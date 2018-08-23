@@ -20,9 +20,14 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@kaltura-ng/kaltura-logger": "^3.0.0",
+    "@ngx-translate/core": "^10.0.2",
+    "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^2.5.4",
+    "jsnlog": "^2.28.0",
     "rxjs": "^6.0.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.0.0-v20180801-143654.tgz"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
