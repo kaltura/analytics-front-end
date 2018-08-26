@@ -24,7 +24,7 @@ export class AppComponent {
       // populate analyticsConfig with configuration send from hosting app
       analyticsConfig.ks = config.ks;
       analyticsConfig.pid = config.pid;
-      analyticsConfig.local = config.local;
+      analyticsConfig.locale = config.locale;
       analyticsConfig.kalturaServer = config.kalturaServer;
 
       // set ks in ngx-client
@@ -39,10 +39,10 @@ export class AppComponent {
 
       // load localization
       this._logger.info("Loading localization...");
-      this._translate.setDefaultLang(analyticsConfig.local);
-      this._translate.use(analyticsConfig.local).subscribe(
+      this._translate.setDefaultLang(analyticsConfig.locale);
+      this._translate.use(analyticsConfig.locale).subscribe(
         () => {
-          this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.local}`);
+          this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
           this._onInitSuccess();
         },
         (error) => {

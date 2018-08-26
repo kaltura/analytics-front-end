@@ -1,10 +1,11 @@
 export interface AnalyticsConfig {
-    kalturaServer?: {
-        uri?: string,
-    },
-    ks?: string,
-    pid?: string,
-    local?: string
+  appVersion: string,
+  kalturaServer?: {
+      uri?: string,
+  },
+  ks?: string,
+  pid?: string,
+  locale?: string
 }
 
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
@@ -24,4 +25,6 @@ export function getKalturaServerUri(suffix: string = ''): string {
   }
 }
 
-export const analyticsConfig: AnalyticsConfig = <any>{};
+export const analyticsConfig: AnalyticsConfig = <any>{
+  appVersion: "0.1"
+};

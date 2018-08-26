@@ -8,9 +8,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { KalturaClientModule } from 'kaltura-ngx-client';
+import { analyticsConfig } from '../configuration/analytics-config';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json?v='+analyticsConfig.appVersion);
 }
 
 @NgModule({

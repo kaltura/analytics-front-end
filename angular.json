@@ -23,8 +23,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                ".",
+                "src/styles",
+                "node_modules"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -123,5 +130,10 @@
       }
     }
   },
-  "defaultProject": "analytics-front-end"
+  "defaultProject": "analytics-front-end",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
