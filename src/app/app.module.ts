@@ -9,9 +9,12 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { KalturaClientModule } from 'kaltura-ngx-client';
 import { analyticsConfig } from '../configuration/analytics-config';
+import { BrowserService } from './shared/services/browser.service';
+import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json?v='+analyticsConfig.appVersion);
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
 }
 
 @NgModule({
@@ -23,6 +26,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     KalturaClientModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -30,9 +34,13 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    ConfirmDialogModule
   ],
-  providers: [],
+  providers: [
+    BrowserService,
+    ConfirmationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
