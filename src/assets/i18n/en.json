@@ -1,16 +1,17 @@
 {
   "app":{
+    "modules":{
+      "content": "Content Reports",
+      "users": "Users & Community Reports",
+      "bandwidth": "Bandwidth & Storage Reports",
+      "system": "System Reports",
+      "live": "Live Reports"
+    },
     "common":{
       "cancel": "Cancel",
       "retry": "Retry",
       "attention": "Attention",
       "error": "Error"
     }
-  },
-
-
-  "HOME": {
-    "TITLE": "Hello Angular with ngx-translate!",
-    "SELECT": "Change language"
   }
 }

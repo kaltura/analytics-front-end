@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
   }
 
   private _onInitSuccess(): void {
-    this._browserService.alert({message: 'Loaded!'});
+    // this._browserService.alert({message: 'Loaded!'});
   }
 
 }

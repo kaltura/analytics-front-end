@@ -12,6 +12,7 @@ import { analyticsConfig } from '../configuration/analytics-config';
 import { BrowserService } from './shared/services/browser.service';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppMenuComponent } from './app-menu/app-menu.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
@@ -20,7 +21,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent
+    DashboardComponent,
+    AppMenuComponent
   ],
   imports: [
     BrowserModule,
