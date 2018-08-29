@@ -26,13 +26,8 @@ const routes: Routes = [
       ]
       },
       {
-        path: 'bandwidth', children: [
-        { path: '', redirectTo: 'publisher-storage', pathMatch: 'full' },
-        {
-          path: 'publisher-storage',
-          loadChildren: '../modules/bandwidth/views/publisher-storage/publisher-storage.module#PublisherStorageModule'
-        }
-      ]
+        path: 'bandwidth',
+        loadChildren: '../modules/bandwidth//bandwidth.module#BandwidthModule'
       },
       {
         path: 'system', children: [

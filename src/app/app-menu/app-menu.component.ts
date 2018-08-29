@@ -8,13 +8,16 @@ import { Router } from '@angular/router';
 })
 export class AppMenuComponent implements OnInit {
 
+  public activeRoute = 'content';
+
   constructor(private _router: Router) { }
 
   ngOnInit() {
   }
 
   public navigateToView(route: string): void {
-    // TODO add smart navigation according to permissions, set active route visualization
+    // TODO add smart navigation according to permissions
+    this.activeRoute = route;
     this._router.navigate([route]);
   }
 

@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+@import './variables';
 $mc-theme-font-path : '~@kaltura-ng/mc-theme/themes/default/fonts';
 @import '~@kaltura-ng/mc-theme/themes/default/scss/index.scss';
 
@@ -19,5 +19,37 @@ body{
     position: absolute;
     top: 50%; left: 50%;
     transform: translate3d(-50px, -50px, 0);
+  }
+}
+
+.kSections{
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  width: 320px;
+  flex: 0 0 auto;
+  background-color: white;
+  border: 0px solid white;
+  border-radius: 3px;
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    width: 100%;
+    li {
+      line-height: 44px;
+      cursor: pointer;
+      color: $kGrayscale3;
+      font-weight: 700;
+      padding-left: 24px;
+      &:hover {
+        background-color: $kGrayscale7;
+      }
+      &.active {
+        color: $kTertiary;
+        cursor: default;
+      }
+    }
   }
 }

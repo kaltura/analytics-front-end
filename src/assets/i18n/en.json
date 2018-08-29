@@ -12,6 +12,10 @@
       "retry": "Retry",
       "attention": "Attention",
       "error": "Error"
+    },
+    "bandwidth":{
+      "publisherStorage": "Publish Bandwidth & Storage Report",
+      "usersStorage": "End User Storage Report"
     }
   }
 }

@@ -1,0 +1,16 @@
+<div style="display: flex">
+
+  <div class="kSections">
+    <ul>
+      <li *ngFor="let section of _sections" [class.active]="section.active">
+        <div (click)="navigateToView(section.route)" >
+          {{section.label}}
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div style="margin-left: 50px">
+    <router-outlet></router-outlet>
+  </div>
+</div>
