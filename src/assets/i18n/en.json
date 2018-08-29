@@ -13,6 +13,23 @@
       "attention": "Attention",
       "error": "Error"
     },
+    "dateFilter":{
+      "dateRange": "Date Range:",
+      "timeUnits": "Time Units:",
+      "dates": "Dates:",
+      "currYear": "Current year",
+      "currMonth": "Current month",
+      "currPrevMonth": "Current and previous month",
+      "prevMonth": "Previous month",
+      "currQuarter": "Current quarter",
+      "currPrevQuarter": "Current and previous quarter",
+      "prevQuarter": "Previous quarter",
+      "currPrevYear": "Current and previous year",
+      "prevYear": "Previous year",
+      "custom": "Custom",
+      "monthly": "Monthly",
+      "daily": "Daily"
+    },
     "bandwidth":{
       "publisherStorage": "Publish Bandwidth & Storage Report",
       "usersStorage": "End User Storage Report"

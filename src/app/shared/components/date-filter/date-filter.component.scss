@@ -1,0 +1,22 @@
+@import '../../../../styles/variables';
+
+.kDateFilter{
+  display: flex;
+  align-items: center;
+  .kLabel{
+    color: $kGrayscale1;
+    margin-right: 8px;
+  }
+  .kMargin{
+    margin-left: 16px;
+  }
+  p-calendar{
+    margin-right: 8px;
+  }
+}
+
+:host /deep/ .kDateFilter p-dropdown{
+  .ui-dropdown{
+    width: 200px !important;
+  }
+}
