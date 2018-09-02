@@ -11,12 +11,14 @@
       "cancel": "Cancel",
       "retry": "Retry",
       "attention": "Attention",
-      "error": "Error"
+      "error": "Error",
+      "exportCsv": "Export to CSV"
     },
     "dateFilter":{
       "dateRange": "Date Range:",
       "timeUnits": "Time Units:",
       "dates": "Dates:",
+      "select": "Select Date",
       "currYear": "Current year",
       "currMonth": "Current month",
       "currPrevMonth": "Current and previous month",
@@ -28,11 +30,19 @@
       "prevYear": "Previous year",
       "custom": "Custom",
       "monthly": "Monthly",
-      "daily": "Daily"
+      "daily": "Daily",
+      "error": "'From Date' must be before 'To Date'"
     },
     "bandwidth":{
       "publisherStorage": "Publish Bandwidth & Storage Report",
-      "usersStorage": "End User Storage Report"
+      "usersStorage": "End User Storage Report",
+      "bandwidth_consumption": "Bandwidth Consumption (MB)",
+      "average_storage": "Average Storage (MB)",
+      "peak_storage": "Peak Storage (MB)",
+      "added_storage": "Added Storage (MB)",
+      "deleted_storage": "Deleted Storage (MB)",
+      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage (MB)",
+      "transcoding_consumption": "Transcoding Consumption (MB)"
     }
   }
 }

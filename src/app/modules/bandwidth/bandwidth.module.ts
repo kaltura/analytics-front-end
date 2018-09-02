@@ -1,29 +1,31 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { ButtonModule } from 'primeng/button';
 
 import { routing } from './bandwidth.routes';
 import { BandwidthComponent } from './bandwidth.component';
 import { PublisherStorageComponent } from './views/publisher-storage/publisher-storage.component';
 import { EndUserStorageComponent } from './views/end-user/end-user-storage.component';
-import { DateFilterComponent } from '../../shared/components/date-filter/date-filter.component';
+import { SharedModule } from 'shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     TranslateModule,
     DropdownModule,
-    CalendarModule,
+    ButtonModule,
+    SharedModule,
     RouterModule.forChild(routing),
   ],
   declarations: [
     BandwidthComponent,
     PublisherStorageComponent,
-    EndUserStorageComponent,
-    DateFilterComponent
+    EndUserStorageComponent
   ],
   exports: [],
   providers: []

@@ -1,4 +1,8 @@
-<div class="kReport">
+<div class="kReport kOverrideFAIcons">
   <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
-  <app-date-filter></app-date-filter>
+  <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)"></app-date-filter>
+  <div class="kFilter">
+    <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
+    <button pButton class="kButtonDefault" [label]="'app.common.exportCsv' | translate"></button>
+  </div>
 </div>

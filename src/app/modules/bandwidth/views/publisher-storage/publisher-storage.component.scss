@@ -1,0 +1,17 @@
+.kReport{
+  display: flex;
+  flex-direction: column;
+  .kFilter{
+    display: flex;
+    margin-top: 48px;
+    button{
+      margin-left: auto;
+    }
+  }
+}
+
+:host /deep/ .kReport p-dropdown{
+  .ui-dropdown{
+    width: 250px !important;
+  }
+}
