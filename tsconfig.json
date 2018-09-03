@@ -20,6 +20,9 @@
     "paths": {
       "shared/*": [
         "./src/app/shared/*"
+      ],
+      "configuration/*": [
+        "./src/configuration/*"
       ]
     }
   }

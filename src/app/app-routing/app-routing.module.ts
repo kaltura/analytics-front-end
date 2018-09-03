@@ -8,6 +8,9 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
         {
+          path: '', redirectTo: 'content', pathMatch: 'full'
+        },
+        {
           path: 'content', children: [
           { path: '', redirectTo: 'top-content', pathMatch: 'full' },
           {

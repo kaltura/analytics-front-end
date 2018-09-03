@@ -1,4 +1,4 @@
-<div class="kMenu">
+<div class="kMenu" *ngIf="showNavBar">
   <a [class.activeLink]="activeRoute === 'content'" (click)="navigateToView('content')">{{'app.modules.content' | translate | uppercase}}</a>
   <a [class.activeLink]="activeRoute === 'users'" (click)="navigateToView('users')">{{'app.modules.users' | translate | uppercase}}</a>
   <a [class.activeLink]="activeRoute === 'bandwidth'" (click)="navigateToView('bandwidth')">{{'app.modules.bandwidth' | translate | uppercase}}</a>

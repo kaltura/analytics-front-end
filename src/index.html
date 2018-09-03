@@ -9,13 +9,21 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <script type="text/javascript">
+    function doLogOut() {
+      alert('log out from hoster');
+    }
+
     var analyticsConfig = {
       kalturaServer: {
         uri : "www.kaltura.com"
       },
-    	ks: "djJ8MTY0NTE2MXwYR2akN6BF1ACUzpM7O-WtNMjY_Dbvd_j4Brpmu7CwAbrny7lywfzBkrOj6DYVMtGLW6nx3bqzl1NrwiS3PY9DIs2IVr4bGPO_QLLv0B996EA8EHXsPZKLHObsuPFm81CIvt7-MuHrHGjRLjuea_aj0eUvBC8sYuRCY4xqCrKOWQ==",
+    	ks: "djJ8MTY0NTE2MXzQAEDDlQ8CzdzJwT3DjeVDohWIg6xQq07aovy7EMxLkw-YBnh9KoH_Mu_oMice2h1t5_GgD-FSXSm2v4PAMJlkXXbdrG6t9ay0pIrPiG6Z4EFI-FcrgI_bTceZmIvpCEn3xAyRmTUUG6ziMInHrCpzmbT-awHRJ7qF5rETOTdxzw==",
       pid: "1645161",
-      locale: "en"
+      locale: "en",
+      showNavBar: true,
+      callbacks: {
+      	logout: doLogOut
+      }
     }
   </script>
 

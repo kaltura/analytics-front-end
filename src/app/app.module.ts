@@ -9,7 +9,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { KalturaClientModule } from 'kaltura-ngx-client';
 import { analyticsConfig } from '../configuration/analytics-config';
-import { BrowserService } from './shared/services/browser.service';
+import { BrowserService, ErrorsManagerService } from './shared/services';
 import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
@@ -43,6 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   providers: [
     BrowserService,
+    ErrorsManagerService,
     ConfirmationService
   ],
   bootstrap: [AppComponent]

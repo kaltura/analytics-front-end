@@ -49,4 +49,12 @@ export class DateFilterUtils {
   static toServerDate(value: Date): number {
     return value ? Math.round(value.getTime() / 1000) : null;
   }
+
+  static getDay(value: Date): string {
+    return value.getFullYear().toString() + DateFilterUtils.getFull(value.getMonth() + 1) + DateFilterUtils.getFull(value.getDate());
+  }
+
+  static getFull(num: number): string {
+    return num > 9 ? num.toString() : ( '0' + num.toString());
+  }
 }

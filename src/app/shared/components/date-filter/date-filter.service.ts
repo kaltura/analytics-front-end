@@ -22,14 +22,11 @@ export enum DateRangeType {
   ShortTerm = 1
 }
 
-export enum TimeUnits {
-  Monthly = KalturaReportInterval.months,
-  Daily = KalturaReportInterval.days
-}
-
 export type DateChangeEvent = {
   startDate: number;
   endDate: number;
+  startDay: string;
+  endDay: string;
   timeUnits: KalturaReportInterval;
   timeZoneOffset: number;
 };

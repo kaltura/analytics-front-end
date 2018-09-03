@@ -4,7 +4,7 @@ import { DateFilterService } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
-import { DateRangeType, DateRanges, TimeUnits, DateChangeEvent } from './date-filter.service';
+import { DateRangeType, DateRanges, DateChangeEvent } from './date-filter.service';
 
 @Component({
   selector: 'app-date-filter',
@@ -21,8 +21,8 @@ export class DateFilterComponent implements OnInit {
   public selectedDateRange: DateRanges;
 
   public timeUnitsItems: SelectItem[] = [
-    {label: this._translate.instant('app.dateFilter.monthly'), value: TimeUnits.Monthly},
-    {label: this._translate.instant('app.dateFilter.daily'), value: TimeUnits.Daily},
+    {label: this._translate.instant('app.dateFilter.monthly'), value: KalturaReportInterval.months},
+    {label: this._translate.instant('app.dateFilter.daily'), value: KalturaReportInterval.days},
   ];
   public selectedTimeUnit: KalturaReportInterval = KalturaReportInterval.months;
 
@@ -70,6 +70,8 @@ export class DateFilterComponent implements OnInit {
     this.filterChange.emit({
       startDate: DateFilterUtils.toServerDate(this.startDate),
       endDate: DateFilterUtils.toServerDate(this.endDate),
+      startDay: DateFilterUtils.getDay(this.startDate),
+      endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset()
     });
