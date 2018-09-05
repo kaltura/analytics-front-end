@@ -36,7 +36,9 @@ export class DateFilterComponent implements OnInit {
   ngOnInit() {
     this.dateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType);
     this.selectedDateRange = DateRanges.CurrentMonth; // might need to change for different range type
-    this.updateCalendars();
+    setTimeout( () => {
+      this.updateCalendars(); // use a timeout to allow data binding to complete
+    }, 0);
   }
 
   public updateCalendars(): void {

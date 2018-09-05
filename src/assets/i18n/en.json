@@ -8,6 +8,8 @@
       "live": "Live Reports"
     },
     "common":{
+      "ok": "OK",
+      "close": "Close",
       "cancel": "Cancel",
       "retry": "Retry",
       "attention": "Attention",
