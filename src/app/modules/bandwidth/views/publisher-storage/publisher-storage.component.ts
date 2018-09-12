@@ -1,18 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService } from 'shared/services';
-import { KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { KalturaReportInputFilter } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { PublisherStorageService, Report } from './publisher-storage.service';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './publisher-storage.component.html',
-  styleUrls: ['./publisher-storage.component.scss']
+  styleUrls: ['./publisher-storage.component.scss'],
+  providers: [PublisherStorageService]
 })
-export class PublisherStorageComponent implements OnInit, OnDestroy {
+export class PublisherStorageComponent implements OnInit {
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _metrics: SelectItem[] = [];
@@ -30,8 +31,8 @@ export class PublisherStorageComponent implements OnInit, OnDestroy {
   );
 
   constructor(private _translate: TranslateService,
-              private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
+              private _publisherStorageService: PublisherStorageService,
               private _authService: AuthService ) { }
 
   ngOnInit() {
@@ -40,10 +41,6 @@ export class PublisherStorageComponent implements OnInit, OnDestroy {
     metrics.forEach( key => {
       this._metrics.push({label: this._translate.instant(key), value: key});
     });
-  }
-
-  ngOnDestroy() {
-
   }
 
   public onDateFilterChange(event: DateChangeEvent): void {
@@ -60,49 +57,46 @@ export class PublisherStorageComponent implements OnInit, OnDestroy {
 
   private loadReport(): void {
     this._isBusy = true;
-    this._blockerMessage = null;
-    const getTotal = new ReportGetTotalAction({
-      reportType: KalturaReportType.partnerUsage,
-      reportInputFilter: this.filter
-    });
 
-    this._kalturaClient.request(getTotal).pipe(cancelOnDestroy(this))
-      .subscribe(response => {
-        this.result = JSON.stringify(response);
-        this._isBusy = false;
-      },
-      error => {
-        this._isBusy = false;
-        const err: ErrorDetails = this._errorsManager.getError(error);
-        let buttons: AreaBlockerMessageButton[] = [];
-        if ( err.forceLogout ) {
-          buttons = [{
-            label: this._translate.instant('app.common.ok'),
-            action: () => {
-              this._blockerMessage = null;
-              this._authService.logout();
-            }
-          }];
-        } else {
-          buttons = [{
-            label: this._translate.instant('app.common.close'),
-            action: () => {
-              this._blockerMessage = null;
-            }
-          },
-          {
-            label: this._translate.instant('app.common.retry'),
-            action: () => {
-              this.loadReport();
-            }
-          }];
-        }
-        this._blockerMessage = new AreaBlockerMessage({
-          title: err.title,
-          message: err.message,
-          buttons
+    this._blockerMessage = null;
+
+    this._publisherStorageService.getReport(this.filter)
+      .subscribe( (report: Report) => {
+          this.result = JSON.stringify(report.totals);
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          const err: ErrorDetails = this._errorsManager.getError(error);
+          let buttons: AreaBlockerMessageButton[] = [];
+          if ( err.forceLogout ) {
+            buttons = [{
+              label: this._translate.instant('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._authService.logout();
+              }
+            }];
+          } else {
+            buttons = [{
+              label: this._translate.instant('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            },
+              {
+                label: this._translate.instant('app.common.retry'),
+                action: () => {
+                  this.loadReport();
+                }
+              }];
+          }
+          this._blockerMessage = new AreaBlockerMessage({
+            title: err.title,
+            message: err.message,
+            buttons
+          });
         });
-      });
   }
 
 }

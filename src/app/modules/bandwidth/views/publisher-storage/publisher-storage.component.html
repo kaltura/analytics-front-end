@@ -1,11 +1,13 @@
-<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-  <div class="kReport kOverrideFAIcons">
-    <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
-    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+<div class="kReport kOverrideFAIcons">
+  <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
+  <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+
     <div class="kFilter">
       <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
       <button pButton class="kButtonDefault" [label]="'app.common.exportCsv' | translate"></button>
     </div>
-      <div style="width: 400px; height: 400px; border: 1px solid grey;word-wrap: break-word;margin-top: 40px">{{result}}</div>
-  </div>
-</k-area-blocker>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div style="width: 400px; height: 400px; border: 1px solid grey;word-wrap: break-word;margin-top: 40px">{{result}}</div>
+  </k-area-blocker>
+</div>
+
