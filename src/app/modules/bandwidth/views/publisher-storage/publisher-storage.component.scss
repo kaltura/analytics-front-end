@@ -1,11 +1,36 @@
 .kReport{
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 100px);
   .kFilter{
     display: flex;
     margin-top: 48px;
+    margin-bottom: 48px;
     button{
       margin-left: auto;
+    }
+  }
+  .kTotals{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 48px;
+    .kTotal{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 80px;
+      border: 1px solid grey;
+      border-radius: 4px;
+      margin-right: 8px;
+      padding: 6px;
+      .kTitle{
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .kValue{
+        margin-top: auto;
+        align-self: center;
+      }
     }
   }
 }
@@ -14,4 +39,12 @@
   .ui-dropdown{
     width: 250px !important;
   }
+}
+
+:host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
+  height: inherit;
+}
+
+:host /deep/ .ui-table .ui-table-scrollable-body {
+  max-height: 400px !important;
 }

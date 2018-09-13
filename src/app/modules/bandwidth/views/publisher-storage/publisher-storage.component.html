@@ -6,8 +6,43 @@
       <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
       <button pButton class="kButtonDefault" [label]="'app.common.exportCsv' | translate"></button>
     </div>
+
+
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div style="width: 400px; height: 400px; border: 1px solid grey;word-wrap: break-word;margin-top: 40px">{{result}}</div>
+    <div style="display: flex; flex-direction: column">
+
+      <div class="kTotals">
+        <div *ngFor="let total of _totalsData" class="kTotal">
+          <span class="kTitle">{{total.label}}</span>
+          <span class="kValue">{{total.value}}</span>
+        </div>
+      </div>
+
+      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of _columns" [pSortableColumn]="col">
+              {{'app.bandwidth.' + col | translate}}
+              <p-sortIcon [field]="col"></p-sortIcon>
+            </th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td *ngFor="let col of _columns">
+              {{data[col]}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+
+
+
+
   </k-area-blocker>
+
 </div>
 

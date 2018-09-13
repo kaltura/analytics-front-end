@@ -12,6 +12,7 @@ import { PublisherStorageComponent } from './views/publisher-storage/publisher-s
 import { EndUserStorageComponent } from './views/end-user/end-user-storage.component';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
     DropdownModule,
     ButtonModule,
     SharedModule,
+    TableModule,
     RouterModule.forChild(routing),
   ],
   declarations: [

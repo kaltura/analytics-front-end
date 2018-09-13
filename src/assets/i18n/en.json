@@ -14,7 +14,8 @@
       "retry": "Retry",
       "attention": "Attention",
       "error": "Error",
-      "exportCsv": "Export to CSV"
+      "exportCsv": "Export to CSV",
+      "na": "N/A"
     },
     "errors":{
       "errorHeader": "Error",
@@ -41,6 +42,8 @@
       "error": "'From Date' must be before 'To Date'"
     },
     "bandwidth":{
+      "month_id": "Month",
+      "date_id": "Date",
       "publisherStorage": "Publish Bandwidth & Storage Report",
       "usersStorage": "End User Storage Report",
       "bandwidth_consumption": "Bandwidth Consumption (MB)",
@@ -48,8 +51,10 @@
       "peak_storage": "Peak Storage (MB)",
       "added_storage": "Added Storage (MB)",
       "deleted_storage": "Deleted Storage (MB)",
-      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage (MB)",
-      "transcoding_consumption": "Transcoding Consumption (MB)"
+      "combined_bandwidth_storage": "BW and Storage Consumption (MB)",
+      "transcoding_consumption": "Transcoding Consumption (MB)",
+      "aggregated_monthly_avg_storage": "Accumulative Storage (MB)",
+      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage (MB)"
     }
   }
 }

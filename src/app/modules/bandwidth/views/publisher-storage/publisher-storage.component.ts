@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService } from 'shared/services';
-import { KalturaReportInputFilter } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { PublisherStorageService, Report } from './publisher-storage.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -18,10 +20,14 @@ export class PublisherStorageComponent implements OnInit {
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _metrics: SelectItem[] = [];
   public _selectedMetrics = 'bandwidth_consumption';
+  public _tableData: any[] = [];
+  public _totalsData: {label, value}[] = [];
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public result = '';
+  public _columns: string[] = [];
+
+  private order = '-bandwidth_consumption';
 
   private filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
@@ -39,7 +45,7 @@ export class PublisherStorageComponent implements OnInit {
     this._isBusy = false;
     const metrics: string[] = ['bandwidth_consumption', 'average_storage', 'peak_storage', 'added_storage', 'deleted_storage', 'combined_bandwidth_storage', 'transcoding_consumption'];
     metrics.forEach( key => {
-      this._metrics.push({label: this._translate.instant(key), value: key});
+      this._metrics.push({label: this._translate.instant('app.bandwidth.' + key), value: key});
     });
   }
 
@@ -48,21 +54,28 @@ export class PublisherStorageComponent implements OnInit {
     this.filter.fromDay = event.startDay;
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
-    this.loadReport();
+    this.loadReport(false);
   }
 
   public onMetricsChange(event): void {
     // debugger;
   }
 
-  private loadReport(): void {
+  private loadReport(tableOnly: boolean = false): void {
     this._isBusy = true;
-
+    this._tableData = [];
     this._blockerMessage = null;
 
-    this._publisherStorageService.getReport(this.filter)
+    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
+
+    this._publisherStorageService.getReport(tableOnly, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
-          this.result = JSON.stringify(report.totals);
+          if (report.table) {
+            this.handleTable(report.table); // handle table
+          }
+          if (report.totals) {
+            this.handleTotals(report.totals); // handle totals
+          }
           this._isBusy = false;
         },
         error => {
@@ -97,6 +110,50 @@ export class PublisherStorageComponent implements OnInit {
             buttons
           });
         });
+   }
+
+  _onSortChanged(event) {
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this.order) {
+        this.order = order;
+        this.loadReport(true);
+      }
+    }
+  }
+
+  private handleTable(table: KalturaReportTable): void {
+    // set table columns
+    this._columns = [];
+    table.header.split(',').forEach( header => {
+      this._columns.push(header);
+    });
+    // set table data
+    table.data.split(';').forEach( valuesString => {
+      if ( valuesString.length ) {
+        let data = {};
+        valuesString.split(',').forEach((value, index) => {
+          if (index === 0) { // handle date
+            if (this._columns[index] === 'date_id') {
+              data[this._columns[index]] = DateFilterUtils.formatFullDateString(value, analyticsConfig.locale);
+            } else {
+              data[this._columns[index]] = DateFilterUtils.formatMonthString(value, analyticsConfig.locale);
+            }
+          } else {
+            data[this._columns[index]] = value.length ? Math.round(parseFloat(value)) : this._translate.instant('app.common.na');
+          }
+        });
+        this._tableData.push(data);
+      }
+    });
+  }
+
+  private handleTotals(totals: KalturaReportTotal): void {
+    this._totalsData = [];
+    const data = totals.data.split(',');
+    totals.header.split(',').forEach( (header, index) => {
+      this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: Math.round(parseFloat(data[index]))});
+    });
   }
 
 }
