@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService } from 'shared/services';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { PublisherStorageService, Report } from './publisher-storage.service';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -20,8 +20,11 @@ export class PublisherStorageComponent implements OnInit {
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _metrics: SelectItem[] = [];
   public _selectedMetrics = 'bandwidth_consumption';
+  public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
+  public _chartDataLoaded = false;
   public _tableData: any[] = [];
   public _totalsData: {label, value}[] = [];
+  public _chartData: any = {'bandwidth_consumption': []};
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -50,15 +53,17 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public onDateFilterChange(event: DateChangeEvent): void {
+    this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
+    this._reportInterval = event.timeUnits;
     this.loadReport(false);
   }
 
   public onMetricsChange(event): void {
-    // debugger;
+    this._selectedMetrics = event.value;
   }
 
   private loadReport(tableOnly: boolean = false): void {
@@ -73,7 +78,11 @@ export class PublisherStorageComponent implements OnInit {
           if (report.table) {
             this.handleTable(report.table); // handle table
           }
-          if (report.totals) {
+          if (report.graphs && !tableOnly) {
+            this._chartDataLoaded = false;
+            this.handleGraphs(report.graphs); // handle graphs
+          }
+          if (report.totals && !tableOnly) {
             this.handleTotals(report.totals); // handle totals
           }
           this._isBusy = false;
@@ -153,6 +162,34 @@ export class PublisherStorageComponent implements OnInit {
     const data = totals.data.split(',');
     totals.header.split(',').forEach( (header, index) => {
       this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: Math.round(parseFloat(data[index]))});
+    });
+  }
+
+  private handleGraphs(graphs: KalturaReportGraph[]): void {
+    this._chartData = {};
+    graphs.forEach( (graph: KalturaReportGraph) => {
+      const data = graph.data.split(';');
+      let values = [];
+      data.forEach(value => {
+        if (value.length) {
+          const label = value.split(',')[0];
+          const name = this._reportInterval === KalturaReportInterval.months ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale) : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          let val = Math.round(parseFloat(value.split(',')[1]));
+          if (isNaN(val)) {
+            val = 0;
+          }
+          values.push({name, value: val});
+        }
+      });
+      if (this._reportInterval === KalturaReportInterval.months) {
+        this._chartData[graph.id] = values;
+      } else {
+        this._chartData[graph.id] = [{ name: 'Value', series: values}];
+      }
+      setTimeout(() => {
+        this._chartDataLoaded = true;
+      }, 200);
+
     });
   }
 

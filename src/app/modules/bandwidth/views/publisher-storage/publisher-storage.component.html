@@ -11,6 +11,29 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div style="display: flex; flex-direction: column">
 
+      <div class="kChart">
+        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _reportInterval==='months'"
+          [results]="_chartData[_selectedMetrics]"
+          [gradient]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          >
+        </ngx-charts-bar-vertical>
+
+        <ngx-charts-line-chart *ngIf="_chartDataLoaded && _reportInterval==='days'"
+          [results]="_chartData[_selectedMetrics]"
+          [gradient]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [autoScale]="true"
+          >
+        </ngx-charts-line-chart>
+      </div>
+
       <div class="kTotals">
         <div *ngFor="let total of _totalsData" class="kTotal">
           <span class="kTitle">{{total.label}}</span>

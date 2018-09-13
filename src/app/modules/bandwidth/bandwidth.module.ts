@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { routing } from './bandwidth.routes';
 import { BandwidthComponent } from './bandwidth.component';
@@ -24,6 +25,7 @@ import { TableModule } from 'primeng/table';
     ButtonModule,
     SharedModule,
     TableModule,
+    NgxChartsModule,
     RouterModule.forChild(routing),
   ],
   declarations: [

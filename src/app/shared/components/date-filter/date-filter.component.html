@@ -6,8 +6,8 @@
   <span class="kLabel kMargin">{{'app.dateFilter.dates' | translate}}</span>
   <div>
     <div class="kDateFilter">
-      <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="startDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
-      <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="endDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
+      <p-calendar [disabled]="selectedDateRange < 9" [showIcon]="true" icon="kIconcalendar" [(ngModel)]="startDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
+      <p-calendar [disabled]="selectedDateRange < 9" [showIcon]="true" icon="kIconcalendar" [(ngModel)]="endDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
     </div>
     <span *ngIf="hasError" class="kError">{{'app.dateFilter.error' | translate}}</span>
   </div>
