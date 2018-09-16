@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 export enum HeaderTypes {
     error = 1,
@@ -98,6 +99,67 @@ export class BrowserService {
         this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
     }
+
+  public openLink(baseUrl: string, params: any = {}, target: string = '_blank') {
+    // if we got params, append to the base URL using query string
+    if (baseUrl && baseUrl.length) {
+      if (Object.keys(params).length > 0) {
+        baseUrl += '?';
+        for (let key of Object.keys(params)) {
+          baseUrl += key + '=' + params[key] + '&';
+        }
+        baseUrl = baseUrl.slice(0, -1); // remove last &
+      }
+    }
+    window.open(baseUrl, target);
+  }
+
+  public isIE11(): boolean {
+    return !!window['MSInputMethodContext'] && !!document['documentMode'];
+  }
+
+  public download(data, filename, type): void {
+    let file;
+    if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+      if (this.isIE11()) {
+        this.openLink(data);
+        return;
+      }
+      file = this._downloadContent(data);
+    } else {
+      file = Observable.of(new Blob([data], {type: type}));
+    }
+
+    file.subscribe(content => {
+      if (window.navigator.msSaveOrOpenBlob) {// IE10+
+        window.navigator.msSaveOrOpenBlob(content, filename);
+      } else { // Others
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(content);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 0);
+      }
+    });
+  }
+
+  private _downloadContent(url: string): void {
+    return Observable.create(observer => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        observer.next(xhr.response);
+        observer.complete();
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    });
+  }
 
 }
 

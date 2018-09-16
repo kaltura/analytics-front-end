@@ -7,6 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
+import { ReportService } from './services/report.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
@@ -32,7 +33,8 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: <any[]>[
-        DateFilterService
+        DateFilterService,
+        ReportService
       ]
     };
   }

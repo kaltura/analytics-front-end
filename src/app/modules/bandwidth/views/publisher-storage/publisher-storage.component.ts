@@ -3,17 +3,17 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService } from 'shared/services';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval } from 'kaltura-ngx-client';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report } from 'shared/services';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { PublisherStorageService, Report } from './publisher-storage.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { BrowserService } from 'shared/services/browser.service';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './publisher-storage.component.html',
   styleUrls: ['./publisher-storage.component.scss'],
-  providers: [PublisherStorageService]
+  providers: []
 })
 export class PublisherStorageComponent implements OnInit {
 
@@ -27,10 +27,12 @@ export class PublisherStorageComponent implements OnInit {
   public _chartData: any = {'bandwidth_consumption': []};
 
   public _isBusy: boolean;
+  public _exportingCsv: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
 
   private order = '-bandwidth_consumption';
+  private totalCount = 1;
 
   private filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
@@ -41,11 +43,13 @@ export class PublisherStorageComponent implements OnInit {
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
-              private _publisherStorageService: PublisherStorageService,
-              private _authService: AuthService ) { }
+              private _reportService: ReportService,
+              private _authService: AuthService,
+              private _browserService: BrowserService) { }
 
   ngOnInit() {
     this._isBusy = false;
+    this._exportingCsv = false;
     const metrics: string[] = ['bandwidth_consumption', 'average_storage', 'peak_storage', 'added_storage', 'deleted_storage', 'combined_bandwidth_storage', 'transcoding_consumption'];
     metrics.forEach( key => {
       this._metrics.push({label: this._translate.instant('app.bandwidth.' + key), value: key});
@@ -66,6 +70,44 @@ export class PublisherStorageComponent implements OnInit {
     this._selectedMetrics = event.value;
   }
 
+  public exportToScv(): void {
+    this._exportingCsv = true;
+    let headers = '';
+    this._totalsData.forEach( total => {
+      headers = headers + total.label + ',';
+    });
+    headers = headers.substr(0, headers.length - 1) + ';';
+    this._columns.forEach( col => {
+      headers = headers + this._translate.instant('app.bandwidth.' + col ) + ',';
+    });
+    const args: ReportGetUrlForReportAsCsvActionArgs = {
+      dimension: this._selectedMetrics,
+      pager: new KalturaFilterPager({pageSize: this.totalCount, pageIndex: 1}),
+      reportType: KalturaReportType.partnerUsage,
+      reportInputFilter: this.filter,
+      headers: headers.substr(0, headers.length - 1),
+      reportText: this._translate.instant('app.common.noMsg'),
+      reportTitle: this._translate.instant('app.bandwidth.title')
+    };
+    this._reportService.exportToCsv(args).subscribe(
+      result => {
+        this._exportingCsv = false;
+        this._browserService.alert({
+          message: this._translate.instant('app.common.reportReady'),
+          header: this._translate.instant('app.common.attention'),
+          accept: () => {
+            this._browserService.download(result, this._translate.instant('app.bandwidth.title') + '.csv', 'text/csv');
+          }
+        });
+      },
+      error => {
+        this._exportingCsv = false;
+        const err: ErrorDetails = this._errorsManager.getError(error);
+        this._browserService.alert({ message: err.message, header: err.title});
+      }
+    );
+  }
+
   private loadReport(tableOnly: boolean = false): void {
     this._isBusy = true;
     this._tableData = [];
@@ -73,7 +115,7 @@ export class PublisherStorageComponent implements OnInit {
 
     const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
 
-    this._publisherStorageService.getReport(tableOnly, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, KalturaReportType.partnerUsage, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table) {
             this.handleTable(report.table); // handle table
@@ -109,7 +151,7 @@ export class PublisherStorageComponent implements OnInit {
               {
                 label: this._translate.instant('app.common.retry'),
                 action: () => {
-                  this.loadReport();
+                  this.loadReport(false);
                 }
               }];
           }
@@ -132,6 +174,7 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   private handleTable(table: KalturaReportTable): void {
+    this.totalCount = table.totalCount;
     // set table columns
     this._columns = [];
     table.header.split(',').forEach( header => {

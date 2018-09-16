@@ -4,7 +4,7 @@
 
     <div class="kFilter">
       <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
-      <button pButton class="kButtonDefault" [label]="'app.common.exportCsv' | translate"></button>
+      <button [disabled]="_exportingCsv" pButton class="kButtonDefault" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate" style=""(click)="exportToScv()"></button>
     </div>
 
 
@@ -24,7 +24,6 @@
 
         <ngx-charts-line-chart *ngIf="_chartDataLoaded && _reportInterval==='days'"
           [results]="_chartData[_selectedMetrics]"
-          [gradient]="false"
           [xAxis]="true"
           [yAxis]="true"
           [showXAxisLabel]="true"
