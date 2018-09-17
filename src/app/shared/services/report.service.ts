@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
   KalturaReportGraph, ReportGetTableAction, KalturaFilterPager, KalturaMultiResponse, KalturaReportTable,
-  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs} from 'kaltura-ngx-client';
+  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ export class ReportService implements OnDestroy {
   constructor(private _translate: TranslateService, private _kalturaClient: KalturaClient) {
   }
 
-  public getReport(tableOnly: boolean, reportType: KalturaReportType, filter: KalturaReportInputFilter, pager: KalturaFilterPager, order: string): Observable<Report> {
+  public getReport(tableOnly: boolean, loadBaseTotals: boolean, reportType: KalturaReportType, filter: KalturaReportInputFilter, pager: KalturaFilterPager, order: string): Observable<Report> {
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
@@ -35,6 +35,10 @@ export class ReportService implements OnDestroy {
           reportInputFilter: filter
         });
 
+        const getBaseTotals = new ReportGetBaseTotalAction({
+          reportType,
+          reportInputFilter: filter
+        });
 
         const getTable = new ReportGetTableAction({
           reportType,
@@ -48,7 +52,7 @@ export class ReportService implements OnDestroy {
           this._querySubscription = null;
         }
 
-        const request = tableOnly ? [getTable] : [getTable, getGraphs, getTotal];
+        const request = tableOnly ? [getTable] : loadBaseTotals ? [getTable, getGraphs, getTotal, getBaseTotals] : [getTable, getGraphs, getTotal];
         this._querySubscription = this._kalturaClient.multiRequest(request)
           .pipe(cancelOnDestroy(this))
           .subscribe((response: KalturaMultiResponse) => {
@@ -60,6 +64,10 @@ export class ReportService implements OnDestroy {
                   graphs: response[1] ? response[1].result : [],
                   totals: response[2] ? response[2].result : null
                 };
+                if (loadBaseTotals) {
+                  const baseTotals = response[3] ? response[3].result : [];
+                  this.addTotals(report, baseTotals);
+                }
                 observer.next(report);
                 observer.complete();
               }
@@ -94,6 +102,24 @@ export class ReportService implements OnDestroy {
               this._exportSubscription = null;
             });
       });
+  }
+
+  private addTotals(report: Report,  totals: KalturaReportBaseTotal[]): void {
+    totals.forEach( (total: KalturaReportBaseTotal) => {
+      let newGraph = new KalturaReportGraph({id: total.id, data: ''});
+      const metrics = total.id.substr(6);
+      const added_data_graph: KalturaReportGraph = report.graphs.find( (graph: KalturaReportGraph) => {
+        return graph.id === 'added_' + metrics;
+      });
+      const deleted_data_graph: KalturaReportGraph = report.graphs.find( (graph: KalturaReportGraph) => {
+        return graph.id === 'deleted_' + metrics;
+      });
+      if (typeof added_data_graph !== 'undefined' && typeof deleted_data_graph !== 'undefined') {
+        const totalValue = parseFloat(total.data);
+        // TODO create data here
+        // report.graphs.push(newGraph);
+      }
+    });
   }
 
   ngOnDestroy() {

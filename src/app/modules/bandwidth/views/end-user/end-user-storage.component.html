@@ -1,4 +1,90 @@
-<div class="kReport">
+<div class="kReport kOverrideFAIcons">
   <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
-  <app-date-filter></app-date-filter>
+  <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+
+  <div class="kSearch">
+    <span>{{'app.bandwidth.search' | translate}}</span>
+    <kAutoComplete
+      suggestionItemField="item"
+      suggestionLabelField="name"
+      field="screenName"
+      [(ngModel)]="_selectedUsers"
+      [multiple]="true"
+      [onItemAdding]="_convertUserInputToValidValue"
+      [limitToSuggestions]="true"
+      [minLength]="3"
+      suggestionSelectableField="isSelectable"
+      [suggestionsProvider]="_usersProvider"
+      (completeMethod)="_searchUsers($event)"
+      [tooltipResolver]="'__tooltip'"
+      (onSelect)="_updateUsers($event)" (onUnselect)="_updateUsers($event)"
+      >
+    </kAutoComplete>
+  </div>
+
+  <div class="kFilter">
+    <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
+    <button [disabled]="_exportingCsv" pButton class="kButtonDefault" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate" style=""(click)="exportToScv()"></button>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div style="display: flex; flex-direction: column">
+
+      <div class="kChart">
+        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _reportInterval==='months'"
+                                 [results]="_chartData[_selectedMetrics]"
+                                 [gradient]="false"
+                                 [xAxis]="true"
+                                 [yAxis]="true"
+                                 [showXAxisLabel]="true"
+                                 [showYAxisLabel]="true"
+        >
+        </ngx-charts-bar-vertical>
+
+        <ngx-charts-line-chart *ngIf="_chartDataLoaded && _reportInterval==='days'"
+                               [results]="_chartData[_selectedMetrics]"
+                               [xAxis]="true"
+                               [yAxis]="true"
+                               [showXAxisLabel]="true"
+                               [showYAxisLabel]="true"
+                               [autoScale]="true"
+        >
+        </ngx-charts-line-chart>
+      </div>
+
+      <div class="kTotals">
+        <div *ngFor="let total of _totalsData" class="kTotal">
+          <span class="kTitle">{{total.label}}</span>
+          <span class="kValue">{{total.value}}</span>
+        </div>
+      </div>
+
+      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of _columns" [pSortableColumn]="col" [style.display]="col==='HIDDEN'?'none':'table-cell'">
+              {{'app.bandwidth.' + col | translate}}
+              <p-sortIcon [field]="col"></p-sortIcon>
+            </th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td *ngFor="let col of _columns; let i = index" [style.display]="col==='HIDDEN'?'none':'table-cell'">
+              <span *ngIf="i>1">{{data[col]}}</span>
+              <a *ngIf="i===1" style=""(click)="drillDown(data[col])">{{data[col].name}}</a>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+
+
+
+
+  </k-area-blocker>
+
 </div>
+

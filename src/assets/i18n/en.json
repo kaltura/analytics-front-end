@@ -58,7 +58,29 @@
       "combined_bandwidth_storage": "BW and Storage Consumption (MB)",
       "transcoding_consumption": "Transcoding Consumption (MB)",
       "aggregated_monthly_avg_storage": "Accumulative Storage (MB)",
-      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage (MB)"
+      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage (MB)",
+      "added_entries": "Added Entries",
+      "user_added_entries": "Added Entries",
+      "deleted_entries": "Deleted Entries",
+      "user_deleted_entries": "Deleted Entries",
+      "total_entries": "Total Entries",
+      "user_total_entries": "Total Entries",
+      "added_storage_mb": "Added Storage (MB)",
+      "user_added_storage_mb": "Added Storage (MB)",
+      "deleted_storage_mb": "Deleted Storage (MB)",
+      "user_deleted_storage_mb": "Deleted Storage (MB)",
+      "total_storage_mb": "Total Storage (MB)",
+      "user_total_storage_mb": "Total Storage (MB)",
+      "added_msecs": "Added Minutes",
+      "user_added_msecs": "Added Minutes",
+      "deleted_msecs": "Deleted Minutes",
+      "user_deleted_msecs": "Deleted Minutes",
+      "total_msecs": "Total Minutes",
+      "user_total_msecs": "Total Minutes",
+      "name": "User ID",
+      "NAME": "User ID",
+      "search": "Search User:",
+      "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
     }
   }
 }

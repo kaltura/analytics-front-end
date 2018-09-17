@@ -3,7 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report } from 'shared/services';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper } from 'shared/services';
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -115,7 +115,7 @@ export class PublisherStorageComponent implements OnInit {
 
     const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
 
-    this._reportService.getReport(tableOnly, KalturaReportType.partnerUsage, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, false, KalturaReportType.partnerUsage, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table) {
             this.handleTable(report.table); // handle table
@@ -192,7 +192,7 @@ export class PublisherStorageComponent implements OnInit {
               data[this._columns[index]] = DateFilterUtils.formatMonthString(value, analyticsConfig.locale);
             }
           } else {
-            data[this._columns[index]] = value.length ? Math.round(parseFloat(value)) : this._translate.instant('app.common.na');
+            data[this._columns[index]] = ReportHelper.format(this._columns[index], value);
           }
         });
         this._tableData.push(data);
@@ -204,7 +204,7 @@ export class PublisherStorageComponent implements OnInit {
     this._totalsData = [];
     const data = totals.data.split(',');
     totals.header.split(',').forEach( (header, index) => {
-      this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: Math.round(parseFloat(data[index]))});
+      this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: ReportHelper.format(header, data[index])});
     });
   }
 
