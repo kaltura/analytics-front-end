@@ -217,7 +217,7 @@ export class PublisherStorageComponent implements OnInit {
         if (value.length) {
           const label = value.split(',')[0];
           const name = this._reportInterval === KalturaReportInterval.months ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale) : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
-          let val = Math.round(parseFloat(value.split(',')[1]));
+          let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
           if (isNaN(val)) {
             val = 0;
           }

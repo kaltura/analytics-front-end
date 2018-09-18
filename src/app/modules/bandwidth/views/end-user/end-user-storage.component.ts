@@ -5,7 +5,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaUser,
-  KalturaReportGraph, KalturaReportInterval, KalturaReportBaseTotal, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
+  KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -41,7 +41,6 @@ export class EndUserStorageComponent implements OnInit {
 
   private _searchUsersSubscription: ISubscription;
   private order = '-added_storage_mb';
-  private totalCount = 1;
 
   private filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
@@ -80,61 +79,6 @@ export class EndUserStorageComponent implements OnInit {
     this._selectedMetrics = event.value;
   }
 
-  public _searchUsers(event): void {
-    this._usersProvider.next({ suggestions : [], isLoading : true});
-
-    if (this._searchUsersSubscription) {
-      // abort previous request
-      this._searchUsersSubscription.unsubscribe();
-      this._searchUsersSubscription = null;
-    }
-
-    this._searchUsersSubscription = this._endUserStorageService.searchUsers(event.query).subscribe(data => {
-        const suggestions = [];
-        (data || []).forEach((suggestedUser: KalturaUser) => {
-          suggestedUser['__tooltip'] = suggestedUser.id;
-          let isSelectable = !this._selectedUsers.find(user => {
-            return user.id === suggestedUser.id;
-          });
-          suggestions.push({
-            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
-            item: suggestedUser,
-            isSelectable: isSelectable
-          });
-        });
-        this._usersProvider.next({suggestions: suggestions, isLoading: false});
-      },
-      (err) => {
-        this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
-      });
-  }
-
-  public _convertUserInputToValidValue(value: string): any {
-    let result = null;
-    const tooltip = this._translate.instant('app.bandwidth.userTooltip', {0: value});
-    if (value) {
-      result =  {
-          id : value,
-          screenName: value,
-          __tooltip: tooltip
-        };
-    }
-    return result;
-  }
-
-  public _updateUsers(event): void {
-    let users = [];
-    this._selectedUsers.forEach((user: KalturaUser) => {
-      users.push(user.screenName);
-    });
-    if (users.toString().length) {
-      this.filter.userIds = users.toString();
-    } else {
-      this.filter.userIds = '';
-    }
-    this.loadReport(false);
-  }
-
   public drillDown(user): void {
     debugger;
   }
@@ -147,16 +91,20 @@ export class EndUserStorageComponent implements OnInit {
     });
     headers = headers.substr(0, headers.length - 1) + ';';
     this._columns.forEach( col => {
-      headers = headers + this._translate.instant('app.bandwidth.' + col ) + ',';
+      if (col !== 'HIDDEN') {
+        headers = headers + this._translate.instant('app.bandwidth.' + col) + ',';
+      } else {
+        headers = headers + this._translate.instant('app.bandwidth.objectId') + ',';
+      }
     });
     const args: ReportGetUrlForReportAsCsvActionArgs = {
       dimension: this._selectedMetrics,
-      pager: new KalturaFilterPager({pageSize: this.totalCount, pageIndex: 1}),
-      reportType: KalturaReportType.partnerUsage,
+      pager: new KalturaFilterPager({pageSize: 1000000, pageIndex: 1}),
+      reportType: KalturaReportType.userUsage,
       reportInputFilter: this.filter,
       headers: headers.substr(0, headers.length - 1),
       reportText: this._translate.instant('app.common.noMsg'),
-      reportTitle: this._translate.instant('app.bandwidth.title')
+      reportTitle: this._translate.instant('app.bandwidth.usersStorage')
     };
     this._reportService.exportToCsv(args).subscribe(
       result => {
@@ -165,7 +113,7 @@ export class EndUserStorageComponent implements OnInit {
           message: this._translate.instant('app.common.reportReady'),
           header: this._translate.instant('app.common.attention'),
           accept: () => {
-            this._browserService.download(result, this._translate.instant('app.bandwidth.title') + '.csv', 'text/csv');
+            this._browserService.download(result, this._translate.instant('app.bandwidth.publisherStorage') + '.csv', 'text/csv');
           }
         });
       },
@@ -243,9 +191,6 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   private handleTable(table: KalturaReportTable): void {
-    if (table.totalCount) {
-      this.totalCount = table.totalCount;
-    }
     // set table columns
     if (table.header) {
       this._columns = [];
@@ -294,7 +239,7 @@ export class EndUserStorageComponent implements OnInit {
         if (value.length) {
           const label = value.split(',')[0];
           const name = this._reportInterval === KalturaReportInterval.months ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale) : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
-          let val = Math.round(parseFloat(value.split(',')[1]));
+          let val = Math.ceil(parseFloat(value.split(',')[1])); // end-user storage report should round up graph values
           if (isNaN(val)) {
             val = 0;
           }
@@ -312,5 +257,66 @@ export class EndUserStorageComponent implements OnInit {
 
     });
   }
+
+  /* --- users search using auto-complete component code starts here --- */
+
+  // TODO consider moving to a shared component with its UI and service
+
+  public _searchUsers(event): void {
+    this._usersProvider.next({ suggestions : [], isLoading : true});
+
+    if (this._searchUsersSubscription) {
+      // abort previous request
+      this._searchUsersSubscription.unsubscribe();
+      this._searchUsersSubscription = null;
+    }
+
+    this._searchUsersSubscription = this._endUserStorageService.searchUsers(event.query).subscribe(data => {
+        const suggestions = [];
+        (data || []).forEach((suggestedUser: KalturaUser) => {
+          suggestedUser['__tooltip'] = suggestedUser.id;
+          let isSelectable = !this._selectedUsers.find(user => {
+            return user.id === suggestedUser.id;
+          });
+          suggestions.push({
+            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+            item: suggestedUser,
+            isSelectable: isSelectable
+          });
+        });
+        this._usersProvider.next({suggestions: suggestions, isLoading: false});
+      },
+      (err) => {
+        this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+      });
+  }
+
+  public _convertUserInputToValidValue(value: string): any {
+    let result = null;
+    const tooltip = this._translate.instant('app.bandwidth.userTooltip', {0: value});
+    if (value) {
+      result =  {
+        id : value,
+        screenName: value,
+        __tooltip: tooltip
+      };
+    }
+    return result;
+  }
+
+  public _updateUsers(event): void {
+    let users = [];
+    this._selectedUsers.forEach((user: KalturaUser) => {
+      users.push(user.screenName);
+    });
+    if (users.toString().length) {
+      this.filter.userIds = users.toString();
+    } else {
+      this.filter.userIds = '';
+    }
+    this.loadReport(false);
+  }
+
+  /* --- users search using auto-complete component code ends here --- */
 
 }

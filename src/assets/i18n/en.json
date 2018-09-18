@@ -80,7 +80,8 @@
       "name": "User ID",
       "NAME": "User ID",
       "search": "Search User:",
-      "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
+      "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
+      "objectId": "Object Id"
     }
   }
 }

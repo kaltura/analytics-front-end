@@ -116,8 +116,25 @@ export class ReportService implements OnDestroy {
       });
       if (typeof added_data_graph !== 'undefined' && typeof deleted_data_graph !== 'undefined') {
         const totalValue = parseFloat(total.data);
-        // TODO create data here
-        // report.graphs.push(newGraph);
+        const added_data = added_data_graph.data.split(';');
+        const deleted_data = deleted_data_graph.data.split(';');
+        let totalAdded = 0;
+        let totalDeleted = 0;
+        added_data.forEach( (dataSet, index) => {
+          if (dataSet.split(',').length === 2 && deleted_data[index] && deleted_data[index].split(',').length === 2) {
+            const addedXvalue = dataSet.split(',')[0];
+            const addedYvalue = dataSet.split(',')[1];
+            const deletedXvalue = deleted_data[index].split(',')[0];
+            const deletedYvalue = deleted_data[index].split(',')[1];
+            totalAdded += parseFloat(addedYvalue);
+            totalDeleted += parseFloat(deletedYvalue);
+            const calculatedValue = totalValue + totalAdded - totalDeleted;
+            newGraph.data += addedXvalue + ',' + calculatedValue + ';';
+          }
+        });
+        if (newGraph.data.length > 0) {
+          report.graphs.push(newGraph);
+        }
       }
     });
   }
