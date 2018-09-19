@@ -2,25 +2,7 @@
   <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
   <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
 
-  <div class="kSearch">
-    <span>{{'app.bandwidth.search' | translate}}</span>
-    <kAutoComplete
-      suggestionItemField="item"
-      suggestionLabelField="name"
-      field="screenName"
-      [(ngModel)]="_selectedUsers"
-      [multiple]="true"
-      [onItemAdding]="_convertUserInputToValidValue"
-      [limitToSuggestions]="true"
-      [minLength]="3"
-      suggestionSelectableField="isSelectable"
-      [suggestionsProvider]="_usersProvider"
-      (completeMethod)="_searchUsers($event)"
-      [tooltipResolver]="'__tooltip'"
-      (onSelect)="_updateUsers($event)" (onUnselect)="_updateUsers($event)"
-      >
-    </kAutoComplete>
-  </div>
+  <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
 
   <div class="kFilter">
     <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>

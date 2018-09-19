@@ -7,8 +7,10 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
+import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { ReportService } from './services/report.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -16,13 +18,16 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     TranslateModule,
     DropdownModule,
-    CalendarModule
+    CalendarModule,
+    AutoCompleteModule
   ],
   declarations: [
-    DateFilterComponent
+    DateFilterComponent,
+    UsersFilterComponent
   ],
   exports: [
-    DateFilterComponent
+    DateFilterComponent,
+    UsersFilterComponent
   ],
   providers: [
   ]

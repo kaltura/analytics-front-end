@@ -7,18 +7,13 @@ import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report,
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaUser,
   KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BrowserService } from 'shared/services/browser.service';
-import { ISubscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-import { EndUserStorageService } from './end-user-storage.service';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './end-user-storage.component.html',
-  styleUrls: ['./end-user-storage.component.scss'],
-  providers: [EndUserStorageService]
+  styleUrls: ['./end-user-storage.component.scss']
 })
 export class EndUserStorageComponent implements OnInit {
 
@@ -31,15 +26,11 @@ export class EndUserStorageComponent implements OnInit {
   public _totalsData: {label, value}[] = [];
   public _chartData: any = {'added_storage_mb': []};
 
-  public _selectedUsers: KalturaUser[] = [];
-  public _usersProvider = new Subject<SuggestionsProviderData>();
-
   public _isBusy: boolean;
   public _exportingCsv: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
 
-  private _searchUsersSubscription: ISubscription;
   private order = '-added_storage_mb';
 
   private filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
@@ -51,7 +42,6 @@ export class EndUserStorageComponent implements OnInit {
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
-              private _endUserStorageService: EndUserStorageService,
               private _reportService: ReportService,
               private _authService: AuthService,
               private _browserService: BrowserService) { }
@@ -77,6 +67,19 @@ export class EndUserStorageComponent implements OnInit {
 
   public onMetricsChange(event): void {
     this._selectedMetrics = event.value;
+  }
+
+  public onSearchUsersChange(users): void {
+    let usersIds = [];
+    users.forEach((user: KalturaUser) => {
+      usersIds.push(user.id);
+    });
+    if (usersIds.toString().length) {
+      this.filter.userIds = usersIds.toString();
+    } else {
+      this.filter.userIds = '';
+    }
+    this.loadReport(false);
   }
 
   public drillDown(user): void {
@@ -257,66 +260,5 @@ export class EndUserStorageComponent implements OnInit {
 
     });
   }
-
-  /* --- users search using auto-complete component code starts here --- */
-
-  // TODO consider moving to a shared component with its UI and service
-
-  public _searchUsers(event): void {
-    this._usersProvider.next({ suggestions : [], isLoading : true});
-
-    if (this._searchUsersSubscription) {
-      // abort previous request
-      this._searchUsersSubscription.unsubscribe();
-      this._searchUsersSubscription = null;
-    }
-
-    this._searchUsersSubscription = this._endUserStorageService.searchUsers(event.query).subscribe(data => {
-        const suggestions = [];
-        (data || []).forEach((suggestedUser: KalturaUser) => {
-          suggestedUser['__tooltip'] = suggestedUser.id;
-          let isSelectable = !this._selectedUsers.find(user => {
-            return user.id === suggestedUser.id;
-          });
-          suggestions.push({
-            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
-            item: suggestedUser,
-            isSelectable: isSelectable
-          });
-        });
-        this._usersProvider.next({suggestions: suggestions, isLoading: false});
-      },
-      (err) => {
-        this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
-      });
-  }
-
-  public _convertUserInputToValidValue(value: string): any {
-    let result = null;
-    const tooltip = this._translate.instant('app.bandwidth.userTooltip', {0: value});
-    if (value) {
-      result =  {
-        id : value,
-        screenName: value,
-        __tooltip: tooltip
-      };
-    }
-    return result;
-  }
-
-  public _updateUsers(event): void {
-    let users = [];
-    this._selectedUsers.forEach((user: KalturaUser) => {
-      users.push(user.screenName);
-    });
-    if (users.toString().length) {
-      this.filter.userIds = users.toString();
-    } else {
-      this.filter.userIds = '';
-    }
-    this.loadReport(false);
-  }
-
-  /* --- users search using auto-complete component code ends here --- */
 
 }

@@ -44,6 +44,11 @@
       "daily": "Daily",
       "error": "'From Date' must be before 'To Date'"
     },
+    "usersFilter":{
+      "search": "Search User:",
+      "prompt": "Enter Users",
+      "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
+    },
     "bandwidth":{
       "title": "Publisher Bandwidth & Storage Report",
       "month_id": "Month",
@@ -79,8 +84,6 @@
       "user_total_msecs": "Total Minutes",
       "name": "User ID",
       "NAME": "User ID",
-      "search": "Search User:",
-      "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "objectId": "Object Id"
     }
   }

@@ -5,7 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
-export class EndUserStorageService implements OnDestroy {
+export class UsersFilterService implements OnDestroy {
 
   constructor(private _kalturaClient: KalturaClient) {
   }
