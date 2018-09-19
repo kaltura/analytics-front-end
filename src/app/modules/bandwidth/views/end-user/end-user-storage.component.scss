@@ -52,12 +52,6 @@
   }
 }
 
-:host /deep/ .kReport p-dropdown{
-  .ui-dropdown{
-    width: 250px !important;
-  }
-}
-
 :host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: inherit;
 }

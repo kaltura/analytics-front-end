@@ -30,7 +30,7 @@ body{
     flex-direction: column;
     overflow-y: hidden;
     overflow-x: hidden;
-    width: 320px;
+    width: 200px;
     flex: 0 0 auto;
     background-color: white;
     border: 0px solid white;
@@ -41,7 +41,8 @@ body{
       padding-left: 0;
       width: 100%;
       li {
-        line-height: 44px;
+        margin-bottom: 24px;
+        font-size: 15px;
         cursor: pointer;
         color: $kGrayscale3;
         font-weight: 700;
