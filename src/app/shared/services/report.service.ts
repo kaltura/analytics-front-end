@@ -10,7 +10,8 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 export type Report = {
   totals: KalturaReportTotal,
   graphs: KalturaReportGraph[],
-  table: KalturaReportTable
+  table: KalturaReportTable,
+  baseTotals?: KalturaReportBaseTotal[]
 };
 
 @Injectable()
@@ -52,21 +53,29 @@ export class ReportService implements OnDestroy {
           this._querySubscription = null;
         }
 
-        const request = tableOnly ? [getTable] : loadBaseTotals ? [getTable, getGraphs, getTotal, getBaseTotals] : [getTable, getGraphs, getTotal];
+        let request = tableOnly ? [getTable] : loadBaseTotals ? [getTable, getGraphs, getTotal, getBaseTotals] : [getTable, getGraphs, getTotal];
+        if (tableOnly && loadBaseTotals) {
+          request = [getTable, getBaseTotals];
+        }
         this._querySubscription = this._kalturaClient.multiRequest(request)
           .pipe(cancelOnDestroy(this))
           .subscribe((response: KalturaMultiResponse) => {
               if (response.hasErrors()) {
                 observer.error(this._translate.instant('app.errors.general'));
               } else {
-                const report: Report = {
+                let report: Report = {
                   table: response[0].result,
                   graphs: response[1] ? response[1].result : [],
                   totals: response[2] ? response[2].result : null
                 };
                 if (loadBaseTotals) {
-                  const baseTotals = response[3] ? response[3].result : [];
-                  this.addTotals(report, baseTotals);
+                  let baseTotals = [];
+                  if (tableOnly) {
+                    baseTotals = response[1] ? response[1].result : [];
+                  } else {
+                    baseTotals = response[3] ? response[3].result : [];
+                  }
+                  report.baseTotals = baseTotals;
                 }
                 observer.next(report);
                 observer.complete();
@@ -104,14 +113,14 @@ export class ReportService implements OnDestroy {
       });
   }
 
-  private addTotals(report: Report,  totals: KalturaReportBaseTotal[]): void {
+  public addGraphTotals(graphs: KalturaReportGraph[], totals: KalturaReportBaseTotal[]): void {
     totals.forEach( (total: KalturaReportBaseTotal) => {
       let newGraph = new KalturaReportGraph({id: total.id, data: ''});
       const metrics = total.id.substr(6);
-      const added_data_graph: KalturaReportGraph = report.graphs.find( (graph: KalturaReportGraph) => {
+      const added_data_graph: KalturaReportGraph = graphs.find( (graph: KalturaReportGraph) => {
         return graph.id === 'added_' + metrics;
       });
-      const deleted_data_graph: KalturaReportGraph = report.graphs.find( (graph: KalturaReportGraph) => {
+      const deleted_data_graph: KalturaReportGraph = graphs.find( (graph: KalturaReportGraph) => {
         return graph.id === 'deleted_' + metrics;
       });
       if (typeof added_data_graph !== 'undefined' && typeof deleted_data_graph !== 'undefined') {
@@ -133,11 +142,41 @@ export class ReportService implements OnDestroy {
           }
         });
         if (newGraph.data.length > 0) {
-          report.graphs.push(newGraph);
+          graphs.push(newGraph);
         }
       }
     });
   }
+
+  public addTableTotals(report: Report): { headers: string,  data: string } {
+    let tableHeaders = report.table.header.split(',');
+    let tableData = report.table.data.split(';');
+    let newTableData = '';
+    report.baseTotals.forEach( (total: KalturaReportBaseTotal) => {
+      const metrics = total.id.substr(6);
+      const totalValue = parseFloat(total.data);
+      if (report.table.header.indexOf(total.id) === -1) {
+        const index = tableHeaders.indexOf('deleted_' + metrics);
+        if (index > -1) {
+          let totalAdded = 0;
+          let totalDeleted = 0;
+          tableHeaders.splice(index + 1, 0, total.id);
+          tableData.forEach((dataSet, ind) => {
+            if (dataSet && dataSet.length) {
+              let dataArr = dataSet.split(',');
+              totalDeleted += parseFloat(dataArr[index]);
+              totalAdded += parseFloat(dataArr[index - 1]);
+              dataArr.splice(index + 1, 0, (totalValue + totalAdded - totalDeleted).toString());
+              tableData[ind] = dataArr.join(',');
+            }
+          });
+          newTableData = tableData.join(';');
+        }
+      }
+    });
+    return {headers: tableHeaders.join(','), data: newTableData};
+  }
+
 
   ngOnDestroy() {
   }

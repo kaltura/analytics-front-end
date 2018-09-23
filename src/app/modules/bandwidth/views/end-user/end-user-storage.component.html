@@ -1,5 +1,10 @@
 <div class="kReport kOverrideFAIcons">
   <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
+  <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+    <a (click)="onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
+    <i class="kIcondropdown_arrow_right"></i>
+    <span>{{_drillDown}}</span>
+  </div>
   <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
 
   <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
@@ -41,7 +46,7 @@
         </div>
       </div>
 
-      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
+      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="added_entries" [sortOrder]="-1">
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of _columns" [pSortableColumn]="col" [style.display]="col==='HIDDEN'?'none':'table-cell'">
@@ -54,8 +59,8 @@
         <ng-template pTemplate="body" let-data>
           <tr>
             <td *ngFor="let col of _columns; let i = index" [style.display]="col==='HIDDEN'?'none':'table-cell'">
-              <span *ngIf="i>1">{{data[col]}}</span>
-              <a *ngIf="i===1" style=""(click)="drillDown(data[col])">{{data[col].name}}</a>
+              <span *ngIf="i>1 || _drillDown.length">{{data[col]}}</span>
+              <a *ngIf="i===1 && !_drillDown.length" style=""(click)="onDrillDown(data[col].name)">{{data[col].name}}</a>
             </td>
           </tr>
         </ng-template>

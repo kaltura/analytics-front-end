@@ -30,8 +30,10 @@ export class EndUserStorageComponent implements OnInit {
   public _exportingCsv: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
+  public _drillDown = '';
 
-  private order = '-added_storage_mb';
+  private order = '-added_entries';
+  private reportType: KalturaReportType = KalturaReportType.userUsage;
 
   private filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
@@ -82,8 +84,11 @@ export class EndUserStorageComponent implements OnInit {
     this.loadReport(false);
   }
 
-  public drillDown(user): void {
-    debugger;
+  public onDrillDown(user: string): void {
+    this._drillDown = user.length ? user : '';
+    this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
+    this.filter.userIds = user.length ? user : '';
+    this.loadReport(false);
   }
 
   public exportToScv(): void {
@@ -103,7 +108,7 @@ export class EndUserStorageComponent implements OnInit {
     const args: ReportGetUrlForReportAsCsvActionArgs = {
       dimension: this._selectedMetrics,
       pager: new KalturaFilterPager({pageSize: 1000000, pageIndex: 1}),
-      reportType: KalturaReportType.userUsage,
+      reportType: this.reportType,
       reportInputFilter: this.filter,
       headers: headers.substr(0, headers.length - 1),
       reportText: this._translate.instant('app.common.noMsg'),
@@ -135,13 +140,23 @@ export class EndUserStorageComponent implements OnInit {
 
     const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
 
-    this._reportService.getReport(tableOnly, true, KalturaReportType.userUsage, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, true, this.reportType, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table) {
-            this.handleTable(report.table); // handle table
+            let header = report.table.header;
+            let data = report.table.data;
+            if (this._drillDown.length && report.baseTotals) {
+              const tableTotals = this._reportService.addTableTotals(report); // add totals to table
+              header = tableTotals.headers;
+              data = tableTotals.data;
+            }
+            this.handleTable(header, data); // handle table
           }
           if (report.graphs && !tableOnly) {
             this._chartDataLoaded = false;
+            if (report.baseTotals) {
+              this._reportService.addGraphTotals(report.graphs, report.baseTotals); // add totals to graph
+            }
             this.handleGraphs(report.graphs); // handle graphs
           }
           if (report.totals && !tableOnly) {
@@ -193,35 +208,55 @@ export class EndUserStorageComponent implements OnInit {
     }
   }
 
-  private handleTable(table: KalturaReportTable): void {
+  private handleTable(header: string,  data: string): void {
     // set table columns
-    if (table.header) {
+    if (header.length) {
       this._columns = [];
-      table.header.split(',').forEach(header => {
-        this._columns.push(header);
+      header.split(',').forEach(hdr => {
+        this._columns.push(hdr);
       });
     }
     // set table data
-    if (table.data) {
-      table.data.split(';').forEach(valuesString => {
-        if (valuesString.length) {
-          let data = {};
-          let userId = '';
-          valuesString.split(',').forEach((value, index) => {
-            if (index < 2) { // handle user
-              if (index === 0) {
-                this._columns[index] = 'HIDDEN'; // user ID column, save the data and hide the column
-                userId = value;
+    if (data.length) {
+      if (this._drillDown.length) {
+        data.split(';').forEach( valuesString => {
+          if ( valuesString.length ) {
+            let dataObj = {};
+            valuesString.split(',').forEach((value, index) => {
+              if (index === 0) { // handle date
+                if (this._columns[index] === 'date_id') {
+                  dataObj[this._columns[index]] = DateFilterUtils.formatFullDateString(value, analyticsConfig.locale);
+                } else {
+                  dataObj[this._columns[index]] = DateFilterUtils.formatMonthString(value, analyticsConfig.locale);
+                }
               } else {
-                data[this._columns[index]] = {name: value, id: userId}; // user name column, add the user ID to this column data
+                dataObj[this._columns[index]] = ReportHelper.format(this._columns[index], value);
               }
-            } else {
-              data[this._columns[index]] = ReportHelper.format(this._columns[index], value);
-            }
-          });
-          this._tableData.push(data);
-        }
-      });
+            });
+            this._tableData.push(dataObj);
+          }
+        });
+      } else {
+        data.split(';').forEach(valuesString => {
+          if (valuesString.length) {
+            let dataObj = {};
+            let userId = '';
+            valuesString.split(',').forEach((value, index) => {
+              if (index < 2) { // handle user
+                if (index === 0) {
+                  this._columns[index] = 'HIDDEN'; // user ID column, save the data and hide the column
+                  userId = value;
+                } else {
+                  dataObj[this._columns[index]] = {name: value, id: userId}; // user name column, add the user ID to this column data
+                }
+              } else {
+                dataObj[this._columns[index]] = ReportHelper.format(this._columns[index], value);
+              }
+            });
+            this._tableData.push(dataObj);
+          }
+        });
+      }
     }
   }
 
