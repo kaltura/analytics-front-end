@@ -61,7 +61,12 @@ export class ReportService implements OnDestroy {
           .pipe(cancelOnDestroy(this))
           .subscribe((response: KalturaMultiResponse) => {
               if (response.hasErrors()) {
-                observer.error(this._translate.instant('app.errors.general'));
+                const err = response.getFirstError();
+                if (err) {
+                  observer.error(err);
+                } else {
+                  observer.error(this._translate.instant('app.errors.general'));
+                }
               } else {
                 let report: Report = {
                   table: response[0].result,

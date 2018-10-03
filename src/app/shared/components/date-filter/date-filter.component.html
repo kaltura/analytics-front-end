@@ -1,14 +1,35 @@
 <div class="kDateFilter kOverrideFAIcons">
-  <span class="kLabel">{{'app.dateFilter.dateRange' | translate}}</span>
-  <p-dropdown [options]="dateRangeItems" [(ngModel)]="selectedDateRange" (onChange)="updateCalendars()"></p-dropdown>
-  <span class="kLabel kMargin">{{'app.dateFilter.timeUnits' | translate}}</span>
-  <p-dropdown [options]="timeUnitsItems" [(ngModel)]="selectedTimeUnit" (onChange)="onTimeUnitsChange()"></p-dropdown>
-  <span class="kLabel kMargin">{{'app.dateFilter.dates' | translate}}</span>
-  <div>
-    <div class="kDateFilter">
-      <p-calendar [disabled]="selectedDateRange < 9" [showIcon]="true" icon="kIconcalendar" [(ngModel)]="startDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
-      <p-calendar [disabled]="selectedDateRange < 9" [showIcon]="true" icon="kIconcalendar" [(ngModel)]="endDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="onCalendarChange()"></p-calendar>
-    </div>
-    <span *ngIf="hasError" class="kError">{{'app.dateFilter.error' | translate}}</span>
+
+  <p-selectButton [options]="timeUnitsItems" [(ngModel)]="selectedTimeUnit" (onChange)="onTimeUnitsChange()"></p-selectButton>
+
+  <div #datesBtn class="datesRangeDropDown" (click)="openPopup()">
+    <span>{{_dateRangeLabel}}</span>
+    <i class="kIcondropdown_arrow_bottom"></i>
   </div>
+
 </div>
+
+
+<kPopupWidget #datesPopup
+              [popupWidth]="420"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="datesBtn"
+              [targetOffset]="{'x':-220, 'y': 35}">
+  <ng-template>
+    <div class="kFilters">
+      <p-radioButton *ngFor="let dateRange of dateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value" [(ngModel)]="selectedDateRange"></p-radioButton>
+    </div>
+    <div>
+      <div class="kCalendars kOverrideFAIcons" [class.kHidden]="selectedDateRange < 9">
+        <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="customStartDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="validateDates()"></p-calendar>
+        <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="customEndDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="validateDates()"></p-calendar>
+      </div>
+      <span *ngIf="hasError" class="kError">{{'app.dateFilter.error' | translate}}</span>
+    </div>
+    <hr>
+    <div class="kCompare">
+      <button pButton [disabled]="hasError || (selectedDateRange === 9 && (!customStartDate || !customEndDate))" class="kButtonBranded" [label]="'app.common.apply' | translate" (click)="updateDataRanges();datesPopup.close()"></button>
+    </div>
+  </ng-template>
+</kPopupWidget>

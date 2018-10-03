@@ -5,3 +5,8 @@
   <a [class.activeLink]="activeRoute === 'system'" (click)="navigateToView('system')">{{'app.modules.system' | translate | uppercase}}</a>
   <a [class.activeLink]="activeRoute === 'live'" (click)="navigateToView('live')">{{'app.modules.live' | translate | uppercase}}</a>
 </div>
+
+<div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'bandwidth'">
+  <a [class.activeLink]="activeSubRoute === 'publisher'" (click)="navigateToView('bandwidth/publisher')">{{'app.bandwidth.publisherStorage' | translate }}</a>
+  <a [class.activeLink]="activeSubRoute === 'end-user'" (click)="navigateToView('bandwidth/end-user')">{{'app.bandwidth.usersStorage' | translate }}</a>
+</div>

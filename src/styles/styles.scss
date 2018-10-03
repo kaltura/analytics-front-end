@@ -23,55 +23,47 @@ body{
 }
 .kMain {
   width: 100%;
-  display: flex;
-  .kSections {
-    margin-left: 20px;
-    display: flex;
-    flex-direction: column;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    width: 200px;
-    flex: 0 0 auto;
-    background-color: white;
-    border: 0px solid white;
-    border-radius: 3px;
-    margin-right: 20px;
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-      width: 100%;
-      li {
-        margin-bottom: 24px;
-        font-size: 15px;
-        cursor: pointer;
-        color: $kGrayscale3;
-        font-weight: 700;
-        padding-left: 24px;
-        &:hover {
-          background-color: $kGrayscale7;
-        }
-        &.active {
-          color: $kTertiary;
-          cursor: default;
-        }
-      }
-    }
-  }
   .kReportView{
     width: 100%;
-    padding-right: 20px;
     .kReport {
+      margin-left: 40px;
+      margin-right: 40px;
       background-color: white;
-      padding: 20px;
       border: 0px solid white;
       border-radius: 3px;
       display: flex;
       flex-direction: column;
-      .kTitle {
-        font-size: 18px;
-        color: $kGrayscale1;
-        margin-bottom: 20px;
+      .kReportHeader{
+        height: 80px;
+        display: flex;
+        align-items: center;
+        background-color: $appBkgColor;
+        .kTitle {
+          font-size: 24px;
+          color: $kGrayscale1;
+          font-weight: bold;
+        }
+        a{
+          margin-left: auto;
+        }
+      }
+      .kFilters{
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        .kTitle {
+          width: 100%;
+          font-size: 20px;
+          color: $kGrayscale1;
+          font-weight: bold;
+        }
       }
     }
   }
+}
+.kHidden {
+  visibility: hidden;
+  width: 0px;
+  height: 0px;
 }

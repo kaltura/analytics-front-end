@@ -1,15 +1,4 @@
 <div class="kMain">
-
-  <div class="kSections">
-    <ul>
-      <li *ngFor="let section of _sections" [class.active]="section.active">
-        <div (click)="navigateToView(section.route)" >
-          {{section.label}}
-        </div>
-      </li>
-    </ul>
-  </div>
-
   <div class="kReportView">
     <router-outlet></router-outlet>
   </div>

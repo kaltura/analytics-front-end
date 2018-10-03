@@ -9,6 +9,7 @@
     },
     "common":{
       "ok": "OK",
+      "apply": "Apply",
       "close": "Close",
       "cancel": "Cancel",
       "retry": "Retry",
@@ -26,9 +27,6 @@
       "invalidKS": "Your session has expired. Please log-in again."
     },
     "dateFilter":{
-      "dateRange": "Date Range:",
-      "timeUnits": "Time Units:",
-      "dates": "Dates:",
       "select": "Select Date",
       "currYear": "Current year",
       "currMonth": "Current month",
@@ -50,6 +48,7 @@
       "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
     },
     "bandwidth":{
+      "highlights": "Highlights",
       "title": "Publisher Bandwidth & Storage Report",
       "month_id": "Month",
       "date_id": "Date",

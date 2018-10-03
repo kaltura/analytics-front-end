@@ -1,11 +1,17 @@
 <div class="kReport kOverrideFAIcons">
-  <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
-  <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
+    <a [class.disabled]="_exportingCsv"(click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
+  </div>
 
-    <div class="kFilter">
-      <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
-      <button [disabled]="_exportingCsv" pButton class="kButtonDefault" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate" style=""(click)="exportToScv()"></button>
-    </div>
+  <div class="kFilters">
+    <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
+    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+  </div>
+
+  <div class="kFilter">
+    <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
+  </div>
 
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

@@ -12,6 +12,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
 
   public showNavBar = analyticsConfig.showNavBar;
   public activeRoute = '';
+  public activeSubRoute = '';
 
   constructor(private _router: Router) {
     _router.events
@@ -27,7 +28,11 @@ export class AppMenuComponent implements OnInit, OnDestroy {
   }
 
   private setSelectedRoute(path: string): void {
-    this.activeRoute = path.split('/')[1];
+    const paths = path.split('/');
+    this.activeRoute = paths[1];
+    if (paths.length > 2) {
+      this.activeSubRoute = paths[2];
+    }
   }
 
   public navigateToView(route: string): void {

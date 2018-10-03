@@ -5,6 +5,7 @@ import { DateFilterUtils } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import { DateRangeType, DateRanges, DateChangeEvent } from './date-filter.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-date-filter',
@@ -19,6 +20,7 @@ export class DateFilterComponent implements OnInit {
 
   public dateRangeItems: SelectItem[] = [];
   public selectedDateRange: DateRanges;
+  private lastSelectedDateRange: DateRanges; // used for revert selection
 
   public timeUnitsItems: SelectItem[] = [
     {label: this._translate.instant('app.dateFilter.monthly'), value: KalturaReportInterval.months},
@@ -26,46 +28,52 @@ export class DateFilterComponent implements OnInit {
   ];
   public selectedTimeUnit: KalturaReportInterval = KalturaReportInterval.months;
 
-  public startDate: Date;
-  public endDate: Date;
   public hasError = false;
+  public _dateRangeLabel = '';
+  public customStartDate: Date = null;
+  public customEndDate: Date = null;
+
+  private startDate: Date;
+  private endDate: Date;
 
   constructor(private _translate: TranslateService, private _dateFilterService: DateFilterService) {
   }
 
   ngOnInit() {
     this.dateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType);
-    this.selectedDateRange = DateRanges.CurrentMonth; // might need to change for different range type
+    this.selectedDateRange = this.lastSelectedDateRange = DateRanges.CurrentMonth; // might need to change for different range type
     setTimeout( () => {
-      this.updateCalendars(); // use a timeout to allow data binding to complete
+      this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
   }
 
-  public updateCalendars(): void {
-    const dates = this._dateFilterService.getCalendars(this.selectedDateRange);
-    this.startDate = dates.startDate;
-    this.endDate = dates.endDate;
-    if (this.validateDates()) {
-      this.triggerChangeEvent();
+  public updateDataRanges(): void {
+    this.lastSelectedDateRange = this.selectedDateRange;
+    this.hasError = false;
+    if (this.selectedDateRange < DateRanges.Custom) {
+      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange);
+      this.startDate = dates.startDate;
+      this.endDate = dates.endDate;
+      this._dateRangeLabel = dates.label;
+      this.customStartDate = this.customEndDate = null;
+    } else {
+      this.startDate = this.customStartDate;
+      this.endDate = this.customEndDate;
+      this._dateRangeLabel = moment(this.startDate).format('MMM Do YY') + ' - ' + moment(this.endDate).format('MMM Do YY');
     }
+    this.triggerChangeEvent();
   }
 
   public onTimeUnitsChange(): void {
-    if (this.validateDates()) {
-      this.triggerChangeEvent();
-    }
+    this.triggerChangeEvent();
   }
 
-  public onCalendarChange(): void {
-    this.selectedDateRange = DateRanges.Custom;
-    if (this.validateDates()) {
-      this.triggerChangeEvent();
-    }
+  public openPopup(): void {
+    this.selectedDateRange = this.lastSelectedDateRange;
   }
 
-  private validateDates(): boolean {
-    this.hasError = this.startDate > this.endDate;
-    return !this.hasError && !!this.startDate && !!this.endDate;
+  public validateDates(): void {
+    this.hasError = this.customStartDate && this.customEndDate && this.customStartDate > this.customEndDate;
   }
 
   private triggerChangeEvent(): void {

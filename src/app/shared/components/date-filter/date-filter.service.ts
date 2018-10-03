@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from './date-filter-utils';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
+import * as moment from 'moment';
 
 export enum DateRanges {
   CurrentYear = 0,
@@ -43,39 +44,39 @@ export class DateFilterService {
     switch (dateRangeType) {
       case DateRangeType.LongTerm:
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currYear'),
+          label: this._translate.instant('app.dateFilter.currYear') + ' (' + this.getDateRangeDetails(DateRanges.CurrentYear).label + ')',
           value: DateRanges.CurrentYear
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currMonth'),
+          label: this._translate.instant('app.dateFilter.currMonth') + ' (' + this.getDateRangeDetails(DateRanges.CurrentMonth).label + ')',
           value: DateRanges.CurrentMonth
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevMonth'),
+          label: this._translate.instant('app.dateFilter.currPrevMonth') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousMonth).label + ')',
           value: DateRanges.CurrentPreviousMonth
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevMonth'),
+          label: this._translate.instant('app.dateFilter.prevMonth') + ' (' + this.getDateRangeDetails(DateRanges.PreviousMonth).label + ')',
           value: DateRanges.PreviousMonth
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currQuarter'),
+          label: this._translate.instant('app.dateFilter.currQuarter') + ' (' + this.getDateRangeDetails(DateRanges.CurrentQuarter).label + ')',
           value: DateRanges.CurrentQuarter
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevQuarter'),
+          label: this._translate.instant('app.dateFilter.currPrevQuarter') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousQuarter).label + ')',
           value: DateRanges.CurrentPreviousQuarter
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevQuarter'),
+          label: this._translate.instant('app.dateFilter.prevQuarter') + ' (' + this.getDateRangeDetails(DateRanges.PreviousQuarter).label + ')',
           value: DateRanges.PreviousQuarter
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevYear'),
+          label: this._translate.instant('app.dateFilter.currPrevYear') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousYear).label + ')',
           value: DateRanges.CurrentPreviousYear
         });
         selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevYear'),
+          label: this._translate.instant('app.dateFilter.prevYear') + ' (' + this.getDateRangeDetails(DateRanges.PreviousYear).label + ')',
           value: DateRanges.PreviousYear
         });
         selectItemArr.push({label: this._translate.instant('app.dateFilter.custom'), value: DateRanges.Custom});
@@ -89,7 +90,7 @@ export class DateFilterService {
     return selectItemArr;
   }
 
-  public getCalendars(selectedDateRange: DateRanges): { startDate: Date,  endDate: Date} {
+  public getDateRangeDetails(selectedDateRange: DateRanges): { startDate: Date,  endDate: Date, label: string} {
     const today: Date = new Date();
     let startDate, endDate: Date;
 
@@ -163,7 +164,8 @@ export class DateFilterService {
         endDate = new Date(today.getFullYear() - 1, 11, 31);
         break;
     }
-    return { startDate, endDate};
+    const label = moment(startDate).format('MMM Do YY') + ' - ' + moment(endDate).format('MMM Do YY');
+    return { startDate, endDate, label};
   }
 
 }
