@@ -142,7 +142,7 @@ export class EndUserStorageComponent implements OnInit {
 
     this._reportService.getReport(tableOnly, true, this.reportType, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
-          if (report.table) {
+          if (report.table && report.table.header && report.table.data) {
             let header = report.table.header;
             let data = report.table.data;
             if (this._drillDown.length && report.baseTotals) {

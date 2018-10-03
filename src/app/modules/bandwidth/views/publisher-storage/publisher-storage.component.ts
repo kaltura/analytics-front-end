@@ -8,6 +8,7 @@ import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, Kaltu
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BrowserService } from 'shared/services/browser.service';
+import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -18,12 +19,11 @@ import { BrowserService } from 'shared/services/browser.service';
 export class PublisherStorageComponent implements OnInit {
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
-  public _metrics: SelectItem[] = [];
   public _selectedMetrics = 'bandwidth_consumption';
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
   public _tableData: any[] = [];
-  public _totalsData: {label, value}[] = [];
+  public _tabsData: Tab[] = [];
   public _chartData: any = {'bandwidth_consumption': []};
 
   public _isBusy: boolean;
@@ -50,10 +50,6 @@ export class PublisherStorageComponent implements OnInit {
   ngOnInit() {
     this._isBusy = false;
     this._exportingCsv = false;
-    const metrics: string[] = ['bandwidth_consumption', 'average_storage', 'peak_storage', 'added_storage', 'deleted_storage', 'combined_bandwidth_storage', 'transcoding_consumption'];
-    metrics.forEach( key => {
-      this._metrics.push({label: this._translate.instant('app.bandwidth.' + key), value: key});
-    });
   }
 
   public onDateFilterChange(event: DateChangeEvent): void {
@@ -66,15 +62,16 @@ export class PublisherStorageComponent implements OnInit {
     this.loadReport(false);
   }
 
-  public onMetricsChange(event): void {
-    this._selectedMetrics = event.value;
+  public onTabChange(tab: Tab): void {
+    this._selectedMetrics = tab.key;
   }
+
 
   public exportToScv(): void {
     this._exportingCsv = true;
     let headers = '';
-    this._totalsData.forEach( total => {
-      headers = headers + total.label + ',';
+    this._tabsData.forEach( (total: Tab) => {
+      headers = headers + total.title + ',';
     });
     headers = headers.substr(0, headers.length - 1) + ';';
     this._columns.forEach( col => {
@@ -117,7 +114,7 @@ export class PublisherStorageComponent implements OnInit {
 
     this._reportService.getReport(tableOnly, false, KalturaReportType.partnerUsage, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
-          if (report.table) {
+          if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
           }
           if (report.graphs && !tableOnly) {
@@ -201,10 +198,20 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this._totalsData = [];
+    this._tabsData = [];
     const data = totals.data.split(',');
+    const excludedFields = ['aggregated_monthly_avg_storage', 'combined_bandwidth_aggregated_storage'];
     totals.header.split(',').forEach( (header, index) => {
-      this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: ReportHelper.format(header, data[index])});
+      if (excludedFields.indexOf(header) === -1) {
+        const tab: Tab = {
+          title: this._translate.instant('app.bandwidth.' + header),
+          value: ReportHelper.format(header, data[index]),
+          selected: header === this._selectedMetrics,
+          units: 'MB',
+          key: header
+        }
+        this._tabsData.push(tab);
+      }
     });
   }
 
@@ -213,7 +220,7 @@ export class PublisherStorageComponent implements OnInit {
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
       let values = [];
-      data.forEach(value => {
+      data.forEach((value, index) => {
         if (value.length) {
           const label = value.split(',')[0];
           const name = this._reportInterval === KalturaReportInterval.months ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale) : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);

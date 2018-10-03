@@ -1,45 +1,17 @@
+@import '../../../../../styles/variables';
+
 .kReport{
   display: flex;
   flex-direction: column;
 
-  .kFilter{
-    display: flex;
-    margin-top: 48px;
-    margin-bottom: 48px;
-    button{
-      margin-left: auto;
-      width: 120px;
-    }
-  }
   .kChart{
     width: 100%;
-    height: 400px;
+    height: 500px;
   }
-  .kTotals{
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 48px;
-    .kTotal{
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 80px;
-      border: 1px solid grey;
-      background-color: #fafafa;
-      border-radius: 4px;
-      margin-right: 8px;
-      padding: 6px;
-      .kTitle{
-        font-weight: 700;
-        font-size: 12px;
-        align-self: center;
-        text-align: center;
-      }
-      .kValue{
-        margin-top: auto;
-        align-self: center;
-      }
-    }
+
+  .kHighlight{
+    font-weight: bold;
+    color: $kGrayscale1;
   }
 }
 

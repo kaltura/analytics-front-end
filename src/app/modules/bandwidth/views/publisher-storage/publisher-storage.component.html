@@ -9,9 +9,8 @@
     <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
   </div>
 
-  <div class="kFilter">
-    <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
-  </div>
+  <app-report-tabs [Tabs]="_tabsData" (tabChange)="onTabChange($event)"></app-report-tabs>
+
 
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -39,12 +38,6 @@
         </ngx-charts-line-chart>
       </div>
 
-      <div class="kTotals">
-        <div *ngFor="let total of _totalsData" class="kTotal">
-          <span class="kTitle">{{total.label}}</span>
-          <span class="kValue">{{total.value}}</span>
-        </div>
-      </div>
 
       <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
         <ng-template pTemplate="header">
@@ -58,7 +51,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-data>
           <tr>
-            <td *ngFor="let col of _columns">
+            <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
               {{data[col]}}
             </td>
           </tr>
