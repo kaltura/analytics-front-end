@@ -276,6 +276,7 @@ export class EndUserStorageComponent implements OnInit {
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
     this._chartData = {};
+    const inMiliseconds = ['added_msecs','deleted_msecs','total_msecs'];
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
       let values = [];
@@ -287,7 +288,10 @@ export class EndUserStorageComponent implements OnInit {
           if (isNaN(val)) {
             val = 0;
           }
-          values.push({name, value: val});
+          if (inMiliseconds.indexOf(graph.id) !== -1) {
+            val = Math.round(val / 60000); // value is received in ms. need to convert to minutes
+          }
+          values.push({name, 'value': val});
         }
       });
       if (this._reportInterval === KalturaReportInterval.months) {
