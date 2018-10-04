@@ -1,22 +1,25 @@
 <div class="kReport kOverrideFAIcons">
-  <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
+    <a [class.disabled]="_exportingCsv"(click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
+  </div>
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
+    <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
+    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+  </div>
+
+
   <div class="kBreadcrumbs" *ngIf="_drillDown.length">
     <a (click)="onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
     <i class="kIcondropdown_arrow_right"></i>
     <span>{{_drillDown}}</span>
   </div>
-  <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
-
-  <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
-
-  <div class="kFilter">
-    <p-dropdown [options]="_metrics" [(ngModel)]="_selectedMetrics" (onChange)="onMetricsChange($event)"></p-dropdown>
-    <button [disabled]="_exportingCsv" pButton class="kButtonDefault" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate" style=""(click)="exportToScv()"></button>
-  </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div style="display: flex; flex-direction: column">
-
+    <div class="kReportContent">
+      <app-report-tabs [Tabs]="_tabsData" (tabChange)="onTabChange($event)"></app-report-tabs>
       <div class="kChart">
         <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _reportInterval==='months'"
                                  [results]="_chartData[_selectedMetrics]"

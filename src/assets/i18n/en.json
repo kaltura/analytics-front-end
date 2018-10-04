@@ -43,8 +43,7 @@
       "error": "'From Date' must be before 'To Date'"
     },
     "usersFilter":{
-      "search": "Search User:",
-      "prompt": "Enter Users",
+      "prompt": "Search Users",
       "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
     },
     "bandwidth":{
@@ -69,12 +68,12 @@
       "user_deleted_entries": "Deleted Entries",
       "total_entries": "Total Entries",
       "user_total_entries": "Total Entries",
-      "added_storage_mb": "Added Storage (MB)",
-      "user_added_storage_mb": "Added Storage (MB)",
-      "deleted_storage_mb": "Deleted Storage (MB)",
-      "user_deleted_storage_mb": "Deleted Storage (MB)",
-      "total_storage_mb": "Total Storage (MB)",
-      "user_total_storage_mb": "Total Storage (MB)",
+      "added_storage_mb": "Added Storage",
+      "user_added_storage_mb": "Added Storage",
+      "deleted_storage_mb": "Deleted Storage",
+      "user_deleted_storage_mb": "Deleted Storage",
+      "total_storage_mb": "Total Storage",
+      "user_total_storage_mb": "Total Storage",
       "added_msecs": "Added Minutes",
       "user_added_msecs": "Added Minutes",
       "deleted_msecs": "Deleted Minutes",

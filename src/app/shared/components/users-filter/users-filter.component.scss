@@ -1,9 +1,10 @@
 .kSearch{
-  margin-top: 24px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-right: 8px;
   kAutoComplete {
     margin-left: 8px;
+    height: 34px;
   }
 }

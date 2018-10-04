@@ -1,20 +1,3 @@
-@import '../../../../../styles/variables';
-
-.kReport{
-  display: flex;
-  flex-direction: column;
-
-  .kChart{
-    width: 100%;
-    height: 500px;
-  }
-
-  .kHighlight{
-    font-weight: bold;
-    color: $kGrayscale1;
-  }
-}
-
 :host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: inherit;
 }

@@ -9,6 +9,7 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTable
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BrowserService } from 'shared/services/browser.service';
+import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -23,7 +24,7 @@ export class EndUserStorageComponent implements OnInit {
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
   public _tableData: any[] = [];
-  public _totalsData: {label, value}[] = [];
+  public _tabsData: Tab[] = [];
   public _chartData: any = {'added_storage_mb': []};
 
   public _isBusy: boolean;
@@ -51,10 +52,6 @@ export class EndUserStorageComponent implements OnInit {
   ngOnInit() {
     this._isBusy = false;
     this._exportingCsv = false;
-    const metrics: string[] = ['added_storage_mb', 'deleted_storage_mb', 'total_storage_mb', 'added_entries', 'deleted_entries', 'total_entries', 'added_msecs', 'deleted_msecs', 'total_msecs'];
-    metrics.forEach( key => {
-      this._metrics.push({label: this._translate.instant('app.bandwidth.' + key), value: key});
-    });
   }
 
   public onDateFilterChange(event: DateChangeEvent): void {
@@ -67,8 +64,8 @@ export class EndUserStorageComponent implements OnInit {
     this.loadReport(false);
   }
 
-  public onMetricsChange(event): void {
-    this._selectedMetrics = event.value;
+  public onTabChange(tab: Tab): void {
+    this._selectedMetrics = tab.key;
   }
 
   public onSearchUsersChange(users): void {
@@ -94,8 +91,8 @@ export class EndUserStorageComponent implements OnInit {
   public exportToScv(): void {
     this._exportingCsv = true;
     let headers = '';
-    this._totalsData.forEach( total => {
-      headers = headers + total.label + ',';
+    this._tabsData.forEach( total => {
+      headers = headers + total.title + ',';
     });
     headers = headers.substr(0, headers.length - 1) + ';';
     this._columns.forEach( col => {
@@ -261,10 +258,19 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this._totalsData = [];
+    this._tabsData = [];
     const data = totals.data.split(',');
+    const noUnits = ['added_msecs','deleted_msecs','total_msecs'];
+
     totals.header.split(',').forEach( (header, index) => {
-      this._totalsData.push({label: this._translate.instant('app.bandwidth.' + header), value: ReportHelper.format(header, data[index])});
+        const tab: Tab = {
+          title: this._translate.instant('app.bandwidth.' + header),
+          value: ReportHelper.format(header, data[index]),
+          selected: header === this._selectedMetrics,
+          units: noUnits.indexOf(header) > -1 ? '' : 'MB',
+          key: header
+        }
+        this._tabsData.push(tab);
     });
   }
 

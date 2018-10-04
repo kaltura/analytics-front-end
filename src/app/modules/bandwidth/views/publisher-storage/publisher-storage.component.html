@@ -9,13 +9,12 @@
     <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
   </div>
 
-  <app-report-tabs [Tabs]="_tabsData" (tabChange)="onTabChange($event)"></app-report-tabs>
 
 
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div style="display: flex; flex-direction: column">
-
+    <div class="kReportContent">
+      <app-report-tabs [Tabs]="_tabsData" (tabChange)="onTabChange($event)"></app-report-tabs>
       <div class="kChart">
         <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _reportInterval==='months'"
           [results]="_chartData[_selectedMetrics]"
