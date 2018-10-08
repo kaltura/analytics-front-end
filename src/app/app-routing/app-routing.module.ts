@@ -8,9 +8,6 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
         {
-          path: '', redirectTo: 'content', pathMatch: 'full'
-        },
-        {
           path: 'content', children: [
           { path: '', redirectTo: 'top-content', pathMatch: 'full' },
           {
@@ -18,6 +15,15 @@ const routes: Routes = [
             loadChildren: '../modules/content/views/top-content/top-content.module#TopContentModule'
           }
         ]
+      },
+      {
+        path: 'system', children: [
+        { path: '', redirectTo: 'platforms', pathMatch: 'full' },
+        {
+          path: 'platforms',
+          loadChildren: '../modules/system/views/platforms/platforms.module#PlatformsModule'
+        }
+      ]
       },
       {
         path: 'users', children: [
@@ -31,15 +37,6 @@ const routes: Routes = [
       {
         path: 'bandwidth',
         loadChildren: '../modules/bandwidth//bandwidth.module#BandwidthModule'
-      },
-      {
-        path: 'system', children: [
-        { path: '', redirectTo: 'platforms', pathMatch: 'full' },
-        {
-          path: 'platforms',
-          loadChildren: '../modules/system/views/platforms/platforms.module#PlatformsModule'
-        }
-      ]
       },
       {
         path: 'live', children: [

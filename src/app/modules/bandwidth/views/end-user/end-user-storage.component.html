@@ -7,7 +7,7 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
     <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
-    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)" (filterReady)="onFilterReady()"></app-date-filter>
+    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)"></app-date-filter>
   </div>
 
 
@@ -42,12 +42,12 @@
         </ngx-charts-line-chart>
       </div>
 
-      <div class="kTotals">
+      <!--div class="kTotals">
         <div *ngFor="let total of _totalsData" class="kTotal">
           <span class="kTitle">{{total.label}}</span>
           <span class="kValue">{{total.value}}</span>
         </div>
-      </div>
+      </div-->
 
       <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="added_entries" [sortOrder]="-1">
         <ng-template pTemplate="header">

@@ -1,4 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -19,14 +20,24 @@ export class AppComponent implements OnInit {
 
   public _confirmDialogAlignLeft = false;
   public _confirmationLabels = {
-    yes: "Yes",
-    no: "No",
-    ok: "OK"
+    yes: 'Yes',
+    no: 'No',
+    ok: 'OK'
   };
+
+  @HostListener('window:message', ['$event'])
+  onMessage(e) {
+    if (e.data && e.data.action) {
+      if (e.data.action === 'navigate') {
+        this._router.navigateByUrl(e.data.url);
+      }
+    }
+  }
 
   constructor(private _translate: TranslateService,
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
+              private _router: Router,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
     this._initApp();

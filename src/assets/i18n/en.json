@@ -1,11 +1,11 @@
 {
   "app":{
     "modules":{
-      "content": "Content Reports",
-      "users": "Users & Community Reports",
+      "content": "Dashboard",
+      "users": "Audience",
       "bandwidth": "Bandwidth & Storage Reports",
-      "system": "System Reports",
-      "live": "Live Reports"
+      "system": "Contributors",
+      "live": "Live"
     },
     "common":{
       "ok": "OK",

@@ -104,7 +104,7 @@ export class EndUserStorageComponent implements OnInit {
     });
     const args: ReportGetUrlForReportAsCsvActionArgs = {
       dimension: this._selectedMetrics,
-      pager: new KalturaFilterPager({pageSize: 1000000, pageIndex: 1}),
+      pager: new KalturaFilterPager({pageSize: 60000, pageIndex: 1}),
       reportType: this.reportType,
       reportInputFilter: this.filter,
       headers: headers.substr(0, headers.length - 1),
@@ -276,7 +276,7 @@ export class EndUserStorageComponent implements OnInit {
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
     this._chartData = {};
-    const inMiliseconds = ['added_msecs','deleted_msecs','total_msecs'];
+    const inMilliseconds = ['added_msecs','deleted_msecs','total_msecs'];
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
       let values = [];
@@ -288,7 +288,7 @@ export class EndUserStorageComponent implements OnInit {
           if (isNaN(val)) {
             val = 0;
           }
-          if (inMiliseconds.indexOf(graph.id) !== -1) {
+          if (inMilliseconds.indexOf(graph.id) !== -1) {
             val = Math.round(val / 60000); // value is received in ms. need to convert to minutes
           }
           values.push({name, 'value': val});

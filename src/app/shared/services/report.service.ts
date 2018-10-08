@@ -23,6 +23,71 @@ export class ReportService implements OnDestroy {
   constructor(private _translate: TranslateService, private _kalturaClient: KalturaClient) {
   }
 
+  public getReport2(tableOnly: boolean, loadBaseTotals: boolean, reportType: KalturaReportType, filter: KalturaReportInputFilter, pager: KalturaFilterPager, order: string): Observable<Report> {
+    return Observable.create(
+      observer => {
+        const getTotal = new ReportGetTotalAction({
+          reportType,
+          reportInputFilter: filter
+        });
+        const getTotal$ = this._kalturaClient.request(getTotal);
+
+        const getGraphs = new ReportGetGraphsAction({
+          reportType,
+          reportInputFilter: filter
+        });
+        const getGraphs$ = this._kalturaClient.request(getGraphs);
+
+        const getBaseTotals = new ReportGetBaseTotalAction({
+          reportType,
+          reportInputFilter: filter
+        });
+        const getBaseTotals$ = this._kalturaClient.request(getBaseTotals);
+
+        const getTable = new ReportGetTableAction({
+          reportType,
+          reportInputFilter: filter,
+          pager,
+          order
+        });
+        const getTable$ = this._kalturaClient.request(getTable);
+
+        if (this._querySubscription) {
+          this._querySubscription.unsubscribe();
+          this._querySubscription = null;
+        }
+
+        this._querySubscription = Observable.forkJoin(getTable$, getGraphs$, getTotal$, getBaseTotals$)
+          .pipe(cancelOnDestroy(this))
+          .subscribe(response => {
+
+                let report: Report = {
+                  table: response[0],
+                  graphs: response[1],
+                  totals: response[2]
+                };
+                if (loadBaseTotals) {
+                  let baseTotals = [];
+                  if (tableOnly) {
+                    baseTotals = response[1];
+                  } else {
+                    baseTotals = response[3];
+                  }
+                  report.baseTotals = baseTotals;
+                }
+                observer.next(report);
+                observer.complete();
+
+              this._querySubscription = null;
+            },
+            error => {
+              observer.error(error);
+              this._querySubscription = null;
+            });
+
+      });
+  }
+
   public getReport(tableOnly: boolean, loadBaseTotals: boolean, reportType: KalturaReportType, filter: KalturaReportInputFilter, pager: KalturaFilterPager, order: string): Observable<Report> {
     return Observable.create(
       observer => {
