@@ -38,7 +38,7 @@
       </div>
 
 
-      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
+      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of _columns" [pSortableColumn]="col">

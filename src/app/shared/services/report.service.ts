@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
   KalturaReportGraph, ReportGetTableAction, KalturaFilterPager, KalturaMultiResponse, KalturaReportTable,
   ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal} from 'kaltura-ngx-client';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
@@ -149,6 +150,9 @@ export class ReportService implements OnDestroy {
                 }
                 observer.next(report);
                 observer.complete();
+                if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
+                  analyticsConfig.callbacks.updateLayout();
+                }
               }
               this._querySubscription = null;
             },

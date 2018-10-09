@@ -42,14 +42,7 @@
         </ngx-charts-line-chart>
       </div>
 
-      <!--div class="kTotals">
-        <div *ngFor="let total of _totalsData" class="kTotal">
-          <span class="kTitle">{{total.label}}</span>
-          <span class="kValue">{{total.value}}</span>
-        </div>
-      </div-->
-
-      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"  [scrollable]="true" sortField="added_entries" [sortOrder]="-1">
+      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="added_entries" [sortOrder]="-1">
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of _columns" [pSortableColumn]="col" [style.display]="col==='HIDDEN'?'none':'table-cell'">

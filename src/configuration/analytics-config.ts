@@ -8,7 +8,9 @@ export interface AnalyticsConfig {
   locale?: string;
   showNavBar?: boolean;
   callbacks?: {
+    loaded?: Function;
     logout?: Function;
+    updateLayout?: Function;
   };
 }
 

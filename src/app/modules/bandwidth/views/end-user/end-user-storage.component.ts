@@ -137,7 +137,7 @@ export class EndUserStorageComponent implements OnInit {
 
     const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
 
-    this._reportService.getReport(tableOnly, true, this.reportType, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, false, this.reportType, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table && report.table.header && report.table.data) {
             let header = report.table.header;
