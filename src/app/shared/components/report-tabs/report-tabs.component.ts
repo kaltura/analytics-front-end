@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 export type Tab = {
   title: string;
+  tooltip: string;
   value: string;
   selected: boolean;
   units: string;

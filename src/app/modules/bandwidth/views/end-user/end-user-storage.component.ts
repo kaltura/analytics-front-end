@@ -265,6 +265,7 @@ export class EndUserStorageComponent implements OnInit {
     totals.header.split(',').forEach( (header, index) => {
         const tab: Tab = {
           title: this._translate.instant('app.bandwidth.' + header),
+          tooltip: this._translate.instant('app.bandwidth.' + header + '_tt'),
           value: ReportHelper.format(header, data[index]),
           selected: header === this._selectedMetrics,
           units: noUnits.indexOf(header) > -1 ? '' : 'MB',

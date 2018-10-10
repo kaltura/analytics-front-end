@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardViewComponent } from './modules/dashboard/dashboard-view.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -23,6 +24,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     DashboardComponent,
+    DashboardViewComponent,
     AppMenuComponent
   ],
   imports: [

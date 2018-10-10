@@ -205,6 +205,7 @@ export class PublisherStorageComponent implements OnInit {
       if (excludedFields.indexOf(header) === -1) {
         const tab: Tab = {
           title: this._translate.instant('app.bandwidth.' + header),
+          tooltip: this._translate.instant('app.bandwidth.' + header + '_tt'),
           value: ReportHelper.format(header, data[index]),
           selected: header === this._selectedMetrics,
           units: 'MB',

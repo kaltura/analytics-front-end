@@ -14,7 +14,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 @NgModule({
   imports: [
@@ -26,6 +26,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
     CalendarModule,
     RadioButtonModule,
     PopupWidgetModule,
+    TooltipModule,
     AutoCompleteModule
   ],
   declarations: [

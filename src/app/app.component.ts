@@ -77,14 +77,7 @@ export class AppComponent implements OnInit {
       analyticsConfig.locale = config.locale;
       analyticsConfig.kalturaServer = config.kalturaServer;
       analyticsConfig.callbacks = config.callbacks;
-
-      // check if hosted in KMC
-      if (this.hosted) {
-        this._el.nativeElement.ownerDocument.body.style.overflow = 'hidden';
-        analyticsConfig.showNavBar = false;
-      } else {
-        analyticsConfig.showNavBar = true;
-      }
+      analyticsConfig.showNavBar = !this.hosted;
 
       // set ks in ngx-client
       this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);

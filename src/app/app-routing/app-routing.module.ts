@@ -1,20 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { DashboardViewComponent } from '../modules/dashboard/dashboard-view.component';
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
     children: [
-        {
-          path: 'content', children: [
-          { path: '', redirectTo: 'top-content', pathMatch: 'full' },
-          {
-            path: 'top-content',
-            loadChildren: '../modules/content/views/top-content/top-content.module#TopContentModule'
-          }
-        ]
+       {
+          path: 'dashboard',
+          component: DashboardViewComponent
       },
       {
         path: 'system', children: [
