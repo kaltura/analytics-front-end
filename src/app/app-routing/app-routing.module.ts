@@ -13,22 +13,12 @@ const routes: Routes = [
           component: DashboardViewComponent
       },
       {
-        path: 'system', children: [
-        { path: '', redirectTo: 'platforms', pathMatch: 'full' },
-        {
-          path: 'platforms',
-          loadChildren: '../modules/system/views/platforms/platforms.module#PlatformsModule'
-        }
-      ]
+        path: 'audience',
+        loadChildren: '../modules/audience//audience.module#AudienceModule'
       },
       {
-        path: 'users', children: [
-        { path: '', redirectTo: 'top-contributors', pathMatch: 'full' },
-        {
-          path: 'top-contributors',
-          loadChildren: '../modules/users/views/top-contributors/top-contributors.module#TopContributorsModule'
-        }
-      ]
+        path: 'contributors',
+        loadChildren: '../modules/contributors//contributors.module#ContributorsModule'
       },
       {
         path: 'bandwidth',

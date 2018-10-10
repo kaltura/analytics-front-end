@@ -1,7 +1,7 @@
 <div class="kMenu" *ngIf="showNavBar">
-  <a [class.activeLink]="activeRoute === 'content'" (click)="navigateToView('dashboard')">{{'app.modules.dashboard' | translate | uppercase}}</a>
-  <a [class.activeLink]="activeRoute === 'users'" (click)="navigateToView('users')">{{'app.modules.users' | translate | uppercase}}</a>
-  <a [class.activeLink]="activeRoute === 'system'" (click)="navigateToView('system')">{{'app.modules.system' | translate | uppercase}}</a>
+  <a [class.activeLink]="activeRoute === 'dashboard'" (click)="navigateToView('dashboard')">{{'app.modules.dashboard' | translate | uppercase}}</a>
+  <a [class.activeLink]="activeRoute === 'audience'" (click)="navigateToView('audience')">{{'app.modules.audience' | translate | uppercase}}</a>
+  <a [class.activeLink]="activeRoute === 'contributors'" (click)="navigateToView('contributors')">{{'app.modules.contributors' | translate | uppercase}}</a>
   <a [class.activeLink]="activeRoute === 'bandwidth'" (click)="navigateToView('bandwidth')">{{'app.modules.bandwidth' | translate | uppercase}}</a>
   <a [class.activeLink]="activeRoute === 'live'" (click)="navigateToView('live')">{{'app.modules.live' | translate | uppercase}}</a>
 </div>
@@ -9,4 +9,15 @@
 <div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'bandwidth'">
   <a [class.activeLink]="activeSubRoute === 'publisher'" (click)="navigateToView('bandwidth/publisher')">{{'app.bandwidth.publisherStorage' | translate }}</a>
   <a [class.activeLink]="activeSubRoute === 'end-user'" (click)="navigateToView('bandwidth/end-user')">{{'app.bandwidth.usersStorage' | translate }}</a>
+</div>
+
+<div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'audience'">
+  <a [class.activeLink]="activeSubRoute === 'technology'" (click)="navigateToView('audience/technology')">{{'app.audience.technology' | translate }}</a>
+  <a [class.activeLink]="activeSubRoute === 'geo-location'" (click)="navigateToView('audience/geo-location')">{{'app.audience.geo-location' | translate }}</a>
+  <a [class.activeLink]="activeSubRoute === 'engagement'" (click)="navigateToView('audience/engagement')">{{'app.audience.engagement' | translate }}</a>
+  <a [class.activeLink]="activeSubRoute === 'content-interactions'" (click)="navigateToView('audience/content-interactions')">{{'app.audience.content-interactions' | translate }}</a>
+</div>
+
+<div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'contributors'">
+  <a [class.activeLink]="activeSubRoute === 'top-contributors'" (click)="navigateToView('contributors/top-contributors')">{{'app.contributors.top-contributors' | translate }}</a>
 </div>

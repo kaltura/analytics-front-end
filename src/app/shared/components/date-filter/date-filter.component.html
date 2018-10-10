@@ -1,11 +1,11 @@
 <div class="kDateFilter kOverrideFAIcons">
 
-  <p-selectButton [options]="timeUnitsItems" [(ngModel)]="selectedTimeUnit" (onChange)="onTimeUnitsChange()"></p-selectButton>
-
   <div #datesBtn class="datesRangeDropDown" (click)="openPopup()">
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
+
+  <p-selectButton [options]="timeUnitsItems" [(ngModel)]="selectedTimeUnit" (onChange)="onTimeUnitsChange()"></p-selectButton>
 
 </div>
 

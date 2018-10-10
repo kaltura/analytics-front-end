@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   onMessage(e) {
     if (e.data && e.data.action) {
       if (e.data.action === 'navigate') {
-        this._router.navigateByUrl(e.data.url);
+        this._router.navigateByUrl(this.mapRoutes(e.data.url));
       }
     }
   }
@@ -117,5 +117,42 @@ export class AppComponent implements OnInit {
       }
     }
   }
+
+  private mapRoutes(kmcRoute: string): string {
+    let analyticsRoute = kmcRoute;
+    switch (kmcRoute) {
+      case '/analytics/dashboard':
+        analyticsRoute = '/dashboard';
+        break;
+      case '/analytics/contributors':
+        analyticsRoute = '/contributors/top-contributors';
+        break;
+      case '/analytics/technology':
+        analyticsRoute = '/audience/technology';
+        break;
+      case '/analytics/geo-location':
+        analyticsRoute = '/audience/geo-location';
+        break;
+      case '/analytics/content-interactions':
+        analyticsRoute = '/audience/content-interactions';
+        break;
+      case '/analytics/engagement':
+        analyticsRoute = '/audience/engagement';
+        break;
+      case '/analytics/publisher':
+        analyticsRoute = '/bandwidth/publisher';
+        break;
+      case '/analytics/enduser':
+        analyticsRoute = '/bandwidth/end-user';
+        break;
+      case '/analytics/live':
+        analyticsRoute = '/live/live-reports';
+        break;
+      default:
+        break;
+    }
+    return analyticsRoute;
+  }
+
 
 }

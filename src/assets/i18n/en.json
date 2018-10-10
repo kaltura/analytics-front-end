@@ -2,9 +2,9 @@
   "app":{
     "modules":{
       "dashboard": "Dashboard",
-      "users": "Audience",
+      "audience": "Audience",
       "bandwidth": "Bandwidth & Storage Reports",
-      "system": "Contributors",
+      "contributors": "Contributors",
       "live": "Live"
     },
     "common":{
@@ -45,6 +45,15 @@
     "usersFilter":{
       "prompt": "Search Users",
       "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
+    },
+    "contributors": {
+      "top-contributors": "Top Contributors"
+    },
+    "audience":{
+      "technology": "Technology",
+      "geo-location": "Geo-Location",
+      "engagement": "Engagement",
+      "content-interactions": "Content Interactions"
     },
     "bandwidth":{
       "highlights": "Highlights",
