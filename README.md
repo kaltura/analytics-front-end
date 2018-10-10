@@ -4,7 +4,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* Copy file `src/dev/index.tpl.html` to `src/index.html` (overwrite existing file)
+* Fill all params index.html `analyticsConfig` object.
+* Run ng serve for a dev server.
+* Navigate to http://localhost:4200
 
 ## Code scaffolding
 
