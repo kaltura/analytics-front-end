@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaUser,
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser,
   KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -19,7 +18,6 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 export class EndUserStorageComponent implements OnInit {
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
-  public _metrics: SelectItem[] = [];
   public _selectedMetrics = 'added_storage_mb';
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
@@ -137,7 +135,7 @@ export class EndUserStorageComponent implements OnInit {
 
     const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
 
-    this._reportService.getReport(tableOnly, false, this.reportType, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, true, this.reportType, this.filter, pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table && report.table.header && report.table.data) {
             let header = report.table.header;
@@ -260,7 +258,7 @@ export class EndUserStorageComponent implements OnInit {
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = [];
     const data = totals.data.split(',');
-    const noUnits = ['added_msecs','deleted_msecs','total_msecs'];
+    const noUnits = ['added_msecs', 'deleted_msecs', 'total_msecs'];
 
     totals.header.split(',').forEach( (header, index) => {
         const tab: Tab = {
@@ -270,14 +268,14 @@ export class EndUserStorageComponent implements OnInit {
           selected: header === this._selectedMetrics,
           units: noUnits.indexOf(header) > -1 ? '' : 'MB',
           key: header
-        }
+        };
         this._tabsData.push(tab);
     });
   }
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
     this._chartData = {};
-    const inMilliseconds = ['added_msecs','deleted_msecs','total_msecs'];
+    const inMilliseconds = ['added_msecs', 'deleted_msecs', 'total_msecs'];
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
       let values = [];

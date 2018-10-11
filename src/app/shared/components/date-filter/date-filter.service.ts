@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFilterUtils } from './date-filter-utils';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 
 export enum DateRanges {
-  CurrentYear = 0,
-  CurrentMonth = 1,
-  CurrentPreviousMonth = 2,
-  PreviousMonth = 3,
-  CurrentQuarter = 4,
-  CurrentPreviousQuarter = 5,
-  PreviousQuarter = 6,
-  CurrentPreviousYear = 7,
-  PreviousYear = 8,
-  Custom = 9
+  Last7D = 0,
+  Last30D = 1,
+  Last3M = 2,
+  Last12M = 3,
+  CurrentWeek = 4,
+  CurrentMonth = 5,
+  CurrentQuarter = 6,
+  CurrentYear = 7,
+  PreviousMonth = 8
 }
 
 export enum DateRangeType {
@@ -30,6 +28,7 @@ export type DateChangeEvent = {
   endDay: string;
   timeUnits: KalturaReportInterval;
   timeZoneOffset: number;
+  compare: boolean;
 };
 
 @Injectable()
@@ -38,48 +37,47 @@ export class DateFilterService {
   constructor(private _translate: TranslateService) {
   }
 
-  public getDateRange(dateRangeType: DateRangeType): SelectItem[] {
+  public getDateRange(dateRangeType: DateRangeType, period: string): SelectItem[] {
     let selectItemArr: SelectItem[] = [];
 
     switch (dateRangeType) {
       case DateRangeType.LongTerm:
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currYear') + ' (' + this.getDateRangeDetails(DateRanges.CurrentYear).label + ')',
-          value: DateRanges.CurrentYear
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currMonth') + ' (' + this.getDateRangeDetails(DateRanges.CurrentMonth).label + ')',
-          value: DateRanges.CurrentMonth
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevMonth') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousMonth).label + ')',
-          value: DateRanges.CurrentPreviousMonth
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevMonth') + ' (' + this.getDateRangeDetails(DateRanges.PreviousMonth).label + ')',
-          value: DateRanges.PreviousMonth
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currQuarter') + ' (' + this.getDateRangeDetails(DateRanges.CurrentQuarter).label + ')',
-          value: DateRanges.CurrentQuarter
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevQuarter') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousQuarter).label + ')',
-          value: DateRanges.CurrentPreviousQuarter
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevQuarter') + ' (' + this.getDateRangeDetails(DateRanges.PreviousQuarter).label + ')',
-          value: DateRanges.PreviousQuarter
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.currPrevYear') + ' (' + this.getDateRangeDetails(DateRanges.CurrentPreviousYear).label + ')',
-          value: DateRanges.CurrentPreviousYear
-        });
-        selectItemArr.push({
-          label: this._translate.instant('app.dateFilter.prevYear') + ' (' + this.getDateRangeDetails(DateRanges.PreviousYear).label + ')',
-          value: DateRanges.PreviousYear
-        });
-        selectItemArr.push({label: this._translate.instant('app.dateFilter.custom'), value: DateRanges.Custom});
+        if (period === 'last') {
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.last7d'),
+            value: {val: DateRanges.Last7D, tooltip: this.getDateRangeDetails(DateRanges.Last7D).label}
+          });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.last30d'),
+            value: {val: DateRanges.Last30D, tooltip: this.getDateRangeDetails(DateRanges.Last30D).label}
+          });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.last3m'),
+            value: {val: DateRanges.Last3M, tooltip: this.getDateRangeDetails(DateRanges.Last3M).label}
+            });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.last12m'),
+            value: {val: DateRanges.Last12M, tooltip: this.getDateRangeDetails(DateRanges.Last12M).label}
+            });
+        }
+        if (period === 'current') {
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.week'),
+            value: {val: DateRanges.CurrentWeek, tooltip: this.getDateRangeDetails(DateRanges.CurrentWeek).label}
+            });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.month'),
+            value: {val: DateRanges.CurrentMonth, tooltip: this.getDateRangeDetails(DateRanges.CurrentMonth).label}
+            });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.quarter'),
+            value: {val: DateRanges.CurrentQuarter, tooltip: this.getDateRangeDetails(DateRanges.CurrentQuarter).label}
+            });
+          selectItemArr.push({
+            label: this._translate.instant('app.dateFilter.year'),
+            value: {val: DateRanges.CurrentYear, tooltip: this.getDateRangeDetails(DateRanges.CurrentYear).label}
+            });
+        }
         break;
       case DateRangeType.ShortTerm:
         break;
@@ -92,76 +90,41 @@ export class DateFilterService {
 
   public getDateRangeDetails(selectedDateRange: DateRanges): { startDate: Date,  endDate: Date, label: string} {
     const today: Date = new Date();
+    const m = moment();
     let startDate, endDate: Date;
 
     switch (selectedDateRange) {
-      case DateRanges.CurrentYear:
-        startDate = new Date(today.getFullYear(), 0, 1);
+      case DateRanges.Last7D:
+        startDate = m.subtract(7, 'days').toDate();
+        endDate = today;
+        break;
+      case DateRanges.Last30D:
+        startDate = m.subtract(30, 'days').toDate();
+        endDate = today;
+        break;
+      case DateRanges.Last3M:
+        startDate = m.subtract(3, 'months').toDate();
+        endDate = today;
+        break;
+      case DateRanges.Last12M:
+        startDate = m.subtract(12, 'months').toDate();
+        endDate = today;
+        break;
+      case DateRanges.CurrentWeek:
+        startDate = m.startOf('week').toDate();
         endDate = today;
         break;
       case DateRanges.CurrentMonth:
-        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        startDate = m.startOf('month').toDate();
         endDate = today;
-        break;
-      case DateRanges.CurrentPreviousMonth:
-        if (today.getMonth() === 0) {
-          // wer'e in january, get last december
-          startDate = new Date(today.getFullYear() - 1, 11, 1);
-        } else {
-          // first of last month
-          startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        }
-        endDate = today;
-        break;
-      case DateRanges.PreviousMonth:
-        if (today.getMonth() === 0) {
-          // wer'e in january, get last december
-          startDate = new Date(today.getFullYear() - 1, 11, 1);
-          endDate = new Date(today.getFullYear() - 1, 11, 31);
-        } else {
-          // first of last month
-          startDate = new Date(today.getFullYear() - 1, today.getMonth() - 1, 1);
-          endDate = new Date(today.getFullYear() - 1, today.getMonth() - 1, DateFilterUtils.getLastDayOfMonth(today.getMonth() - 1));
-        }
         break;
       case DateRanges.CurrentQuarter:
-        startDate = new Date(today.getFullYear(), DateFilterUtils.getFirstMonthOfQtr(today.getMonth()), 1);
+        startDate = m.startOf('quarter').toDate();
         endDate = today;
         break;
-      case DateRanges.CurrentPreviousQuarter:
-        if (today.getMonth() < 3) {
-          startDate = new Date(today.getFullYear() - 1, 9, 1); // 4th qtr of last year
-        } else if (today.getMonth() < 6) {
-          startDate = new Date(today.getFullYear(), 0, 1); // 1st qtr
-        } else if (today.getMonth() < 9) {
-          startDate = new Date(today.getFullYear(), 3, 1); // 2nd qtr
-        } else {
-          startDate = new Date(today.getFullYear(), 6, 1); // 3rd qtr
-        }
+      case DateRanges.CurrentYear:
+        startDate = m.startOf('year').toDate();
         endDate = today;
-        break;
-      case DateRanges.PreviousQuarter:
-        if (today.getMonth() < 3) {
-          startDate = new Date(today.getFullYear() - 1, 9, 1); // (last) oct 1
-          endDate = new Date(today.getFullYear() - 1, 11, 31); // (last) dec 31
-        } else if (today.getMonth() < 6) {
-          startDate = new Date(today.getFullYear(), 0, 1); // jan 1
-          endDate = new Date(today.getFullYear(), 2, 31); // mar 31
-        } else if (today.getMonth() < 9) {
-          startDate = new Date(today.getFullYear(), 3, 1); // apr 1
-          endDate = new Date(today.getFullYear(), 5, 30); // jun 30
-        } else {
-          startDate = new Date(today.getFullYear(), 6, 1); // jul 1
-          endDate = new Date(today.getFullYear(), 8, 30); // sep 30
-        }
-        break;
-      case DateRanges.CurrentPreviousYear:
-        startDate = new Date(today.getFullYear() - 1, 0, 1);
-        endDate = today;
-        break;
-      case DateRanges.PreviousYear:
-        startDate = new Date(today.getFullYear() - 1, 0, 1);
-        endDate = new Date(today.getFullYear() - 1, 11, 31);
         break;
     }
     const label = moment(startDate).format('MMM Do YY') + ' - ' + moment(endDate).format('MMM Do YY');

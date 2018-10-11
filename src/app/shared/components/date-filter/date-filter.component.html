@@ -10,25 +10,31 @@
 </div>
 
 
-<kPopupWidget #datesPopup
-              [popupWidth]="420"
-              [closeBtn]="false"
-              [targetRef]="datesBtn"
-              [targetOffset]="{'x':-220, 'y': 35}">
+<kPopupWidget #datesPopup [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-210, 'y': 35}">
   <ng-template>
-    <div class="kFilters">
-      <p-radioButton *ngFor="let dateRange of dateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value" [(ngModel)]="selectedDateRange"></p-radioButton>
-    </div>
-    <div>
-      <div class="kCalendars kOverrideFAIcons" [class.kHidden]="selectedDateRange < 9">
-        <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="customStartDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="validateDates()"></p-calendar>
-        <p-calendar [showIcon]="true" icon="kIconcalendar" [(ngModel)]="customEndDate" [placeholder]="'app.dateFilter.select' | translate" (onSelect)="validateDates()"></p-calendar>
+    <div class="kDateFilterPopup kOverrideFAIcons">
+
+      <div class="kViews">
+        <p-selectButton [options]="viewItems" [(ngModel)]="selectedView"></p-selectButton>
       </div>
-      <span *ngIf="hasError" class="kError">{{'app.dateFilter.error' | translate}}</span>
-    </div>
-    <hr>
-    <div class="kCompare">
-      <button pButton [disabled]="hasError || (selectedDateRange === 9 && (!customStartDate || !customEndDate))" class="kButtonBranded" [label]="'app.common.apply' | translate" (click)="updateDataRanges();datesPopup.close()"></button>
+      <div class="kFilters kPreset" *ngIf="selectedView==='preset'">
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let dateRange of lastDateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value.val" [kTooltip]="dateRange.value.tooltip" [placement]="'left'" [(ngModel)]="selectedDateRange"></p-radioButton>
+        </div>
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.current' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let dateRange of currDateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value.val" [kTooltip]="dateRange.value.tooltip" [placement]="'right'" [(ngModel)]="selectedDateRange"></p-radioButton>
+        </div>
+      </div>
+      <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
+        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+      </div>
+      <hr>
+      <div class="kCompare">
+        <p-checkbox [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" binary="true"></p-checkbox>
+        <button pButton class="kButtonBranded" [label]="'app.common.apply' | translate" (click)="updateDataRanges();datesPopup.close()"></button>
+      </div>
     </div>
   </ng-template>
 </kPopupWidget>

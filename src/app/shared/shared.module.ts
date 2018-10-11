@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -21,7 +21,7 @@ import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
     CommonModule,
     FormsModule,
     TranslateModule,
-    DropdownModule,
+    CheckboxModule,
     SelectButtonModule,
     CalendarModule,
     RadioButtonModule,

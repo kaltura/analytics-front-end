@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
@@ -210,7 +209,7 @@ export class PublisherStorageComponent implements OnInit {
           selected: header === this._selectedMetrics,
           units: 'MB',
           key: header
-        }
+        };
         this._tabsData.push(tab);
       }
     });
@@ -221,7 +220,7 @@ export class PublisherStorageComponent implements OnInit {
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
       let values = [];
-      data.forEach((value, index) => {
+      data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
           const name = this._reportInterval === KalturaReportInterval.months ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale) : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
