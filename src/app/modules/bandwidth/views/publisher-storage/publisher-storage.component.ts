@@ -6,6 +6,7 @@ import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report,
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { lineChartColors, barChartColors } from 'shared/color-schemes/color-schemes';
 import { BrowserService } from 'shared/services/browser.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
@@ -29,6 +30,9 @@ export class PublisherStorageComponent implements OnInit {
   public _exportingCsv: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
+
+  public lineChartColors = lineChartColors;
+  public barChartColors = barChartColors;
 
   private order = '-bandwidth_consumption';
   private totalCount = 1;

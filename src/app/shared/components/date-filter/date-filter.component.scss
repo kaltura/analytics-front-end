@@ -97,7 +97,7 @@
       justify-content: center;
       p-calendar{
         /deep/ .ui-calendar .ui-datepicker{
-          width: 400px;
+          width: 380px;
           .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
             background-color: $kPrimary;
           }
@@ -112,7 +112,7 @@
     padding-bottom: 20px;
     justify-content: center;
     /deep/ p-selectbutton .ui-button{
-      min-width: 170px;
+      min-width: 190px;
     }
   }
   .kCompare{
@@ -121,13 +121,11 @@
     }
     display: flex;
     flex-direction: column;
-    padding: 12px;
+    padding: 20px;
     button{
       width: 80px;
       margin-left: auto;
       margin-top: 20px;
-      margin-right: 8px;
-      margin-bottom: 8px;
     }
   }
   hr {
@@ -135,7 +133,8 @@
     height: 1px;
     border: 0;
     border-top: 1px solid $kGrayscale4;
-    margin: 1em 0;
+    margin-top: 20px;
+    margin-bottom: 0px;
     padding: 0;
   }
 }

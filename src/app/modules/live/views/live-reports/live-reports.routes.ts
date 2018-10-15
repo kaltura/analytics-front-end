@@ -3,6 +3,6 @@ import { LiveReportsComponent } from './live-reports.component';
 
 export const routing: Route[] = [
   {
-    path: '', component: LiveReportsComponent
+    path: '', component: LiveReportsComponent, pathMatch: 'full'
   }
 ];

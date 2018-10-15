@@ -7,15 +7,26 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
 
   <script type="text/javascript">
     var analyticsConfig = {
       kalturaServer: {
         uri : "lbd.kaltura.com"
       },
-      ks: "djJ8MTY0NTE2MXzJ4KvaWCSgqUoEPp9w_DpusxZdTEAxzklUKR-5FoxgTQob-bS4r8g4Xw-5J3tBC35JaSk8DvKeTHNShpANzbfMgKlwdmlDSdishZAne4h2wmr93QB5Z3uYdN4jvP7_K3KREQkf0dSoexzi8_fPp03QQiKj5pGXe1RtREFk46PIgg==",
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      ks: "djJ8MTY0NTE2MXxVQqfYvdFR0-bjAKZGAf9Wuhd-EueIow9CsFJwGt3Kyw9ktyTrLibJ7Kj7ASNn8NSwnBYywqj_2Y3YBIp3JgNw4rYBzjI-qYFe5Bh5YLB339NON9s95R88lp3LFKDqm_joNwGAHdPJR6tz6mJLG2oBq62afMP3c57F9yRC-VdwbA==",
       pid: "1645161",
-      locale: "en"
+      locale: "en",
+      liveAnalytics: {
+      	uri: "/__local_machine_only__/live-analytics-v2.7.2/index.html",
+        uiConfId: "36060752",
+        mapUrls: ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
+        mapZoomLevels: "12"
+      }
     }
   </script>
 

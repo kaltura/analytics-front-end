@@ -76,7 +76,9 @@ export class AppComponent implements OnInit {
       analyticsConfig.pid = config.pid;
       analyticsConfig.locale = config.locale;
       analyticsConfig.kalturaServer = config.kalturaServer;
+      analyticsConfig.cdnServers = config.cdnServers;
       analyticsConfig.callbacks = config.callbacks;
+      analyticsConfig.liveAnalytics = config.liveAnalytics;
       analyticsConfig.showNavBar = !this.hosted;
 
       // set ks in ngx-client

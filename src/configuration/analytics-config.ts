@@ -3,6 +3,10 @@ export interface AnalyticsConfig {
   kalturaServer?: {
       uri?: string,
   };
+  cdnServers?: {
+    serverUri?: string,
+    securedServerUri?: string
+  };
   ks?: string;
   pid?: string;
   locale?: string;
@@ -11,6 +15,12 @@ export interface AnalyticsConfig {
     loaded?: Function;
     logout?: Function;
     updateLayout?: Function;
+  };
+  liveAnalytics?: {
+    uri?: string;
+    uiConfId?: string;
+    mapUrls?: string[];
+    mapZoomLevels?: string;
   };
 }
 
