@@ -1,4 +1,4 @@
-<div class="kReport kOverrideFAIcons">
+<div class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
     <a [class.disabled]="_exportingCsv"(click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
@@ -40,25 +40,51 @@
       </div>
 
 
-      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
-        <ng-template pTemplate="header">
-          <tr>
-            <th *ngFor="let col of _columns" [pSortableColumn]="col">
-              {{'app.bandwidth.' + col | translate}}
-              <p-sortIcon [field]="col"></p-sortIcon>
-            </th>
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                  {{'app.bandwidth.' + col | translate}}
+                  <p-sortIcon [field]="col"></p-sortIcon>
+                </th>
 
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-data>
-          <tr>
-            <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-              {{data[col]}}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                  {{data[col]}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="totalCount"></p-paginator>
+        </div>
+      </div>
 
+      <span class="kAccumulativeTitle">{{'app.bandwidth.accumulative' | translate}}</span>
+      <div class="kAccumulative">
+        <div class="kItem">
+          <span class="kLabel">{{'app.bandwidth.aggregated_monthly_avg_storage' | translate}}</span>
+          <div class="kValueContainer">
+            <span class="kValue">{{_accumulativeStorage}}</span>
+            <span class="kUnits">MB</span>
+          </div>
+        </div>
+        <div class="kItem">
+          <span class="kLabel">{{'app.bandwidth.combined_bandwidth_aggregated_storage' | translate}}</span>
+          <div class="kValueContainer">
+            <span class="kValue">{{_accumulativeBwStorage}}</span>
+            <span class="kUnits">MB</span>
+          </div>
+        </div>
+      </div>
     </div>
 
 

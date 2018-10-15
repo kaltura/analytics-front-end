@@ -84,6 +84,31 @@ body{
         width: 100%;
         height: 500px;
       }
+      .kTable{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        .kToggle{
+          display: flex;
+          align-items: center;
+          margin-bottom: 24px;
+          i{
+            width: 20px;
+            color: $kTertiary;
+            font-size: 12px;
+            margin-left: 24px;
+          }
+        }
+        .kTableContainer{
+          overflow-y: hidden;
+          &.kOpen{
+            height: auto;
+          }
+          &.kClose{
+            height: 0px;
+          }
+        }
+      }
 
       .kHighlight{
         font-weight: bold;
@@ -99,4 +124,11 @@ body{
 }
 .ng-tooltip {
   transition: none !important;
+}
+p-table /deep/ .ui-table .ui-table-tbody > tr > td {
+  height: 42px;
+}
+p-paginator /deep/ .ui-paginator.ui-widget-header.ui-unselectable-text {
+  height: 34px;
+  border-bottom: 1px solid #d9d9d9;
 }

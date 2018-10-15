@@ -1,7 +1,55 @@
+@import '../../../../../styles/variables';
+
+.kAccumulativeTitle{
+  font-size: 20px;
+  color: $kGrayscale1;
+  font-weight: bold;
+  margin-left: 24px;
+}
+
+.kAccumulative{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  .kItem{
+    display: flex;
+    align-items: center;
+    width: 50%;
+    padding-left: 24px;
+    .kLabel{
+      color: $kGrayscale1;
+      font-size:15px;
+    }
+    .kValueContainer{
+      margin-left: auto;
+      margin-right: 24px;
+      margin-top: auto;
+      display: flex;
+      align-items: flex-end;
+      .kValue{
+        font-size: 24px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+      .kUnits{
+        font-size: 13px;
+        font-weight: bold;
+        color: $kGrayscale3;
+        line-height: 20px;
+        margin-left: 4px;
+      }
+    }
+  }
+}
 :host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: inherit;
 }
 :host /deep/ .ui-table .ui-table-tbody > tr > td:first-child {
+  border-top: 1px solid #d9d9d9;
+}
+:host /deep/ .ui-table .ui-table-thead {
   border-top: 1px solid #d9d9d9;
 }
 

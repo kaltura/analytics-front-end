@@ -24,6 +24,7 @@ export class PublisherStorageComponent implements OnInit {
   public _chartDataLoaded = false;
   public _tableData: any[] = [];
   public _tabsData: Tab[] = [];
+  public _showTable = false;
   public _chartData: any = {'bandwidth_consumption': []};
 
   public _isBusy: boolean;
@@ -34,8 +35,13 @@ export class PublisherStorageComponent implements OnInit {
   public lineChartColors = lineChartColors;
   public barChartColors = barChartColors;
 
+  public _accumulativeStorage: string;
+  public _accumulativeBwStorage: string;
+
+  public pager: KalturaFilterPager;
+  public totalCount = 1;
   private order = '-bandwidth_consumption';
-  private totalCount = 1;
+
 
   private filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
@@ -48,7 +54,9 @@ export class PublisherStorageComponent implements OnInit {
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
-              private _browserService: BrowserService) { }
+              private _browserService: BrowserService) {
+    this.pager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
+  }
 
   ngOnInit() {
     this._isBusy = false;
@@ -69,6 +77,19 @@ export class PublisherStorageComponent implements OnInit {
     this._selectedMetrics = tab.key;
   }
 
+  public _onPaginationChanged(event): void {
+    if (event.page !== (this.pager.pageIndex - 1)) {
+      this.pager.pageIndex = event.page + 1;
+      this.loadReport(true);
+    }
+  }
+
+  public toggleTable(): void {
+    this._showTable = !this._showTable;
+    if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
+      analyticsConfig.callbacks.updateLayout();
+    }
+  }
 
   public exportToScv(): void {
     this._exportingCsv = true;
@@ -113,9 +134,7 @@ export class PublisherStorageComponent implements OnInit {
     this._tableData = [];
     this._blockerMessage = null;
 
-    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
-
-    this._reportService.getReport(tableOnly, false, KalturaReportType.partnerUsage, this.filter, pager, this.order)
+    this._reportService.getReport(tableOnly, false, KalturaReportType.partnerUsage, this.filter, this.pager, this.order)
       .subscribe( (report: Report) => {
           if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
@@ -215,6 +234,12 @@ export class PublisherStorageComponent implements OnInit {
           key: header
         };
         this._tabsData.push(tab);
+      } else {
+        if (header === 'aggregated_monthly_avg_storage') {
+          this._accumulativeStorage = ReportHelper.format(header, data[index]);
+        } else {
+          this._accumulativeBwStorage = ReportHelper.format(header, data[index]);
+        }
       }
     });
   }

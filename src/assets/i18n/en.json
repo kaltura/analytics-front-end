@@ -19,7 +19,9 @@
       "na": "N/A",
       "noMsg": "No Message",
       "exporting": "Exporting",
-      "reportReady": "Your report is ready for download"
+      "reportReady": "Your report is ready for download",
+      "viewDetails": "View Details",
+      "hideDetails": "Hide Details"
     },
     "errors":{
       "errorHeader": "Error",
@@ -79,7 +81,8 @@
       "combined_bandwidth_storage_tt": "BW and Storage Consumption Tooltip",
       "transcoding_consumption_tt": "Transcoding Consumption Tooltip",
       "aggregated_monthly_avg_storage": "Accumulative Storage",
-      "combined_bandwidth_aggregated_storage": "BW and Accumulative Storage",
+      "accumulative": "Accumulative Bandwidth & Storage",
+      "combined_bandwidth_aggregated_storage": "Accumulative Bandwidth & Storage",
       "added_entries": "Added Entries",
       "deleted_entries": "Deleted Entries",
       "total_entries": "Total Entries",

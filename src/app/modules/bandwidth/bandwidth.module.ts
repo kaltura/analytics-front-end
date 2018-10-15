@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { PaginatorModule } from 'primeng/paginator';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { routing } from './bandwidth.routes';
@@ -25,6 +26,7 @@ import { TableModule } from 'primeng/table';
     TranslateModule,
     DropdownModule,
     ButtonModule,
+    PaginatorModule,
     SharedModule,
     TableModule,
     NgxChartsModule,
