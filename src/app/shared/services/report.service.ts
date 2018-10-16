@@ -8,6 +8,13 @@ import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
+export type ReportConfig = {
+  reportType: KalturaReportType,
+  filter: KalturaReportInputFilter,
+  pager: KalturaFilterPager,
+  order: string
+};
+
 export type Report = {
   totals: KalturaReportTotal,
   graphs: KalturaReportGraph[],
@@ -89,29 +96,29 @@ export class ReportService implements OnDestroy {
   //     });
   // }
 
-  public getReport(tableOnly: boolean, loadBaseTotals: boolean, reportType: KalturaReportType, filter: KalturaReportInputFilter, pager: KalturaFilterPager, order: string): Observable<Report> {
+  public getReport(config: ReportConfig, tableOnly: boolean, loadBaseTotals: boolean = false): Observable<Report> {
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
-          reportType,
-          reportInputFilter: filter
+          reportType : config.reportType,
+          reportInputFilter: config.filter
         });
 
         const getGraphs = new ReportGetGraphsAction({
-          reportType,
-          reportInputFilter: filter
+          reportType: config.reportType,
+          reportInputFilter: config.filter
         });
 
         const getBaseTotals = new ReportGetBaseTotalAction({
-          reportType,
-          reportInputFilter: filter
+          reportType: config.reportType,
+          reportInputFilter: config.filter
         });
 
         const getTable = new ReportGetTableAction({
-          reportType,
-          reportInputFilter: filter,
-          pager,
-          order
+          reportType: config.reportType,
+          reportInputFilter: config.filter,
+          pager: config.pager,
+          order: config.order
         });
 
         if (this._querySubscription) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper } from 'shared/services';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper, ReportConfig } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser,
   KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -23,7 +23,11 @@ export class EndUserStorageComponent implements OnInit {
   public _chartDataLoaded = false;
   public _tableData: any[] = [];
   public _tabsData: Tab[] = [];
-  public _chartData: any = {'added_storage_mb': []};
+  public _lineChartData: any = {'bandwidth_consumption': []};
+  public _barChartData: any = {'bandwidth_consumption': []};
+  public _chartType = 'bar';
+  public _showTable = false;
+  public _totalCount: number;
 
   public _isBusy: boolean;
   public _exportingCsv: boolean;
@@ -31,9 +35,9 @@ export class EndUserStorageComponent implements OnInit {
   public _columns: string[] = [];
   public _drillDown = '';
 
+  public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   private order = '-added_entries';
   private reportType: KalturaReportType = KalturaReportType.userUsage;
-
   private filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
@@ -52,7 +56,7 @@ export class EndUserStorageComponent implements OnInit {
     this._exportingCsv = false;
   }
 
-  public onDateFilterChange(event: DateChangeEvent): void {
+  public _onDateFilterChange(event: DateChangeEvent): void {
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
@@ -62,11 +66,12 @@ export class EndUserStorageComponent implements OnInit {
     this.loadReport(false);
   }
 
-  public onTabChange(tab: Tab): void {
+  public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this.updateChartType();
   }
 
-  public onSearchUsersChange(users): void {
+  public _onSearchUsersChange(users): void {
     let usersIds = [];
     users.forEach((user: KalturaUser) => {
       usersIds.push(user.id);
@@ -79,11 +84,25 @@ export class EndUserStorageComponent implements OnInit {
     this.loadReport(false);
   }
 
-  public onDrillDown(user: string): void {
+  public _onDrillDown(user: string): void {
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
     this.filter.userIds = user.length ? user : '';
     this.loadReport(false);
+  }
+
+  public toggleTable(): void {
+    this._showTable = !this._showTable;
+    if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
+      analyticsConfig.callbacks.updateLayout();
+    }
+  }
+
+  public _onPaginationChanged(event): void {
+    if (event.page !== (this.pager.pageIndex - 1)) {
+      this.pager.pageIndex = event.page + 1;
+      this.loadReport(true);
+    }
   }
 
   public exportToScv(): void {
@@ -102,10 +121,10 @@ export class EndUserStorageComponent implements OnInit {
     });
     const args: ReportGetUrlForReportAsCsvActionArgs = {
       dimension: this._selectedMetrics,
-      pager: new KalturaFilterPager({pageSize: 60000, pageIndex: 1}),
+      pager: new KalturaFilterPager({pageSize: this._totalCount, pageIndex: 1}),
       reportType: this.reportType,
       reportInputFilter: this.filter,
-      headers: headers.substr(0, headers.length - 1),
+      headers: 'headers.substr(0, headers.length - 1)',
       reportText: this._translate.instant('app.common.noMsg'),
       reportTitle: this._translate.instant('app.bandwidth.usersStorage')
     };
@@ -133,18 +152,19 @@ export class EndUserStorageComponent implements OnInit {
     this._tableData = [];
     this._blockerMessage = null;
 
-    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
-
-    this._reportService.getReport(tableOnly, true, this.reportType, this.filter, pager, this.order)
+    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
+    this._reportService.getReport(reportConfig, tableOnly, true)
       .subscribe( (report: Report) => {
           if (report.table && report.table.header && report.table.data) {
             let header = report.table.header;
             let data = report.table.data;
-            if (this._drillDown.length && report.baseTotals) {
-              const tableTotals = this._reportService.addTableTotals(report); // add totals to table
-              header = tableTotals.headers;
-              data = tableTotals.data;
-            }
+            // TODO - remove once table totals are returned in production (currently implemented only on lbd.kaltura.com)
+            // if (this._drillDown.length && report.baseTotals) {
+            //   const tableTotals = this._reportService.addTableTotals(report); // add totals to table
+            //   header = tableTotals.headers;
+            //   data = tableTotals.data;
+            // }
+            this._totalCount = report.table.totalCount;
             this.handleTable(header, data); // handle table
           }
           if (report.graphs && !tableOnly) {
@@ -157,6 +177,7 @@ export class EndUserStorageComponent implements OnInit {
           if (report.totals && !tableOnly) {
             this.handleTotals(report.totals); // handle totals
           }
+          this.updateChartType();
           this._isBusy = false;
         },
         error => {
@@ -274,7 +295,8 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
-    this._chartData = {};
+    this._lineChartData = {};
+    this._barChartData = {};
     const inMilliseconds = ['added_msecs', 'deleted_msecs', 'total_msecs'];
     graphs.forEach( (graph: KalturaReportGraph) => {
       const data = graph.data.split(';');
@@ -293,16 +315,17 @@ export class EndUserStorageComponent implements OnInit {
           values.push({name, 'value': val});
         }
       });
-      if (this._reportInterval === KalturaReportInterval.months) {
-        this._chartData[graph.id] = values;
-      } else {
-        this._chartData[graph.id] = [{ name: 'Value', series: values}];
-      }
+      this._barChartData[graph.id] = values;
+      this._lineChartData[graph.id] = [{ name: 'Value', series: values}];
       setTimeout(() => {
         this._chartDataLoaded = true;
       }, 200);
 
     });
+  }
+
+  private updateChartType(): void {
+    this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
   }
 
 }

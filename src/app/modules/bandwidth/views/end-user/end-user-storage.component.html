@@ -6,8 +6,8 @@
 
   <div class="kFilters">
     <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
-    <app-users-filter (filterChange)="onSearchUsersChange($event)"></app-users-filter>
-    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="onDateFilterChange($event)"></app-date-filter>
+    <app-users-filter (filterChange)="_onSearchUsersChange($event)"></app-users-filter>
+    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
 
@@ -19,10 +19,10 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <app-report-tabs [Tabs]="_tabsData" (tabChange)="onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [Tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kChart">
-        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _reportInterval==='months'"
-                                 [results]="_chartData[_selectedMetrics]"
+        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar'"
+                                 [results]="_barChartData[_selectedMetrics]"
                                  [gradient]="false"
                                  [xAxis]="true"
                                  [yAxis]="true"
@@ -31,8 +31,8 @@
         >
         </ngx-charts-bar-vertical>
 
-        <ngx-charts-line-chart *ngIf="_chartDataLoaded && _reportInterval==='days'"
-                               [results]="_chartData[_selectedMetrics]"
+        <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
+                               [results]="_lineChartData[_selectedMetrics]"
                                [xAxis]="true"
                                [yAxis]="true"
                                [showXAxisLabel]="true"
@@ -42,26 +42,34 @@
         </ngx-charts-line-chart>
       </div>
 
-      <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="added_entries" [sortOrder]="-1">
-        <ng-template pTemplate="header">
-          <tr>
-            <th *ngFor="let col of _columns" [pSortableColumn]="col" [style.display]="col==='HIDDEN'?'none':'table-cell'">
-              {{'app.bandwidth.' + col | translate}}
-              <p-sortIcon [field]="col"></p-sortIcon>
-            </th>
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="added_entries" [sortOrder]="-1">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="col" [style.display]="col==='HIDDEN'?'none':'table-cell'">
+                  {{'app.bandwidth.' + col | translate}}
+                  <p-sortIcon [field]="col"></p-sortIcon>
+                </th>
 
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-data>
-          <tr>
-            <td *ngFor="let col of _columns; let i = index" [style.display]="col==='HIDDEN'?'none':'table-cell'">
-              <span *ngIf="i>1 || _drillDown.length">{{data[col]}}</span>
-              <a *ngIf="i===1 && !_drillDown.length" style=""(click)="onDrillDown(data[col].name)">{{data[col].name}}</a>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [style.display]="col==='HIDDEN'?'none':'table-cell'">
+                  <span *ngIf="i>1 || _drillDown.length">{{data[col]}}</span>
+                  <a *ngIf="i===1 && !_drillDown.length" style=""(click)="_onDrillDown(data[col].name)">{{data[col].name}}</a>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
+        </div>
+      </div>
     </div>
 
 
