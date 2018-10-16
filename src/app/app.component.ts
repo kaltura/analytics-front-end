@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
               private _router: Router,
-              private _el: ElementRef,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
     this._initApp();

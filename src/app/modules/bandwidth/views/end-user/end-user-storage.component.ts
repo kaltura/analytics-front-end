@@ -3,11 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper, ReportConfig } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser,
-  KalturaReportGraph, KalturaReportInterval, ReportGetUrlForReportAsCsvActionArgs, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { BrowserService } from 'shared/services/browser.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
 @Component({
@@ -30,30 +28,29 @@ export class EndUserStorageComponent implements OnInit {
   public _totalCount: number;
 
   public _isBusy: boolean;
-  public _exportingCsv: boolean;
+  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
-  private order = '-added_entries';
-  private reportType: KalturaReportType = KalturaReportType.userUsage;
-  private filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
+  public reportType: KalturaReportType = KalturaReportType.userUsage;
+  public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
     }
   );
 
+  private order = '-added_entries';
+
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
-              private _authService: AuthService,
-              private _browserService: BrowserService) { }
+              private _authService: AuthService) { }
 
   ngOnInit() {
     this._isBusy = false;
-    this._exportingCsv = false;
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -105,48 +102,6 @@ export class EndUserStorageComponent implements OnInit {
     }
   }
 
-  public exportToScv(): void {
-    this._exportingCsv = true;
-    let headers = '';
-    this._tabsData.forEach( total => {
-      headers = headers + total.title + ',';
-    });
-    headers = headers.substr(0, headers.length - 1) + ';';
-    this._columns.forEach( col => {
-      if (col !== 'HIDDEN') {
-        headers = headers + this._translate.instant('app.bandwidth.' + col) + ',';
-      } else {
-        headers = headers + this._translate.instant('app.bandwidth.objectId') + ',';
-      }
-    });
-    const args: ReportGetUrlForReportAsCsvActionArgs = {
-      dimension: this._selectedMetrics,
-      pager: new KalturaFilterPager({pageSize: this._totalCount, pageIndex: 1}),
-      reportType: this.reportType,
-      reportInputFilter: this.filter,
-      headers: 'headers.substr(0, headers.length - 1)',
-      reportText: this._translate.instant('app.common.noMsg'),
-      reportTitle: this._translate.instant('app.bandwidth.usersStorage')
-    };
-    this._reportService.exportToCsv(args).subscribe(
-      result => {
-        this._exportingCsv = false;
-        this._browserService.alert({
-          message: this._translate.instant('app.common.reportReady'),
-          header: this._translate.instant('app.common.attention'),
-          accept: () => {
-            this._browserService.download(result, this._translate.instant('app.bandwidth.publisherStorage') + '.csv', 'text/csv');
-          }
-        });
-      },
-      error => {
-        this._exportingCsv = false;
-        const err: ErrorDetails = this._errorsManager.getError(error);
-        this._browserService.alert({ message: err.message, header: err.title});
-      }
-    );
-  }
-
   private loadReport(tableOnly: boolean = false): void {
     this._isBusy = true;
     this._tableData = [];
@@ -177,7 +132,7 @@ export class EndUserStorageComponent implements OnInit {
           if (report.totals && !tableOnly) {
             this.handleTotals(report.totals); // handle totals
           }
-          this.updateChartType();
+          this.prepareCsvExportHeaders();
           this._isBusy = false;
         },
         error => {
@@ -328,4 +283,19 @@ export class EndUserStorageComponent implements OnInit {
     this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
   }
 
+  private prepareCsvExportHeaders(): void {
+    let headers = '';
+    this._tabsData.forEach( total => {
+      headers = headers + total.title + ',';
+    });
+    headers = headers.substr(0, headers.length - 1) + ';';
+    this._columns.forEach( col => {
+      if (col !== 'HIDDEN') {
+        headers = headers + this._translate.instant('app.bandwidth.' + col) + ',';
+      } else {
+        headers = headers + this._translate.instant('app.bandwidth.objectId') + ',';
+      }
+    });
+    this._csvExportHeaders = headers.substr(0, headers.length - 1);
+  }
 }

@@ -10,6 +10,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
+import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -32,12 +33,14 @@ import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
   declarations: [
     DateFilterComponent,
     UsersFilterComponent,
-    ReportTabsComponent
+    ReportTabsComponent,
+    ExportCsvComponent
   ],
   exports: [
     DateFilterComponent,
     UsersFilterComponent,
-    ReportTabsComponent
+    ReportTabsComponent,
+    ExportCsvComponent
   ],
   providers: [
   ]

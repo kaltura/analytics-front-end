@@ -18,8 +18,10 @@
       "exportCsv": "Export to CSV",
       "na": "N/A",
       "noMsg": "No Message",
-      "exporting": "Exporting",
-      "reportReady": "Your report is ready for download",
+      "exporting": "Exporting...",
+      "ready": "Ready",
+      "downloadCsv": "(download)",
+      "downloading": "Downloading...",
       "viewDetails": "View Details",
       "hideDetails": "Hide Details"
     },

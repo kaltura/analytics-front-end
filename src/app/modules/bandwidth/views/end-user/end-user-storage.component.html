@@ -1,7 +1,8 @@
 <div class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
-    <a [class.disabled]="_exportingCsv"(click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
   </div>
 
   <div class="kFilters">

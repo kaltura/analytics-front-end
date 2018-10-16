@@ -1,0 +1,14 @@
+<div class="kExport">
+  <div class="k-spinner-animation kSpinner" *ngIf="_exportingCsv"></div>
+  <a [class.disabled]="_exportingCsv" (click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
+  <div class="kStatus" *ngIf="_status.length > 0">
+    <div *ngIf="_status==='ready'">
+      <span class="kReady">{{(_downloading ? 'app.common.downloading' : 'app.common.ready') | translate}}</span>
+      <a *ngIf="!_downloading" (click)="download()">{{'app.common.downloadCsv' | translate}}</a>
+    </div>
+    <div *ngIf="_status==='error'">
+      <span class="kError" [kTooltip]="_errorDetails">{{'app.common.error' | translate}}</span>
+      <i class="kIconclose_small" (click)="_status=''"></i>
+    </div>
+  </div>
+</div>
