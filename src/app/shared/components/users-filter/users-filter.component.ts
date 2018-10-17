@@ -15,6 +15,7 @@ import { Subject } from 'rxjs/Subject';
 export class UsersFilterComponent implements OnInit {
 
   @Output() filterChange: EventEmitter<KalturaUser[]> = new EventEmitter();
+  @Input() disabled = false;
 
   public _selectedUsers: KalturaUser[] = [];
   public _usersProvider = new Subject<SuggestionsProviderData>();

@@ -43,6 +43,7 @@ export class EndUserStorageComponent implements OnInit {
   );
 
   private order = '-added_entries';
+  private selectedUsers = '';
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -74,17 +75,18 @@ export class EndUserStorageComponent implements OnInit {
       usersIds.push(user.id);
     });
     if (usersIds.toString().length) {
-      this.filter.userIds = usersIds.toString();
+      this.selectedUsers = usersIds.toString();
     } else {
-      this.filter.userIds = '';
+      this.selectedUsers = '';
     }
+    this.filter.userIds = this.selectedUsers
     this.loadReport(false);
   }
 
   public _onDrillDown(user: string): void {
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
-    this.filter.userIds = user.length ? user : '';
+    this.filter.userIds = user.length ? user : this.selectedUsers;
     this.loadReport(false);
   }
 
