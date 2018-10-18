@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
@@ -7,6 +7,7 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -14,6 +15,8 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
   styleUrls: ['./end-user-storage.component.scss']
 })
 export class EndUserStorageComponent implements OnInit {
+
+  @ViewChild('userFilter') private userFilter: UsersFilterComponent;
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics = 'added_storage_mb';
@@ -32,6 +35,7 @@ export class EndUserStorageComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
+  public _tags: any[] = [];
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
@@ -44,6 +48,7 @@ export class EndUserStorageComponent implements OnInit {
 
   private order = '-added_entries';
   private selectedUsers = '';
+
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -71,6 +76,7 @@ export class EndUserStorageComponent implements OnInit {
 
   public _onSearchUsersChange(users): void {
     let usersIds = [];
+    this._tags = users;
     users.forEach((user: KalturaUser) => {
       usersIds.push(user.id);
     });
@@ -102,6 +108,14 @@ export class EndUserStorageComponent implements OnInit {
       this.pager.pageIndex = event.page + 1;
       this.loadReport(true);
     }
+  }
+
+  public _onRemoveTag(user: KalturaUser): void {
+    this.userFilter.removeUser(user.id);
+  }
+
+  public _onRemoveAllTags(): void {
+    this.userFilter.removeAll();
   }
 
   private loadReport(tableOnly: boolean = false): void {

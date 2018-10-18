@@ -15,6 +15,7 @@ import { Subject } from 'rxjs/Subject';
 export class UsersFilterComponent implements OnInit {
 
   @Output() filterChange: EventEmitter<KalturaUser[]> = new EventEmitter();
+  @Input() hideLabels = true;
   @Input() disabled = false;
 
   public _selectedUsers: KalturaUser[] = [];
@@ -70,10 +71,18 @@ export class UsersFilterComponent implements OnInit {
   }
 
   public _updateUsers(event): void {
-    let users = [];
-    this._selectedUsers.forEach((user: KalturaUser) => {
-      users.push(user);
+    this.filterChange.emit(this._selectedUsers);
+  }
+
+  public removeUser(id: string): void {
+    this._selectedUsers = this._selectedUsers.filter((user: KalturaUser) => {
+      return user.id !== id;
     });
-    this.filterChange.emit(users);
+    this.filterChange.emit(this._selectedUsers);
+  }
+
+  public removeAll(): void {
+    this._selectedUsers = [];
+    this.filterChange.emit(this._selectedUsers);
   }
 }

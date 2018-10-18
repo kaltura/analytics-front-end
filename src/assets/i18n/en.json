@@ -23,7 +23,8 @@
       "downloadCsv": "(download)",
       "downloading": "Downloading...",
       "viewDetails": "View Details",
-      "hideDetails": "Hide Details"
+      "hideDetails": "Hide Details",
+      "clearAll": "Clear All"
     },
     "errors":{
       "errorHeader": "Error",

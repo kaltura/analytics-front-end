@@ -1,10 +1,38 @@
+@import '../../../../styles/variables';
+
 .kSearch{
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-right: 8px;
-  kAutoComplete {
+  height: 34px;
+  i{
     margin-left: 8px;
+    color: $kGrayscale3;
+    font-size: 18px;
+  }
+  kAutoComplete {
+    margin-left: 3px;
     height: 34px;
+  }
+}
+.hideLabels{
+  kautocomplete /deep/ {
+    .ui-autocomplete-multiple-container {
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      width: 220px;
+    }
+    .ui-autocomplete-multiple-container:before {
+      font-family: 'kmcng-icon-pack' !important;
+      content: "\e90f";
+      margin-right: 6px;
+      margin-left: 3px;
+      font-size: 18px;
+    }
+    .ui-autocomplete-token {
+      display: none;
+    }
   }
 }
