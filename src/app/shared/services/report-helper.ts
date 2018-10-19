@@ -1,7 +1,33 @@
 export class ReportHelper {
 
-  static numberWithCommas = (x) => {
+  static numberWithCommas(x: any): string {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  
+  static percents(x: any): string {
+    return this.numberWithCommas(parseFloat(x) * 100) + '%';
+  }
+  
+  static numberOrNA(x: any): string {
+    return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
+  }
+  
+  static seconds(x: any): string {
+    const numValue = Math.abs(parseFloat(x));
+    const wholeMinutes = Math.floor(numValue / 60000);
+    const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
+    const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
+    let formattedTime = wholeMinutes.toString() + ':' + secondsText;
+  
+    if (parseFloat(x) < 0) {
+      formattedTime = '-' + formattedTime;
+    }
+  
+    return formattedTime;
+  }
+  
+  static underscoreToSpace(x: string): string {
+    return x.replace('_', ' ');
   }
 
   static format(param: string, value: string): string {

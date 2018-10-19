@@ -1,12 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
+import {
+  KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
   KalturaReportGraph, ReportGetTableAction, KalturaFilterPager, KalturaMultiResponse, KalturaReportTable,
-  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal} from 'kaltura-ngx-client';
+  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal, KalturaReportInterval
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { ReportDataItemConfig } from 'shared/services/storage-data-base.config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -21,6 +26,17 @@ export type Report = {
   table: KalturaReportTable,
   baseTotals?: KalturaReportBaseTotal[]
 };
+
+export interface AccumulativeData {
+  value: string;
+  label: string;
+  units: string;
+}
+
+export interface GraphsData {
+  lineChartData: { [key: string]: {name: string, series: { name: string, value: string } }[]};
+  barChartData: { [key: string]: { name: string, value: string }[] };
+}
 
 @Injectable()
 export class ReportService implements OnDestroy {
@@ -262,6 +278,98 @@ export class ReportService implements OnDestroy {
   ngOnDestroy() {
   }
 
+  public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
+    console.time('table');
+    // parse table columns
+    const columns = [];
+    const tableData = [];
+    table.header.split(',').forEach( header => {
+      if (config.fields.hasOwnProperty(header)) {
+        columns.push(header);
+      }
+    });
+    // parse table data
+    table.data.split(';').forEach( valuesString => {
+      if (valuesString.length) {
+        let data = {};
+        valuesString.split(',').forEach((value, index) => {
+          if (config.fields[columns[index]]) {
+            data[columns[index]] = config.fields[columns[index]].format(value);
+          }
+        });
+        tableData.push(data);
+      }
+    });
+    console.timeEnd('table');
+    return { columns, tableData };
+  }
+  
+  public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+    console.time('totals');
+    const tabsData = [];
+    const data = totals.data.split(',');
 
+    totals.header.split(',').forEach( (header, index) => {
+      const field = config.fields[header];
+      if (field) {
+        tabsData.push({
+          title: field.title,
+          tooltip: field.tooltip,
+          value: field.format(data[index]),
+          selected: header === (selected || config.preSelected),
+          units: field.units || config.units,
+          key: header
+        });
+      }
+    });
+  
+    console.timeEnd('totals');
+    return tabsData;
+  }
+  
+  public parseGraphs(graphs: KalturaReportGraph[],
+                     config: ReportDataItemConfig,
+                     reportInterval: KalturaReportInterval,
+                     dataLoadedCb?: Function): GraphsData {
+    console.time('graphs');
+    const lineChartData = {};
+    const barChartData = {};
+    graphs.forEach( (graph: KalturaReportGraph) => {
+      if (!config.fields[graph.id]) {
+        return;
+      }
+
+      const data = graph.data.split(';');
+      let values = [];
+      data.forEach((value) => {
+        if (value.length) {
+          const label = value.split(',')[0];
+          const name = reportInterval === KalturaReportInterval.months
+            ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
+            : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
+          if (isNaN(val)) {
+            val = 0;
+          }
+          
+          if (config.fields[graph.id]) {
+            val = config.fields[graph.id].format(val);
+          }
+
+          values.push({name, value: val});
+        }
+      });
+      barChartData[graph.id] = values;
+      lineChartData[graph.id] = [{ name: 'Value', series: values}];
+    
+      if (typeof dataLoadedCb === 'function') {
+        setTimeout(() => {
+          dataLoadedCb();
+        }, 200);
+      }
+    });
+    console.timeEnd('graphs');
+    return { barChartData, lineChartData };
+  }
 }
 
