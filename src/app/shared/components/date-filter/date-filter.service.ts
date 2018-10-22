@@ -28,7 +28,13 @@ export type DateChangeEvent = {
   endDay: string;
   timeUnits: KalturaReportInterval;
   timeZoneOffset: number;
-  compare: boolean;
+  compare: {
+    active: boolean;
+    startDate: number;
+    startDay: string;
+    endDate: number;
+    endDay: string;
+  };
 };
 
 @Injectable()
@@ -129,6 +135,31 @@ export class DateFilterService {
     }
     const label = moment(startDate).format('MMM Do YY') + ' - ' + moment(endDate).format('MMM Do YY');
     return { startDate, endDate, label};
+  }
+
+  public getMaxCompare(selectedDateRange: DateRanges): Date {
+    const m = moment();
+    let maxDate: Date;
+
+    switch (selectedDateRange) {
+      case DateRanges.Last7D:
+      case DateRanges.CurrentWeek:
+        maxDate = m.subtract(7, 'days').toDate();
+        break;
+      case DateRanges.Last30D:
+      case DateRanges.CurrentMonth:
+        maxDate = m.subtract(30, 'days').toDate();
+        break;
+      case DateRanges.Last3M:
+      case DateRanges.CurrentQuarter:
+        maxDate = m.subtract(3, 'months').toDate();
+        break;
+      case DateRanges.Last12M:
+      case DateRanges.CurrentYear:
+        maxDate = m.subtract(12, 'months').toDate();
+        break;
+    }
+    return maxDate;
   }
 
 }

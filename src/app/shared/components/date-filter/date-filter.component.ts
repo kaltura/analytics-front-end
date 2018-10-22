@@ -15,6 +15,7 @@ import * as moment from 'moment';
 export class DateFilterComponent implements OnInit {
 
   @Input() dateRangeType: DateRangeType = DateRangeType.LongTerm;
+  @Input() showCompare = true;
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
 
@@ -34,10 +35,16 @@ export class DateFilterComponent implements OnInit {
     {label: this._translate.instant('app.dateFilter.specific'), value: 'specific'},
   ];
   public selectedView = 'preset';
+  public selectedComparePeriod = 'lastYear';
 
   public _dateRangeLabel = '';
   public specificDateRange: Date[] = [new Date(), new Date()];
   public compare = false;
+  public specificCompareSatrtDate: Date = new Date();
+  public compareMaxDate: Date;
+
+  private compareStartDate: Date;
+  private compareEndDate: Date;
 
   private startDate: Date;
   private endDate: Date;
@@ -66,6 +73,18 @@ export class DateFilterComponent implements OnInit {
       this.endDate = this.specificDateRange[1];
       this._dateRangeLabel = moment(this.startDate).format('MMM Do YY') + ' - ' + moment(this.endDate).format('MMM Do YY');
     }
+    this.updateCompareMax();
+    if (this.selectedComparePeriod === 'lastYear') {
+      this.compareStartDate = moment(this.startDate).subtract(12, 'months').toDate();
+      this.compareEndDate = moment(this.endDate).subtract(12, 'months').toDate();
+    } else {
+      this.compareStartDate = this.specificCompareSatrtDate;
+      if (this.compareStartDate > this.compareMaxDate) {
+        this.compareStartDate = this.compareMaxDate;
+      }
+      const diff = moment(this.endDate).diff(moment(this.startDate));
+      this.compareEndDate = moment(this.compareStartDate).add(diff).toDate();
+    }
     this.triggerChangeEvent();
   }
 
@@ -77,6 +96,12 @@ export class DateFilterComponent implements OnInit {
     this.selectedDateRange = this.lastSelectedDateRange;
   }
 
+  public updateCompareMax(): void {
+    setTimeout(() => { // use a timeout to allow binded variables to update before calculations
+      this.compareMaxDate = this._dateFilterService.getMaxCompare(this.selectedDateRange);
+    }, 0);
+  }
+
   private triggerChangeEvent(): void {
     this.filterChange.emit({
       startDate: DateFilterUtils.toServerDate(this.startDate),
@@ -85,7 +110,13 @@ export class DateFilterComponent implements OnInit {
       endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-      compare: this.compare
+      compare: {
+        active: this.compare,
+        startDate: DateFilterUtils.toServerDate(this.compareStartDate),
+        startDay: DateFilterUtils.getDay(this.compareStartDate),
+        endDate: DateFilterUtils.toServerDate(this.compareEndDate),
+        endDay: DateFilterUtils.getDay(this.compareEndDate)
+      }
     });
   }
 
