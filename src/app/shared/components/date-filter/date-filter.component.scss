@@ -124,11 +124,18 @@
     }
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    button{
-      width: 80px;
-      margin-left: auto;
-      margin-top: 20px;
+    padding: 24px;
+    padding-bottom: 0px;
+    p-radiobutton{
+      margin-top: 12px;
+      margin-left: 24px;
+      /deep/ .ui-radiobutton-label{
+        font-weight: normal;
+      }
+    }
+    p-calendar {
+      margin-top: 12px;
+      margin-left: 48px;
     }
   }
   hr {
@@ -139,5 +146,11 @@
     margin-top: 20px;
     margin-bottom: 0px;
     padding: 0;
+  }
+  button{
+    width: 80px;
+    margin-left: 316px;
+    margin-bottom: 24px;
+    margin-top: 24px;
   }
 }
