@@ -7,14 +7,14 @@
   .kTab{
     display: flex;
     flex-direction: column;
-    padding: 12px;
+    padding: 24px;
+    box-sizing: border-box;
     width: 100%;
     height: 120px;
     background-color: white;
     cursor: pointer;
     &:hover{
       background-color: $kGrayscale7;
-      border-bottom: 4px solid $kGrayscale7;
     }
     &.active{
       cursor: default;
@@ -22,8 +22,8 @@
     }
     .kTitle{
       font-size: 15px;
-      font-weight: bold;
-      color: $kGrayscale1;
+      font-weight: 400;
+      color: $kGrayscale3;
     }
     .kValueContainer{
       margin-top: auto;
@@ -31,17 +31,26 @@
       align-items: flex-end;
       .kValue{
         font-size: 24px;
-        font-weight: bold;
+        font-weight: 400;
         color: $kGrayscale1;
       }
       .kUnits{
         font-size: 13px;
-        font-weight: bold;
+        font-weight: 700;
         color: $kGrayscale3;
         line-height: 20px;
         margin-left: 4px;
       }
     }
-
+    &.active{
+      padding-bottom: 20px;
+      .kValueContainer .kValue {
+        font-weight: 700;
+      }
+      .kTitle{
+        color: $kGrayscale1;
+        font-weight: 700;
+      }
+    }
   }
 }

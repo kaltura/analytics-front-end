@@ -20,17 +20,31 @@
   kautocomplete /deep/ {
     .ui-autocomplete-multiple-container {
       padding: 4px;
+      padding-left: 8px;
       display: flex;
       align-items: center;
       width: 220px;
+      &.ui-state-focus{
+        border: 1px solid $kGrayscale3;
+      }
+      input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: $kGrayscale4;
+      }
+      input::-moz-placeholder { /* Firefox 19+ */
+        color: $kGrayscale4;
+      }
+      input:-ms-input-placeholder { /* IE 10+ */
+        color: $kGrayscale4;
+      }
     }
+    /*
     .ui-autocomplete-multiple-container:before {
       font-family: 'kmcng-icon-pack' !important;
       content: "\e90f";
       margin-right: 6px;
       margin-left: 3px;
       font-size: 18px;
-    }
+    }*/
     .ui-autocomplete-token {
       display: none;
     }

@@ -88,6 +88,9 @@
             display: block;
             width: 100%;
             cursor: pointer;
+            &.ui-label-active{
+              font-weight: 700;
+            }
           }
         }
       }
