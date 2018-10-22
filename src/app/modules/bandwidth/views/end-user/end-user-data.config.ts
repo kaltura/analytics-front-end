@@ -73,7 +73,7 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
         }
       },
       totals: {
-        preSelected: 'added_entries',
+        preSelected: 'added_storage_mb',
         fields: {
           'added_entries': {
             format: value => ReportHelper.numberOrNA(value),

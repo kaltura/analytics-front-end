@@ -6,17 +6,18 @@
   </div>
 
   <div class="kFilters">
-    <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
+    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.highlights' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
+      <span class="separator">/</span>
+      <span>{{_drillDown}}</span>
+    </div>
     <app-users-filter #userFilter [disabled]="_drillDown.length>0" (filterChange)="_onSearchUsersChange($event)"></app-users-filter>
     <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
 
-  <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-    <a (click)="_onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
-    <i class="kIcondropdown_arrow_right"></i>
-    <span>{{_drillDown}}</span>
-  </div>
+
 
   <kTags *ngIf="_tags.length"
          [title]="''"

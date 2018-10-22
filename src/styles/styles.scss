@@ -51,21 +51,31 @@ body{
       }
       .kBreadcrumbs{
         height: 24px;
+        width: 100%;
         display: flex;
         align-items: center;
-        margin-bottom: 24px;
-        margin-left: 20px;
-        i{
-          margin-left: 12px;
-          margin-right: 12px;
-          font-size: 14px;
+        a{
+          font-size:20px;
+          font-weight: 700;
+          color: $kGrayscale3;
+          text-decoration: none;
+        }
+        span{
+          font-size:20px;
+          font-weight: 700;
+          color: $kGrayscale1;
+          &.separator{
+            color: $kGrayscale3;
+            margin-left: 8px;
+            margin-right: 8px;
+          }
         }
       }
       .kFilters{
         height: 40px;
         display: flex;
         align-items: center;
-        padding: 20px;
+        padding: 24px;
         .kTitle {
           width: 100%;
           font-size: 20px;
@@ -127,16 +137,29 @@ body{
 }
 p-table /deep/ .ui-table .ui-table-tbody > tr{
   &:nth-child(odd) {
-    background-color: #F6F6F6;
+    background-color: #F8F8F8;
     &:hover{
       background-color: $kGrayscale7;
     }
   }
   > td {
     height: 48px;
+    padding-left: 24px;
+    a {
+      color: $kTertiary;
+      text-decoration: none;
+      font-weight: 700;
+    }
   }
+}
+p-table /deep/ .ui-table .ui-table-thead > tr > th{
+  padding-left: 24px;
 }
 p-paginator /deep/ .ui-paginator.ui-widget-header.ui-unselectable-text {
   height: 34px;
-  border-bottom: 1px solid #d9d9d9;
+}
+kpopupwidget{
+  .kPopupWidget{
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24) !important;
+  }
 }
