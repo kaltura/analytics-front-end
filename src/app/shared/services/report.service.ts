@@ -279,15 +279,10 @@ export class ReportService implements OnDestroy {
   }
 
   public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
-    console.time('table');
     // parse table columns
-    const columns = [];
+    let columns = table.header.split(',');
     const tableData = [];
-    table.header.split(',').forEach( header => {
-      if (config.fields.hasOwnProperty(header)) {
-        columns.push(header);
-      }
-    });
+
     // parse table data
     table.data.split(';').forEach( valuesString => {
       if (valuesString.length) {
@@ -300,12 +295,13 @@ export class ReportService implements OnDestroy {
         tableData.push(data);
       }
     });
-    console.timeEnd('table');
+
+    columns = columns.filter(header => config.fields.hasOwnProperty(header));
+
     return { columns, tableData };
   }
   
   public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
-    console.time('totals');
     const tabsData = [];
     const data = totals.data.split(',');
 
@@ -323,7 +319,6 @@ export class ReportService implements OnDestroy {
       }
     });
   
-    console.timeEnd('totals');
     return tabsData;
   }
   
@@ -331,7 +326,6 @@ export class ReportService implements OnDestroy {
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function): GraphsData {
-    console.time('graphs');
     const lineChartData = {};
     const barChartData = {};
     graphs.forEach( (graph: KalturaReportGraph) => {
@@ -368,7 +362,6 @@ export class ReportService implements OnDestroy {
         }, 200);
       }
     });
-    console.timeEnd('graphs');
     return { barChartData, lineChartData };
   }
 }

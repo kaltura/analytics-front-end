@@ -9,14 +9,15 @@ export interface ReportDataItemConfig {
       units?: string;
       title?: string;
       tooltip?: string;
+      hidden?: boolean;
     };
   };
 }
 
 export interface ReportDataConfig {
-  table: ReportDataItemConfig;
+  table?: ReportDataItemConfig;
   totals?: ReportDataItemConfig;
-  graph?: any;
+  graph?: ReportDataItemConfig;
   accumulative?: ReportDataItemConfig;
 }
 

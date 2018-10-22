@@ -12,7 +12,7 @@ export class ReportHelper {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
   
-  static seconds(x: any): string {
+  static time(x: any): string {
     const numValue = Math.abs(parseFloat(x));
     const wholeMinutes = Math.floor(numValue / 60000);
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);

@@ -21,7 +21,7 @@ export class PublisherStorageComponent implements OnInit {
   private _dataConfig: ReportDataConfig;
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
-  public _selectedMetrics = 'bandwidth_consumption';
+  public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
   public _tableData: any[] = [];
@@ -59,6 +59,7 @@ export class PublisherStorageComponent implements OnInit {
               private _authService: AuthService,
               _dataConfigService: PublisherStorageDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
 
   ngOnInit() {
