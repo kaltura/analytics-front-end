@@ -2,7 +2,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ReportDataConfig, StorageDataBaseConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection, StorageDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      graph: {
+      [ReportDataSection.graph]: {
         fields: {
           'month_id': {
             format: value => value
@@ -44,7 +44,7 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
           }
         }
       },
-      table: {
+      [ReportDataSection.table]: {
         fields: {
           'month_id': {
             format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale)
@@ -75,7 +75,7 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
           }
         }
       },
-      totals: {
+      [ReportDataSection.totals]: {
         units: 'MB',
         preSelected: 'bandwidth_consumption',
         fields: {
@@ -116,7 +116,7 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
           },
         }
       },
-      accumulative: {
+      [ReportDataSection.accumulative]: {
         fields: {
           'aggregated_monthly_avg_storage': {
             format: value => ReportHelper.numberOrNA(value),

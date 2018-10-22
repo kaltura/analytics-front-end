@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import {
   KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
   KalturaReportGraph, ReportGetTableAction, KalturaFilterPager, KalturaMultiResponse, KalturaReportTable,
-  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal, KalturaReportInterval
+  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal, KalturaReportInterval, KalturaResponse, KalturaObjectBase, KalturaRequest
 } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Observable } from 'rxjs/Observable';
@@ -10,7 +10,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { ReportDataItemConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export type ReportConfig = {
@@ -111,8 +111,15 @@ export class ReportService implements OnDestroy {
   //
   //     });
   // }
+  
+  private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
+    return response.result instanceof type
+      || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
+  }
 
-  public getReport(config: ReportConfig, tableOnly: boolean, loadBaseTotals: boolean = false): Observable<Report> {
+  public getReport(config: ReportConfig, sections: ReportDataConfig, loadBaseTotals: boolean = false): Observable<Report> {
+    sections = sections === null ? { table: null } : sections; // table is mandatory section
+
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
@@ -141,16 +148,26 @@ export class ReportService implements OnDestroy {
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
+  
+        let request: KalturaRequest<any>[] = [getTable];
 
-        let request = tableOnly ? [getTable] : loadBaseTotals ? [getTable, getGraphs, getTotal, getBaseTotals] : [getTable, getGraphs, getTotal];
-        if (tableOnly && loadBaseTotals) {
-          request = [getTable, getBaseTotals];
+        if (sections.graph) {
+          request.push(getGraphs);
         }
+  
+        if (sections.totals) {
+          request.push(getTotal);
+        }
+        
+        if (loadBaseTotals) {
+          request.push(getBaseTotals);
+        }
+
         this._querySubscription = this._kalturaClient.multiRequest(request)
           .pipe(cancelOnDestroy(this))
-          .subscribe((response: KalturaMultiResponse) => {
-              if (response.hasErrors()) {
-                const err = response.getFirstError();
+          .subscribe((responses: KalturaMultiResponse) => {
+              if (responses.hasErrors()) {
+                const err = responses.getFirstError();
                 if (err) {
                   observer.error(err);
                 } else {
@@ -158,19 +175,21 @@ export class ReportService implements OnDestroy {
                 }
               } else {
                 let report: Report = {
-                  table: response[0].result,
-                  graphs: response[1] ? response[1].result : [],
-                  totals: response[2] ? response[2].result : null
+                  table: null,
+                  graphs: [],
+                  totals: null
                 };
-                if (loadBaseTotals) {
-                  let baseTotals = [];
-                  if (tableOnly) {
-                    baseTotals = response[1] ? response[1].result : [];
-                  } else {
-                    baseTotals = response[3] ? response[3].result : [];
+                responses.forEach(response => {
+                  if (this._responseIsType(response, KalturaReportTable)) {
+                    report.table = response.result;
+                  } else if (this._responseIsType(response, KalturaReportTotal)) {
+                    report.totals = response.result;
+                  } else if (this._responseIsType(response, KalturaReportGraph)) {
+                    report.graphs = response.result;
+                  } else if (this._responseIsType(response, KalturaReportBaseTotal)) {
+                    report.baseTotals = response.result;
                   }
-                  report.baseTotals = baseTotals;
-                }
+                });
                 observer.next(report);
                 observer.complete();
                 if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {

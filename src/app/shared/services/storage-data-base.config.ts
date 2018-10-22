@@ -1,5 +1,12 @@
 import { TranslateService } from '@ngx-translate/core';
 
+export enum ReportDataSection {
+  table = 'table',
+  totals = 'totals',
+  graph = 'graph',
+  accumulative = 'accumulative',
+}
+
 export interface ReportDataItemConfig {
   units?: string;
   preSelected?: string;
@@ -15,11 +22,13 @@ export interface ReportDataItemConfig {
 }
 
 export interface ReportDataConfig {
-  table?: ReportDataItemConfig;
-  totals?: ReportDataItemConfig;
-  graph?: ReportDataItemConfig;
-  accumulative?: ReportDataItemConfig;
+  [ReportDataSection.table]?: ReportDataItemConfig;
+  [ReportDataSection.totals]?: ReportDataItemConfig;
+  [ReportDataSection.graph]?: ReportDataItemConfig;
+  [ReportDataSection.accumulative]?: ReportDataItemConfig;
 }
+
+
 
 export abstract class StorageDataBaseConfig {
   protected constructor(protected _translate: TranslateService) {

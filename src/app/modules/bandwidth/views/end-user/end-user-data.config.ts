@@ -2,7 +2,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ReportDataConfig, StorageDataBaseConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection, StorageDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      graph: {
+      [ReportDataSection.graph]: {
         fields: {
           'added_storage_mb': {
             format: value => value
@@ -44,7 +44,7 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
           },
         }
       },
-      table: {
+      [ReportDataSection.table]: {
         fields: {
           'name': {
             format: value => value
@@ -72,7 +72,7 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
           }
         }
       },
-      totals: {
+      [ReportDataSection.totals]: {
         preSelected: 'added_storage_mb',
         fields: {
           'added_entries': {

@@ -73,7 +73,7 @@ export class PublisherStorageComponent implements OnInit {
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
-    this.loadReport(false);
+    this.loadReport();
   }
 
   public _onTabChange(tab: Tab): void {
@@ -84,7 +84,7 @@ export class PublisherStorageComponent implements OnInit {
   public _onPaginationChanged(event): void {
     if (event.page !== (this.pager.pageIndex - 1)) {
       this.pager.pageIndex = event.page + 1;
-      this.loadReport(true);
+      this.loadReport({table: null});
     }
   }
 
@@ -93,7 +93,7 @@ export class PublisherStorageComponent implements OnInit {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this.order) {
         this.order = order;
-        this.loadReport(true);
+        this.loadReport({table: null});
       }
     }
   }
@@ -105,22 +105,22 @@ export class PublisherStorageComponent implements OnInit {
     }
   }
 
-  private loadReport(tableOnly: boolean = false): void {
+  private loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._tableData = [];
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-    this._reportService.getReport(reportConfig, tableOnly, false)
+    this._reportService.getReport(reportConfig, sections, false)
       .subscribe( (report: Report) => {
           if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
           }
-          if (report.graphs && !tableOnly) {
+          if (report.graphs.length) {
             this._chartDataLoaded = false;
             this.handleGraphs(report.graphs); // handle graphs
           }
-          if (report.totals && !tableOnly) {
+          if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
           this.updateChartType();
@@ -149,7 +149,7 @@ export class PublisherStorageComponent implements OnInit {
               {
                 label: this._translate.instant('app.common.retry'),
                 action: () => {
-                  this.loadReport(false);
+                  this.loadReport();
                 }
               }];
           }
