@@ -15,7 +15,7 @@
     <div class="kReportContent">
       <app-report-tabs [Tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kChart">
-        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar'"
+        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
           [results]="_barChartData[_selectedMetrics]"
           [gradient]="false"
           [xAxis]="true"
@@ -25,6 +25,17 @@
           [showYAxisLabel]="true"
           >
         </ngx-charts-bar-vertical>
+
+        <ngx-charts-bar-vertical-2d *ngIf="_chartDataLoaded && _chartType==='bar' && isCompareMode"
+           [results]="_barChartData[_selectedMetrics]"
+           [gradient]="false"
+           [xAxis]="true"
+           [yAxis]="true"
+           [scheme]="barChartColors"
+           [showXAxisLabel]="true"
+           [showYAxisLabel]="true"
+        >
+        </ngx-charts-bar-vertical-2d>
 
         <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
           [results]="_lineChartData[_selectedMetrics]"

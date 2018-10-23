@@ -6,7 +6,7 @@ import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report,
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { lineChartColors, barChartColors } from 'shared/color-schemes/color-schemes';
+import { lineChartColors, barChartColors, lineChartCompareColors, barChartCompareColors } from 'shared/color-schemes/color-schemes';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -84,6 +84,8 @@ export class PublisherStorageComponent implements OnInit {
     this._reportInterval = event.timeUnits;
     if (event.compare.active) {
       const compare = event.compare;
+      this.lineChartColors = lineChartCompareColors;
+      this.barChartColors = barChartCompareColors;
       this.compareFilter = new KalturaReportInputFilter(
         {
           searchInTags: true,
@@ -96,6 +98,8 @@ export class PublisherStorageComponent implements OnInit {
       );
     } else {
       this.compareFilter = null;
+      this.lineChartColors = lineChartColors;
+      this.barChartColors = barChartColors;
     }
     this.loadReport();
   }
@@ -208,9 +212,7 @@ export class PublisherStorageComponent implements OnInit {
       }
   
      if (current.totals && compare.totals) {
-       const currentTotals = this._reportService.parseTotals(current.totals, this._dataConfig.totals, this._selectedMetrics);
-       const compareTotals = this._reportService.parseTotals(compare.totals, this._dataConfig.totals, this._selectedMetrics);
-       this._tabsData = this._compareService.compareTotalsData(currentTotals, compareTotals);
+       this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
      }
   
      if (current.graphs && compare.graphs) {

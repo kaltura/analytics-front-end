@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { KalturaReportGraph, KalturaReportInterval } from 'kaltura-ngx-client';
+import { KalturaReportGraph, KalturaReportInterval, KalturaReportTotal } from 'kaltura-ngx-client';
 import { ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { GraphsData } from 'shared/services/report.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -21,6 +22,7 @@ export class CompareService implements OnDestroy {
                           dataLoadedCb?: Function): GraphsData {
     const lineChartData = {};
     const barChartData = {};
+
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id]) {
         return;
@@ -62,8 +64,8 @@ export class CompareService implements OnDestroy {
   
           barChartValues.push({
             name: currentName, series: [
-              { name: '', value: currentVal },
-              { name: '', value: compareVal }
+              { name: 'Value1', value: currentVal },
+              { name: 'Value2', value: compareVal }
             ]
           });
 
@@ -83,6 +85,7 @@ export class CompareService implements OnDestroy {
         }, 200);
       }
     });
+    
     return { barChartData, lineChartData };
   }
   
@@ -90,8 +93,37 @@ export class CompareService implements OnDestroy {
     return [];
   }
   
-  public compareTotalsData(current, compare): any {
-    return [];
+  public compareTotalsData(current: KalturaReportTotal, compare: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+    const tabsData = [];
+    const data = current.data.split(',');
+    const compareData = compare.data.split(',');
+  
+    current.header.split(',').forEach( (header, index) => {
+      const field = config.fields[header];
+      if (field) {
+        const trend = this._calculateTrend(data[index], compareData[index]);
+        const currentVal = field.format(data[index]);
+        const compareVal = field.format(compareData[index]);
+        tabsData.push({
+          title: field.title,
+          tooltip: `${currentVal} – ${compareVal}`,
+          value: field.format(String(trend)),
+          selected: header === (selected || config.preSelected),
+          units: '%',
+          key: header
+        });
+      }
+    });
+  
+    return tabsData;
+  }
+  
+  private _calculateTrend(current, compare): number {
+    if (current === 0) {
+      return 0; // todo
+    }
+  
+    return Math.ceil(((current - compare) / current) * 100);
   }
 }
 
