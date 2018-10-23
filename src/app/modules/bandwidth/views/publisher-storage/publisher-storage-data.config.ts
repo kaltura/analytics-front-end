@@ -116,7 +116,7 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
           },
         }
       },
-      [ReportDataSection.accumulative]: {
+      accumulative: {
         fields: {
           'aggregated_monthly_avg_storage': {
             format: value => ReportHelper.numberOrNA(value),

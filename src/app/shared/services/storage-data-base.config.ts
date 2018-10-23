@@ -21,11 +21,12 @@ export interface ReportDataItemConfig {
   };
 }
 
+// can have either one of predefined sections or any string keys for a custom handling for specific cases
 export interface ReportDataConfig {
   [ReportDataSection.table]?: ReportDataItemConfig;
   [ReportDataSection.totals]?: ReportDataItemConfig;
   [ReportDataSection.graph]?: ReportDataItemConfig;
-  [ReportDataSection.accumulative]?: ReportDataItemConfig;
+  [key: string]: ReportDataItemConfig;
 }
 
 
