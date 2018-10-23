@@ -3,6 +3,10 @@
 .kDateFilter{
   display: flex;
   align-items: center;
+  .kExitCompare{
+    white-space: nowrap;
+    margin-right: 12px;
+  }
   .kLabel{
     color: $kGrayscale1;
     margin-right: 8px;
@@ -30,11 +34,17 @@
     }
     span{
       font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
     }
     i{
       margin-left: auto;
       font-size: 12px;
       color: $kGrayscale3;
+    }
+    .compareIcon{
+      font-size: 24px;
+      color: $kOrange;
     }
   }
 }

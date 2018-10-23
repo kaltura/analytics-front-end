@@ -1,7 +1,7 @@
 @import './variables';
 $mc-theme-font-path : '~@kaltura-ng/mc-theme/themes/default/fonts';
 @import '~@kaltura-ng/mc-theme/themes/default/scss/index.scss';
-
+@import './icons/icons.scss';
 
 $appBkgColor: #f2f2f2;
 body{
@@ -132,8 +132,9 @@ body{
 }
 .kHidden {
   visibility: hidden;
-  width: 0px;
-  height: 0px;
+  width: 0px !important;
+  height: 0px !important;
+  margin: 0px !important;
 }
 .ng-tooltip {
   transition: none !important;
