@@ -16,6 +16,7 @@ import { ReportTabsComponent } from './components/report-tabs/report-tabs.compon
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { CompareService } from 'shared/services/compare.service';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ export class SharedModule {
       ngModule: SharedModule,
       providers: <any[]>[
         DateFilterService,
-        ReportService
+        ReportService,
+        CompareService,
       ]
     };
   }

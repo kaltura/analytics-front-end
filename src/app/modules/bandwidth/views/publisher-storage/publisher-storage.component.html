@@ -66,16 +66,18 @@
         </div>
       </div>
 
-      <span class="kAccumulativeTitle">{{'app.bandwidth.accumulative' | translate}}</span>
-      <div class="kAccumulative">
-        <div class="kItem" *ngFor="let item of _accumulativeStorage">
-          <span class="kLabel">{{item.title}}</span>
-          <div class="kValueContainer">
-            <span class="kValue">{{item.value}}</span>
-            <span class="kUnits">{{item.units}}</span>
+      <ng-container *ngIf="!isCompareMode">
+        <span class="kAccumulativeTitle">{{'app.bandwidth.accumulative' | translate}}</span>
+        <div class="kAccumulative">
+          <div class="kItem" *ngFor="let item of _accumulativeStorage">
+            <span class="kLabel">{{item.title}}</span>
+            <div class="kValueContainer">
+              <span class="kValue">{{item.value}}</span>
+              <span class="kUnits">{{item.units}}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
 
   </k-area-blocker>
