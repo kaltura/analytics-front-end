@@ -47,9 +47,10 @@
       "monthly": "Monthly",
       "daily": "Daily",
       "error": "'From Date' must be before 'To Date'",
-      "compare": "Compare with same period last year",
+      "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
-      "comparespecific": "Same period starting at:"
+      "comparespecific": "Same period starting at:",
+      "exit": "Exit Compare Mode"
     },
     "usersFilter":{
       "prompt": "Search Users",

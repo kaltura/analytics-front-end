@@ -42,6 +42,7 @@ export class DateFilterComponent implements OnInit {
   public compare = false;
   public specificCompareSatrtDate: Date = new Date();
   public compareMaxDate: Date;
+  public comparing = false;
 
   private compareStartDate: Date;
   private compareEndDate: Date;
@@ -85,6 +86,7 @@ export class DateFilterComponent implements OnInit {
       const diff = moment(this.endDate).diff(moment(this.startDate));
       this.compareEndDate = moment(this.compareStartDate).add(diff).toDate();
     }
+    this.comparing = this.compare;
     this.triggerChangeEvent();
   }
 
@@ -100,6 +102,11 @@ export class DateFilterComponent implements OnInit {
     setTimeout(() => { // use a timeout to allow binded variables to update before calculations
       this.compareMaxDate = this._dateFilterService.getMaxCompare(this.selectedDateRange);
     }, 0);
+  }
+
+  public exitCompare(): void {
+    this.compare = false;
+    this.updateDataRanges();
   }
 
   private triggerChangeEvent(): void {

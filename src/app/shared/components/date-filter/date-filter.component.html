@@ -1,6 +1,8 @@
 <div class="kDateFilter kOverrideFAIcons">
 
-  <div #datesBtn class="datesRangeDropDown" (click)="openPopup()">
+  <a *ngIf="comparing" class="kExitCompare" (click)="exitCompare()">{{'app.dateFilter.exit' | translate}}</a>
+  <div #datesBtn class="datesRangeDropDown" [class.comparing]="comparing" (click)="openPopup()">
+    <i *ngIf="comparing" class="compareIcon icon-Bolt"></i>
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
@@ -33,9 +35,9 @@
       <hr>
       <div class="kCompare" *ngIf="showCompare">
         <p-checkbox [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" binary="true"></p-checkbox>
-        <p-radioButton name="compare" value="lastYear" [disabled]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparelastyear' | translate"></p-radioButton>
-        <p-radioButton name="compare" value="specific" [disabled]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
-        <p-calendar [showIcon]="true" icon="kIconcalendar" [disabled]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareSatrtDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+        <p-radioButton name="compare" value="lastYear" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparelastyear' | translate"></p-radioButton>
+        <p-radioButton name="compare" value="specific" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
+        <p-calendar [showIcon]="true" icon="kIconcalendar" [class.kHidden]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareSatrtDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
       </div>
       <button pButton class="kButtonBranded" [label]="'app.common.apply' | translate" (click)="updateDataRanges();datesPopup.close()"></button>
     </div>
