@@ -126,9 +126,11 @@ export class CompareService implements OnDestroy {
             if (fieldConfig.nonComparable) {
               result = fieldConfig.format(value);
             } else {
+              const trend = this._calculateTrend(Number(value), Number(compareValues[j]));
               result = {
-                value: fieldConfig.format(String(this._calculateTrend(Number(value), Number(compareValues[j])))),
+                value: fieldConfig.format(String(Math.abs(trend))),
                 tooltip: `${fieldConfig.format(value)} – ${fieldConfig.format(compareValues[j])}`,
+                trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
                 units: '%'
               };
             }
@@ -158,10 +160,11 @@ export class CompareService implements OnDestroy {
         tabsData.push({
           title: field.title,
           tooltip: `${currentVal} – ${compareVal}`,
-          value: field.format(String(trend)),
+          value: field.format(String(Math.abs(trend))),
           selected: header === (selected || config.preSelected),
           units: '%',
-          key: header
+          key: header,
+          trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
         });
       }
     });

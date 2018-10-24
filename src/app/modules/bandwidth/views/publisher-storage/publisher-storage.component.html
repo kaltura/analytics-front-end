@@ -13,7 +13,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [Tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kChart">
         <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
           [results]="_barChartData[_selectedMetrics]"
@@ -73,8 +73,8 @@
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="isCompareMode && data[col]?.value" class="kTrend">
-                    <i [class]="data[col].value | appTrend"></i>
-                    <span [kTooltip]="data[col].tooltip">{{data[col].value | appAbs}}&nbsp;{{data[col].units}}</span>
+                    <i [class]="data[col].trend | appTrend"></i>
+                    <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
                   </span>
                   <span *ngIf="!isCompareMode || !data[col]?.value">{{data[col]}}</span>
                 </td>
@@ -91,8 +91,15 @@
           <div class="kItem" *ngFor="let item of _accumulativeStorage">
             <span class="kLabel">{{item.title}}</span>
             <div class="kValueContainer">
-              <span class="kValue" [kTooltip]="item.tooltip">{{item.value}}</span>
-              <span class="kUnits">{{item.units}}</span>
+              <span *ngIf="isCompareMode" class="kTrend" [kTooltip]="item.tooltip">
+                <i [class]="item.trend | appTrend"></i>
+                <span class="kValue">{{item.value}}</span>
+                <span class="kUnits">{{item.units}}</span>
+              </span>
+              <ng-container *ngIf="!isCompareMode">
+                <span class="kValue">{{item.value}}</span>
+                <span class="kUnits">{{item.units}}</span>
+              </ng-container>
             </div>
           </div>
         </div>

@@ -18,7 +18,6 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
-import { AbsPipe } from 'shared/pipes/abs.pipe';
 
 @NgModule({
   imports: [
@@ -39,7 +38,6 @@ import { AbsPipe } from 'shared/pipes/abs.pipe';
     ReportTabsComponent,
     ExportCsvComponent,
     TrendPipe,
-    AbsPipe,
   ],
   exports: [
     DateFilterComponent,
@@ -47,7 +45,6 @@ import { AbsPipe } from 'shared/pipes/abs.pipe';
     ReportTabsComponent,
     ExportCsvComponent,
     TrendPipe,
-    AbsPipe,
   ],
   providers: [
   ]
