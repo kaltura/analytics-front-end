@@ -122,14 +122,17 @@ export class CompareService implements OnDestroy {
         currentValues.forEach((value, j) => {
           const fieldConfig = config.fields[columns[j]];
           if (fieldConfig) {
-            let trend = value;
-            if (!fieldConfig.nonComparable) {
-              trend = String(this._calculateTrend(Number(value), Number(compareValues[j])));
+            let result;
+            if (fieldConfig.nonComparable) {
+              result = fieldConfig.format(value);
+            } else {
+              result = {
+                value: fieldConfig.format(String(this._calculateTrend(Number(value), Number(compareValues[j])))),
+                tooltip: `${fieldConfig.format(value)} – ${fieldConfig.format(compareValues[j])}`,
+                units: '%'
+              };
             }
-            data[columns[j]] = {
-              value: fieldConfig.format(trend),
-              tooltip: `${fieldConfig.format(value)} – ${fieldConfig.format(compareValues[j])}`
-            };
+            data[columns[j]] = result;
           }
         });
         tableData.push(data);

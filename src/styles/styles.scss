@@ -171,3 +171,13 @@ kpopupwidget{
 .ngx-charts .grid-panel.odd {
   display: none;
 }
+
+.kTrend {
+  .icon-progress, .icon-progress + span {
+    color: $kPrimary;
+  }
+
+  .icon-regression, .icon-regression + span {
+    color: $kDandger;
+  }
+}

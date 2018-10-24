@@ -72,9 +72,11 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span [kTooltip]="data[col]?.tooltip">
-                    {{data[col]?.value !== undefined ? data[col].value : data[col]}}
+                  <span *ngIf="isCompareMode && data[col]?.value" class="kTrend">
+                    <i [class]="data[col].value | appTrend"></i>
+                    <span [kTooltip]="data[col].tooltip">{{data[col].value | appAbs}}&nbsp;{{data[col].units}}</span>
                   </span>
+                  <span *ngIf="!isCompareMode || !data[col]?.value">{{data[col]}}</span>
                 </td>
               </tr>
             </ng-template>
