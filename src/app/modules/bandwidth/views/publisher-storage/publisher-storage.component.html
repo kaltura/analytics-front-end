@@ -27,8 +27,10 @@
         </ngx-charts-bar-vertical>
 
         <ngx-charts-bar-vertical-2d *ngIf="_chartDataLoaded && _chartType==='bar' && isCompareMode"
+           legendTitle=""
            [results]="_barChartData[_selectedMetrics]"
            [gradient]="false"
+           [legend]="isCompareMode"
            [xAxis]="true"
            [yAxis]="true"
            [scheme]="barChartColors"
@@ -38,7 +40,9 @@
         </ngx-charts-bar-vertical-2d>
 
         <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
+          legendTitle=""
           [results]="_lineChartData[_selectedMetrics]"
+          [legend]="isCompareMode"
           [xAxis]="true"
           [yAxis]="true"
           [scheme]="lineChartColors"
@@ -68,7 +72,9 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  {{data[col]}}
+                  <span [kTooltip]="data[col]?.tooltip">
+                    {{data[col]?.value !== undefined ? data[col].value : data[col]}}
+                  </span>
                 </td>
               </tr>
             </ng-template>
@@ -77,13 +83,13 @@
         </div>
       </div>
 
-      <ng-container *ngIf="!isCompareMode">
+      <ng-container>
         <span class="kAccumulativeTitle">{{'app.bandwidth.accumulative' | translate}}</span>
         <div class="kAccumulative">
           <div class="kItem" *ngFor="let item of _accumulativeStorage">
             <span class="kLabel">{{item.title}}</span>
             <div class="kValueContainer">
-              <span class="kValue">{{item.value}}</span>
+              <span class="kValue" [kTooltip]="item.tooltip">{{item.value}}</span>
               <span class="kUnits">{{item.units}}</span>
             </div>
           </div>

@@ -203,20 +203,24 @@ export class PublisherStorageComponent implements OnInit {
    }
    
    private handleCompare(current: Report, compare: Report): void {
+     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
+     const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
+
       if (current.table && compare.table) {
-        const { columns, tableData: currentTableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
-        const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-        this._totalCount = current.table.totalCount;
+        const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
         this._columns = columns;
-        this._tableData = this._compareService.compareTableData(currentTableData, compareTableData);
+        this._tableData = tableData;
       }
   
      if (current.totals && compare.totals) {
        this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+       this._accumulativeStorage = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.accumulative, this._selectedMetrics);
      }
   
      if (current.graphs && compare.graphs) {
        const { lineChartData, barChartData } = this._compareService.compareGraphData(
+         currentPeriod,
+         comparePeriod,
          current.graphs,
          compare.graphs,
          this._dataConfig.graph,

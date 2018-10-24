@@ -5,7 +5,7 @@ export const barChartColors = {
   domain: ['#00a784']
 };
 export const barChartCompareColors = {
-  domain: ['#00a784', '#F49616']
+  domain: ['#00a784', '#66CAB5']
 };
 export const lineChartCompareColors = {
   domain: ['#F49616', '#FCDBA3']
