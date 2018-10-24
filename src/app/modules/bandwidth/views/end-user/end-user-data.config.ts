@@ -47,10 +47,12 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
       [ReportDataSection.table]: {
         fields: {
           'name': {
-            format: value => value
+            format: value => value,
+            nonComparable: true,
           },
           'month_id': {
-            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale)
+            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
+            nonComparable: true,
           },
           'added_entries': {
             format: value => ReportHelper.numberOrNA(value)

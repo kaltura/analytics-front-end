@@ -111,10 +111,10 @@ export class CompareService implements OnDestroy {
     // parse table data
     const currentData = current.data.split(';');
     const compareData = compare.data.split(';');
-
+    
     currentData.forEach((valuesString, i) => {
       const compareValuesString = compareData[i];
-      if (valuesString.length && compareValuesString.length) {
+      if (valuesString.length && compareValuesString && compareValuesString.length) {
         let data = {};
         const currentValues = valuesString.split(',');
         const compareValues = compareValuesString.split(',');

@@ -3,13 +3,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper, ReportConfig } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser, KalturaReportGraph, KalturaReportInterval, KalturaReportType, KalturaReportTable } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser, KalturaReportGraph, KalturaReportInterval, KalturaReportType, KalturaReportTable, KalturaReportInputFilter } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { EndUserDataConfig } from './end-user-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { barChartColors, barChartCompareColors, lineChartColors, lineChartCompareColors } from 'shared/color-schemes/color-schemes';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { CompareService } from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -39,9 +43,13 @@ export class EndUserStorageComponent implements OnInit {
   public _columns: string[] = [];
   public _drillDown = '';
   public _tags: any[] = [];
+  
+  public lineChartColors = lineChartColors;
+  public barChartColors = barChartColors;
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
+  public compareFilter: KalturaReportInputFilter = null;
   public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
@@ -52,12 +60,16 @@ export class EndUserStorageComponent implements OnInit {
   private order = '-added_entries';
   private selectedUsers = '';
   private _dataConfig: ReportDataConfig = null;
-
+  
+  public get isCompareMode(): boolean {
+    return this.compareFilter !== null;
+  }
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
+              private _compareService: CompareService,
               _dataConfigService: EndUserDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
@@ -74,6 +86,25 @@ export class EndUserStorageComponent implements OnInit {
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
+    if (event.compare.active) {
+      const compare = event.compare;
+      this.lineChartColors = lineChartCompareColors;
+      this.barChartColors = barChartCompareColors;
+      this.compareFilter = new KalturaReportInputFilter(
+        {
+          searchInTags: true,
+          searchInAdminTags: false,
+          timeZoneOffset: event.timeZoneOffset,
+          interval: event.timeUnits,
+          fromDay: compare.startDay,
+          toDay: compare.endDay,
+        }
+      );
+    } else {
+      this.compareFilter = null;
+      this.lineChartColors = lineChartColors;
+      this.barChartColors = barChartColors;
+    }
     this.loadReport();
   }
 
@@ -133,25 +164,38 @@ export class EndUserStorageComponent implements OnInit {
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections, true)
-      .subscribe( (report: Report) => {
-          if (report.table && report.table.header && report.table.data) {
-            // TODO - remove once table totals are returned in production (currently implemented only on lbd.kaltura.com)
-            // if (this._drillDown.length && report.baseTotals) {
-            //   const tableTotals = this._reportService.addTableTotals(report); // add totals to table
-            //   (<any>report.table).header = tableTotals.headers;
-            //   (<any>report.table).data = tableTotals.data;
-            // }
-            this.handleTable(report.table); // handle table
-          }
-          if (report.graphs.length) {
-            this._chartDataLoaded = false;
-            if (report.baseTotals) {
-              this._reportService.addGraphTotals(report.graphs, report.baseTotals); // add totals to graph
+      .pipe(switchMap(report => {
+        if (!this.isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+    
+        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        return this._reportService.getReport(compareReportConfig, sections, true)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe( ({ report, compare }) => {
+          if (compare) {
+            this.handleCompare(report, compare);
+          } else {
+            if (report.table && report.table.header && report.table.data) {
+              // TODO - remove once table totals are returned in production (currently implemented only on lbd.kaltura.com)
+              // if (this._drillDown.length && report.baseTotals) {
+              //   const tableTotals = this._reportService.addTableTotals(report); // add totals to table
+              //   (<any>report.table).header = tableTotals.headers;
+              //   (<any>report.table).data = tableTotals.data;
+              // }
+              this.handleTable(report.table); // handle table
             }
-            this.handleGraphs(report.graphs); // handle graphs
-          }
-          if (report.totals) {
-            this.handleTotals(report.totals); // handle totals
+            if (report.graphs.length) {
+              this._chartDataLoaded = false;
+              if (report.baseTotals) {
+                this._reportService.addGraphTotals(report.graphs, report.baseTotals); // add totals to graph
+              }
+              this.handleGraphs(report.graphs); // handle graphs
+            }
+            if (report.totals) {
+              this.handleTotals(report.totals); // handle totals
+            }
           }
           this.prepareCsvExportHeaders();
           this._isBusy = false;
@@ -197,6 +241,48 @@ export class EndUserStorageComponent implements OnInit {
         this.order = order;
         this.loadReport({ table: null });
       }
+    }
+  }
+  
+  private handleCompare(current: Report, compare: Report): void {
+    const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
+    const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
+    
+    if (current.table && compare.table) {
+      // TODO - remove once table totals are returned in production (currently implemented only on lbd.kaltura.com)
+      // if (this._drillDown.length && current.baseTotals && compare.baseTotals) {
+      //   const currentTotals = this._reportService.addTableTotals(current); // add totals to table
+      //   const compareTotals = this._reportService.addTableTotals(compare); // add totals to table
+      //   (<any>current.table).header = currentTotals.headers;
+      //   (<any>current.table).data = currentTotals.data;
+      //   (<any>current.table).header = compareTotals.headers;
+      //   (<any>current.table).data = compareTotals.data;
+      // }
+      const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
+      this._columns = columns;
+      this._tableData = tableData;
+    }
+    
+    if (current.totals && compare.totals) {
+      this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+    }
+    
+    if (current.graphs && compare.graphs) {
+      if (current.baseTotals && compare.baseTotals) {
+        this._reportService.addGraphTotals(current.graphs, current.baseTotals); // add totals to graph
+        this._reportService.addGraphTotals(compare.graphs, compare.baseTotals); // add totals to graph
+      }
+      const { lineChartData, barChartData } = this._compareService.compareGraphData(
+        currentPeriod,
+        comparePeriod,
+        current.graphs,
+        compare.graphs,
+        this._dataConfig.graph,
+        this._reportInterval,
+        () => this._chartDataLoaded = true
+      );
+      this._lineChartData = lineChartData;
+      this._barChartData = barChartData;
     }
   }
 
