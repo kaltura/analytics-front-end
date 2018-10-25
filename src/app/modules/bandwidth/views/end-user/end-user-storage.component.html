@@ -33,7 +33,7 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kChart">
         <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
                                  [results]="_barChartData[_selectedMetrics]"
@@ -59,6 +59,8 @@
         </ngx-charts-bar-vertical-2d>
 
         <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
+                               legendTitle=""
+                               [legend]="isCompareMode"
                                [results]="_lineChartData[_selectedMetrics]"
                                [xAxis]="true"
                                [yAxis]="true"
@@ -89,11 +91,11 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index">
-                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'name'" class="kTrend">
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'name' && col !== 'month_id'" class="kTrend">
                     <i [class]="data[col].trend | appTrend"></i>
                     <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
                   </span>
-                  <ng-container *ngIf="!isCompareMode || col === 'name'">
+                  <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id'">
                     <span *ngIf="col !== 'name'">{{data[col]}}</span>
                     <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])">{{data[col]}}</a>
                   </ng-container>

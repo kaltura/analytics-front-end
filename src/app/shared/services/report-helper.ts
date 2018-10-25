@@ -12,6 +12,10 @@ export class ReportHelper {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
   
+  static numberOrZero(x: any): string {
+    return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : '0';
+  }
+  
   static time(x: any): string {
     const numValue = Math.abs(parseFloat(x));
     const wholeMinutes = Math.floor(numValue / 60000);

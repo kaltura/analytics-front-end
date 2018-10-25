@@ -8,7 +8,7 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
-import { EndUserDataConfig } from './end-user-data.config';
+import { EndUserStorageDataConfig } from './end-user-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { barChartColors, barChartCompareColors, lineChartColors, lineChartCompareColors } from 'shared/color-schemes/color-schemes';
 import { map, switchMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { CompareService } from 'shared/services/compare.service';
   selector: 'app-publisher-storage',
   templateUrl: './end-user-storage.component.html',
   styleUrls: ['./end-user-storage.component.scss'],
-  providers: [EndUserDataConfig]
+  providers: [EndUserStorageDataConfig]
 })
 export class EndUserStorageComponent implements OnInit {
 
@@ -49,7 +49,7 @@ export class EndUserStorageComponent implements OnInit {
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
-  public compareFilter: KalturaReportInputFilter = null;
+  public compareFilter: KalturaEndUserReportInputFilter = null;
   public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
@@ -70,7 +70,7 @@ export class EndUserStorageComponent implements OnInit {
               private _reportService: ReportService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              _dataConfigService: EndUserDataConfig) {
+              _dataConfigService: EndUserStorageDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -90,7 +90,7 @@ export class EndUserStorageComponent implements OnInit {
       const compare = event.compare;
       this.lineChartColors = lineChartCompareColors;
       this.barChartColors = barChartCompareColors;
-      this.compareFilter = new KalturaReportInputFilter(
+      this.compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,
@@ -98,6 +98,7 @@ export class EndUserStorageComponent implements OnInit {
           interval: event.timeUnits,
           fromDay: compare.startDay,
           toDay: compare.endDay,
+          userIds: this.filter.userIds,
         }
       );
     } else {
@@ -125,6 +126,10 @@ export class EndUserStorageComponent implements OnInit {
       this.selectedUsers = '';
     }
     this.filter.userIds = this.selectedUsers;
+    
+    if (this.compareFilter) {
+      this.compareFilter.userIds = this.filter.userIds;
+    }
     this.loadReport();
   }
 
@@ -132,6 +137,9 @@ export class EndUserStorageComponent implements OnInit {
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
     this.filter.userIds = user.length ? user : this.selectedUsers;
+    if (this.compareFilter) {
+      this.compareFilter.userIds = this.filter.userIds;
+    }
     this.loadReport();
   }
 

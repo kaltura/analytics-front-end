@@ -6,7 +6,7 @@ import { ReportDataConfig, ReportDataSection, StorageDataBaseConfig } from 'shar
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EndUserDataConfig extends StorageDataBaseConfig {
+export class EndUserStorageDataConfig extends StorageDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }

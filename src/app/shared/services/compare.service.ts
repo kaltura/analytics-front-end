@@ -6,6 +6,7 @@ import { GraphsData } from 'shared/services/report.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { ReportHelper } from 'shared/services/report-helper';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -129,7 +130,7 @@ export class CompareService implements OnDestroy {
               const trend = this._calculateTrend(Number(value), Number(compareValues[j]));
               result = {
                 value: fieldConfig.format(String(Math.abs(trend))),
-                tooltip: `${fieldConfig.format(value)} – ${fieldConfig.format(compareValues[j])}`,
+                tooltip: `${ReportHelper.numberOrZero(value)} – ${ReportHelper.numberOrZero(compareValues[j])}`,
                 trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
                 units: '%'
               };
@@ -160,7 +161,7 @@ export class CompareService implements OnDestroy {
         tabsData.push({
           title: field.title,
           tooltip: `${currentVal} – ${compareVal}`,
-          value: field.format(String(Math.abs(trend))),
+          value: ReportHelper.numberOrZero(String(Math.abs(trend))),
           selected: header === (selected || config.preSelected),
           units: '%',
           key: header,
@@ -181,6 +182,10 @@ export class CompareService implements OnDestroy {
       return -100;
     }
     
+    if (compare === 0 && current > 0) {
+      return 100;
+    }
+
     return Math.ceil(((current - compare) / current) * 100);
   }
 }
