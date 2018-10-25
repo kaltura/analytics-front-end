@@ -208,6 +208,7 @@ export class PublisherStorageComponent implements OnInit {
 
       if (current.table && compare.table) {
         const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
+        this._totalCount = current.table.totalCount;
         this._columns = columns;
         this._tableData = tableData;
       }
