@@ -275,7 +275,7 @@ export class EndUserStorageComponent implements OnInit {
       this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
     }
     
-    if (current.graphs && compare.graphs) {
+    if (current.graphs.length && compare.graphs.length) {
       if (current.baseTotals && compare.baseTotals) {
         this._reportService.addGraphTotals(current.graphs, current.baseTotals); // add totals to graph
         this._reportService.addGraphTotals(compare.graphs, compare.baseTotals); // add totals to graph

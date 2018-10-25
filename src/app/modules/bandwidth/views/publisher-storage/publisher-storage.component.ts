@@ -217,7 +217,7 @@ export class PublisherStorageComponent implements OnInit {
        this._accumulativeStorage = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.accumulative, this._selectedMetrics);
      }
   
-     if (current.graphs && compare.graphs) {
+     if (current.graphs.length && compare.graphs.length) {
        const { lineChartData, barChartData } = this._compareService.compareGraphData(
          currentPeriod,
          comparePeriod,

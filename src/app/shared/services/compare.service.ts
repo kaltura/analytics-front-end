@@ -37,7 +37,7 @@ export class CompareService implements OnDestroy {
     }
     
     current.forEach((graph: KalturaReportGraph, i) => {
-      if (!config.fields[graph.id]) {
+      if (!config.fields[graph.id] || !graph.data || !compare[i].data) {
         return;
       }
       
@@ -105,6 +105,10 @@ export class CompareService implements OnDestroy {
   public compareTableData(current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
+    if (!current.header || !current.data || !compare.header || !compare.data) {
+      return;
+    }
+
     // parse table columns
     let columns = current.header.split(',');
     const tableData = [];
@@ -148,6 +152,10 @@ export class CompareService implements OnDestroy {
   }
   
   public compareTotalsData(current: KalturaReportTotal, compare: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+    if (!current.header || !current.data || !compare.header || !compare.data) {
+      return;
+    }
+
     const tabsData = [];
     const data = current.data.split(',');
     const compareData = compare.data.split(',');
