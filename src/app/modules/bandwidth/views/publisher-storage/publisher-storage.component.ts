@@ -82,6 +82,7 @@ export class PublisherStorageComponent implements OnInit {
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
+    this.pager.pageIndex = 1;
     if (event.compare.active) {
       const compare = event.compare;
       this.lineChartColors = lineChartCompareColors;
