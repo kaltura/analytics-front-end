@@ -118,7 +118,7 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order) {
+    if (event.data.length && event.field && event.order && !this.isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this.order) {
         this.order = order;

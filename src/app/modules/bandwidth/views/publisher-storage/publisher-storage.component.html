@@ -62,9 +62,9 @@
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? col : null">
                   {{'app.bandwidth.' + col | translate}}
-                  <p-sortIcon [field]="col"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
                 </th>
 
               </tr>
