@@ -119,10 +119,17 @@ export class CompareService implements OnDestroy {
     
     currentData.forEach((valuesString, i) => {
       const compareValuesString = compareData[i];
-      if (valuesString.length && compareValuesString && compareValuesString.length) {
+      if (valuesString.length) {
         let data = {};
         const currentValues = valuesString.split(',');
-        const compareValues = compareValuesString.split(',');
+        let hasConsistentData = false;
+        let compareValues = [];
+        if (compareValuesString) {
+          hasConsistentData = true;
+          compareValues = compareValuesString.split(',');
+        } else {
+          compareValues = currentValues.map(() => 'N/A');
+        }
   
         currentValues.forEach((value, j) => {
           const fieldConfig = config.fields[columns[j]];
@@ -131,12 +138,12 @@ export class CompareService implements OnDestroy {
             if (fieldConfig.nonComparable) {
               result = fieldConfig.format(value);
             } else {
-              const trend = this._calculateTrend(Number(value), Number(compareValues[j]));
+              const trend = hasConsistentData ? Math.abs(this._calculateTrend(Number(value), Number(compareValues[j]))) : 0;
               result = {
-                value: fieldConfig.format(String(Math.abs(trend))),
-                tooltip: `${ReportHelper.numberOrZero(value)} – ${ReportHelper.numberOrZero(compareValues[j])}`,
+                value: hasConsistentData ? fieldConfig.format(String(trend)) : 'N/A',
+                tooltip: `${ReportHelper.numberOrZero(value)} – ${hasConsistentData ? ReportHelper.numberOrZero(compareValues[j]) : 'N/A'}`,
                 trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
-                units: '%'
+                units: hasConsistentData ? '%' : ''
               };
             }
             data[columns[j]] = result;
