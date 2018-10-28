@@ -5,7 +5,6 @@ import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report,
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { lineChartColors, barChartColors, lineChartCompareColors, barChartCompareColors } from 'shared/color-schemes/color-schemes';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -30,17 +29,14 @@ export class PublisherStorageComponent implements OnInit {
   public _tabsData: Tab[] = [];
   public _showTable = false;
   public _chartType = 'line';
-  public _lineChartData: any = {'bandwidth_consumption': []};
-  public _barChartData: any = {'bandwidth_consumption': []};
+  public _lineChartData: any = {'bandwidth_consumption': {}};
+  public _barChartData: any = {'bandwidth_consumption': {}};
 
   public _isBusy: boolean;
   public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
-
-  public lineChartColors = lineChartColors;
-  public barChartColors = barChartColors;
 
   public _accumulativeStorage: any[] = [];
 
@@ -84,8 +80,6 @@ export class PublisherStorageComponent implements OnInit {
     this.pager.pageIndex = 1;
     if (event.compare.active) {
       const compare = event.compare;
-      this.lineChartColors = lineChartCompareColors;
-      this.barChartColors = barChartCompareColors;
       this.compareFilter = new KalturaReportInputFilter(
         {
           searchInTags: true,
@@ -98,8 +92,6 @@ export class PublisherStorageComponent implements OnInit {
       );
     } else {
       this.compareFilter = null;
-      this.lineChartColors = lineChartColors;
-      this.barChartColors = barChartColors;
     }
     this.loadReport();
   }

@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { routing } from './bandwidth.routes';
 import { BandwidthComponent } from './bandwidth.component';
@@ -31,7 +31,7 @@ import { TableModule } from 'primeng/table';
     SharedModule,
     TableModule,
     TooltipModule,
-    NgxChartsModule,
+    NgxEchartsModule,
     RouterModule.forChild(routing),
   ],
   declarations: [

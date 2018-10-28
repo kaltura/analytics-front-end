@@ -40,25 +40,21 @@ export class CompareService implements OnDestroy {
       if (!config.fields[graph.id] || !graph.data || !compare[i].data) {
         return;
       }
+      let xAxisData = [];
+      let yAxisCurrentData = [];
+      let yAxisCompareData = [];
 
       const currentData = graph.data.split(';');
       const compareData = compare[i].data.split(';');
-      let values = [];
-      let compareValues = [];
-      let barChartValues = [];
+
       currentData.forEach((currentValue, j) => {
         const compareValue = compareData[j];
         if (currentValue.length && compareValue.length) {
           const currentLabel = currentValue.split(',')[0];
-          const compareLabel = compareValue.split(',')[0];
 
           const currentName = reportInterval === KalturaReportInterval.months
             ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
             : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
-
-          const compareName = reportInterval === KalturaReportInterval.months
-            ? DateFilterUtils.formatMonthOnlyString(compareLabel, analyticsConfig.locale)
-            : DateFilterUtils.formatShortDateString(compareLabel, analyticsConfig.locale);
 
           let currentVal = Math.ceil(parseFloat(currentValue.split(',')[1])); // publisher storage report should round up graph values
           let compareVal = Math.ceil(parseFloat(compareValue.split(',')[1])); // publisher storage report should round up graph values
@@ -75,22 +71,73 @@ export class CompareService implements OnDestroy {
             compareVal = config.fields[graph.id].format(compareVal);
           }
 
-          barChartValues.push({
-            name: currentName, series: [
-              { name: currentPeriodTitle, value: currentVal },
-              { name: comparePeriodTitle, value: compareVal }
-            ]
-          });
-
-          values.push({ name: currentName, value: currentVal });
-          compareValues.push({ name: currentName, value: compareVal });
+          xAxisData.push(currentName);
+          yAxisCurrentData.push(currentVal);
+          yAxisCompareData.push(compareVal);
         }
       });
-      barChartData[graph.id] = barChartValues;
-      lineChartData[graph.id] = [
-        { name: currentPeriodTitle, series: values },
-        { name: comparePeriodTitle, series: compareValues },
-      ];
+
+      lineChartData[graph.id] = {
+        color: ['#F49616', '#FCDBA3'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {},
+        legend: {
+          data: [currentPeriodTitle, comparePeriodTitle],
+          left: 'left',
+          bottom: 0,
+          padding: [16, 0, 0, 80]
+        },
+        series: [{
+          name: currentPeriodTitle,
+          data: yAxisCurrentData,
+          type: 'line'
+        },
+        {
+          name: comparePeriodTitle,
+          data: yAxisCompareData,
+          type: 'line'
+        }]
+      };
+      barChartData[graph.id] = {
+        color: ['#00a784', '#66CAB5'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        legend: {
+          data: [currentPeriodTitle, comparePeriodTitle],
+          left: 'left',
+          bottom: 0,
+          padding: [16, 0, 0, 80]
+        },
+        series: [{
+          name: currentPeriodTitle,
+          data: yAxisCurrentData,
+          barGap: 0,
+          type: 'bar'
+        },
+        {
+          name: comparePeriodTitle,
+          data: yAxisCompareData,
+          barGap: 0,
+          type: 'bar'
+        }]
+      };
 
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {

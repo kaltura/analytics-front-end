@@ -280,15 +280,16 @@ export class ReportService implements OnDestroy {
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function): GraphsData {
-    const lineChartData = {};
-    const barChartData = {};
+    let lineChartData = {};
+    let barChartData = {};
     graphs.forEach( (graph: KalturaReportGraph) => {
       if (!config.fields[graph.id]) {
         return;
       }
-
+      let xAxisData = [];
+      let yAxisData = [];
       const data = graph.data.split(';');
-      let values = [];
+
       data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
@@ -304,11 +305,40 @@ export class ReportService implements OnDestroy {
             val = config.fields[graph.id].format(val);
           }
 
-          values.push({name, value: val});
+          xAxisData.push(name);
+          yAxisData.push(val);
         }
       });
-      barChartData[graph.id] = values;
-      lineChartData[graph.id] = [{ name: 'Value', series: values}];
+      lineChartData[graph.id] = {
+        color: ['#F49616', '#149CC1'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {},
+        series: [{
+          data: yAxisData,
+          type: 'line'
+        }]
+      };
+      barChartData[graph.id] = {
+        color: ['#00a784'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {},
+        series: [{
+          data: yAxisData,
+          type: 'bar'
+        }]
+      };
 
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
