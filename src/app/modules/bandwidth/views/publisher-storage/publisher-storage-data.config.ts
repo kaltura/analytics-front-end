@@ -47,10 +47,12 @@ export class PublisherStorageDataConfig extends StorageDataBaseConfig {
       [ReportDataSection.table]: {
         fields: {
           'month_id': {
-            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale)
+            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
+            nonComparable: true,
           },
           'date_id': {
-            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale)
+            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
+            nonComparable: true,
           },
           'bandwidth_consumption': {
             format: value => ReportHelper.numberOrNA(value)

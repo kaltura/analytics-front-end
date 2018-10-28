@@ -13,9 +13,9 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [Tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kChart">
-        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar'"
+        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
           [results]="_barChartData[_selectedMetrics]"
           [gradient]="false"
           [xAxis]="true"
@@ -26,8 +26,23 @@
           >
         </ngx-charts-bar-vertical>
 
+        <ngx-charts-bar-vertical-2d *ngIf="_chartDataLoaded && _chartType==='bar' && isCompareMode"
+           legendTitle=""
+           [results]="_barChartData[_selectedMetrics]"
+           [gradient]="false"
+           [legend]="isCompareMode"
+           [xAxis]="true"
+           [yAxis]="true"
+           [scheme]="barChartColors"
+           [showXAxisLabel]="true"
+           [showYAxisLabel]="true"
+        >
+        </ngx-charts-bar-vertical-2d>
+
         <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
+          legendTitle=""
           [results]="_lineChartData[_selectedMetrics]"
+          [legend]="isCompareMode"
           [xAxis]="true"
           [yAxis]="true"
           [scheme]="lineChartColors"
@@ -47,9 +62,9 @@
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="bandwidth_consumption" [sortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? col : null">
                   {{'app.bandwidth.' + col | translate}}
-                  <p-sortIcon [field]="col"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
                 </th>
 
               </tr>
@@ -57,7 +72,11 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  {{data[col]}}
+                  <span *ngIf="isCompareMode && data[col]?.value" class="kTrend">
+                    <i [class]="data[col].trend | appTrend"></i>
+                    <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
+                  </span>
+                  <span *ngIf="!isCompareMode || !data[col]?.value">{{data[col]}}</span>
                 </td>
               </tr>
             </ng-template>
@@ -71,11 +90,19 @@
         <div class="kItem" *ngFor="let item of _accumulativeStorage">
           <span class="kLabel">{{item.title}}</span>
           <div class="kValueContainer">
-            <span class="kValue">{{item.value}}</span>
-            <span class="kUnits">{{item.units}}</span>
+            <span *ngIf="isCompareMode" class="kTrend" [kTooltip]="item.tooltip">
+              <i [class]="item.trend | appTrend"></i>
+              <span class="kValue">{{item.value}}</span>
+              <span class="kUnits">{{item.units}}</span>
+            </span>
+            <ng-container *ngIf="!isCompareMode">
+              <span class="kValue">{{item.value}}</span>
+              <span class="kUnits">{{item.units}}</span>
+            </ng-container>
           </div>
         </div>
       </div>
+
     </div>
 
   </k-area-blocker>

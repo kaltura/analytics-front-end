@@ -6,10 +6,13 @@ import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report,
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { lineChartColors, barChartColors } from 'shared/color-schemes/color-schemes';
+import { lineChartColors, barChartColors, lineChartCompareColors, barChartCompareColors } from 'shared/color-schemes/color-schemes';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { of as ObservableOf } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { CompareService } from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -44,6 +47,7 @@ export class PublisherStorageComponent implements OnInit {
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.partnerUsage;
+  public compareFilter: KalturaReportInputFilter = null;
   public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
@@ -52,10 +56,15 @@ export class PublisherStorageComponent implements OnInit {
   );
 
   private order = '-bandwidth_consumption';
+  
+  public get isCompareMode(): boolean {
+    return this.compareFilter !== null;
+  }
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
+              private _compareService: CompareService,
               private _authService: AuthService,
               _dataConfigService: PublisherStorageDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -73,6 +82,26 @@ export class PublisherStorageComponent implements OnInit {
     this.filter.toDay = event.endDay;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
+    this.pager.pageIndex = 1;
+    if (event.compare.active) {
+      const compare = event.compare;
+      this.lineChartColors = lineChartCompareColors;
+      this.barChartColors = barChartCompareColors;
+      this.compareFilter = new KalturaReportInputFilter(
+        {
+          searchInTags: true,
+          searchInAdminTags: false,
+          timeZoneOffset: event.timeZoneOffset,
+          interval: event.timeUnits,
+          fromDay: compare.startDay,
+          toDay: compare.endDay,
+        }
+      );
+    } else {
+      this.compareFilter = null;
+      this.lineChartColors = lineChartColors;
+      this.barChartColors = barChartColors;
+    }
     this.loadReport();
   }
 
@@ -89,7 +118,7 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order) {
+    if (event.data.length && event.field && event.order && !this.isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this.order) {
         this.order = order;
@@ -112,16 +141,29 @@ export class PublisherStorageComponent implements OnInit {
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections, false)
-      .subscribe( (report: Report) => {
-          if (report.table && report.table.header && report.table.data) {
-            this.handleTable(report.table); // handle table
-          }
-          if (report.graphs.length) {
-            this._chartDataLoaded = false;
-            this.handleGraphs(report.graphs); // handle graphs
-          }
-          if (report.totals) {
-            this.handleTotals(report.totals); // handle totals
+      .pipe(switchMap(report => {
+        if (!this.isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+          if (compare) {
+            this.handleCompare(report, compare);
+          } else {
+            if (report.table && report.table.header && report.table.data) {
+              this.handleTable(report.table); // handle table
+            }
+            if (report.graphs.length) {
+              this._chartDataLoaded = false;
+              this.handleGraphs(report.graphs); // handle graphs
+            }
+            if (report.totals) {
+              this.handleTotals(report.totals); // handle totals
+            }
           }
           this.updateChartType();
           this.prepareCsvExportHeaders();
@@ -159,6 +201,37 @@ export class PublisherStorageComponent implements OnInit {
             buttons
           });
         });
+   }
+   
+   private handleCompare(current: Report, compare: Report): void {
+     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
+     const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
+
+      if (current.table && compare.table) {
+        const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
+        this._totalCount = current.table.totalCount;
+        this._columns = columns;
+        this._tableData = tableData;
+      }
+  
+     if (current.totals && compare.totals) {
+       this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+       this._accumulativeStorage = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.accumulative, this._selectedMetrics);
+     }
+  
+     if (current.graphs.length && compare.graphs.length) {
+       const { lineChartData, barChartData } = this._compareService.compareGraphData(
+         currentPeriod,
+         comparePeriod,
+         current.graphs,
+         compare.graphs,
+         this._dataConfig.graph,
+         this._reportInterval,
+         () => this._chartDataLoaded = true
+       );
+       this._lineChartData = lineChartData;
+       this._barChartData = barChartData;
+     }
    }
 
   private handleTable(table: KalturaReportTable): void {

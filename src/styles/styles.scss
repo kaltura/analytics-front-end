@@ -167,3 +167,17 @@ kpopupwidget{
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24) !important;
   }
 }
+
+.ngx-charts .grid-panel.odd {
+  display: none;
+}
+
+.kTrend {
+  .icon-progress, .icon-progress + span, .icon-progress + span + span {
+    color: $kPrimary !important;
+  }
+
+  .icon-regression, .icon-regression + span, .icon-regression + span + span {
+    color: $kDandger !important;
+  }
+}

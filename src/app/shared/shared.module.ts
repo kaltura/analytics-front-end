@@ -16,6 +16,8 @@ import { ReportTabsComponent } from './components/report-tabs/report-tabs.compon
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { CompareService } from 'shared/services/compare.service';
+import { TrendPipe } from 'shared/pipes/trend.pipe';
 
 @NgModule({
   imports: [
@@ -34,13 +36,15 @@ import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
     DateFilterComponent,
     UsersFilterComponent,
     ReportTabsComponent,
-    ExportCsvComponent
+    ExportCsvComponent,
+    TrendPipe,
   ],
   exports: [
     DateFilterComponent,
     UsersFilterComponent,
     ReportTabsComponent,
-    ExportCsvComponent
+    ExportCsvComponent,
+    TrendPipe,
   ],
   providers: [
   ]
@@ -52,7 +56,8 @@ export class SharedModule {
       ngModule: SharedModule,
       providers: <any[]>[
         DateFilterService,
-        ReportService
+        ReportService,
+        CompareService,
       ]
     };
   }

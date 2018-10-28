@@ -17,6 +17,7 @@ export interface ReportDataItemConfig {
       title?: string;
       tooltip?: string;
       hidden?: boolean;
+      nonComparable?: boolean;
     };
   };
 }

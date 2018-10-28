@@ -18,8 +18,8 @@ export class ReportTabsComponent implements OnInit {
 
   @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
 
-  @Input() Tabs: Tab[] = [];
-  @Input() CompareMode = false;
+  @Input() tabs: Tab[] = [];
+  @Input() compareMode = false;
 
   constructor() {
   }
@@ -28,7 +28,7 @@ export class ReportTabsComponent implements OnInit {
   }
 
   public tabClick(tab: Tab): void {
-    this.Tabs.forEach((t: Tab) => {
+    this.tabs.forEach((t: Tab) => {
       t.selected = false;
     });
     tab.selected = true;

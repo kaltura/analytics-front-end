@@ -31,4 +31,18 @@ export class DateFilterUtils {
     // const date: date = new Date( parseFloat(year) , parseFloat(month) - 1 , parseFloat(day) );
     return month + '/' + day + '/' + year;
   }
+  
+  static formatMonthOnlyString(value: string, locale: string): string {
+    const year: string = value.substring(0, 4);
+    const month: string = value.substring(4, 6);
+    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+    return date.toLocaleString(locale, { month: 'long' });
+  }
+  
+  static formatShortDateString(value: string, locale: string): string {
+    const year: string = value.substring(0, 4);
+    const month: string = value.substring(4, 6);
+    const day: string = value.substring(6, 8);
+    return month + '/' + day;
+  }
 }

@@ -6,7 +6,7 @@ import { ReportDataConfig, ReportDataSection, StorageDataBaseConfig } from 'shar
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EndUserDataConfig extends StorageDataBaseConfig {
+export class EndUserStorageDataConfig extends StorageDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
@@ -47,10 +47,12 @@ export class EndUserDataConfig extends StorageDataBaseConfig {
       [ReportDataSection.table]: {
         fields: {
           'name': {
-            format: value => value
+            format: value => value,
+            nonComparable: true,
           },
           'month_id': {
-            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale)
+            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
+            nonComparable: true,
           },
           'added_entries': {
             format: value => ReportHelper.numberOrNA(value)
