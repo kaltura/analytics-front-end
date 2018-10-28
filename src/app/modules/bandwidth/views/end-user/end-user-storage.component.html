@@ -3,21 +3,18 @@
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
-    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.highlights' | translate}}</span>
+    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.allUsers' | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
       <a (click)="_onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
       <span class="separator">/</span>
       <span>{{_drillDown}}</span>
     </div>
-    <app-users-filter #userFilter [disabled]="_drillDown.length>0" (filterChange)="_onSearchUsersChange($event)"></app-users-filter>
-    <app-date-filter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-users-filter #userFilter [class.kHidden]="_drillDown.length>0" (filterChange)="_onSearchUsersChange($event)"></app-users-filter>
   </div>
-
-
-
 
   <kTags *ngIf="_tags.length"
          [title]="''"
@@ -25,7 +22,7 @@
          [labelField]="'fullName'"
          [tooltipField]="'fullName'"
          [clearAllLabel]="'app.common.clearAll' | translate"
-         [class.disabled]="_drillDown.length>0"
+         [class.kHidden]="_drillDown.length>0"
          (onTagRemove)="_onRemoveTag($event)"
          (onRemoveAll)="_onRemoveAllTags()">
   </kTags>
@@ -34,6 +31,9 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units [dateFilter]="dateFilter"></app-time-units>
+      </div>
       <div class="kChart">
         <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
                                  [results]="_barChartData[_selectedMetrics]"

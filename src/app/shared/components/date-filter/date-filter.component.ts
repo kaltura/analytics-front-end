@@ -24,10 +24,6 @@ export class DateFilterComponent implements OnInit {
   public selectedDateRange: DateRanges;
   private lastSelectedDateRange: DateRanges; // used for revert selection
 
-  public timeUnitsItems: SelectItem[] = [
-    {label: this._translate.instant('app.dateFilter.monthly'), value: KalturaReportInterval.months},
-    {label: this._translate.instant('app.dateFilter.daily'), value: KalturaReportInterval.days},
-  ];
   public selectedTimeUnit: KalturaReportInterval = KalturaReportInterval.months;
 
   public viewItems: SelectItem[] = [
@@ -90,7 +86,8 @@ export class DateFilterComponent implements OnInit {
     this.triggerChangeEvent();
   }
 
-  public onTimeUnitsChange(): void {
+  public timeUnitsChange(timeUnit: KalturaReportInterval): void {
+    this.selectedTimeUnit = timeUnit;
     this.triggerChangeEvent();
   }
 

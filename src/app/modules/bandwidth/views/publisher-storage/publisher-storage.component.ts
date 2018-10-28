@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportConfig } from 'shared/services';
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
@@ -56,7 +55,7 @@ export class PublisherStorageComponent implements OnInit {
   );
 
   private order = '-bandwidth_consumption';
-  
+
   public get isCompareMode(): boolean {
     return this.compareFilter !== null;
   }
@@ -202,7 +201,7 @@ export class PublisherStorageComponent implements OnInit {
           });
         });
    }
-   
+
    private handleCompare(current: Report, compare: Report): void {
      const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
      const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
@@ -213,12 +212,12 @@ export class PublisherStorageComponent implements OnInit {
         this._columns = columns;
         this._tableData = tableData;
       }
-  
+
      if (current.totals && compare.totals) {
        this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
        this._accumulativeStorage = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.accumulative, this._selectedMetrics);
      }
-  
+
      if (current.graphs.length && compare.graphs.length) {
        const { lineChartData, barChartData } = this._compareService.compareGraphData(
          currentPeriod,

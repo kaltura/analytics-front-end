@@ -12,10 +12,10 @@ import { ReportHelper } from 'shared/services/report-helper';
 export class CompareService implements OnDestroy {
   constructor(private _translate: TranslateService) {
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   public compareGraphData(currentPeriod: { from: string, to: string },
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportGraph[],
@@ -25,7 +25,7 @@ export class CompareService implements OnDestroy {
                           dataLoadedCb?: Function): GraphsData {
     const lineChartData = {};
     const barChartData = {};
-    
+
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
     if (reportInterval === KalturaReportInterval.months) {
@@ -35,12 +35,12 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
     }
-    
+
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id] || !graph.data || !compare[i].data) {
         return;
       }
-      
+
       const currentData = graph.data.split(';');
       const compareData = compare[i].data.split(';');
       let values = [];
@@ -51,37 +51,37 @@ export class CompareService implements OnDestroy {
         if (currentValue.length && compareValue.length) {
           const currentLabel = currentValue.split(',')[0];
           const compareLabel = compareValue.split(',')[0];
-          
+
           const currentName = reportInterval === KalturaReportInterval.months
             ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
             : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
-          
+
           const compareName = reportInterval === KalturaReportInterval.months
             ? DateFilterUtils.formatMonthOnlyString(compareLabel, analyticsConfig.locale)
             : DateFilterUtils.formatShortDateString(compareLabel, analyticsConfig.locale);
-          
+
           let currentVal = Math.ceil(parseFloat(currentValue.split(',')[1])); // publisher storage report should round up graph values
           let compareVal = Math.ceil(parseFloat(compareValue.split(',')[1])); // publisher storage report should round up graph values
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
-          
+
           if (isNaN(compareVal)) {
             compareVal = 0;
           }
-          
+
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
             compareVal = config.fields[graph.id].format(compareVal);
           }
-          
+
           barChartValues.push({
             name: currentName, series: [
               { name: currentPeriodTitle, value: currentVal },
               { name: comparePeriodTitle, value: compareVal }
             ]
           });
-          
+
           values.push({ name: currentName, value: currentVal });
           compareValues.push({ name: currentName, value: compareVal });
         }
@@ -91,17 +91,17 @@ export class CompareService implements OnDestroy {
         { name: currentPeriodTitle, series: values },
         { name: comparePeriodTitle, series: compareValues },
       ];
-      
+
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();
         }, 200);
       }
     });
-    
+
     return { barChartData, lineChartData };
   }
-  
+
   public compareTableData(current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
@@ -110,13 +110,13 @@ export class CompareService implements OnDestroy {
     }
 
     // parse table columns
-    let columns = current.header.split(',');
+    let columns = current.header.toLowerCase().split(',');
     const tableData = [];
-    
+
     // parse table data
     const currentData = current.data.split(';');
     const compareData = compare.data.split(';');
-    
+
     currentData.forEach((valuesString, i) => {
       const compareValuesString = compareData[i];
       if (valuesString.length) {
@@ -130,7 +130,7 @@ export class CompareService implements OnDestroy {
         } else {
           compareValues = currentValues.map(() => 'N/A');
         }
-  
+
         currentValues.forEach((value, j) => {
           const fieldConfig = config.fields[columns[j]];
           if (fieldConfig) {
@@ -152,12 +152,12 @@ export class CompareService implements OnDestroy {
         tableData.push(data);
       }
     });
-    
+
     columns = columns.filter(header => config.fields.hasOwnProperty(header));
-    
+
     return { columns, tableData };
   }
-  
+
   public compareTotalsData(current: KalturaReportTotal, compare: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
     if (!current.header || !current.data || !compare.header || !compare.data) {
       return;
@@ -166,7 +166,7 @@ export class CompareService implements OnDestroy {
     const tabsData = [];
     const data = current.data.split(',');
     const compareData = compare.data.split(',');
-    
+
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
@@ -184,19 +184,19 @@ export class CompareService implements OnDestroy {
         });
       }
     });
-    
+
     return tabsData;
   }
-  
+
   private _calculateTrend(current: number, compare: number): number {
     if (current === 0 && compare === 0) {
       return 0;
     }
-    
+
     if (current === 0 && compare > 0) {
       return -100;
     }
-    
+
     if (compare === 0 && current > 0) {
       return 100;
     }

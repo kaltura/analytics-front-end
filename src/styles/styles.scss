@@ -28,8 +28,8 @@ body{
   .kReportView{
     width: 100%;
     .kReport {
-      margin-left: 40px;
-      margin-right: 40px;
+      width: 100%;
+      margin-bottom: 24px;
       background-color: white;
       border: 0px solid white;
       border-radius: 3px;
@@ -47,12 +47,15 @@ body{
         }
         app-export-csv{
           margin-left: auto;
+          margin-right: 16px;
+          white-space: nowrap;
         }
       }
       .kBreadcrumbs{
         height: 24px;
         width: 100%;
         display: flex;
+        padding-left: 24px;
         align-items: center;
         a{
           font-size:20px;
@@ -75,12 +78,13 @@ body{
         }
       }
       .kFilters{
-        height: 40px;
+        height: 70px;
         display: flex;
+        width: 100%;
         align-items: center;
-        padding: 24px;
         .kTitle {
           width: 100%;
+          padding-left: 24px;
           font-size: 20px;
           color: $kGrayscale1;
           font-weight: bold;
@@ -92,6 +96,23 @@ body{
         width: 100%;
         height:100%;
         background-color: white;
+        .kDimensions{
+          width: 100%;
+          height: 66px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          app-time-units{
+            margin-right: 24px;
+          }
+        }
+      }
+      ktags{
+        margin-left: 16px;
+        width: auto;
+        /deep/ .kTags {
+          border-top: none;
+        }
       }
       .kChart{
         width: 100%;
@@ -179,5 +200,34 @@ kpopupwidget{
 
   .icon-regression, .icon-regression + span, .icon-regression + span + span {
     color: $kDandger !important;
+  }
+}
+/* main content width according to screen resolution */
+@media screen and (max-width: 991px) {
+  .kContent {
+    width: 970px !important;
+    margin: auto !important;
+    display: flex;
+  }
+}
+@media screen and (min-width: 992px) {
+  .kContent {
+    width: 970px !important;
+    margin: auto !important;
+    display: flex;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .kContent {
+    width: 1200px!important;
+    margin: auto !important;
+    display: flex;
+  }
+}
+@media screen and (min-width: 1610px) {
+  .kContent {
+    width: 1500px !important;
+    margin: auto !important;
+    display: flex;
   }
 }

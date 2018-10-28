@@ -6,7 +6,12 @@
   font-weight: bold;
   margin-left: 24px;
 }
-
+.kSeparator{
+  width: 100%;
+  height: 24px;
+  background-color: $appBkgColor;
+  margin-bottom: 24px;
+}
 .kAccumulative{
   display: flex;
   align-items: center;

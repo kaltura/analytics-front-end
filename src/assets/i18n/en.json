@@ -67,6 +67,7 @@
     },
     "bandwidth":{
       "highlights": "Highlights",
+      "allUsers": "All Users",
       "title": "Publisher Bandwidth & Storage Report",
       "month_id": "Month",
       "date_id": "Date",

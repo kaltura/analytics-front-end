@@ -43,7 +43,7 @@ export class EndUserStorageComponent implements OnInit {
   public _columns: string[] = [];
   public _drillDown = '';
   public _tags: any[] = [];
-  
+
   public lineChartColors = lineChartColors;
   public barChartColors = barChartColors;
 
@@ -60,7 +60,7 @@ export class EndUserStorageComponent implements OnInit {
   private order = '-added_entries';
   private selectedUsers = '';
   private _dataConfig: ReportDataConfig = null;
-  
+
   public get isCompareMode(): boolean {
     return this.compareFilter !== null;
   }
@@ -127,7 +127,7 @@ export class EndUserStorageComponent implements OnInit {
       this.selectedUsers = '';
     }
     this.filter.userIds = this.selectedUsers;
-    
+
     if (this.compareFilter) {
       this.compareFilter.userIds = this.filter.userIds;
     }
@@ -177,7 +177,7 @@ export class EndUserStorageComponent implements OnInit {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-    
+
         const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
         return this._reportService.getReport(compareReportConfig, sections, true)
           .pipe(map(compare => ({ report, compare })));
@@ -252,11 +252,11 @@ export class EndUserStorageComponent implements OnInit {
       }
     }
   }
-  
+
   private handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
     const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
-    
+
     if (current.table && compare.table) {
       // TODO - remove once table totals are returned in production (currently implemented only on lbd.kaltura.com)
       // if (this._drillDown.length && current.baseTotals && compare.baseTotals) {
@@ -271,11 +271,11 @@ export class EndUserStorageComponent implements OnInit {
       this._columns = columns;
       this._tableData = tableData;
     }
-    
+
     if (current.totals && compare.totals) {
       this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
     }
-    
+
     if (current.graphs.length && compare.graphs.length) {
       if (current.baseTotals && compare.baseTotals) {
         this._reportService.addGraphTotals(current.graphs, current.baseTotals); // add totals to graph

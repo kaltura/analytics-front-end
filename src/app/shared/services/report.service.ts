@@ -46,7 +46,7 @@ export class ReportService implements OnDestroy {
 
   constructor(private _translate: TranslateService, private _kalturaClient: KalturaClient) {
   }
-  
+
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
     return response.result instanceof type
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
@@ -83,17 +83,17 @@ export class ReportService implements OnDestroy {
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
-  
+
         let request: KalturaRequest<any>[] = [getTable];
 
         if (sections.graph) {
           request.push(getGraphs);
         }
-  
+
         if (sections.totals) {
           request.push(getTotal);
         }
-        
+
         if (loadBaseTotals) {
           request.push(getBaseTotals);
         }
@@ -234,7 +234,7 @@ export class ReportService implements OnDestroy {
 
   public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
-    let columns = table.header.split(',');
+    let columns = table.header.toLowerCase().split(',');
     const tableData = [];
 
     // parse table data
@@ -254,7 +254,7 @@ export class ReportService implements OnDestroy {
 
     return { columns, tableData };
   }
-  
+
   public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(',');
@@ -272,10 +272,10 @@ export class ReportService implements OnDestroy {
         });
       }
     });
-  
+
     return tabsData;
   }
-  
+
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
@@ -299,7 +299,7 @@ export class ReportService implements OnDestroy {
           if (isNaN(val)) {
             val = 0;
           }
-          
+
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
@@ -309,7 +309,7 @@ export class ReportService implements OnDestroy {
       });
       barChartData[graph.id] = values;
       lineChartData[graph.id] = [{ name: 'Value', series: values}];
-    
+
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();

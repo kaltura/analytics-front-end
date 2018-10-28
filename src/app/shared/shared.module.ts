@@ -16,6 +16,7 @@ import { ReportTabsComponent } from './components/report-tabs/report-tabs.compon
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
 
@@ -37,14 +38,16 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     UsersFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
-    TrendPipe,
+    TimeUnitsComponent,
+    TrendPipe
   ],
   exports: [
     DateFilterComponent,
     UsersFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
-    TrendPipe,
+    TimeUnitsComponent,
+    TrendPipe
   ],
   providers: [
   ]
