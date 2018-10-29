@@ -61,7 +61,7 @@ export class PublisherStorageComponent implements OnInit {
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _authService: AuthService,
-              _dataConfigService: PublisherStorageDataConfig) {
+              private _dataConfigService: PublisherStorageDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -253,15 +253,11 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   private prepareCsvExportHeaders(): void {
-    let headers = '';
-    this._tabsData.forEach( (total: Tab) => {
-      headers = headers + total.title + ',';
+    let tabsData = JSON.parse(JSON.stringify(this._tabsData));
+    this._accumulativeStorage.forEach((item: Tab) => {
+      tabsData.push({title: item.title});
     });
-    headers = headers.substr(0, headers.length - 1) + ';';
-    this._columns.forEach( col => {
-      headers = headers + this._translate.instant('app.bandwidth.' + col ) + ',';
-    });
-    this._csvExportHeaders = headers.substr(0, headers.length - 1);
+    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(tabsData, this._columns);
   }
 
 }

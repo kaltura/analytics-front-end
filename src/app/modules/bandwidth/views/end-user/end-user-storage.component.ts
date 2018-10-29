@@ -65,7 +65,7 @@ export class EndUserStorageComponent implements OnInit {
               private _reportService: ReportService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              _dataConfigService: EndUserStorageDataConfig) {
+              private _dataConfigService: EndUserStorageDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -313,18 +313,6 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   private prepareCsvExportHeaders(): void {
-    let headers = '';
-    this._tabsData.forEach( total => {
-      headers = headers + total.title + ',';
-    });
-    headers = headers.substr(0, headers.length - 1) + ';';
-    this._columns.forEach( col => {
-      if (col !== 'HIDDEN') {
-        headers = headers + this._translate.instant('app.bandwidth.' + col) + ',';
-      } else {
-        headers = headers + this._translate.instant('app.bandwidth.objectId') + ',';
-      }
-    });
-    this._csvExportHeaders = headers.substr(0, headers.length - 1);
+    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns);
   }
 }

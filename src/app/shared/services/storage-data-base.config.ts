@@ -1,4 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
+import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 
 export enum ReportDataSection {
   table = 'table',
@@ -35,6 +36,22 @@ export interface ReportDataConfig {
 export abstract class StorageDataBaseConfig {
   protected constructor(protected _translate: TranslateService) {
   }
-  
+
   public abstract getConfig(): ReportDataConfig;
+
+  public prepareCsvExportHeaders(tabsData: Tab[], columns: string[]): string {
+    const config = this.getConfig();
+    let headers = '';
+
+    tabsData.forEach( (tab: Tab) => {
+      headers = `${headers}${tab.title},`;
+    });
+    headers = headers.substr(0, headers.length - 1) + ';';
+
+    columns.forEach( col => {
+      headers = `${headers}${this._translate.instant(`app.bandwidth.${col}`)},`;
+    });
+
+    return headers.substr(0, headers.length - 1);
+  }
 }
