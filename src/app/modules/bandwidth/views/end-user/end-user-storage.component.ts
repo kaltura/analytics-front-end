@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportHelper, ReportConfig } from 'shared/services';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportConfig } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser, KalturaReportGraph, KalturaReportInterval, KalturaReportType, KalturaReportTable, KalturaReportInputFilter } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -10,7 +9,6 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { EndUserStorageDataConfig } from './end-user-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { barChartColors, barChartCompareColors, lineChartColors, lineChartCompareColors } from 'shared/color-schemes/color-schemes';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -43,9 +41,6 @@ export class EndUserStorageComponent implements OnInit {
   public _columns: string[] = [];
   public _drillDown = '';
   public _tags: any[] = [];
-
-  public lineChartColors = lineChartColors;
-  public barChartColors = barChartColors;
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
@@ -89,8 +84,6 @@ export class EndUserStorageComponent implements OnInit {
     this.pager.pageIndex = 1;
     if (event.compare.active) {
       const compare = event.compare;
-      this.lineChartColors = lineChartCompareColors;
-      this.barChartColors = barChartCompareColors;
       this.compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
@@ -104,8 +97,6 @@ export class EndUserStorageComponent implements OnInit {
       );
     } else {
       this.compareFilter = null;
-      this.lineChartColors = lineChartColors;
-      this.barChartColors = barChartColors;
     }
     this.loadReport();
   }

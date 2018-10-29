@@ -280,15 +280,16 @@ export class ReportService implements OnDestroy {
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function): GraphsData {
-    const lineChartData = {};
-    const barChartData = {};
+    let lineChartData = {};
+    let barChartData = {};
     graphs.forEach( (graph: KalturaReportGraph) => {
       if (!config.fields[graph.id]) {
         return;
       }
-
+      let xAxisData = [];
+      let yAxisData = [];
       const data = graph.data.split(';');
-      let values = [];
+
       data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
@@ -304,11 +305,60 @@ export class ReportService implements OnDestroy {
             val = config.fields[graph.id].format(val);
           }
 
-          values.push({name, value: val});
+          xAxisData.push(name);
+          yAxisData.push(val);
         }
       });
-      barChartData[graph.id] = values;
-      lineChartData[graph.id] = [{ name: 'Value', series: values}];
+      lineChartData[graph.id] = {
+        color: ['#F49616', '#149CC1'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {},
+        series: [{
+          data: yAxisData,
+          type: 'line'
+        }]
+      };
+      barChartData[graph.id] = {
+        color: ['#00a784'],
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {},
+        series: [{
+          data: yAxisData,
+          type: 'bar'
+        }]
+      };
+
+      if (reportInterval === KalturaReportInterval.days) {
+        lineChartData[graph.id].dataZoom = [{
+          type: 'inside',
+          start: 0,
+          end: 100
+        }, {
+          start: 0,
+          end: 10,
+          handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+          }
+        }];
+      }
 
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {

@@ -35,41 +35,8 @@
         <app-time-units [dateFilter]="dateFilter"></app-time-units>
       </div>
       <div class="kChart">
-        <ngx-charts-bar-vertical *ngIf="_chartDataLoaded && _chartType==='bar' && !isCompareMode"
-                                 [results]="_barChartData[_selectedMetrics]"
-                                 [gradient]="false"
-                                 [xAxis]="true"
-                                 [yAxis]="true"
-                                 [scheme]="barChartColors"
-                                 [showXAxisLabel]="true"
-                                 [showYAxisLabel]="true"
-        >
-        </ngx-charts-bar-vertical>
-
-        <ngx-charts-bar-vertical-2d *ngIf="_chartDataLoaded && _chartType==='bar' && isCompareMode"
-                                    legendTitle=""
-                                    [results]="_barChartData[_selectedMetrics]"
-                                    [gradient]="false"
-                                    [legend]="isCompareMode"
-                                    [xAxis]="true"
-                                    [yAxis]="true"
-                                    [scheme]="barChartColors"
-                                    [showXAxisLabel]="true"
-                                    [showYAxisLabel]="true">
-        </ngx-charts-bar-vertical-2d>
-
-        <ngx-charts-line-chart *ngIf="_chartDataLoaded && _chartType==='line'"
-                               legendTitle=""
-                               [legend]="isCompareMode"
-                               [results]="_lineChartData[_selectedMetrics]"
-                               [xAxis]="true"
-                               [yAxis]="true"
-                               [scheme]="lineChartColors"
-                               [showXAxisLabel]="true"
-                               [showYAxisLabel]="true"
-                               [autoScale]="true"
-        >
-        </ngx-charts-line-chart>
+        <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]" *ngIf="_chartType==='bar'"></div>
+        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
       </div>
 
       <div class="kTable">

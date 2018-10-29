@@ -23,6 +23,9 @@
       ],
       "configuration/*": [
         "./src/configuration/*"
+      ],
+      "echarts": [
+        "node_modules/echarts/dist/echarts.min.js"
       ]
     }
   }
