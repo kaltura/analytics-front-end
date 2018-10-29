@@ -2,15 +2,15 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ReportDataConfig, ReportDataSection, StorageDataBaseConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EndUserStorageDataConfig extends StorageDataBaseConfig {
+export class EndUserStorageDataConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {

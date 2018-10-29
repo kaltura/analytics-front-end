@@ -1,5 +1,6 @@
-p{
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 20px;
+$kmc-flags-path: './styles/flags/';
+@import "./styles/flags/flags.scss";
+
+p-table /deep/ .narrowRow{
+  width: 40px;
 }

@@ -33,7 +33,7 @@ export interface ReportDataConfig {
 
 
 
-export abstract class StorageDataBaseConfig {
+export abstract class ReportDataBaseConfig {
   protected constructor(protected _translate: TranslateService) {
   }
 

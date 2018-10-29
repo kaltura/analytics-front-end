@@ -1,3 +1,61 @@
-<p>
-  Audience Geo-Location View
-</p>
+<div class="kReport kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.audience.geo.top' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <span>Countries filter placeholder </span>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns; let i = index" [pSortableColumn]="isCompareMode ? null : col" [class.narrowRow]="i<2">
+                  {{'app.audience.geo.' + col | translate}}
+                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [class.narrowRow]="i<2">
+                  <span *ngIf="i===0">{{rowIndex+1}}</span>
+                  <span *ngIf="isCompareMode && data[col]?.value && i!==1" class="kTrend">
+                    <i [class]="data[col].trend | appTrend"></i>
+                    <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
+                    <span *ngIf="i===1">flag</span>
+                  </span>
+                  <span *ngIf="(!isCompareMode || !data[col]?.value) && i!==1">{{data[col]}}</span>
+                  <i *ngIf="i===1" class="kFlag" [ngClass]="'kFlag-'+data[col].toLowerCase()"></i>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+
+</div>
+
