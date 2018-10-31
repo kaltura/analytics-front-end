@@ -11,6 +11,7 @@ import { DateFilterComponent } from './components/date-filter/date-filter.compon
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
+import { BulletComponent } from './components/bullet/bullet.component';
 import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,6 +39,7 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     UsersFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
+    BulletComponent,
     TimeUnitsComponent,
     TrendPipe
   ],
@@ -46,6 +48,7 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     UsersFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
+    BulletComponent,
     TimeUnitsComponent,
     TrendPipe
   ],

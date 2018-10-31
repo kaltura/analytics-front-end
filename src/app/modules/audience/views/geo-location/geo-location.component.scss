@@ -2,5 +2,20 @@ $kmc-flags-path: './styles/flags/';
 @import "./styles/flags/flags.scss";
 
 p-table /deep/ .narrowRow{
-  width: 40px;
+  width: 42px;
+}
+.kCountryFilter{
+  margin-right: 24px;
+}
+
+.kCountryList {
+  vertical-align: middle;
+  display: inline-block;
+  max-width: 275px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .kCountryListFlag {
+    margin: 0 .125em 0 .5em;
+  }
 }

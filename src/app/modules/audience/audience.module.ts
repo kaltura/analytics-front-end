@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { NgxEchartsModule } from 'ngx-echarts';
 
 import { routing } from './audience.routes';
@@ -32,6 +33,7 @@ import { TableModule } from 'primeng/table';
     DropdownModule,
     ButtonModule,
     PaginatorModule,
+    MultiSelectModule,
     SharedModule,
     TableModule,
     NgxEchartsModule,

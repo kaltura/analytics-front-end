@@ -8,9 +8,9 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { SelectItem } from 'primeng/api';
 import { of as ObservableOf } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CompareService } from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-geo-location',
@@ -26,6 +26,7 @@ export class GeoLocationComponent implements OnInit {
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
 
   public _tableData: any[] = [];
+  private unFilteredTableData: any[] = [];
   public _tabsData: Tab[] = [];
   public _showTable = true;
 
@@ -35,9 +36,8 @@ export class GeoLocationComponent implements OnInit {
   public _columns: string[] = [];
   public _totalCount: number;
 
-  public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 10, pageIndex: 1});
+  private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlay;
-  public compareFilter: KalturaReportInputFilter = null;
   public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
@@ -45,16 +45,14 @@ export class GeoLocationComponent implements OnInit {
     }
   );
 
-  private order = '-count_plays';
+  public _countryCodes: { value: string, label: string }[] = [];
+  public _selectedCountries: SelectItem[] = [];
 
-  public get isCompareMode(): boolean {
-    return this.compareFilter !== null;
-  }
+  private order = '-count_plays';
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
-              private _compareService: CompareService,
               private _authService: AuthService,
               private _dataConfigService: GeoLocationDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -72,21 +70,6 @@ export class GeoLocationComponent implements OnInit {
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
-    if (event.compare.active) {
-      const compare = event.compare;
-      this.compareFilter = new KalturaReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: event.timeZoneOffset,
-          interval: event.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
-    } else {
-      this.compareFilter = null;
-    }
     this.loadReport();
   }
 
@@ -94,20 +77,23 @@ export class GeoLocationComponent implements OnInit {
     this._selectedMetrics = tab.key;
   }
 
-  public _onPaginationChanged(event): void {
-    if (event.page !== (this.pager.pageIndex - 1)) {
-      this.pager.pageIndex = event.page + 1;
-      this.loadReport({table: null});
-    }
-  }
-
   public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order && !this.isCompareMode) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this.order) {
-        this.order = order;
-        this.loadReport({table: null});
-      }
+    if (event.data.length && event.field && event.order) {
+      event.data.sort((data1, data2) => {
+        const sortByValue = event.field !== 'object_id'; // country name should be sorted alphabetically, all the rest by value
+        let value1 = sortByValue ? parseInt(data1[event.field]) : data1[event.field];
+        let value2 = sortByValue ? parseInt(data2[event.field]) : data2[event.field];
+        let result = null;
+
+        if (value1 < value2) {
+          result = -1;
+        } else if (value1 > value2) {
+          result = 1;
+        } else if (value1 === value2) {
+          result = 0;
+        }
+        return (event.order * result);
+      });
     }
   }
 
@@ -118,6 +104,22 @@ export class GeoLocationComponent implements OnInit {
     }
   }
 
+  public _onCountrySelectChange(event): void {
+    this._tableData = this.unFilteredTableData.filter(data => {
+      if (this._selectedCountries.length === 0) {
+        return true;
+      } else {
+        let found = false;
+        this._selectedCountries.forEach(country => {
+          if (data.country.toLowerCase() === country) {
+            found = true;
+          }
+        });
+        return found;
+      }
+    });
+  }
+
   private loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._tableData = [];
@@ -126,24 +128,15 @@ export class GeoLocationComponent implements OnInit {
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
-        if (!this.isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-
-        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
-        return this._reportService.getReport(compareReportConfig, sections, false)
-          .pipe(map(compare => ({ report, compare })));
+        return ObservableOf({ report, compare: null });
       }))
       .subscribe(({ report, compare }) => {
-          if (compare) {
-            this.handleCompare(report, compare);
-          } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.handleTable(report.table); // handle table
-            }
-            if (report.totals) {
-              this.handleTotals(report.totals); // handle totals
-            }
+          this._countryCodes = [];
+          if (report.table && report.table.header && report.table.data) {
+            this.handleTable(report.table); // handle table
+          }
+          if (report.totals) {
+            this.handleTotals(report.totals); // handle totals
           }
           this.prepareCsvExportHeaders();
           this._isBusy = false;
@@ -182,29 +175,24 @@ export class GeoLocationComponent implements OnInit {
         });
   }
 
-  private handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
-    const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
-
-    if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
-      this._totalCount = current.table.totalCount;
-      this._columns = columns;
-      this._tableData = tableData;
-    }
-
-    if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
-    }
-  }
-
   private handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._columns[0] = this._columns.splice(1, 1, this._columns[0])[0]; // switch places between the first 2 columns
-    this._columns.unshift('index'); // add line indexing column
+    this._columns.unshift('index'); // add line indexing column at the beginning
+    let tmp = this._columns.pop();
+    this._columns.push('distribution'); // add distribution column at the end
+    this._columns.push(tmp);
     this._tableData = tableData;
+    this.unFilteredTableData = [];
+
+    // set countries filter data
+    tableData.forEach( data => {
+      this._countryCodes.push({value: data.country.toLowerCase(), label: data.object_id});
+      this.unFilteredTableData.push(data);
+    });
+
   }
 
   private handleTotals(totals: KalturaReportTotal): void {

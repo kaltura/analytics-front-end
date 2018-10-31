@@ -3,19 +3,36 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" [showCompare]="false" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
     <span class="kTitle">{{'app.audience.geo.top' | translate}}</span>
+    <p-multiSelect class="kCountryFilter"
+                   [options]="_countryCodes"
+                   [maxSelectedLabels]="0"
+                   [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
+                   [filterPlaceHolder]="'app.audience.geo.findCountry' | translate"
+                   [showToggleAll]="false"
+                   [resetFilterOnHide]="true"
+                   [(ngModel)]="_selectedCountries"
+                   (onChange)="_onCountrySelectChange($event)"
+                   [defaultLabel]="'app.audience.geo.selectCountry' | translate">
+      <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+              <i class="kFlag" [ngClass]="'kFlag-'+country.value"></i>
+              {{country.label}}
+            </span>
+      </ng-template>
+    </p-multiSelect>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
-        <span>Countries filter placeholder </span>
+
       </div>
 
       <div class="kTable">
@@ -24,19 +41,39 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns; let i = index" [pSortableColumn]="isCompareMode ? null : col" [class.narrowRow]="i<2">
+                <th *ngFor="let col of _columns; let i = index" [pSortableColumn]="i < 2 || i === 4 ? null : col" [class.narrowRow]="i<2">
                   {{'app.audience.geo.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  <p-sortIcon [field]="col"></p-sortIcon>
                 </th>
 
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
-                <td *ngFor="let col of _columns; let i = index" [class.narrowRow]="i<2">
+                <td>
+                  <span>{{rowIndex+1}}</span>
+                </td>
+                <td>
+                  <i class="kFlag" [ngClass]="'kFlag-'+data[_columns[1]].toLowerCase()"></i>
+                </td>
+                <td>
+                  <span *ngIf="!data[_columns[2]]?.value && i!==1">{{data[_columns[2]]}}</span>
+                </td>
+                <td>
+                  <span *ngIf="!data[_columns[3]]?.value && i!==1">{{data[_columns[3]]}}</span>
+                </td>
+                <td>
+                  <div *ngIf="!data[_columns[3]]?.value && i!==1">
+                    <app-bullet [value]="data[_columns[3]] / _tabsData[0].value * 100"></app-bullet>
+                  </div>
+                </td>
+                <td>
+                  <span *ngIf="!data[_columns[5]]?.value && i!==1">{{data[_columns[5]]}}</span>
+                </td>
+                <!--td *ngFor="let col of _columns; let i = index" [class.narrowRow]="i<2">
                   <span *ngIf="i===0">{{rowIndex+1}}</span>
                   <span *ngIf="isCompareMode && data[col]?.value && i!==1" class="kTrend">
                     <i [class]="data[col].trend | appTrend"></i>
@@ -45,11 +82,10 @@
                   </span>
                   <span *ngIf="(!isCompareMode || !data[col]?.value) && i!==1">{{data[col]}}</span>
                   <i *ngIf="i===1" class="kFlag" [ngClass]="'kFlag-'+data[col].toLowerCase()"></i>
-                </td>
+                </td-->
               </tr>
             </ng-template>
           </p-table>
-          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
         </div>
       </div>
 
