@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportConfig } from 'shared/services';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig } from 'shared/services';
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -47,6 +47,7 @@ export class GeoLocationComponent implements OnInit {
 
   public _countryCodes: { value: string, label: string }[] = [];
   public _selectedCountries: SelectItem[] = [];
+  public _drillDown = '';
 
   private order = '-count_plays';
 
@@ -105,19 +106,12 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onCountrySelectChange(event): void {
-    this._tableData = this.unFilteredTableData.filter(data => {
-      if (this._selectedCountries.length === 0) {
-        return true;
-      } else {
-        let found = false;
-        this._selectedCountries.forEach(country => {
-          if (data.country.toLowerCase() === country) {
-            found = true;
-          }
-        });
-        return found;
-      }
-    });
+    this.updateSelectedCountries();
+  }
+
+  public _onDrillDown(country: string): void {
+    this._drillDown = country.length ? country : '';
+    this.loadReport();
   }
 
   private loadReport(sections = this._dataConfig): void {
@@ -126,6 +120,9 @@ export class GeoLocationComponent implements OnInit {
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
+    if (this._drillDown.length) {
+      reportConfig.objectIds = this._drillDown;
+    }
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
         return ObservableOf({ report, compare: null });
@@ -188,11 +185,29 @@ export class GeoLocationComponent implements OnInit {
     this.unFilteredTableData = [];
 
     // set countries filter data
-    tableData.forEach( data => {
-      this._countryCodes.push({value: data.country.toLowerCase(), label: data.object_id});
-      this.unFilteredTableData.push(data);
-    });
+    if (this._drillDown.length === 0) {
+      tableData.forEach(data => {
+        this._countryCodes.push({value: data.country.toLowerCase(), label: data.object_id});
+        this.unFilteredTableData.push(data);
+      });
+      this.updateSelectedCountries();
+    }
+  }
 
+  private updateSelectedCountries(): void {
+    this._tableData = this.unFilteredTableData.filter(data => {
+      if (this._selectedCountries.length === 0) {
+        return true;
+      } else {
+        let found = false;
+        this._selectedCountries.forEach(country => {
+          if (data.country.toLowerCase() === country) {
+            found = true;
+          }
+        });
+        return found;
+      }
+    });
   }
 
   private handleTotals(totals: KalturaReportTotal): void {

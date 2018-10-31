@@ -1,9 +1,6 @@
 $kmc-flags-path: './styles/flags/';
 @import "./styles/flags/flags.scss";
 
-p-table /deep/ .narrowRow{
-  width: 42px;
-}
 .kCountryFilter{
   margin-right: 24px;
 }

@@ -7,8 +7,13 @@
   </div>
 
   <div class="kFilters">
-    <span class="kTitle">{{'app.audience.geo.top' | translate}}</span>
-    <p-multiSelect class="kCountryFilter"
+    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.audience.geo.top' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown('')">{{'app.audience.geo.title' | translate}}</a>
+      <span class="separator">/</span>
+      <span>{{_drillDown}}</span>
+    </div>
+    <p-multiSelect class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
                    [options]="_countryCodes"
                    [maxSelectedLabels]="0"
                    [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
@@ -44,45 +49,43 @@
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns; let i = index" [pSortableColumn]="i < 2 || i === 4 ? null : col" [class.narrowRow]="i<2">
-                  {{'app.audience.geo.' + col | translate}}
-                  <p-sortIcon [field]="col"></p-sortIcon>
+                <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
+                <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
+                <th [pSortableColumn]="'object_id'">{{'app.audience.geo.object_id' | translate}}
+                  <p-sortIcon [field]="'object_id'"></p-sortIcon>
                 </th>
-
+                <th [pSortableColumn]="'count_plays'">{{'app.audience.geo.count_plays' | translate}}
+                  <p-sortIcon [field]="'count_plays'"></p-sortIcon>
+                </th>
+                <th *ngIf="!_drillDown.length">{{'app.audience.geo.distribution' | translate}}</th>
+                <th [pSortableColumn]="'play_through_ratio'">{{'app.audience.geo.play_through_ratio' | translate}}
+                  <p-sortIcon [field]="'play_through_ratio'"></p-sortIcon>
+                </th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
-                <td>
+                <td *ngIf="!_drillDown.length">
                   <span>{{rowIndex+1}}</span>
                 </td>
-                <td>
-                  <i class="kFlag" [ngClass]="'kFlag-'+data[_columns[1]].toLowerCase()"></i>
+                <td *ngIf="!_drillDown.length">
+                  <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
                 </td>
                 <td>
-                  <span *ngIf="!data[_columns[2]]?.value && i!==1">{{data[_columns[2]]}}</span>
+                  <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && !_drillDown.length">{{data['object_id']}}</a>
+                  <span *ngIf="!data['object_id']?.value && _drillDown.length">{{data['object_id']}}</span>
                 </td>
-                <td>
-                  <span *ngIf="!data[_columns[3]]?.value && i!==1">{{data[_columns[3]]}}</span>
+                <td *ngIf="!data['count_plays']?.value">
+                  <span>{{data['count_plays']}}</span>
                 </td>
-                <td>
-                  <div *ngIf="!data[_columns[3]]?.value && i!==1">
-                    <app-bullet [value]="data[_columns[3]] / _tabsData[0].value * 100"></app-bullet>
+                <td *ngIf="!data['count_plays']?.value && !_drillDown.length">
+                  <div>
+                    <app-bullet [value]="data['count_plays'] / _tabsData[0].value * 100"></app-bullet>
                   </div>
                 </td>
-                <td>
-                  <span *ngIf="!data[_columns[5]]?.value && i!==1">{{data[_columns[5]]}}</span>
+                <td *ngIf="!data['play_through_ratio']?.value">
+                  <span>{{data['play_through_ratio']}}</span>
                 </td>
-                <!--td *ngFor="let col of _columns; let i = index" [class.narrowRow]="i<2">
-                  <span *ngIf="i===0">{{rowIndex+1}}</span>
-                  <span *ngIf="isCompareMode && data[col]?.value && i!==1" class="kTrend">
-                    <i [class]="data[col].trend | appTrend"></i>
-                    <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
-                    <span *ngIf="i===1">flag</span>
-                  </span>
-                  <span *ngIf="(!isCompareMode || !data[col]?.value) && i!==1">{{data[col]}}</span>
-                  <i *ngIf="i===1" class="kFlag" [ngClass]="'kFlag-'+data[col].toLowerCase()"></i>
-                </td-->
               </tr>
             </ng-template>
           </p-table>
