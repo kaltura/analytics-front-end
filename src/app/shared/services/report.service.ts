@@ -314,6 +314,9 @@ export class ReportService implements OnDestroy {
         }
       });
       lineChartData[graph.id] = {
+        grid: {
+          top: 24, left: 54, bottom: 24, right: 24
+        },
         color: ['#F49616', '#149CC1'],
         xAxis: {
           type: 'category',
@@ -329,6 +332,9 @@ export class ReportService implements OnDestroy {
         }]
       };
       barChartData[graph.id] = {
+        grid: {
+          top: 24, left: 54, bottom: 24, right: 24
+        },
         color: ['#00a784'],
         xAxis: {
           type: 'category',
