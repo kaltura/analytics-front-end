@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig } from 'shared/services';
@@ -11,6 +12,8 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { SelectItem } from 'primeng/api';
 import { of as ObservableOf } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import * as echarts from 'echarts';
+import { EChartOption } from 'echarts';
 
 @Component({
   selector: 'app-geo-location',
@@ -29,6 +32,7 @@ export class GeoLocationComponent implements OnInit {
   private unFilteredTableData: any[] = [];
   public _tabsData: Tab[] = [];
   public _showTable = true;
+  public _mapChartData: any = {'count_plays': {}};
 
   public _isBusy: boolean;
   public _csvExportHeaders = '';
@@ -55,6 +59,7 @@ export class GeoLocationComponent implements OnInit {
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
+              private http: HttpClient,
               private _dataConfigService: GeoLocationDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
@@ -62,6 +67,11 @@ export class GeoLocationComponent implements OnInit {
 
   ngOnInit() {
     this._isBusy = false;
+    // load works map data
+    this.http.get('assets/world.json')
+      .subscribe(data => {
+        echarts.registerMap('world', data);
+      });
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -76,14 +86,17 @@ export class GeoLocationComponent implements OnInit {
 
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    if (this._drillDown.length === 0) {
+      this.updateMap();
+    }
   }
 
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
       event.data.sort((data1, data2) => {
         const sortByValue = event.field !== 'object_id'; // country name should be sorted alphabetically, all the rest by value
-        let value1 = sortByValue ? parseInt(data1[event.field]) : data1[event.field];
-        let value2 = sortByValue ? parseInt(data2[event.field]) : data2[event.field];
+        let value1 = sortByValue ? parseInt(data1[event.field].replace(new RegExp(',', 'g'), '')) : data1[event.field].replace(new RegExp(',', 'g'), '');
+        let value2 = sortByValue ? parseInt(data2[event.field].replace(new RegExp(',', 'g'), '')) : data2[event.field].replace(new RegExp(',', 'g'), '');
         let result = null;
 
         if (value1 < value2) {
@@ -96,6 +109,19 @@ export class GeoLocationComponent implements OnInit {
         return (event.order * result);
       });
     }
+  }
+
+  public getValue(val: string): number {
+    return parseFloat(val.split(',').join(''));
+  }
+
+  public getPercent(val: string): number {
+    const total: number = parseFloat(this._tabsData[0].value.split(',').join(''));
+    return parseFloat(val.split(',').join('')) / total * 100;
+  }
+
+  public onChartClick(event): void {
+    debugger;
   }
 
   public toggleTable(): void {
@@ -191,6 +217,7 @@ export class GeoLocationComponent implements OnInit {
         this.unFilteredTableData.push(data);
       });
       this.updateSelectedCountries();
+      this.updateMap();
     }
   }
 
@@ -216,6 +243,21 @@ export class GeoLocationComponent implements OnInit {
 
   private prepareCsvExportHeaders(): void {
     this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns);
+  }
+
+  private updateMap(): void {
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
+    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
+    mapConfig.series[0].data = [];
+    let maxValue = 0;
+    this._tableData.forEach(data => {
+      mapConfig.series[0].data.push({name: data.object_id, value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))});
+      if (parseInt(data[this._selectedMetrics]) > maxValue) {
+        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+      }
+    });
+    mapConfig.visualMap.max = maxValue;
+    this._mapChartData[this._selectedMetrics] = mapConfig;
   }
 
 }

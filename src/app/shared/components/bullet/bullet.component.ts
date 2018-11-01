@@ -15,7 +15,7 @@ export class BulletComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this._value = parseFloat(this.value.toPrecision(2));
+      this._value = parseFloat(this.value.toFixed(2));
     }, 200);
 
   }

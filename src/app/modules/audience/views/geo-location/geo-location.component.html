@@ -39,7 +39,9 @@
       <div class="kDimensions">
 
       </div>
-
+      <div class="kMap">
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapselectchanged)="onChartClick($event)"></div>
+      </div>
       <div class="kTable">
         <div class="kToggle">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
@@ -80,7 +82,7 @@
                 </td>
                 <td *ngIf="!data['count_plays']?.value && !_drillDown.length">
                   <div>
-                    <app-bullet [value]="data['count_plays'] / _tabsData[0].value * 100"></app-bullet>
+                    <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="!data['play_through_ratio']?.value">
