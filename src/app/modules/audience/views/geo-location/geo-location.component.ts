@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig } from 'shared/services';
+import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig, Report } from 'shared/services';
 import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -14,6 +14,7 @@ import { of as ObservableOf } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
+import { CompareService } from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-geo-location',
@@ -48,6 +49,10 @@ export class GeoLocationComponent implements OnInit {
       searchInAdminTags: false
     }
   );
+  public compareFilter: KalturaReportInputFilter = null;
+  public get isCompareMode(): boolean {
+    return this.compareFilter !== null;
+  }
 
   public _countryCodes: { value: string, label: string }[] = [];
   public _selectedCountries: SelectItem[] = [];
@@ -60,6 +65,7 @@ export class GeoLocationComponent implements OnInit {
               private _reportService: ReportService,
               private _authService: AuthService,
               private http: HttpClient,
+              private _compareService: CompareService,
               private _dataConfigService: GeoLocationDataConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
@@ -81,6 +87,21 @@ export class GeoLocationComponent implements OnInit {
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
+    if (event.compare.active) {
+      const compare = event.compare;
+      this.compareFilter = new KalturaReportInputFilter(
+        {
+          searchInTags: true,
+          searchInAdminTags: false,
+          timeZoneOffset: event.timeZoneOffset,
+          interval: event.timeUnits,
+          fromDay: compare.startDay,
+          toDay: compare.endDay
+        }
+      );
+    } else {
+      this.compareFilter = null;
+    }
     this.loadReport();
   }
 
@@ -92,7 +113,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order) {
+    if (event.data.length && event.field && event.order && !this.isCompareMode) {
       event.data.sort((data1, data2) => {
         const sortByValue = event.field !== 'object_id'; // country name should be sorted alphabetically, all the rest by value
         let value1 = sortByValue ? parseInt(data1[event.field].replace(new RegExp(',', 'g'), '')) : data1[event.field].replace(new RegExp(',', 'g'), '');
@@ -151,15 +172,24 @@ export class GeoLocationComponent implements OnInit {
     }
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
-        return ObservableOf({ report, compare: null });
+        if (!this.isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
+          .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          this._countryCodes = [];
-          if (report.table && report.table.header && report.table.data) {
-            this.handleTable(report.table); // handle table
-          }
-          if (report.totals) {
-            this.handleTotals(report.totals); // handle totals
+          if (compare) {
+            this.handleCompare(report, compare);
+          } else {
+            this._countryCodes = [];
+            if (report.table && report.table.header && report.table.data) {
+              this.handleTable(report.table); // handle table
+            }
+            if (report.totals) {
+              this.handleTotals(report.totals); // handle totals
+            }
           }
           this.prepareCsvExportHeaders();
           this._isBusy = false;
@@ -196,6 +226,22 @@ export class GeoLocationComponent implements OnInit {
             buttons
           });
         });
+  }
+
+  private handleCompare(current: Report, compare: Report): void {
+    const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
+    const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
+
+    if (current.table && compare.table) {
+      const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
+      this._totalCount = current.table.totalCount;
+      this._columns = columns;
+      this._tableData = tableData;
+    }
+
+    if (current.totals && compare.totals) {
+      this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+    }
   }
 
   private handleTable(table: KalturaReportTable): void {
@@ -246,18 +292,23 @@ export class GeoLocationComponent implements OnInit {
   }
 
   private updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
-    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
-    mapConfig.series[0].data = [];
-    let maxValue = 0;
-    this._tableData.forEach(data => {
-      mapConfig.series[0].data.push({name: data.object_id, value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))});
-      if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
-      }
-    });
-    mapConfig.visualMap.max = maxValue;
-    this._mapChartData[this._selectedMetrics] = mapConfig;
+    if (!this.isCompareMode) {
+      let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
+      mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
+      mapConfig.series[0].data = [];
+      let maxValue = 0;
+      this._tableData.forEach(data => {
+        mapConfig.series[0].data.push({
+          name: data.object_id,
+          value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
+        });
+        if (parseInt(data[this._selectedMetrics]) > maxValue) {
+          maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        }
+      });
+      mapConfig.visualMap.max = maxValue;
+      this._mapChartData[this._selectedMetrics] = mapConfig;
+    }
   }
 
 }

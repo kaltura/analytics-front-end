@@ -13,7 +13,16 @@ export class ReportHelper {
   }
 
   static numberOrZero(x: any): string {
-    return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : '0';
+    if (!x.length) {
+      return '0';
+    } else {
+      if (parseFloat(x) > 1) {
+        return ReportHelper.numberWithCommas(Math.round(parseFloat(x)));
+      } else {
+        return parseFloat(x).toPrecision(3);
+      }
+    }
+
   }
 
   static time(x: any): string {

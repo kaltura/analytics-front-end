@@ -211,9 +211,9 @@ export class CompareService implements OnDestroy {
             if (fieldConfig.nonComparable) {
               result = fieldConfig.format(value);
             } else {
-              const trend = hasConsistentData ? Math.abs(this._calculateTrend(Number(value), Number(compareValues[j]))) : 0;
+              const trend = hasConsistentData ? this._calculateTrend(Number(value), Number(compareValues[j])) : 0;
               result = {
-                value: hasConsistentData ? fieldConfig.format(String(trend)) : 'N/A',
+                value: hasConsistentData ? String(Math.abs(trend)) : 'N/A',
                 tooltip: `${ReportHelper.numberOrZero(value)} – ${hasConsistentData ? ReportHelper.numberOrZero(compareValues[j]) : 'N/A'}`,
                 trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
                 units: hasConsistentData ? '%' : ''
@@ -262,6 +262,7 @@ export class CompareService implements OnDestroy {
   }
 
   private _calculateTrend(current: number, compare: number): number {
+
     if (current === 0 && compare === 0) {
       return 0;
     }
@@ -273,7 +274,6 @@ export class CompareService implements OnDestroy {
     if (compare === 0 && current > 0) {
       return 100;
     }
-
     return Math.ceil(((current - compare) / current) * 100);
   }
 }

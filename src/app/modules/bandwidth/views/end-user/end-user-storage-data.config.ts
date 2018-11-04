@@ -67,10 +67,10 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrNA(value)
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.time(value)
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.time(value)
           }
         }
       },

@@ -3,7 +3,7 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" [showCompare]="false" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
@@ -13,7 +13,7 @@
       <span class="separator">/</span>
       <span>{{_drillDown}}</span>
     </div>
-    <p-multiSelect class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
+    <p-multiSelect *ngIf="!isCompareMode" class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
                    [options]="_countryCodes"
                    [maxSelectedLabels]="0"
                    [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
@@ -35,7 +35,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
 
       </div>
@@ -53,15 +53,15 @@
               <tr>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
-                <th [pSortableColumn]="'object_id'">{{'app.audience.geo.object_id' | translate}}
-                  <p-sortIcon [field]="'object_id'"></p-sortIcon>
+                <th [pSortableColumn]="isCompareMode ? null : 'object_id'">{{'app.audience.geo.object_id' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'object_id'"></p-sortIcon>
                 </th>
-                <th [pSortableColumn]="'count_plays'">{{'app.audience.geo.count_plays' | translate}}
-                  <p-sortIcon [field]="'count_plays'"></p-sortIcon>
+                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="isCompareMode ? null : 'count_plays'">{{'app.audience.geo.count_plays' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
                 </th>
-                <th *ngIf="!_drillDown.length">{{'app.audience.geo.distribution' | translate}}</th>
-                <th [pSortableColumn]="'play_through_ratio'">{{'app.audience.geo.play_through_ratio' | translate}}
-                  <p-sortIcon [field]="'play_through_ratio'"></p-sortIcon>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
+                <th *ngIf="_selectedMetrics==='play_through_ratio'" [pSortableColumn]="isCompareMode ? null : 'play_through_ratio'">{{'app.audience.geo.play_through_ratio' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'play_through_ratio'"></p-sortIcon>
                 </th>
               </tr>
             </ng-template>
@@ -77,16 +77,24 @@
                   <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && !_drillDown.length">{{data['object_id']}}</a>
                   <span *ngIf="!data['object_id']?.value && _drillDown.length">{{data['object_id']}}</span>
                 </td>
-                <td *ngIf="!data['count_plays']?.value">
-                  <span>{{data['count_plays']}}</span>
+                <td *ngIf="_selectedMetrics==='count_plays'">
+                  <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend">
+                    <i [class]="data['count_plays'].trend | appTrend"></i>
+                    <span [kTooltip]="data['count_plays'].tooltip">{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
+                  </span>
+                  <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
                 </td>
-                <td *ngIf="!data['count_plays']?.value && !_drillDown.length">
+                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.value && !_drillDown.length && !isCompareMode">
                   <div>
                     <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
                   </div>
                 </td>
-                <td *ngIf="!data['play_through_ratio']?.value">
-                  <span>{{data['play_through_ratio']}}</span>
+                <td *ngIf="_selectedMetrics==='play_through_ratio'">
+                  <span *ngIf="isCompareMode && data['play_through_ratio']?.value" class="kTrend">
+                    <i [class]="data['play_through_ratio'].trend | appTrend"></i>
+                    <span [kTooltip]="data['play_through_ratio'].tooltip">{{data['play_through_ratio'].value}}&nbsp;{{data['play_through_ratio'].units}}</span>
+                  </span>
+                  <span *ngIf="!data['count_plays']?.value">{{data['play_through_ratio']}}</span>
                 </td>
               </tr>
             </ng-template>

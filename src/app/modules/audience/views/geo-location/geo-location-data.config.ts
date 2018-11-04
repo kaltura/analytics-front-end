@@ -57,9 +57,9 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       tooltip: {
         trigger: 'item',
         formatter: (params) => {
-          if (params.name && params.value) {
+          if (params.name && parseFloat(params.value) >= 0) {
             let tooltip = params.seriesName + '<br/>' + params.name + ' : ' + params.value;
-            if (params.seriesName === 'Play-through Ratio'){
+            if (params.seriesName === 'Play-through Ratio') {
               tooltip = tooltip + '%';
             }
             return tooltip;
