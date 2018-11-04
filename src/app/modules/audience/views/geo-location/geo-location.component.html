@@ -40,7 +40,7 @@
 
       </div>
       <div class="kMap">
-        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapselectchanged)="onChartClick($event)"></div>
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
       </div>
       <div class="kTable">
         <div class="kToggle">

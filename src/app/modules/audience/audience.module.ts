@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 
 import { routing } from './audience.routes';
 import { AudienceComponent } from './audience.component';

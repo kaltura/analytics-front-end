@@ -59,6 +59,8 @@ export class GeoLocationComponent implements OnInit {
   public _drillDown = '';
 
   private order = '-count_plays';
+  private echartsIntance: any; // echart instance
+  private countryCoords: {name: string,  coords: [number, number]}[] = [];
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -77,7 +79,16 @@ export class GeoLocationComponent implements OnInit {
     this.http.get('assets/world.json')
       .subscribe(data => {
         echarts.registerMap('world', data);
+        if (data['features'] && data['features'].length) {
+          data['features'].forEach(feature => {
+            this.countryCoords.push({name: feature['properties']['name'], coords: feature['geometry']['coordinates'][0][0]});
+          });
+        }
       });
+  }
+
+  public onChartInit(ec) {
+    this.echartsIntance = ec;
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -142,7 +153,17 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public onChartClick(event): void {
-    debugger;
+    if (event.batch && event.batch.length && event.batch[0].name) {
+      let countryGotData = false;
+      this._countryCodes.forEach(country => {
+        if (country.label === event.batch[0].name) {
+          countryGotData = true;
+        }
+      });
+      if (countryGotData) {
+        this._onDrillDown(event.batch[0].name);
+      }
+    }
   }
 
   public toggleTable(): void {
@@ -158,6 +179,18 @@ export class GeoLocationComponent implements OnInit {
 
   public _onDrillDown(country: string): void {
     this._drillDown = country.length ? country : '';
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
+    if (this._drillDown === '') {
+      this.echartsIntance.setOption({series: [{zoom: 1.2}]}, false);
+    } else {
+      this.echartsIntance.setOption({series: [{zoom: 4}]}, false);
+      this.countryCoords.forEach(country => {
+        if (country.name === this._drillDown) {
+          const coords = Array.isArray(country.coords[0]) ? country.coords[0] : country.coords;
+          this.echartsIntance.setOption({series: [{center: coords}]}, false);
+        }
+      });
+    }
     this.loadReport();
   }
 

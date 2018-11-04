@@ -54,6 +54,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       grid: {
         top: 24, left: 24, bottom: 24, right: 24
       },
+      selectedMode: 'single',
       tooltip: {
         trigger: 'item',
         formatter: (params) => {
@@ -85,6 +86,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           mapType: 'world',
           roam: true,
           zoom: 1.2,
+          animationDurationUpdate: 1000,
+          animationEasingUpdate: 'cubicInOut',
           itemStyle: {
             emphasis: {label: {show: true}, areaColor: '#F49616'}
           },
