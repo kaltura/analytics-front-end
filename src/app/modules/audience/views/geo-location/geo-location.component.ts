@@ -167,7 +167,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onDrillDown(country: string): void {
-    this._drillDown = country.length ? country : '';
+    this._drillDown = country.length ? (this._drillDown !== country ? country : '') : '';
     this.loadReport();
   }
 
