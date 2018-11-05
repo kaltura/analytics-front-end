@@ -3,7 +3,6 @@ const workspaceLibraries = [
   '@kaltura-ng/kaltura-common',
   '@kaltura-ng/kaltura-ui',
   '@kaltura-ng/kaltura-primeng-ui',
-  '@kaltura-ng/mc-shared',
   '@kaltura-ng/mc-theme'
 ];
 
