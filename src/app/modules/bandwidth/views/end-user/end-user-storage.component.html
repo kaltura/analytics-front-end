@@ -58,11 +58,11 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index">
-                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'name' && col !== 'month_id'" class="kTrend">
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'name' && col !== 'month_id' && col !== 'date_id'" class="kTrend">
                     <i [class]="data[col].trend | appTrend"></i>
                     <span [kTooltip]="data[col].tooltip">{{data[col].value}}&nbsp;{{data[col].units}}</span>
                   </span>
-                  <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id'">
+                  <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
                     <span *ngIf="col !== 'name'">{{data[col]}}</span>
                     <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])">{{data[col]}}</a>
                   </ng-container>
