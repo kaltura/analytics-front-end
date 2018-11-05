@@ -59,8 +59,6 @@ export class GeoLocationComponent implements OnInit {
   public _drillDown = '';
 
   private order = '-count_plays';
-  private echartsIntance: any; // echart instance
-  private countryCoords: {name: string,  coords: [number, number]}[] = [];
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -79,16 +77,7 @@ export class GeoLocationComponent implements OnInit {
     this.http.get('assets/world.json')
       .subscribe(data => {
         echarts.registerMap('world', data);
-        if (data['features'] && data['features'].length) {
-          data['features'].forEach(feature => {
-            this.countryCoords.push({name: feature['properties']['name'], coords: feature['geometry']['coordinates'][0][0]});
-          });
-        }
       });
-  }
-
-  public onChartInit(ec) {
-    this.echartsIntance = ec;
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -155,8 +144,8 @@ export class GeoLocationComponent implements OnInit {
   public onChartClick(event): void {
     if (event.batch && event.batch.length && event.batch[0].name) {
       let countryGotData = false;
-      this._countryCodes.forEach(country => {
-        if (country.label === event.batch[0].name) {
+      this.unFilteredTableData.forEach(country => {
+        if (country.object_id === event.batch[0].name) {
           countryGotData = true;
         }
       });
@@ -178,19 +167,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onDrillDown(country: string): void {
-    this._drillDown = country.length ? country : '';
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
-    if (this._drillDown === '') {
-      this.echartsIntance.setOption({series: [{zoom: 1.2}]}, false);
-    } else {
-      this.echartsIntance.setOption({series: [{zoom: 4}]}, false);
-      this.countryCoords.forEach(country => {
-        if (country.name === this._drillDown) {
-          const coords = Array.isArray(country.coords[0]) ? country.coords[0] : country.coords;
-          this.echartsIntance.setOption({series: [{center: coords}]}, false);
-        }
-      });
-    }
+    this._drillDown = country.length ? (this._drillDown !== country ? country : '') : '';
     this.loadReport();
   }
 
@@ -294,10 +271,10 @@ export class GeoLocationComponent implements OnInit {
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
     this._tableData = tableData;
-    this.unFilteredTableData = [];
 
     // set countries filter data
     if (this._drillDown.length === 0) {
+      this.unFilteredTableData = [];
       tableData.forEach(data => {
         this._countryCodes.push({value: data.country.toLowerCase(), label: data.object_id});
         this.unFilteredTableData.push(data);
