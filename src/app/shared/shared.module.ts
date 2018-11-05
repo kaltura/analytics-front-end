@@ -16,7 +16,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { InputHelperModule, PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
@@ -32,7 +32,8 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     RadioButtonModule,
     PopupWidgetModule,
     TooltipModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    InputHelperModule,
   ],
   declarations: [
     DateFilterComponent,

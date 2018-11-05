@@ -23,6 +23,14 @@ export class DateFilterUtils {
     const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
     return date.toLocaleString(locale, { month: 'long' }) + ' ' + date.getFullYear();
   }
+  
+  static formatMonthDayString(value: string, locale: string): string {
+    const year: string = value.substring(0, 4);
+    const month: string = value.substring(4, 6);
+    const day: string = value.substring(6, 8);
+    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+    return `${date.toLocaleString(locale, { month: 'short' })} ${day} ${date.getFullYear()}`;
+  }
 
   static formatFullDateString(value: string, locale: string): string {
     const year: string = value.substring(0, 4);

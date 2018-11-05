@@ -7,6 +7,7 @@
   .kTab{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 16px;
     padding-bottom: 20px;
     box-sizing: border-box;
@@ -16,6 +17,9 @@
     cursor: pointer;
     &:hover{
       background-color: $kGrayscale7;
+    }
+    /deep/ .kInputHelper {
+      margin: 0;
     }
     .kTabTitle{
       font-size: 15px;
@@ -51,5 +55,18 @@
         font-weight: 700;
       }
     }
+  }
+}
+
+:host /deep/ .kTotalsCompareTooltip {
+  width: 100%;
+  display: flex;
+
+  strong {
+    color: $kGrayscale1;
+  }
+
+  .kTotalsCompareTooltipValue {
+    margin-left: auto;
   }
 }

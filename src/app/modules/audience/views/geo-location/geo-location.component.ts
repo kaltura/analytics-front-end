@@ -273,7 +273,14 @@ export class GeoLocationComponent implements OnInit {
     }
 
     if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+      this._tabsData = this._compareService.compareTotalsData(
+        currentPeriod,
+        comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig.totals,
+        this._selectedMetrics
+      );
     }
   }
 
