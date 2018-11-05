@@ -3,33 +3,42 @@ export class ReportHelper {
   static numberWithCommas(x: any): string {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
-  
+
   static percents(x: any): string {
-    return this.numberWithCommas(parseFloat(x) * 100) + '%';
+    return this.numberWithCommas((parseFloat(x) * 100).toPrecision(3)) + '%';
   }
-  
+
   static numberOrNA(x: any): string {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
-  
+
   static numberOrZero(x: any): string {
-    return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : '0';
+    if (!x.length) {
+      return '0';
+    } else {
+      if (parseFloat(x) > 1) {
+        return ReportHelper.numberWithCommas(Math.round(parseFloat(x)));
+      } else {
+        return parseFloat(x).toPrecision(3);
+      }
+    }
+
   }
-  
+
   static time(x: any): string {
     const numValue = Math.abs(parseFloat(x));
     const wholeMinutes = Math.floor(numValue / 60000);
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
     let formattedTime = wholeMinutes.toString() + ':' + secondsText;
-  
+
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;
     }
-  
+
     return formattedTime;
   }
-  
+
   static underscoreToSpace(x: string): string {
     return x.replace('_', ' ');
   }

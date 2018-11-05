@@ -15,6 +15,7 @@ import * as moment from 'moment';
 export class DateFilterComponent implements OnInit {
 
   @Input() dateRangeType: DateRangeType = DateRangeType.LongTerm;
+  @Input() dateRange: DateRanges = DateRanges.CurrentYear;
   @Input() showCompare = true;
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
@@ -52,7 +53,7 @@ export class DateFilterComponent implements OnInit {
   ngOnInit() {
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'last');
     this.currDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'current');
-    this.selectedDateRange = this.lastSelectedDateRange = DateRanges.CurrentYear; // might need to change for different range type
+    this.selectedDateRange = this.lastSelectedDateRange = this.dateRange;
     setTimeout( () => {
       this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);

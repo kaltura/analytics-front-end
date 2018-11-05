@@ -1,3 +1,110 @@
-<p>
-  Audience Geo-Location View
-</p>
+<div class="kReport kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kFilters">
+    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.audience.geo.top' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown('')">{{'app.audience.geo.title' | translate}}</a>
+      <span class="separator">/</span>
+      <span>{{_drillDown}}</span>
+    </div>
+    <p-multiSelect *ngIf="!isCompareMode" class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
+                   [options]="_countryCodes"
+                   [maxSelectedLabels]="0"
+                   [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
+                   [filterPlaceHolder]="'app.audience.geo.findCountry' | translate"
+                   [showToggleAll]="false"
+                   [resetFilterOnHide]="true"
+                   [(ngModel)]="_selectedCountries"
+                   (onChange)="_onCountrySelectChange($event)"
+                   [defaultLabel]="'app.audience.geo.selectCountry' | translate">
+      <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+              <i class="kFlag" [ngClass]="'kFlag-'+country.value"></i>
+              {{country.label}}
+            </span>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+
+      </div>
+      <div class="kMap">
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
+      </div>
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1" [paginator]="true" [rows]="10">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
+                <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
+                <th [pSortableColumn]="isCompareMode ? null : 'object_id'">{{'app.audience.geo.object_id' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'object_id'"></p-sortIcon>
+                </th>
+                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="isCompareMode ? null : 'count_plays'">{{'app.audience.geo.count_plays' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
+                </th>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
+                <th *ngIf="_selectedMetrics==='play_through_ratio'" [pSortableColumn]="isCompareMode ? null : 'play_through_ratio'">{{'app.audience.geo.play_through_ratio' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'play_through_ratio'"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td *ngIf="!_drillDown.length">
+                  <span>{{rowIndex+1}}</span>
+                </td>
+                <td *ngIf="!_drillDown.length">
+                  <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
+                </td>
+                <td>
+                  <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && !_drillDown.length">{{data['object_id']}}</a>
+                  <span *ngIf="!data['object_id']?.value && _drillDown.length">{{data['object_id']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='count_plays'">
+                  <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend">
+                    <i [class]="data['count_plays'].trend | appTrend"></i>
+                    <span [kTooltip]="data['count_plays'].tooltip">{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
+                  </span>
+                  <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.value && !_drillDown.length && !isCompareMode">
+                  <div>
+                    <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
+                  </div>
+                </td>
+                <td *ngIf="_selectedMetrics==='play_through_ratio'">
+                  <span *ngIf="isCompareMode && data['play_through_ratio']?.value" class="kTrend">
+                    <i [class]="data['play_through_ratio'].trend | appTrend"></i>
+                    <span [kTooltip]="data['play_through_ratio'].tooltip">{{data['play_through_ratio'].value}}&nbsp;{{data['play_through_ratio'].units}}</span>
+                  </span>
+                  <span *ngIf="!data['count_plays']?.value">{{data['play_through_ratio']}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+
+</div>
+

@@ -1,0 +1,24 @@
+@import '../../../../styles/variables';
+
+.kBulletContainer{
+  display: flex;
+  align-items: center;
+  .kValue{
+    font-size: 15px;
+    color: $kGrayscale3;
+    width: 54px;
+  }
+  .kBullet{
+    width: 200px;
+    height: 12px;
+    border: 0px solid $kGrayscale4;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: $kGrayscale4;
+    .kBar{
+      height: 100%;
+      background-color: $kPrimary;
+      transition: width 0.35s ease-out;
+    }
+  }
+}

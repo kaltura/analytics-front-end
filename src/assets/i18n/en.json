@@ -59,12 +59,6 @@
     "contributors": {
       "top-contributors": "Top Contributors"
     },
-    "audience":{
-      "technology": "Technology",
-      "geo-location": "Geo-Location",
-      "engagement": "Engagement",
-      "content-interactions": "Content Interactions"
-    },
     "bandwidth":{
       "highlights": "Highlights",
       "allUsers": "All Users",
@@ -111,6 +105,23 @@
       "name": "User ID",
       "NAME": "User ID",
       "objectId": "Object Id"
+    },
+    "audience":{
+      "geo": {
+        "title": "Geo Location",
+        "top": "Top Countries",
+        "count_plays": "Plays Count",
+        "count_plays_tt": "Plays Tooltip",
+        "play_through_ratio": "Play-through Ratio",
+        "play_through_ratio_tt": "Play-through Ratio Tooltip",
+        "object_id": "Name",
+        "country": "",
+        "index": "#",
+        "distribution": "Plays Distribution",
+        "countriesSelected": "{0} Countries Selected",
+        "findCountry": "Find Country",
+        "selectCountry": "Select Country"
+      }
     }
   }
 }

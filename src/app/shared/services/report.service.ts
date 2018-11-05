@@ -17,7 +17,8 @@ export type ReportConfig = {
   reportType: KalturaReportType,
   filter: KalturaReportInputFilter,
   pager: KalturaFilterPager,
-  order: string
+  order: string,
+  objectIds?: string
 };
 
 export type Report = {
@@ -59,12 +60,14 @@ export class ReportService implements OnDestroy {
       observer => {
         const getTotal = new ReportGetTotalAction({
           reportType : config.reportType,
-          reportInputFilter: config.filter
+          reportInputFilter: config.filter,
+          objectIds: config.objectIds ? config.objectIds : null
         });
 
         const getGraphs = new ReportGetGraphsAction({
           reportType: config.reportType,
-          reportInputFilter: config.filter
+          reportInputFilter: config.filter,
+          objectIds: config.objectIds ? config.objectIds : null
         });
 
         const getBaseTotals = new ReportGetBaseTotalAction({
@@ -76,7 +79,8 @@ export class ReportService implements OnDestroy {
           reportType: config.reportType,
           reportInputFilter: config.filter,
           pager: config.pager,
-          order: config.order
+          order: config.order,
+          objectIds: config.objectIds ? config.objectIds : null
         });
 
         if (this._querySubscription) {
@@ -310,6 +314,9 @@ export class ReportService implements OnDestroy {
         }
       });
       lineChartData[graph.id] = {
+        grid: {
+          top: 24, left: 54, bottom: 24, right: 24
+        },
         color: ['#F49616', '#149CC1'],
         xAxis: {
           type: 'category',
@@ -325,6 +332,9 @@ export class ReportService implements OnDestroy {
         }]
       };
       barChartData[graph.id] = {
+        grid: {
+          top: 24, left: 54, bottom: 24, right: 24
+        },
         color: ['#00a784'],
         xAxis: {
           type: 'category',

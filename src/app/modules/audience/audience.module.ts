@@ -5,7 +5,9 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
-import { NgxEchartsModule } from 'ngx-echarts';
+import { PaginatorModule } from 'primeng/paginator';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 
 import { routing } from './audience.routes';
 import { AudienceComponent } from './audience.component';
@@ -15,19 +17,23 @@ import { EngagementComponent } from './views/engagement/engagement.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
 
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
     AreaBlockerModule,
+    TagsModule,
+    TooltipModule,
     AutoCompleteModule,
     CommonModule,
     FormsModule,
     TranslateModule,
     DropdownModule,
     ButtonModule,
+    PaginatorModule,
+    MultiSelectModule,
     SharedModule,
     TableModule,
     NgxEchartsModule,
