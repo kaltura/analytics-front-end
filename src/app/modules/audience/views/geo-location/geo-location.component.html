@@ -40,7 +40,7 @@
 
       </div>
       <div class="kMap">
-        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)"></div>
       </div>
       <div class="kTable">
         <div class="kToggle">
@@ -60,8 +60,12 @@
                   <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
                 </th>
                 <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
-                <th *ngIf="_selectedMetrics==='play_through_ratio'" [pSortableColumn]="isCompareMode ? null : 'play_through_ratio'">{{'app.audience.geo.play_through_ratio' | translate}}
-                  <p-sortIcon *ngIf="!isCompareMode" [field]="'play_through_ratio'"></p-sortIcon>
+                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="isCompareMode ? null : 'unique_known_users'">{{'app.audience.geo.unique_known_users' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
+                </th>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
+                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">{{'app.audience.geo.avg_view_drop_off' | translate}}
+                  <p-sortIcon *ngIf="!isCompareMode" [field]="'avg_view_drop_off'"></p-sortIcon>
                 </th>
               </tr>
             </ng-template>
@@ -89,12 +93,24 @@
                     <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
                   </div>
                 </td>
-                <td *ngIf="_selectedMetrics==='play_through_ratio'">
-                  <span *ngIf="isCompareMode && data['play_through_ratio']?.value" class="kTrend">
-                    <i [class]="data['play_through_ratio'].trend | appTrend"></i>
-                    <span [kTooltip]="data['play_through_ratio'].tooltip">{{data['play_through_ratio'].value}}&nbsp;{{data['play_through_ratio'].units}}</span>
+                <td *ngIf="_selectedMetrics==='unique_known_users'">
+                  <span *ngIf="isCompareMode && data['unique_known_users']?.value" class="kTrend">
+                    <i [class]="data['unique_known_users'].trend | appTrend"></i>
+                    <span [kTooltip]="data['unique_known_users'].tooltip">{{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}</span>
                   </span>
-                  <span *ngIf="!data['count_plays']?.value">{{data['play_through_ratio']}}</span>
+                  <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value && !_drillDown.length && !isCompareMode">
+                  <div>
+                    <app-bullet [value]="getPercent(data['unique_known_users'])"></app-bullet>
+                  </div>
+                </td>
+                <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
+                  <span *ngIf="isCompareMode && data['avg_view_drop_off']?.value" class="kTrend">
+                    <i [class]="data['avg_view_drop_off'].trend | appTrend"></i>
+                    <span [kTooltip]="data['avg_view_drop_off'].tooltip">{{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}</span>
+                  </span>
+                  <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
                 </td>
               </tr>
             </ng-template>
