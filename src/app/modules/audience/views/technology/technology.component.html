@@ -14,6 +14,10 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]"></div>
+      </div>
     </div>
 
   </k-area-blocker>
