@@ -212,8 +212,8 @@ export class CompareService implements OnDestroy {
               const currentVal = fieldConfig.format(value);
               const compareVal = hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A';
               const tooltip = `
-                ${this.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units || config.units)}
-                ${this.getTooltipRowString(comparePeriodTitle, compareVal, compareVal !== 'N/A' ? fieldConfig.units || config.units : '')}
+                ${this.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
+                ${this.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
               `;
               result = {
                 value: hasConsistentData ? String(Math.abs(trend)) : 'N/A',
@@ -259,8 +259,8 @@ export class CompareService implements OnDestroy {
         tabsData.push({
           title: field.title,
           tooltip: `
-            ${this.getTooltipRowString(currentPeriodTitle, currentVal, field.units || config.units)}
-            ${this.getTooltipRowString(comparePeriodTitle, compareVal, field.units || config.units)}
+            ${this.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
+            ${this.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
           `,
           value: ReportHelper.numberOrZero(String(Math.abs(trend))),
           selected: header === (selected || config.preSelected),

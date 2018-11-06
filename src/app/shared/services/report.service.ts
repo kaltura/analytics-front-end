@@ -271,7 +271,7 @@ export class ReportService implements OnDestroy {
           tooltip: field.tooltip,
           value: field.format(data[index]),
           selected: header === (selected || config.preSelected),
-          units: field.units || config.units,
+          units: field.units ? field.units(data[index]) : (config.units || ''),
           key: header
         });
       }
