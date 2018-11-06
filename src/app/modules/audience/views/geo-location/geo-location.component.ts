@@ -31,6 +31,7 @@ export class GeoLocationComponent implements OnInit {
 
   public _tableData: any[] = [];
   private unFilteredTableData: any[] = [];
+  private selectedTab: Tab;
   public _tabsData: Tab[] = [];
   public _showTable = true;
   public _mapChartData: any = {'count_plays': {}};
@@ -106,6 +107,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onTabChange(tab: Tab): void {
+    this.selectedTab = tab;
     this._selectedMetrics = tab.key;
     if (this._drillDown.length === 0) {
       this.updateMap();
@@ -137,7 +139,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public getPercent(val: string): number {
-    const total: number = parseFloat(this._tabsData[0].value.split(',').join(''));
+    const total: number = parseFloat(this.selectedTab.value.split(',').join(''));
     return parseFloat(val.split(',').join('')) / total * 100;
   }
 
@@ -308,6 +310,7 @@ export class GeoLocationComponent implements OnInit {
 
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    this.selectedTab = this._tabsData[0];
   }
 
   private prepareCsvExportHeaders(): void {
