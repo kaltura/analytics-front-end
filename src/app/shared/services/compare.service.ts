@@ -214,7 +214,7 @@ export class CompareService implements OnDestroy {
               const trend = hasConsistentData ? this._calculateTrend(Number(value), Number(compareValues[j])) : 0;
               result = {
                 value: hasConsistentData ? String(Math.abs(trend)) : 'N/A',
-                tooltip: `${ReportHelper.numberOrZero(value)} – ${hasConsistentData ? ReportHelper.numberOrZero(compareValues[j]) : 'N/A'}`,
+                tooltip: `${fieldConfig.format(value)} – ${hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A'}`,
                 trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
                 units: hasConsistentData ? '%' : ''
               };
@@ -231,7 +231,12 @@ export class CompareService implements OnDestroy {
     return { columns, tableData };
   }
 
-  public compareTotalsData(current: KalturaReportTotal, compare: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+  public compareTotalsData(currentPeriod: { from: string, to: string },
+                           comparePeriod: { from: string, to: string },
+                           current: KalturaReportTotal,
+                           compare: KalturaReportTotal,
+                           config: ReportDataItemConfig,
+                           selected?: string): Tab[] {
     if (!current.header || !current.data || !compare.header || !compare.data) {
       return;
     }
@@ -239,6 +244,10 @@ export class CompareService implements OnDestroy {
     const tabsData = [];
     const data = current.data.split(',');
     const compareData = compare.data.split(',');
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
+    const getTooltipRowString = (time, value, units = '') => `
+      <span class="kTotalsCompareTooltip">${time}:<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
 
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
@@ -248,7 +257,10 @@ export class CompareService implements OnDestroy {
         const compareVal = field.format(compareData[index]);
         tabsData.push({
           title: field.title,
-          tooltip: `${currentVal} – ${compareVal}`,
+          tooltip: `
+            ${getTooltipRowString(currentPeriodTitle, currentVal, field.units || config.units)}
+            ${getTooltipRowString(comparePeriodTitle, compareVal, field.units || config.units)}
+          `,
           value: ReportHelper.numberOrZero(String(Math.abs(trend))),
           selected: header === (selected || config.preSelected),
           units: '%',
