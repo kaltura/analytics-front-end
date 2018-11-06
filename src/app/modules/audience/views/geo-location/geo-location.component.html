@@ -63,7 +63,7 @@
                 <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="isCompareMode ? null : 'unique_known_users'">{{'app.audience.geo.unique_known_users' | translate}}
                   <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
                 </th>
-                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">{{'app.audience.geo.distribution2' | translate}}</th>
                 <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">{{'app.audience.geo.avg_view_drop_off' | translate}}
                   <p-sortIcon *ngIf="!isCompareMode" [field]="'avg_view_drop_off'"></p-sortIcon>
                 </th>
