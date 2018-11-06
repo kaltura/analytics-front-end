@@ -1,11 +1,11 @@
 <div class="kDateFilter kOverrideFAIcons">
 
-  <a *ngIf="comparing" class="kExitCompare" (click)="exitCompare()">{{'app.dateFilter.exit' | translate}}</a>
   <div #datesBtn class="datesRangeDropDown" [class.comparing]="comparing" (click)="openPopup()">
     <i *ngIf="comparing" class="compareIcon icon-Bolt"></i>
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
+  <a *ngIf="comparing" class="kExitCompare" (click)="exitCompare()">{{'app.dateFilter.exit' | translate}}</a>
 
 </div>
 

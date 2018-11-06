@@ -83,7 +83,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         realtime: false,
         calculable: true,
         inRange: {
-          color: ['#B3E8FF', '#6991D9', '#2642B8']
+          color: ['#B4E9FF', '#2541B8']
         }
       },
       series: [
