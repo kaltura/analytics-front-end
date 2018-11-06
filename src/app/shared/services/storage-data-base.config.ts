@@ -14,7 +14,7 @@ export interface ReportDataItemConfig {
   fields: {
     [key: string]: {
       format: (value: any) => any;
-      units?: string;
+      units?: (value: any) => string;
       title?: string;
       tooltip?: string;
       hidden?: boolean;

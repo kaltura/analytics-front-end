@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
+import { fileSize } from 'shared/utils/file-size';
 
 @Injectable()
 export class EndUserStorageDataConfig extends ReportDataBaseConfig {
@@ -106,22 +107,22 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
           },
           'added_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.added_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.added_storage_mb_tt`),
-            units: 'MB',
+            units: value => fileSize(value).units,
           },
           'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.deleted_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.deleted_storage_mb_tt`),
-            units: 'MB',
+            units: value => fileSize(value).units,
           },
           'total_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
-            units: 'MB',
+            units: value => fileSize(value).units,
           },
           'added_msecs': {
             format: value => ReportHelper.time(value),

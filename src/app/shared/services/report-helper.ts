@@ -12,14 +12,17 @@ export class ReportHelper {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
 
-  static numberOrZero(x: any): string {
+  static numberOrZero(x: any, round = true): string {
     if (!x.length) {
       return '0';
     } else {
-      if (parseFloat(x) > 1) {
-        return ReportHelper.numberWithCommas(Math.round(parseFloat(x)));
+      x = parseFloat(x);
+      if (x > 1) {
+        return ReportHelper.numberWithCommas(round ? Math.round(x) : x);
+      } else if (x < 0) {
+        return x.toPrecision(3);
       } else {
-        return parseFloat(x).toPrecision(3);
+        return x;
       }
     }
 
