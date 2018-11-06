@@ -242,17 +242,30 @@ export class GeoLocationComponent implements OnInit {
 
   private handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
-    const comparePeriod = { from: this.compareFilter.fromDay, to: this.filter.toDay };
+    const comparePeriod = { from: this.compareFilter.fromDay, to: this.compareFilter.toDay };
 
     if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(current.table, compare.table, this._dataConfig.table);
+      const { columns, tableData } = this._compareService.compareTableData(
+        currentPeriod,
+        comparePeriod,
+        current.table,
+        compare.table,
+        this._dataConfig.table
+      );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
       this._tableData = tableData;
     }
 
     if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(current.totals, compare.totals, this._dataConfig.totals, this._selectedMetrics);
+      this._tabsData = this._compareService.compareTotalsData(
+        currentPeriod,
+        comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig.totals,
+        this._selectedMetrics
+      );
     }
   }
 

@@ -159,8 +159,29 @@ body{
   margin: 0px !important;
 }
 .ng-tooltip {
+  background-color: white;
+  color: $kGrayscale1;
+  border: 1px solid $kGrayscale4;
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.30);
+  display: flex;
+  flex-direction: column;
   transition: none !important;
+  .kTotalsCompareTooltip {
+    line-height: 24px;
+    display: flex;
+    strong {
+      color: $kGrayscale1;
+    }
+    .kTotalsCompareTooltipValue {
+      display: flex;
+      margin-left: 24px;
+    }
+  }
+  &:after{
+    content: none;
+  }
 }
+
 p-table /deep/ .ui-table .ui-table-tbody > tr{
   &:nth-child(odd) {
     background-color: #F8F8F8;

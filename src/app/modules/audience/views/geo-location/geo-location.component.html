@@ -84,7 +84,7 @@
                 <td *ngIf="_selectedMetrics==='count_plays'">
                   <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend">
                     <i [class]="data['count_plays'].trend | appTrend"></i>
-                    <span [kTooltip]="data['count_plays'].tooltip">{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
+                    <span [kTooltip]="data['count_plays'].tooltip" [escape]="false">{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
                   </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
                 </td>
@@ -96,7 +96,7 @@
                 <td *ngIf="_selectedMetrics==='unique_known_users'">
                   <span *ngIf="isCompareMode && data['unique_known_users']?.value" class="kTrend">
                     <i [class]="data['unique_known_users'].trend | appTrend"></i>
-                    <span [kTooltip]="data['unique_known_users'].tooltip">{{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}</span>
+                    <span [kTooltip]="data['unique_known_users'].tooltip" [escape]="false">{{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}</span>
                   </span>
                   <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
                 </td>
@@ -108,7 +108,7 @@
                 <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
                   <span *ngIf="isCompareMode && data['avg_view_drop_off']?.value" class="kTrend">
                     <i [class]="data['avg_view_drop_off'].trend | appTrend"></i>
-                    <span [kTooltip]="data['avg_view_drop_off'].tooltip">{{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}</span>
+                    <span [kTooltip]="data['avg_view_drop_off'].tooltip" [escape]="false">{{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}</span>
                   </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
                 </td>
