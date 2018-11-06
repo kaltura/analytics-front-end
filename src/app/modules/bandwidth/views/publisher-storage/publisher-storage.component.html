@@ -32,7 +32,7 @@
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col">
-                  {{'app.bandwidth.' + col | translate}}
+                  {{'app.bandwidth.publisher_table.' + col | translate}}
                   <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
                 </th>
 
