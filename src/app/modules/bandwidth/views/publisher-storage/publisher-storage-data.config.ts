@@ -55,25 +55,25 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'bandwidth_consumption': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'average_storage': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'peak_storage': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'added_storage': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'deleted_storage': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'combined_bandwidth_storage': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'transcoding_consumption': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           }
         }
       },
@@ -82,37 +82,37 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
         preSelected: 'bandwidth_consumption',
         fields: {
           'bandwidth_consumption': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.bandwidth_consumption`),
             tooltip: this._translate.instant(`app.bandwidth.bandwidth_consumption_tt`),
           },
           'average_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.average_storage`),
             tooltip: this._translate.instant(`app.bandwidth.average_storage_tt`),
           },
           'peak_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.peak_storage`),
             tooltip: this._translate.instant(`app.bandwidth.peak_storage_tt`),
           },
           'added_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.added_storage`),
             tooltip: this._translate.instant(`app.bandwidth.added_storage_tt`),
           },
           'deleted_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.deleted_storage`),
             tooltip: this._translate.instant(`app.bandwidth.deleted_storage_tt`),
           },
           'combined_bandwidth_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.combined_bandwidth_storage`),
             tooltip: this._translate.instant(`app.bandwidth.combined_bandwidth_storage_tt`),
           },
           'transcoding_consumption': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.transcoding_consumption`),
             tooltip: this._translate.instant(`app.bandwidth.transcoding_consumption_tt`),
           },
@@ -121,12 +121,12 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
       accumulative: {
         fields: {
           'aggregated_monthly_avg_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant('app.bandwidth.aggregated_monthly_avg_storage'),
             units: 'MB',
           },
           'combined_bandwidth_aggregated_storage': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant('app.bandwidth.combined_bandwidth_aggregated_storage'),
             units: 'MB',
           }

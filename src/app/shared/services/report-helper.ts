@@ -26,6 +26,9 @@ export class ReportHelper {
   }
 
   static time(x: any): string {
+    if (!x.length) {
+      return '00:00';
+    }
     const numValue = Math.abs(parseFloat(x));
     const wholeMinutes = Math.floor(numValue / 60000);
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);

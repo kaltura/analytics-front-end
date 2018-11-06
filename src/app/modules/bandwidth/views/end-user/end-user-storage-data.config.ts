@@ -59,60 +59,66 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'added_entries': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'deleted_entries': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
+          },
+          'total_entries': {
+            format: value => ReportHelper.numberOrZero(value)
           },
           'added_storage_mb': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
           },
           'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrNA(value)
+            format: value => ReportHelper.numberOrZero(value)
+          },
+          'total_storage_mb': {
+            format: value => ReportHelper.numberOrZero(value)
           },
           'added_msecs': {
             format: value => ReportHelper.time(value)
           },
           'deleted_msecs': {
             format: value => ReportHelper.time(value)
-          }
+          },
+          'total_msecs': {
+            format: value => ReportHelper.time(value)
+          },
         }
       },
       [ReportDataSection.totals]: {
         preSelected: 'added_storage_mb',
         fields: {
           'added_entries': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.added_entries`),
             tooltip: this._translate.instant(`app.bandwidth.added_entries_tt`),
-            units: 'MB',
           },
           'deleted_entries': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.deleted_entries`),
             tooltip: this._translate.instant(`app.bandwidth.deleted_entries_tt`),
-            units: 'MB',
           },
           'total_entries': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_entries`),
             tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
-            units: 'MB',
           },
           'added_storage_mb': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.added_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.added_storage_mb_tt`),
             units: 'MB',
           },
           'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.deleted_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.deleted_storage_mb_tt`),
             units: 'MB',
           },
           'total_storage_mb': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
             units: 'MB',
