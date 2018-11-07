@@ -1,3 +1,35 @@
-<p>
-  Audience Technology View
-</p>
+<app-devices-overview [filter]="_filterEvent" [allowedDevices]="_allowedDevices">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
+    <app-date-filter #dateFilter
+                     [dateRange]="_dateRange"
+                     [showCompare]="false"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+</app-devices-overview>
+
+<div class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.audience.technology.topBrowsers' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+    </div>
+
+  </k-area-blocker>
+</div>
+
+<div class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.audience.technology.topOS' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+    </div>
+
+  </k-area-blocker>
+</div>

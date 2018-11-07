@@ -149,6 +149,24 @@
         "countriesSelected": "{0} Countries Selected",
         "findCountry": "Find Country",
         "selectCountry": "Select Country"
+      },
+      "technology": {
+        "title": "Technology",
+        "devicesOverview": "Devices Overview",
+        "topBrowsers": "Top Browsers",
+        "topOS": "Top Operating Systems",
+        "count_plays": "Plays",
+        "sum_time_viewed": "Minutes Viewed",
+        "avg_time_viewed": "Avg. Min Viewed",
+        "count_plays_tt": "Plays",
+        "sum_time_viewed_tt": "Minutes Viewed",
+        "avg_time_viewed_tt": "Avg. Min Viewed",
+        "devices": {
+          "COMPUTER": "Desktop",
+          "MOBILE": "Mobile",
+          "TABLET": "Tablet",
+          "OTHER": "Other"
+        }
       }
     }
   }

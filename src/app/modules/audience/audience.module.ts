@@ -20,6 +20,8 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
+import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
+import { CheckboxModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -37,6 +39,7 @@ import { TableModule } from 'primeng/table';
     SharedModule,
     TableModule,
     NgxEchartsModule,
+    CheckboxModule,
     RouterModule.forChild(routing),
   ],
   declarations: [
@@ -44,7 +47,8 @@ import { TableModule } from 'primeng/table';
     TechnologyComponent,
     GeoLocationComponent,
     EngagementComponent,
-    ContentInteractionsComponent
+    ContentInteractionsComponent,
+    DevicesOverviewComponent,
   ],
   exports: [],
   providers: []

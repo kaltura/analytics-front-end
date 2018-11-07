@@ -20,6 +20,7 @@ import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
+import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     ExportCsvComponent,
     BulletComponent,
     TimeUnitsComponent,
-    TrendPipe
+    TrendPipe,
+    DeviceIconPipe,
   ],
   exports: [
     DateFilterComponent,
@@ -50,7 +52,8 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
     ExportCsvComponent,
     BulletComponent,
     TimeUnitsComponent,
-    TrendPipe
+    TrendPipe,
+    DeviceIconPipe,
   ],
   providers: [
   ]
