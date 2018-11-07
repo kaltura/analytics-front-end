@@ -122,7 +122,21 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private handleOverview(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
-    const graphData = tableData.filter(({ device }) => this.allowedDevices.includes(device));
+    const graphData = tableData.reduce((data, item) => {
+      if (this.allowedDevices.includes(item.device)) {
+        data.push(item);
+      } else if (item.value) {
+        const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
+        if (otherIndex !== -1) {
+          data[otherIndex].value = (parseFloat(data[otherIndex].value) || 0) + (parseFloat(item.value) || 0);
+        } else {
+          item.device = 'OTHER';
+          data.push(item);
+        }
+      }
+      
+      return data;
+    }, []);
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
@@ -145,23 +159,23 @@ export class DevicesOverviewComponent implements OnDestroy {
       const relevantTotal = this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
-        
         summaryData[key] = graphData.map(item => {
-          const value = parseFloat(item[key]);
-          let percent = 0;
-          if (!isNaN(value) && !isNaN(totalValue) && value !== 0) {
-            percent = Math.round((value / totalValue) * 100);
+          const itemValue = parseFloat(item[key]);
+          let value = 0;
+          if (key === 'avg_time_viewed') {
+            value = Number((itemValue || 0).toFixed(2));
+          } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
+            value = Math.round((itemValue / totalValue) * 100);
           }
-          
           return {
             key: item.device,
             name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-            value: percent
+            value: value,
+            units: key === 'avg_time_viewed' ? 'min' : '%'
           };
         });
       }
     });
-    
     this._barChartData = barChartData;
     this._summaryData = summaryData;
   }

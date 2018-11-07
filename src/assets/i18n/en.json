@@ -164,7 +164,8 @@
         "devices": {
           "COMPUTER": "Desktop",
           "MOBILE": "Mobile",
-          "TABLET": "Tablet"
+          "TABLET": "Tablet",
+          "OTHER": "Other"
         }
       }
     }
