@@ -170,7 +170,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           data: graphData.map(item => {
             const value = parseFloat(item[key]) || 0;
             if (value % 1 !== 0) {
-              return value.toFixed(this._fractions);
+              return value.toPrecision(this._fractions);
             }
             return value;
           }),
@@ -185,11 +185,11 @@ export class DevicesOverviewComponent implements OnDestroy {
           const itemValue = parseFloat(item[key]);
           let value = 0;
           if (key === 'avg_time_viewed') {
-            value = Number((itemValue || 0).toFixed(this._fractions));
+            value = Number((itemValue || 0).toPrecision(this._fractions));
           } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
             value = (itemValue / totalValue) * 100;
             if (value % 1 !== 0) {
-              value = Number(value.toFixed(this._fractions));
+              value = Number(value.toPrecision(this._fractions));
             }
           }
           return {
