@@ -150,14 +150,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           type: 'category',
           data: xAxisData
         },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              color: '#dadada'
-            }
-          }
-        },
+        tooltip: {},
         series: [{
           data: graphData.map(item => item[key] || 0),
           type: 'bar'
