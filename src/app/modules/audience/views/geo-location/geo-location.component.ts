@@ -60,6 +60,8 @@ export class GeoLocationComponent implements OnInit {
   public _drillDown = '';
 
   private order = '-count_plays';
+  private echartsIntance: any; // echart instance
+  public _mapZoom = 1.2;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -79,6 +81,10 @@ export class GeoLocationComponent implements OnInit {
       .subscribe(data => {
         echarts.registerMap('world', data);
       });
+  }
+
+  public onChartInit(ec) {
+    this.echartsIntance = ec;
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -154,6 +160,17 @@ export class GeoLocationComponent implements OnInit {
       if (countryGotData) {
         this._onDrillDown(event.batch[0].name);
       }
+    }
+  }
+
+  public zoom(direction: string): void {
+    if (direction === 'in' && this._mapZoom < 4) {
+      this._mapZoom += 1;
+      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+    }
+    if (direction === 'out' && this._mapZoom > 2) {
+      this._mapZoom -= 1;
+      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
     }
   }
 

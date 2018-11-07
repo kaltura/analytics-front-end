@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-minus:before {
+  content: "\e907";
+}
 .icon-desktop:before {
   content: "\e903";
 }
@@ -37,7 +40,7 @@
 .icon-tablet:before {
   content: "\e906";
 }
-.icon-Bolt:before {
+.icon-bolt:before {
   content: "\e900";
 }
 .icon-progress:before {
@@ -46,4 +49,5 @@
 .icon-regression:before {
   content: "\e902";
 }
+
 

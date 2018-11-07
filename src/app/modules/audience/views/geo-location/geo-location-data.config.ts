@@ -91,10 +91,10 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           name: '',
           type: 'map',
           mapType: 'world',
-          roam: true,
+          roam: 'move',
           zoom: 1.2,
           selectedMode: 'single',
-          animationDurationUpdate: 1000,
+          animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',
           itemStyle: {
             emphasis: {label: {show: true}, areaColor: '#F49616'}
