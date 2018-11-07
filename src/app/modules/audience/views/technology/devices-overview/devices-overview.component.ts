@@ -164,12 +164,10 @@ export class DevicesOverviewComponent implements OnDestroy {
     
     this._barChartData = barChartData;
     this._summaryData = summaryData;
-    console.warn('summary', this._summaryData);
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._platformDataConfig.totals, this._selectedMetrics);
-    console.warn(this._tabsData);
   }
   
   public _onSelectionChange(event): void {
