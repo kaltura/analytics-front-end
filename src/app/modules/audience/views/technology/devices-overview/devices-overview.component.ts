@@ -125,18 +125,28 @@ export class DevicesOverviewComponent implements OnDestroy {
     const graphData = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
-      } else if (item.value) {
+      } else {
         const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
         if (otherIndex !== -1) {
-          data[otherIndex].value = (parseFloat(data[otherIndex].value) || 0) + (parseFloat(item.value) || 0);
+          Object.keys(data[otherIndex]).forEach(key => {
+            if (key !== 'device') {
+              data[otherIndex][key] = (parseFloat(data[otherIndex][key]) || 0) + (parseFloat(item[key]) || 0);
+            }
+          });
         } else {
           item.device = 'OTHER';
           data.push(item);
         }
       }
-      
       return data;
     }, []);
+
+    // move other devices in the end
+    const otherDevicesIndex = graphData.findIndex(({ device }) => device === 'OTHER');
+    if (otherDevicesIndex !== -1) {
+      graphData.push(graphData.splice(otherDevicesIndex, 1)[0]);
+    }
+
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
