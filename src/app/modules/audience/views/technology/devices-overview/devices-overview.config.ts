@@ -18,21 +18,12 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
           },
-          'sum_time_viewed': {
-            format: value => value,
-          },
           'avg_time_viewed': {
             format: value => value,
           },
-          'count_loads': {
+          'sum_time_viewed': {
             format: value => value,
-          },
-          'load_play_ratio': {
-            format: value => value,
-          },
-          'avg_view_drop_off': {
-            format: value => value,
-          },
+          }
         }
       },
       [ReportDataSection.totals]: {

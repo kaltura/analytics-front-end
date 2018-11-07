@@ -31,6 +31,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     }
   }
   
+  private _fractions = 2;
+  
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -122,11 +124,11 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private handleOverview(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
+    const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
     const graphData = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
       } else {
-        const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
         const hasValue = relevantFields.map(key => item.hasOwnProperty(key) ? parseFloat(item[key]) || 0 : 0).some(Boolean);
         
         if (hasValue) {
@@ -153,8 +155,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
-    
-    Object.keys(this._platformDataConfig.totals.fields).forEach(key => {
+  
+    relevantFields.forEach(key => {
       barChartData[key] = {
         grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
         color: ['#00a784'],
@@ -168,7 +170,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           data: graphData.map(item => {
             const value = parseFloat(item[key]) || 0;
             if (value % 1 !== 0) {
-              return value.toFixed(3);
+              return value.toFixed(this._fractions);
             }
             return value;
           }),
@@ -183,9 +185,12 @@ export class DevicesOverviewComponent implements OnDestroy {
           const itemValue = parseFloat(item[key]);
           let value = 0;
           if (key === 'avg_time_viewed') {
-            value = Number((itemValue || 0).toFixed(2));
+            value = Number((itemValue || 0).toFixed(this._fractions));
           } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
-            value = Math.round((itemValue / totalValue) * 100);
+            value = (itemValue / totalValue) * 100;
+            if (value % 1 !== 0) {
+              value = Number(value.toFixed(this._fractions));
+            }
           }
           return {
             key: item.device,
