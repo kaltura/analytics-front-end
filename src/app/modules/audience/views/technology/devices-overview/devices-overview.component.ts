@@ -126,16 +126,19 @@ export class DevicesOverviewComponent implements OnDestroy {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
       } else {
-        const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
-        if (otherIndex !== -1) {
-          Object.keys(data[otherIndex]).forEach(key => {
-            if (key !== 'device') {
+        const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
+        const hasValue = relevantFields.map(key => item.hasOwnProperty(key) ? parseFloat(item[key]) || 0 : 0).some(Boolean);
+        
+        if (hasValue) {
+          const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
+          if (otherIndex !== -1) {
+            relevantFields.forEach(key => {
               data[otherIndex][key] = (parseFloat(data[otherIndex][key]) || 0) + (parseFloat(item[key]) || 0);
-            }
-          });
-        } else {
-          item.device = 'OTHER';
-          data.push(item);
+            });
+          } else {
+            item.device = 'OTHER';
+            data.push(item);
+          }
         }
       }
       return data;
