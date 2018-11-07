@@ -1,0 +1,43 @@
+<div class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.audience.technology.topOS' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kTable">
+        <div class="kTableContainer">
+          <p-table sortField="count_plays"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                  {{'app.audience.technology.' + col | translate}}
+                  <p-sortIcon [field]="col"></p-sortIcon>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index">{{data[col]}}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage">No results</div>
+              </div>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="_pager.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>

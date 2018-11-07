@@ -1,0 +1,139 @@
+import { Component, Input, OnDestroy } from '@angular/core';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { TranslateService } from '@ngx-translate/core';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { TopBrowsersConfig } from './top-browsers.config';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+
+@Component({
+  selector: 'app-top-browsers',
+  templateUrl: './top-browsers.component.html',
+  styleUrls: ['./top-browsers.component.scss'],
+  providers: [TopBrowsersConfig, ReportService]
+})
+export class TopBrowsersComponent implements OnDestroy {
+  @Input() allowedDevices: string[] = [];
+  
+  @Input() set filter(value: DateChangeEvent) {
+    if (value) {
+      this._chartDataLoaded = false;
+      this._filter.timeZoneOffset = value.timeZoneOffset;
+      this._filter.fromDay = value.startDay;
+      this._filter.toDay = value.endDay;
+      this._filter.interval = value.timeUnits;
+      this._reportInterval = value.timeUnits;
+      this._pager.pageIndex = 1;
+      this._loadReport();
+    }
+  }
+  
+  private _order = '-count_plays';
+  
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _totalCount: number;
+  public _columns: string[] = [];
+  public _tableData: any[] = [];
+  public _isBusy = false;
+  public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
+  public _chartDataLoaded = false;
+  public _dataConfig: ReportDataConfig;
+  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+    {
+      searchInTags: true,
+      searchInAdminTags: false
+    }
+  );
+  
+  constructor(private _reportService: ReportService,
+              private _translate: TranslateService,
+              private _authService: AuthService,
+              private _errorsManager: ErrorsManagerService,
+              private _topBrowsersConfigService: TopBrowsersConfig) {
+    this._dataConfig = _topBrowsersConfigService.getConfig();
+  }
+  
+  ngOnDestroy() {
+  
+  }
+
+  private _handleTable(table: KalturaReportTable): void {
+    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._totalCount = table.totalCount;
+    this._columns = columns;
+    this._tableData = tableData;
+  }
+
+  private _loadReport(): void {
+    this._isBusy = true;
+    this._blockerMessage = null;
+    
+    const reportConfig: ReportConfig = {
+      reportType: KalturaReportType.browsers,
+      filter: this._filter,
+      pager: this._pager,
+      order: this._order,
+    };
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(report => {
+          if (report.table && report.table.header && report.table.data) {
+            this._handleTable(report.table); // handle table
+          }
+          
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          const err: ErrorDetails = this._errorsManager.getError(error);
+          let buttons: AreaBlockerMessageButton[] = [];
+          if (err.forceLogout) {
+            buttons = [{
+              label: this._translate.instant('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._authService.logout();
+              }
+            }];
+          } else {
+            buttons = [{
+              label: this._translate.instant('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            },
+              {
+                label: this._translate.instant('app.common.retry'),
+                action: () => {
+                  this._loadReport();
+                }
+              }];
+          }
+          this._blockerMessage = new AreaBlockerMessage({
+            title: err.title,
+            message: err.message,
+            buttons
+          });
+        });
+  }
+  
+  public _onSortChanged(event) {
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        this._loadReport();
+      }
+    }
+  }
+  
+  public _onPaginationChanged(event): void {
+    if (event.page !== (this._pager.pageIndex - 1)) {
+      this._pager.pageIndex = event.page + 1;
+      this._loadReport();
+    }
+  }
+}

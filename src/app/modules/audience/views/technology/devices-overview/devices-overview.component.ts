@@ -13,7 +13,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
   selector: 'app-devices-overview',
   templateUrl: './devices-overview.component.html',
   styleUrls: ['./devices-overview.component.scss'],
-  providers: [DevicesOverviewConfig]
+  providers: [DevicesOverviewConfig, ReportService]
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
@@ -43,7 +43,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _chartDataLoaded = false;
   public _tabsData: Tab[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _platformDataConfig: ReportDataConfig;
+  public _dataConfig: ReportDataConfig;
   public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
@@ -56,8 +56,8 @@ export class DevicesOverviewComponent implements OnDestroy {
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService,
               private _platformsConfigService: DevicesOverviewConfig) {
-    this._platformDataConfig = _platformsConfigService.getConfig();
-    this._selectedMetrics = this._platformDataConfig.totals.preSelected;
+    this._dataConfig = _platformsConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   ngOnDestroy() {
@@ -74,7 +74,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       pager: this._pager,
       order: ''
     };
-    this._reportService.getReport(reportConfig, this._platformDataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           // IMPORTANT to handle totals first, summary rely on totals
@@ -123,8 +123,8 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private handleOverview(table: KalturaReportTable): void {
-    const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
-    const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const graphData = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
@@ -206,7 +206,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
-    this._tabsData = this._reportService.parseTotals(totals, this._platformDataConfig.totals, this._selectedMetrics);
+    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
   public _onSelectionChange(event): void {
