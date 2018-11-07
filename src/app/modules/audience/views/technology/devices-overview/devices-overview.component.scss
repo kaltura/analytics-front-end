@@ -1,7 +1,71 @@
+@import '../../../../../../styles/variables';
+
 :host {
   width: 100%;
 }
 
 app-date-filter {
   margin-left: auto;
+}
+
+.kOverview {
+  display: flex;
+
+  .kSummary {
+    width: calc(33% - 46px);
+    padding: 50px 23px;
+
+    .kSummaryRow {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 43px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .kSummaryCheckbox {
+        display: flex;
+        align-items: center;
+
+        .kLabel {
+          font-size: 15px;
+          line-height: 22px;
+          color: $kGrayscale1;
+          font-weight: bold;
+        }
+
+        .kIcon {
+          font-size: 22px;
+          color: $kGrayscale3;
+          margin: 0 17px 0 11px;
+        }
+
+        p-checkbox {
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      .kSummaryValue {
+        .kValue {
+          font-size: 24px;
+          font-weight: bold;
+          color: $kGrayscale1;
+        }
+
+        .kUnits {
+          font-size: 13px;
+          font-weight: bold;
+          color: $kGrayscale3;
+          line-height: 20px;
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .kSummaryChart {
+    width: 66%;
+  }
 }

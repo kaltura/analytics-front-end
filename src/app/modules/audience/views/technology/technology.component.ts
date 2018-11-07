@@ -8,7 +8,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./technology.component.scss'],
 })
 export class TechnologyComponent implements OnInit {
-  public _dateRange = DateRanges.Last30D;
+  public _dateRange = DateRanges.CurrentYear;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _allowedDevices = ['COMPUTER', 'MOBILE', 'TABLET'];

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -7,6 +7,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DevicesOverviewConfig } from './devices-overview.config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-devices-overview',
@@ -14,8 +15,9 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
   styleUrls: ['./devices-overview.component.scss'],
   providers: [DevicesOverviewConfig]
 })
-export class DevicesOverviewComponent implements OnInit {
+export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
+  
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
       this._chartDataLoaded = false;
@@ -29,9 +31,11 @@ export class DevicesOverviewComponent implements OnInit {
     }
   }
   
+  public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
-  public _barChartData: any = { 'count_plays': {} };
+  public _barChartData: any = {};
+  public _summaryData: any = {};
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
@@ -54,11 +58,8 @@ export class DevicesOverviewComponent implements OnInit {
     this._selectedMetrics = this._platformDataConfig.totals.preSelected;
   }
   
-  ngOnInit() {
-  }
+  ngOnDestroy() {
   
-  public _onTabChange(tab: Tab): void {
-    this._selectedMetrics = tab.key;
   }
   
   private loadReport(): void {
@@ -72,13 +73,17 @@ export class DevicesOverviewComponent implements OnInit {
       order: ''
     };
     this._reportService.getReport(reportConfig, this._platformDataConfig, false)
+      .pipe(cancelOnDestroy(this))
       .subscribe(report => {
-          if (report.table && report.table.header && report.table.data) {
-            this.handleGraph(report.table); // handle grapgh
-          }
+          // IMPORTANT to handle totals first, summary rely on totals
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
+          
+          if (report.table && report.table.header && report.table.data) {
+            this.handleOverview(report.table); // handle overview
+          }
+          
           this._isBusy = false;
         },
         error => {
@@ -115,36 +120,63 @@ export class DevicesOverviewComponent implements OnInit {
         });
   }
   
-  private handleGraph(table: KalturaReportTable): void {
+  private handleOverview(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
     const graphData = tableData.filter(({ device }) => this.allowedDevices.includes(device));
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
-    this._barChartData = Object.keys(this._platformDataConfig.totals.fields)
-      .reduce((data, key) => {
-        data[key] = {
-          grid: {
-            top: 24, left: 54, bottom: 24, right: 24
-          },
-          color: ['#00a784'],
-          xAxis: {
-            type: 'category',
-            data: xAxisData
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [{
-            data: graphData.map((item) => item[key] || 0),
-            type: 'bar'
-          }]
-        };
+    const barChartData = {};
+    const summaryData = {};
+    
+    Object.keys(this._platformDataConfig.totals.fields).forEach(key => {
+      barChartData[key] = {
+        grid: { top: 24, left: 54, bottom: 24, right: 24 },
+        color: ['#00a784'],
+        yAxis: { type: 'value' },
+        xAxis: {
+          type: 'category',
+          data: xAxisData
+        },
+        series: [{
+          data: graphData.map(item => item[key] || 0),
+          type: 'bar'
+        }]
+      };
+      
+      const relevantTotal = this._tabsData.find(total => total.key === key);
+      if (relevantTotal) {
+        const totalValue = parseFloat(relevantTotal.value);
         
-        return data;
-      }, {});
+        summaryData[key] = graphData.map(item => {
+          const value = parseFloat(item[key]);
+          let percent = 0;
+          if (!isNaN(value) && !isNaN(totalValue) && value !== 0) {
+            percent = Math.round((value / totalValue) * 100);
+          }
+          
+          return {
+            key: item.device,
+            name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+            value: percent
+          };
+        });
+      }
+    });
+    
+    this._barChartData = barChartData;
+    this._summaryData = summaryData;
+    console.warn('summary', this._summaryData);
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._platformDataConfig.totals, this._selectedMetrics);
     console.warn(this._tabsData);
+  }
+  
+  public _onSelectionChange(event): void {
+    console.warn(this._selectedValues);
+  }
+  
+  public _onTabChange(tab: Tab): void {
+    this._selectedMetrics = tab.key;
   }
 }

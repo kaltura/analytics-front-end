@@ -21,6 +21,7 @@ import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltur
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
+import { CheckboxModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { DevicesOverviewComponent } from './views/technology/devices-overview/de
     SharedModule,
     TableModule,
     NgxEchartsModule,
+    CheckboxModule,
     RouterModule.forChild(routing),
   ],
   declarations: [
