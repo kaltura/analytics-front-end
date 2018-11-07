@@ -25,6 +25,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-desktop:before {
+  content: "\e903";
+}
+.icon-export:before {
+  content: "\e904";
+}
+.icon-phone:before {
+  content: "\e905";
+}
+.icon-tablet:before {
+  content: "\e906";
+}
 .icon-Bolt:before {
   content: "\e900";
 }
@@ -34,3 +46,4 @@
 .icon-regression:before {
   content: "\e902";
 }
+
