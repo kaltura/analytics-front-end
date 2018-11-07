@@ -1,4 +1,4 @@
-<div class="kReport kOverrideFAIcons">
+<app-devices-overview [filter]="_filterEvent" [allowedDevices]="_allowedDevices">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
     <app-date-filter #dateFilter
@@ -6,22 +6,7 @@
                      [showCompare]="false"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
-
-  <div class="kFilters">
-    <span class="kTitle">{{'app.audience.technology.devicesOverview' | translate}}</span>
-  </div>
-
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-
-    <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kChart">
-        <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]"></div>
-      </div>
-    </div>
-
-  </k-area-blocker>
-</div>
+</app-devices-overview>
 
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">

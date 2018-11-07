@@ -3,26 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 
 @Injectable()
-export class TechnologyPlatformReportConfig extends ReportDataBaseConfig {
+export class DevicesOverviewConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
   
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.graph]: {
-        fields: {
-          'count_plays': {
-            format: value => value
-          },
-          'sum_time_viewed': {
-            format: value => value
-          },
-          'avg_time_viewed': {
-            format: value => value
-          },
-        }
-      },
       [ReportDataSection.table]: {
         fields: {
           'device': {

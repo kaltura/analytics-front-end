@@ -160,7 +160,12 @@
         "avg_time_viewed": "Avg. Min Viewed",
         "count_plays_tt": "Plays",
         "sum_time_viewed_tt": "Minutes Viewed",
-        "avg_time_viewed_tt": "Avg. Min Viewed"
+        "avg_time_viewed_tt": "Avg. Min Viewed",
+        "devices": {
+          "COMPUTER": "Desktop",
+          "MOBILE": "Mobile",
+          "TABLET": "Tablet"
+        }
       }
     }
   }

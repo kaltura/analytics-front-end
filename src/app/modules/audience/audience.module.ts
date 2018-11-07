@@ -20,6 +20,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
+import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { TableModule } from 'primeng/table';
     TechnologyComponent,
     GeoLocationComponent,
     EngagementComponent,
-    ContentInteractionsComponent
+    ContentInteractionsComponent,
+    DevicesOverviewComponent,
   ],
   exports: [],
   providers: []

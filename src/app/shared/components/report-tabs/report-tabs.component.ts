@@ -7,6 +7,7 @@ export type Tab = {
   selected: boolean;
   units: string;
   key: string;
+  trend?: string;
 };
 
 @Component({
@@ -20,6 +21,7 @@ export class ReportTabsComponent implements OnInit {
 
   @Input() tabs: Tab[] = [];
   @Input() compareMode = false;
+  @Input() showValue = true;
 
   constructor() {
   }
