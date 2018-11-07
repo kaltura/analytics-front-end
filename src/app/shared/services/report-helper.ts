@@ -17,12 +17,10 @@ export class ReportHelper {
       return '0';
     } else {
       x = parseFloat(x);
-      if (x > 1) {
+      if (x % 1 === 0) {
         return ReportHelper.numberWithCommas(round ? Math.round(x) : x);
-      } else if (x > 0) {
-        return x.toPrecision(3);
       } else {
-        return x;
+        return x.toPrecision(3);
       }
     }
 

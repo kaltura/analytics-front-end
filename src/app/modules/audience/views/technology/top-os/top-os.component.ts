@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -8,6 +8,7 @@ import { TopOsConfig } from './top-os.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TopBrowsersConfig } from '../top-browsers/top-browsers.config';
+import { numberToFixed } from 'shared/utils/number-to-fixed';
 
 @Component({
   selector: 'app-top-os',
@@ -32,6 +33,7 @@ export class TopOsComponent implements OnDestroy {
   }
   
   private _order = '-count_plays';
+  private _totalPlaysCount = 0;
   
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
@@ -63,11 +65,33 @@ export class TopOsComponent implements OnDestroy {
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const countPlaysIndex = columns.indexOf('count_plays');
+    if (countPlaysIndex !== -1) {
+      columns.splice(countPlaysIndex + 1, 0, 'plays_distribution');
+    }
     this._totalCount = table.totalCount;
     this._columns = columns;
-    this._tableData = tableData;
+    this._tableData = tableData.map(row => {
+      let playsDistribution = 0;
+      if (this._totalPlaysCount !== 0) {
+        const countPlays = parseFloat(row['count_plays']) || 0;
+        playsDistribution = (countPlays / this._totalPlaysCount) * 100;
+      }
+      playsDistribution = numberToFixed(playsDistribution);
+      row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
+      row['plays_distribution'] = String(playsDistribution);
+
+      return row;
+    });
   }
   
+  private _handleTotals(totals: KalturaReportTotal): void {
+    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+    if (tabsData.length) {
+      this._totalPlaysCount = Number(tabsData[0].value);
+    }
+  }
+
   private _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
@@ -81,6 +105,10 @@ export class TopOsComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
+          // IMPORTANT to handle totals first, distribution rely on it
+          if (report.totals) {
+            this._handleTotals(report.totals); // handle totals
+          }
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
           }

@@ -17,7 +17,7 @@ export class TopOsConfig extends ReportDataBaseConfig {
             format: value => value,
           },
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
           },
           'avg_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
@@ -27,6 +27,13 @@ export class TopOsConfig extends ReportDataBaseConfig {
           }
         }
       },
+      [ReportDataSection.totals]: {
+        fields: {
+          'count_plays': {
+            format: value => parseFloat(value) || 0,
+          },
+        }
+      }
     };
   }
 }

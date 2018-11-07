@@ -24,7 +24,12 @@
             </ng-template>
             <ng-template pTemplate="body" let-data>
               <tr>
-                <td *ngFor="let col of _columns; let i = index">{{data[col]}}</td>
+                <td *ngFor="let col of _columns; let i = index">
+                  <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
+                  <div *ngIf="col === 'plays_distribution'">
+                    <app-bullet [value]="data[col]"></app-bullet>
+                  </div>
+                </td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

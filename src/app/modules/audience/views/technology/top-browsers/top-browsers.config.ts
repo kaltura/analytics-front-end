@@ -27,6 +27,13 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
           }
         }
       },
+      [ReportDataSection.totals]: {
+        fields: {
+          'count_plays': {
+            format: value => parseFloat(value) || 0,
+          },
+        }
+      }
     };
   }
 }
