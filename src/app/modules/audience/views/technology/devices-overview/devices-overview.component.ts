@@ -143,7 +143,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     
     Object.keys(this._platformDataConfig.totals.fields).forEach(key => {
       barChartData[key] = {
-        grid: { top: 24, left: 54, bottom: 24, right: 24 },
+        grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
         color: ['#00a784'],
         yAxis: { type: 'value' },
         xAxis: {
@@ -152,7 +152,13 @@ export class DevicesOverviewComponent implements OnDestroy {
         },
         tooltip: {},
         series: [{
-          data: graphData.map(item => item[key] || 0),
+          data: graphData.map(item => {
+            const value = parseFloat(item[key]) || 0;
+            if (value % 1 !== 0) {
+              return value.toFixed(3);
+            }
+            return value;
+          }),
           type: 'bar'
         }]
       };
