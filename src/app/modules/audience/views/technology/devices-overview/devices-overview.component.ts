@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DevicesOverviewConfig } from './devices-overview.config';
@@ -13,7 +13,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
   selector: 'app-devices-overview',
   templateUrl: './devices-overview.component.html',
   styleUrls: ['./devices-overview.component.scss'],
-  providers: [DevicesOverviewConfig]
+  providers: [DevicesOverviewConfig, ReportService]
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
@@ -30,7 +30,10 @@ export class DevicesOverviewComponent implements OnDestroy {
       this.loadReport();
     }
   }
-
+  
+  @Output() deviceFilterChange = new EventEmitter<string[]>();
+  @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
+  
   private _fractions = 2;
 
   public _selectedValues = [];
@@ -43,8 +46,8 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _chartDataLoaded = false;
   public _tabsData: Tab[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _platformDataConfig: ReportDataConfig;
-  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  public _dataConfig: ReportDataConfig;
+  public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
@@ -56,8 +59,8 @@ export class DevicesOverviewComponent implements OnDestroy {
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService,
               private _platformsConfigService: DevicesOverviewConfig) {
-    this._platformDataConfig = _platformsConfigService.getConfig();
-    this._selectedMetrics = this._platformDataConfig.totals.preSelected;
+    this._dataConfig = _platformsConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
 
   ngOnDestroy() {
@@ -74,7 +77,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       pager: this._pager,
       order: ''
     };
-    this._reportService.getReport(reportConfig, this._platformDataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           // IMPORTANT to handle totals first, summary rely on totals
@@ -123,8 +126,8 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
 
   private handleOverview(table: KalturaReportTable): void {
-    const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
-    const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const graphData = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
@@ -145,13 +148,13 @@ export class DevicesOverviewComponent implements OnDestroy {
       }
       return data;
     }, []);
-
+    
     // move other devices in the end
     const otherDevicesIndex = graphData.findIndex(({ device }) => device === 'OTHER');
     if (otherDevicesIndex !== -1) {
       graphData.push(graphData.splice(otherDevicesIndex, 1)[0]);
     }
-
+    
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
@@ -247,17 +250,30 @@ export class DevicesOverviewComponent implements OnDestroy {
     });
     this._barChartData = barChartData;
     this._summaryData = summaryData;
+    const devices = graphData.map(item => ({
+      value: item.device,
+      label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+    }));
+    this.devicesListChange.emit(devices);
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this._tabsData = this._reportService.parseTotals(totals, this._platformDataConfig.totals, this._selectedMetrics);
+    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-
-  public _onSelectionChange(event): void {
-    console.warn(this._selectedValues);
+  
+  public _onSelectionChange(): void {
+    this.deviceFilterChange.emit(this._selectedValues);
   }
 
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+  }
+  
+  public resetDeviceFilters(emit = false): void {
+    this._selectedValues = [];
+    
+    if (emit) {
+      this._onSelectionChange();
+    }
   }
 }

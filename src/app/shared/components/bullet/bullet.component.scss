@@ -1,15 +1,21 @@
 @import '../../../../styles/variables';
 
+:host {
+  display: block;
+  width: 100%;
+}
+
 .kBulletContainer{
   display: flex;
   align-items: center;
   .kValue{
     font-size: 15px;
+    margin-right: 5px;
     color: $kGrayscale3;
-    width: 54px;
+    width: 30%;
   }
   .kBullet{
-    width: 200px;
+    width: 70%;
     height: 12px;
     border: 0px solid $kGrayscale5;
     border-radius: 6px;

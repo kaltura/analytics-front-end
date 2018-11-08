@@ -22,6 +22,8 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
 import { CheckboxModule } from 'primeng/primeng';
+import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
+import { TopOsComponent } from './views/technology/top-os/top-os.component';
 
 @NgModule({
   imports: [
@@ -49,6 +51,8 @@ import { CheckboxModule } from 'primeng/primeng';
     EngagementComponent,
     ContentInteractionsComponent,
     DevicesOverviewComponent,
+    TopBrowsersComponent,
+    TopOsComponent,
   ],
   exports: [],
   providers: []

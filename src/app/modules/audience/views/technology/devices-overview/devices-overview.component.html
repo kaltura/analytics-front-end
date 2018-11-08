@@ -14,11 +14,14 @@
           <div class="kSummaryRow" *ngFor="let summary of _summaryData[_selectedMetrics]">
             <div class="kSummaryCheckbox">
               <p-checkbox name="devices"
+                          [inputId]="summary.key"
                           [value]="summary.key"
-                          (onChange)="_onSelectionChange($event)"
+                          (onChange)="_onSelectionChange()"
                           [(ngModel)]="_selectedValues"></p-checkbox>
-              <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
-              <span class="kLabel">{{summary.name}}</span>
+              <label [for]="summary.key">
+                <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
+                <span class="kLabel">{{summary.name}}</span>
+              </label>
             </div>
             <div class="kSummaryValue">
               <span class="kValue">{{summary.value}}</span>

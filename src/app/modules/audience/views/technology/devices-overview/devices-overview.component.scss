@@ -1,13 +1,5 @@
 @import '../../../../../../styles/variables';
 
-:host {
-  width: 100%;
-}
-
-app-date-filter {
-  margin-left: auto;
-}
-
 .kOverview {
   display: flex;
 
@@ -39,6 +31,11 @@ app-date-filter {
           font-size: 22px;
           color: $kGrayscale3;
           margin: 0 17px 0 11px;
+        }
+
+        label {
+          display: flex;
+          align-items: center;
         }
 
         p-checkbox {

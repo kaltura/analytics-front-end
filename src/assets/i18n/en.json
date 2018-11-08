@@ -162,6 +162,12 @@
         "count_plays_tt": "Plays",
         "sum_time_viewed_tt": "Minutes Viewed",
         "avg_time_viewed_tt": "Avg. Min Viewed",
+        "plays_distribution": "Plays Distribution",
+        "browser": "Name",
+        "os": "Name",
+        "devicesSelected": "{0} Devices Selected",
+        "filterDeviceType": "Filter Device Type",
+        "index": "#",
         "devices": {
           "COMPUTER": "Desktop",
           "MOBILE": "Mobile",

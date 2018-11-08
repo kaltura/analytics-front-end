@@ -1,22 +1,19 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { significantDigits } from 'shared/utils/significant-digits';
 
 @Component({
   selector: 'app-bullet',
   templateUrl: './bullet.component.html',
   styleUrls: ['./bullet.component.scss']
 })
-export class BulletComponent implements AfterViewInit {
-
-  @Input() value: number;
+export class BulletComponent {
   public _value = 0;
-
-  constructor() {
-  }
-
-  ngAfterViewInit() {
+  
+  @Input() formatter: Function = significantDigits;
+  
+  @Input() set value(value: any) {
     setTimeout(() => {
-      this._value = parseFloat(this.value.toFixed(2));
+      this._value = typeof this.formatter === 'function' ? this.formatter(value) : value;
     }, 200);
-
   }
 }

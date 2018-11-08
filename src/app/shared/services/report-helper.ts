@@ -1,33 +1,30 @@
 export class ReportHelper {
-
   static numberWithCommas(x: any): string {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toLocaleString(navigator.language, { maximumSignificantDigits: 10 });
   }
-
+  
   static percents(x: any): string {
     return this.numberWithCommas((parseFloat(x) * 100).toPrecision(3)) + '%';
   }
-
+  
   static numberOrNA(x: any): string {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
-
+  
   static numberOrZero(x: any, round = true): string {
     if (!x.length) {
       return '0';
     } else {
       x = parseFloat(x);
-      if (x > 1) {
-        return ReportHelper.numberWithCommas(round ? Math.round(x) : x);
-      } else if (x > 0) {
-        return x.toPrecision(3);
-      } else {
-        return x;
-      }
+      x = x % 1 === 0
+        ? round ? Math.round(x) : x
+        : Number(x.toPrecision(3));
+      
+      return ReportHelper.numberWithCommas(x);
     }
-
+    
   }
-
+  
   static time(x: any): string {
     if (!x.length) {
       return '00:00';
@@ -37,21 +34,21 @@ export class ReportHelper {
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
     let formattedTime = wholeMinutes.toString() + ':' + secondsText;
-
+    
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;
     }
-
+    
     return formattedTime;
   }
-
+  
   static underscoreToSpace(x: string): string {
     return x.replace('_', ' ');
   }
-
+  
   static format(param: string, value: string): string {
     let result: string = value;
-
+    
     switch (param) {
       case 'count_plays':
       case 'count_plays_25':
@@ -74,7 +71,7 @@ export class ReportHelper {
         // format as number
         result = this.numberWithCommas(parseInt(value));
         break;
-
+      
       case 'avg_view_drop_off':
       case 'play_through_ratio':
       case 'load_play_ratio':
@@ -82,29 +79,29 @@ export class ReportHelper {
         const perc = parseFloat(value) * 100;
         result = this.numberWithCommas(perc) + '%';
         break;
-/*
-      case 'sum_time_viewed':
-      case 'avg_time_viewed':
-        // format as HH:MM:SS
-        return KTimeUtil.formatTime2(Number(value) * 60);
-        break;
-      case 'event_date_id':
-        return new Date(Number(value) * 1000).toDatestring();
-        break;
-
-      case 'entry_media_source_name':
-        return getLocalised('sourceTypes', value);
-        break;
-
-      case 'country':
-        return getLocalised('map', value);
-        break;
-      case 'date_id':
-        return FormattingUtil.formatFullDatestring(value);
-        break;
-      case 'month_id':
-        return FormattingUtil.formatMonthstring(value);
-        break;*/
+      /*
+            case 'sum_time_viewed':
+            case 'avg_time_viewed':
+              // format as HH:MM:SS
+              return KTimeUtil.formatTime2(Number(value) * 60);
+              break;
+            case 'event_date_id':
+              return new Date(Number(value) * 1000).toDatestring();
+              break;
+      
+            case 'entry_media_source_name':
+              return getLocalised('sourceTypes', value);
+              break;
+      
+            case 'country':
+              return getLocalised('map', value);
+              break;
+            case 'date_id':
+              return FormattingUtil.formatFullDatestring(value);
+              break;
+            case 'month_id':
+              return FormattingUtil.formatMonthstring(value);
+              break;*/
       case 'bandwidth_consumption':
       case 'storage_used':
       case 'used_storage':
@@ -129,7 +126,7 @@ export class ReportHelper {
         const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
         const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
         let formattedTime = wholeMinutes.toString() + ':' + secondsText;
-
+        
         if (parseFloat(value) < 0) {
           formattedTime = '-' + formattedTime;
         }
@@ -141,7 +138,7 @@ export class ReportHelper {
         // replace '_' with space
         result = value.replace('_', ' ');
         break;
-
+      
     }
     return result;
   }

@@ -1,0 +1,78 @@
+<div class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.audience.technology.topBrowsers' | translate}}</span>
+    <p-multiSelect class="kDevicesFilter"
+                   [disabled]="true"
+                   [options]="devicesList"
+                   [maxSelectedLabels]="0"
+                   [selectedItemsLabel]="'app.audience.technology.devicesSelected' | translate"
+                   [showToggleAll]="false"
+                   [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
+                   [resetFilterOnHide]="true"
+                   [filter]="false"
+                   (onChange)="_onDeviceFilterChange()"
+                   [(ngModel)]="_selectedDevices">
+      <ng-template let-device pTemplate="item">
+            <span class="kDevicesListItem">
+              <i class="kIcon" [ngClass]="device.value | appDeviceIcon"></i>
+              <span class="kLabel">{{device.label}}</span>
+            </span>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <kTags *ngIf="_tags.length"
+             [title]="''"
+             [data]="_tags"
+             [labelField]="'label'"
+             [tooltipField]="'label'"
+             [clearAllLabel]="'app.common.clearAll' | translate"
+             (onTagRemove)="_onRemoveTag($event)"
+             (onRemoveAll)="_onRemoveAllTags()">
+      </kTags>
+
+      <div class="kTable">
+        <div class="kTableContainer">
+          <p-table sortField="count_plays"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
+                <th *ngFor="let col of _columns" [pSortableColumn]="col" [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
+                  {{'app.audience.technology.' + col | translate}}
+                  <p-sortIcon [field]="col"></p-sortIcon>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td><span>{{rowIndex+1}}</span></td>
+                <td *ngFor="let col of _columns">
+                  <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
+                  <div *ngIf="col === 'plays_distribution'">
+                    <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage">No results</div>
+              </div>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="_pager.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
