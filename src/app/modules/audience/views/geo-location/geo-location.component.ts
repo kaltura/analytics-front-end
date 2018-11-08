@@ -33,7 +33,6 @@ export class GeoLocationComponent implements OnInit {
   private unFilteredTableData: any[] = [];
   private selectedTab: Tab;
   public _tabsData: Tab[] = [];
-  public _showTable = true;
   public _mapChartData: any = {'count_plays': {}};
 
   public _isBusy: boolean;
@@ -171,13 +170,6 @@ export class GeoLocationComponent implements OnInit {
     if (direction === 'out' && this._mapZoom > 2) {
       this._mapZoom -= 1;
       this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
-    }
-  }
-
-  public toggleTable(): void {
-    this._showTable = !this._showTable;
-    if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
-      analyticsConfig.callbacks.updateLayout();
     }
   }
 

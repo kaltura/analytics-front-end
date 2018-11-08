@@ -89,10 +89,42 @@ export class CompareService implements OnDestroy {
         xAxis: {
           type: 'category',
           boundaryGap: true,
-          data: xAxisData
+          data: xAxisData,
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisTick: {
+            length: 8,
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
         },
         tooltip: {
           trigger: 'axis',
@@ -126,10 +158,42 @@ export class CompareService implements OnDestroy {
         color: ['#00a784', '#66CAB5'],
         xAxis: {
           type: 'category',
-          data: xAxisData
+          data: xAxisData,
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisTick: {
+            length: 8,
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
         },
         tooltip: {
           trigger: 'axis',

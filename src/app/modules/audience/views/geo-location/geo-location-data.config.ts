@@ -97,6 +97,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',
           itemStyle: {
+            areaColor: '#ebebeb',
+            borderColor: '#999999',
             emphasis: {label: {show: true}, areaColor: '#F49616'}
           },
           data: []

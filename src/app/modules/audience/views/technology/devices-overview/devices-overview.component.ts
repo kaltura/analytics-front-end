@@ -17,7 +17,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
-  
+
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
       this._chartDataLoaded = false;
@@ -30,9 +30,9 @@ export class DevicesOverviewComponent implements OnDestroy {
       this.loadReport();
     }
   }
-  
+
   private _fractions = 2;
-  
+
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -50,7 +50,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
-  
+
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _authService: AuthService,
@@ -59,15 +59,15 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._platformDataConfig = _platformsConfigService.getConfig();
     this._selectedMetrics = this._platformDataConfig.totals.preSelected;
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   private loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = {
       reportType: KalturaReportType.platforms,
       filter: this._filter,
@@ -81,11 +81,11 @@ export class DevicesOverviewComponent implements OnDestroy {
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
-          
+
           if (report.table && report.table.header && report.table.data) {
             this.handleOverview(report.table); // handle overview
           }
-          
+
           this._isBusy = false;
         },
         error => {
@@ -121,7 +121,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           });
         });
   }
-  
+
   private handleOverview(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._platformDataConfig.table);
     const relevantFields = Object.keys(this._platformDataConfig.totals.fields);
@@ -130,7 +130,7 @@ export class DevicesOverviewComponent implements OnDestroy {
         data.push(item);
       } else {
         const hasValue = relevantFields.map(key => item.hasOwnProperty(key) ? parseFloat(item[key]) || 0 : 0).some(Boolean);
-        
+
         if (hasValue) {
           const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
           if (otherIndex !== -1) {
@@ -155,15 +155,49 @@ export class DevicesOverviewComponent implements OnDestroy {
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
-  
+
     relevantFields.forEach(key => {
       barChartData[key] = {
         grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
         color: ['#00a784'],
-        yAxis: { type: 'value' },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
+        },
         xAxis: {
           type: 'category',
-          data: xAxisData
+          data: xAxisData,
+          axisLabel: {
+            color: '#999999',
+            fontSize: 12,
+            fontWeight: 'bold'
+          },
+          axisTick: {
+            length: 8,
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#ebebeb'
+            }
+          }
         },
         tooltip: {},
         series: [{
@@ -177,7 +211,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           type: 'bar'
         }]
       };
-      
+
       const relevantTotal = this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
@@ -204,15 +238,15 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._barChartData = barChartData;
     this._summaryData = summaryData;
   }
-  
+
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._platformDataConfig.totals, this._selectedMetrics);
   }
-  
+
   public _onSelectionChange(event): void {
     console.warn(this._selectedValues);
   }
-  
+
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
   }
