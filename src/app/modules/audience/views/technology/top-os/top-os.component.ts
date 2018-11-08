@@ -177,6 +177,7 @@ export class TopOsComponent implements OnDestroy {
   }
   
   public _onSortChanged(event): void {
+    event.field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
