@@ -24,6 +24,16 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
+      <kTags *ngIf="_tags.length"
+             [title]="''"
+             [data]="_tags"
+             [labelField]="'label'"
+             [tooltipField]="'label'"
+             [clearAllLabel]="'app.common.clearAll' | translate"
+             (onTagRemove)="_onRemoveTag($event)"
+             (onRemoveAll)="_onRemoveAllTags()">
+      </kTags>
+
       <div class="kTable">
         <div class="kTableContainer">
           <p-table sortField="count_plays"

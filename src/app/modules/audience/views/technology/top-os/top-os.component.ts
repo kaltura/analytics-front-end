@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TopOsConfig } from './top-os.config';
@@ -34,6 +34,7 @@ export class TopOsComponent implements OnDestroy {
       this._selectedDevices = [];
       this._reportType = KalturaReportType.operatingSystem;
     }
+    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
     this._pager.pageIndex = 1;
     this._loadReport();
   }
@@ -58,6 +59,7 @@ export class TopOsComponent implements OnDestroy {
   private _reportType = KalturaReportType.operatingSystem;
   private _devices: string[] = [];
   
+  public _tags: any[] = [];
   public _selectedDevices: string[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
@@ -194,5 +196,15 @@ export class TopOsComponent implements OnDestroy {
   public _onDeviceFilterChange(): void {
     this.deviceFilter = this._selectedDevices;
     this.deviceFilterChange.emit(this._selectedDevices);
+  }
+  
+  public _onRemoveTag(item: { value: string, label: string }): void {
+    this._selectedDevices = this._selectedDevices.filter(device => device !== item.value);
+    this._onDeviceFilterChange();
+  }
+  
+  public _onRemoveAllTags(): void {
+    this._selectedDevices = [];
+    this._onDeviceFilterChange();
   }
 }

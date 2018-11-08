@@ -9,7 +9,6 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { numberToFixed } from 'shared/utils/number-to-fixed';
 import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
-import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-top-browsers',
@@ -35,6 +34,7 @@ export class TopBrowsersComponent implements OnDestroy {
       this._selectedDevices = [];
       this._reportType = KalturaReportType.browsers;
     }
+    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
     this._pager.pageIndex = 1;
     this._loadReport();
   }
@@ -59,6 +59,7 @@ export class TopBrowsersComponent implements OnDestroy {
   private _reportType = KalturaReportType.browsers;
   private _devices: string[] = [];
   
+  public _tags: any[] = [];
   public _selectedDevices: string[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
@@ -195,5 +196,15 @@ export class TopBrowsersComponent implements OnDestroy {
   public _onDeviceFilterChange(): void {
     this.deviceFilter = this._selectedDevices;
     this.deviceFilterChange.emit(this._selectedDevices);
+  }
+  
+  public _onRemoveTag(item: { value: string, label: string }): void {
+    this._selectedDevices = this._selectedDevices.filter(device => device !== item.value);
+    this._onDeviceFilterChange();
+  }
+  
+  public _onRemoveAllTags(): void {
+    this._selectedDevices = [];
+    this._onDeviceFilterChange();
   }
 }
