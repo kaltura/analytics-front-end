@@ -43,6 +43,7 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
+                <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="col">
                   {{'app.audience.technology.' + col | translate}}
                   <p-sortIcon [field]="col"></p-sortIcon>
@@ -50,8 +51,9 @@
 
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-data>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
+                <td><span>{{rowIndex+1}}</span></td>
                 <td *ngFor="let col of _columns; let i = index">
                   <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
                   <div *ngIf="col === 'plays_distribution'">

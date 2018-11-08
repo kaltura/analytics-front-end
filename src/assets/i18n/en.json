@@ -167,6 +167,7 @@
         "os": "Name",
         "devicesSelected": "{0} Devices Selected",
         "filterDeviceType": "Filter Device Type",
+        "index": "#",
         "devices": {
           "COMPUTER": "Desktop",
           "MOBILE": "Mobile",

@@ -61,7 +61,7 @@ export class TopBrowsersComponent implements OnDestroy {
   
   public _tags: any[] = [];
   public _selectedDevices: string[] = [];
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
   public _columns: string[] = [];
