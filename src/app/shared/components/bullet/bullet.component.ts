@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { numberToFixed } from 'shared/utils/number-to-fixed';
 
 @Component({
   selector: 'app-bullet',
@@ -10,7 +11,7 @@ export class BulletComponent {
   
   @Input() set value(value: any) {
     setTimeout(() => {
-      this._value = Number(parseFloat(value).toFixed(2));
+      this._value = numberToFixed(value);
     }, 200);
   }
 }
