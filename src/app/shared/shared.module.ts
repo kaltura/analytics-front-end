@@ -6,6 +6,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ToastModule } from 'primeng/toast';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
@@ -29,6 +30,7 @@ import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
     TranslateModule,
     CheckboxModule,
     SelectButtonModule,
+    ToastModule,
     CalendarModule,
     RadioButtonModule,
     PopupWidgetModule,

@@ -88,7 +88,7 @@ export class CompareService implements OnDestroy {
         color: ['#F49616', '#FCDBA3'],
         xAxis: {
           type: 'category',
-          boundaryGap: false,
+          boundaryGap: true,
           data: xAxisData
         },
         yAxis: {

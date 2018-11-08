@@ -320,7 +320,7 @@ export class ReportService implements OnDestroy {
         color: ['#F49616', '#149CC1'],
         xAxis: {
           type: 'category',
-          boundaryGap: false,
+          boundaryGap: true,
           data: xAxisData
         },
         yAxis: {

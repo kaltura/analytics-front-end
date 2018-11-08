@@ -1,14 +1,19 @@
 <div class="kExport">
-  <div class="k-spinner-animation kSpinner" *ngIf="_exportingCsv"></div>
-  <a [class.disabled]="_exportingCsv" (click)="exportToScv()">{{(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate}}</a>
-  <div class="kStatus" *ngIf="_status.length > 0">
-    <div *ngIf="_status==='ready'">
-      <span class="kReady">{{(_downloading ? 'app.common.downloading' : 'app.common.ready') | translate}}</span>
-      <a *ngIf="!_downloading" (click)="download()">{{'app.common.downloadCsv' | translate}}</a>
-    </div>
-    <div *ngIf="_status==='error'">
-      <span class="kError" [kTooltip]="_errorDetails">{{'app.common.error' | translate}}</span>
-      <i class="kIconclose_small" (click)="_status=''"></i>
-    </div>
-  </div>
+  <button pButton class="kButtonDefault" icon="icon-export" (click)="exportToScv()" [class.kButtonProcess]="_exportingCsv" [disabled]="_exportingCsv" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"></button>
 </div>
+<p-toast key="ready">
+  <ng-template let-message pTemplate="message">
+    <div class="kToast">
+      <span class="kHeader" >{{'app.common.reportReady' | translate}}</span>
+      <a (click)="download()">{{'app.common.downloadCsv' | translate}}</a>
+    </div>
+  </ng-template>
+</p-toast>
+<p-toast key="error">
+  <ng-template let-message pTemplate="message">
+    <div class="kToast">
+      <span class="kHeader" >{{'app.common.reportFail' | translate}}</span>
+      <a (click)="tryAgain()">{{'app.common.tryAgain' | translate}}</a>
+    </div>
+  </ng-template>
+</p-toast>
