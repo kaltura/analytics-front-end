@@ -31,3 +31,85 @@
     }
   }
 }
+@keyframes processing-button {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(46px);
+  }
+}
+
+.ui-button.kButtonProcess {
+  position: relative;
+  overflow: hidden;
+
+  &:disabled {
+    opacity: 1;
+  }
+
+  /deep/ .ui-button-text {
+    position: relative;
+  }
+
+  &:before {
+    position: absolute;
+    content: ' ';
+    top: 0; left: -46px; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        -55deg,
+        transparent 1px,
+        rgba(0,0,0,0.1) 2px,
+        rgba(0,0,0,0.1) 11px,
+        transparent 12px,
+        transparent 20px
+    );
+    animation-name: processing-button;
+    animation-duration: .6s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+}
+/deep/ p-toast {
+  /deep/ p-toastitem {
+    .ui-toast-message.ui-toast-message-success {
+      border-radius: 3px;
+      background-color: white;
+      border-left: 4px solid $kPrimary;
+    }
+    .ui-toast-message.ui-toast-message-error {
+      border-radius: 3px;
+      background-color: white;
+      border-left: 4px solid $kDandger;
+    }
+    .kToast{
+      display: flex;
+      flex-direction: column;
+      .kHeader{
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      a{
+        margin-top: 24px;
+        margin-bottom: 8px;
+      }
+    }
+
+  }
+}
+
+:host /deep/ button{
+  .ui-button-text{
+    padding-left: 3.1em;
+  }
+}
+
+:host /deep/ .ui-toast-close-icon{
+  text-decoration: none;
+  font-size: 24px;
+  color: $kGrayscale3;
+  &:before{
+    content: "\e973";
+  }
+}
