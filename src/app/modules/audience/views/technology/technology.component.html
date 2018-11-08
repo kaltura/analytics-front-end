@@ -12,7 +12,9 @@
   </div>
 </app-devices-overview>
 
-<app-top-browsers [filter]="_filterEvent" [devicesList]="_devicesList"></app-top-browsers>
+<app-top-browsers [filter]="_filterEvent"
+                  [devicesList]="_devicesList"
+                  (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-browsers>
 
 <app-top-os [filter]="_filterEvent"
             [devicesList]="_devicesList"

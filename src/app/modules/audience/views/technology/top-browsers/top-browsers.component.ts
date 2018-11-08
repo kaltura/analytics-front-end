@@ -28,9 +28,11 @@ export class TopBrowsersComponent implements OnDestroy {
 
     if (value.length) {
       this._devices = value;
+      this._selectedDevices = value;
       this._reportType = KalturaReportType.platforms;
     } else {
       this._devices = null;
+      this._selectedDevices = [];
       this._reportType = KalturaReportType.browsers;
     }
     this._pager.pageIndex = 1;
