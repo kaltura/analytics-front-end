@@ -33,6 +33,11 @@
           margin: 0 17px 0 11px;
         }
 
+        label {
+          display: flex;
+          align-items: center;
+        }
+
         p-checkbox {
           width: 22px;
           height: 22px;
