@@ -17,7 +17,7 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
             format: value => value,
           },
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
           },
           'avg_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
