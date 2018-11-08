@@ -64,6 +64,13 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       },
       tooltip: {
         trigger: 'item',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999'
+        },
         formatter: (params) => {
           if (params.name && parseFloat(params.value) >= 0) {
             let tooltip = params.seriesName + '<br/>' + params.name + ' : ' + params.value;

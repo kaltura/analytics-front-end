@@ -165,7 +165,8 @@ export class DevicesOverviewComponent implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisLine: {
             show: false
@@ -185,7 +186,8 @@ export class DevicesOverviewComponent implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisTick: {
             length: 8,
@@ -199,7 +201,15 @@ export class DevicesOverviewComponent implements OnDestroy {
             }
           }
         },
-        tooltip: {},
+        tooltip: {
+          backgroundColor: '#ffffff',
+          borderColor: '#dadada',
+          borderWidth: 1,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+          textStyle: {
+            color: '#999999'
+          }
+        },
         series: [{
           data: graphData.map(item => {
             const value = parseFloat(item[key]) || 0;

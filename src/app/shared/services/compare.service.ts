@@ -93,7 +93,8 @@ export class CompareService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisTick: {
             length: 8,
@@ -112,7 +113,8 @@ export class CompareService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisLine: {
             show: false
@@ -128,6 +130,13 @@ export class CompareService implements OnDestroy {
         },
         tooltip: {
           trigger: 'axis',
+          backgroundColor: '#ffffff',
+          borderColor: '#dadada',
+          borderWidth: 1,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+          textStyle: {
+            color: '#999999'
+          },
           axisPointer: {
             lineStyle: {
               color: '#dadada'
@@ -143,7 +152,10 @@ export class CompareService implements OnDestroy {
         series: [{
           name: currentPeriodTitle,
           data: yAxisCurrentData,
-          type: 'line'
+          type: 'line',
+          lineStyle: {
+            width: 3
+          }
         },
         {
           name: comparePeriodTitle,
@@ -162,7 +174,8 @@ export class CompareService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisTick: {
             length: 8,
@@ -181,7 +194,8 @@ export class CompareService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisLine: {
             show: false
@@ -197,6 +211,13 @@ export class CompareService implements OnDestroy {
         },
         tooltip: {
           trigger: 'axis',
+          backgroundColor: '#ffffff',
+          borderColor: '#dadada',
+          borderWidth: 1,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+          textStyle: {
+            color: '#999999'
+          },
           axisPointer: {
             type: 'shadow'
           }

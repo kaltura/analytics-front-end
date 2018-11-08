@@ -325,7 +325,8 @@ export class ReportService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisTick: {
             length: 8,
@@ -344,7 +345,8 @@ export class ReportService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisLine: {
             show: false
@@ -360,6 +362,13 @@ export class ReportService implements OnDestroy {
         },
         tooltip: {
           trigger: 'axis',
+          backgroundColor: '#ffffff',
+          borderColor: '#dadada',
+          borderWidth: 1,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+          textStyle: {
+            color: '#999999'
+          },
           axisPointer: {
             lineStyle: {
               color: '#dadada'
@@ -368,7 +377,10 @@ export class ReportService implements OnDestroy {
         },
         series: [{
           data: yAxisData,
-          type: 'line'
+          type: 'line',
+          lineStyle: {
+            width: 3
+          }
         }]
       };
       barChartData[graph.id] = {
@@ -382,7 +394,8 @@ export class ReportService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisTick: {
             length: 8,
@@ -401,7 +414,8 @@ export class ReportService implements OnDestroy {
           axisLabel: {
             color: '#999999',
             fontSize: 12,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            fontFamily: 'Lato'
           },
           axisLine: {
             show: false
@@ -415,7 +429,15 @@ export class ReportService implements OnDestroy {
             }
           }
         },
-        tooltip: {},
+        tooltip: {
+          backgroundColor: '#ffffff',
+          borderColor: '#dadada',
+          borderWidth: 1,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+          textStyle: {
+            color: '#999999'
+          }
+        },
         series: [{
           data: yAxisData,
           type: 'bar'
