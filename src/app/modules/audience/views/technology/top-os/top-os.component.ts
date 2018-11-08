@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TopOsConfig } from './top-os.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { numberToFixed } from 'shared/utils/number-to-fixed';
 import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
+import { significantDigits } from 'shared/utils/significant-digits';
 
 @Component({
   selector: 'app-top-os',
@@ -103,9 +103,9 @@ export class TopOsComponent implements OnDestroy {
         const countPlays = parseFloat(row['count_plays']) || 0;
         playsDistribution = (countPlays / this._totalPlaysCount) * 100;
       }
-      playsDistribution = numberToFixed(playsDistribution);
+      playsDistribution = significantDigits(playsDistribution);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
-      row['plays_distribution'] = String(playsDistribution);
+      row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
       
       return row;
     });

@@ -42,7 +42,7 @@
             <ng-template pTemplate="header">
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
-                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="col" [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
                   {{'app.audience.technology.' + col | translate}}
                   <p-sortIcon [field]="col"></p-sortIcon>
                 </th>
@@ -52,10 +52,10 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
-                <td *ngFor="let col of _columns; let i = index">
+                <td *ngFor="let col of _columns">
                   <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
                   <div *ngIf="col === 'plays_distribution'">
-                    <app-bullet [value]="data[col]"></app-bullet>
+                    <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
                   </div>
                 </td>
               </tr>

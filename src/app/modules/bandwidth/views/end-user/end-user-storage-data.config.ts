@@ -89,7 +89,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'added_storage_mb',
+        preSelected: 'added_entries',
         fields: {
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),

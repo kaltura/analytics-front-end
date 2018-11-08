@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { numberToFixed } from 'shared/utils/number-to-fixed';
+import { significantDigits } from 'shared/utils/significant-digits';
 
 @Component({
   selector: 'app-bullet',
@@ -9,9 +9,11 @@ import { numberToFixed } from 'shared/utils/number-to-fixed';
 export class BulletComponent {
   public _value = 0;
   
+  @Input() formatter: Function = significantDigits;
+  
   @Input() set value(value: any) {
     setTimeout(() => {
-      this._value = numberToFixed(value);
+      this._value = typeof this.formatter === 'function' ? this.formatter(value) : value;
     }, 200);
   }
 }
