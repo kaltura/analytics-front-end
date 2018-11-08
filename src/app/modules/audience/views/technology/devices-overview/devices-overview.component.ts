@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DevicesOverviewConfig } from './devices-overview.config';
@@ -31,6 +31,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     }
   }
   
+  @Output() deviceFilterChange = new EventEmitter<string[]>();
+  
   private _fractions = 2;
   
   public _selectedValues = [];
@@ -44,7 +46,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _tabsData: Tab[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _dataConfig: ReportDataConfig;
-  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
@@ -145,17 +147,17 @@ export class DevicesOverviewComponent implements OnDestroy {
       }
       return data;
     }, []);
-
+    
     // move other devices in the end
     const otherDevicesIndex = graphData.findIndex(({ device }) => device === 'OTHER');
     if (otherDevicesIndex !== -1) {
       graphData.push(graphData.splice(otherDevicesIndex, 1)[0]);
     }
-
+    
     const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const barChartData = {};
     const summaryData = {};
-  
+    
     relevantFields.forEach(key => {
       barChartData[key] = {
         grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
@@ -209,8 +211,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
-  public _onSelectionChange(event): void {
-    console.warn(this._selectedValues);
+  public _onSelectionChange(): void {
+    this.deviceFilterChange.emit(this._selectedValues);
   }
   
   public _onTabChange(tab: Tab): void {

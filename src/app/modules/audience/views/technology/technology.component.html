@@ -1,4 +1,6 @@
-<app-devices-overview [filter]="_filterEvent" [allowedDevices]="_allowedDevices">
+<app-devices-overview [filter]="_filterEvent"
+                      [allowedDevices]="_allowedDevices"
+                      (deviceFilterChange)="_onDeviceFilterChange($event)">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
     <app-date-filter #dateFilter
@@ -10,4 +12,4 @@
 
 <app-top-browsers [filter]="_filterEvent"></app-top-browsers>
 
-<app-top-os [filter]="_filterEvent"></app-top-os>
+<app-top-os [filter]="_filterEvent" [deviceFilter]="_devicesFilter"></app-top-os>

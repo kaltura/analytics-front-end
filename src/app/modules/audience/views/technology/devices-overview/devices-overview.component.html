@@ -15,7 +15,7 @@
             <div class="kSummaryCheckbox">
               <p-checkbox name="devices"
                           [value]="summary.key"
-                          (onChange)="_onSelectionChange($event)"
+                          (onChange)="_onSelectionChange()"
                           [(ngModel)]="_selectedValues"></p-checkbox>
               <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
               <span class="kLabel">{{summary.name}}</span>

@@ -1,14 +1,14 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TopOsConfig } from './top-os.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { TopBrowsersConfig } from '../top-browsers/top-browsers.config';
 import { numberToFixed } from 'shared/utils/number-to-fixed';
+import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
 
 @Component({
   selector: 'app-top-os',
@@ -18,6 +18,22 @@ import { numberToFixed } from 'shared/utils/number-to-fixed';
 })
 export class TopOsComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
+  
+  @Input() set deviceFilter(value: string[]) {
+    if (!Array.isArray(value)) {
+      return;
+    }
+    
+    if (value.length) {
+      this._devices = value;
+      this._reportType = KalturaReportType.platforms;
+    } else {
+      this._devices = null;
+      this._reportType = KalturaReportType.operatingSystem;
+    }
+    this._pager.pageIndex = 1;
+    this._loadReport();
+  }
   
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
@@ -34,6 +50,8 @@ export class TopOsComponent implements OnDestroy {
   
   private _order = '-count_plays';
   private _totalPlaysCount = 0;
+  private _reportType = KalturaReportType.operatingSystem;
+  private _devices: string[] = [];
   
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
@@ -44,7 +62,7 @@ export class TopOsComponent implements OnDestroy {
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
   public _dataConfig: ReportDataConfig;
-  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
@@ -80,7 +98,7 @@ export class TopOsComponent implements OnDestroy {
       playsDistribution = numberToFixed(playsDistribution);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = String(playsDistribution);
-
+      
       return row;
     });
   }
@@ -91,16 +109,17 @@ export class TopOsComponent implements OnDestroy {
       this._totalPlaysCount = Number(tabsData[0].value);
     }
   }
-
+  
   private _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.operatingSystem,
+      reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
       order: this._order,
+      objectIds: devicesFilterToServerValue(this._devices)
     };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
