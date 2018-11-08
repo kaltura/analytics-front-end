@@ -9,6 +9,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { numberToFixed } from 'shared/utils/number-to-fixed';
 import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-top-os',
@@ -17,6 +18,7 @@ import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-serve
   providers: [TopOsConfig, ReportService]
 })
 export class TopOsComponent implements OnDestroy {
+  @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];
   
   @Input() set deviceFilter(value: string[]) {
@@ -52,7 +54,8 @@ export class TopOsComponent implements OnDestroy {
   private _totalPlaysCount = 0;
   private _reportType = KalturaReportType.operatingSystem;
   private _devices: string[] = [];
-  
+
+  public _selectedDevices: SelectItem[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
@@ -168,7 +171,7 @@ export class TopOsComponent implements OnDestroy {
         });
   }
   
-  public _onSortChanged(event) {
+  public _onSortChanged(event): void {
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
@@ -183,5 +186,9 @@ export class TopOsComponent implements OnDestroy {
       this._pager.pageIndex = event.page + 1;
       this._loadReport();
     }
+  }
+  
+  public _onDeviceFilterChange(event): void {
+    console.warn(this._selectedDevices);
   }
 }

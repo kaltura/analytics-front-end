@@ -1,6 +1,24 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.audience.technology.topBrowsers' | translate}}</span>
+    <p-multiSelect class="kDevicesFilter"
+                   [disabled]="true"
+                   [options]="devicesList"
+                   [maxSelectedLabels]="0"
+                   [selectedItemsLabel]="'app.audience.technology.devicesSelected' | translate"
+                   [showToggleAll]="false"
+                   [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
+                   [resetFilterOnHide]="true"
+                   [filter]="false"
+                   (onChange)="_onDeviceFilterChange($event)"
+                   [(ngModel)]="_selectedDevices">
+      <ng-template let-device pTemplate="item">
+            <span class="kDevicesListItem">
+              <i class="kIcon" [ngClass]="device.value | appDeviceIcon"></i>
+              {{device.label}}
+            </span>
+      </ng-template>
+    </p-multiSelect>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

@@ -9,6 +9,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { numberToFixed } from 'shared/utils/number-to-fixed';
 import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-top-browsers',
@@ -17,6 +18,7 @@ import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-serve
   providers: [TopBrowsersConfig, ReportService]
 })
 export class TopBrowsersComponent implements OnDestroy {
+  @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];
   
   @Input() set deviceFilter(value: string[]) {
@@ -53,6 +55,7 @@ export class TopBrowsersComponent implements OnDestroy {
   private _reportType = KalturaReportType.browsers;
   private _devices: string[] = [];
   
+  public _selectedDevices: SelectItem[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
@@ -183,5 +186,10 @@ export class TopBrowsersComponent implements OnDestroy {
       this._pager.pageIndex = event.page + 1;
       this._loadReport();
     }
+  }
+  
+  public _onDeviceFilterChange(event): void {
+    console.warn(event);
+    console.warn(this._selectedDevices);
   }
 }

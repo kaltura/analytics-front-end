@@ -32,6 +32,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
+  @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
   
   private _fractions = 2;
   
@@ -205,6 +206,11 @@ export class DevicesOverviewComponent implements OnDestroy {
     });
     this._barChartData = barChartData;
     this._summaryData = summaryData;
+    const devices = graphData.map(item => ({
+      value: item.device,
+      label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+    }));
+    this.devicesListChange.emit(devices);
   }
   
   private handleTotals(totals: KalturaReportTotal): void {

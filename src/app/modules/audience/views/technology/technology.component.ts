@@ -14,6 +14,7 @@ export class TechnologyComponent implements OnInit {
   public _allowedDevices = ['COMPUTER', 'MOBILE', 'TABLET'];
   public _filterEvent: DateChangeEvent = null;
   public _devicesFilter: string[] = null;
+  public _devicesList: { value: string, label: string; }[] = [];
   
   constructor() {
   }
@@ -27,5 +28,9 @@ export class TechnologyComponent implements OnInit {
   
   public _onDeviceFilterChange(event: string[]): void {
     this._devicesFilter = event;
+  }
+  
+  public _onDevicesListChange(event: { value: string, label: string; }[]): void {
+    this._devicesList = event;
   }
 }

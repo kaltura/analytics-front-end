@@ -165,6 +165,8 @@
         "plays_distribution": "Plays Distribution",
         "browser": "Name",
         "os": "Name",
+        "devicesSelected": "{0} Devices Selected",
+        "filterDeviceType": "Filter Device Type",
         "devices": {
           "COMPUTER": "Desktop",
           "MOBILE": "Mobile",
