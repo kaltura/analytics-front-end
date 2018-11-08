@@ -224,4 +224,12 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
   }
+  
+  public resetDeviceFilters(emit = false): void {
+    this._selectedValues = [];
+    
+    if (emit) {
+      this._onSelectionChange();
+    }
+  }
 }

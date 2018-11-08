@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { DevicesOverviewComponent } from './devices-overview/devices-overview.component';
 
 @Component({
   selector: 'app-technology',
@@ -8,6 +9,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./technology.component.scss'],
 })
 export class TechnologyComponent implements OnInit {
+  @ViewChild('overview') _overview: DevicesOverviewComponent;
+
   public _dateRange = DateRanges.CurrentYear;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
@@ -32,5 +35,11 @@ export class TechnologyComponent implements OnInit {
   
   public _onDevicesListChange(event: { value: string, label: string; }[]): void {
     this._devicesList = event;
+  }
+  
+  public _onReportDeviceFilterChange(): void {
+    if (this._overview) {
+      this._overview.resetDeviceFilters();
+    }
   }
 }

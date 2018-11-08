@@ -8,7 +8,7 @@
                    [showToggleAll]="false"
                    [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
                    [filter]="false"
-                   (onChange)="_onDeviceFilterChange($event)"
+                   (onChange)="_onDeviceFilterChange()"
                    [(ngModel)]="_selectedDevices">
       <ng-template let-device pTemplate="item">
             <span class="kDevicesListItem">

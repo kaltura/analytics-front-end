@@ -10,12 +10,12 @@
                    [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
                    [resetFilterOnHide]="true"
                    [filter]="false"
-                   (onChange)="_onDeviceFilterChange($event)"
+                   (onChange)="_onDeviceFilterChange()"
                    [(ngModel)]="_selectedDevices">
       <ng-template let-device pTemplate="item">
             <span class="kDevicesListItem">
               <i class="kIcon" [ngClass]="device.value | appDeviceIcon"></i>
-              {{device.label}}
+              <span class="kLabel">{{device.label}}</span>
             </span>
       </ng-template>
     </p-multiSelect>

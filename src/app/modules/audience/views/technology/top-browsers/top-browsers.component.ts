@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -50,12 +50,14 @@ export class TopBrowsersComponent implements OnDestroy {
     }
   }
   
+  @Output() deviceFilterChange = new EventEmitter<string[]>();
+  
   private _order = '-count_plays';
   private _totalPlaysCount = 0;
   private _reportType = KalturaReportType.browsers;
   private _devices: string[] = [];
   
-  public _selectedDevices: SelectItem[] = [];
+  public _selectedDevices: string[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
@@ -188,8 +190,8 @@ export class TopBrowsersComponent implements OnDestroy {
     }
   }
   
-  public _onDeviceFilterChange(event): void {
-    console.warn(event);
-    console.warn(this._selectedDevices);
+  public _onDeviceFilterChange(): void {
+    this.deviceFilter = this._selectedDevices;
+    this.deviceFilterChange.emit(this._selectedDevices);
   }
 }
