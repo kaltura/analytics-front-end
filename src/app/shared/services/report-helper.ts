@@ -1,7 +1,7 @@
 export class ReportHelper {
 
   static numberWithCommas(x: any): string {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   static percents(x: any): string {
@@ -17,11 +17,11 @@ export class ReportHelper {
       return '0';
     } else {
       x = parseFloat(x);
-      if (x % 1 === 0) {
-        return ReportHelper.numberWithCommas(round ? Math.round(x) : x);
-      } else {
-        return x.toPrecision(3);
-      }
+      x = x % 1 === 0
+        ? round ? Math.round(x) : x
+        : Number(x.toPrecision(3));
+
+      return ReportHelper.numberWithCommas(x);
     }
 
   }
