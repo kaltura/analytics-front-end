@@ -1,7 +1,7 @@
 export class ReportHelper {
 
   static numberWithCommas(x: any): string {
-    return x.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   static percents(x: any): string {
