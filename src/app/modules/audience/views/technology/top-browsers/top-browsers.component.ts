@@ -89,12 +89,17 @@ export class TopBrowsersComponent implements OnDestroy {
   
   }
   
+  private _insertColumnAfter(column: string, after: string, columns: string[]): void {
+    const countPlaysIndex = columns.indexOf(after);
+    if (countPlaysIndex !== -1) {
+      columns.splice(countPlaysIndex + 1, 0, column);
+    }
+  }
+  
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    const countPlaysIndex = columns.indexOf('count_plays');
-    if (countPlaysIndex !== -1) {
-      columns.splice(countPlaysIndex + 1, 0, 'plays_distribution');
-    }
+    this._insertColumnAfter('plays_distribution', 'count_plays', columns);
+    this._insertColumnAfter('plays_trend', 'plays_distribution', columns);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map(row => {
@@ -106,6 +111,7 @@ export class TopBrowsersComponent implements OnDestroy {
       playsDistribution = significantDigits(playsDistribution);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
+      row['plays_trend'] = '0'; // TODO
       
       return row;
     });
@@ -177,7 +183,8 @@ export class TopBrowsersComponent implements OnDestroy {
   }
   
   public _onSortChanged(event) {
-    event.field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
+    const playsColumns = ['plays_distribution', 'plays_trend'];
+    event.field = playsColumns.includes(event.field) ? 'count_plays' : event.field;
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {

@@ -53,7 +53,10 @@
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
                 <td *ngFor="let col of _columns">
-                  <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
+                  <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
+                  <span *ngIf="col === 'plays_trend'">
+                    <h5 class="mini-loader"><span></span><span></span></h5>
+                  </span>
                   <div *ngIf="col === 'plays_distribution'">
                     <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
                   </div>

@@ -1,0 +1,80 @@
+@import '../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables';
+
+$mini-loader-size: 12px;
+$mini-loader-spacer: 7px;
+$start-position-left: $mini-loader-size / 2;
+$start-position-right: -$mini-loader-size / 2;
+
+.mini-loader {
+  display: inline-block;
+
+  @keyframes mini-loader-left {
+    0% {
+      transform: translate3d($start-position-left - $mini-loader-spacer, 0, 0);
+    }
+    // move left
+    25% {
+      transform: translate3d($start-position-left, 0, 0);
+    }
+    // on top
+    50% {
+      transform: translate3d($start-position-left + $mini-loader-spacer, 0, 0);
+    }
+    // move right
+    75% {
+      transform: translate3d($start-position-left, 0, 0);
+    }
+    // on top
+    100% {
+      transform: translate3d($start-position-left - $mini-loader-spacer, 0, 0);
+    }
+    // move left
+  }
+
+  @keyframes mini-loader-right {
+    0% {
+      transform: translate3d($start-position-right + $mini-loader-spacer, 0, 0);
+    }
+    // move right
+    25% {
+      transform: translate3d($start-position-right, 0, 0);
+    }
+    // on top
+    50% {
+      transform: translate3d($start-position-right - $mini-loader-spacer, 0, 0);
+    }
+    // move left
+    75% {
+      transform: translate3d($start-position-right, 0, 0);
+    }
+    // on top
+    100% {
+      transform: translate3d($start-position-right + $mini-loader-spacer, 0, 0);
+    }
+    // move right
+  }
+
+  &::before {
+    content: " ";
+  }
+
+  span {
+    position: relative;
+    display: inline-block;
+    width: $mini-loader-size;
+    height: $mini-loader-size;
+    background: $kOrange;
+    border-radius: $mini-loader-size;
+
+    &:nth-child(1) {
+      opacity: .5;
+      transform: translate3d(-$mini-loader-spacer, 0, 0);
+      animation: mini-loader-left 1.5s infinite;
+    }
+
+    &:nth-child(2) {
+      transform: translate3d($mini-loader-spacer, 0, 0);
+      animation: mini-loader-right 1.5s infinite;
+    }
+  }
+}

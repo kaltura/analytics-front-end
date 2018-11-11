@@ -163,6 +163,7 @@
         "sum_time_viewed_tt": "Minutes Viewed",
         "avg_time_viewed_tt": "Avg. Min Viewed",
         "plays_distribution": "Plays Distribution",
+        "plays_trend": "Play Trend",
         "browser": "Name",
         "os": "Name",
         "devicesSelected": "{0} Devices Selected",

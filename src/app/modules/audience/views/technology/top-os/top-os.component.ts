@@ -89,12 +89,18 @@ export class TopOsComponent implements OnDestroy {
   
   }
   
+  private _insertColumnAfter(column: string, after: string, columns: string[]): void {
+    const countPlaysIndex = columns.indexOf(after);
+    if (countPlaysIndex !== -1) {
+      columns.splice(countPlaysIndex + 1, 0, column);
+    }
+  }
+  
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    const countPlaysIndex = columns.indexOf('count_plays');
-    if (countPlaysIndex !== -1) {
-      columns.splice(countPlaysIndex + 1, 0, 'plays_distribution');
-    }
+    this._insertColumnAfter('plays_distribution', 'count_plays', columns);
+    this._insertColumnAfter('plays_trend', 'plays_distribution', columns);
+
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map(row => {
@@ -106,6 +112,7 @@ export class TopOsComponent implements OnDestroy {
       playsDistribution = significantDigits(playsDistribution);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
+      row['plays_trend'] = '0';
       
       return row;
     });
