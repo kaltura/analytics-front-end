@@ -189,8 +189,20 @@ export class EndUserStorageComponent implements OnInit {
             if (report.graphs.length) {
               this._chartDataLoaded = false;
               if (report.baseTotals) {
+                // FIXME discrepancy in the names, should be fixed on the server side
+                report.baseTotals.forEach(total => {
+                  if (total.id === 'total_storage_mb') {
+                    total.id = 'total_storage';
+                  }
+                });
                 this._reportService.addGraphTotals(report.graphs, report.baseTotals); // add totals to graph
               }
+              // FIXME discrepancy in the names, should be fixed on the server side
+              report.graphs.forEach(total => {
+                if (total.id === 'total_storage') {
+                  total.id = 'total_storage_mb';
+                }
+              });
               this.handleGraphs(report.graphs); // handle graphs
             }
             if (report.totals) {
