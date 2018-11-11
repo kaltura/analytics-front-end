@@ -45,8 +45,13 @@
       }
 
       .kSummaryValue {
+        width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         .mini-loader {
-          margin-right: 12px;
+          margin: 0;
         }
 
         .kValue {
