@@ -45,6 +45,11 @@
       }
 
       .kSummaryValue {
+        width: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         .kValue {
           font-size: 24px;
           font-weight: bold;

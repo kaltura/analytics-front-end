@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -8,6 +8,21 @@ import { DevicesOverviewConfig } from './devices-overview.config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { TrendService } from 'shared/services/trend.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
+
+export interface SummaryItem {
+  key: string;
+  name: string;
+  value: number;
+  rawValue: number;
+  units: string;
+}
+
+export interface Summary {
+  [key: string]: SummaryItem[];
+}
 
 @Component({
   selector: 'app-devices-overview',
@@ -17,7 +32,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
-
+  
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
       this._chartDataLoaded = false;
@@ -33,14 +48,21 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
+  @Output() exportDataChange = new EventEmitter<{
+    headers: string,
+    totalCount: number,
+    filter: KalturaEndUserReportInputFilter,
+    selectedMetrics: string
+  }>();
   
   private _fractions = 2;
+  private _columns: string[] = [];
 
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
   public _barChartData: any = {};
-  public _summaryData: any = {};
+  public _summaryData: Summary = {};
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
@@ -53,8 +75,9 @@ export class DevicesOverviewComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
-
+  
   constructor(private _reportService: ReportService,
+              private _trendService: TrendService,
               private _translate: TranslateService,
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService,
@@ -62,20 +85,20 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._dataConfig = _platformsConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
-
+  
   ngOnDestroy() {
-
+  
   }
-
+  
   private loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-
+    
     const reportConfig: ReportConfig = {
       reportType: KalturaReportType.platforms,
       filter: this._filter,
       pager: this._pager,
-      order: ''
+      order: null
     };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
@@ -84,12 +107,21 @@ export class DevicesOverviewComponent implements OnDestroy {
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
-
+          
           if (report.table && report.table.header && report.table.data) {
             this.handleOverview(report.table); // handle overview
           }
-
+          
           this._isBusy = false;
+    
+          this.exportDataChange.emit({
+            headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.technology'),
+            totalCount: report.table.totalCount,
+            selectedMetrics: this._selectedMetrics,
+            filter: this._filter,
+          });
+          
+          this._loadTrendData();
         },
         error => {
           this._isBusy = false;
@@ -124,16 +156,88 @@ export class DevicesOverviewComponent implements OnDestroy {
           });
         });
   }
-
-  private handleOverview(table: KalturaReportTable): void {
-    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    const relevantFields = Object.keys(this._dataConfig.totals.fields);
-    const graphData = tableData.reduce((data, item) => {
+  
+  private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
+    const currentValue = device.rawValue;
+    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
+    const tooltip = `
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
+    `;
+    device['trend'] = value;
+    device['trendDirection'] = direction;
+    device['tooltip'] = tooltip;
+  }
+  
+  private _loadTrendData(): void {
+    const { startDay, endDay } = this._trendService.getCompareDates(this._filter.fromDay, this._filter.toDay);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
+    
+    this._filter.fromDay = startDay;
+    this._filter.toDay = endDay;
+    const reportConfig: ReportConfig = {
+      reportType: KalturaReportType.platforms,
+      filter: this._filter,
+      pager: this._pager,
+      order: null
+    };
+    
+    this._reportService.getReport(reportConfig, this._dataConfig)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(report => {
+          if (report.table && report.table.header && report.table.data) {
+            const relevantFields = Object.keys(this._dataConfig.totals.fields);
+            const { data } = this._getOverviewData(report.table, relevantFields);
+            const compareData = this._getSummaryData(data, relevantFields);
+            Object.keys(this._summaryData).forEach(key => {
+              const compare = compareData[key];
+              if (compare) {
+                this._summaryData[key].forEach((device, index) => {
+                  this._setCompareData(device, compare[index].rawValue, currentPeriodTitle, comparePeriodTitle);
+                });
+              }
+            });
+          } else {
+            Object.keys(this._summaryData).forEach(key => {
+              this._summaryData[key].forEach((device) => {
+                this._setCompareData(device, 0, currentPeriodTitle, comparePeriodTitle);
+              });
+            });
+          }
+        },
+        error => {
+          const err: ErrorDetails = this._errorsManager.getError(error);
+          if (err.forceLogout) {
+            this._blockerMessage = new AreaBlockerMessage({
+              title: err.title,
+              message: err.message,
+              buttons: [{
+                label: this._translate.instant('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._authService.logout();
+                }
+              }]
+            });
+          } else {
+            Object.keys(this._summaryData).forEach(key => {
+              this._summaryData[key].forEach((device) => {
+                device['trend'] = 'N/A';
+              });
+            });
+          }
+        });
+  }
+  
+  private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
+    const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const data = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
       } else {
         const hasValue = relevantFields.map(key => item.hasOwnProperty(key) ? parseFloat(item[key]) || 0 : 0).some(Boolean);
-
+        
         if (hasValue) {
           const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
           if (otherIndex !== -1) {
@@ -150,16 +254,25 @@ export class DevicesOverviewComponent implements OnDestroy {
     }, []);
     
     // move other devices in the end
-    const otherDevicesIndex = graphData.findIndex(({ device }) => device === 'OTHER');
+    const otherDevicesIndex = data.findIndex(({ device }) => device === 'OTHER');
     if (otherDevicesIndex !== -1) {
-      graphData.push(graphData.splice(otherDevicesIndex, 1)[0]);
+      data.push(data.splice(otherDevicesIndex, 1)[0]);
     }
     
-    const xAxisData = graphData.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
-    const barChartData = {};
-    const summaryData = {};
-
-    relevantFields.forEach(key => {
+    return { data, columns };
+  }
+  
+  private _handleDevicesListChange(data: { [key: string]: string }[]): void {
+    const devices = data.map(item => ({
+      value: item.device,
+      label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+    }));
+    this.devicesListChange.emit(devices);
+  }
+  
+  private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
+    const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+    return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
         grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
         color: ['#00a784'],
@@ -214,7 +327,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
         },
         series: [{
-          data: graphData.map(item => {
+          data: data.map(item => {
             const value = parseFloat(item[key]) || 0;
             if (value % 1 !== 0) {
               return value.toFixed(this._fractions);
@@ -224,11 +337,17 @@ export class DevicesOverviewComponent implements OnDestroy {
           type: 'bar'
         }]
       };
-
+      
+      return barChartData;
+    }, {});
+  }
+  
+  private _getSummaryData(data: { [key: string]: string }[], relevantFields: string[]): Summary {
+    return relevantFields.reduce((summaryData, key) => {
       const relevantTotal = this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
-        summaryData[key] = graphData.map(item => {
+        summaryData[key] = data.map(item => {
           const itemValue = parseFloat(item[key]);
           let value = 0;
           if (key === 'avg_time_viewed') {
@@ -243,20 +362,26 @@ export class DevicesOverviewComponent implements OnDestroy {
             key: item.device,
             name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
             value: value,
+            rawValue: itemValue,
             units: key === 'avg_time_viewed' ? 'min' : '%'
           };
         });
       }
-    });
-    this._barChartData = barChartData;
-    this._summaryData = summaryData;
-    const devices = graphData.map(item => ({
-      value: item.device,
-      label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-    }));
-    this.devicesListChange.emit(devices);
+      return summaryData;
+    }, {});
   }
-
+  
+  private handleOverview(table: KalturaReportTable): void {
+    const relevantFields = Object.keys(this._dataConfig.totals.fields);
+    const { data, columns } = this._getOverviewData(table, relevantFields);
+  
+    this._columns = columns;
+    this._barChartData = this._getGraphData(data, relevantFields);
+    this._summaryData = this._getSummaryData(data, relevantFields);
+    
+    this._handleDevicesListChange(data);
+  }
+  
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
@@ -264,7 +389,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _onSelectionChange(): void {
     this.deviceFilterChange.emit(this._selectedValues);
   }
-
+  
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
   }

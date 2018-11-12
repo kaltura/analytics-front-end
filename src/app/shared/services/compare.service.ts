@@ -6,18 +6,15 @@ import { GraphsData } from 'shared/services/report.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { ReportHelper } from 'shared/services/report-helper';
+import { TrendService } from 'shared/services/trend.service';
 
 @Injectable()
 export class CompareService implements OnDestroy {
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService,
+              private _trendService: TrendService) {
   }
 
   ngOnDestroy() {
-  }
-
-  private getTooltipRowString(time, value, units = '') {
-    return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
   }
 
   public compareGraphData(currentPeriod: { from: string, to: string },
@@ -293,17 +290,17 @@ export class CompareService implements OnDestroy {
             if (fieldConfig.nonComparable) {
               result = fieldConfig.format(value);
             } else {
-              const trend = hasConsistentData ? this._calculateTrend(Number(value), Number(compareValues[j])) : 0;
+              const { value: trend, direction } = hasConsistentData ? this._trendService.calculateTrend(Number(value), Number(compareValues[j])) : { value: 0, direction: 0 };
               const currentVal = fieldConfig.format(value);
               const compareVal = hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A';
               const tooltip = `
-                ${this.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
-                ${this.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
+                ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
+                ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
               `;
               result = {
-                value: hasConsistentData ? String(Math.abs(trend)) : 'N/A',
+                value: hasConsistentData ? trend : 'N/A',
                 tooltip: tooltip,
-                trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
+                trend: direction,
                 units: hasConsistentData ? '%' : ''
               };
             }
@@ -338,41 +335,25 @@ export class CompareService implements OnDestroy {
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
-        const trend = this._calculateTrend(Number(data[index]), Number(compareData[index]));
+        const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index]), Number(compareData[index]));
         const currentVal = field.format(data[index]);
         const compareVal = field.format(compareData[index]);
         tabsData.push({
           title: field.title,
           tooltip: `
-            ${this.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
-            ${this.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
+            ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
+            ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
           `,
-          value: ReportHelper.numberOrZero(String(Math.abs(trend))),
+          value: trend,
           selected: header === (selected || config.preSelected),
           units: '%',
           key: header,
-          trend: trend > 0 ? 1 : trend < 0 ? -1 : 0,
+          trend: direction
         });
       }
     });
 
     return tabsData;
-  }
-
-  private _calculateTrend(current: number, compare: number): number {
-
-    if (current === 0 && compare === 0) {
-      return 0;
-    }
-
-    if (current === 0 && compare > 0) {
-      return -100;
-    }
-
-    if (compare === 0 && current > 0) {
-      return 100;
-    }
-    return Math.ceil(((current - compare) / current) * 100);
   }
 }
 

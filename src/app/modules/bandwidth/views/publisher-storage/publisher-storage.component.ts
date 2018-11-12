@@ -277,7 +277,7 @@ export class PublisherStorageComponent implements OnInit {
     this._accumulativeStorage.forEach((item: Tab) => {
       tabsData.push({title: item.title});
     });
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(tabsData, this._columns);
+    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(tabsData, this._columns, 'app.bandwidth');
   }
 
 }

@@ -1,10 +1,19 @@
 <app-devices-overview #overview
                       [filter]="_filterEvent"
                       [allowedDevices]="_allowedDevices"
+                      (exportDataChange)="_onExportDataChange($event)"
                       (devicesListChange)="_onDevicesListChange($event)"
                       (deviceFilterChange)="_onDeviceFilterChange($event)">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
+    <app-export-csv [disabled]="!_exportData"
+                    [headers]="_exportData?.headers"
+                    [totalCount]="_exportData?.totalCount"
+                    [reportInputFilter]="_exportData?.filter"
+                    [dimension]="_exportData?.selectedMetrics"
+                    [reportType]="_reportType"
+                    [reportText]="'app.common.noMsg' | translate"
+                    [reportTitle]="'app.audience.technology.devicesOverview' | translate"></app-export-csv>
     <app-date-filter #dateFilter
                      [dateRange]="_dateRange"
                      [showCompare]="false"

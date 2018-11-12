@@ -1,5 +1,5 @@
 <div class="kExport">
-  <button pButton class="kButtonDefault" icon="icon-export" (click)="exportToScv()" [class.kButtonProcess]="_exportingCsv" [disabled]="_exportingCsv" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"></button>
+  <button pButton class="kButtonDefault" icon="icon-export" (click)="exportToScv()" [class.kButtonProcess]="_exportingCsv" [disabled]="disabled || _exportingCsv" [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"></button>
 </div>
 <p-toast key="ready">
   <ng-template let-message pTemplate="message">
