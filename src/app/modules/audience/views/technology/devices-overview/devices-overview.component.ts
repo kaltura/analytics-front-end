@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -16,6 +16,7 @@ export interface SummaryItem {
   key: string;
   name: string;
   value: number;
+  rawValue: number;
   units: string;
 }
 
@@ -143,12 +144,12 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
-    const currentValue = device.value;
+    const currentValue = device.rawValue;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `
-                    ${this._trendService.getTooltipRowString(currentPeriodTitle, currentValue)}
-                    ${this._trendService.getTooltipRowString(comparePeriodTitle, compareValue)}
-                  `;
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
+    `;
     device['trend'] = value;
     device['trendDirection'] = direction;
     device['tooltip'] = tooltip;
@@ -179,7 +180,7 @@ export class DevicesOverviewComponent implements OnDestroy {
               const compare = compareData[key];
               if (compare) {
                 this._summaryData[key].forEach((device, index) => {
-                  this._setCompareData(device, compare[index].value, currentPeriodTitle, comparePeriodTitle);
+                  this._setCompareData(device, compare[index].rawValue, currentPeriodTitle, comparePeriodTitle);
                 });
               }
             });
@@ -347,6 +348,7 @@ export class DevicesOverviewComponent implements OnDestroy {
             key: item.device,
             name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
             value: value,
+            rawValue: itemValue,
             units: key === 'avg_time_viewed' ? 'min' : '%'
           };
         });

@@ -116,6 +116,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         playsDistribution = (countPlays / this._totalPlaysCount) * 100;
       }
       playsDistribution = significantDigits(playsDistribution);
+      row['count_plays_raw'] = row['count_plays'];
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
       
@@ -191,12 +192,12 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _setPlaysTrend(row: any, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string): void {
-    const currentValue = parseFloat(row['count_plays']) || 0;
+    const currentValue = parseFloat(row['count_plays_raw']) || 0;
     compareValue = parseFloat(compareValue) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, currentValue)}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, compareValue)}
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
     `;
     row['plays_trend'] = {
       trend: value,
