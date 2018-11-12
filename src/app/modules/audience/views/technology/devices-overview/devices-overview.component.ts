@@ -92,7 +92,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       pager: this._pager,
       order: null
     };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           // IMPORTANT to handle totals first, summary rely on totals
