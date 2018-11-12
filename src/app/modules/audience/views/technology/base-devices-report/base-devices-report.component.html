@@ -1,8 +1,8 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.audience.technology.topBrowsers' | translate}}</span>
+    <span class="kTitle">{{_title | translate}}</span>
     <p-multiSelect class="kDevicesFilter"
-                   [disabled]="true"
+                   [disabled]="!_devicesSelectActive"
                    [options]="devicesList"
                    [maxSelectedLabels]="0"
                    [selectedItemsLabel]="'app.audience.technology.devicesSelected' | translate"
@@ -44,9 +44,11 @@
             <ng-template pTemplate="header">
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
-                <th *ngFor="let col of _columns" [pSortableColumn]="col" [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
+                <th *ngFor="let col of _columns"
+                    [pSortableColumn]="col !== 'plays_trend' ? col : null"
+                    [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
                   {{'app.audience.technology.' + col | translate}}
-                  <p-sortIcon [field]="col"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
                 </th>
 
               </tr>
@@ -57,7 +59,11 @@
                 <td *ngFor="let col of _columns">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
                   <span *ngIf="col === 'plays_trend'">
-                    <h5 class="mini-loader"><span></span><span></span></h5>
+                    <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
+                    <span *ngIf="data[col]" class="kTrend">
+                      <i [class]="data[col].trendDirection | appTrend"></i>
+                      <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].trend}}&nbsp;%</span>
+                    </span>
                   </span>
                   <div *ngIf="col === 'plays_distribution'">
                     <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>

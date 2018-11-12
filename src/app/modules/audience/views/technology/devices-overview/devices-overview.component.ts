@@ -206,7 +206,11 @@ export class DevicesOverviewComponent implements OnDestroy {
               }]
             });
           } else {
-            // TODO handle error
+            Object.keys(this._summaryData).forEach(key => {
+              this._summaryData[key].forEach((device) => {
+                device['trend'] = 'N/A';
+              });
+            });
           }
         });
   }

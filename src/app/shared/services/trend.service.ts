@@ -34,7 +34,7 @@ export class TrendService {
     }
     
     if (current === 0 && compare > 0) {
-      return { value: '-100', direction: -1 };
+      return { value: '100', direction: -1 };
     }
     
     if (compare === 0 && current > 0) {
