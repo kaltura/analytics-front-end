@@ -53,7 +53,7 @@ export class ReportService implements OnDestroy {
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
   }
 
-  public getReport(config: ReportConfig, sections: ReportDataConfig, loadBaseTotals: boolean = false): Observable<Report> {
+  public getReport(config: ReportConfig, sections: ReportDataConfig): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
 
     return Observable.create(
@@ -68,11 +68,6 @@ export class ReportService implements OnDestroy {
           reportType: config.reportType,
           reportInputFilter: config.filter,
           objectIds: config.objectIds ? config.objectIds : null
-        });
-
-        const getBaseTotals = new ReportGetBaseTotalAction({
-          reportType: config.reportType,
-          reportInputFilter: config.filter
         });
 
         const getTable = new ReportGetTableAction({
@@ -96,10 +91,6 @@ export class ReportService implements OnDestroy {
 
         if (sections.totals) {
           request.push(getTotal);
-        }
-
-        if (loadBaseTotals) {
-          request.push(getBaseTotals);
         }
 
         this._querySubscription = this._kalturaClient.multiRequest(request)
@@ -166,70 +157,6 @@ export class ReportService implements OnDestroy {
               this._exportSubscription = null;
             });
       });
-  }
-
-  public addGraphTotals(graphs: KalturaReportGraph[], totals: KalturaReportBaseTotal[]): void {
-    totals.forEach( (total: KalturaReportBaseTotal) => {
-      let newGraph = new KalturaReportGraph({id: total.id, data: ''});
-      const metrics = total.id.substr(6);
-      const added_data_graph: KalturaReportGraph = graphs.find( (graph: KalturaReportGraph) => {
-        return graph.id === 'added_' + metrics;
-      });
-      const deleted_data_graph: KalturaReportGraph = graphs.find( (graph: KalturaReportGraph) => {
-        return graph.id === 'deleted_' + metrics;
-      });
-      if (typeof added_data_graph !== 'undefined' && typeof deleted_data_graph !== 'undefined') {
-        const totalValue = parseFloat(total.data);
-        const added_data = added_data_graph.data.split(';');
-        const deleted_data = deleted_data_graph.data.split(';');
-        let totalAdded = 0;
-        let totalDeleted = 0;
-        added_data.forEach( (dataSet, index) => {
-          if (dataSet.split(',').length === 2 && deleted_data[index] && deleted_data[index].split(',').length === 2) {
-            const addedXvalue = dataSet.split(',')[0];
-            const addedYvalue = dataSet.split(',')[1];
-            const deletedXvalue = deleted_data[index].split(',')[0];
-            const deletedYvalue = deleted_data[index].split(',')[1];
-            totalAdded += parseFloat(addedYvalue);
-            totalDeleted += parseFloat(deletedYvalue);
-            const calculatedValue = totalValue + totalAdded - totalDeleted;
-            newGraph.data += addedXvalue + ',' + calculatedValue + ';';
-          }
-        });
-        if (newGraph.data.length > 0) {
-          graphs.push(newGraph);
-        }
-      }
-    });
-  }
-
-  public addTableTotals(report: Report): { headers: string,  data: string } {
-    let tableHeaders = report.table.header.split(',');
-    let tableData = report.table.data.split(';');
-    let newTableData = '';
-    report.baseTotals.forEach( (total: KalturaReportBaseTotal) => {
-      const metrics = total.id.substr(6);
-      const totalValue = parseFloat(total.data);
-      if (report.table.header.indexOf(total.id) === -1) {
-        const index = tableHeaders.indexOf('deleted_' + metrics);
-        if (index > -1) {
-          let totalAdded = 0;
-          let totalDeleted = 0;
-          tableHeaders.splice(index + 1, 0, total.id);
-          tableData.forEach((dataSet, ind) => {
-            if (dataSet && dataSet.length) {
-              let dataArr = dataSet.split(',');
-              totalDeleted += parseFloat(dataArr[index]);
-              totalAdded += parseFloat(dataArr[index - 1]);
-              dataArr.splice(index + 1, 0, (totalValue + totalAdded - totalDeleted).toString());
-              tableData[ind] = dataArr.join(',');
-            }
-          });
-          newTableData = tableData.join(';');
-        }
-      }
-    });
-    return {headers: tableHeaders.join(','), data: newTableData};
   }
 
 

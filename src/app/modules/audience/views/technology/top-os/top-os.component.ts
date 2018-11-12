@@ -129,7 +129,7 @@ export class TopOsComponent implements OnDestroy {
       order: this._order,
       objectIds: devicesFilterToServerValue(this._devices)
     };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           // IMPORTANT to handle totals first, distribution rely on it
