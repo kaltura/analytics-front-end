@@ -3,7 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig, Report } from 'shared/services';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaReportInputFilter,
+  KalturaFilterPager,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportGraph,
+  KalturaReportInterval,
+  KalturaReportType,
+  KalturaUser
+} from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
@@ -40,6 +49,7 @@ export class GeoLocationComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
+  public _tags: any[] = [];
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlay;
@@ -177,6 +187,20 @@ export class GeoLocationComponent implements OnInit {
     this.updateSelectedCountries();
   }
 
+  public _onRemoveTag(country: any): void {
+    const index = this._selectedCountries.indexOf(country.data);
+    if (index > -1) {
+      this._selectedCountries.splice(index, 1);
+      this.updateSelectedCountries();
+    }
+  }
+
+  public _onRemoveAllTags(): void {
+    this._tags = [];
+    this._selectedCountries = [];
+    this.updateSelectedCountries();
+  }
+
   public _onDrillDown(country: string): void {
     this._drillDown = country.length ? (this._drillDown !== country ? country : '') : '';
     this.loadReport();
@@ -302,6 +326,7 @@ export class GeoLocationComponent implements OnInit {
   }
 
   private updateSelectedCountries(): void {
+    this._tags = [];
     this._tableData = this.unFilteredTableData.filter(data => {
       if (this._selectedCountries.length === 0) {
         return true;
@@ -309,6 +334,7 @@ export class GeoLocationComponent implements OnInit {
         let found = false;
         this._selectedCountries.forEach(country => {
           if (data.country.toLowerCase() === country) {
+            this._tags.push({country: data.object_id, data: country});
             found = true;
           }
         });
