@@ -9,6 +9,8 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TrendService } from 'shared/services/trend.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface SummaryItem {
   key: string;
@@ -140,8 +142,22 @@ export class DevicesOverviewComponent implements OnDestroy {
         });
   }
   
-  private _loadTrendData() {
+  private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
+    const currentValue = device.value;
+    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
+    const tooltip = `
+                    ${this._trendService.getTooltipRowString(currentPeriodTitle, currentValue)}
+                    ${this._trendService.getTooltipRowString(comparePeriodTitle, compareValue)}
+                  `;
+    device['trend'] = value;
+    device['trendDirection'] = direction;
+    device['tooltip'] = tooltip;
+  }
+  
+  private _loadTrendData(): void {
     const { startDay, endDay } = this._trendService.getCompareDates(this._filter.fromDay, this._filter.toDay);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
     
     this._filter.fromDay = startDay;
     this._filter.toDay = endDay;
@@ -163,22 +179,14 @@ export class DevicesOverviewComponent implements OnDestroy {
               const compare = compareData[key];
               if (compare) {
                 this._summaryData[key].forEach((device, index) => {
-                  const currentValue = device.value;
-                  const compareValue = compare[index].value;
-                  const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-                  device['trend'] = value;
-                  device['trendDirection'] = direction;
+                  this._setCompareData(device, compare[index].value, currentPeriodTitle, comparePeriodTitle);
                 });
               }
             });
           } else {
             Object.keys(this._summaryData).forEach(key => {
               this._summaryData[key].forEach((device) => {
-                const currentValue = device.value;
-                const compareValue = 0;
-                const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-                device['trend'] = value;
-                device['trendDirection'] = direction;
+                this._setCompareData(device, 0, currentPeriodTitle, comparePeriodTitle);
               });
             });
           }

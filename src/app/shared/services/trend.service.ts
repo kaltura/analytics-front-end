@@ -8,6 +8,10 @@ export class TrendService {
   private _getTrendDirection(trend: number): number {
     return trend > 0 ? 1 : trend < 0 ? -1 : 0;
   }
+  
+  public getTooltipRowString(time, value, units = '') {
+    return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
+  }
 
   public getCompareDates(from: string | Date, to: string | Date): any {
     const fromDay = moment(from);

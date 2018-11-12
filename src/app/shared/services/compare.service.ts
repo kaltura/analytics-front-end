@@ -17,10 +17,6 @@ export class CompareService implements OnDestroy {
   ngOnDestroy() {
   }
 
-  private getTooltipRowString(time, value, units = '') {
-    return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
-  }
-
   public compareGraphData(currentPeriod: { from: string, to: string },
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportGraph[],
@@ -298,8 +294,8 @@ export class CompareService implements OnDestroy {
               const currentVal = fieldConfig.format(value);
               const compareVal = hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A';
               const tooltip = `
-                ${this.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
-                ${this.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
+                ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
+                ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
               `;
               result = {
                 value: hasConsistentData ? trend : 'N/A',
@@ -345,8 +341,8 @@ export class CompareService implements OnDestroy {
         tabsData.push({
           title: field.title,
           tooltip: `
-            ${this.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
-            ${this.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
+            ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
+            ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
           `,
           value: trend,
           selected: header === (selected || config.preSelected),
