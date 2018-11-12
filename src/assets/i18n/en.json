@@ -166,6 +166,7 @@
         "plays_trend": "Play Trend",
         "browser": "Name",
         "os": "Name",
+        "device": "Device",
         "devicesSelected": "{0} Devices Selected",
         "filterDeviceType": "Filter Device Type",
         "index": "#",

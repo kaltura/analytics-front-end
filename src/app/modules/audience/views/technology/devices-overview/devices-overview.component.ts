@@ -115,7 +115,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           this._isBusy = false;
     
           this.exportDataChange.emit({
-            headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns),
+            headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.technology'),
             totalCount: report.table.totalCount,
             selectedMetrics: this._selectedMetrics,
             filter: this._filter,

@@ -304,6 +304,6 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   private prepareCsvExportHeaders(): void {
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns);
+    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.bandwidth');
   }
 }

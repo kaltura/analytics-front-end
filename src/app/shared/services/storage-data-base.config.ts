@@ -39,7 +39,7 @@ export abstract class ReportDataBaseConfig {
 
   public abstract getConfig(): ReportDataConfig;
 
-  public prepareCsvExportHeaders(tabsData: Tab[], columns: string[]): string {
+  public prepareCsvExportHeaders(tabsData: Tab[], columns: string[], translationPrefix: string): string {
     const config = this.getConfig();
     let headers = '';
 
@@ -49,7 +49,7 @@ export abstract class ReportDataBaseConfig {
     headers = headers.substr(0, headers.length - 1) + ';';
 
     columns.forEach( col => {
-      headers = `${headers}${this._translate.instant(`app.bandwidth.${col}`)},`;
+      headers = `${headers}${this._translate.instant(`${translationPrefix}.${col}`)},`;
     });
 
     return headers.substr(0, headers.length - 1);
