@@ -24,7 +24,11 @@
               </label>
             </div>
             <div class="kSummaryValue">
-              <h5 class="mini-loader"><span></span><span></span></h5>
+              <h5 class="mini-loader" *ngIf="summary.trend === undefined"><span></span><span></span></h5>
+              <span *ngIf="summary.trend !== undefined" class="kTrend">
+                <i [class]="summary.trendDirection | appTrend"></i>
+                <span [kTooltip]="summary.tooltip" [escape]="false">{{summary.trend}}&nbsp;%</span>
+              </span>
               <div>
                 <span class="kValue">{{summary.value}}</span>
                 <span class="kUnits">{{summary.units}}</span>
