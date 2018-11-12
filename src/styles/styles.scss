@@ -183,12 +183,12 @@ body{
 }
 
 p-table /deep/ .ui-table .ui-table-tbody > tr{
-  &:nth-child(odd) {
-    background-color: #F8F8F8;
-    &:hover{
-      background-color: $kGrayscale7;
-    }
-  }
+  //&:nth-child(odd) {
+  //  background-color: #F8F8F8;
+  //  &:hover{
+  //    background-color: $kGrayscale7;
+  //  }
+  //}
   > td {
     height: 48px;
     padding-left: 24px;
