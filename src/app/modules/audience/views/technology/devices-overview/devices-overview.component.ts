@@ -168,7 +168,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       order: null
     };
     
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           if (report.table && report.table.header && report.table.data) {

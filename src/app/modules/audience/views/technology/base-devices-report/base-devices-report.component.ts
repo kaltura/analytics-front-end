@@ -141,7 +141,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       order: this._order,
       objectIds: devicesFilterToServerValue(this._devices)
     };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           // IMPORTANT to handle totals first, distribution rely on it
@@ -220,7 +220,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       order: this._order,
       objectIds: devicesFilterToServerValue(this._devices)
     };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
         if (report.table && report.table.header && report.table.data) {
