@@ -48,9 +48,16 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
+  @Output() exportDataChange = new EventEmitter<{
+    headers: string,
+    totalCount: number,
+    filter: KalturaEndUserReportInputFilter,
+    selectedMetrics: string
+  }>();
   
   private _fractions = 2;
-  
+  private _columns: string[] = [];
+
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -106,6 +113,13 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
           
           this._isBusy = false;
+    
+          this.exportDataChange.emit({
+            headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns),
+            totalCount: report.table.totalCount,
+            selectedMetrics: this._selectedMetrics,
+            filter: this._filter,
+          });
           
           this._loadTrendData();
         },
@@ -174,7 +188,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       .subscribe(report => {
           if (report.table && report.table.header && report.table.data) {
             const relevantFields = Object.keys(this._dataConfig.totals.fields);
-            const data = this._getOverviewData(report.table, relevantFields);
+            const { data } = this._getOverviewData(report.table, relevantFields);
             const compareData = this._getSummaryData(data, relevantFields);
             Object.keys(this._summaryData).forEach(key => {
               const compare = compareData[key];
@@ -216,8 +230,8 @@ export class DevicesOverviewComponent implements OnDestroy {
         });
   }
   
-  private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { [key: string]: string }[] {
-    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+  private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
+    const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
@@ -245,7 +259,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       data.push(data.splice(otherDevicesIndex, 1)[0]);
     }
     
-    return data;
+    return { data, columns };
   }
   
   private _handleDevicesListChange(data: { [key: string]: string }[]): void {
@@ -359,8 +373,9 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
-    const data = this._getOverviewData(table, relevantFields);
-    
+    const { data, columns } = this._getOverviewData(table, relevantFields);
+  
+    this._columns = columns;
     this._barChartData = this._getGraphData(data, relevantFields);
     this._summaryData = this._getSummaryData(data, relevantFields);
     

@@ -11,7 +11,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
   providers: [MessageService]
 })
 export class ExportCsvComponent implements OnInit {
-
+  @Input() disabled: boolean;
   @Input() headers: string;
   @Input() dimension: string;
   @Input() totalCount: number;
