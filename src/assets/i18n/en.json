@@ -7,6 +7,18 @@
       "contributors": "Contributors",
       "live": "Live"
     },
+    "filters": {
+      "mediaType": "Media Type",
+      "deviceType": "Device Type",
+      "vod": "VOD",
+      "live": "Live",
+      "audio": "Audio",
+      "interactiveVideo": "Interactive Video",
+      "mobile": "Mobile",
+      "tablet": "Tablet",
+      "desktop": "Desktop",
+      "other": "Other"
+    },
     "common":{
       "ok": "OK",
       "apply": "Apply",
