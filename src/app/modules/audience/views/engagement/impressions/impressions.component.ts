@@ -13,5 +13,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   protected _loadReport(): void {
     console.log('EngagementImpressionsComponent - loadReport');
   }
-
+  
+  protected _updateFilter(): void {
+    console.log('EngagementImpressionsComponent - updateFilter');
+  }
 }
