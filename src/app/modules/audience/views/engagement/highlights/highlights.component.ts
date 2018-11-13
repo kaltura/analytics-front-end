@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -19,7 +19,7 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
   styleUrls: ['./highlights.component.scss'],
   providers: [HighlightsConfig, ReportService]
 })
-export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnInit {
+export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-count_plays';
@@ -63,13 +63,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
-  
-  ngOnInit() {
-  }
-  
   protected _loadReport(sections = this._dataConfig): void {
-    this._updateFilter();
-    
     this._tableData = [];
     this._isBusy = true;
     this._blockerMessage = null;
@@ -87,7 +81,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       }))
       .subscribe(({ report, compare }) => {
           if (compare) {
-            this.handleCompare(report, compare);
+            this._handleCompare(report, compare);
           } else {
             if (report.table && report.table.header && report.table.data) {
               this.handleTable(report.table); // handle table
@@ -136,7 +130,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         });
   }
   
-  private _updateFilter(): void {
+  protected _updateFilter(): void {
     this._chartDataLoaded = false;
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
@@ -159,7 +153,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     }
   }
   
-  private handleCompare(current: Report, compare: Report): void {
+  private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
     
