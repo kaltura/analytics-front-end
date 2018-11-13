@@ -11,3 +11,15 @@
     }
   }
 }
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
+}
