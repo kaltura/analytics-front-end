@@ -13,5 +13,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   protected _loadReport(): void {
     console.log('EngagementHighlightsComponent - loadReport');
   }
+  
+  protected _updateFilter(): void {
+    console.log('EngagementHighlightsComponent - updateFilter');
+  }
 
 }

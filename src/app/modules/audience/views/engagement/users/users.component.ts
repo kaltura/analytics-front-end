@@ -14,5 +14,8 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent impl
   protected _loadReport(): void {
     console.log('EngagementUsersComponent - loadReport');
   }
-
+  
+  protected _updateFilter(): void {
+    console.log('EngagementUsersComponent - updateFilter');
+  }
 }

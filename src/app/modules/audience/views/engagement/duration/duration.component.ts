@@ -13,5 +13,8 @@ export class EngagementDurationComponent extends EngagementBaseReportComponent i
   protected _loadReport(): void {
     console.log('EngagementDurationComponent - loadReport');
   }
-
+  
+  protected _updateFilter(): void {
+    console.log('EngagementDurationComponent - updateFilter');
+  }
 }

@@ -182,5 +182,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
           });
         });
   }
-
+  
+  protected _updateFilter(): void {
+    console.log('EngagementImpressionsComponent - updateFilter');
+  }
 }
