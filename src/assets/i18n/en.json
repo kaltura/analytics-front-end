@@ -196,7 +196,15 @@
       "topVideos": "Top Videos",
       "duration": "Which video duration leads to better engagement?",
       "impressions": "How player impressions are leading to engagement?",
-      "users": "How many users watched at least once?"
+      "users": "How many users watched at least once?",
+      "highlightsReport": {
+        "count_plays": "Plays",
+        "sum_time_viewed": "Minutes Viewed",
+        "unique_viewers": "Unique Viewers",
+        "count_plays_tt": "Plays",
+        "sum_time_viewed_tt": "Minutes Viewed",
+        "unique_viewers_tt": "Unique Viewers"
+      }
     }
   }
 }

@@ -2,5 +2,64 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
   </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData"
+                       [compareMode]="_isCompareMode"
+                       (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units [dateFilter]="dateFilterComponent"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table sortField="count_plays"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
+                  {{'app.engagement.highlightsReport.' + col | translate}}
+                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                  <span *ngIf="_isCompareMode && data[col]?.value" class="kTrend">
+                    <i [class]="data[col].trend | appTrend"></i>
+                    <span [kTooltip]="data[col].tooltip"
+                          [escape]="false">{{data[col].value}}&nbsp;{{data[col].units}}</span>
+                  </span>
+                  <span *ngIf="!_isCompareMode || !data[col]?.value">{{data[col]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <p-paginator [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
 </div>
 
