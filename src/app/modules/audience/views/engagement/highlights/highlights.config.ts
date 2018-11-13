@@ -26,15 +26,20 @@ export class HighlightsConfig extends ReportDataBaseConfig {
         fields: {
           'name': {
             format: value => value,
+            nonComparable: true,
+          },
+          'entry_name': {
+            format: value => value,
+            nonComparable: true,
           },
           'count_plays': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'sum_time_viewed': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'unique_known_users': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           }
         }
       },

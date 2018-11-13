@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -25,7 +25,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _order = '-count_plays';
   private _reportType = KalturaReportType.userEngagement;
   private _dataConfig: ReportDataConfig;
+  private _selectedUsers = '';
   
+  public _drillDown = '';
   public _columns: string[] = [];
   public _isBusy: boolean;
   public _chartDataLoaded = false;
@@ -35,17 +37,15 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartType = 'line';
-  public _compareFilter: KalturaReportInputFilter = null;
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
-    {
-      searchInTags: true,
-      searchInAdminTags: false
-    }
-  );
+  public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _filter = new KalturaEndUserReportInputFilter({
+    searchInTags: true,
+    searchInAdminTags: false
+  });
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -146,16 +146,14 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: this._dateFilter.timeZoneOffset,
-          interval: this._dateFilter.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
+      this._compareFilter = new KalturaEndUserReportInputFilter({
+        searchInTags: true,
+        searchInAdminTags: false,
+        timeZoneOffset: this._dateFilter.timeZoneOffset,
+        interval: this._dateFilter.timeUnits,
+        fromDay: compare.startDay,
+        toDay: compare.endDay,
+      });
     } else {
       this._compareFilter = null;
     }
@@ -250,5 +248,15 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._loadReport({ table: null });
       }
     }
+  }
+  
+  public _onDrillDown(user: string): void {
+    this._drillDown = user.length ? user : '';
+    this._reportType = user.length ? KalturaReportType.specificUserEngagement : KalturaReportType.userEngagement;
+    this._filter.userIds = user.length ? user : this._selectedUsers;
+    if (this._compareFilter) {
+      this._compareFilter.userIds = this._filter.userIds;
+    }
+    this._loadReport();
   }
 }
