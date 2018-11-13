@@ -13,5 +13,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   protected _loadReport(): void {
     console.log('EngagementTopVideosComponent - loadReport');
   }
-
+  
+  protected _updateFilter(): void {
+    console.log('EngagementTopVideosComponent - updateFilter');
+  }
 }
