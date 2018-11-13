@@ -348,12 +348,15 @@ export class CompareService implements OnDestroy {
           selected: header === (selected || config.preSelected),
           units: '%',
           key: header,
-          trend: direction
+          trend: direction,
+          sortOrder: field.sortOrder || 0,
         });
       }
     });
-
-    return tabsData;
+  
+    return tabsData.sort((a, b) => {
+      return a.sortOrder - b.sortOrder;
+    });
   }
 }
 
