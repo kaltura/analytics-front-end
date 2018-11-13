@@ -14,10 +14,16 @@ import { AudienceComponent } from './audience.component';
 import { TechnologyComponent } from './views/technology/technology.component';
 import { GeoLocationComponent } from './views/geo-location/geo-location.component';
 import { EngagementComponent } from './views/engagement/engagement.component';
+import { EngagementHighlightsComponent } from './views/engagement/highlights/highlights.component';
+import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
+import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
+import { EngagementImpressionsComponent } from './views/engagement/impressions/impressions.component';
+import { EngagementUsersComponent } from './views/engagement/users/users.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
+import { FilterComponent } from './views/engagement/filter/filter.component';
 
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
@@ -30,6 +36,7 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
     AreaBlockerModule,
     TagsModule,
     TooltipModule,
+    PopupWidgetModule,
     AutoCompleteModule,
     CommonModule,
     FormsModule,
@@ -49,6 +56,12 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
     TechnologyComponent,
     GeoLocationComponent,
     EngagementComponent,
+    EngagementHighlightsComponent,
+    EngagementTopVideosComponent,
+    EngagementDurationComponent,
+    EngagementImpressionsComponent,
+    EngagementUsersComponent,
+    FilterComponent,
     ContentInteractionsComponent,
     DevicesOverviewComponent,
     TopBrowsersComponent,

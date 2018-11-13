@@ -1,3 +1,32 @@
-<p>
-  Audience Engagement View
-</p>
+<div class="kReport kContent kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.engagement.title' | translate}}</span>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
+    <app-filter></app-filter>
+    <app-date-filter #dateFilter [dateRange]="_dateRange" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer">
+    <app-engagement-highlights></app-engagement-highlights>
+  </div>
+
+  <div class="kReportContainer">
+    <app-engagement-top-videos></app-engagement-top-videos>
+  </div>
+
+  <div class="kReportContainer">
+    <app-engagement-duration></app-engagement-duration>
+  </div>
+
+  <div class="kReportContainer">
+    <div class="kSmallReportContainer">
+      <app-engagement-impressions></app-engagement-impressions>
+    </div>
+    <div class="kSmallReportContainer">
+      <app-engagement-users></app-engagement-users>
+    </div>
+  </div>
+</div>
+
+

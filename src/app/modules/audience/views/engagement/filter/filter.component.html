@@ -1,0 +1,14 @@
+<div class="kFilter kOverrideFAIcons">
+
+  <div #filterBtn class="kDropDown">
+    <span>Filter</span>
+    <i class="kIcondropdown_arrow_bottom"></i>
+  </div>
+</div>
+
+
+<kPopupWidget #datesPopup [popupWidth]="460" [closeBtn]="false" [targetRef]="filterBtn" [targetOffset]="{'x':-360, 'y': 35}">
+  <ng-template>
+    <span>Filter</span>
+  </ng-template>
+</kPopupWidget>
