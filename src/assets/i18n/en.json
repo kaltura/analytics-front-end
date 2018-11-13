@@ -177,6 +177,14 @@
           "OTHER": "Other"
         }
       }
+    },
+    "engagement": {
+      "title": "Engagement",
+      "highlights": "Highlights",
+      "topVideos": "Top Videos",
+      "duration": "Which video duration leads to better engagement?",
+      "impressions": "How player impressions are leading to engagement?",
+      "users": "How many users watched at least once?"
     }
   }
 }

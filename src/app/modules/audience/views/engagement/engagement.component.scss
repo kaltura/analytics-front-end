@@ -1,5 +1,13 @@
-p{
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 20px;
+@import '../../../../../styles/variables';
+
+.kReportContainer{
+ padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  .kSmallReportContainer{
+    width: 50%;
+    &:nth-child(even){
+      padding-left: 24px;
+    }
+  }
 }
