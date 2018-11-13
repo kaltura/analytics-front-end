@@ -196,7 +196,11 @@
       "topVideos": "Top Videos",
       "duration": "Which video duration leads to better engagement?",
       "impressions": "How player impressions are leading to engagement?",
-      "users": "How many users watched at least once?"
+      "users": "How many users watched at least once?",
+      "playerImpressions": "Player Impressions",
+      "plays": "Plays",
+      "playthrough1": "Sessions that reached",
+      "playthrough2": "play - through"
     }
   }
 }

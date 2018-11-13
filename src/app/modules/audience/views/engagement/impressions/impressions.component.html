@@ -2,5 +2,37 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.impressions' | translate}}</span>
   </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kData">
+        <div class="kDataContainer">
+          <span class="kValue">100</span>
+          <span class="kLabel">{{'app.engagement.playerImpressions' | translate}}</span>
+        </div>
+        <div class="kDataContainer">
+          <span class="kValue">100</span>
+          <span class="kLabel">{{'app.engagement.plays' | translate}}</span>
+        </div>
+        <div class="kDataContainer">
+        </div>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_chartData"></div>
+      </div>
+      <div class="kData">
+        <div style="height: 100%"></div>
+        <div style="height: 100%"></div>
+        <div style="height: 100%">
+          <span class="kValue">100</span>
+          <div>
+            <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
+            <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough"></p-dropdown>
+            <span class="kLabel">{{'app.engagement.playthrough2' | translate}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
 </div>
 
