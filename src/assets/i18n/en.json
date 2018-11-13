@@ -200,10 +200,10 @@
       "highlightsReport": {
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
-        "unique_viewers": "Unique Viewers",
+        "unique_known_users": "Unique Viewers",
         "count_plays_tt": "Plays",
         "sum_time_viewed_tt": "Minutes Viewed",
-        "unique_viewers_tt": "Unique Viewers"
+        "unique_known_users_tt": "Unique Viewers"
       }
     }
   }

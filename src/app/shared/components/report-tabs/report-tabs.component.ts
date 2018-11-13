@@ -8,6 +8,7 @@ export type Tab = {
   units: string;
   key: string;
   trend?: string;
+  sortOrder?: number;
 };
 
 @Component({

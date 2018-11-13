@@ -29,6 +29,9 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           },
           'sum_time_viewed': {
             format: value => value,
+          },
+          'unique_known_users': {
+            format: value => value,
           }
         }
       },
@@ -39,12 +42,20 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
+            sortOrder: 1,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
-            units: () => 'min'
+            units: value => 'min',
+            sortOrder: 2,
+          },
+          'unique_known_users': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
+            sortOrder: 3,
           }
         }
       }
