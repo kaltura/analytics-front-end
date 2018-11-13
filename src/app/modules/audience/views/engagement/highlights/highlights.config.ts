@@ -24,6 +24,9 @@ export class HighlightsConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
+          'name': {
+            format: value => value,
+          },
           'count_plays': {
             format: value => value,
           },

@@ -198,6 +198,7 @@
       "impressions": "How player impressions are leading to engagement?",
       "users": "How many users watched at least once?",
       "highlightsReport": {
+        "name": "User",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
