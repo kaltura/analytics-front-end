@@ -4,7 +4,7 @@
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <div class="kData">
+      <div class="kData" *ngIf="_chartData.series[0].data.length">
         <div class="kDataContainer">
           <span class="kValue">100</span>
           <span class="kLabel">{{'app.engagement.playerImpressions' | translate}}</span>
@@ -19,7 +19,7 @@
       <div class="kChart">
         <div echarts class="kChart" [options]="_chartData"></div>
       </div>
-      <div class="kData">
+      <div class="kData" *ngIf="_chartData.series[0].data.length">
         <div style="height: 100%"></div>
         <div style="height: 100%"></div>
         <div style="height: 100%">
