@@ -1,30 +1,38 @@
 <div class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.engagement.title' | translate}}</span>
-    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
-                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-filter></app-filter>
-    <app-date-filter #dateFilter [dateRange]="_dateRange" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
+                    [reportType]="_reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
+                    [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
+    <app-refine-filter (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+    <app-date-filter #dateFilter [dateRange]="_dateRange"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-highlights></app-engagement-highlights>
+    <app-engagement-highlights [dateFilter]="_dateFilter"
+                               [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-top-videos></app-engagement-top-videos>
+    <app-engagement-top-videos [dateFilter]="_dateFilter"
+                               [refineFilter]="_refineFilter"></app-engagement-top-videos>
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-duration></app-engagement-duration>
+    <app-engagement-duration [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-engagement-duration>
   </div>
 
   <div class="kReportContainer">
     <div class="kSmallReportContainer">
-      <app-engagement-impressions></app-engagement-impressions>
+      <app-engagement-impressions [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-engagement-impressions>
     </div>
     <div class="kSmallReportContainer">
-      <app-engagement-users></app-engagement-users>
+      <app-engagement-users [dateFilter]="_dateFilter"
+                            [refineFilter]="_refineFilter"></app-engagement-users>
     </div>
   </div>
 </div>

@@ -7,8 +7,42 @@
 </div>
 
 
-<kPopupWidget #datesPopup [popupWidth]="460" [closeBtn]="false" [targetRef]="filterBtn" [targetOffset]="{'x':-360, 'y': 35}">
+<kPopupWidget #datesPopup [popupWidth]="460"
+              [closeBtn]="false"
+              [targetRef]="filterBtn"
+              [targetOffset]="{'x':-360, 'y': 35}">
   <ng-template>
-    <span>Filter</span>
+    <div class="kFilterContainer kOverrideFAIcons">
+      <div class="kRow">
+        <div class="kRowLabel">{{'app.filters.mediaType' | translate}}</div>
+        <div class="kRowContent">
+          <div class="kCheckboxGroup" *ngFor="let type of _mediaTypes">
+            <p-checkbox name="mediaTypes"
+                        [inputId]="type.value"
+                        [value]="type.value"
+                        (onChange)="_onTypesSelectionChange()"
+                        [(ngModel)]="_selectedMediaTypes"></p-checkbox>
+            <label [for]="type.value">
+              <span class="kLabel">{{type.label | translate}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="kRow">
+        <div class="kRowLabel">{{'app.filters.deviceType' | translate}}</div>
+        <div class="kRowContent">
+          <div class="kCheckboxGroup" *ngFor="let type of _deviceTypes">
+            <p-checkbox name="deviceTypes"
+                        [inputId]="type.value"
+                        [value]="type.value"
+                        (onChange)="_onTypesSelectionChange()"
+                        [(ngModel)]="_selectedDeviceTypes"></p-checkbox>
+            <label [for]="type.value">
+              <span class="kLabel">{{type.label | translate}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </kPopupWidget>
