@@ -164,9 +164,10 @@ export class DevicesOverviewComponent implements OnDestroy {
       ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
       ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
     `;
-    device['trend'] = value;
+    device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
     device['tooltip'] = tooltip;
+    device['units'] = value !== null ? '%' : '';
   }
   
   private _loadTrendData(): void {

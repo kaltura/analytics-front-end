@@ -41,11 +41,11 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span *ngIf="isCompareMode && data[col]?.value" class="kTrend">
+                  <span *ngIf="isCompareMode && data[col]?.value !== undefined" class="kTrend">
                     <i [class]="data[col].trend | appTrend"></i>
                     <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].value}}&nbsp;{{data[col].units}}</span>
                   </span>
-                  <span *ngIf="!isCompareMode || !data[col]?.value">{{data[col]}}</span>
+                  <span *ngIf="!isCompareMode || data[col]?.value === undefined">{{data[col]}}</span>
                 </td>
               </tr>
             </ng-template>
