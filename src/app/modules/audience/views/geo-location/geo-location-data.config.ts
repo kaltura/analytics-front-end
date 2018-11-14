@@ -60,7 +60,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
   public getMapConfig(): EChartOption {
     return {
       grid: {
-        top: 24, left: 24, bottom: 24, right: 24
+        top: 24, left: 24, bottom: 24, right: 24, containLabel: true
       },
       tooltip: {
         trigger: 'item',

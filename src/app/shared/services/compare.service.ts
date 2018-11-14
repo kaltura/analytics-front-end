@@ -80,7 +80,7 @@ export class CompareService implements OnDestroy {
 
       lineChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 64, right: 24
+          top: 24, left: 54, bottom: 64, right: 24, containLabel: true
         },
         color: ['#F49616', '#FCDBA3'],
         xAxis: {
@@ -162,7 +162,7 @@ export class CompareService implements OnDestroy {
       };
       barChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 64, right: 24
+          top: 24, left: 54, bottom: 64, right: 24, containLabel: true
         },
         color: ['#00a784', '#66CAB5'],
         xAxis: {
