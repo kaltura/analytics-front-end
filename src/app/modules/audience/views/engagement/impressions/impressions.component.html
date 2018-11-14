@@ -4,29 +4,29 @@
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <div class="kData" *ngIf="_chartData.series[0].data.length">
+      <div class="kData" *ngIf="_chartLoaded">
         <div class="kDataContainer">
-          <span class="kValue">100</span>
+          <span class="kValue">{{_funnelData.impressions}}</span>
           <span class="kLabel">{{'app.engagement.playerImpressions' | translate}}</span>
         </div>
         <div class="kDataContainer">
-          <span class="kValue">100</span>
+          <span class="kValue">{{_funnelData.plays}}</span>
           <span class="kLabel">{{'app.engagement.plays' | translate}}</span>
         </div>
         <div class="kDataContainer">
         </div>
       </div>
       <div class="kChart">
-        <div echarts class="kChart" [options]="_chartData"></div>
+        <div echarts class="kChart" [options]="_chartData" (chartInit)="onChartInit($event)"></div>
       </div>
-      <div class="kData" *ngIf="_chartData.series[0].data.length">
+      <div class="kData" *ngIf="_chartLoaded">
         <div style="height: 100%"></div>
         <div style="height: 100%"></div>
         <div style="height: 100%">
-          <span class="kValue">100</span>
+          <span class="kValue">{{_funnelData.playThrough['perc'+_selectedPlaythrough]}}</span>
           <div>
             <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
-            <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough"></p-dropdown>
+            <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough" (onChange)="updateFunnel()"></p-dropdown>
             <span class="kLabel">{{'app.engagement.playthrough2' | translate}}</span>
           </div>
 

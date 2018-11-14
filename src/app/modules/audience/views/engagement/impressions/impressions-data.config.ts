@@ -1,10 +1,8 @@
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import { fileSize } from 'shared/utils/file-size';
+import { EChartOption } from 'echarts';
 
 @Injectable()
 export class ImpressionsDataConfig extends ReportDataBaseConfig {
@@ -36,6 +34,50 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
           }
         }
       }
+    };
+  }
+
+  public getChartConfig(): EChartOption {
+    return {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c}%'
+      },
+      color: ['#00745C', '#008569', '#00A784'],
+      calculable: true,
+      series: [
+        {
+          name: 'Player Impressions',
+          type: 'funnel',
+          left: '35%',
+          top: 10,
+          bottom: 10,
+          width: '60%',
+          height: 340,
+          min: 0,
+          max: 100,
+          minSize: '5%',
+          maxSize: '100%',
+          sort: 'descending',
+          gap: 0,
+          label: {
+            show: true,
+            verticalAlign: 'top',
+            position: 'inside',
+            formatter: '{c}%',
+            fontFamily: 'Lato',
+            fontSize: 15,
+            fontWeight: 'bold'
+          },
+          labelLine: {
+            show: false
+          },
+          itemStyle: {
+            borderWidth: 0
+          },
+          data: []
+        }
+      ]
     };
   }
 }
