@@ -22,6 +22,7 @@ import { TimeUnitsComponent } from './components/date-filter/time-units.componen
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
+import { NumberFormatPipe } from 'shared/pipes/number-formatter';
 import { TrendService } from 'shared/services/trend.service';
 
 @NgModule({
@@ -46,6 +47,7 @@ import { TrendService } from 'shared/services/trend.service';
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    NumberFormatPipe,
     DeviceIconPipe,
   ],
   exports: [
@@ -56,6 +58,7 @@ import { TrendService } from 'shared/services/trend.service';
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    NumberFormatPipe,
     DeviceIconPipe,
   ],
   providers: [

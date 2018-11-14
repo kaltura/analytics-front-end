@@ -4,7 +4,7 @@
   height: 360px !important;
 }
 .kData{
-  width: 65%;
+  width: 60%;
   position: absolute;
   margin-top: 10px;
   height: 340px;
@@ -28,6 +28,11 @@
     font-size: 15px;
     color: $kGrayscale1;
   }
+}
+.kPlaythrough{
+  margin-left: 24px;
+  position: absolute;
+  top: 288px;
 }
 :host /deep/ p-dropdown{
   .ui-dropdown {

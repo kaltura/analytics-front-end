@@ -6,33 +6,29 @@
     <div class="kReportContent">
       <div class="kData" *ngIf="_chartLoaded">
         <div class="kDataContainer">
-          <span class="kValue">{{_funnelData.impressions}}</span>
+          <span class="kValue">{{_funnelData.impressions | numberFormat}}</span>
           <span class="kLabel">{{'app.engagement.playerImpressions' | translate}}</span>
         </div>
         <div class="kDataContainer">
-          <span class="kValue">{{_funnelData.plays}}</span>
+          <span class="kValue">{{_funnelData.plays | numberFormat}}</span>
           <span class="kLabel">{{'app.engagement.plays' | translate}}</span>
         </div>
         <div class="kDataContainer">
+          <span class="kValue">{{_funnelData.playThrough['perc'+_selectedPlaythrough] |numberFormat}}</span>
         </div>
       </div>
       <div class="kChart">
         <div echarts class="kChart" [options]="_chartData" (chartInit)="onChartInit($event)"></div>
       </div>
-      <div class="kData" *ngIf="_chartLoaded">
-        <div style="height: 100%"></div>
-        <div style="height: 100%"></div>
-        <div style="height: 100%">
-          <span class="kValue">{{_funnelData.playThrough['perc'+_selectedPlaythrough]}}</span>
-          <div>
-            <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
-            <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough" (onChange)="updateFunnel()"></p-dropdown>
-            <span class="kLabel">{{'app.engagement.playthrough2' | translate}}</span>
-          </div>
 
-        </div>
+      <div class="kPlaythrough" *ngIf="_chartLoaded">
+        <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
+        <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough" (onChange)="updateFunnel()"></p-dropdown>
+        <span class="kLabel">{{'app.engagement.playthrough2' | translate}}</span>
       </div>
+
     </div>
+
   </k-area-blocker>
 </div>
 
