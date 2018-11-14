@@ -1,0 +1,44 @@
+@import '../../../../../../styles/variables';
+
+.kChart{
+  height: 360px !important;
+}
+.kData{
+  width: 60%;
+  position: absolute;
+  margin-top: 10px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 24px;
+  .kDataContainer{
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid #CCEDE6;
+    display: flex;
+    flex-direction: column;
+  }
+  .kValue{
+    font-size: 24px;
+    color: $kGrayscale1;
+    font-weight: 700;
+    line-height: 52px;
+  }
+  .kLabel{
+    font-size: 15px;
+    color: $kGrayscale1;
+  }
+}
+.kPlaythrough{
+  margin-left: 24px;
+  position: absolute;
+  top: 288px;
+}
+:host /deep/ p-dropdown{
+  .ui-dropdown {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 74px !important;
+  }
+}
+

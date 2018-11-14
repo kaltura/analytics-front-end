@@ -5,8 +5,9 @@
   background-color: $appBkgColor;
   display: flex;
   .kSmallReportContainer{
-    width: 50%;
+    width: 60%;
     &:nth-child(even){
+      width: 40%;
       padding-left: 24px;
     }
   }
