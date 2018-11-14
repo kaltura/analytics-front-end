@@ -298,10 +298,10 @@ export class CompareService implements OnDestroy {
                 ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
               `;
               result = {
-                value: hasConsistentData ? trend : 'N/A',
+                value: hasConsistentData && trend !== null ? trend : '–',
                 tooltip: tooltip,
                 trend: direction,
-                units: hasConsistentData ? '%' : ''
+                units: hasConsistentData && trend !== null ? '%' : ''
               };
             }
             data[columns[j]] = result;
@@ -346,7 +346,7 @@ export class CompareService implements OnDestroy {
           `,
           value: trend,
           selected: header === (selected || config.preSelected),
-          units: '%',
+          units: trend !== null ? '%' : '',
           key: header,
           trend: direction
         });

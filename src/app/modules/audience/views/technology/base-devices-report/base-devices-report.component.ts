@@ -200,9 +200,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
     `;
     row['plays_trend'] = {
-      trend: value,
+      trend: value !== null ? value : '–',
       trendDirection: direction,
-      tooltip: tooltip
+      tooltip: tooltip,
+      units: value !== null ? '%' : '',
     };
   }
   

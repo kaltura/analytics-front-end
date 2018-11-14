@@ -38,7 +38,7 @@ export class TrendService {
     }
     
     if (compare === 0 && current > 0) {
-      return { value: '100', direction: 1 };
+      return { value: null, direction: 0 };
     }
 
     const value = Math.ceil(((current - compare) / current) * 100);
