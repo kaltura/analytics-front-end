@@ -56,7 +56,7 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
-                <td *ngFor="let col of _columns">
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
                   <span *ngIf="col === 'plays_trend'">
                     <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
