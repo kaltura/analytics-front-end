@@ -256,8 +256,8 @@ export class ReportService implements OnDestroy {
       });
       const getFormatter = color => params => {
         const { name, value } = Array.isArray(params) ? params[0] : params;
-        const formattedValue = typeof config.fields[graph.id].tooltip === 'function'
-          ? config.fields[graph.id].tooltip(value)
+        const formattedValue = typeof config.fields[graph.id].graphTooltip === 'function'
+          ? config.fields[graph.id].graphTooltip(value)
           : value;
         return `
           <div class="kGraphTooltip">

@@ -17,6 +17,7 @@ export interface ReportDataItemConfig {
       units?: (value: any) => string;
       title?: string;
       tooltip?: string;
+      graphTooltip?: (value: any) => string;
       hidden?: boolean;
       nonComparable?: boolean;
     };
