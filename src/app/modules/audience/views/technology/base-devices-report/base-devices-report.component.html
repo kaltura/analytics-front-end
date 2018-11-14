@@ -5,10 +5,9 @@
                    [disabled]="!_devicesSelectActive"
                    [options]="devicesList"
                    [maxSelectedLabels]="0"
-                   [selectedItemsLabel]="'app.audience.technology.devicesSelected' | translate"
                    [showToggleAll]="false"
+                   [displaySelectedLabel]="false"
                    [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
-                   [resetFilterOnHide]="true"
                    [filter]="false"
                    (onChange)="_onDeviceFilterChange()"
                    [(ngModel)]="_selectedDevices">
