@@ -263,3 +263,19 @@ kpopupwidget{
     display: flex;
   }
 }
+
+.kGraphTooltip {
+  padding: 16px 46px 16px 16px;
+
+  .kBullet {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 15px;
+    vertical-align: middle;
+  }
+
+  .kValue {
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+}

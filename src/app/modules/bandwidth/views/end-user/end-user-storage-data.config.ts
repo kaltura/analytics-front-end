@@ -17,10 +17,12 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
       [ReportDataSection.graph]: {
         fields: {
           'added_storage_mb': {
-            format: value => value
+            format: value => value,
+            tooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
           },
           'deleted_storage_mb': {
-            format: value => value
+            format: value => value,
+            tooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
           },
           'added_entries': {
             format: value => value
@@ -35,10 +37,11 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => Math.round(value / 60000)
           },
           'total_storage_mb': {
-            format: value => value
+            format: value => value,
+            tooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
           },
           'total_entries': {
-            format: value => value
+            format: value => value,
           },
           'total_msecs': {
             format: value => Math.round(value / 60000)
