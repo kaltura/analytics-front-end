@@ -335,9 +335,9 @@ export class CompareService implements OnDestroy {
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
-        const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index]), Number(compareData[index]));
-        const currentVal = field.format(data[index]);
-        const compareVal = field.format(compareData[index]);
+        const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index] || 0), Number(compareData[index] || 0));
+        const currentVal = field.format(data[index] || '0');
+        const compareVal = field.format(compareData[index] || '0');
         tabsData.push({
           title: field.title,
           tooltip: `
