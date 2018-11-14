@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface RefineChangeEvent {
   mediaTypes: string[];
@@ -11,6 +11,14 @@ export interface RefineChangeEvent {
   styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent {
+  @Input() set selectedFilters(value: RefineChangeEvent) {
+    if (value) {
+      this._selectedDeviceTypes = value.deviceTypes;
+      this._selectedMediaTypes = value.mediaTypes;
+      this._onTypesSelectionChange();
+    }
+  }
+
   @Output() filterChange = new EventEmitter<RefineChangeEvent>();
   
   public _selectedMediaTypes: string[] = [];

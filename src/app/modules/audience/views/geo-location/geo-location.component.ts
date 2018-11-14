@@ -277,7 +277,7 @@ export class GeoLocationComponent implements OnInit {
     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
     const comparePeriod = { from: this.compareFilter.fromDay, to: this.compareFilter.toDay };
 
-    if (current.table && compare.table) {
+    if (current.table && compare.table && current.table.data && compare.table.data) {
       const { columns, tableData } = this._compareService.compareTableData(
         currentPeriod,
         comparePeriod,
@@ -290,7 +290,7 @@ export class GeoLocationComponent implements OnInit {
       this._tableData = tableData;
     }
 
-    if (current.totals && compare.totals) {
+    if (current.totals && compare.totals && current.totals.data && compare.totals.data) {
       this._tabsData = this._compareService.compareTotalsData(
         currentPeriod,
         comparePeriod,
