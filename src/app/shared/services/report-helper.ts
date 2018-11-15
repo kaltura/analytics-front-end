@@ -27,7 +27,8 @@ export class ReportHelper {
   
   static time(x: any): string {
     if (!x.length) {
-      return '00:00';
+      return '00';
+      // return '00:00';
     }
     const numValue = Math.abs(parseFloat(x));
     const wholeMinutes = Math.floor(numValue / 60000);
@@ -38,8 +39,8 @@ export class ReportHelper {
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;
     }
-    
-    return formattedTime;
+    return (numValue / 60000).toFixed(2);
+    // return formattedTime;
   }
   
   static underscoreToSpace(x: string): string {

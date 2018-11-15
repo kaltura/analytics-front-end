@@ -77,7 +77,25 @@ export class CompareService implements OnDestroy {
           yAxisCompareData.push(compareVal);
         }
       });
-
+  
+      const getFormatter = colors => params => {
+        const [current, compare] = params;
+        const currentValue = typeof config.fields[graph.id].graphTooltip === 'function'
+          ? config.fields[graph.id].graphTooltip(current.value)
+          : current.value;
+        const compareValue = typeof config.fields[graph.id].graphTooltip === 'function'
+          ? config.fields[graph.id].graphTooltip(compare.value)
+          : compare.value;
+        return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
+            <span class="kValue">${current.seriesName}</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;
+            <span class="kValue">${compare.seriesName}</span>&nbsp;${compareValue}
+          </div>
+        `;
+      };
       lineChartData[graph.id] = {
         grid: {
           top: 24, left: 24, bottom: 64, right: 24, containLabel: true
@@ -126,6 +144,7 @@ export class CompareService implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: getFormatter(['#F49616', '#FCDBA3']),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -207,6 +226,7 @@ export class CompareService implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: getFormatter(['#00a784', '#66CAB5']),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -344,7 +364,7 @@ export class CompareService implements OnDestroy {
             ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
             ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
           `,
-          value: trend,
+          value: trend !== null ? trend : '–',
           selected: header === (selected || config.preSelected),
           units: trend !== null ? '%' : '',
           key: header,

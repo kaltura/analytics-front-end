@@ -1,8 +1,22 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  KalturaClient, KalturaReportInputFilter, KalturaReportType, ReportGetTotalAction, KalturaReportTotal, ReportGetGraphsAction,
-  KalturaReportGraph, ReportGetTableAction, KalturaFilterPager, KalturaMultiResponse, KalturaReportTable,
-  ReportGetUrlForReportAsCsvAction, ReportGetUrlForReportAsCsvActionArgs, ReportGetBaseTotalAction, KalturaReportBaseTotal, KalturaReportInterval, KalturaResponse, KalturaObjectBase, KalturaRequest
+  KalturaClient,
+  KalturaFilterPager,
+  KalturaMultiResponse,
+  KalturaReportBaseTotal,
+  KalturaReportGraph,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType,
+  KalturaRequest,
+  KalturaResponse,
+  ReportGetGraphsAction,
+  ReportGetTableAction,
+  ReportGetTotalAction,
+  ReportGetUrlForReportAsCsvAction,
+  ReportGetUrlForReportAsCsvActionArgs
 } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Observable } from 'rxjs/Observable';
@@ -35,41 +49,41 @@ export interface AccumulativeData {
 }
 
 export interface GraphsData {
-  lineChartData: { [key: string]: {name: string, series: { name: string, value: string } }[]};
+  lineChartData: { [key: string]: { name: string, series: { name: string, value: string } }[] };
   barChartData: { [key: string]: { name: string, value: string }[] };
 }
 
 @Injectable()
 export class ReportService implements OnDestroy {
-
+  
   private _querySubscription: ISubscription;
   private _exportSubscription: ISubscription;
-
+  
   constructor(private _translate: TranslateService, private _kalturaClient: KalturaClient) {
   }
-
+  
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
     return response.result instanceof type
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
   }
-
+  
   public getReport(config: ReportConfig, sections: ReportDataConfig): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
-
+    
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
-          reportType : config.reportType,
+          reportType: config.reportType,
           reportInputFilter: config.filter,
           objectIds: config.objectIds ? config.objectIds : null
         });
-
+        
         const getGraphs = new ReportGetGraphsAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
           objectIds: config.objectIds ? config.objectIds : null
         });
-
+        
         const getTable = new ReportGetTableAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
@@ -77,22 +91,22 @@ export class ReportService implements OnDestroy {
           order: config.order,
           objectIds: config.objectIds ? config.objectIds : null
         });
-
+        
         if (this._querySubscription) {
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
-
+        
         let request: KalturaRequest<any>[] = [getTable];
-
+        
         if (sections.graph) {
           request.push(getGraphs);
         }
-
+        
         if (sections.totals) {
           request.push(getTotal);
         }
-
+        
         this._querySubscription = this._kalturaClient.multiRequest(request)
           .pipe(cancelOnDestroy(this))
           .subscribe((responses: KalturaMultiResponse) => {
@@ -122,7 +136,7 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
-                if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
+                if (analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout) {
                   analyticsConfig.callbacks.updateLayout();
                 }
               }
@@ -134,17 +148,17 @@ export class ReportService implements OnDestroy {
             });
       });
   }
-
+  
   public exportToCsv(args: ReportGetUrlForReportAsCsvActionArgs): Observable<string> {
     return Observable.create(
       observer => {
         const exportAction = new ReportGetUrlForReportAsCsvAction(args);
-
+        
         if (this._exportSubscription) {
           this._exportSubscription.unsubscribe();
           this._exportSubscription = null;
         }
-
+        
         this._exportSubscription = this._kalturaClient.request(exportAction)
           .pipe(cancelOnDestroy(this))
           .subscribe((response: string) => {
@@ -158,18 +172,18 @@ export class ReportService implements OnDestroy {
             });
       });
   }
-
-
+  
+  
   ngOnDestroy() {
   }
-
+  
   public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
     let columns = table.header.toLowerCase().split(',');
     const tableData = [];
-
+    
     // parse table data
-    table.data.split(';').forEach( valuesString => {
+    table.data.split(';').forEach(valuesString => {
       if (valuesString.length) {
         let data = {};
         valuesString.split(',').forEach((value, index) => {
@@ -180,17 +194,17 @@ export class ReportService implements OnDestroy {
         tableData.push(data);
       }
     });
-
+    
     columns = columns.filter(header => config.fields.hasOwnProperty(header));
-
+    
     return { columns, tableData };
   }
-
+  
   public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(',');
-
-    totals.header.split(',').forEach( (header, index) => {
+    
+    totals.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
         tabsData.push({
@@ -209,21 +223,21 @@ export class ReportService implements OnDestroy {
       return a.sortOrder - b.sortOrder;
     });
   }
-
+  
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function): GraphsData {
     let lineChartData = {};
     let barChartData = {};
-    graphs.forEach( (graph: KalturaReportGraph) => {
+    graphs.forEach((graph: KalturaReportGraph) => {
       if (!config.fields[graph.id]) {
         return;
       }
       let xAxisData = [];
       let yAxisData = [];
       const data = graph.data.split(';');
-
+      
       data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
@@ -234,15 +248,28 @@ export class ReportService implements OnDestroy {
           if (isNaN(val)) {
             val = 0;
           }
-
+          
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-
+          
           xAxisData.push(name);
           yAxisData.push(val);
         }
       });
+      const getFormatter = color => params => {
+        const { name, value } = Array.isArray(params) ? params[0] : params;
+        const formattedValue = typeof config.fields[graph.id].graphTooltip === 'function'
+          ? config.fields[graph.id].graphTooltip(value)
+          : value;
+        return `
+          <div class="kGraphTooltip">
+            ${name}<br/>
+            <span class="kBullet" style="color: ${color}">&bull;</span>&nbsp;
+            ${formattedValue}
+          </div>
+        `;
+      };
       lineChartData[graph.id] = {
         grid: {
           top: 24, left: 24, bottom: 24, right: 24, containLabel: true
@@ -291,6 +318,7 @@ export class ReportService implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: getFormatter('#F49616'),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -360,6 +388,7 @@ export class ReportService implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: getFormatter('#00a784'),
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
           borderWidth: 1,
@@ -373,7 +402,7 @@ export class ReportService implements OnDestroy {
           type: 'bar'
         }]
       };
-
+      
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();
