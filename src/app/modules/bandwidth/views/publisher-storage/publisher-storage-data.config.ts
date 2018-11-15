@@ -23,25 +23,39 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
             format: value => value
           },
           'bandwidth_consumption': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'average_storage': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'peak_storage': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'added_storage': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'deleted_storage': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'combined_bandwidth_storage': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           },
           'transcoding_consumption': {
-            format: value => value
+            format: value => value,
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            units: value => 'MB',
           }
         }
       },
@@ -56,25 +70,32 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'bandwidth_consumption': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'average_storage': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'peak_storage': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'added_storage': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'deleted_storage': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'combined_bandwidth_storage': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           },
           'transcoding_consumption': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            units: value => 'MB',
           }
         }
       },
