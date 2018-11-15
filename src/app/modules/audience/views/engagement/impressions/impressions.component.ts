@@ -1,20 +1,193 @@
 import { Component, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { CompareService } from 'shared/services/compare.service';
+import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { SelectItem } from 'primeng/api';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ImpressionsDataConfig } from './impressions-data.config';
+import { TranslateService } from '@ngx-translate/core';
+import { EChartOption } from 'echarts';
+
+export type funnelData = {
+  impressions: number;
+  plays: number;
+  playThrough: {
+    perc25: number;
+    perc50: number;
+    perc75: number;
+    perc100: number;
+  }
+};
 
 @Component({
   selector: 'app-engagement-impressions',
   templateUrl: './impressions.component.html',
-  styleUrls: ['./impressions.component.scss']
+  styleUrls: ['./impressions.component.scss'],
+  providers: [ImpressionsDataConfig]
 })
 export class EngagementImpressionsComponent extends EngagementBaseReportComponent implements OnInit {
+
+  public _isBusy: boolean;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _playthroughs: SelectItem[] = [{label: '25%', value: 25}, {label: '50%', value: 50}, {label: '75%', value: 75}, {label: '100%', value: 100}];
+  public _selectedPlaythrough = 25;
+  public _chartData: EChartOption = {};
+  public _chartLoaded = false;
+
+  private echartsIntance: any;
+  private reportType: KalturaReportType = KalturaReportType.contentDropoff;
+  private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
+  private order = 'count_plays';
+  private filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+    {
+      searchInTags: true,
+      searchInAdminTags: false
+    }
+  );
+  private compareFilter: KalturaReportInputFilter = null;
+  private _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
+  private _dataConfig: ReportDataConfig;
+  public get isCompareMode(): boolean {
+    return this.compareFilter !== null;
+  }
+  public _funnelData: funnelData;
+
+  constructor(private _errorsManager: ErrorsManagerService,
+              private _reportService: ReportService,
+              private _translate: TranslateService,
+              private _authService: AuthService,
+              private _compareService: CompareService,
+              private _dataConfigService: ImpressionsDataConfig) {
+    super();
+    this._dataConfig = _dataConfigService.getConfig();
+    this._chartData = _dataConfigService.getChartConfig();
+  }
+
   ngOnInit() {
+    this._isBusy = false;
+  }
+
+  public onChartInit(ec) {
+    this.echartsIntance = ec;
+  }
+
+  public updateFunnel(): void {
+    this.echartsIntance.setOption({series: [{data: [
+          {value: 100, name: this._translate.instant('app.engagement.playerImpressions')},
+          {value: (this._funnelData.plays / this._funnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.plays')},
+          {value: (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)}
+        ]}]}, false);
   }
   
   protected _loadReport(): void {
-    console.log('EngagementImpressionsComponent - loadReport');
+    this._isBusy = true;
+    this._chartLoaded = false;
+    this._blockerMessage = null;
+    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
+    this._reportService.getReport(reportConfig, this._dataConfig)
+      .pipe(switchMap(report => {
+        if (!this.isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        return this._reportService.getReport(compareReportConfig, this._dataConfig)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+          if (compare) {
+            this.handleCompare(report, compare);
+          } else {
+            if (report.totals) {
+              this.handleTotals(report.totals); // handle totals
+            }
+          }
+          this.prepareCsvExportHeaders();
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          const err: ErrorDetails = this._errorsManager.getError(error);
+          let buttons: AreaBlockerMessageButton[] = [];
+          if ( err.forceLogout ) {
+            buttons = [{
+              label: this._translate.instant('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._authService.logout();
+              }
+            }];
+          } else {
+            buttons = [{
+              label: this._translate.instant('app.common.close'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            },
+              {
+                label: this._translate.instant('app.common.retry'),
+                action: () => {
+                  this._loadReport();
+                }
+              }];
+          }
+          this._blockerMessage = new AreaBlockerMessage({
+            title: err.title,
+            message: err.message,
+            buttons
+          });
+        });
+  }
+
+  private handleCompare(current: Report, compare: Report): void {
+    debugger;
+  }
+
+  private handleTotals(totals: KalturaReportTotal): void {
+    const data = totals.data.split(',');
+    this._funnelData = {
+      impressions: data[6].length ? parseInt(data[6]) : 0,
+      plays: data[0].length ? parseInt(data[0]) : 0,
+      playThrough: {
+        perc25: data[1].length ? parseInt(data[1]) : 0,
+        perc50: data[2].length ? parseInt(data[2]) : 0,
+        perc75: data[3].length ? parseInt(data[3]) : 0,
+        perc100: data[4].length ? parseInt(data[4]) : 0
+      }
+    };
+    this.updateFunnel();
+    this._chartLoaded = true;
+  }
+
+  private prepareCsvExportHeaders(): void {
+    // TODO: TBD according to export refactor
   }
   
   protected _updateFilter(): void {
-    console.log('EngagementImpressionsComponent - updateFilter');
+    this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
+    this.filter.fromDay = this._dateFilter.startDay;
+    this.filter.toDay = this._dateFilter.endDay;
+    this.filter.interval = this._dateFilter.timeUnits;
+    this._reportInterval = this._dateFilter.timeUnits;
+    this.pager.pageIndex = 1;
+    if (this._dateFilter.compare.active) {
+      const compare = this._dateFilter.compare;
+      this.compareFilter = new KalturaReportInputFilter(
+        {
+          searchInTags: true,
+          searchInAdminTags: false,
+          timeZoneOffset: this._dateFilter.timeZoneOffset,
+          interval: this._dateFilter.timeUnits,
+          fromDay: compare.startDay,
+          toDay: compare.endDay,
+        }
+      );
+    } else {
+      this.compareFilter = null;
+    }
   }
 }

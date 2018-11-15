@@ -80,7 +80,7 @@ export class CompareService implements OnDestroy {
 
       lineChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 64, right: 24
+          top: 24, left: 24, bottom: 64, right: 24, containLabel: true
         },
         color: ['#F49616', '#FCDBA3'],
         xAxis: {
@@ -162,7 +162,7 @@ export class CompareService implements OnDestroy {
       };
       barChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 64, right: 24
+          top: 24, left: 24, bottom: 64, right: 24, containLabel: true
         },
         color: ['#00a784', '#66CAB5'],
         xAxis: {
@@ -298,10 +298,10 @@ export class CompareService implements OnDestroy {
                 ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
               `;
               result = {
-                value: hasConsistentData ? trend : 'N/A',
+                value: hasConsistentData && trend !== null ? trend : '–',
                 tooltip: tooltip,
                 trend: direction,
-                units: hasConsistentData ? '%' : ''
+                units: hasConsistentData && trend !== null ? '%' : ''
               };
             }
             data[columns[j]] = result;
@@ -335,9 +335,9 @@ export class CompareService implements OnDestroy {
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
-        const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index]), Number(compareData[index]));
-        const currentVal = field.format(data[index]);
-        const compareVal = field.format(compareData[index]);
+        const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index] || 0), Number(compareData[index] || 0));
+        const currentVal = field.format(data[index] || '0');
+        const compareVal = field.format(compareData[index] || '0');
         tabsData.push({
           title: field.title,
           tooltip: `
@@ -346,7 +346,7 @@ export class CompareService implements OnDestroy {
           `,
           value: trend,
           selected: header === (selected || config.preSelected),
-          units: '%',
+          units: trend !== null ? '%' : '',
           key: header,
           trend: direction,
           sortOrder: field.sortOrder || 0,

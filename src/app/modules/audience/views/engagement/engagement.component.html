@@ -5,9 +5,21 @@
                     [reportType]="_reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-refine-filter (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+    <app-refine-filter [selectedFilters]="_selectedRefineFilters"
+                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
     <app-date-filter #dateFilter [dateRange]="_dateRange"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer kTagsContainer" *ngIf="_tags.length">
+    <kTags [title]="''"
+           [data]="_tags"
+           [labelField]="'label'"
+           [tooltipField]="'label'"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_onRemoveTag($event)"
+           (onRemoveAll)="_onRemoveAllTags()">
+    </kTags>
   </div>
 
   <div class="kReportContainer">

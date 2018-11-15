@@ -245,7 +245,7 @@ export class ReportService implements OnDestroy {
       });
       lineChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 24, right: 24
+          top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
         color: ['#F49616', '#149CC1'],
         xAxis: {
@@ -315,7 +315,7 @@ export class ReportService implements OnDestroy {
       };
       barChartData[graph.id] = {
         grid: {
-          top: 24, left: 54, bottom: 24, right: 24
+          top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
         color: ['#00a784'],
         xAxis: {

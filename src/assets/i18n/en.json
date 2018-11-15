@@ -179,7 +179,6 @@
         "browser": "Name",
         "os": "Name",
         "device": "Device",
-        "devicesSelected": "{0} Devices Selected",
         "filterDeviceType": "Filter Device Type",
         "index": "#",
         "devices": {
@@ -198,13 +197,21 @@
       "duration": "Which video duration leads to better engagement?",
       "impressions": "How player impressions are leading to engagement?",
       "users": "How many users watched at least once?",
+      "playerImpressions": "Player Impressions",
+      "plays": "Plays",
+      "playthrough1": "Plays that reached",
+      "playthrough2": "play-through",
+      "perc25": "25% Play-through",
+      "perc50": "50% Play-through",
+      "perc75": "75% Play-through",
+      "perc100": "100% Play - through",
       "highlightsReport": {
         "name": "User",
         "entry_name": "Entry",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
-        "unique_known_users": "Unique Viewers",
         "count_plays_tt": "Plays",
+        "unique_known_users": "Unique Viewers",
         "sum_time_viewed_tt": "Minutes Viewed",
         "unique_known_users_tt": "Unique Viewers"
       }

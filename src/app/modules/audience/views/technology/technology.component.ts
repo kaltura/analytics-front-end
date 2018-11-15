@@ -12,7 +12,7 @@ import { KalturaEndUserReportInputFilter, KalturaReportType } from 'kaltura-ngx-
 export class TechnologyComponent implements OnInit {
   @ViewChild('overview') _overview: DevicesOverviewComponent;
 
-  public _dateRange = DateRanges.CurrentYear;
+  public _dateRange = DateRanges.Last30D;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _allowedDevices = ['COMPUTER', 'MOBILE', 'TABLET'];

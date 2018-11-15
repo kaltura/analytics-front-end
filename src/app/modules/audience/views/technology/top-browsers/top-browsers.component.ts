@@ -14,6 +14,6 @@ import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-dev
   ]
 })
 export class TopBrowsersComponent extends BaseDevicesReportComponent {
-  protected readonly _defaultReportType = KalturaReportType.browsers;
+  protected _reportType = KalturaReportType.browsers;
   public _title = 'app.audience.technology.topBrowsers';
 }

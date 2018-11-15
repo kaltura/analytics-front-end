@@ -28,11 +28,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     if (value.length) {
       this._devices = value;
       this._selectedDevices = value;
-      this._reportType = KalturaReportType.platforms;
+      this._filter.devicesIn = devicesFilterToServerValue(this._devices);
     } else {
       this._devices = null;
       this._selectedDevices = [];
-      this._reportType = this._defaultReportType;
+      delete this._filter.devicesIn;
     }
     this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
     this._pager.pageIndex = 1;
@@ -48,18 +48,16 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._filter.interval = value.timeUnits;
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
-      this._reportType = this._defaultReportType;
       this._loadReport();
     }
   }
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   
-  protected abstract _defaultReportType: KalturaReportType;
+  protected abstract _reportType: KalturaReportType;
   
   protected _order = '-count_plays';
   protected _totalPlaysCount = 0;
-  protected _reportType = this._defaultReportType;
   protected _devices: string[] = [];
   
   public abstract _title: string;
@@ -139,8 +137,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
-      order: this._order,
-      objectIds: devicesFilterToServerValue(this._devices)
+      order: this._order
     };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
@@ -200,9 +197,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
     `;
     row['plays_trend'] = {
-      trend: value,
+      trend: value !== null ? value : '–',
       trendDirection: direction,
-      tooltip: tooltip
+      tooltip: tooltip,
+      units: value !== null ? '%' : '',
     };
   }
   

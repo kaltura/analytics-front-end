@@ -164,9 +164,10 @@ export class DevicesOverviewComponent implements OnDestroy {
       ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
       ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
     `;
-    device['trend'] = value;
+    device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
     device['tooltip'] = tooltip;
+    device['units'] = value !== null ? '%' : '';
   }
   
   private _loadTrendData(): void {
@@ -274,7 +275,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
-        grid: { top: 24, left: 54, bottom: 24, right: 24, containLabel: true },
+        grid: { top: 24, left: 24, bottom: 24, right: 24, containLabel: true },
         color: ['#00a784'],
         yAxis: {
           type: 'value',

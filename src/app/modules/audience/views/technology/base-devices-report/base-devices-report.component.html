@@ -5,10 +5,9 @@
                    [disabled]="!_devicesSelectActive"
                    [options]="devicesList"
                    [maxSelectedLabels]="0"
-                   [selectedItemsLabel]="'app.audience.technology.devicesSelected' | translate"
                    [showToggleAll]="false"
+                   [displaySelectedLabel]="false"
                    [defaultLabel]="'app.audience.technology.filterDeviceType' | translate"
-                   [resetFilterOnHide]="true"
                    [filter]="false"
                    (onChange)="_onDeviceFilterChange()"
                    [(ngModel)]="_selectedDevices">
@@ -56,13 +55,13 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
-                <td *ngFor="let col of _columns">
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
                   <span *ngIf="col === 'plays_trend'">
                     <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
                     <span *ngIf="data[col]" class="kTrend">
                       <i [class]="data[col].trendDirection | appTrend"></i>
-                      <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].trend}}&nbsp;%</span>
+                      <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].trend}}&nbsp;{{data[col].units}}</span>
                     </span>
                   </span>
                   <div *ngIf="col === 'plays_distribution'">
