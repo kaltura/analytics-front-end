@@ -20,6 +20,7 @@ export enum DateFilterQueryParams {
   dateBy = 'dateBy',
   dateFrom = 'dateFrom',
   dateTo = 'dateTo',
+  compareTo = 'compareTo',
 }
 
 export enum DateRangeType {

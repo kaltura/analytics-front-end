@@ -87,6 +87,24 @@ export class DateFilterComponent implements OnInit {
         this.specificDateRange = [dateFrom.toDate(), dateTo.toDate()];
       }
     }
+  
+    const compareTo = params[DateFilterQueryParams.compareTo];
+    if (compareTo) {
+      this.compare = true;
+      if (compareTo === 'lastYear') {
+        this.selectedComparePeriod = 'lastYear';
+      } else {
+        const compareToDateObject = moment(compareTo);
+        if (compareToDateObject.isValid()) {
+          const compareToDate = compareToDateObject.toDate();
+          const maxCompareDate = this._dateFilterService.getMaxCompare(this.dateRange);
+          this.selectedComparePeriod = 'specific';
+          this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
+        } else {
+          this.compare = false;
+        }
+      }
+    }
   }
   
   private _updateRouteParams(): void {
@@ -98,6 +116,14 @@ export class DateFilterComponent implements OnInit {
         dateFrom: DateFilterUtils.getDay(this.startDate),
         dateTo: DateFilterUtils.getDay(this.endDate),
       };
+    }
+    
+    if (queryParams && this.compare) {
+      if (this.selectedComparePeriod === 'lastYear') {
+        queryParams.compareTo = 'lastYear';
+      } else if (this.selectedComparePeriod === 'specific') {
+        queryParams.compareTo = DateFilterUtils.getDay(this.compareStartDate);
+      }
     }
   
     this._router.navigate(['.'], { relativeTo: this._route, queryParams });
