@@ -19,7 +19,13 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           },
           'sum_time_viewed': {
             format: value => value,
-          }
+          },
+          'unique_known_users': {
+            format: value => value,
+          },
+          'avg_view_drop_off': {
+            format: value => value,
+          },
         }
       },
       [ReportDataSection.table]: {
@@ -40,7 +46,10 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
-          }
+          },
+          'avg_view_drop_off': {
+            format: value => `${ReportHelper.numberOrZero(String(value * 100))} %`,
+          },
         }
       },
       [ReportDataSection.totals]: {
