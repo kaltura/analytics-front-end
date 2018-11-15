@@ -64,6 +64,13 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 3,
+          },
+          'avg_view_drop_off': {
+            format: value => ReportHelper.numberOrZero(String(value * 100)),
+            units: value => '%',
+            title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),
+            sortOrder: 4,
           }
         }
       }

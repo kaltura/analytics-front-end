@@ -210,10 +210,12 @@
         "entry_name": "Entry",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
+        "avg_view_drop_off": "Drop Off Rate",
         "count_plays_tt": "Plays",
         "unique_known_users": "Unique Viewers",
         "sum_time_viewed_tt": "Minutes Viewed",
-        "unique_known_users_tt": "Unique Viewers"
+        "unique_known_users_tt": "Unique Viewers",
+        "avg_view_drop_off_tt": "Drop Off Rate"
       }
     }
   }
