@@ -5,15 +5,21 @@ import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 
 export enum DateRanges {
-  Last7D = 0,
-  Last30D = 1,
-  Last3M = 2,
-  Last12M = 3,
-  CurrentWeek = 4,
-  CurrentMonth = 5,
-  CurrentQuarter = 6,
-  CurrentYear = 7,
-  PreviousMonth = 8
+  Last7D = 'last7days',
+  Last30D = 'last30days',
+  Last3M = 'last3months',
+  Last12M = 'last12months',
+  CurrentWeek = 'currentWeek',
+  CurrentMonth = 'currentMonth',
+  CurrentQuarter = 'currentQuarter',
+  CurrentYear = 'currentYear',
+  PreviousMonth = 'previousMonth'
+}
+
+export enum DateFilterQueryParams {
+  dateBy = 'dateBy',
+  dateFrom = 'dateFrom',
+  dateTo = 'dateTo',
 }
 
 export enum DateRangeType {
@@ -42,6 +48,32 @@ export class DateFilterService {
 
   constructor(private _translate: TranslateService) {
   }
+  
+  public getDateRangeByString(value: string): DateRanges {
+    switch (value) {
+      case 'last7days':
+        return DateRanges.Last7D;
+      case 'last30days':
+        return DateRanges.Last30D;
+      case 'last3months':
+        return DateRanges.Last3M;
+      case 'last12months':
+        return DateRanges.Last12M;
+      case 'currentWeek':
+        return DateRanges.CurrentWeek;
+      case 'currentMonth':
+        return DateRanges.CurrentMonth;
+      case 'currentQuarter':
+        return DateRanges.CurrentQuarter;
+      case 'currentYear':
+        return DateRanges.CurrentYear;
+      case 'previousMonth':
+        return DateRanges.PreviousMonth;
+      default:
+        return null;
+    }
+  }
+  
 
   public getDateRange(dateRangeType: DateRangeType, period: string): SelectItem[] {
     let selectItemArr: SelectItem[] = [];
