@@ -229,10 +229,12 @@ kpopupwidget{
   cursor: default;
 
   .icon-progress, .icon-progress + span, .icon-progress + span + span {
+    font-weight: bold;
     color: $kPrimary !important;
   }
 
   .icon-regression, .icon-regression + span, .icon-regression + span + span {
+    font-weight: bold;
     color: $kDandger !important;
   }
 }
