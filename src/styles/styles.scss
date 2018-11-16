@@ -226,6 +226,8 @@ kpopupwidget{
 }
 
 .kTrend {
+  cursor: default;
+
   .icon-progress, .icon-progress + span, .icon-progress + span + span {
     color: $kPrimary !important;
   }
