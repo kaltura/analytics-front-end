@@ -97,7 +97,7 @@
                   <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend"
                         [kTooltip]="data['count_plays'].tooltip" [escape]="false">
                     <i [class]="data['count_plays'].trend | appTrend"></i>
-                    {{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}
+                    <span>{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
                   </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
                 </td>
@@ -110,7 +110,7 @@
                   <span *ngIf="isCompareMode && data['unique_known_users']?.value" class="kTrend"
                         [kTooltip]="data['unique_known_users'].tooltip" [escape]="false">
                     <i [class]="data['unique_known_users'].trend | appTrend"></i>
-                    {{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}
+                    <span>{{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}</span>
                   </span>
                   <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
                 </td>
@@ -123,7 +123,7 @@
                   <span *ngIf="isCompareMode && data['avg_view_drop_off']?.value" class="kTrend"
                         [kTooltip]="data['avg_view_drop_off'].tooltip" [escape]="false">
                     <i [class]="data['avg_view_drop_off'].trend | appTrend"></i>
-                    {{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}
+                    <span>{{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}</span>
                   </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
                 </td>
