@@ -65,19 +65,51 @@
               <tr>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
-                <th [pSortableColumn]="isCompareMode ? null : 'object_id'">{{'app.audience.geo.object_id' | translate}}
-                  <p-sortIcon *ngIf="!isCompareMode" [field]="'object_id'"></p-sortIcon>
+                <th [pSortableColumn]="isCompareMode ? null : 'object_id'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+                    <p-sortIcon *ngIf="!isCompareMode" [field]="'object_id'"></p-sortIcon>
+                  </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="isCompareMode ? null : 'count_plays'">{{'app.audience.geo.count_plays' | translate}}
-                  <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
+                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="isCompareMode ? null : 'count_plays'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.count_plays' | translate}}
+                    </span>
+                    <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
+                  </div>
                 </th>
-                <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">{{'app.audience.geo.distribution' | translate}}</th>
-                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="isCompareMode ? null : 'unique_known_users'">{{'app.audience.geo.unique_known_users' | translate}}
-                  <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.distribution' | translate}}
+                    </span>
+                  </div>
                 </th>
-                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">{{'app.audience.geo.distribution2' | translate}}</th>
-                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">{{'app.audience.geo.avg_view_drop_off' | translate}}
-                  <p-sortIcon *ngIf="!isCompareMode" [field]="'avg_view_drop_off'"></p-sortIcon>
+                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="isCompareMode ? null : 'unique_known_users'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.unique_known_users' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.unique_known_users' | translate}}
+                    </span>
+                    <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
+                  </div>
+                </th>
+                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.distribution2' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.distribution2' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.avg_view_drop_off' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.avg_view_drop_off' | translate}}
+                    </span>
+                    <p-sortIcon *ngIf="!isCompareMode" [field]="'avg_view_drop_off'"></p-sortIcon>
+                  </div>
                 </th>
               </tr>
             </ng-template>

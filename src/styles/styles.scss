@@ -200,8 +200,11 @@ p-table /deep/ .ui-table .ui-table-tbody > tr{
     }
   }
 }
-p-table /deep/ .ui-table .ui-table-thead > tr > th{
+p-table /deep/ .ui-table .ui-table-thead > tr > th {
   padding-left: 24px;
+  &:last-child {
+    padding-right: 24px;
+  }
 }
 p-table /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: inherit;
@@ -211,6 +214,26 @@ p-table /deep/ .ui-table .ui-table-tbody > tr > td:first-child {
 }
 p-table /deep/ .ui-table .ui-table-thead {
   border-top: 1px solid #d9d9d9;
+}
+p-table /deep/ {
+  tr {
+    height: 31px;
+  }
+
+  .kColumnHeader {
+    display: flex;
+    align-items: center;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    p-sorticon {
+      margin-top: -4px;
+    }
+  }
 }
 p-paginator /deep/ .ui-paginator.ui-widget-header.ui-unselectable-text {
   height: 34px;

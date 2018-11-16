@@ -46,8 +46,12 @@
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="col !== 'plays_trend' ? col : null"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
-                  {{'app.audience.technology.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.technology.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.audience.technology.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
+                  </div>
                 </th>
 
               </tr>

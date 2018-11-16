@@ -32,10 +32,13 @@
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col">
-                  {{'app.bandwidth.publisher_table.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.bandwidth.publisher_table.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.bandwidth.publisher_table.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  </div>
                 </th>
-
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data>
