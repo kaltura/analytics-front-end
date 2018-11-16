@@ -228,13 +228,16 @@ kpopupwidget{
 .kTrend {
   cursor: default;
 
-  .icon-progress, .icon-progress + span, .icon-progress + span + span {
+  .icon-progress,
+  .icon-regression {
     font-weight: bold;
+  }
+
+  .icon-progress, .icon-progress + span, .icon-progress + span + span {
     color: $kPrimary !important;
   }
 
   .icon-regression, .icon-regression + span, .icon-regression + span + span {
-    font-weight: bold;
     color: $kDandger !important;
   }
 }
