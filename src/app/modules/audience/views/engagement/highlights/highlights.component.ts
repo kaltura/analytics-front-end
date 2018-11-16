@@ -83,12 +83,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           if (compare) {
             this._handleCompare(report, compare);
           } else {
-            // if (report.table && report.table.header && report.table.data) {
-            //   this.handleTable(report.table); // handle table
-            // }
             if (report.graphs.length) {
               this._chartDataLoaded = false;
-              this._handleTable2(report.graphs);
+              this._handleTable(report.graphs);
               this._handleGraphs(report.graphs); // handle graphs
             }
             if (report.totals) {
@@ -196,18 +193,11 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     }
   }
   
-  private handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
-    this._columns = columns;
-    this._tableData = tableData;
-  }
-  
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
-  private _handleTable2(graphs: KalturaReportGraph[]): void {
+  private _handleTable(graphs: KalturaReportGraph[]): void {
     const config = this._dataConfig.table;
     const fields = config.fields;
     const temp = {};
@@ -243,7 +233,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     if (temp['count_plays']) {
       temp['count_plays'].dates.forEach((date, index) => {
         tableData.push({
-          'name': date,
+          'date': date,
           'count_plays': fields['count_plays'] ? fields['count_plays'].format(temp['count_plays'].values[index]) : 0,
           'sum_time_viewed': fields['sum_time_viewed'] ? fields['sum_time_viewed'].format(temp['sum_time_viewed'].values[index]) : 0,
           'unique_known_users': temp['unique_known_users'] ? fields['unique_known_users'].format(temp['unique_known_users'].values[index]) : 0,
@@ -252,7 +242,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       });
     }
   
-    this._columns = ['name', ...Object.keys(temp)];
+    this._totalCount = tableData.length;
+    this._columns = ['date', ...Object.keys(temp)];
     this._tableData = tableData;
     
   }
@@ -290,7 +281,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
-        this._loadReport({ table: null });
+        this._loadReport({ graphs: null });
       }
     }
   }

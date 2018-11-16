@@ -206,7 +206,7 @@
       "perc75": "75% Play-through",
       "perc100": "100% Play - through",
       "highlightsReport": {
-        "name": "User",
+        "date": "Date",
         "entry_name": "Entry",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
