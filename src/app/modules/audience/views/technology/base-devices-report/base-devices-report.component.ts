@@ -62,6 +62,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _firstTimeLoading = true;
   public _devicesSelectActive = false;
   public _tags: any[] = [];
   public _selectedDevices: string[] = [];
@@ -151,6 +152,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           }
           
           this._isBusy = false;
+          this._firstTimeLoading = false;
           
           this._loadTrendData();
         },
