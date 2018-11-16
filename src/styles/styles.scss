@@ -272,13 +272,12 @@ kpopupwidget{
 }
 
 .kGraphTooltip {
-  padding: 16px 46px 16px 16px;
+  padding: 16px;
 
   .kBullet {
     font-weight: bold;
-    font-size: 40px;
-    line-height: 15px;
-    vertical-align: middle;
+    font-size: 24px;
+    vertical-align: text-bottom;
   }
 
   .kValue {
