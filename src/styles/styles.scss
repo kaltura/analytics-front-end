@@ -285,3 +285,17 @@ kpopupwidget{
     color: $kGrayscale1;
   }
 }
+
+p-multiselect /deep/ {
+  .ui-multiselect-label {
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: .5em calc(2em + 12px) .25em 12px !important;
+  }
+
+  .ui-multiselect-item {
+    padding: .125em 13px !important;
+  }
+}
