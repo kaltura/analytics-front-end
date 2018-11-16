@@ -89,7 +89,7 @@
                 <td *ngIf="!_drillDown.length">
                   <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
                 </td>
-                <td>
+                <td class="kHighlight">
                   <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && !_drillDown.length">{{data['object_id']}}</a>
                   <span *ngIf="!data['object_id']?.value && _drillDown.length">{{data['object_id']}}</span>
                 </td>
