@@ -17,10 +17,14 @@ export class DateFilterUtils {
     return num > 9 ? num.toString() : ( '0' + num.toString());
   }
 
-  static formatMonthString(value: string, locale: string): string {
+  static formatMonthString(value: string, locale: string, monthFormat = 'long'): string {
     const year: string = value.substring(0, 4);
     const month: string = value.substring(4, 6);
     const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+    if (monthFormat === 'short') {
+      const day: string = value.substring(6, 8);
+      return `${date.toLocaleString(locale, { month: 'short' })} ${day}`;
+    }
     return date.toLocaleString(locale, { month: 'long' }) + ' ' + date.getFullYear();
   }
 

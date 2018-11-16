@@ -12,6 +12,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -27,7 +28,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _dataConfig: ReportDataConfig;
   private _selectedUsers = '';
   
-  public _drillDown = '';
   public _columns: string[] = [];
   public _isBusy: boolean;
   public _chartDataLoaded = false;
@@ -83,11 +83,12 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           if (compare) {
             this._handleCompare(report, compare);
           } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.handleTable(report.table); // handle table
-            }
+            // if (report.table && report.table.header && report.table.data) {
+            //   this.handleTable(report.table); // handle table
+            // }
             if (report.graphs.length) {
               this._chartDataLoaded = false;
+              this._handleTable2(report.graphs);
               this._handleGraphs(report.graphs); // handle graphs
             }
             if (report.totals) {
@@ -206,6 +207,56 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
+  private _handleTable2(graphs: KalturaReportGraph[]): void {
+    const config = this._dataConfig.table;
+    const fields = config.fields;
+    const temp = {};
+    graphs.forEach((graph: KalturaReportGraph) => {
+      if (!fields[graph.id]) {
+        return;
+      }
+      let dates = [];
+      let values = [];
+      const data = graph.data.split(';');
+    
+      data.forEach((value) => {
+        if (value.length) {
+          const label = value.split(',')[0];
+          const name = DateFilterUtils.formatMonthString(label, analyticsConfig.locale, 'short');
+          let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
+          if (isNaN(val)) {
+            val = 0;
+          }
+        
+          if (config.fields[graph.id]) {
+            val = fields[graph.id].format(val);
+          }
+        
+          dates.push(name);
+          values.push(val);
+        }
+      });
+      temp[graph.id] = { dates, values };
+    });
+  
+    const tableData = [];
+    if (temp['count_plays']) {
+      temp['count_plays'].dates.forEach((date, index) => {
+        tableData.push({
+          'name': date,
+          'count_plays': fields['count_plays'] ? fields['count_plays'].format(temp['count_plays'].values[index]) : 0,
+          'sum_time_viewed': fields['sum_time_viewed'] ? fields['sum_time_viewed'].format(temp['sum_time_viewed'].values[index]) : 0,
+          'unique_known_users': temp['unique_known_users'] ? fields['unique_known_users'].format(temp['unique_known_users'].values[index]) : 0,
+          'avg_view_drop_off': temp['avg_view_drop_off'] ? fields['avg_view_drop_off'].format(temp['avg_view_drop_off'].values[index]) : 0,
+        });
+      });
+    }
+  
+    this._columns = ['name', ...Object.keys(temp)];
+    this._tableData = tableData;
+    
+  }
+  
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
@@ -242,15 +293,5 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._loadReport({ table: null });
       }
     }
-  }
-  
-  public _onDrillDown(user: string): void {
-    this._drillDown = user.length ? user : '';
-    this._reportType = user.length ? KalturaReportType.specificUserEngagement : KalturaReportType.userEngagement;
-    this._filter.userIds = user.length ? user : this._selectedUsers;
-    if (this._compareFilter) {
-      this._compareFilter.userIds = this._filter.userIds;
-    }
-    this._loadReport();
   }
 }

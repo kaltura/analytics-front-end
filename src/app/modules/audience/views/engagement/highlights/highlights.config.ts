@@ -30,26 +30,22 @@ export class HighlightsConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
-          'name': {
-            format: value => value,
-            nonComparable: true,
-          },
-          'entry_name': {
+          'date': {
             format: value => value,
             nonComparable: true,
           },
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(String(value)),
           },
           'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(String(value)),
           },
           'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(String(value)),
           },
           'avg_view_drop_off': {
-            format: value => `${ReportHelper.numberOrZero(String(value * 100))} %`,
-          },
+            format: value => ReportHelper.numberOrZero(String(value * 100)),
+          }
         }
       },
       [ReportDataSection.totals]: {

@@ -1,11 +1,6 @@
 <div class="kReport kContent kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.engagement.highlights' | translate}}</span>
-    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_onDrillDown('')">{{'app.engagement.userHighlights' | translate}}</a>
-      <span class="separator">/</span>
-      <span>{{_drillDown}}</span>
-    </div>
+    <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -53,8 +48,7 @@
                     </span>
                   </span>
                   <ng-container *ngIf="!_isCompareMode || col === 'name' || col === 'entry_name'">
-                    <span *ngIf="col !== 'name'">{{data[col]}}</span>
-                    <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])">{{data[col]}}</a>
+                    <span>{{data[col]}}</span>
                   </ng-container>
                 </td>
               </tr>
