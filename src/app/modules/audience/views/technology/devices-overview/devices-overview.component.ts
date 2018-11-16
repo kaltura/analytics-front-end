@@ -57,11 +57,13 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _fractions = 2;
   private _columns: string[] = [];
-
+  private _echartsIntance: any; // echart instance
+  
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
-  public _barChartData: any = {};
+  public _barChartData: { [key: string]: any } = {};
+  public _rawChartData: { [key: string]: { value: number, key: string; }[]; } = {};
   public _summaryData: Summary = {};
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -113,7 +115,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
           
           this._isBusy = false;
-    
+          
           this.exportDataChange.emit({
             headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.technology'),
             totalCount: report.table.totalCount,
@@ -271,6 +273,21 @@ export class DevicesOverviewComponent implements OnDestroy {
     this.devicesListChange.emit(devices);
   }
   
+  private _getRawGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
+    return relevantFields.reduce((result, key) => {
+      result[key] = data.map(item => {
+        let value = parseFloat(item[key]) || 0;
+        if (value % 1 !== 0) {
+          value = Number(value.toFixed(this._fractions));
+        }
+        return { value, key: item.device };
+      });
+      
+      return result;
+    }, {});
+  }
+  
+  
   private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     return relevantFields.reduce((barChartData, key) => {
@@ -329,9 +346,9 @@ export class DevicesOverviewComponent implements OnDestroy {
         },
         series: [{
           data: data.map(item => {
-            const value = parseFloat(item[key]) || 0;
+            let value = parseFloat(item[key]) || 0;
             if (value % 1 !== 0) {
-              return value.toFixed(this._fractions);
+              value = Number(value.toFixed(this._fractions));
             }
             return value;
           }),
@@ -375,9 +392,10 @@ export class DevicesOverviewComponent implements OnDestroy {
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data, columns } = this._getOverviewData(table, relevantFields);
-  
+    
     this._columns = columns;
     this._barChartData = this._getGraphData(data, relevantFields);
+    this._rawChartData = this._getRawGraphData(data, relevantFields);
     this._summaryData = this._getSummaryData(data, relevantFields);
     
     this._handleDevicesListChange(data);
@@ -387,16 +405,48 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
+  private _updateGraphStyle(): void {
+    if (!this._echartsIntance) {
+      return;
+    }
+
+    const data = this._rawChartData[this._selectedMetrics];
+    const series = data.map(({ value, key }) => {
+      const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
+      const color = isActive ? '#00A784' : '#CCCCCC';
+      if (typeof value === 'number') {
+        return {
+          value,
+          itemStyle: { color }
+        };
+      }
+      
+      return {
+        value,
+        itemStyle: { color }
+      };
+    });
+  
+    setTimeout(() => this._echartsIntance.setOption({ series: [{ data: series }] }), 0);
+  }
+  
+  public _onChartInit(ec: any): void {
+    this._echartsIntance = ec;
+  }
+  
   public _onSelectionChange(): void {
+    this._updateGraphStyle();
     this.deviceFilterChange.emit(this._selectedValues);
   }
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._updateGraphStyle();
   }
   
   public resetDeviceFilters(emit = false): void {
     this._selectedValues = [];
+    this._updateGraphStyle();
     
     if (emit) {
       this._onSelectionChange();
