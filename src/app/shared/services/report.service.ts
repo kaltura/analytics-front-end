@@ -268,6 +268,9 @@ export class ReportService implements OnDestroy {
         `;
       };
       lineChartData[graph.id] = {
+        textStyle: {
+          fontFamily: 'Lato',
+        },
         grid: {
           top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
@@ -339,6 +342,9 @@ export class ReportService implements OnDestroy {
         }]
       };
       barChartData[graph.id] = {
+        textStyle: {
+          fontFamily: 'Lato',
+        },
         grid: {
           top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
