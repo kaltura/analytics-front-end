@@ -73,35 +73,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this._dataConfig = _dataConfigService.getConfig();
 
     this._chartData = _dataConfigService.getChartConfig((params) => {
-      if (this.isCompareMode) {
-        let value = this._funnelData.impressions;
-        if (params.dataIndex === 1) {
-          value = this._funnelData.plays;
-        } else if (params.dataIndex === 2) {
-          value = this._funnelData.playThrough['perc' + this._selectedPlaythrough];
-        }
-
-        let compareValue = this.compareFunnelData.impressions;
-        if (params.dataIndex === 1) {
-          compareValue = this.compareFunnelData.plays;
-        } else if (params.dataIndex === 2) {
-          compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
-        }
-        const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors, move tooltips functions to data config service
-        return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value} </b></span><span> ${trend}</span>`;
-      } else {
-        return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
-      }
+      return this.getChartTooltip(params);
     });
 
     this._compareChartData = _dataConfigService.getChartConfig((params) => {
-      let value = this.compareFunnelData.impressions;
-      if (params.dataIndex === 1) {
-        value = this.compareFunnelData.plays;
-      } else if (params.dataIndex === 2) {
-        value = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
-      }
-      return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value}</b></span>`;
+      return this.getCompareChartTooltip(params);
     });
   }
 
@@ -249,7 +225,39 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   private prepareCsvExportHeaders(): void {
     // TODO: TBD according to export refactor
   }
-  
+
+  private getChartTooltip(params): string {
+    if (this.isCompareMode) {
+      let value = this._funnelData.impressions;
+      if (params.dataIndex === 1) {
+        value = this._funnelData.plays;
+      } else if (params.dataIndex === 2) {
+        value = this._funnelData.playThrough['perc' + this._selectedPlaythrough];
+      }
+
+      let compareValue = this.compareFunnelData.impressions;
+      if (params.dataIndex === 1) {
+        compareValue = this.compareFunnelData.plays;
+      } else if (params.dataIndex === 2) {
+        compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
+      }
+      const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
+    } else {
+      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
+    }
+  }
+
+  private getCompareChartTooltip(params): string {
+    let value = this.compareFunnelData.impressions;
+    if (params.dataIndex === 1) {
+      value = this.compareFunnelData.plays;
+    } else if (params.dataIndex === 2) {
+      value = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
+    }
+    return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value}</b></span>`;
+  }
+
   protected _updateFilter(): void {
     this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this.filter.fromDay = this._dateFilter.startDay;
