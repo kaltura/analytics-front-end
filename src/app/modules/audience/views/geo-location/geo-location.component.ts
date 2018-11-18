@@ -201,20 +201,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-    if (reportConfig.filter['countriesIn']) {
-      delete reportConfig.filter['countriesIn'];
-    }
-    if (reportConfig.filter['regionsIn']) {
-      delete reportConfig.filter['regionsIn'];
-    }
-    reportConfig.objectIds = '';
-    if (this._drillDown.length === 1) {
-      reportConfig.objectIds = this._drillDown[0];
-    }
-    if (this._drillDown.length === 2) {
-      reportConfig.filter.countriesIn = this._drillDown[0];
-      reportConfig.filter.regionsIn = this._drillDown[1];
-    }
+    this.updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
@@ -345,6 +332,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       pager: this.pager,
       order: this.order
     };
+    this.updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
@@ -357,13 +345,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
             compareValue = relevantCompareRow ? relevantCompareRow['unique_known_users'] : 0;
             this._setPlaysTrend(row, 'unique_known_users', compareValue, currentPeriodTitle, comparePeriodTitle);
             compareValue = relevantCompareRow ? relevantCompareRow['avg_view_drop_off'] : 0;
-            this._setPlaysTrend(row, 'avg_view_drop_off', compareValue, currentPeriodTitle, comparePeriodTitle);
+            this._setPlaysTrend(row, 'avg_view_drop_off', compareValue, currentPeriodTitle, comparePeriodTitle, '%');
           });
         } else {
           this._tableData.forEach(row => {
             this._setPlaysTrend(row, 'count_plays', 0, currentPeriodTitle, comparePeriodTitle);
             this._setPlaysTrend(row, 'unique_known_users', 0, currentPeriodTitle, comparePeriodTitle);
-            this._setPlaysTrend(row, 'avg_view_drop_off', 0, currentPeriodTitle, comparePeriodTitle);
+            this._setPlaysTrend(row, 'avg_view_drop_off', 0, currentPeriodTitle, comparePeriodTitle, '%');
           });
         }
       }, error => {
@@ -390,13 +378,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string): void {
+  private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
     const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
     compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}
     `;
     row[field + '_trend'] = {
       trend: value !== null ? value : '–',
@@ -404,6 +392,23 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       tooltip: tooltip,
       units: value !== null ? '%' : '',
     };
+  }
+
+  private updateReportConfig(reportConfig: ReportConfig): void {
+    if (reportConfig.filter['countriesIn']) {
+      delete reportConfig.filter['countriesIn'];
+    }
+    if (reportConfig.filter['regionsIn']) {
+      delete reportConfig.filter['regionsIn'];
+    }
+    reportConfig.objectIds = '';
+    if (this._drillDown.length === 1) {
+      reportConfig.objectIds = this._drillDown[0];
+    }
+    if (this._drillDown.length === 2) {
+      reportConfig.filter.countriesIn = this._drillDown[0];
+      reportConfig.filter.regionsIn = this._drillDown[1];
+    }
   }
 
   ngOnDestroy() {}
