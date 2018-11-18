@@ -1,29 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, ReportConfig, Report } from 'shared/services';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {TranslateService} from '@ngx-translate/core';
+import {DateChangeEvent, DateRangeType} from 'shared/components/date-filter/date-filter.service';
+import {AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import {
-  KalturaReportInputFilter,
   KalturaFilterPager,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
   KalturaReportTable,
   KalturaReportTotal,
-  KalturaReportGraph,
-  KalturaReportInterval,
-  KalturaReportType,
-  KalturaUser
+  KalturaReportType
 } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { GeoLocationDataConfig } from './geo-location-data.config';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { SelectItem } from 'primeng/api';
-import { of as ObservableOf } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {Tab} from 'shared/components/report-tabs/report-tabs.component';
+import {GeoLocationDataConfig} from './geo-location-data.config';
+import {ReportDataConfig} from 'shared/services/storage-data-base.config';
+import {SelectItem} from 'primeng/api';
+import {of as ObservableOf} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import * as echarts from 'echarts';
-import { EChartOption } from 'echarts';
-import { CompareService } from 'shared/services/compare.service';
+import {EChartOption} from 'echarts';
+import {CompareService} from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-geo-location',
@@ -66,7 +63,7 @@ export class GeoLocationComponent implements OnInit {
 
   public _countryCodes: { value: string, label: string }[] = [];
   public _selectedCountries: SelectItem[] = [];
-  public _drillDown = '';
+  public _drillDown: string[] = [];
 
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
@@ -167,6 +164,7 @@ export class GeoLocationComponent implements OnInit {
         }
       });
       if (countryGotData) {
+        this._drillDown = [];
         this._onDrillDown(event.batch[0].name);
       }
     }
@@ -202,7 +200,14 @@ export class GeoLocationComponent implements OnInit {
   }
 
   public _onDrillDown(country: string): void {
-    this._drillDown = country.length ? (this._drillDown !== country ? country : '') : '';
+    if (country === '') {
+      this._drillDown = [];
+    } else if (this._drillDown.length < 2) {
+      this._drillDown.push(country);
+    } else if (this._drillDown.length === 2) {
+      this._drillDown.pop();
+    }
+    this.reportType = this._drillDown.length === 2 ?  KalturaReportType.cities : KalturaReportType.mapOverlay;
     this.loadReport();
   }
 
@@ -212,8 +217,19 @@ export class GeoLocationComponent implements OnInit {
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-    if (this._drillDown.length) {
-      reportConfig.objectIds = this._drillDown;
+    if (reportConfig.filter['countriesIn']) {
+      delete reportConfig.filter['countriesIn'];
+    }
+    if (reportConfig.filter['regionsIn']) {
+      delete reportConfig.filter['regionsIn'];
+    }
+    reportConfig.objectIds = '';
+    if (this._drillDown.length === 1) {
+      reportConfig.objectIds = this._drillDown[0];
+    }
+    if (this._drillDown.length === 2) {
+      reportConfig.filter.countriesIn = this._drillDown[0];
+      reportConfig.filter.regionsIn = this._drillDown[1];
     }
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {

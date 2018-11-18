@@ -77,7 +77,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         formatter: (params) => {
           if (params.name && parseFloat(params.value) >= 0) {
             let tooltip = params.seriesName + '<br/>' + params.name + ' : ' + params.value;
-            if (params.seriesName === 'Play-through Ratio') {
+            if (params.seriesName === 'Avg. Drop Off') {
               tooltip = tooltip + '%';
             }
             return tooltip;

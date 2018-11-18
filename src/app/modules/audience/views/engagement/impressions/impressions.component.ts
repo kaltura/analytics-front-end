@@ -9,6 +9,7 @@ import { SelectItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportHelper } from 'shared/services';
 import { ImpressionsDataConfig } from './impressions-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
@@ -241,8 +242,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       } else if (params.dataIndex === 2) {
         compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
       }
-      const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
-      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
+      // const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
     } else {
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
     }
@@ -255,7 +256,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     } else if (params.dataIndex === 2) {
       value = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
     }
-    return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${value}</b></span>`;
+    return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)}</b></span>`;
   }
 
   protected _updateFilter(): void {

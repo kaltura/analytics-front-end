@@ -11,7 +11,10 @@
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
       <a (click)="_onDrillDown('')">{{'app.audience.geo.title' | translate}}</a>
       <span class="separator">/</span>
-      <span>{{_drillDown}}</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0])">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
     <p-multiSelect *ngIf="!isCompareMode" class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
                    [options]="_countryCodes"
@@ -63,7 +66,7 @@
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [sortOrder]="-1" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
+                <th [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
                 <th [pSortableColumn]="isCompareMode ? null : 'object_id'">
                   <div class="kColumnHeader">
@@ -81,7 +84,7 @@
                     <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="!_drillDown.length && _selectedMetrics==='count_plays' && !isCompareMode">
+                <th *ngIf="_selectedMetrics==='count_plays' && !isCompareMode">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.distribution' | translate}}
@@ -96,7 +99,7 @@
                     <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="!_drillDown.length && _selectedMetrics==='unique_known_users' && !isCompareMode">
+                <th *ngIf="_selectedMetrics==='unique_known_users' && !isCompareMode">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.distribution2' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.distribution2' | translate}}
@@ -115,15 +118,15 @@
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
-                <td *ngIf="!_drillDown.length">
+                <td>
                   <span>{{rowIndex+1}}</span>
                 </td>
                 <td *ngIf="!_drillDown.length">
                   <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
                 </td>
                 <td class="kHighlight">
-                  <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && !_drillDown.length">{{data['object_id']}}</a>
-                  <span *ngIf="!data['object_id']?.value && _drillDown.length">{{data['object_id']}}</span>
+                  <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && _drillDown.length < 2">{{data['object_id']}}</a>
+                  <span *ngIf="!data['object_id']?.value && _drillDown.length === 2">{{data['object_id']}}</span>
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays'">
                   <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend"
@@ -133,7 +136,7 @@
                   </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.value && !_drillDown.length && !isCompareMode">
+                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.value && !isCompareMode">
                   <div>
                     <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
                   </div>
@@ -146,7 +149,7 @@
                   </span>
                   <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value && !_drillDown.length && !isCompareMode">
+                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value && !isCompareMode">
                   <div>
                     <app-bullet [value]="getPercent(data['unique_known_users'])"></app-bullet>
                   </div>
