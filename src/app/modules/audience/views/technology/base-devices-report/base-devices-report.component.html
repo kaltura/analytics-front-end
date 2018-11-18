@@ -46,8 +46,12 @@
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="col !== 'plays_trend' ? col : null"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
-                  {{'app.audience.technology.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.technology.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.audience.technology.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
+                  </div>
                 </th>
 
               </tr>
@@ -59,9 +63,9 @@
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
                   <span *ngIf="col === 'plays_trend'">
                     <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
-                    <span *ngIf="data[col]" class="kTrend">
+                    <span *ngIf="data[col]" class="kTrend" [kTooltip]="data[col].tooltip" [escape]="false">
                       <i [class]="data[col].trendDirection | appTrend"></i>
-                      <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].trend}}&nbsp;{{data[col].units}}</span>
+                      <span>{{data[col].trend}}&nbsp;{{data[col].units}}</span>
                     </span>
                   </span>
                   <div *ngIf="col === 'plays_distribution'">
@@ -72,7 +76,8 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
               <div class="emptymessage">
-                <div class="kEmptyMessage">No results</div>
+                <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
               </div>
             </ng-template>
           </p-table>

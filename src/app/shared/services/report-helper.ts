@@ -12,7 +12,8 @@ export class ReportHelper {
   }
   
   static numberOrZero(x: any, round = true): string {
-    if (!x.length) {
+    x = parseFloat(x);
+    if (isNaN(x)) {
       return '0';
     } else {
       x = parseFloat(x);

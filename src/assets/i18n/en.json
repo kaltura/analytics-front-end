@@ -30,6 +30,7 @@
       "exportCsv": "Export",
       "na": "N/A",
       "noMsg": "No Message",
+      "noResults": "No results",
       "exporting": "Preparing Report",
       "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
