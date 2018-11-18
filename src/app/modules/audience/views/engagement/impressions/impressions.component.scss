@@ -1,7 +1,25 @@
 @import '../../../../../../styles/variables';
 
-.kChart{
-  height: 360px !important;
+.kCharts{
+  display: flex;
+  &.compare{
+    margin-left: 35%;
+  }
+  .kChart{
+    height: 360px !important;
+    width: 100%;
+    &.compare{
+      width: 80%;
+    }
+  }
+}
+.kCompareDates{
+  display: flex;
+  color: $kGrayscale3;
+  div{
+    width: 35%;
+    text-align: center;
+  }
 }
 .kData{
   width: 60%;
@@ -11,10 +29,14 @@
   display: flex;
   flex-direction: column;
   padding-left: 24px;
+  &.compare{
+    width: 77%;
+    margin-top: 27px;
+  }
   .kDataContainer{
     width: 100%;
     height: 100%;
-    border-top: 2px solid #CCEDE6;
+    border-top: 1px solid $kGrayscale6;
     display: flex;
     flex-direction: column;
   }
@@ -27,12 +49,21 @@
   .kLabel{
     font-size: 15px;
     color: $kGrayscale1;
+    &.compare {
+      margin-top: 12px;
+    }
   }
 }
 .kPlaythrough{
   margin-left: 24px;
   position: absolute;
   top: 288px;
+  &.compare {
+    top: 264px;
+  }
+  .kLabel.block{
+    display: block;
+  }
 }
 :host /deep/ p-dropdown{
   .ui-dropdown {

@@ -9,6 +9,11 @@ export class DateFilterUtils {
     return value ? Math.round(value.getTime() / 1000) : null;
   }
 
+  static fromServerDate(value: number): Date {
+    return (value ? new Date(value * 1000) : null);
+  }
+
+
   static getDay(value: Date): string {
     return value.getFullYear().toString() + DateFilterUtils.getFull(value.getMonth() + 1) + DateFilterUtils.getFull(value.getDate());
   }
