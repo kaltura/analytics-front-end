@@ -3,7 +3,7 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)" [showCompare]="false"></app-date-filter>
   </div>
 
   <div class="kFilters">
@@ -16,7 +16,7 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
-    <p-multiSelect *ngIf="!isCompareMode" class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
+    <p-multiSelect class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
                    [options]="_countryCodes"
                    [maxSelectedLabels]="0"
                    [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
@@ -50,7 +50,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
 
       </div>
@@ -68,52 +68,53 @@
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
-                <th [pSortableColumn]="isCompareMode ? null : 'object_id'">
+                <th [pSortableColumn]="'object_id'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.object_id' | translate}}
                     </span>
-                    <p-sortIcon *ngIf="!isCompareMode" [field]="'object_id'"></p-sortIcon>
+                    <p-sortIcon [field]="'object_id'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="isCompareMode ? null : 'count_plays'">
+                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="'count_plays'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.count_plays' | translate}}
                     </span>
-                    <p-sortIcon *ngIf="!isCompareMode" [field]="'count_plays'"></p-sortIcon>
+                    <p-sortIcon [field]="'count_plays'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays' && !isCompareMode">
+                <th *ngIf="_selectedMetrics==='count_plays'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.distribution' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="isCompareMode ? null : 'unique_known_users'">
+                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="'unique_known_users'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.unique_known_users' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.unique_known_users' | translate}}
                     </span>
-                    <p-sortIcon *ngIf="!isCompareMode" [field]="'unique_known_users'"></p-sortIcon>
+                    <p-sortIcon [field]="'unique_known_users'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='unique_known_users' && !isCompareMode">
+                <th *ngIf="_selectedMetrics==='unique_known_users'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.distribution2' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.distribution2' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">
+                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="'avg_view_drop_off'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.avg_view_drop_off' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.avg_view_drop_off' | translate}}
                     </span>
-                    <p-sortIcon *ngIf="!isCompareMode" [field]="'avg_view_drop_off'"></p-sortIcon>
+                    <p-sortIcon [field]="'avg_view_drop_off'"></p-sortIcon>
                   </div>
                 </th>
+                <th >{{'app.audience.geo.trend' | translate}}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
@@ -129,38 +130,32 @@
                   <span *ngIf="!data['object_id']?.value && _drillDown.length === 2">{{data['object_id']}}</span>
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays'">
-                  <span *ngIf="isCompareMode && data['count_plays']?.value" class="kTrend"
-                        [kTooltip]="data['count_plays'].tooltip" [escape]="false">
-                    <i [class]="data['count_plays'].trend | appTrend"></i>
-                    <span>{{data['count_plays'].value}}&nbsp;{{data['count_plays'].units}}</span>
-                  </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.value && !isCompareMode">
+                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.valuee">
                   <div>
                     <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='unique_known_users'">
-                  <span *ngIf="isCompareMode && data['unique_known_users']?.value" class="kTrend"
-                        [kTooltip]="data['unique_known_users'].tooltip" [escape]="false">
-                    <i [class]="data['unique_known_users'].trend | appTrend"></i>
-                    <span>{{data['unique_known_users'].value}}&nbsp;{{data['unique_known_users'].units}}</span>
-                  </span>
                   <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value && !isCompareMode">
+                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value">
                   <div>
                     <app-bullet [value]="getPercent(data['unique_known_users'])"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
-                  <span *ngIf="isCompareMode && data['avg_view_drop_off']?.value" class="kTrend"
-                        [kTooltip]="data['avg_view_drop_off'].tooltip" [escape]="false">
-                    <i [class]="data['avg_view_drop_off'].trend | appTrend"></i>
-                    <span>{{data['avg_view_drop_off'].value}}&nbsp;{{data['avg_view_drop_off'].units}}</span>
-                  </span>
                   <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
+                </td>
+                <td>
+                  <span>
+                    <h5 class="mini-loader" *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
+                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [escape]="false">
+                      <i [class]="data[_selectedMetrics+'_trend']?.trendDirection | appTrend"></i>
+                      <span>{{data[_selectedMetrics+'_trend']?.trend}}&nbsp;{{data[_selectedMetrics+'_trend']?.units}}</span>
+                    </span>
+                  </span>
                 </td>
               </tr>
             </ng-template>
