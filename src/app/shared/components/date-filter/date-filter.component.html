@@ -35,9 +35,12 @@
         <p-checkbox [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" binary="true"></p-checkbox>
         <p-radioButton name="compare" value="lastYear" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparelastyear' | translate"></p-radioButton>
         <p-radioButton name="compare" value="specific" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
-        <p-calendar [showIcon]="true" icon="kIconcalendar" [class.kHidden]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareSatrtDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+        <p-calendar [showIcon]="true" icon="kIconcalendar" [class.kHidden]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
       </div>
-      <button pButton class="kButtonBranded" [label]="'app.common.apply' | translate" (click)="updateDataRanges();datesPopup.close()"></button>
+      <button pButton class="kButtonBranded"
+              [disabled]="_applyDisabled"
+              [label]="'app.common.apply' | translate"
+              (click)="updateDataRanges();datesPopup.close()"></button>
     </div>
   </ng-template>
 </kPopupWidget>

@@ -59,6 +59,9 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
 
   public getMapConfig(): EChartOption {
     return {
+      textStyle: {
+        fontFamily: 'Lato',
+      },
       grid: {
         top: 24, left: 24, bottom: 24, right: 24, containLabel: true
       },

@@ -200,8 +200,11 @@ p-table /deep/ .ui-table .ui-table-tbody > tr{
     }
   }
 }
-p-table /deep/ .ui-table .ui-table-thead > tr > th{
+p-table /deep/ .ui-table .ui-table-thead > tr > th {
   padding-left: 24px;
+  &:last-child {
+    padding-right: 24px;
+  }
 }
 p-table /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: inherit;
@@ -211,6 +214,26 @@ p-table /deep/ .ui-table .ui-table-tbody > tr > td:first-child {
 }
 p-table /deep/ .ui-table .ui-table-thead {
   border-top: 1px solid #d9d9d9;
+}
+p-table /deep/ {
+  tr {
+    height: 31px;
+  }
+
+  .kColumnHeader {
+    display: flex;
+    align-items: center;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    p-sorticon {
+      margin-top: -4px;
+    }
+  }
 }
 p-paginator /deep/ .ui-paginator.ui-widget-header.ui-unselectable-text {
   height: 34px;
@@ -226,6 +249,13 @@ kpopupwidget{
 }
 
 .kTrend {
+  cursor: default;
+
+  .icon-progress,
+  .icon-regression {
+    font-weight: bold;
+  }
+
   .icon-progress, .icon-progress + span, .icon-progress + span + span {
     color: $kPrimary !important;
   }
@@ -265,17 +295,30 @@ kpopupwidget{
 }
 
 .kGraphTooltip {
-  padding: 16px 46px 16px 16px;
+  padding: 16px;
 
   .kBullet {
     font-weight: bold;
-    font-size: 40px;
-    line-height: 15px;
-    vertical-align: middle;
+    font-size: 24px;
+    vertical-align: text-bottom;
   }
 
   .kValue {
     font-weight: bold;
     color: $kGrayscale1;
+  }
+}
+
+p-multiselect /deep/ {
+  .ui-multiselect-label {
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: .5em calc(2em + 12px) .25em 12px !important;
+  }
+
+  .ui-multiselect-item {
+    padding: .125em 13px !important;
   }
 }

@@ -32,18 +32,23 @@
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col">
-                  {{'app.bandwidth.publisher_table.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.bandwidth.publisher_table.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.bandwidth.publisher_table.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  </div>
                 </th>
-
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span *ngIf="isCompareMode && data[col]?.value !== undefined" class="kTrend">
+                  <span *ngIf="isCompareMode && data[col]?.value !== undefined"
+                        class="kTrend"
+                        [kTooltip]="data[col].tooltip" [escape]="false">
                     <i [class]="data[col].trend | appTrend"></i>
-                    <span [kTooltip]="data[col].tooltip" [escape]="false">{{data[col].value}}&nbsp;{{data[col].units}}</span>
+                    <span>{{data[col].value}}&nbsp;{{data[col].units}}</span>
                   </span>
                   <span *ngIf="!isCompareMode || data[col]?.value === undefined">{{data[col]}}</span>
                 </td>
