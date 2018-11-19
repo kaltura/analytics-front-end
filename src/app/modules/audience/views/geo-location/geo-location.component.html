@@ -118,8 +118,8 @@
                 <td>
                   <span>{{rowIndex+1}}</span>
                 </td>
-                <td *ngIf="!_drillDown.length">
-                  <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
+                <td class="kFlagColumn" *ngIf="!_drillDown.length">
+                  <img class="kFlag" src="{{'assets/flags/'+data['country']+'.png'}}"/>
                 </td>
                 <td class="kHighlight">
                   <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && _drillDown.length < 2">{{data['object_id']}}</a>
