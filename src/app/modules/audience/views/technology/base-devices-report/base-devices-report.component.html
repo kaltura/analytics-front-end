@@ -1,6 +1,11 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{_title | translate}}</span>
+    <span class="kTitle" *ngIf="!_drillDown">{{_title | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown">
+      <a (click)="_onDrillDown(null)">{{_title | translate}}</a>
+      <span class="separator">/</span>
+      <span>{{_drillDown}}</span>
+    </div>
     <p-multiSelect class="kDevicesFilter"
                    [disabled]="!_devicesSelectActive"
                    [options]="devicesList"
@@ -60,7 +65,9 @@
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
-                  <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend'">{{data[col]}}</span>
+                  <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend' && col !== 'browser_family' && col !== 'os_family'">
+                    {{data[col]}}
+                  </span>
                   <span *ngIf="col === 'plays_trend'">
                     <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
                     <span *ngIf="data[col]" class="kTrend" [kTooltip]="data[col].tooltip" [escape]="false">
@@ -71,6 +78,9 @@
                   <div *ngIf="col === 'plays_distribution'">
                     <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
                   </div>
+                  <a *ngIf="col === 'browser_family' || col === 'os_family'" (click)="_onDrillDown(data[col])">
+                    {{data[col]}}
+                  </a>
                 </td>
               </tr>
             </ng-template>
