@@ -105,14 +105,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (this._drillDown.length === 0) {
       this.updateMap();
     }
+    this._onSortChanged({data: this._tableData, field: tab.key, order: -1});
   }
 
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
       event.data.sort((data1, data2) => {
-        const sortByValue = event.field !== 'object_id'; // country name should be sorted alphabetically, all the rest by value
-        let value1 = sortByValue ? parseInt(data1[event.field].replace(new RegExp(',', 'g'), '')) : data1[event.field].replace(new RegExp(',', 'g'), '');
-        let value2 = sortByValue ? parseInt(data2[event.field].replace(new RegExp(',', 'g'), '')) : data2[event.field].replace(new RegExp(',', 'g'), '');
+        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
