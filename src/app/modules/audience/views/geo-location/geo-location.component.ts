@@ -304,7 +304,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let maxValue = 0;
     this._tableData.forEach(data => {
       mapConfig.series[0].data.push({
-        name: data.object_id,
+        name: this._dataConfigService.getCountryName(data.object_id),
         value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
