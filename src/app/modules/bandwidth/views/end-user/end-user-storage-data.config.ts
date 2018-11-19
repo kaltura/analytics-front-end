@@ -81,66 +81,35 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value)
           },
           'added_msecs': {
-            format: value => ReportHelper.time(value)
+            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
           },
           'deleted_msecs': {
-            format: value => ReportHelper.time(value)
+            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
           },
           'total_msecs': {
-            format: value => ReportHelper.time(value)
+            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
           },
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'added_entries',
+        preSelected: 'total_storage_mb',
         fields: {
-          'added_entries': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.bandwidth.added_entries`),
-            tooltip: this._translate.instant(`app.bandwidth.added_entries_tt`),
-          },
-          'deleted_entries': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.bandwidth.deleted_entries`),
-            tooltip: this._translate.instant(`app.bandwidth.deleted_entries_tt`),
-          },
-          'total_entries': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.bandwidth.total_entries`),
-            tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
-          },
-          'added_storage_mb': {
-            format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
-            title: this._translate.instant(`app.bandwidth.added_storage_mb`),
-            tooltip: this._translate.instant(`app.bandwidth.added_storage_mb_tt`),
-            units: value => fileSize(value).units,
-          },
-          'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
-            title: this._translate.instant(`app.bandwidth.deleted_storage_mb`),
-            tooltip: this._translate.instant(`app.bandwidth.deleted_storage_mb_tt`),
-            units: value => fileSize(value).units,
-          },
           'total_storage_mb': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
             units: value => fileSize(value).units,
           },
-          'added_msecs': {
-            format: value => ReportHelper.time(value),
-            title: this._translate.instant(`app.bandwidth.added_msecs`),
-            tooltip: this._translate.instant(`app.bandwidth.added_msecs_tt`),
-          },
-          'deleted_msecs': {
-            format: value => ReportHelper.time(value),
-            title: this._translate.instant(`app.bandwidth.deleted_msecs`),
-            tooltip: this._translate.instant(`app.bandwidth.deleted_msecs_tt`),
+          'total_entries': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.bandwidth.total_entries`),
+            tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
           },
           'total_msecs': {
-            format: value => ReportHelper.time(value),
+            format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
             tooltip: this._translate.instant(`app.bandwidth.total_msecs_tt`),
+            units: value => 'Min',
           },
         }
       }

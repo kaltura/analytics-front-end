@@ -85,6 +85,7 @@
     .kToast{
       display: flex;
       flex-direction: column;
+      padding-top: .5em;
       .kHeader{
         color: $kGrayscale1;
         font-size: 15px;

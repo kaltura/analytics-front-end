@@ -77,6 +77,8 @@
           }
           /deep/ .ui-radiobutton{
             float: right;
+            margin-right: 16px;
+
             .ui-radiobutton-box{
               display: none;
               &.ui-state-active{

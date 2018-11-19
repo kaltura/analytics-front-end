@@ -30,6 +30,7 @@
       "exportCsv": "Export",
       "na": "N/A",
       "noMsg": "No Message",
+      "noResults": "No results",
       "exporting": "Preparing Report",
       "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
@@ -157,6 +158,7 @@
         "object_id": "Name",
         "country": "",
         "index": "#",
+        "trend": "Trend",
         "distribution": "Plays Distribution",
         "distribution2": "Unique Viewers Distribution",
         "countriesSelected": "{0} Countries Selected",
@@ -203,7 +205,7 @@
       "perc25": "25% Play-through",
       "perc50": "50% Play-through",
       "perc75": "75% Play-through",
-      "perc100": "100% Play - through"
+      "perc100": "100% Play-through"
     }
   }
 }
