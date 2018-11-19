@@ -417,13 +417,6 @@ export class DevicesOverviewComponent implements OnDestroy {
     const series = data.map(({ value, key }) => {
       const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
       const color = isActive ? '#00A784' : '#CCCCCC';
-      if (typeof value === 'number') {
-        return {
-          value,
-          itemStyle: { color }
-        };
-      }
-      
       return {
         value,
         itemStyle: { color }
