@@ -43,6 +43,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
       this.loadReport();
+      this.resetDeviceFilters(true, false);
     }
   }
   
@@ -57,8 +58,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _fractions = 2;
   private _columns: string[] = [];
-  // private _echartsIntance: any; // echart instance
-  
+
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -423,8 +423,11 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._mergeChartData = { series: [{ data: series }] };
   }
   
-  public _onSelectionChange(): void {
-    this._updateGraphStyle();
+  public _onSelectionChange(updateGraph = true): void {
+    if (updateGraph) {
+      this._updateGraphStyle();
+    }
+
     this.deviceFilterChange.emit(this._selectedValues);
   }
   
@@ -433,12 +436,15 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._updateGraphStyle();
   }
   
-  public resetDeviceFilters(emit = false): void {
+  public resetDeviceFilters(emit = false, updateGraph = true): void {
     this._selectedValues = [];
-    this._updateGraphStyle();
+    
+    if (updateGraph) {
+      this._updateGraphStyle();
+    }
     
     if (emit) {
-      this._onSelectionChange();
+      this._onSelectionChange(updateGraph);
     }
   }
 }
