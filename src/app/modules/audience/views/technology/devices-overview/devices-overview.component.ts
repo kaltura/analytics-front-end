@@ -57,13 +57,14 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _fractions = 2;
   private _columns: string[] = [];
-  private _echartsIntance: any; // echart instance
+  // private _echartsIntance: any; // echart instance
   
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
-  public _barChartData: { [key: string]: any } = {};
+  public _barChartData: { [key: string]: any; } = {};
   public _rawChartData: { [key: string]: { value: number, key: string; }[]; } = {};
+  public _mergeChartData: { [key: string]: any; } = {};
   public _summaryData: Summary = {};
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -409,10 +410,6 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private _updateGraphStyle(): void {
-    if (!this._echartsIntance) {
-      return;
-    }
-
     const data = this._rawChartData[this._selectedMetrics];
     const series = data.map(({ value, key }) => {
       const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
@@ -423,11 +420,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       };
     });
   
-    setTimeout(() => this._echartsIntance.setOption({ series: [{ data: series }] }), 0);
-  }
-  
-  public _onChartInit(ec: any): void {
-    this._echartsIntance = ec;
+    this._mergeChartData = { series: [{ data: series }] };
   }
   
   public _onSelectionChange(): void {

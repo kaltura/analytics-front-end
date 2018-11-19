@@ -41,7 +41,7 @@
           <div class="kChart">
             <div echarts class="kChart"
                  [options]="_barChartData[_selectedMetrics]"
-                 (chartInit)="_onChartInit($event)"></div>
+                 [merge]="_mergeChartData"></div>
           </div>
         </div>
       </div>
