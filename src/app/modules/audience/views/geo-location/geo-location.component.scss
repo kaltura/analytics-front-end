@@ -1,6 +1,10 @@
-$kmc-flags-path: './styles/flags/';
-@import "./styles/flags/flags.scss";
-
+.kFlag {
+  width: 24px;
+  height: 24px;
+}
+.kFlagColumn{
+  padding-left: 18px !important;
+}
 .kCountryFilter{
   margin-right: 24px;
 }

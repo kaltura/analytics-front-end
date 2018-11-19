@@ -26,9 +26,11 @@ export class AppMenuComponent implements OnDestroy {
 
   private setSelectedRoute(path: string): void {
     const urlTree = this._router.parseUrl(path);
-    const [activeRoute, activeSubRoute] = urlTree.root.children['primary'].segments.map(({ path }) => path);
-    this.activeRoute = activeRoute || '';
-    this.activeSubRoute = activeSubRoute || '';
+    if (urlTree.root.children['primary']) {
+      const [activeRoute, activeSubRoute] = urlTree.root.children['primary'].segments.map(({ path }) => path);
+      this.activeRoute = activeRoute || '';
+      this.activeSubRoute = activeSubRoute || '';
+    }
   }
   public navigateToView(route: string): void {
     // TODO add smart navigation according to permissions
