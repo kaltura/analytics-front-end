@@ -8,9 +8,9 @@ export class AuthService {
     }
 
     public logout(): void {
-      if ( analyticsConfig.callbacks && analyticsConfig.callbacks.logout ) {
-        analyticsConfig.callbacks.logout();
-      }
+      window.parent.postMessage({
+        'messageType': 'logout'
+      }, "*");
     }
 
 }

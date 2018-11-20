@@ -136,9 +136,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
-                if (analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout) {
-                  analyticsConfig.callbacks.updateLayout();
-                }
+                window.parent.postMessage({
+                  'messageType': 'updateLayout'
+                }, "*");
               }
               this._querySubscription = null;
             },

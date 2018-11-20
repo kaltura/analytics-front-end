@@ -28,7 +28,9 @@ export class LiveReportsComponent implements OnInit, OnDestroy {
       },
       'functions': {
         expired: () => {
-          analyticsConfig.callbacks.logout();
+          window.parent.postMessage({
+            'messageType': 'logout'
+          }, "*");
         }
       }
     };

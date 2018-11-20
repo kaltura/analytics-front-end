@@ -120,9 +120,9 @@ export class PublisherStorageComponent implements OnInit {
 
   public toggleTable(): void {
     this._showTable = !this._showTable;
-    if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
-      analyticsConfig.callbacks.updateLayout();
-    }
+    window.parent.postMessage({
+      'messageType': 'updateLayout'
+    }, "*");
   }
 
   private loadReport(sections = this._dataConfig): void {
