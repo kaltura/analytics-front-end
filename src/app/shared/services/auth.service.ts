@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Injectable()
 export class AuthService {
 
-    constructor() {
+    constructor(private _frameEventManager: FrameEventManagerService) {
     }
 
     public logout(): void {
-      window.parent.postMessage({
-        'messageType': 'logout'
-      }, "*");
+      this._frameEventManager.publish(FrameEvents.Logout);
     }
 
 }

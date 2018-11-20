@@ -26,6 +26,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -59,7 +60,9 @@ export class ReportService implements OnDestroy {
   private _querySubscription: ISubscription;
   private _exportSubscription: ISubscription;
   
-  constructor(private _translate: TranslateService, private _kalturaClient: KalturaClient) {
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
+              private _kalturaClient: KalturaClient) {
   }
   
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
@@ -136,9 +139,7 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
-                window.parent.postMessage({
-                  'messageType': 'updateLayout'
-                }, "*");
+                this._frameEventManager.publish(FrameEvents.UpdateLayout);
               }
               this._querySubscription = null;
             },

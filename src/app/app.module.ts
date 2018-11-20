@@ -15,6 +15,7 @@ import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { SharedModule } from './shared/shared.module';
+import { FrameEventManagerModule } from 'shared/modules/frame-event-manager/frame-event-manager.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
@@ -34,6 +35,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     BrowserAnimationsModule,
     KalturaClientModule.forRoot(),
+    FrameEventManagerModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
