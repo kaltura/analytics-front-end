@@ -8,7 +8,7 @@ export enum FrameEvents {
   Init = 'init',
   AnalyticsInit = 'analytics-init',
   AnalyticsInitComplete = 'analytics-init-complete',
-  Navigate = 'Navigate',
+  Navigate = 'navigate',
 }
 
 @Injectable()
