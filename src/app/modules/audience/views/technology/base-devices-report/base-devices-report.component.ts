@@ -150,6 +150,9 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
+          this._tableData = [];
+          this._totalPlaysCount = 0;
+
           // IMPORTANT to handle totals first, distribution rely on it
           if (report.totals) {
             this._handleTotals(report.totals); // handle totals
