@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportConfig } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportTotal, KalturaUser, KalturaReportGraph, KalturaReportInterval, KalturaReportType, KalturaReportTable, KalturaReportInputFilter } from 'kaltura-ngx-client';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { EndUserStorageDataConfig } from './end-user-storage-data.config';
@@ -12,6 +11,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -60,7 +60,8 @@ export class EndUserStorageComponent implements OnInit {
     return this.compareFilter !== null;
   }
 
-  constructor(private _translate: TranslateService,
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
@@ -137,9 +138,7 @@ export class EndUserStorageComponent implements OnInit {
 
   public toggleTable(): void {
     this._showTable = !this._showTable;
-    window.parent.postMessage({
-      'messageType': 'updateLayout'
-    }, "*");
+    this._frameEventManager.publish(FrameEvents.UpdateLayout);
   }
 
   public _onPaginationChanged(event): void {

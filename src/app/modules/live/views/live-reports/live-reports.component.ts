@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-live-reports',
@@ -10,7 +11,7 @@ export class LiveReportsComponent implements OnInit, OnDestroy {
 
   public _url = null;
 
-  constructor() { }
+  constructor(private _frameEventManager: FrameEventManagerService) { }
 
   ngOnInit() {
     const cdnUrl = analyticsConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
@@ -28,9 +29,7 @@ export class LiveReportsComponent implements OnInit, OnDestroy {
       },
       'functions': {
         expired: () => {
-          window.parent.postMessage({
-            'messageType': 'logout'
-          }, "*");
+          this._frameEventManager.publish(FrameEvents.Logout);
         }
       }
     };

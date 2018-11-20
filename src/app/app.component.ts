@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -6,6 +6,8 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { BrowserService } from './shared/services/browser.service';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,7 @@ import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
   styleUrls: ['./app.component.css'],
   providers: [KalturaLogger.createLogger('AppComponent')]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
@@ -28,25 +30,22 @@ export class AppComponent implements OnInit {
 
   private hosted = false;
 
-  @HostListener('window:message', ['$event'])
-  onMessage(e) {
-    if (e.data && e.data.action) {
-      if (e.data.action === 'navigate') {
-        this._router.navigateByUrl(this.mapRoutes(e.data.url));
-      }
-      if (e.data.action === 'init') {
-        this._initApp(e.data.data);
-      }
-    }
-  }
-
-  constructor(private _translate: TranslateService,
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
               private _router: Router,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
     this._initApp();
+  
+    this._frameEventManager.once(FrameEvents.Init)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(data => this._initApp(data));
+    
+    this._frameEventManager.listen(FrameEvents.Navigate)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(url => this._router.navigateByUrl(this.mapRoutes(url)));
   }
 
   ngOnInit() {
@@ -67,10 +66,11 @@ export class AppComponent implements OnInit {
         dialog.center();
       }, 0);
     });
-
-    window.parent.postMessage({
-      'messageType': 'analytics-init'
-    }, "*");
+  
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit);
+  }
+  
+  ngOnDestroy() {
 
   }
 
@@ -110,9 +110,7 @@ export class AppComponent implements OnInit {
       () => {
         this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
         if (this.hosted) {
-          window.parent.postMessage({
-            'messageType': 'analytics-init-complete'
-          }, "*");
+          this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
         }
       },
       (error) => {
