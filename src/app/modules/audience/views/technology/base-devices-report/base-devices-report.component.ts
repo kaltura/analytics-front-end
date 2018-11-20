@@ -229,8 +229,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       reportType: this._reportType,
       filter: filter,
       pager: this._pager,
-      order: this._order,
-      objectIds: devicesFilterToServerValue(this._devices)
+      order: this._order
     };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
