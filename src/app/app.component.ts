@@ -45,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this))
-      .subscribe(url => this._router.navigateByUrl(this.mapRoutes(url)));
+      .subscribe(({ url }) => this._router.navigateByUrl(this.mapRoutes(url)));
   }
 
   ngOnInit() {
