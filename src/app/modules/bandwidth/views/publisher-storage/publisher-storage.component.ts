@@ -121,7 +121,9 @@ export class PublisherStorageComponent implements OnInit {
 
   public toggleTable(): void {
     this._showTable = !this._showTable;
-    this._frameEventManager.publish(FrameEvents.UpdateLayout);
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 0);
   }
 
   private loadReport(sections = this._dataConfig): void {

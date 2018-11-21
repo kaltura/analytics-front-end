@@ -138,7 +138,9 @@ export class EndUserStorageComponent implements OnInit {
 
   public toggleTable(): void {
     this._showTable = !this._showTable;
-    this._frameEventManager.publish(FrameEvents.UpdateLayout);
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 0);
   }
 
   public _onPaginationChanged(event): void {

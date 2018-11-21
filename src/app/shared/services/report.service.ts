@@ -139,7 +139,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
-                this._frameEventManager.publish(FrameEvents.UpdateLayout);
+                setTimeout(() => {
+                  this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+                }, 0);
               }
               this._querySubscription = null;
             },
