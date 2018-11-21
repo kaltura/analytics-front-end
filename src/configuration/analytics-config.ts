@@ -11,6 +11,7 @@ export interface AnalyticsConfig {
   pid?: string;
   locale?: string;
   showNavBar?: boolean;
+  isHosted?: boolean;
   liveAnalytics?: {
     uri?: string;
     uiConfId?: string;
