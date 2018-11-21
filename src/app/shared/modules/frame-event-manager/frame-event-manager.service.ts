@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, first, last, map, tap } from 'rxjs/operators';
 
 export enum FrameEvents {
   UpdateLayout = 'updateLayout',
@@ -9,11 +9,12 @@ export enum FrameEvents {
   AnalyticsInit = 'analytics-init',
   AnalyticsInitComplete = 'analytics-init-complete',
   Navigate = 'navigate',
+  UpdateFilters = 'updateFilters'
 }
 
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
-  private _parentEvents = new Subject<{ event: FrameEvents, payload: any }>();
+  private _parentEvents = new ReplaySubject<{ event: FrameEvents, payload: any }>();
   private _targetOrigin = '*';
   private _ready = false;
   
@@ -45,6 +46,7 @@ export class FrameEventManagerService implements OnDestroy {
     const chain = [
       filter(({ event }) => event === eventName),
       map(({ payload }) => payload),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
     ];
     
     if (once) {

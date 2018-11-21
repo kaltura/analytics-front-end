@@ -92,6 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.cdnServers = config.cdnServers;
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
+    analyticsConfig.isHosted = this.hosted;
 
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
