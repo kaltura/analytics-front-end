@@ -9,10 +9,12 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnDestroy {
-
-  public showNavBar = analyticsConfig.showNavBar;
   public activeRoute = '';
   public activeSubRoute = '';
+  
+  public get showNavBar(): boolean {
+    return analyticsConfig.showNavBar;
+  }
 
   constructor(private _router: Router) {
     _router.events

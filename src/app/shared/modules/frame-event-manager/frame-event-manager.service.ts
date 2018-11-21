@@ -13,7 +13,7 @@ export enum FrameEvents {
 
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
-  private _parentEvents = new Subject<{ event: FrameEvents, data: any }>();
+  private _parentEvents = new Subject<{ event: FrameEvents, payload: any }>();
   private _targetOrigin = '*';
   private _ready = false;
   
@@ -34,7 +34,7 @@ export class FrameEventManagerService implements OnDestroy {
     } catch (ex) {
       return;
     }
-    this._parentEvents.next({ event: postMessageData.messageType, data: postMessageData.data });
+    this._parentEvents.next({ event: postMessageData.messageType, payload: postMessageData.payload });
   }
   
   private _subscribeToParentEvents(): void {
@@ -44,7 +44,7 @@ export class FrameEventManagerService implements OnDestroy {
   private _listenEvent(eventName: FrameEvents, once = false): Observable<any> {
     const chain = [
       filter(({ event }) => event === eventName),
-      map(({ data }) => data),
+      map(({ payload }) => payload),
     ];
     
     if (once) {
