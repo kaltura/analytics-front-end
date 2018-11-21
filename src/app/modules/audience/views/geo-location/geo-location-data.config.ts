@@ -101,7 +101,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           name: '',
           type: 'map',
           mapType: 'world',
-          roam: 'move',
+          roam: false,
           zoom: 1.2,
           selectedMode: 'single',
           animationDurationUpdate: 200,
