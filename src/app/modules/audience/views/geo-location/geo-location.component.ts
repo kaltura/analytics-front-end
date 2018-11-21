@@ -160,6 +160,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._mapZoom -= 1;
       this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
     }
+    // update drag and center according to zoom
+    if (this._mapZoom < 2) {
+      this.echartsIntance.setOption({series: [{roam: false}]}, false); // prevent move when zoomed out
+      this.echartsIntance.setOption({series: [{center: [0, 10]}]}, false); // center map upon zoom out
+    } else {
+      this.echartsIntance.setOption({series: [{roam: 'move'}]}, false); // allow move when zoomed in
+    }
   }
 
   public _onCountrySelectChange(event): void {
