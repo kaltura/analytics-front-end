@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
@@ -8,9 +9,11 @@ import { SelectItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportHelper } from 'shared/services';
 import { ImpressionsDataConfig } from './impressions-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
+import * as moment from 'moment';
 
 export type funnelData = {
   impressions: number;
@@ -36,9 +39,13 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   public _playthroughs: SelectItem[] = [{label: '25%', value: 25}, {label: '50%', value: 50}, {label: '75%', value: 75}, {label: '100%', value: 100}];
   public _selectedPlaythrough = 25;
   public _chartData: EChartOption = {};
+  public _compareChartData: EChartOption = {};
   public _chartLoaded = false;
+  public _currentDates: string;
+  public _compareDates: string;
 
   private echartsIntance: any;
+  private compareEchartsIntance: any;
   private reportType: KalturaReportType = KalturaReportType.contentDropoff;
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   private order = 'count_plays';
@@ -55,6 +62,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     return this.compareFilter !== null;
   }
   public _funnelData: funnelData;
+  private compareFunnelData: funnelData;
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -64,7 +72,14 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
               private _dataConfigService: ImpressionsDataConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
-    this._chartData = _dataConfigService.getChartConfig();
+
+    this._chartData = _dataConfigService.getChartConfig((params) => {
+      return this.getChartTooltip(params);
+    });
+
+    this._compareChartData = _dataConfigService.getChartConfig((params) => {
+      return this.getCompareChartTooltip(params);
+    });
   }
 
   ngOnInit() {
@@ -75,6 +90,10 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.echartsIntance = ec;
   }
 
+  public onCompareChartInit(ec) {
+    this.compareEchartsIntance = ec;
+  }
+
   public updateFunnel(): void {
     this.echartsIntance.setOption({series: [{data: [
           {value: 100, name: this._translate.instant('app.engagement.playerImpressions')},
@@ -82,11 +101,23 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
           {value: (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)}
         ]}]}, false);
   }
+
+  public onPlaythroughChange(): void {
+    this.updateFunnel();
+    if (this.isCompareMode) {
+      this.updateCompareFunnel();
+    }
+  }
   
   protected _loadReport(): void {
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
+    this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM Do YY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM Do YY');
+    this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM Do YY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM Do YY');
+    if (this._dateFilter.compare.active){
+
+    }
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
@@ -101,9 +132,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       .subscribe(({ report, compare }) => {
           if (compare) {
             this.handleCompare(report, compare);
+            this._chartLoaded = true;
           } else {
             if (report.totals) {
               this.handleTotals(report.totals); // handle totals
+              this._chartLoaded = true;
             }
           }
           this.prepareCsvExportHeaders();
@@ -144,10 +177,38 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private handleCompare(current: Report, compare: Report): void {
-    debugger;
+    this.handleTotals(current.totals); // set original funnel data
+    // resize funnels to fit window
+    this.echartsIntance.setOption({series: [{width: '100%'}]}, false);
+    this.compareEchartsIntance.setOption({series: [{width: '100%'}]}, false);
+    this.echartsIntance.setOption({series: [{left: '0%'}]}, false);
+    this.compareEchartsIntance.setOption({series: [{left: '0%'}]}, false);
+
+    const data = compare.totals.data.split(',');
+    this.compareFunnelData = {
+      impressions: data[6].length ? parseInt(data[6]) : 0,
+      plays: data[0].length ? parseInt(data[0]) : 0,
+      playThrough: {
+        perc25: data[1].length ? parseInt(data[1]) : 0,
+        perc50: data[2].length ? parseInt(data[2]) : 0,
+        perc75: data[3].length ? parseInt(data[3]) : 0,
+        perc100: data[4].length ? parseInt(data[4]) : 0
+      }
+    };
+    this.updateCompareFunnel();
+  }
+
+  private updateCompareFunnel(): void {
+    this.compareEchartsIntance.setOption({series: [{data: [
+          {value: 100, name: this._translate.instant('app.engagement.playerImpressions')},
+          {value: (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.plays')},
+          {value: (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)}
+        ]}]}, false);
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
+    this.echartsIntance.setOption({series: [{width: '60%'}]}, false);
+    this.echartsIntance.setOption({series: [{left: '35%'}]}, false);
     const data = totals.data.split(',');
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
@@ -160,13 +221,44 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       }
     };
     this.updateFunnel();
-    this._chartLoaded = true;
   }
 
   private prepareCsvExportHeaders(): void {
     // TODO: TBD according to export refactor
   }
-  
+
+  private getChartTooltip(params): string {
+    if (this.isCompareMode) {
+      let value = this._funnelData.impressions;
+      if (params.dataIndex === 1) {
+        value = this._funnelData.plays;
+      } else if (params.dataIndex === 2) {
+        value = this._funnelData.playThrough['perc' + this._selectedPlaythrough];
+      }
+
+      let compareValue = this.compareFunnelData.impressions;
+      if (params.dataIndex === 1) {
+        compareValue = this.compareFunnelData.plays;
+      } else if (params.dataIndex === 2) {
+        compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
+      }
+      // const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
+    } else {
+      return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
+    }
+  }
+
+  private getCompareChartTooltip(params): string {
+    let value = this.compareFunnelData.impressions;
+    if (params.dataIndex === 1) {
+      value = this.compareFunnelData.plays;
+    } else if (params.dataIndex === 2) {
+      value = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
+    }
+    return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)}</b></span>`;
+  }
+
   protected _updateFilter(): void {
     this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this.filter.fromDay = this._dateFilter.startDay;

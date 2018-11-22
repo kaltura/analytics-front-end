@@ -1,11 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { DateFilterService } from './date-filter.service';
+import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
-import { DateRangeType, DateRanges, DateChangeEvent } from './date-filter.service';
 import * as moment from 'moment';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { environment } from '../../../../environments/environment';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-date-filter',
@@ -37,7 +40,7 @@ export class DateFilterComponent implements OnInit {
   public _dateRangeLabel = '';
   public specificDateRange: Date[] = [new Date(), new Date()];
   public compare = false;
-  public specificCompareSatrtDate: Date = new Date();
+  public specificCompareStartDate: Date = new Date();
   public compareMaxDate: Date;
   public comparing = false;
 
@@ -46,17 +49,105 @@ export class DateFilterComponent implements OnInit {
 
   private startDate: Date;
   private endDate: Date;
+  
+  public get _applyDisabled(): boolean {
+    return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2;
+  }
 
-  constructor(private _translate: TranslateService, private _dateFilterService: DateFilterService) {
+  constructor(private _translate: TranslateService,
+              private _frameEventManager: FrameEventManagerService,
+              private _route: ActivatedRoute,
+              private _router: Router,
+              private _dateFilterService: DateFilterService) {
   }
 
   ngOnInit() {
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager
+        .once(FrameEvents.UpdateFilters)
+        .subscribe(({ queryParams }) => {
+          this._init(queryParams);
+        });
+    } else {
+      const params = this._route.snapshot.queryParams;
+      this._init(params);
+    }
+    
+    
+  }
+  
+  private _init(queryParams: Params): void {
+    this._initCurrentFilterFromEventParams(queryParams);
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'last');
     this.currDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this.dateRange;
     setTimeout( () => {
       this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
+  }
+  
+  private _initCurrentFilterFromEventParams(params: Params): void {
+    if (!params) {
+      return;
+    }
+  
+    const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
+    if (dateBy) {
+      this.selectedView = 'preset';
+      this.dateRange = dateBy;
+    } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
+      const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
+      const dateTo = moment(params[DateFilterQueryParams.dateTo]);
+  
+      if (dateFrom.isValid() && dateTo.isValid()) {
+        this.selectedView = 'specific';
+        this.specificDateRange = [dateFrom.toDate(), dateTo.toDate()];
+      }
+    }
+  
+    const compareTo = params[DateFilterQueryParams.compareTo];
+    if (compareTo) {
+      this.compare = true;
+      if (compareTo === 'lastYear') {
+        this.selectedComparePeriod = 'lastYear';
+      } else {
+        const compareToDateObject = moment(compareTo);
+        if (compareToDateObject.isValid()) {
+          const compareToDate = compareToDateObject.toDate();
+          const maxCompareDate = this._dateFilterService.getMaxCompare(this.dateRange);
+          this.selectedComparePeriod = 'specific';
+          this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
+        } else {
+          this.compare = false;
+        }
+      }
+    }
+  }
+  
+  private _updateRouteParams(): void {
+    let queryParams = null;
+    if (this.selectedView === 'preset') {
+      queryParams = { dateBy: this.selectedDateRange };
+    } else if (this.selectedView === 'specific') {
+      queryParams = {
+        dateFrom: DateFilterUtils.getDay(this.startDate),
+        dateTo: DateFilterUtils.getDay(this.endDate),
+      };
+    }
+    
+    if (queryParams && this.compare) {
+      if (this.selectedComparePeriod === 'lastYear') {
+        queryParams.compareTo = 'lastYear';
+      } else if (this.selectedComparePeriod === 'specific') {
+        queryParams.compareTo = DateFilterUtils.getDay(this.compareStartDate);
+      }
+    }
+  
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.Navigate, queryParams);
+    } else {
+      this._router.navigate(['.'], { relativeTo: this._route, queryParams });
+    }
   }
 
   public updateDataRanges(): void {
@@ -76,7 +167,7 @@ export class DateFilterComponent implements OnInit {
       this.compareStartDate = moment(this.startDate).subtract(12, 'months').toDate();
       this.compareEndDate = moment(this.endDate).subtract(12, 'months').toDate();
     } else {
-      this.compareStartDate = this.specificCompareSatrtDate;
+      this.compareStartDate = this.specificCompareStartDate;
       if (this.compareStartDate > this.compareMaxDate) {
         this.compareStartDate = this.compareMaxDate;
       }
@@ -123,6 +214,7 @@ export class DateFilterComponent implements OnInit {
         endDay: DateFilterUtils.getDay(this.compareEndDate)
       }
     });
+    this._updateRouteParams();
   }
 
 }

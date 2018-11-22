@@ -37,11 +37,18 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
     };
   }
 
-  public getChartConfig(): EChartOption {
+  public getChartConfig(tooltipFormatter): EChartOption {
     return {
       tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c}%'
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999'
+        },
+        formatter: tooltipFormatter,
+        trigger: 'item'
       },
       color: ['#00745C', '#008569', '#00A784'],
       calculable: true,

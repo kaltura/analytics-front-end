@@ -28,11 +28,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     if (value.length) {
       this._devices = value;
       this._selectedDevices = value;
-      this._filter.devicesIn = devicesFilterToServerValue(this._devices);
+      this._filter.deviceIn = devicesFilterToServerValue(this._devices);
     } else {
       this._devices = null;
       this._selectedDevices = [];
-      delete this._filter.devicesIn;
+      delete this._filter.deviceIn;
     }
     this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
     this._pager.pageIndex = 1;
@@ -62,6 +62,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _firstTimeLoading = true;
   public _devicesSelectActive = false;
   public _tags: any[] = [];
   public _selectedDevices: string[] = [];
@@ -151,6 +152,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           }
           
           this._isBusy = false;
+          this._firstTimeLoading = false;
           
           this._loadTrendData();
         },
