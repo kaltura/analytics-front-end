@@ -15,7 +15,7 @@ export enum FrameEvents {
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
   private _parentEvents = new ReplaySubject<{ event: FrameEvents, payload: any }>();
-  private _targetOrigin = '*';
+  private _targetOrigin = window.location.origin;
   private _ready = false;
   
   constructor() {
