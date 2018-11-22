@@ -1,0 +1,37 @@
+<div class="kTableContainer">
+  <p-table sortField="bandwidth_consumption"
+           [value]="tableData"
+           [customSort]="true"
+           [sortOrder]="-1"
+           (sortFunction)="_onSortChanged($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of _columns" [pSortableColumn]="col">
+          <div class="kColumnHeader">
+                    <span [kTooltip]="'app.bandwidth.publisher_table.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.bandwidth.publisher_table.' + col | translate}}
+                    </span>
+            <p-sortIcon [field]="col"></p-sortIcon>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr>
+        <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
+          <span>{{data[col]}}</span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <div class="emptymessage">
+        <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+        <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+      </div>
+    </ng-template>
+  </p-table>
+  <p-paginator [rows]="_pager.pageSize"
+               [first]="(_pager.pageIndex -1) * _pager.pageSize"
+               [totalRecords]="_totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</div>

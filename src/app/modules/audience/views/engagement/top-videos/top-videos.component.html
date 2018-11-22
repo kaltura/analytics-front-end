@@ -2,5 +2,9 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
   </div>
+  <div class="kReportContent">
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+      <app-engagement-top-videos-table></app-engagement-top-videos-table>
+    </k-area-blocker>
+  </div>
 </div>
-

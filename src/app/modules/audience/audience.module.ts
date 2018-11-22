@@ -30,6 +30,7 @@ import { DevicesOverviewComponent } from './views/technology/devices-overview/de
 import { CheckboxModule } from 'primeng/primeng';
 import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
+import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 
 @NgModule({
   imports: [
@@ -66,6 +67,7 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
     DevicesOverviewComponent,
     TopBrowsersComponent,
     TopOsComponent,
+    TopVideosTableComponent,
   ],
   exports: [],
   providers: []
