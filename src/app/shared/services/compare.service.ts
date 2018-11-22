@@ -257,6 +257,7 @@ export class CompareService implements OnDestroy {
         },
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
+          icon: 'circle',
           left: 'left',
           bottom: 0,
           padding: [16, 0, 0, 80]
