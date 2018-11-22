@@ -9,10 +9,12 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnDestroy {
-
-  public showNavBar = analyticsConfig.showNavBar;
   public activeRoute = '';
   public activeSubRoute = '';
+  
+  public get showNavBar(): boolean {
+    return analyticsConfig.showNavBar;
+  }
 
   constructor(private _router: Router) {
     _router.events
@@ -25,13 +27,13 @@ export class AppMenuComponent implements OnDestroy {
   }
 
   private setSelectedRoute(path: string): void {
-    const paths = path.split('/');
-    this.activeRoute = paths[1];
-    if (paths.length > 2) {
-      this.activeSubRoute = paths[2];
+    const urlTree = this._router.parseUrl(path);
+    if (urlTree.root.children['primary']) {
+      const [activeRoute, activeSubRoute] = urlTree.root.children['primary'].segments.map(({ path }) => path);
+      this.activeRoute = activeRoute || '';
+      this.activeSubRoute = activeSubRoute || '';
     }
   }
-
   public navigateToView(route: string): void {
     // TODO add smart navigation according to permissions
     this._router.navigate([route]);

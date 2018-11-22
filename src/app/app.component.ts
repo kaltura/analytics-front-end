@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -6,6 +6,8 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { BrowserService } from './shared/services/browser.service';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +15,12 @@ import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
   styleUrls: ['./app.component.css'],
   providers: [KalturaLogger.createLogger('AppComponent')]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
 
+  public _windowEventListener = null;
   public _confirmDialogAlignLeft = false;
   public _confirmationLabels = {
     yes: 'Yes',
@@ -27,22 +30,22 @@ export class AppComponent implements OnInit {
 
   private hosted = false;
 
-  @HostListener('window:message', ['$event'])
-  onMessage(e) {
-    if (e.data && e.data.action) {
-      if (e.data.action === 'navigate') {
-        this._router.navigateByUrl(this.mapRoutes(e.data.url));
-      }
-    }
-  }
-
-  constructor(private _translate: TranslateService,
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
               private _router: Router,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
     this._initApp();
+  
+    this._frameEventManager.once(FrameEvents.Init)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(config => this._initApp(config));
+    
+    this._frameEventManager.listen(FrameEvents.Navigate)
+      .pipe(cancelOnDestroy(this))
+      .subscribe(({ url }) => this._router.navigateByUrl(this.mapRoutes(url)));
   }
 
   ngOnInit() {
@@ -61,62 +64,64 @@ export class AppComponent implements OnInit {
       setTimeout(() => {
         const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
         dialog.center();
-      },0);
+      }, 0);
     });
+  
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit);
+  }
+  
+  ngOnDestroy() {
+
   }
 
-  private _initApp(): void {
-    this.hosted = window.parent && window.location.href !== window.parent.location.href;
-    const config = window['analyticsConfig'] || parent['analyticsConfig'] || null;
-    if (config) {
-
-      // populate analyticsConfig with configuration send from hosting app
-      analyticsConfig.ks = config.ks;
-      analyticsConfig.pid = config.pid;
-      analyticsConfig.locale = config.locale;
-      analyticsConfig.kalturaServer = config.kalturaServer;
-      analyticsConfig.cdnServers = config.cdnServers;
-      analyticsConfig.callbacks = config.callbacks;
-      analyticsConfig.liveAnalytics = config.liveAnalytics;
-      analyticsConfig.showNavBar = !this.hosted;
-
-      // set ks in ngx-client
-      this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
-      this._kalturaServerClient.setOptions({
-        endpointUrl: getKalturaServerUri(),
-        clientTag: 'analytics'
-      });
-      this._kalturaServerClient.setDefaultRequestOptions({
-        ks: analyticsConfig.ks
-      });
-
-      // load localization
-      this._logger.info('Loading localization...');
-      this._translate.setDefaultLang(analyticsConfig.locale);
-      this._translate.use(analyticsConfig.locale).subscribe(
-        () => {
-          this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
-          this._onInitSuccess();
-        },
-        (error) => {
-          this._initAppError(error.message);
-        }
-      );
-    } else {
-      this._initAppError('Error getting configuration from hosting app');
+  private _initApp(configuration = null): void {
+    let config  = null;
+    if (!configuration && !window['analyticsConfig']) {
+      return;
     }
+    if (!configuration && window['analyticsConfig']) { // stand alone
+      config = window['analyticsConfig'];
+    } else {
+      config = configuration;
+      this.hosted = true; // hosted;
+    }
+    analyticsConfig.ks = config.ks;
+    analyticsConfig.pid = config.pid;
+    analyticsConfig.locale = config.locale;
+    analyticsConfig.kalturaServer = config.kalturaServer;
+    analyticsConfig.cdnServers = config.cdnServers;
+    analyticsConfig.liveAnalytics = config.liveAnalytics;
+    analyticsConfig.showNavBar = !this.hosted;
+    analyticsConfig.isHosted = this.hosted;
+
+    // set ks in ngx-client
+    this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
+    this._kalturaServerClient.setOptions({
+      endpointUrl: getKalturaServerUri(),
+      clientTag: 'analytics'
+    });
+    this._kalturaServerClient.setDefaultRequestOptions({
+      ks: analyticsConfig.ks
+    });
+
+    // load localization
+    this._logger.info('Loading localization...');
+    this._translate.setDefaultLang(analyticsConfig.locale);
+    this._translate.use(analyticsConfig.locale).subscribe(
+      () => {
+        this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
+        if (this.hosted) {
+          this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
+        }
+      },
+      (error) => {
+        this._initAppError(error.message);
+      }
+    );
   }
 
   private _initAppError(errorMsg: string): void{
     this._logger.error(errorMsg);
-  }
-
-  private _onInitSuccess(): void {
-    if (this.hosted) {
-      if ( analyticsConfig.callbacks && analyticsConfig.callbacks.loaded ) {
-        analyticsConfig.callbacks.loaded();
-      }
-    }
   }
 
   private mapRoutes(kmcRoute: string): string {
@@ -154,6 +159,7 @@ export class AppComponent implements OnInit {
     }
     return analyticsRoute;
   }
+
 
 
 }

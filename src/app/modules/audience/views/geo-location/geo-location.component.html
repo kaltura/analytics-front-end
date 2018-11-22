@@ -68,20 +68,18 @@
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
-                <th [pSortableColumn]="'object_id'">
+                <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.object_id' | translate}}
                     </span>
-                    <p-sortIcon [field]="'object_id'"></p-sortIcon>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'" [pSortableColumn]="'count_plays'">
+                <th *ngIf="_selectedMetrics==='count_plays'" [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.count_plays' | translate}}
                     </span>
-                    <p-sortIcon [field]="'count_plays'"></p-sortIcon>
                   </div>
                 </th>
                 <th *ngIf="_selectedMetrics==='count_plays'">
@@ -91,12 +89,11 @@
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='unique_known_users'" [pSortableColumn]="'unique_known_users'">
+                <th *ngIf="_selectedMetrics==='unique_known_users'" [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.unique_known_users' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.unique_known_users' | translate}}
                     </span>
-                    <p-sortIcon [field]="'unique_known_users'"></p-sortIcon>
                   </div>
                 </th>
                 <th *ngIf="_selectedMetrics==='unique_known_users'">
@@ -106,12 +103,11 @@
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [pSortableColumn]="'avg_view_drop_off'">
+                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.avg_view_drop_off' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.avg_view_drop_off' | translate}}
                     </span>
-                    <p-sortIcon [field]="'avg_view_drop_off'"></p-sortIcon>
                   </div>
                 </th>
                 <th >{{'app.audience.geo.trend' | translate}}</th>
@@ -122,8 +118,8 @@
                 <td>
                   <span>{{rowIndex+1}}</span>
                 </td>
-                <td *ngIf="!_drillDown.length">
-                  <i class="kFlag" [ngClass]="'kFlag-'+data['country'].toLowerCase()"></i>
+                <td class="kFlagColumn" *ngIf="!_drillDown.length">
+                  <img class="kFlag" src="{{'assets/flags/'+data['country']+'.png'}}"/>
                 </td>
                 <td class="kHighlight">
                   <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && _drillDown.length < 2">{{data['object_id']}}</a>

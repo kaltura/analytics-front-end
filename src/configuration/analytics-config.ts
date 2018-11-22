@@ -11,11 +11,7 @@ export interface AnalyticsConfig {
   pid?: string;
   locale?: string;
   showNavBar?: boolean;
-  callbacks?: {
-    loaded?: Function;
-    logout?: Function;
-    updateLayout?: Function;
-  };
+  isHosted?: boolean;
   liveAnalytics?: {
     uri?: string;
     uiConfId?: string;

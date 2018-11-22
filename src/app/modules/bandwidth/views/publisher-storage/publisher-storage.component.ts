@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { ErrorsManagerService, ErrorDetails, AuthService, ReportService, Report, ReportConfig } from 'shared/services';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { of as ObservableOf } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { CompareService } from 'shared/services/compare.service';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -56,7 +56,8 @@ export class PublisherStorageComponent implements OnInit {
     return this.compareFilter !== null;
   }
 
-  constructor(private _translate: TranslateService,
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -120,9 +121,9 @@ export class PublisherStorageComponent implements OnInit {
 
   public toggleTable(): void {
     this._showTable = !this._showTable;
-    if ( analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout ) {
-      analyticsConfig.callbacks.updateLayout();
-    }
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 0);
   }
 
   private loadReport(sections = this._dataConfig): void {

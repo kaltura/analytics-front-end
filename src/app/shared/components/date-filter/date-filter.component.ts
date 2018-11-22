@@ -1,12 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { DateFilterQueryParams, DateFilterService } from './date-filter.service';
+import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
-import { DateRangeType, DateRanges, DateChangeEvent } from './date-filter.service';
 import * as moment from 'moment';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { environment } from '../../../../environments/environment';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-date-filter',
@@ -53,13 +55,29 @@ export class DateFilterComponent implements OnInit {
   }
 
   constructor(private _translate: TranslateService,
+              private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
               private _router: Router,
               private _dateFilterService: DateFilterService) {
   }
 
   ngOnInit() {
-    this._initCurrentFilterFromRouteParams();
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager
+        .once(FrameEvents.UpdateFilters)
+        .subscribe(({ queryParams }) => {
+          this._init(queryParams);
+        });
+    } else {
+      const params = this._route.snapshot.queryParams;
+      this._init(params);
+    }
+    
+    
+  }
+  
+  private _init(queryParams: Params): void {
+    this._initCurrentFilterFromEventParams(queryParams);
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'last');
     this.currDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this.dateRange;
@@ -68,8 +86,7 @@ export class DateFilterComponent implements OnInit {
     }, 0);
   }
   
-  private _initCurrentFilterFromRouteParams(): void {
-    const params = this._route.snapshot.queryParams;
+  private _initCurrentFilterFromEventParams(params: Params): void {
     if (!params) {
       return;
     }
@@ -126,7 +143,11 @@ export class DateFilterComponent implements OnInit {
       }
     }
   
-    this._router.navigate(['.'], { relativeTo: this._route, queryParams });
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.Navigate, queryParams);
+    } else {
+      this._router.navigate(['.'], { relativeTo: this._route, queryParams });
+    }
   }
 
   public updateDataRanges(): void {

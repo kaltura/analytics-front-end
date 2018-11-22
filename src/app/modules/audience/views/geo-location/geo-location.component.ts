@@ -1,16 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import {
-  AuthService,
-  ErrorDetails,
-  ErrorsManagerService,
-  Report,
-  ReportConfig,
-  ReportHelper,
-  ReportService
-} from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
@@ -18,12 +10,11 @@ import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TrendService } from 'shared/services/trend.service';
 import { SelectItem } from 'primeng/api';
-import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { devicesFilterToServerValue } from 'shared/utils/devices-filter-to-server-value';
+import * as echarts from 'echarts';
 
 @Component({
   selector: 'app-geo-location',
@@ -54,6 +45,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlay;
   public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+    {
+      searchInTags: true,
+      searchInAdminTags: false
+    }
+  );
+  private trendFilter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
@@ -93,10 +90,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
-    this.filter.timeZoneOffset = event.timeZoneOffset;
+    this.filter.timeZoneOffset = this.trendFilter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
     this.filter.toDay = event.endDay;
-    this.filter.interval = event.timeUnits;
+    this.filter.interval = this.trendFilter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
     this.loadReport();
@@ -108,14 +105,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (this._drillDown.length === 0) {
       this.updateMap();
     }
+    this._onSortChanged({data: this._tableData, field: tab.key, order: -1});
   }
 
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
       event.data.sort((data1, data2) => {
-        const sortByValue = event.field !== 'object_id'; // country name should be sorted alphabetically, all the rest by value
-        let value1 = sortByValue ? parseInt(data1[event.field].replace(new RegExp(',', 'g'), '')) : data1[event.field].replace(new RegExp(',', 'g'), '');
-        let value2 = sortByValue ? parseInt(data2[event.field].replace(new RegExp(',', 'g'), '')) : data2[event.field].replace(new RegExp(',', 'g'), '');
+        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
@@ -162,6 +159,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (direction === 'out' && this._mapZoom > 2) {
       this._mapZoom -= 1;
       this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+    }
+    // update drag and center according to zoom
+    if (this._mapZoom < 2) {
+      this.echartsIntance.setOption({series: [{roam: false}]}, false); // prevent move when zoomed out
+      this.echartsIntance.setOption({series: [{center: [0, 10]}]}, false); // center map upon zoom out
+    } else {
+      this.echartsIntance.setOption({series: [{roam: 'move'}]}, false); // allow move when zoomed in
     }
   }
 
@@ -307,7 +311,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let maxValue = 0;
     this._tableData.forEach(data => {
       mapConfig.series[0].data.push({
-        name: data.object_id,
+        name: this._dataConfigService.getCountryName(data.object_id),
         value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
@@ -323,12 +327,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this.filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.filter.toDay, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
 
-    this.filter.fromDay = startDay;
-    this.filter.toDay = endDay;
+    this.trendFilter.fromDay = startDay;
+    this.trendFilter.toDay = endDay;
 
     const reportConfig: ReportConfig = {
       reportType: this.reportType,
-      filter: this.filter,
+      filter: this.trendFilter,
       pager: this.pager,
       order: this.order
     };
@@ -395,19 +399,24 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private updateReportConfig(reportConfig: ReportConfig): void {
-    if (reportConfig.filter['countriesIn']) {
-      delete reportConfig.filter['countriesIn'];
+    if (reportConfig.filter['countryIn']) {
+      delete reportConfig.filter['countryIn'];
     }
-    if (reportConfig.filter['regionsIn']) {
-      delete reportConfig.filter['regionsIn'];
+    if (reportConfig.filter['regionIn']) {
+      delete reportConfig.filter['regionIn'];
     }
-    reportConfig.objectIds = '';
-    if (this._drillDown.length === 1) {
-      reportConfig.objectIds = this._drillDown[0];
+    if (reportConfig['objectIds__null']) {
+      delete reportConfig['objectIds__null'];
+    }
+    if (this.reportType === KalturaReportType.mapOverlay) {
+      reportConfig.objectIds = '';
+      if (this._drillDown.length === 1) {
+        reportConfig.objectIds = this._drillDown[0];
+      }
     }
     if (this._drillDown.length === 2) {
-      reportConfig.filter.countriesIn = this._drillDown[0];
-      reportConfig.filter.regionsIn = this._drillDown[1];
+      reportConfig.filter.countryIn = this._drillDown[0];
+      reportConfig.filter.regionIn = this._drillDown[1];
     }
   }
 

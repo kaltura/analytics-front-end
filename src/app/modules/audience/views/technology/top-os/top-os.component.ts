@@ -14,6 +14,7 @@ import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-dev
   ]
 })
 export class TopOsComponent extends BaseDevicesReportComponent {
-  protected _reportType = KalturaReportType.operatingSystem;
+  protected _defaultReportType = KalturaReportType.operatingSystemFamilies;
+  protected _drillDownReportType = KalturaReportType.operatingSystem;
   public _title = 'app.audience.technology.topOS';
 }
