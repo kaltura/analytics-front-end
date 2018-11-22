@@ -16,6 +16,9 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
           'browser': {
             format: value => value,
           },
+          'browser_family': {
+            format: value => value,
+          },
           'count_plays': {
             format: value => value,
           },

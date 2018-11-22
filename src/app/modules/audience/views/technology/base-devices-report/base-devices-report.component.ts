@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, InjectionToken, Input, OnDestroy, Output } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -20,7 +20,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   @Input() set deviceFilter(value: string[]) {
     this._devicesSelectActive = true;
-
+    
     if (!Array.isArray(value)) {
       return;
     }
@@ -54,14 +54,17 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   
-  protected abstract _reportType: KalturaReportType;
+  protected abstract _defaultReportType: KalturaReportType;
+  protected abstract _drillDownReportType: KalturaReportType;
   
   protected _order = '-count_plays';
   protected _totalPlaysCount = 0;
   protected _devices: string[] = [];
+  protected _reportType: KalturaReportType;
   
   public abstract _title: string;
   
+  public _drillDown: string = null;
   public _firstTimeLoading = true;
   public _devicesSelectActive = false;
   public _tags: any[] = [];
@@ -89,6 +92,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
               private _errorsManager: ErrorsManagerService,
               @Inject(BaseDevicesReportConfig) _configService: ReportDataBaseConfig) {
     this._dataConfig = _configService.getConfig();
+    
+    setTimeout(() => {
+      this._reportType = this._defaultReportType;
+    });
   }
   
   ngOnDestroy() {
@@ -143,6 +150,9 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
+          this._tableData = [];
+          this._totalPlaysCount = 0;
+
           // IMPORTANT to handle totals first, distribution rely on it
           if (report.totals) {
             this._handleTotals(report.totals); // handle totals
@@ -211,15 +221,15 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
     
-    this._filter.fromDay = startDay;
-    this._filter.toDay = endDay;
+    const filter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+    filter.fromDay = startDay;
+    filter.toDay = endDay;
     
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
-      filter: this._filter,
+      filter: filter,
       pager: this._pager,
-      order: this._order,
-      objectIds: devicesFilterToServerValue(this._devices)
+      order: this._order
     };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
@@ -258,6 +268,16 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       });
   }
   
+  private _getDrillDownFilterPropByReportType(): string {
+    if ([KalturaReportType.browsers, KalturaReportType.browsersFamiles].includes(this._reportType)) {
+      return 'browserFamilyIn';
+    }
+
+    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].includes(this._reportType)) {
+      return 'operatingSystemFamilyIn';
+    }
+  }
+  
   public _onSortChanged(event) {
     const field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
     if (event.data.length && field && event.order) {
@@ -289,5 +309,20 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   public _onRemoveAllTags(): void {
     this._selectedDevices = [];
     this._onDeviceFilterChange();
+  }
+  
+  public _onDrillDown(family: string): void {
+    this._drillDown = family;
+    this._reportType = family ? this._drillDownReportType : this._defaultReportType;
+    this._pager.pageIndex = 1;
+
+    const prop = this._getDrillDownFilterPropByReportType();
+    if (family) {
+      this._filter[prop] = family;
+    } else {
+      delete this._filter[prop];
+    }
+    
+    this._loadReport();
   }
 }
