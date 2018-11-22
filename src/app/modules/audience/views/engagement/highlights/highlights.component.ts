@@ -12,6 +12,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -51,7 +52,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     return this._compareFilter !== null;
   }
   
-  constructor(private _translate: TranslateService,
+  constructor(private _frameEventManager: FrameEventManagerService,
+              private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
@@ -222,9 +224,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-    if (analyticsConfig.callbacks && analyticsConfig.callbacks.updateLayout) {
-      analyticsConfig.callbacks.updateLayout();
-    }
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 0);
   }
   
   public _onPaginationChanged(event: any): void {

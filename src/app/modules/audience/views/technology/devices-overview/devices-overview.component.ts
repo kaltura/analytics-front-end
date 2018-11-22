@@ -57,7 +57,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _fractions = 2;
   private _columns: string[] = [];
-
+  
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -113,7 +113,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
           
           this._isBusy = false;
-    
+          
           this.exportDataChange.emit({
             headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.technology'),
             totalCount: report.table.totalCount,
@@ -237,18 +237,14 @@ export class DevicesOverviewComponent implements OnDestroy {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
       } else {
-        const hasValue = relevantFields.map(key => item.hasOwnProperty(key) ? parseFloat(item[key]) || 0 : 0).some(Boolean);
-        
-        if (hasValue) {
-          const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
-          if (otherIndex !== -1) {
-            relevantFields.forEach(key => {
-              data[otherIndex][key] = (parseFloat(data[otherIndex][key]) || 0) + (parseFloat(item[key]) || 0);
-            });
-          } else {
-            item.device = 'OTHER';
-            data.push(item);
-          }
+        const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
+        if (otherIndex !== -1) {
+          relevantFields.forEach(key => {
+            data[otherIndex][key] = (parseFloat(data[otherIndex][key]) || 0) + (parseFloat(item[key]) || 0);
+          });
+        } else {
+          item.device = 'OTHER';
+          data.push(item);
         }
       }
       return data;
@@ -378,11 +374,11 @@ export class DevicesOverviewComponent implements OnDestroy {
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data, columns } = this._getOverviewData(table, relevantFields);
-  
+    
     this._columns = columns;
     this._barChartData = this._getGraphData(data, relevantFields);
     this._summaryData = this._getSummaryData(data, relevantFields);
-    
+
     this._handleDevicesListChange(data);
   }
   

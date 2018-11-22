@@ -16,6 +16,9 @@ export class TopOsConfig extends ReportDataBaseConfig {
           'os': {
             format: value => value,
           },
+          'os_family': {
+            format: value => value,
+          },
           'count_plays': {
             format: value => value,
           },
