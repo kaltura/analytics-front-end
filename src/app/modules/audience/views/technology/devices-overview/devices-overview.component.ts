@@ -231,22 +231,8 @@ export class DevicesOverviewComponent implements OnDestroy {
         });
   }
   
-  private _appendMissingDevice(tableData: { [key: string]: string }[], deviceName: string, relevantFields: string[]): any {
-    const relevantDevice = tableData.find(item => item.device === deviceName);
-    
-    if (!relevantDevice) {
-      const fields = relevantFields.reduce((acc, val) => (acc[val] = 0, acc), {});
-      tableData.push({
-        device: deviceName,
-        ...fields,
-      });
-    }
-  }
-  
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this.allowedDevices.forEach(device => this._appendMissingDevice(tableData, device, relevantFields));
-    this._appendMissingDevice(tableData, 'OTHER', relevantFields);
     const data = tableData.reduce((data, item) => {
       if (this.allowedDevices.includes(item.device)) {
         data.push(item);
