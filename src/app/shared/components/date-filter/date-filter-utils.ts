@@ -56,6 +56,6 @@ export class DateFilterUtils {
     const month: string = value.substring(4, 6);
     const day: string = value.substring(6, 8);
     const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-    return `${date.toLocaleString(locale, { month: 'short' })} ${day} ${date.getFullYear()}`;
+    return `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
   }
 }
