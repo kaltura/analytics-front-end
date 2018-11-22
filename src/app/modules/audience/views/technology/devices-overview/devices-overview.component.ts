@@ -43,6 +43,7 @@ export class DevicesOverviewComponent implements OnDestroy {
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
       this.loadReport();
+      this.resetDeviceFilters(true, false);
     }
   }
   
@@ -61,7 +62,9 @@ export class DevicesOverviewComponent implements OnDestroy {
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
-  public _barChartData: any = {};
+  public _barChartData: { [key: string]: any; } = {};
+  public _rawChartData: { [key: string]: { value: number, key: string; }[]; } = {};
+  public _mergeChartData: { [key: string]: any; } = {};
   public _summaryData: Summary = {};
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -267,6 +270,21 @@ export class DevicesOverviewComponent implements OnDestroy {
     this.devicesListChange.emit(devices);
   }
   
+  private _getRawGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
+    return relevantFields.reduce((result, key) => {
+      result[key] = data.map(item => {
+        let value = parseFloat(item[key]) || 0;
+        if (value % 1 !== 0) {
+          value = Number(value.toFixed(this._fractions));
+        }
+        return { value, key: item.device };
+      });
+      
+      return result;
+    }, {});
+  }
+  
+  
   private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     return relevantFields.reduce((barChartData, key) => {
@@ -328,9 +346,9 @@ export class DevicesOverviewComponent implements OnDestroy {
         },
         series: [{
           data: data.map(item => {
-            const value = parseFloat(item[key]) || 0;
+            let value = parseFloat(item[key]) || 0;
             if (value % 1 !== 0) {
-              return value.toFixed(this._fractions);
+              value = Number(value.toFixed(this._fractions));
             }
             return value;
           }),
@@ -377,6 +395,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     
     this._columns = columns;
     this._barChartData = this._getGraphData(data, relevantFields);
+    this._rawChartData = this._getRawGraphData(data, relevantFields);
     this._summaryData = this._getSummaryData(data, relevantFields);
 
     this._handleDevicesListChange(data);
@@ -386,19 +405,42 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
-  public _onSelectionChange(): void {
+  private _updateGraphStyle(): void {
+    const data = this._rawChartData[this._selectedMetrics];
+    const series = data.map(({ value, key }) => {
+      const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
+      const color = isActive ? '#00A784' : '#CCCCCC';
+      return {
+        value,
+        itemStyle: { color }
+      };
+    });
+  
+    this._mergeChartData = { series: [{ data: series }] };
+  }
+  
+  public _onSelectionChange(updateGraph = true): void {
+    if (updateGraph) {
+      this._updateGraphStyle();
+    }
+
     this.deviceFilterChange.emit(this._selectedValues);
   }
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._updateGraphStyle();
   }
   
-  public resetDeviceFilters(emit = false): void {
+  public resetDeviceFilters(emit = false, updateGraph = true): void {
     this._selectedValues = [];
     
+    if (updateGraph) {
+      this._updateGraphStyle();
+    }
+    
     if (emit) {
-      this._onSelectionChange();
+      this._onSelectionChange(updateGraph);
     }
   }
 }
