@@ -17,7 +17,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
   selector: 'app-engagement-top-videos',
   templateUrl: './top-videos.component.html',
   styleUrls: ['./top-videos.component.scss'],
-  providers: [TopVideosDataConfig]
+  providers: [TopVideosDataConfig, ReportService]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
   private _partnerId = analyticsConfig.pid;
