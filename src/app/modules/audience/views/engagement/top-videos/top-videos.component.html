@@ -6,7 +6,8 @@
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-engagement-top-videos-table [tableData]="_tableData"
                                        [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"></app-engagement-top-videos-table>
+                                       [columns]="_columns"
+                                       (sortFieldChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
     </k-area-blocker>
   </div>
 </div>

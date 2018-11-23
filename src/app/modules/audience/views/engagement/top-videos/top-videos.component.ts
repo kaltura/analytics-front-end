@@ -149,25 +149,16 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((item, index) => {
-      item['index'] = index + 1;
+      (<any>item)['index'] = index + 1;
       item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/164516100/thumbnail/entry_id/${item['object_id']}/width/108/height/60?rnd=${Math.random()}`;
       return item;
     });
   }
   
-  public _onSortChanged(event): void {
-    if (event.data.length && event.field && event.order && !this._isCompareMode) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this._order) {
-        this._order = order;
-        this._loadReport();
-      }
-    }
-  }
-  
-  public _onPaginationChanged(event): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
+  public _onSortChanged(field: string): void {
+    const order = `-${field}`;
+    if (order !== this._order) {
+      this._order = order;
       this._loadReport();
     }
   }
