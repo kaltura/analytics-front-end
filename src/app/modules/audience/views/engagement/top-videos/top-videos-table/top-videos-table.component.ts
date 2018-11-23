@@ -11,13 +11,9 @@ export class TopVideosTableComponent {
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
-  
-  private _order = '-bandwidth_consumption';
-  
-  public _columns: string[] = [];
-  public _pager = new KalturaFilterPager({ pageSize: 100, pageIndex: 1 });
-  public _totalCount = 0;
-  
+  @Input() pager: KalturaFilterPager;
+  @Input() totalCount = 0;
+
   public _onSortChanged(event): void {
   
   }
