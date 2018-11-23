@@ -20,6 +20,7 @@ export interface ReportDataItemConfig {
       graphTooltip?: (value: any) => string;
       hidden?: boolean;
       nonComparable?: boolean;
+      sortOrder?: number;
     };
   };
 }

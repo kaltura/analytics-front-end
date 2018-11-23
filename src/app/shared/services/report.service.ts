@@ -199,6 +199,11 @@ export class ReportService implements OnDestroy {
     });
     
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
+    columns.sort((a, b) => {
+      const valA = config.fields[a].sortOrder || 0;
+      const valB = config.fields[b].sortOrder || 0;
+      return valA - valB;
+    });
     
     return { columns, tableData };
   }

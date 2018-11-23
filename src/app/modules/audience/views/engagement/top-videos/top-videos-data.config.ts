@@ -20,18 +20,23 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           },
           'entry_name': {
             format: value => value,
+            sortOrder: 1,
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 2,
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value),
+            sortOrder: 4,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5,
           },
         }
       }
