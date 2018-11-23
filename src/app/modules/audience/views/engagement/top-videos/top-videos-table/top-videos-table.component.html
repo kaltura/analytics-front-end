@@ -6,6 +6,8 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr>
+        <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topVideosReport.index' | translate}}</th>
+        <th [ngStyle]="{'width': '80px'}"></th>
         <th *ngFor="let col of columns" [pSortableColumn]="col">
           <div class="kColumnHeader">
             <span [kTooltip]="'app.engagement.topVideosReport.' + col | translate" [showOnEllipsis]="true">
@@ -18,6 +20,14 @@
     </ng-template>
     <ng-template pTemplate="body" let-data>
       <tr>
+        <td>{{data.index}}</td>
+        <td>
+          <div class="kThumbnailHolder" #holder>
+            <img [src]="data.thumbnailUrl"
+                 onError="this.onerror=null;this.style.display='none'"
+                 (error)="holder.classList.add('error')">
+          </div>
+        </td>
         <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
           <span>{{data[col]}}</span>
         </td>
@@ -30,8 +40,8 @@
       </div>
     </ng-template>
   </p-table>
-  <p-paginator [rows]="pager?.pageSize"
-               [first]="(pager?.pageIndex - 1) * pager?.pageSize"
+  <p-paginator [rows]="_pager?.pageSize"
+               [first]="(_pager?.pageIndex - 1) * _pager?.pageSize"
                [totalRecords]="totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>

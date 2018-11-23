@@ -13,6 +13,8 @@ export class TopVideosTableComponent {
   @Input() firstTimeLoading = true;
   @Input() pager: KalturaFilterPager;
   @Input() totalCount = 0;
+  
+  public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
 
   public _onSortChanged(event): void {
   

@@ -335,3 +335,30 @@ p-multiselect /deep/ {
     border-bottom: 1px solid $kGrayscale4;
   }
 }
+
+.kThumbnailHolder {
+  overflow: hidden;
+  position: relative;
+  width: 54px;
+  height: 30px;
+  background-color: $kGrayscale6;
+  white-space: nowrap;
+  text-align: center;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &.error{
+    border: 1px solid $kGrayscale4;
+  }
+  img {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
+    width: 54px;
+    height: auto;
+    border-radius: 3px;
+  }
+}

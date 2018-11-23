@@ -14,21 +14,26 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
+          'object_id': {
+            format: value => value,
+            hidden: true,
+            nonComparable: true,
+          },
           'entry_name': {
             format: value => value,
             nonComparable: true,
           },
           'count_plays': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'unique_known_users': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'avg_view_drop_off': {
-            format: value => value,
+            format: value => ReportHelper.percents(value),
           },
           'sum_time_viewed': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
         }
       }

@@ -10,8 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { ImpressionsDataConfig } from '../impressions/impressions-data.config';
 import { TopVideosDataConfig } from './top-videos-data.config';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -20,6 +20,10 @@ import { TopVideosDataConfig } from './top-videos-data.config';
   providers: [TopVideosDataConfig]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
+  private _partnerId = analyticsConfig.pid;
+  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
+    ? analyticsConfig.kalturaServer.uri
+    : `https://${analyticsConfig.kalturaServer.uri}`;
   private _order = '-count_plays';
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
@@ -49,7 +53,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               private _compareService: CompareService,
               private _dataConfigService: TopVideosDataConfig) {
     super();
-  
+    
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -144,7 +148,11 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
-    this._tableData = tableData;
+    this._tableData = tableData.map((item, index) => {
+      item['index'] = index + 1;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/164516100/thumbnail/entry_id/${item['object_id']}/width/108/height/60?rnd=${Math.random()}`;
+      return item;
+    });
   }
   
   public _onSortChanged(event): void {

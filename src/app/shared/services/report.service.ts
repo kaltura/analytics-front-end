@@ -198,7 +198,7 @@ export class ReportService implements OnDestroy {
       }
     });
     
-    columns = columns.filter(header => config.fields.hasOwnProperty(header));
+    columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
     
     return { columns, tableData };
   }
