@@ -29,7 +29,7 @@
           </div>
         </td>
         <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
-          <span>{{data[col]}}</span>
+          <span class="kTableColumn" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</span>
         </td>
       </tr>
     </ng-template>
