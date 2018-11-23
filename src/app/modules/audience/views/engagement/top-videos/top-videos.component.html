@@ -5,9 +5,18 @@
   <div class="kReportContent">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-engagement-top-videos-table [tableData]="_tableData"
+                                       [isCompareMode]="_isCompareMode"
+                                       [dates]="_currentDates"
                                        [firstTimeLoading]="_firstTimeLoading"
                                        [columns]="_columns"
                                        (sortFieldChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
+      <app-engagement-top-videos-table *ngIf="_isCompareMode"
+                                       class="kCompareMode"
+                                       [isCompareMode]="_isCompareMode"
+                                       [tableData]="_compareTableData"
+                                       [dates]="_compareDates"
+                                       [firstTimeLoading]="_compareFirstTimeLoading"
+                                       [columns]="_columns"></app-engagement-top-videos-table>
     </k-area-blocker>
   </div>
 </div>

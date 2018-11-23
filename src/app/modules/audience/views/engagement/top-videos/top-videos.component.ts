@@ -3,7 +3,7 @@ import { EngagementBaseReportComponent } from '../engagement-base-report/engagem
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,16 +36,16 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: any[] = [];
+  public _compareTableData: any[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageSize: 100, pageIndex: 1 });
-  public _totalCount = 0;
   public _firstTimeLoading = true;
+  public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = KalturaReportType.topContent;
-  
-  
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
@@ -64,11 +64,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   protected _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-    this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-    if (this._dateFilter.compare.active) {
-      
-    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
@@ -81,8 +76,11 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._tableData = [];
+          this._compareTableData = [];
+          
           if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table); // handle table
+            this._handleTable(report.table, compare); // handle table
           }
           this._isBusy = false;
         },
@@ -127,8 +125,10 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
+    this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
+      this._isCompareMode = true;
       this._compareFilter = new KalturaReportInputFilter(
         {
           searchInTags: true,
@@ -141,18 +141,30 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       );
     } else {
       this._compareFilter = null;
+      this._compareFirstTimeLoading = true;
     }
   }
   
-  private _handleTable(table: KalturaReportTable): void {
+  private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
-    this._columns = columns;
-    this._tableData = tableData.map((item, index) => {
+    const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
       item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/164516100/thumbnail/entry_id/${item['object_id']}/width/108/height/60?rnd=${Math.random()}`;
       return item;
-    });
+    };
+    this._columns = columns;
+    this._tableData = tableData.map(extendTableRow);
+    this._currentDates = null;
+    this._compareDates = null;
+    
+    if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      this._compareTableData = compareTableData.map(extendTableRow);
+      this._compareFirstTimeLoading = false;
+      this._columns = ['entry_name', 'count_plays'];
+      this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+      this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+    }
   }
   
   public _onSortChanged(field: string): void {

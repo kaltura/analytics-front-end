@@ -1,5 +1,7 @@
 <div class="kTableContainer">
+  <span class="kDates" *ngIf="dates">{{dates}}</span>
   <p-table sortField="count_plays"
+           [class.kCompareMode]="isCompareMode"
            [value]="_tableData"
            [customSort]="true"
            [sortOrder]="-1"
@@ -8,12 +10,12 @@
       <tr>
         <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topVideosReport.index' | translate}}</th>
         <th [ngStyle]="{'width': '80px'}"></th>
-        <th *ngFor="let col of columns" [pSortableColumn]="col !== 'entry_name' ? col : null">
+        <th *ngFor="let col of columns" [pSortableColumn]="col !== 'entry_name' && !isCompareMode ? col : null">
           <div class="kColumnHeader">
             <span [kTooltip]="'app.engagement.topVideosReport.' + col | translate" [showOnEllipsis]="true">
               {{'app.engagement.topVideosReport.' + col | translate}}
             </span>
-            <p-sortIcon *ngIf="col !== 'entry_name' ? col : null" [field]="col"></p-sortIcon>
+            <p-sortIcon *ngIf="col !== 'entry_name' && !isCompareMode ? col : null" [field]="col"></p-sortIcon>
           </div>
         </th>
       </tr>

@@ -14,6 +14,7 @@ export class TopVideosTableComponent {
     this._totalCount = value.length;
   }
   
+  @Input() dates: string;
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;

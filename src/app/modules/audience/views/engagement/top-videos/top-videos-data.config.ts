@@ -17,11 +17,9 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           'object_id': {
             format: value => value,
             hidden: true,
-            nonComparable: true,
           },
           'entry_name': {
             format: value => value,
-            nonComparable: true,
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
