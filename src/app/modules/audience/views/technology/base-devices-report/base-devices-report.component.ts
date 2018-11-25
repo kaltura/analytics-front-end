@@ -269,7 +269,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _getDrillDownFilterPropByReportType(): string {
-    if ([KalturaReportType.browsers, KalturaReportType.browsersFamiles].includes(this._reportType)) {
+    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].includes(this._reportType)) {
       return 'browserFamilyIn';
     }
 
