@@ -167,7 +167,11 @@ export class CompareService implements OnDestroy {
           icon: 'circle',
           left: 'left',
           bottom: 0,
-          padding: [16, 0, 0, 80]
+          padding: [16, 0, 0, 80],
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold'
+          }
         },
         series: [{
           name: currentPeriodTitle,
@@ -260,7 +264,11 @@ export class CompareService implements OnDestroy {
           icon: 'circle',
           left: 'left',
           bottom: 0,
-          padding: [16, 0, 0, 80]
+          padding: [16, 0, 0, 80],
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold'
+          }
         },
         series: [{
           name: currentPeriodTitle,
