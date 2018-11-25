@@ -9,7 +9,7 @@
   <div class="kFilters">
     <span *ngIf="!_drillDown.length" class="kTitle">{{'app.audience.geo.top' | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_onDrillDown('')">{{'app.audience.geo.title' | translate}}</a>
+      <a (click)="_onDrillDown('')">{{'app.audience.geo.top' | translate}}</a>
       <span class="separator">/</span>
       <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
       <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0])">{{_drillDown[0]}}</a>
