@@ -34,14 +34,19 @@
     }
   }
 }
+:host /deep/ .ui-multiselect-item{
+  display: flex !important;
+  align-items: center;
+}
 .kCountryList {
   vertical-align: middle;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   max-width: 275px;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  .kCountryListFlag {
-    margin: 0 .125em 0 .5em;
+  img{
+    margin-right: 8px;
+    margin-left: 4px;
   }
 }
