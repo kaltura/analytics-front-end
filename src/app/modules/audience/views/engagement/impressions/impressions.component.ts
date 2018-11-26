@@ -30,7 +30,7 @@ export type funnelData = {
   selector: 'app-engagement-impressions',
   templateUrl: './impressions.component.html',
   styleUrls: ['./impressions.component.scss'],
-  providers: [ImpressionsDataConfig]
+  providers: [ImpressionsDataConfig, ReportService]
 })
 export class EngagementImpressionsComponent extends EngagementBaseReportComponent implements OnInit {
 

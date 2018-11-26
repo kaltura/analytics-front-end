@@ -207,7 +207,15 @@
       "perc25": "25% Play-through",
       "perc50": "50% Play-through",
       "perc75": "75% Play-through",
-      "perc100": "100% Play-through"
+      "perc100": "100% Play-through",
+      "topVideosReport": {
+        "entry_name": "Name",
+        "count_plays": "Plays",
+        "unique_known_users": "Unique Viewers",
+        "avg_view_drop_off": "Avg. View Period",
+        "sum_time_viewed": "Minutes Viewed",
+        "index": "#"
+      }
     }
   }
 }
