@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
@@ -10,13 +10,14 @@ import { environment } from '../../../../environments/environment';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-date-filter',
   templateUrl: './date-filter.component.html',
   styleUrls: ['./date-filter.component.scss']
 })
-export class DateFilterComponent implements OnInit {
+export class DateFilterComponent implements OnInit, OnDestroy {
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {
@@ -85,7 +86,7 @@ export class DateFilterComponent implements OnInit {
     if (analyticsConfig.isHosted) {
       this._frameEventManager
         .listen(FrameEvents.UpdateFilters)
-        .pipe(filter(Boolean))
+        .pipe(cancelOnDestroy(this), filter(Boolean))
         .subscribe(({ queryParams }) => {
           this._init(queryParams);
         });
@@ -97,6 +98,10 @@ export class DateFilterComponent implements OnInit {
     
   }
   
+  ngOnDestroy() {
+  
+  }
+
   private _isEmptyObject(value: any): boolean {
     return (value && !Object.keys(value).length);
   }
@@ -115,6 +120,7 @@ export class DateFilterComponent implements OnInit {
     if (this._isEmptyObject(params)) {
       this._dateRangeType = this._defaultDateRageType;
       this._dateRange = this._defaultDateRange;
+      this.compare = false;
       return;
     }
   
