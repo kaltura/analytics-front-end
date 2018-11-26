@@ -27,6 +27,7 @@
           <p-table sortField="count_plays"
                    [value]="_tableData"
                    [customSort]="true"
+                   [defaultSortOrder]="-1"
                    [sortOrder]="-1"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
