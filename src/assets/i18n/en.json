@@ -220,6 +220,14 @@
         "sum_time_viewed_tt": "Minutes Viewed",
         "unique_known_users_tt": "Unique Viewers",
         "avg_view_drop_off_tt": "Drop Off Rate"
+      },
+      "topVideosReport": {
+        "entry_name": "Name",
+        "count_plays": "Plays",
+        "unique_known_users": "Unique Viewers",
+        "avg_view_drop_off": "Avg. View Period",
+        "sum_time_viewed": "Minutes Viewed",
+        "index": "#"
       }
     }
   }
