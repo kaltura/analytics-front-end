@@ -4,6 +4,6 @@ import { ReportHelper } from 'shared/services';
 @Pipe({ name: 'appDuration' })
 export class DurationPipe implements PipeTransform {
   transform(value: number): string {
-    return ReportHelper.time(value);
+    return ReportHelper.time(String(value));
   }
 }
