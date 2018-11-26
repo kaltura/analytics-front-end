@@ -5,12 +5,12 @@
 
   .kSummary {
     width: calc(33% - 46px);
-    padding: 50px 23px;
+    padding: 20px 23px;
 
     .kSummaryRow {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 30px;
+      height: 60px;
 
       &:last-child {
         margin-bottom: 0;
