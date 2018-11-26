@@ -19,7 +19,7 @@ export class ReportHelper {
       x = parseFloat(x);
       x = x % 1 === 0
         ? round ? Math.round(x) : x
-        : Number(x.toPrecision(3));
+        : Number(x.toPrecision(2));
       
       return ReportHelper.numberWithCommas(x);
     }

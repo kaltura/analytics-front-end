@@ -81,13 +81,13 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value)
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
+            format: value => ReportHelper.numberOrZero(value / 60000)
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
+            format: value => ReportHelper.numberOrZero(value / 60000)
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(Math.round(value / 60000))
+            format: value => ReportHelper.numberOrZero(value / 60000)
           },
         }
       },

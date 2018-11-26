@@ -36,12 +36,12 @@ export class TrendService {
     if (current === 0 && compare > 0) {
       return { value: '100', direction: -1 };
     }
-    
+
     if (compare === 0 && current > 0) {
       return { value: null, direction: 0 };
     }
 
-    const value = Math.ceil(((current - compare) / current) * 100);
+    const value = Math.ceil(((current - compare) / compare) * 100);
     const direction = this._getTrendDirection(value);
   
     return { value: ReportHelper.numberOrZero(String(Math.abs(value))), direction };
