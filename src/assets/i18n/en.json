@@ -45,6 +45,13 @@
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again."
     },
+    "entryType": {
+      "video": "Video",
+      "playlist": "Playlist",
+      "live": "Live video",
+      "document": "Document",
+      "other": "Other"
+    },
     "dateFilter":{
       "preset": "Preset",
       "specific": "Specific Date Range",
@@ -214,7 +221,11 @@
         "unique_known_users": "Unique Viewers",
         "avg_view_drop_off": "Avg. View Period",
         "sum_time_viewed": "Minutes Viewed",
-        "index": "#"
+        "index": "#",
+        "type": "Type",
+        "creator": "Creator",
+        "creationDate": "Creation Date",
+        "duration": "Duration"
       }
     }
   }

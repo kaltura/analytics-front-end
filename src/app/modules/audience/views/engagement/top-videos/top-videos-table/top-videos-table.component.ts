@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { OverlayPanel } from 'primeng/primeng';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -21,11 +22,14 @@ export class TopVideosTableComponent {
   
   @Output() sortFieldChanged = new EventEmitter<string>();
   
+  @ViewChild('overlay') _overlay: OverlayPanel;
+  
   private _originalTable: any[] = [];
   private _pageSize = 10;
   private _currentOrderField = 'count_plays';
   private _currentOrderDirection = -1;
   
+  public _entryId: string;
   public _totalCount = 0;
   public _tableData: any[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
@@ -61,6 +65,20 @@ export class TopVideosTableComponent {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
+    }
+  }
+  
+  public _showOverlay(event: any, entryId: string): void {
+    if (this._overlay) {
+      this._entryId = entryId;
+      this._overlay.show(event);
+    }
+  }
+  
+  public _hideOverlay(): void {
+    if (this._overlay) {
+      this._entryId = null;
+      this._overlay.hide();
     }
   }
 }

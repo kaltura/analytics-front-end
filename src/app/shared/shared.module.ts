@@ -24,6 +24,8 @@ import { TrendPipe } from 'shared/pipes/trend.pipe';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { NumberFormatPipe } from 'shared/pipes/number-formatter';
 import { TrendService } from 'shared/services/trend.service';
+import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
+import { DurationPipe } from 'shared/pipes/duration.pipe';
 
 @NgModule({
   imports: [
@@ -49,6 +51,8 @@ import { TrendService } from 'shared/services/trend.service';
     TrendPipe,
     NumberFormatPipe,
     DeviceIconPipe,
+    EntryTypePipe,
+    DurationPipe,
   ],
   exports: [
     DateFilterComponent,
@@ -60,6 +64,8 @@ import { TrendService } from 'shared/services/trend.service';
     TrendPipe,
     NumberFormatPipe,
     DeviceIconPipe,
+    EntryTypePipe,
+    DurationPipe,
   ],
   providers: [
   ]
