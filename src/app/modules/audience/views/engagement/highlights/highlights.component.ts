@@ -28,6 +28,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _dataConfig: ReportDataConfig;
 
   public _columns: string[] = [];
+  public _firstTimeLoading = true;
   public _isBusy: boolean;
   public _chartDataLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -80,6 +81,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._tableData = [];
           if (compare) {
             this._handleCompare(report, compare);
           } else {
@@ -94,6 +96,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
               this._handleTotals(report.totals); // handle totals
             }
           }
+          this._firstTimeLoading = false;
           this._isBusy = false;
         },
         error => {
