@@ -9,6 +9,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { environment } from '../../../../environments/environment';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-date-filter',
@@ -17,11 +18,30 @@ import { analyticsConfig } from 'configuration/analytics-config';
 })
 export class DateFilterComponent implements OnInit {
 
-  @Input() dateRangeType: DateRangeType = DateRangeType.LongTerm;
-  @Input() dateRange: DateRanges = DateRanges.CurrentYear;
+  @Input() set dateRangeType(value: DateRangeType) {
+    if (!isNaN(value)) {
+      this._defaultDateRageType = value;
+      this._dateRangeType = value;
+    } else {
+      this._dateRangeType = this._defaultDateRageType;
+    }
+  }
+  @Input() set dateRange(value: DateRanges) {
+    if (value) {
+      this._defaultDateRange = value;
+      this._dateRange = value;
+    } else {
+      this._dateRange = this._defaultDateRange;
+    }
+  }
   @Input() showCompare = true;
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
+  
+  public _defaultDateRageType = DateRangeType.LongTerm;
+  public _defaultDateRange = DateRanges.CurrentYear;
+  public _dateRangeType = this._defaultDateRageType;
+  public _dateRange = this._defaultDateRange;
 
   public lastDateRangeItems: SelectItem[] = [];
   public currDateRangeItems: SelectItem[] = [];
@@ -64,7 +84,8 @@ export class DateFilterComponent implements OnInit {
   ngOnInit() {
     if (analyticsConfig.isHosted) {
       this._frameEventManager
-        .once(FrameEvents.UpdateFilters)
+        .listen(FrameEvents.UpdateFilters)
+        .pipe(filter(Boolean))
         .subscribe(({ queryParams }) => {
           this._init(queryParams);
         });
@@ -76,25 +97,31 @@ export class DateFilterComponent implements OnInit {
     
   }
   
+  private _isEmptyObject(value: any): boolean {
+    return (value && !Object.keys(value).length);
+  }
+  
   private _init(queryParams: Params): void {
     this._initCurrentFilterFromEventParams(queryParams);
-    this.lastDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'last');
-    this.currDateRangeItems = this._dateFilterService.getDateRange(this.dateRangeType, 'current');
-    this.selectedDateRange = this.lastSelectedDateRange = this.dateRange;
+    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last');
+    this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
+    this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
       this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
   }
   
   private _initCurrentFilterFromEventParams(params: Params): void {
-    if (!params) {
+    if (this._isEmptyObject(params)) {
+      this._dateRangeType = this._defaultDateRageType;
+      this._dateRange = this._defaultDateRange;
       return;
     }
   
     const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
     if (dateBy) {
       this.selectedView = 'preset';
-      this.dateRange = dateBy;
+      this._dateRange = dateBy;
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
       const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
       const dateTo = moment(params[DateFilterQueryParams.dateTo]);
@@ -114,7 +141,7 @@ export class DateFilterComponent implements OnInit {
         const compareToDateObject = moment(compareTo);
         if (compareToDateObject.isValid()) {
           const compareToDate = compareToDateObject.toDate();
-          const maxCompareDate = this._dateFilterService.getMaxCompare(this.dateRange);
+          const maxCompareDate = this._dateFilterService.getMaxCompare(this._dateRange);
           this.selectedComparePeriod = 'specific';
           this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
         } else {

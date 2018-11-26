@@ -8,6 +8,7 @@ import { BrowserService } from './shared/services/browser.service';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -39,12 +40,12 @@ export class AppComponent implements OnInit, OnDestroy {
               private _kalturaServerClient: KalturaClient) {
     this._initApp();
   
-    this._frameEventManager.once(FrameEvents.Init)
+    this._frameEventManager.listen(FrameEvents.Init)
       .pipe(cancelOnDestroy(this))
       .subscribe(config => this._initApp(config));
     
     this._frameEventManager.listen(FrameEvents.Navigate)
-      .pipe(cancelOnDestroy(this))
+      .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ url }) => this._router.navigateByUrl(this.mapRoutes(url)));
   }
 

@@ -20,11 +20,11 @@
       <div class="kFilters kPreset" *ngIf="selectedView==='preset'">
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
-          <p-radioButton *ngFor="let dateRange of lastDateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value.val" [kTooltip]="dateRange.value.tooltip" [placement]="'left'" [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax()"></p-radioButton>
+          <p-radioButton *ngFor="let _dateRangeLast of lastDateRangeItems" name="dates" [label]="_dateRangeLast.label" [value]="_dateRangeLast.value.val" [kTooltip]="_dateRangeLast.value.tooltip" [placement]="'left'" [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax()"></p-radioButton>
         </div>
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.current' | translate | uppercase}}</span>
-          <p-radioButton *ngFor="let dateRange of currDateRangeItems" name="dates" [label]="dateRange.label" [value]="dateRange.value.val" [kTooltip]="dateRange.value.tooltip" [placement]="'right'" [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax()"></p-radioButton>
+          <p-radioButton *ngFor="let _dateRangeCurrent of currDateRangeItems" name="dates" [label]="_dateRangeCurrent.label" [value]="_dateRangeCurrent.value.val" [kTooltip]="_dateRangeCurrent.value.tooltip" [placement]="'right'" [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax()"></p-radioButton>
         </div>
       </div>
       <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
