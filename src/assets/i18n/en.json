@@ -210,8 +210,8 @@
       "perc75": "75% Play-through",
       "perc100": "100% Play - through",
       "highlightsReport": {
-        "name": "User",
-        "entry_name": "Entry",
+        "month_id": "Month",
+        "date_id": "Day",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
         "avg_view_drop_off": "Drop Off Rate",

@@ -24,11 +24,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.userEngagement;
+  private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
-  private _selectedUsers = '';
-  
-  public _drillDown = '';
+
   public _columns: string[] = [];
   public _isBusy: boolean;
   public _chartDataLoaded = false;
@@ -244,15 +242,5 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._loadReport({ table: null });
       }
     }
-  }
-  
-  public _onDrillDown(user: string): void {
-    this._drillDown = user.length ? user : '';
-    this._reportType = user.length ? KalturaReportType.specificUserEngagement : KalturaReportType.userEngagement;
-    this._filter.userIds = user.length ? user : this._selectedUsers;
-    if (this._compareFilter) {
-      this._compareFilter.userIds = this._filter.userIds;
-    }
-    this._loadReport();
   }
 }

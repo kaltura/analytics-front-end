@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import { fileSize } from 'shared/utils/file-size';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Injectable()
 export class HighlightsConfig extends ReportDataBaseConfig {
@@ -30,12 +32,12 @@ export class HighlightsConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
-          'name': {
-            format: value => value,
+          'month_id': {
+            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
             nonComparable: true,
           },
-          'entry_name': {
-            format: value => value,
+          'date_id': {
+            format: value => DateFilterUtils.formatDayString(value, analyticsConfig.locale),
             nonComparable: true,
           },
           'count_plays': {

@@ -1,11 +1,6 @@
 <div class="kReport kContent kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.engagement.highlights' | translate}}</span>
-    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_onDrillDown('')">{{'app.engagement.userHighlights' | translate}}</a>
-      <span class="separator">/</span>
-      <span>{{_drillDown}}</span>
-    </div>
+    <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -38,7 +33,7 @@
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
                   {{'app.engagement.highlightsReport.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                 </th>
 
               </tr>
@@ -46,15 +41,14 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name' && col !== 'entry_name'" class="kTrend">
+                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
                     <i [class]="data[col].trend | appTrend"></i>
                     <span [kTooltip]="data[col].tooltip" [escape]="false">
                       {{data[col].value}}&nbsp;{{data[col].units}}
                     </span>
                   </span>
-                  <ng-container *ngIf="!_isCompareMode || col === 'name' || col === 'entry_name'">
-                    <span *ngIf="col !== 'name'">{{data[col]}}</span>
-                    <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])">{{data[col]}}</a>
+                  <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id'">
+                    <span>{{data[col]}}</span>
                   </ng-container>
                 </td>
               </tr>
