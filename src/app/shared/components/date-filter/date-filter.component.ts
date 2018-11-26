@@ -160,7 +160,7 @@ export class DateFilterComponent implements OnInit {
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];
-      this._dateRangeLabel = moment(this.startDate).format('MMM Do YY') + ' - ' + moment(this.endDate).format('MMM Do YY');
+      this._dateRangeLabel = moment(this.startDate).format('MMM D, YYYY') + ' - ' + moment(this.endDate).format('MMM D, YYYY');
     }
     this.updateCompareMax();
     if (this.selectedComparePeriod === 'lastYear') {

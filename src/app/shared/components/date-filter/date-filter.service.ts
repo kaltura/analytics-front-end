@@ -166,7 +166,7 @@ export class DateFilterService {
         endDate = today;
         break;
     }
-    const label = moment(startDate).format('MMM Do YY') + ' - ' + moment(endDate).format('MMM Do YY');
+    const label = moment(startDate).format('MMM D, YYYY') + ' - ' + moment(endDate).format('MMM D, YYYY');
     return { startDate, endDate, label};
   }
 

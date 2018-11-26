@@ -31,7 +31,7 @@ export class EndUserStorageComponent implements OnInit {
   public _tabsData: Tab[] = [];
   public _lineChartData: any = {'bandwidth_consumption': []};
   public _barChartData: any = {'bandwidth_consumption': []};
-  public _chartType = 'bar';
+  public _chartType = 'line';
   public _showTable = false;
   public _totalCount: number;
 

@@ -344,7 +344,10 @@ export class ReportService implements OnDestroy {
           type: 'line',
           lineStyle: {
             width: 3
-          }
+          },
+          symbol: 'circle',
+          symbolSize: 8,
+          showSymbol: false
         }]
       };
       barChartData[graph.id] = {

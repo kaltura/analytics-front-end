@@ -164,9 +164,14 @@ export class CompareService implements OnDestroy {
         },
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
+          icon: 'circle',
           left: 'left',
           bottom: 0,
-          padding: [16, 0, 0, 80]
+          padding: [16, 0, 0, 80],
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold'
+          }
         },
         series: [{
           name: currentPeriodTitle,
@@ -174,12 +179,21 @@ export class CompareService implements OnDestroy {
           type: 'line',
           lineStyle: {
             width: 3
-          }
+          },
+          symbol: 'circle',
+          symbolSize: 8,
+          showSymbol: false
         },
         {
           name: comparePeriodTitle,
           data: yAxisCompareData,
-          type: 'line'
+          type: 'line',
+          lineStyle: {
+            width: 3
+          },
+          symbol: 'circle',
+          symbolSize: 8,
+          showSymbol: false
         }]
       };
       barChartData[graph.id] = {
@@ -247,9 +261,14 @@ export class CompareService implements OnDestroy {
         },
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
+          icon: 'circle',
           left: 'left',
           bottom: 0,
-          padding: [16, 0, 0, 80]
+          padding: [16, 0, 0, 80],
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold'
+          }
         },
         series: [{
           name: currentPeriodTitle,
