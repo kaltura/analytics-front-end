@@ -9,7 +9,7 @@
   <div class="kFilters">
     <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.allUsers' | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_onDrillDown('')">{{'app.bandwidth.usersStorage' | translate}}</a>
+      <a (click)="_onDrillDown('')">{{'app.bandwidth.allUsers' | translate}}</a>
       <span class="separator">/</span>
       <span>{{_drillDown}}</span>
     </div>

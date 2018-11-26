@@ -149,7 +149,7 @@
       "geo": {
         "title": "Geo Location",
         "top": "Top Countries",
-        "count_plays": "Plays Count",
+        "count_plays": "Plays",
         "count_plays_tt": "Plays Tooltip",
         "unique_known_users": "Unique Viewers",
         "unique_known_users_tt": "Unique Viewers Tooltip",
@@ -163,7 +163,7 @@
         "distribution2": "Unique Viewers Distribution",
         "countriesSelected": "{0} Countries Selected",
         "findCountry": "Find Country",
-        "selectCountry": "Select Country"
+        "selectCountry": "Filter Country"
       },
       "technology": {
         "title": "Technology",
