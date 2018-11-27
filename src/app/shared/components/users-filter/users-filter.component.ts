@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angu
 import { KalturaUser } from 'kaltura-ngx-client';
 import { UsersFilterService } from './users-filter.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
@@ -13,7 +13,6 @@ import { Subject } from 'rxjs/Subject';
   providers: [UsersFilterService]
 })
 export class UsersFilterComponent implements OnInit {
-  @ViewChild('autocompete') _autocompete: AutoComplete;
   @Output() filterChange: EventEmitter<KalturaUser[]> = new EventEmitter();
   @Input() hideLabels = true;
   @Input() disabled = false;
@@ -71,7 +70,6 @@ export class UsersFilterComponent implements OnInit {
   }
 
   public _updateUsers(event): void {
-    this._autocompete.clearValue();
     this.filterChange.emit(this._selectedUsers);
   }
 
