@@ -3,7 +3,7 @@
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter [dateRange]="_dateRange" [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
