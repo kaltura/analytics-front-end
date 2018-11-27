@@ -40,6 +40,15 @@
       position: absolute;
       bottom: 12px;
       left: 16px;
+      width: 264px;
+      text-align: left;
+
+      span {
+        width: 100%;
+        white-space: normal;
+        font-weight: bold;
+        word-break: break-word;
+      }
     }
   }
 

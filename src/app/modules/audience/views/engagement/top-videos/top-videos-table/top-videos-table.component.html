@@ -34,8 +34,6 @@
         <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
           <span *ngIf="col === 'entry_name'"
                 class="kTableColumn kEntryName"
-                [kTooltip]="data[col]"
-                [showOnEllipsis]="true"
                 (mouseleave)="_hideOverlay()"
                 (mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</span>
 

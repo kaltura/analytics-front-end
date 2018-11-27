@@ -6,7 +6,9 @@
              onError="this.onerror=null;this.style.display='none'"
              (error)="holder.classList.add('error')">
 
-        <span class="kEntryName">{{_data.name}}</span>
+        <div class="kEntryName">
+          <span>{{_data.name}}</span>
+        </div>
       </div>
       <div class="kEntryDetails">
         <div class="kDetailsRow">

@@ -225,7 +225,8 @@
         "type": "Type",
         "creator": "Creator",
         "creationDate": "Creation Date",
-        "duration": "Duration"
+        "duration": "Duration",
+        "errorLoadingEntry": "Failed to load entry data"
       }
     }
   }

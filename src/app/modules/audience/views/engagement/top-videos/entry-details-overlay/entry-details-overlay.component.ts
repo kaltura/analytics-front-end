@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BaseEntryGetAction, KalturaClient, KalturaEntryType, KalturaMediaEntry, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
+import { BaseEntryGetAction, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryType, KalturaMediaEntry, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions, KalturaResponseProfileType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
 import { Unsubscribable } from 'rxjs';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map } from 'rxjs/operators';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface EntryDetailsOverlayData {
   name: string;
@@ -33,15 +34,16 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
   public _loading = false;
   public _errorMessage: AreaBlockerMessage;
   
-  constructor(private _kalturaClient: KalturaClient) {
-  
+  constructor(private _kalturaClient: KalturaClient,
+              private _translate: TranslateService) {
+    
   }
   
   ngOnInit(): void {
     if (!this.entryId) {
       return;
     }
-  
+    
     this._loading = true;
     
     if (this._requestSubscription) {
@@ -50,9 +52,22 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
     }
     
     const request = new KalturaMultiRequest(
-      new BaseEntryGetAction({ entryId: this.entryId }),
+      new BaseEntryGetAction({ entryId: this.entryId })
+        .setRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'id,name,type,createdAt,msDuration'
+          })
+        }),
       new UserGetAction({ userId: null })
-        .setRequestOptions(new KalturaRequestOptions({}).setDependency(['userId', 0, 'userId']))
+        .setRequestOptions(
+          new KalturaRequestOptions({
+            responseProfile: new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'id,fullName'
+            })
+          }).setDependency(['userId', 0, 'userId'])
+        )
     );
     
     this._requestSubscription = this._kalturaClient
@@ -61,7 +76,7 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            throw Error('Cannot load entry data');
+            throw Error(this._translate.instant('app.engagement.topVideosReport.errorLoadingEntry'));
           }
           
           const entry = responses[0].result as KalturaMediaEntry;
@@ -85,7 +100,7 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
         error => {
           this._loading = false;
           this._errorMessage = new AreaBlockerMessage({
-            title: 'Error',
+            title: this._translate.instant('app.common.error'),
             message: error.message,
             buttons: []
           });
