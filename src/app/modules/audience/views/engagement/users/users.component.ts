@@ -26,15 +26,15 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     searchInAdminTags: false
   });
   
+  public _chartType = 'bar';
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _currentDates: string;
-  public _compareDates: string;
   public _reportType = KalturaReportType.uniqueUsersPlay;
   public _barChartData: any = {};
+  public _lineChartData: any = {};
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -118,6 +118,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     this._filter.toDay = this._dateFilter.endDay;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
+    // this._chartType = this._reportInterval === KalturaReportInterval.days ? 'line' : 'bar';
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
@@ -140,8 +141,9 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
-    const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { lineChartData, barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
     this._barChartData = barChartData['default'];
+    this._lineChartData = lineChartData['default'];
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -160,6 +162,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
         this._reportInterval
       );
       this._barChartData = barChartData['default'];
+      this._lineChartData = lineChartData['default'];
     }
   }
 }
