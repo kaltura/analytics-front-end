@@ -159,7 +159,8 @@ export class CompareService implements OnDestroy {
           axisPointer: {
             lineStyle: {
               color: '#dadada'
-            }
+            },
+            z: 0
           }
         },
         legend: {

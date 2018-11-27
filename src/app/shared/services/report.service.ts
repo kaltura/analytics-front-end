@@ -341,7 +341,8 @@ export class ReportService implements OnDestroy {
           axisPointer: {
             lineStyle: {
               color: '#dadada'
-            }
+            },
+            z: 0
           }
         },
         series: [{
