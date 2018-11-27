@@ -26,6 +26,7 @@ import { NumberFormatPipe } from 'shared/pipes/number-formatter';
 import { TrendService } from 'shared/services/trend.service';
 import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
+import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { DurationPipe } from 'shared/pipes/duration.pipe';
     DeviceIconPipe,
     EntryTypePipe,
     DurationPipe,
+    OverlayComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -66,6 +68,7 @@ import { DurationPipe } from 'shared/pipes/duration.pipe';
     DeviceIconPipe,
     EntryTypePipe,
     DurationPipe,
+    OverlayComponent,
   ],
   providers: [
   ]

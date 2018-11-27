@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { OverlayPanel } from 'primeng/primeng';
+import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -22,7 +22,7 @@ export class TopVideosTableComponent {
   
   @Output() sortFieldChanged = new EventEmitter<string>();
   
-  @ViewChild('overlay') _overlay: OverlayPanel;
+  @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _originalTable: any[] = [];
   private _pageSize = 10;
