@@ -33,7 +33,8 @@ import { DomHandler, OverlayPanel } from 'primeng/primeng';
 })
 export class OverlayComponent extends OverlayPanel {
   @Input() offset = 10;
-
+  @Input() openDirection: 'up' | 'down' = 'up';
+  
   private _absolutePosition(element: any, target: any): void {
     let elementDimensions = element.offsetParent
       ? { width: element.offsetWidth, height: element.offsetHeight }
@@ -47,16 +48,27 @@ export class OverlayComponent extends OverlayPanel {
     let windowScrollLeft = this.domHandler.getWindowScrollLeft();
     let viewport = this.domHandler.getViewport();
     let top, left;
-  
-    if (targetOffset.top - elementOuterHeight - this.offset < 0) { // open down
-      top = targetOuterHeight + targetOffset.top + windowScrollTop + this.offset;
-    } else { // open up
-      top = targetOffset.top + windowScrollTop - elementOuterHeight - this.offset;
-      if (top < 0) {
-        top = windowScrollTop - this.offset;
+    
+    if (this.openDirection === 'up') {
+      if (targetOffset.top - elementOuterHeight - this.offset < 0) { // open down
+        top = targetOuterHeight + targetOffset.top + windowScrollTop + this.offset;
+      } else { // open up
+        top = targetOffset.top + windowScrollTop - elementOuterHeight - this.offset;
+        if (top < 0) {
+          top = windowScrollTop - this.offset;
+        }
+      }
+    } else {
+      if (targetOffset.top + targetOuterHeight + elementOuterHeight > viewport.height) { // open up
+        top = targetOffset.top + windowScrollTop - elementOuterHeight - this.offset;
+        if (top < 0) {
+          top = windowScrollTop - this.offset;
+        }
+      } else { // open down
+        top = targetOuterHeight + targetOffset.top + windowScrollTop + this.offset;
       }
     }
-
+    
     if (targetOffset.left + targetOuterWidth + elementOuterWidth > viewport.width) {
       left = targetOffset.left + windowScrollLeft + targetOuterWidth - elementOuterWidth;
     } else {
