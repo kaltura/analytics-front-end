@@ -2,5 +2,13 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.users' | translate}}</span>
   </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_barChartData"></div>
+      </div>
+    </div>
+  </k-area-blocker>
 </div>
 
