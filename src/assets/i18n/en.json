@@ -196,6 +196,7 @@
     "engagement": {
       "title": "Engagement",
       "highlights": "Highlights",
+      "userHighlights": "User Highlights",
       "topVideos": "Top Videos",
       "duration": "Which video duration leads to better engagement?",
       "impressions": "How player impressions are leading to engagement?",
@@ -207,7 +208,19 @@
       "perc25": "25% Play-through",
       "perc50": "50% Play-through",
       "perc75": "75% Play-through",
-      "perc100": "100% Play-through",
+      "perc100": "100% Play - through",
+      "highlightsReport": {
+        "month_id": "Month",
+        "date_id": "Day",
+        "count_plays": "Plays",
+        "sum_time_viewed": "Minutes Viewed",
+        "avg_view_drop_off": "Drop Off Rate",
+        "count_plays_tt": "Plays",
+        "unique_known_users": "Unique Viewers",
+        "sum_time_viewed_tt": "Minutes Viewed",
+        "unique_known_users_tt": "Unique Viewers",
+        "avg_view_drop_off_tt": "Drop Off Rate"
+      },
       "topVideosReport": {
         "entry_name": "Name",
         "count_plays": "Plays",

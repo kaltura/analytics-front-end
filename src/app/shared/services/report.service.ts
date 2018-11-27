@@ -221,12 +221,15 @@ export class ReportService implements OnDestroy {
           value: field.format(data[index]),
           selected: header === (selected || config.preSelected),
           units: field.units ? field.units(data[index]) : (config.units || ''),
-          key: header
+          key: header,
+          sortOrder: field.sortOrder || 0,
         });
       }
     });
-    
-    return tabsData;
+
+    return tabsData.sort((a, b) => {
+      return a.sortOrder - b.sortOrder;
+    });
   }
   
   public parseGraphs(graphs: KalturaReportGraph[],
