@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -68,7 +68,11 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          if (report.table && report.table.header && report.table.data) {
+          this._barChartData = {};
+
+          if (compare) {
+            this._handleCompare(report, compare);
+          } else if (report.table && report.table.header && report.table.data) {
             this._handleGraph(report.table); // handle table
           }
           
@@ -138,5 +142,24 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
     const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
     this._barChartData = barChartData['default'];
+  }
+  
+  private _handleCompare(current: Report, compare: Report): void {
+    const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
+    const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+    
+    if (current.table && compare.table) {
+      const currentGraph = [{ id: 'default', data: current.table.data } as KalturaReportGraph];
+      const compareGraph = [{ id: 'default', data: compare.table.data } as KalturaReportGraph];
+      const { lineChartData, barChartData } = this._compareService.compareGraphData(
+        currentPeriod,
+        comparePeriod,
+        currentGraph,
+        compareGraph,
+        this._dataConfig.graph,
+        this._reportInterval
+      );
+      this._barChartData = barChartData['default'];
+    }
   }
 }
