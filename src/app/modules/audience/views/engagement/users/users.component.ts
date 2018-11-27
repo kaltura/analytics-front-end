@@ -9,6 +9,9 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { UsersDataConfig } from './users-data.config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { TrendService } from 'shared/services/trend.service';
 
 @Component({
   selector: 'app-engagement-users',
@@ -35,10 +38,18 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   public _reportType = KalturaReportType.uniqueUsersPlay;
   public _barChartData: any = {};
   public _lineChartData: any = {};
+  public _totalUsers = 0;
+  public _totalUsersCompare: {
+    trend: number,
+    tooltip: string,
+    value: string,
+    units: string
+  } = null;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
+              private _trendService: TrendService,
               private _authService: AuthService,
               private _compareService: CompareService,
               private _dataConfigService: UsersDataConfig) {
@@ -144,6 +155,8 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     const { lineChartData, barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
     this._barChartData = barChartData['default'];
     this._lineChartData = lineChartData['default'];
+  
+    this._totalUsers = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -163,6 +176,34 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
       );
       this._barChartData = barChartData['default'];
       this._lineChartData = lineChartData['default'];
+  
+      const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
+      const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
+  
+      let currentPeriodTitle = '';
+      let comparePeriodTitle = '';
+
+      if (this._reportInterval === KalturaReportInterval.months) {
+        currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
+        comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
+      } else {
+        currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
+        comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
+      }
+  
+      const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
+  
+      const tooltip = `
+        ${this._trendService.getTooltipRowString(currentPeriodTitle, currentTotal, '')}
+        ${this._trendService.getTooltipRowString(comparePeriodTitle, compareTotal, '')}
+      `;
+  
+      this._totalUsersCompare = {
+        trend,
+        value,
+        tooltip,
+        units: '%'
+      };
     }
   }
 }
