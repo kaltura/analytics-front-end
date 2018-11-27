@@ -36,7 +36,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _tableData: any[] = [];
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
-  public _chartType = 'line';
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
   public _showTable = false;

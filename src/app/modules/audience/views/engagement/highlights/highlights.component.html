@@ -13,7 +13,7 @@
         <app-time-units [dateFilter]="dateFilterComponent"></app-time-units>
       </div>
       <div class="kChart">
-        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
+        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
       </div>
 
       <div class="kTable">
