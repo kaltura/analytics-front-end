@@ -63,53 +63,65 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'added_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5
           },
           'deleted_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 6
           },
           'total_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4
           },
           'added_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 2
           },
           'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3
           },
           'total_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 8
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 9
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 7
           },
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'total_entries',
+        preSelected: 'total_storage_mb',
         fields: {
           'total_storage_mb': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
             tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
             units: value => fileSize(value).units,
+            sortOrder: 1
           },
           'total_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_entries`),
             tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
+            sortOrder: 2
           },
           'total_msecs': {
             format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
             tooltip: this._translate.instant(`app.bandwidth.total_msecs_tt`),
             units: value => 'Min',
+            sortOrder: 3
           },
         }
       }

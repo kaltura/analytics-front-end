@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent, DateRangeType, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -34,6 +34,7 @@ export class EndUserStorageComponent implements OnInit {
   public _chartType = 'line';
   public _showTable = false;
   public _totalCount: number;
+  public _dateRange = DateRanges.CurrentQuarter;
 
   public _isBusy: boolean;
   public _csvExportHeaders = '';
@@ -52,7 +53,7 @@ export class EndUserStorageComponent implements OnInit {
     }
   );
 
-  private order = '-added_entries';
+  private order = '-total_storage_mb';
   private selectedUsers = '';
   private _dataConfig: ReportDataConfig = null;
 
