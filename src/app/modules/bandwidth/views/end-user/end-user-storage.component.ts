@@ -52,7 +52,7 @@ export class EndUserStorageComponent implements OnInit {
     }
   );
 
-  private order = '-added_entries';
+  private order = '-total_storage_mb';
   private selectedUsers = '';
   private _dataConfig: ReportDataConfig = null;
 

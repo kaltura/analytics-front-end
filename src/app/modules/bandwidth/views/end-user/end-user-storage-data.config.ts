@@ -63,31 +63,40 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'added_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5
           },
           'deleted_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 6
           },
           'total_entries': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4
           },
           'added_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 2
           },
           'deleted_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3
           },
           'total_storage_mb': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 8
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 9
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000)
+            format: value => ReportHelper.numberOrZero(value / 60000),
+            sortOrder: 7
           },
         }
       },
