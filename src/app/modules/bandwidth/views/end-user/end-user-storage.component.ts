@@ -134,6 +134,8 @@ export class EndUserStorageComponent implements OnInit {
     if (this.compareFilter) {
       this.compareFilter.userIds = this.filter.userIds;
     }
+
+    this.order = user.length ? '-month_id' : '-total_storage_mb';
     this.loadReport();
   }
 
@@ -228,13 +230,16 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   _onSortChanged(event) {
-    if (event.data.length && event.field && event.order && !this.isCompareMode) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this.order) {
-        this.order = order;
-        this.loadReport({ table: null });
+    setTimeout(() => {
+      if (event.data.length && event.field && event.order && !this.isCompareMode) {
+        const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+        if (order !== this.order) {
+          this.order = order;
+          this.loadReport({ table: null });
+        }
       }
-    }
+    }, 0);
+
   }
 
   private handleCompare(current: Report, compare: Report): void {
