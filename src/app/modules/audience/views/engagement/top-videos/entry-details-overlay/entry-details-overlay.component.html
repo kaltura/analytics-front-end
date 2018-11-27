@@ -1,0 +1,36 @@
+<div class="kEntryDetailsOverlay">
+  <k-area-blocker [showLoader]="_loading" [message]="_errorMessage">
+    <ng-container *ngIf="_data">
+      <div class="kEntryThumbnail" #holder>
+        <img [src]="_data.thumbnailUrl"
+             onError="this.onerror=null;this.style.display='none'"
+             (error)="holder.classList.add('error')">
+
+        <div class="kEntryName">
+          <span>{{_data.name}}</span>
+        </div>
+      </div>
+      <div class="kEntryDetails">
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.engagement.topVideosReport.type' | translate}}</div>
+          <div class="kValue">{{_data.type | appEntryType}}</div>
+        </div>
+
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.engagement.topVideosReport.creator' | translate}}</div>
+          <div class="kValue">{{_data.creator}}</div>
+        </div>
+
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.engagement.topVideosReport.creationDate' | translate}}</div>
+          <div class="kValue">{{_data.creationDate | date}}</div>
+        </div>
+
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.engagement.topVideosReport.duration' | translate}}</div>
+          <div class="kValue">{{_data.duration | appDuration}}</div>
+        </div>
+      </div>
+    </ng-container>
+  </k-area-blocker>
+</div>

@@ -32,7 +32,15 @@
           </div>
         </td>
         <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
-          <span class="kTableColumn" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</span>
+          <span *ngIf="col === 'entry_name'"
+                class="kTableColumn kEntryName"
+                (mouseleave)="_hideOverlay()"
+                (mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</span>
+
+          <span *ngIf="col !== 'entry_name'"
+                class="kTableColumn"
+                [kTooltip]="data[col]"
+                [showOnEllipsis]="true">{{data[col]}}</span>
         </td>
       </tr>
     </ng-template>
@@ -48,3 +56,7 @@
                [totalRecords]="_totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>
+
+<p-overlayPanel #overlay appendTo="body">
+  <app-entry-details-overlay *ngIf="_entryId" [entryId]="_entryId"></app-entry-details-overlay>
+</p-overlayPanel>
