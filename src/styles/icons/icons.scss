@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-game-console:before {
+  content: "\e908";
+}
 .icon-minus:before {
   content: "\e907";
 }
@@ -49,5 +52,3 @@
 .icon-regression:before {
   content: "\e902";
 }
-
-
