@@ -1,6 +1,6 @@
 import { Input } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { RefineChangeEvent } from '../filter/filter.component';
+import { RefineFilter } from '../filter/filter.component';
 
 export abstract class EngagementBaseReportComponent {
   @Input() set dateFilter(value: DateChangeEvent) {
@@ -11,7 +11,7 @@ export abstract class EngagementBaseReportComponent {
     }
   }
   
-  @Input() set refineFilter(value: RefineChangeEvent) {
+  @Input() set refineFilter(value: RefineFilter) {
     if (value) {
       this._refineFilter = value;
       this._loadReport();
@@ -19,7 +19,7 @@ export abstract class EngagementBaseReportComponent {
   }
   
   protected _dateFilter: DateChangeEvent;
-  protected _refineFilter: RefineChangeEvent;
+  protected _refineFilter: RefineFilter;
   
   protected abstract _loadReport(): void;
   

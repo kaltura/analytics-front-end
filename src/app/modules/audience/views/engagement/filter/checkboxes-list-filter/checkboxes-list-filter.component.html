@@ -1,0 +1,16 @@
+<div class="kRow">
+  <div class="kRowLabel">{{label}}</div>
+  <div class="kRowContent">
+    <div class="kCheckboxGroup" *ngFor="let option of options">
+      <p-checkbox name="mediaTypes"
+                  [inputId]="option.value"
+                  [value]="option.value"
+                  (onChange)="_onSelectionChange()"
+                  [(ngModel)]="_selectedValue"></p-checkbox>
+      <label [for]="option.value">
+        <span class="kLabel">{{option.label | translate}}</span>
+      </label>
+    </div>
+  </div>
+</div>
+

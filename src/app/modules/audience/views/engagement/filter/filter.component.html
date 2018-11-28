@@ -13,36 +13,17 @@
               [targetOffset]="{'x':-360, 'y': 35}">
   <ng-template>
     <div class="kFilterContainer kOverrideFAIcons">
-      <div class="kRow">
-        <div class="kRowLabel">{{'app.filters.mediaType' | translate}}</div>
-        <div class="kRowContent">
-          <div class="kCheckboxGroup" *ngFor="let type of _mediaTypes">
-            <p-checkbox name="mediaTypes"
-                        [inputId]="type.value"
-                        [value]="type.value"
-                        (onChange)="_onTypesSelectionChange()"
-                        [(ngModel)]="_selectedMediaTypes"></p-checkbox>
-            <label [for]="type.value">
-              <span class="kLabel">{{type.label | translate}}</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="kRow">
-        <div class="kRowLabel">{{'app.filters.deviceType' | translate}}</div>
-        <div class="kRowContent">
-          <div class="kCheckboxGroup" *ngFor="let type of _deviceTypes">
-            <p-checkbox name="deviceTypes"
-                        [inputId]="type.value"
-                        [value]="type.value"
-                        (onChange)="_onTypesSelectionChange()"
-                        [(ngModel)]="_selectedDeviceTypes"></p-checkbox>
-            <label [for]="type.value">
-              <span class="kLabel">{{type.label | translate}}</span>
-            </label>
-          </div>
-        </div>
-      </div>
+      <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
+                                  [options]="_mediaTypes"
+                                  [selectedFilters]="_selectedValues['mediaType']"
+                                  (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                  (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
+
+      <app-checkboxes-list-filter [label]="'app.filters.deviceType' | translate"
+                                  [options]="_deviceTypes"
+                                  [selectedFilters]="_selectedValues['deviceType']"
+                                  (itemSelected)="_onItemSelected($event, 'deviceType')"
+                                  (itemUnselected)="_onItemUnselected($event, 'deviceType')"></app-checkboxes-list-filter>
     </div>
   </ng-template>
 </kPopupWidget>

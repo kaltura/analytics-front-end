@@ -5,7 +5,7 @@
                     [reportType]="_reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-refine-filter [selectedFilters]="_selectedRefineFilters"
+    <app-refine-filter #refineFilter [selectedFilters]="_selectedRefineFilters"
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
     <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
@@ -17,8 +17,8 @@
            [labelField]="'label'"
            [tooltipField]="'label'"
            [clearAllLabel]="'app.common.clearAll' | translate"
-           (onTagRemove)="_onRemoveTag($event)"
-           (onRemoveAll)="_onRemoveAllTags()">
+           (onTagRemove)="refineFilter.removeFilter($event)"
+           (onRemoveAll)="refineFilter.removeAll()">
     </kTags>
   </div>
 
