@@ -18,7 +18,7 @@ export class ReportHelper {
     } else {
       x = x % 1 === 0
         ? round ? Math.round(x) : x
-        : Number(x.toPrecision(2));
+        : Number(x.toPrecision(3)).toFixed(2);
       
       return ReportHelper.numberWithCommas(x);
     }
