@@ -15,7 +15,7 @@ export class TechnologyComponent implements OnInit {
   public _dateRange = DateRanges.Last30D;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
-  public _allowedDevices = ['COMPUTER', 'MOBILE', 'TABLET'];
+  public _allowedDevices = ['COMPUTER', 'MOBILE', 'TABLET', 'GAME_CONSOLE'];
   public _filterEvent: DateChangeEvent = null;
   public _devicesFilter: string[] = null;
   public _devicesList: { value: string, label: string; }[] = [];

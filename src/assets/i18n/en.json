@@ -196,6 +196,7 @@
           "COMPUTER": "Desktop",
           "MOBILE": "Mobile",
           "TABLET": "Tablet",
+          "GAME_CONSOLE": "Game Console",
           "OTHER": "Other"
         }
       }
