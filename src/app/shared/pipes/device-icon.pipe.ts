@@ -8,7 +8,7 @@ export class DeviceIconPipe implements PipeTransform {
     'COMPUTER': 'icon-desktop',
     'TABLET': 'icon-tablet',
     'MOBILE': 'icon-phone',
-    'GAME_CONSOLE': 'kIcondevices',
+    'GAME_CONSOLE': 'icon-game-console',
     'OTHER': 'kIcondevices'
   };
 
