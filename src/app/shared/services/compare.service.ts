@@ -50,7 +50,7 @@ export class CompareService implements OnDestroy {
 
       currentData.forEach((currentValue, j) => {
         const compareValue = compareData[j];
-        if (currentValue.length && compareValue.length) {
+        if (currentValue && currentValue.length && compareValue && compareValue.length) {
           const currentLabel = currentValue.split(',')[0];
 
           const currentName = reportInterval === KalturaReportInterval.months

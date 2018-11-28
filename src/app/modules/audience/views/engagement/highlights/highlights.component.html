@@ -43,9 +43,10 @@
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
-                    <i [class]="data[col].trend | appTrend"></i>
                     <span [kTooltip]="data[col].tooltip" [escape]="false">
-                      {{data[col].value}}&nbsp;{{data[col].units}}
+                      <app-trend-value [value]="data[col].value"
+                                       [units]="data[col].units"
+                                       [trend]="data[col].trend"></app-trend-value>
                     </span>
                   </span>
                   <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id'">

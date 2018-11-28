@@ -6,8 +6,9 @@
     <span class="kTabTitle">{{tab.title}}</span>
     <div class="kValueContainer" *ngIf="showValue">
       <span *ngIf="compareMode" class="kTrend">
-        <i [class]="tab.trend | appTrend"></i>
-        <span class="kValue">{{tab.value}}</span>
+        <app-trend-value valueStyleClass="kValue"
+                         [value]="tab.value"
+                         [trend]="tab.trend"></app-trend-value>
         <span class="kUnits">{{tab.units}}</span>
       </span>
       <ng-container *ngIf="!compareMode">
