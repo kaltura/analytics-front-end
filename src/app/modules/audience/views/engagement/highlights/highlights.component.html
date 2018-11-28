@@ -10,7 +10,7 @@
                        [compareMode]="_isCompareMode"
                        (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
-        <app-time-units [dateFilter]="dateFilterComponent"></app-time-units>
+        <app-time-units [dateFilter]="dateFilterComponent" [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
         <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
@@ -24,7 +24,7 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table sortField="count_plays"
+          <p-table sortField="month_id"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"

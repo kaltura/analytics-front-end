@@ -222,12 +222,12 @@
         "date_id": "Day",
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
-        "avg_view_drop_off": "Drop Off Rate",
-        "count_plays_tt": "Plays",
         "unique_known_users": "Unique Viewers",
-        "sum_time_viewed_tt": "Minutes Viewed",
-        "unique_known_users_tt": "Unique Viewers",
-        "avg_view_drop_off_tt": "Drop Off Rate"
+        "avg_view_drop_off": "Drop Off Rate",
+        "count_plays_tt": "Total plays in the selected timeframe",
+        "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
+        "unique_known_users_tt": "Total unique viewers in the selected timeframe",
+        "avg_view_drop_off_tt": "Average view period in the selected timeframe"
       },
       "topVideosReport": {
         "entry_name": "Name",
