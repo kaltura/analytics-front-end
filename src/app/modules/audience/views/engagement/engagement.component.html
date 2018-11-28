@@ -7,7 +7,7 @@
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
     <app-refine-filter [selectedFilters]="_selectedRefineFilters"
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
-    <app-date-filter #dateFilter [dateRange]="_dateRange"
+    <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 

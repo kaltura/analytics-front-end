@@ -18,6 +18,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./date-filter.component.scss']
 })
 export class DateFilterComponent implements OnInit, OnDestroy {
+  @Input() selectedTimeUnit = KalturaReportInterval.months;
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {
@@ -48,8 +49,6 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public currDateRangeItems: SelectItem[] = [];
   public selectedDateRange: DateRanges;
   private lastSelectedDateRange: DateRanges; // used for revert selection
-
-  public selectedTimeUnit: KalturaReportInterval = KalturaReportInterval.months;
 
   public viewItems: SelectItem[] = [
     {label: this._translate.instant('app.dateFilter.preset'), value: 'preset'},

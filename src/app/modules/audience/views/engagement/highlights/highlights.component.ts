@@ -23,7 +23,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private _order = '-count_plays';
+  private _order = '-month_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
 
@@ -35,7 +35,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _tabsData: Tab[] = [];
   public _tableData: any[] = [];
   public _selectedMetrics: string;
-  public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
+  public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
   public _showTable = false;

@@ -10,12 +10,20 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
   styleUrls: ['./time-units.component.scss']
 })
 export class TimeUnitsComponent implements OnInit {
+  @Input() set selectedTimeUnit(value: KalturaReportInterval) {
+    if (value) {
+      this._selectedTimeUnit = value;
+    }
+  }
+
   @Input() dateFilter: DateFilterComponent;
-  public timeUnitsItems: SelectItem[] = [
+  
+  public _selectedTimeUnit = KalturaReportInterval.months;
+
+  public _timeUnitsItems: SelectItem[] = [
     {label: this._translate.instant('app.dateFilter.monthly'), value: KalturaReportInterval.months},
     {label: this._translate.instant('app.dateFilter.daily'), value: KalturaReportInterval.days},
   ];
-  public selectedTimeUnit: KalturaReportInterval = KalturaReportInterval.months;
   constructor(private _translate: TranslateService, private _logger: KalturaLogger) {
   }
   ngOnInit() {
@@ -24,6 +32,6 @@ export class TimeUnitsComponent implements OnInit {
     }
   }
   public onTimeUnitsChange(): void {
-    this.dateFilter.timeUnitsChange(this.selectedTimeUnit);
+    this.dateFilter.timeUnitsChange(this._selectedTimeUnit);
   }
 }
