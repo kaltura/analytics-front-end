@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
+import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -31,6 +31,7 @@ export class PublisherStorageComponent implements OnInit {
   public _chartType = 'line';
   public _lineChartData: any = {'bandwidth_consumption': {}};
   public _barChartData: any = {'bandwidth_consumption': {}};
+  public _dateRange = DateRanges.CurrentQuarter;
 
   public _isBusy: boolean;
   public _csvExportHeaders = '';
