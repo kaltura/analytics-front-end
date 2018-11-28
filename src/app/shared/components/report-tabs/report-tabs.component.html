@@ -7,7 +7,10 @@
     <div class="kValueContainer" *ngIf="showValue">
       <span *ngIf="compareMode" class="kTrend">
         <i [class]="tab.trend | appTrend"></i>
-        <span class="kValue">{{tab.value}}</span>
+        <span class="kValue">
+          <ng-container *ngIf="tab.value !== '–'">{{tab.value}}</ng-container>
+          <i class="kValue icon-minus" *ngIf="tab.value === '–'"></i>
+        </span>
         <span class="kUnits">{{tab.units}}</span>
       </span>
       <ng-container *ngIf="!compareMode">
