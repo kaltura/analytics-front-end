@@ -23,13 +23,13 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   private _compareFilter: KalturaReportInputFilter = null;
   private _pager = new KalturaFilterPager();
   private _dataConfig: ReportDataConfig;
-  private _reportInterval = KalturaReportInterval.days;
+  private _reportInterval = KalturaReportInterval.months;
   private _filter = new KalturaReportInputFilter({
     searchInTags: true,
-    searchInAdminTags: false
+    searchInAdminTags: false,
+    interval: this._reportInterval,
   });
   
-  public _chartType = 'bar';
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _isCompareMode: boolean;
@@ -37,7 +37,6 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.uniqueUsersPlay;
   public _barChartData: any = {};
-  public _lineChartData: any = {};
   public _totalUsers = 0;
   public _totalUsersCompare: {
     trend: number,
@@ -127,9 +126,6 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
-    this._filter.interval = this._dateFilter.timeUnits;
-    this._reportInterval = this._dateFilter.timeUnits;
-    // this._chartType = this._reportInterval === KalturaReportInterval.days ? 'line' : 'bar';
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
@@ -152,9 +148,8 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
-    const { lineChartData, barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
     this._barChartData = barChartData['default'];
-    this._lineChartData = lineChartData['default'];
   
     this._totalUsers = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
   }
@@ -166,7 +161,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     if (current.table && compare.table) {
       const currentGraph = [{ id: 'default', data: current.table.data } as KalturaReportGraph];
       const compareGraph = [{ id: 'default', data: compare.table.data } as KalturaReportGraph];
-      const { lineChartData, barChartData } = this._compareService.compareGraphData(
+      const { barChartData } = this._compareService.compareGraphData(
         currentPeriod,
         comparePeriod,
         currentGraph,
@@ -175,22 +170,12 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
         this._reportInterval
       );
       this._barChartData = barChartData['default'];
-      this._lineChartData = lineChartData['default'];
   
       const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
       const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
   
-      let currentPeriodTitle = '';
-      let comparePeriodTitle = '';
-
-      if (this._reportInterval === KalturaReportInterval.months) {
-        currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
-        comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
-      } else {
-        currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
-        comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
-      }
-  
+      const currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
+      const comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
       const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
   
       const tooltip = `
