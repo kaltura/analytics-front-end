@@ -72,9 +72,9 @@
                   <span *ngIf="col === 'plays_trend'">
                     <h5 class="mini-loader" *ngIf="!data[col]"><span></span><span></span></h5>
                     <span *ngIf="data[col]" class="kTrend" [kTooltip]="data[col].tooltip" [escape]="false">
-                      <i [class]="data[col].trendDirection | appTrend"></i>
-                      <span *ngIf="data[col].trend !== '–'">{{data[col].trend}}&nbsp;{{data[col].units}}</span>
-                      <i class="kValue icon-minus" *ngIf="data[col].trend === '–'"></i>
+                      <app-trend-value [value]="data[col].trend"
+                                       [units]="data[col].units"
+                                       [trend]="data[col].trendDirection"></app-trend-value>
                     </span>
                   </span>
                   <div *ngIf="col === 'plays_distribution'">

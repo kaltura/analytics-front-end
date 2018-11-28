@@ -47,9 +47,9 @@
                   <span *ngIf="isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
                         [kTooltip]="data[col].tooltip" [escape]="false">
-                    <i [class]="data[col].trend | appTrend"></i>
-                    <span *ngIf="data[col].value !== '–'">{{data[col].value}}&nbsp;{{data[col].units}}</span>
-                    <i class="kValue icon-minus" *ngIf="data[col].value === '–'"></i>
+                    <app-trend-value [value]="data[col].value"
+                                     [units]="data[col].units"
+                                     [trend]="data[col].trend"></app-trend-value>
                   </span>
                   <span *ngIf="!isCompareMode || data[col]?.value === undefined">{{data[col]}}</span>
                 </td>
@@ -67,11 +67,9 @@
           <span class="kLabel">{{item.title}}</span>
           <div class="kValueContainer">
             <span *ngIf="isCompareMode" class="kTrend" [kTooltip]="item.tooltip" [escape]="false">
-              <i [class]="item.trend | appTrend"></i>
-              <span class="kValue">
-                <ng-container *ngIf="item.value !== '–'">{{item.value}}</ng-container>
-                <i class="kValue icon-minus" *ngIf="item.value === '–'"></i>
-              </span>
+              <app-trend-value valueStyleClass="kValue"
+                               [value]="item.value"
+                               [trend]="item.trend"></app-trend-value>
               <span class="kUnits">{{item.units}}</span>
             </span>
             <ng-container *ngIf="!isCompareMode">

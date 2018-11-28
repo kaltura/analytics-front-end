@@ -65,9 +65,9 @@
                   <span *ngIf="isCompareMode && data[col]?.value && col !== 'name' && col !== 'month_id' && col !== 'date_id'"
                         class="kTrend"
                         [kTooltip]="data[col].tooltip" [escape]="false">
-                    <i [class]="data[col].trend | appTrend"></i>
-                    <span *ngIf="data[col].value !== '–'">{{data[col].value}}&nbsp;{{data[col].units}}</span>
-                    <i class="kValue icon-minus" *ngIf="data[col].value === '–'"></i>
+                    <app-trend-value [value]="data[col].value"
+                                     [units]="data[col].units"
+                                     [trend]="data[col].trend"></app-trend-value>
                   </span>
                   <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
                     <span *ngIf="col !== 'name'">{{data[col]}}</span>

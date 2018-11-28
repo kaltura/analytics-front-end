@@ -148,11 +148,9 @@
                   <span>
                     <h5 class="mini-loader" *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
                     <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [escape]="false">
-                      <i [class]="data[_selectedMetrics+'_trend']?.trendDirection | appTrend"></i>
-                      <span *ngIf="data[_selectedMetrics+'_trend']?.trend !== '–'">
-                        {{data[_selectedMetrics+'_trend']?.trend}}&nbsp;{{data[_selectedMetrics+'_trend']?.units}}
-                      </span>
-                      <i class="kValue icon-minus" *ngIf="data[_selectedMetrics+'_trend']?.trend === '–'"></i>
+                      <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
+                                       [units]="data[_selectedMetrics+'_trend']?.units"
+                                       [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
                     </span>
                   </span>
                 </td>

@@ -33,7 +33,7 @@
       margin-top: auto;
       display: flex;
       align-items: flex-end;
-      .kValue{
+      /deep/ .kValue{
         font-size: 24px;
         font-weight: bold;
         color: $kGrayscale1;

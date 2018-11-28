@@ -27,6 +27,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { TrendValueComponent } from 'shared/components/trend-value/trend-value.component';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
     EntryTypePipe,
     DurationPipe,
     OverlayComponent,
+    TrendValueComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -69,6 +71,7 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
     EntryTypePipe,
     DurationPipe,
     OverlayComponent,
+    TrendValueComponent,
   ],
   providers: [
   ]
