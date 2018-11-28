@@ -16,7 +16,6 @@ export class ReportHelper {
     if (isNaN(x)) {
       return '0';
     } else {
-      x = parseFloat(x);
       x = x % 1 === 0
         ? round ? Math.round(x) : x
         : Number(x.toPrecision(2));
