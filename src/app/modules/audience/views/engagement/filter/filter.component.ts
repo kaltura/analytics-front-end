@@ -1,8 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
 export interface OptionItem {
   value: any;
   label: string;
+}
+
+export interface FilterItem {
+  value: any;
+  type: string;
 }
 
 export type RefineFilter = { value: any, type: string }[];
@@ -22,17 +28,23 @@ export class FilterComponent {
           this._selectedValues[item.type].push(item.value);
         }
       });
+      this._updateAppliedValues();
     }
   }
   
   @Output() filterChange = new EventEmitter<RefineFilter>();
   
-  private _currentFilters: any[] = [];
+  @ViewChild('refineFilters') _refineFiltersPopup: PopupWidgetComponent;
   
-  public _selectedValues: { [key: string]: string[]; };
+  private _currentFilters: FilterItem[] = [];
+  private _appliedFilters: FilterItem[] = [];
+  private _selectedValues: { [key: string]: string[]; };
+  
+  public _appliedValues: { [key: string]: string[]; };
+  
   
   constructor() {
-    this._resetSelectedValues();
+    this._clearAll();
   }
   
   public _mediaTypes: OptionItem[] = [
@@ -63,19 +75,28 @@ export class FilterComponent {
     { value: 'classroom', label: 'app.filters.classroom' },
   ];
   
-  private _resetSelectedValues(): void {
+  private _clearAll(): void {
+    this._resetLocalValues();
+    this._updateAppliedValues();
+  }
+  
+  public _resetLocalValues(): void {
     this._selectedValues = {
       'mediaType': [],
       'deviceType': [],
       'applications': [],
       'entrySources': [],
     };
+    this._currentFilters = [];
+  }
+  
+  private _updateAppliedValues(): void {
+    this._appliedValues = Object.keys(this._selectedValues).reduce((result, key) => (result[key] = [...this._selectedValues[key]], result), {});
   }
   
   public _onItemSelected(item: any, type: string): void {
     this._currentFilters.push({ value: item, type });
     this._selectedValues[type].push(item);
-    this.filterChange.emit(this._currentFilters);
   }
   
   public _onItemUnselected(item: any, type: string): void {
@@ -89,17 +110,26 @@ export class FilterComponent {
     if (unselectedValueIndex !== -1) {
       this._selectedValues[type].splice(unselectedValueIndex, 1);
     }
+  }
   
-    this.filterChange.emit(this._currentFilters);
+  public _apply(): void {
+    this._updateAppliedValues();
+    this._appliedFilters = [...this._currentFilters];
+    this.filterChange.emit([...this._appliedFilters]);
+    
+    if (this._refineFiltersPopup) {
+      this._refineFiltersPopup.close();
+    }
   }
   
   public removeFilter(item: { value: string, label: string, type: string }): void {
     this._onItemUnselected(item.value, item.type);
+    this._apply();
   }
   
   public removeAll(): void {
-    this._resetSelectedValues();
+    this._clearAll();
     this._currentFilters = [];
-    this.filterChange.emit(this._currentFilters);
+    this._apply();
   }
 }
