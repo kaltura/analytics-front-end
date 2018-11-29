@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
+import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -27,7 +27,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
-  public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
+  public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
+  public _dateRange = DateRanges.Last30D;
 
   public _tableData: any[] = [];
   private unFilteredTableData: any[] = [];
