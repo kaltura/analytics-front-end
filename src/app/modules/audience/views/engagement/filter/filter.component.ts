@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+export interface OptionItem {
+  value: any;
+  label: string;
+}
+
 export type RefineFilter = { value: any, type: string }[];
 
 @Component({
@@ -30,24 +35,40 @@ export class FilterComponent {
     this._resetSelectedValues();
   }
   
-  public _mediaTypes: { value: string, label: string; }[] = [
+  public _mediaTypes: OptionItem[] = [
     { value: 'vod', label: 'app.filters.vod' },
     { value: 'live', label: 'app.filters.live' },
     { value: 'audio', label: 'app.filters.audio' },
     { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' },
   ];
   
-  public _deviceTypes: { value: string, label: string; }[] = [
+  public _deviceTypes: OptionItem[] = [
     { value: 'mobile', label: 'app.filters.mobile' },
     { value: 'tablet', label: 'app.filters.tablet' },
     { value: 'desktop', label: 'app.filters.desktop' },
     { value: 'other', label: 'app.filters.other' },
   ];
   
+  public _applications: OptionItem[] = [
+    { value: 'mediaSpace', label: 'app.filters.mediaSpace' },
+    { value: 'mediaSpaceGo', label: 'app.filters.mediaSpaceGo' },
+    { value: 'pitch', label: 'app.filters.pitch' },
+    { value: 'others', label: 'app.filters.others' },
+  ];
+  
+  public _entrySources: OptionItem[] = [
+    { value: 'upload', label: 'app.filters.upload' },
+    { value: 'webcasting', label: 'app.filters.webcasting' },
+    { value: 'capture', label: 'app.filters.capture' },
+    { value: 'classroom', label: 'app.filters.classroom' },
+  ];
+  
   private _resetSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
       'deviceType': [],
+      'applications': [],
+      'entrySources': [],
     };
   }
   

@@ -10,6 +10,8 @@
     "filters": {
       "mediaType": "Media Type",
       "deviceType": "Device Type",
+      "applications": "Applications",
+      "entrySource": "Entry Source",
       "vod": "VOD",
       "live": "Live",
       "audio": "Audio",
@@ -17,7 +19,15 @@
       "mobile": "Mobile",
       "tablet": "Tablet",
       "desktop": "Desktop",
-      "other": "Other"
+      "other": "Other",
+      "mediaSpace": "Media Space",
+      "mediaSpaceGo": "Media Space Go",
+      "pitch": "Pitch",
+      "others": "Others",
+      "upload": "Upload",
+      "webcasting": "Webcasting",
+      "capture": "Capture",
+      "classroom": "Classroom"
     },
     "common":{
       "ok": "OK",

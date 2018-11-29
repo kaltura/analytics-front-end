@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
+import { OptionItem } from '../filter.component';
 
 @Component({
   selector: 'app-checkboxes-list-filter',
@@ -14,7 +15,7 @@ export class CheckboxesListFilterComponent {
   }
   
   @Input() label: string;
-  @Input() options: { value: string, label: string; }[] = [];
+  @Input() options: OptionItem[] = [];
 
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
