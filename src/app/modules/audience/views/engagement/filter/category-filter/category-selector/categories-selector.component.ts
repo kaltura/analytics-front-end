@@ -70,12 +70,12 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
   
   public _removeTag(tag: CategoryData): void {
     if (tag && tag.id) {
-      const tagIndex = this._selectedCategories.findIndex(item => item.id + '' === tag.id + '');
+      const tagIndex = this._selectedCategories.findIndex(item => String(item.id) === String(tag.id));
       if (tagIndex > -1) {
         this._selectedCategories.splice(tagIndex, 1);
       }
       
-      this._treeSelection = this._treeSelection.filter(item => item + '' !== tag.id + '');
+      this._treeSelection = this._treeSelection.filter(item => String(item) !== String(tag.id));
     }
   }
   
@@ -133,13 +133,13 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
     const selectedItem: CategoryData = this._autoComplete.getValue();
     
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-      const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
+      const selectedCategoryIndex = this._selectedCategories.findIndex(item => String(item.id) === String(selectedItem.id));
       
       if (selectedCategoryIndex === -1) {
         this._selectedCategories.push(selectedItem);
       }
       
-      const treeSelectionIndex = this._treeSelection.findIndex(item => item + '' === selectedItem.id + '');
+      const treeSelectionIndex = this._treeSelection.findIndex(item => String(item) === String(selectedItem.id));
       
       if (treeSelectionIndex === -1) {
         this._treeSelection = [...this._treeSelection, selectedItem.id];
