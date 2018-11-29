@@ -169,6 +169,7 @@ export class CompareService implements OnDestroy {
           left: 'left',
           bottom: 0,
           padding: [16, 0, 0, 80],
+          selectedMode: false,
           textStyle: {
             fontSize: 12,
             fontWeight: 'bold'
@@ -266,6 +267,7 @@ export class CompareService implements OnDestroy {
           left: 'left',
           bottom: 0,
           padding: [16, 0, 0, 80],
+          selectedMode: false,
           textStyle: {
             fontSize: 12,
             fontWeight: 'bold'
