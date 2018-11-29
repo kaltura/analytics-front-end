@@ -27,7 +27,9 @@
       "upload": "Upload",
       "webcasting": "Webcasting",
       "capture": "Capture",
-      "classroom": "Classroom"
+      "classroom": "Classroom",
+      "category": "Category",
+      "selectCategory": "Select Category"
     },
     "common":{
       "ok": "OK",
@@ -228,6 +230,7 @@
       "perc75": "75% Play-through",
       "perc100": "100% Play - through",
       "totalUsers": "Total Users",
+      "metadata": "Metadata",
       "highlightsReport": {
         "month_id": "Month",
         "date_id": "Day",

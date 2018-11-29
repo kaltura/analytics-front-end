@@ -27,10 +27,10 @@ export class FilterComponent {
   
   @ViewChild('refineFilters') _refineFiltersPopup: PopupWidgetComponent;
   
-  private _currentFilters: FilterItem[] = [];
+  private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
   
-  public _selectedValues: { [key: string]: string[]; };
+  public _selectedValues: { [key: string]: string[]; }; // local state
   
   constructor() {
     this._clearAll();
@@ -116,6 +116,7 @@ export class FilterComponent {
   }
   
   public _apply(): void {
+    // using spread to prevent passing by reference to avoid unwanted mutations
     this._appliedFilters = [...this._currentFilters];
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);

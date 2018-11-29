@@ -51,6 +51,14 @@
     .kFilterContainer {
       padding: 32px 24px;
     }
+
+    .kGroupTitle {
+      display: inline-block;
+      color: $kGrayscale3;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
   }
 
   .kPopupFooter {

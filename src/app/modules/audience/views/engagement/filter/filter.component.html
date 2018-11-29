@@ -40,6 +40,9 @@
                                       [selectedFilters]="_selectedValues['deviceType']"
                                       (itemSelected)="_onItemSelected($event, 'deviceType')"
                                       (itemUnselected)="_onItemUnselected($event, 'deviceType')"></app-checkboxes-list-filter>
+          <span class="kGroupTitle">{{'app.engagement.metadata' | translate}}</span>
+          <app-category-filter [label]="'app.filters.category' | translate"
+                               [linkLabel]="'app.filters.selectCategory' | translate"></app-category-filter>
         </div>
       </div>
       <div class="kPopupFooter">

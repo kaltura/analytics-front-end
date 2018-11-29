@@ -33,6 +33,7 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 import { CheckboxesListFilterComponent } from './views/engagement/filter/checkboxes-list-filter/checkboxes-list-filter.component';
+import { CategoryFilterComponent } from './views/engagement/filter/category-filter/category-filter.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { CheckboxesListFilterComponent } from './views/engagement/filter/checkbo
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
     CheckboxesListFilterComponent,
+    CategoryFilterComponent,
   ],
   exports: [],
   providers: []

@@ -1,0 +1,12 @@
+@import '../../../../../../../styles/variables';
+
+
+.kRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  & > div {
+    flex: 1;
+  }
+}
