@@ -20,6 +20,7 @@
 
 
     <app-categories-tree #categoriesTree
+                         [disablePropagation]="false"
                          [(selectedCategories)]="_treeSelection"
                          (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
                          (onCategorySelected)="_onCategorySelected($event)"
@@ -27,6 +28,15 @@
   </div>
 
   <div class="kFooter">
-    <button class="kButtonBranded" pButton [label]="'app.categories.select' | translate:[_treeSelection.length]" (click)="_apply()"></button>
+    <div class="kActions">
+      <a (click)="_cancel()">{{'app.common.cancel' | translate}}</a>
+      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length <= 1"
+              [disabled]="!_selectedCategories.length"
+              [label]="'app.categories.select' | translate"
+              (click)="_apply()"></button>
+      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length >= 2"
+              [label]="'app.categories.selectCount' | translate:{'0': _selectedCategories.length}"
+              (click)="_apply()"></button>
+    </div>
   </div>
 </div>

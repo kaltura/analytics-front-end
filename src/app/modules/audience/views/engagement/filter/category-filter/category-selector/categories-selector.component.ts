@@ -68,6 +68,13 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
     }
   }
   
+  public _cancel(): void {
+    if (this.parentPopupWidget) {
+      this._confirmClose = false;
+      this.parentPopupWidget.close({ isDirty: true });
+    }
+  }
+  
   public _removeTag(tag: CategoryData): void {
     if (tag && tag.id) {
       const tagIndex = this._selectedCategories.findIndex(item => String(item.id) === String(tag.id));

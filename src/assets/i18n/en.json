@@ -35,7 +35,8 @@
       "selectCategories": "Select Categories",
       "searchCategories": "Find Category",
       "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}",
-      "select": "Select {{0}}",
+      "select": "Select",
+      "selectCount": "Select {{0}}",
       "loading": "Loading...",
       "loadingError": "Failed to load children.",
       "maxChildrenExceeded": "Number of categories exceeds {{childrenCount}}\nand cannot be displayed.\nPlease use the Search Category control."
