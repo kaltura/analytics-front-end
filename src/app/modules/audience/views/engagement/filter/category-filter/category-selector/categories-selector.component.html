@@ -1,0 +1,32 @@
+<div class="kAddCategory kTreeContainer kOverrideFAIcons">
+  <div class="kHeader">
+    <span class="kTitle">{{'app.categories.selectCategories' | translate}}</span>
+  </div>
+
+  <div class="kMain">
+    <kAutoComplete #autoComplete
+                   [disabled]="!_categoriesLoaded"
+                   [multiple]="false"
+                   field="name"
+                   suggestionItemField="item"
+                   suggestionLabelField="name"
+                   suggestionSelectableField="isSelectable"
+                   [placeholder]="'app.categories.searchCategories' | translate"
+                   [minLength]="3"
+                   (onSelect)="_onAutoCompleteSelected()"
+                   [suggestionsProvider]="_categoriesProvider"
+                   (completeMethod)="_onAutoCompleteSearch($event)">
+    </kAutoComplete>
+
+
+    <app-categories-tree #categoriesTree
+                         [(selectedCategory)]="_treeSelection"
+                         (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
+                         (onCategorySelected)="_onCategorySelected($event)"
+                         (onCategoryUnselected)="_onCategoryUnselected($event)"></app-categories-tree>
+  </div>
+
+  <div class="kFooter">
+    <button class="kButtonBranded" pButton [label]="'app.categories.select' | translate:[_treeSelection.length]" (click)="_apply()"></button>
+  </div>
+</div>

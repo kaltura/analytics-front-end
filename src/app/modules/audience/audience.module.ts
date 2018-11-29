@@ -34,6 +34,7 @@ import { TopVideosTableComponent } from './views/engagement/top-videos/top-video
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 import { CheckboxesListFilterComponent } from './views/engagement/filter/checkboxes-list-filter/checkboxes-list-filter.component';
 import { CategoryFilterComponent } from './views/engagement/filter/category-filter/category-filter.component';
+import { CategoriesSelectorComponent } from './views/engagement/filter/category-filter/category-selector/categories-selector.component';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { CategoryFilterComponent } from './views/engagement/filter/category-filt
     EntryDetailsOverlayComponent,
     CheckboxesListFilterComponent,
     CategoryFilterComponent,
+    CategoriesSelectorComponent,
   ],
   exports: [],
   providers: []
