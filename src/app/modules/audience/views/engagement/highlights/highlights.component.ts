@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -152,6 +151,13 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       });
     } else {
       this._compareFilter = null;
+    }
+  }
+  
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
     }
   }
   

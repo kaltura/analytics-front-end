@@ -146,6 +146,13 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     }
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
+  
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
     const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);

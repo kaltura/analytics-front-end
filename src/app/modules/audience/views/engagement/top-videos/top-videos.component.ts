@@ -145,6 +145,13 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     }
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
+  
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {

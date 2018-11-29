@@ -282,4 +282,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       this.compareFilter = null;
     }
   }
+  
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this.filter);
+    if (this.compareFilter) {
+      this._refineFilterToServerValue(this.compareFilter);
+    }
+  }
 }
