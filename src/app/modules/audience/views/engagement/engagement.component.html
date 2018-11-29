@@ -6,16 +6,17 @@
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
     <app-refine-filter #refineFilter [selectedFilters]="_selectedRefineFilters"
-                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+                       (filterChange)="_onRefineFilterChange($event)"
+                       (filterTagsChange)="_onFilterTagsChange($event)"></app-refine-filter>
     <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer kTagsContainer" *ngIf="_tags.length">
-    <kTags [title]="''"
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
            [data]="_tags"
-           [labelField]="'label'"
-           [tooltipField]="'label'"
            [clearAllLabel]="'app.common.clearAll' | translate"
            (onTagRemove)="refineFilter.removeFilter($event)"
            (onRemoveAll)="refineFilter.removeAll()">

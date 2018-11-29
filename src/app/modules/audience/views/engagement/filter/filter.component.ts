@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { TranslateService } from '@ngx-translate/core';
+import { CategoryData } from 'shared/services/categories-search.service';
 
 export interface OptionItem {
   value: any;
@@ -10,6 +12,14 @@ export interface FilterItem {
   value: any;
   type: string;
 }
+
+export interface FilterTagItem {
+  label: string;
+  value: any;
+  type: string;
+  tooltip: string;
+}
+
 
 export type RefineFilter = { value: any, type: string }[];
 
@@ -24,6 +34,7 @@ export class FilterComponent {
   }
   
   @Output() filterChange = new EventEmitter<RefineFilter>();
+  @Output() filterTagsChange = new EventEmitter<FilterTagItem[]>();
   
   @ViewChild('refineFilters') _refineFiltersPopup: PopupWidgetComponent;
   
@@ -32,7 +43,7 @@ export class FilterComponent {
   
   public _selectedValues: { [key: string]: string[]; }; // local state
   
-  constructor() {
+  constructor(private _translate: TranslateService) {
     this._clearAll();
   }
   
@@ -70,7 +81,30 @@ export class FilterComponent {
       'deviceType': [],
       'applications': [],
       'entrySources': [],
+      'categories': [],
     };
+  }
+  
+  private _prepareFilterTags(): FilterTagItem[] {
+    let label, tooltip;
+    return this._appliedFilters.map(({ value, type }) => {
+      switch (type) {
+        case 'mediaType':
+        case 'deviceType':
+        case 'applications':
+        case 'entrySources':
+          label = this._translate.instant(`app.filters.${value}`);
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${label}`;
+          return { value, type, label, tooltip };
+        case 'categories':
+          const category = value as CategoryData;
+          label = category.name;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${category.fullName}`;
+          return { value, type, label, tooltip };
+        default:
+          return null;
+      }
+    }).filter(Boolean);
   }
   
   private _clearAll(): void {
@@ -120,6 +154,7 @@ export class FilterComponent {
     this._appliedFilters = [...this._currentFilters];
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
+    this.filterTagsChange.emit(this._prepareFilterTags());
     
     if (this._refineFiltersPopup) {
       this._refineFiltersPopup.close();
