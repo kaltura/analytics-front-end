@@ -11,32 +11,33 @@
               [closeBtn]="false"
               [targetRef]="filterBtn"
               [targetOffset]="{'x':-360, 'y': 35}"
-              (onClose)="_resetLocalValues()">
+              (onOpen)="_onPopupOpen()"
+              (onClose)="_onPopupClose()">
   <ng-template>
     <div class="kPopupContainer">
       <div class="kPopupContent">
         <div class="kFilterContainer kOverrideFAIcons">
           <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
                                       [options]="_mediaTypes"
-                                      [selectedFilters]="_appliedValues['mediaType']"
+                                      [selectedFilters]="_selectedValues['mediaType']"
                                       (itemSelected)="_onItemSelected($event, 'mediaType')"
                                       (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
           <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
                                       [options]="_applications"
-                                      [selectedFilters]="_appliedValues['applications']"
+                                      [selectedFilters]="_selectedValues['applications']"
                                       (itemSelected)="_onItemSelected($event, 'applications')"
                                       (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
 
           <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
                                       [options]="_entrySources"
-                                      [selectedFilters]="_appliedValues['entrySources']"
+                                      [selectedFilters]="_selectedValues['entrySources']"
                                       (itemSelected)="_onItemSelected($event, 'entrySources')"
                                       (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
 
           <app-checkboxes-list-filter [label]="'app.filters.deviceType' | translate"
                                       [options]="_deviceTypes"
-                                      [selectedFilters]="_appliedValues['deviceType']"
+                                      [selectedFilters]="_selectedValues['deviceType']"
                                       (itemSelected)="_onItemSelected($event, 'deviceType')"
                                       (itemUnselected)="_onItemUnselected($event, 'deviceType')"></app-checkboxes-list-filter>
         </div>

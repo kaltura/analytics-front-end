@@ -20,16 +20,7 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @Input() set selectedFilters(value: RefineFilter) {
-    if (Array.isArray(value)) {
-      value.forEach(item => {
-        if (!this._selectedValues[item.type]) {
-          this._selectedValues[item.type] = [item.value];
-        } else {
-          this._selectedValues[item.type].push(item.value);
-        }
-      });
-      this._updateAppliedValues();
-    }
+    this._updateSelectedValues(value);
   }
   
   @Output() filterChange = new EventEmitter<RefineFilter>();
@@ -38,10 +29,8 @@ export class FilterComponent {
   
   private _currentFilters: FilterItem[] = [];
   private _appliedFilters: FilterItem[] = [];
-  private _selectedValues: { [key: string]: string[]; };
   
-  public _appliedValues: { [key: string]: string[]; };
-  
+  public _selectedValues: { [key: string]: string[]; };
   
   constructor() {
     this._clearAll();
@@ -75,46 +64,60 @@ export class FilterComponent {
     { value: 'classroom', label: 'app.filters.classroom' },
   ];
   
-  private _clearAll(): void {
-    this._resetLocalValues();
-    this._updateAppliedValues();
-  }
-  
-  public _resetLocalValues(): void {
+  private _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
       'deviceType': [],
       'applications': [],
       'entrySources': [],
     };
-    this._currentFilters = [];
   }
   
-  private _updateAppliedValues(): void {
-    this._appliedValues = Object.keys(this._selectedValues).reduce((result, key) => (result[key] = [...this._selectedValues[key]], result), {});
+  private _clearAll(): void {
+    this._clearSelectedValues();
+    this._currentFilters = [];
+    this._appliedFilters = [];
+  }
+  
+  private _updateSelectedValues(values: FilterItem[]): void {
+    if (Array.isArray(values) && values.length) {
+      values.forEach(item => {
+        if (!this._selectedValues[item.type]) {
+          this._selectedValues[item.type] = [item.value];
+        } else {
+          this._selectedValues[item.type].push(item.value);
+        }
+      });
+    } else {
+      this._clearSelectedValues();
+    }
   }
   
   public _onItemSelected(item: any, type: string): void {
     this._currentFilters.push({ value: item, type });
-    this._selectedValues[type].push(item);
   }
   
   public _onItemUnselected(item: any, type: string): void {
     const unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
-    const unselectedValueIndex = this._selectedValues[type].indexOf(item);
     
     if (unselectedItemIndex !== -1) {
       this._currentFilters.splice(unselectedItemIndex, 1);
     }
-    
-    if (unselectedValueIndex !== -1) {
-      this._selectedValues[type].splice(unselectedValueIndex, 1);
-    }
+  }
+  
+  public _onPopupOpen(): void {
+    this._currentFilters = [...this._appliedFilters];
+    this._updateSelectedValues(this._currentFilters);
+  }
+  
+  public _onPopupClose(): void {
+    this._currentFilters = [];
+    this._updateSelectedValues(this._currentFilters);
   }
   
   public _apply(): void {
-    this._updateAppliedValues();
     this._appliedFilters = [...this._currentFilters];
+    this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
     
     if (this._refineFiltersPopup) {
