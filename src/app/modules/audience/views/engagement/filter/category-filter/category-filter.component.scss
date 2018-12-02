@@ -1,13 +1,14 @@
 @import '../../../../../../../styles/variables';
 
 
-.kRow {
+.kColumn {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   margin-bottom: 8px;
 
-  & > div {
-    flex: 1;
+  .kColumnLabel {
+    font-weight: bold;
+    margin-bottom: 16px;
   }
 
   .kSelected a {

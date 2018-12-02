@@ -53,12 +53,16 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @Input() set opened(value: boolean) {
-    this._opened = !!value;
+    const isOpened = !!value;
     
-    if (this._opened) {
-      this._onPopupOpen();
-    } else {
-      this._onPopupClose();
+    if (this._opened !== isOpened) {
+      this._opened = !!value;
+  
+      if (this._opened) {
+        this._onPopupOpen();
+      } else {
+        this._onPopupClose();
+      }
     }
   }
   
@@ -68,8 +72,7 @@ export class FilterComponent {
   
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() filterTagsChange = new EventEmitter<FilterTagItem[]>();
-  
-  @ViewChild('refineFilters') _refineFiltersPopup: PopupWidgetComponent;
+  @Output() closeFilters = new EventEmitter<void>();
   
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
@@ -183,10 +186,8 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
     this.filterTagsChange.emit(this._prepareFilterTags());
-    
-    if (this._refineFiltersPopup) {
-      this._refineFiltersPopup.close();
-    }
+  
+    this.closeFilters.emit();
   }
   
   public removeFilter(item: { value: string, label: string, type: string }): void {

@@ -20,11 +20,13 @@
                                     (itemSelected)="_onItemSelected($event, 'entrySources')"
                                     (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
       </div>
-      <app-category-filter [label]="'app.filters.category' | translate"
-                           [selectedFilters]="_selectedValues['categories']"
-                           [linkLabel]="'app.filters.selectCategory' | translate"
-                           (itemSelected)="_onItemSelected($event, 'categories')"
-                           (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+      <div class="kMiscFilters">
+        <app-category-filter [label]="'app.filters.category' | translate"
+                             [selectedFilters]="_selectedValues['categories']"
+                             [linkLabel]="'app.filters.selectCategory' | translate"
+                             (itemSelected)="_onItemSelected($event, 'categories')"
+                             (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+      </div>
     </div>
   </div>
   <div class="kRefineFiltersFooter">

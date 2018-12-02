@@ -12,7 +12,9 @@
         <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
       </div>
     </div>
-    <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
+    <app-date-filter #dateFilter
+                     [dateRange]="_dateRange"
+                     [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
@@ -31,6 +33,7 @@
     <app-refine-filter #refineFilter
                        [opened]="_refineFilterOpened"
                        [selectedFilters]="_selectedRefineFilters"
+                       (closeFilters)="_refineFilterOpened = false"
                        (filterChange)="_onRefineFilterChange($event)"
                        (filterTagsChange)="_onFilterTagsChange($event)"></app-refine-filter>
   </div>
