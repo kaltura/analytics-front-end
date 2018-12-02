@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./autocomplete-filter.component.scss']
 })
 export class AutocompleteFilterComponent {
-  @Input() tagsProvider = new Subject();
+  @Input() provider = new Subject();
 
   @Input() set selectedFilters(value: string[]) {
     if (Array.isArray(value)) {
@@ -19,10 +19,15 @@ export class AutocompleteFilterComponent {
   
   @Input() label: string;
   @Input() options: OptionItem[] = [];
+  @Input() tooltipResolver: string | Function;
+  @Input() classField: string;
+  @Input() suggestionLabelField: string;
+  @Input() field: string;
+  @Input() onItemAdding: (value: string) => { id: string, screenName: string, __tooltip: string, __class: string };
   
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
-  @Output() searchTags = new EventEmitter();
+  @Output() search = new EventEmitter();
   
   private _listDiffer: IterableDiffer<any>;
   

@@ -1,13 +1,18 @@
-<div class="kColumn">
+<div class="kColumn kAutocompleteFilter">
   <div class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
     <kAutoComplete suggestionItemField="item"
                    suggestionSelectableField="isSelectable"
+                   [field]="field"
+                   [suggestionLabelField]="suggestionLabelField"
                    [multiple]="true"
                    [limitToSuggestions]="false"
                    [minLength]="3"
-                   [suggestionsProvider]="tagsProvider"
-                   (completeMethod)="searchTags.emit($event)"
+                   [suggestionsProvider]="provider"
+                   [tooltipResolver]="tooltipResolver"
+                   [onItemAdding]="onItemAdding"
+                   [classField]="classField"
+                   (completeMethod)="search.emit($event)"
                    (ngModelChange)="_onSelectionChange()"
                    [(ngModel)]="_selectedValue"></kAutoComplete>
   </div>

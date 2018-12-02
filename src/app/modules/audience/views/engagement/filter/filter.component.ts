@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
+import { KalturaUser } from 'kaltura-ngx-client';
 
 export interface OptionItem {
   value: any;
@@ -126,6 +127,7 @@ export class FilterComponent {
       'entrySources': [],
       'categories': [],
       'tags': [],
+      'owners': [],
     };
   }
   
@@ -148,6 +150,11 @@ export class FilterComponent {
         case 'tags':
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;
           return { value, type, label: value, tooltip };
+        case 'owners':
+          const user = value as KalturaUser;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
+          label = user.screenName;
+          return { value, type, label, tooltip };
         default:
           return null;
       }

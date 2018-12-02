@@ -2,7 +2,7 @@
      class="kRefineFilters kReport"
      [class.kAdvancedFiltersShown]="_showAdvancedFilters"
      [@state]="_state"
-     (@state.done)="_animationDone($event)" >
+     (@state.done)="_animationDone($event)">
   <div class="kRefineFiltersMain">
     <div class="kFilterContainer kOverrideFAIcons">
       <div class="kListFilters">
@@ -28,6 +28,10 @@
         <app-tags-filter [selectedFilters]="_selectedValues['tags']"
                          (itemSelected)="_onItemSelected($event, 'tags')"
                          (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
+
+        <app-owners-filter [selectedFilters]="_selectedValues['owners']"
+                         (itemSelected)="_onItemSelected($event, 'owners')"
+                         (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
 
         <app-category-filter [label]="'app.filters.category' | translate"
                              [selectedFilters]="_selectedValues['categories']"

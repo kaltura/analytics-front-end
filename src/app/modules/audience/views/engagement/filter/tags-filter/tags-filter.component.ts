@@ -9,8 +9,8 @@ import { map } from 'rxjs/operators';
   template: `
     <app-autocomplete-filter [label]="'app.filters.tags' | translate"
                              [selectedFilters]="selectedFilters"
-                             [tagsProvider]="_tagsProvider"
-                             (searchTags)="_searchTags($event)"
+                             [provider]="_tagsProvider"
+                             (search)="_searchTags($event)"
                              (itemSelected)="itemSelected.emit($event)"
                              (itemUnselected)="itemUnselected.emit($event)"></app-autocomplete-filter>
   `,

@@ -34,6 +34,7 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-filter.component';
+import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/owners-filter.component';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
     TagsFilterComponent,
+    OwnersFilterComponent,
   ],
   exports: [],
   providers: []

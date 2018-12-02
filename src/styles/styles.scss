@@ -373,3 +373,7 @@ p-multiselect /deep/ {
 .ui-overlaypanel-content {
   padding: 0;
 }
+
+li.userAdded{
+  background-color: transparentize($kPrimary, 0.5) !important;
+}
