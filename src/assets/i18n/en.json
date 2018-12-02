@@ -34,7 +34,9 @@
       "capture": "Capture",
       "classroom": "Classroom",
       "category": "Category",
-      "selectCategory": "Select Category"
+      "selectCategory": "Select Category",
+      "tags": "Tags",
+      "owners": "Owners"
     },
     "categories": {
       "selectCategories": "Select Categories",

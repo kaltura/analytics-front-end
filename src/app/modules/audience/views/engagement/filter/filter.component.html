@@ -25,6 +25,7 @@
                                     (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
       </div>
       <div class="kMiscFilters">
+        <app-autocomplete-filter [label]="'app.filters.tags' | translate"></app-autocomplete-filter>
         <app-category-filter [label]="'app.filters.category' | translate"
                              [selectedFilters]="_selectedValues['categories']"
                              [linkLabel]="'app.filters.selectCategory' | translate"

@@ -1,0 +1,24 @@
+@import '../../../../../../../styles/variables';
+
+:host {
+  margin-right: 24px;
+  margin-bottom: 20px;
+}
+
+.kColumn {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  .kColumnLabel {
+    font-weight: bold;
+  }
+
+  .kColumnLabel {
+    margin-bottom: 16px;
+  }
+
+  /deep/ .ui-autocomplete {
+    width: 100%;
+  }
+}

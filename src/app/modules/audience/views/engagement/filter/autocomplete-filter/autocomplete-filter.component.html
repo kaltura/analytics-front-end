@@ -1,0 +1,13 @@
+<div class="kColumn">
+  <div class="kColumnLabel">{{label}}</div>
+  <div class="kColumnContent">
+    <kAutoComplete suggestionItemField="item"
+                   suggestionSelectableField="isSelectable"
+                   [multiple]="true"
+                   [limitToSuggestions]="false"
+                   [minLength]="3"
+                   [suggestionsProvider]="_tagsProvider"
+                   (completeMethod)="_searchTags($event)"></kAutoComplete>
+  </div>
+</div>
+

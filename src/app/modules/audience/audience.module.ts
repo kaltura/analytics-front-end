@@ -35,6 +35,7 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
 import { CheckboxesListFilterComponent } from './views/engagement/filter/checkboxes-list-filter/checkboxes-list-filter.component';
 import { CategoryFilterComponent } from './views/engagement/filter/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from './views/engagement/filter/category-filter/category-selector/categories-selector.component';
+import { AutocompleteFilterComponent } from './views/engagement/filter/autocomplete-filter/autocomplete-filter.component';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import { CategoriesSelectorComponent } from './views/engagement/filter/category-
     CheckboxesListFilterComponent,
     CategoryFilterComponent,
     CategoriesSelectorComponent,
+    AutocompleteFilterComponent,
   ],
   exports: [],
   providers: []
