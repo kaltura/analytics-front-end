@@ -20,6 +20,7 @@ export class EngagementComponent {
   public _selectedMetrics: string;
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = null;
+  public _refineFilterOpened = false;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

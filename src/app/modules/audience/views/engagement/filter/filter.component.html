@@ -1,58 +1,40 @@
-<div class="kFilter kOverrideFAIcons">
+<div *ngIf="_opened" [@slideInOut] class="kPopupContainer kReport">
+  <div class="kPopupContent">
+    <div class="kFilterContainer kOverrideFAIcons">
+      <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
+                                  [options]="_mediaTypes"
+                                  [selectedFilters]="_selectedValues['mediaType']"
+                                  (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                  (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-  <div #filterBtn class="kDropDown">
-    <span>Filter</span>
-    <i class="kIcondropdown_arrow_bottom"></i>
+      <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
+                                  [options]="_applications"
+                                  [selectedFilters]="_selectedValues['applications']"
+                                  (itemSelected)="_onItemSelected($event, 'applications')"
+                                  (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
+
+      <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
+                                  [options]="_entrySources"
+                                  [selectedFilters]="_selectedValues['entrySources']"
+                                  (itemSelected)="_onItemSelected($event, 'entrySources')"
+                                  (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+
+      <app-checkboxes-list-filter [label]="'app.filters.deviceType' | translate"
+                                  [options]="_deviceTypes"
+                                  [selectedFilters]="_selectedValues['deviceType']"
+                                  (itemSelected)="_onItemSelected($event, 'deviceType')"
+                                  (itemUnselected)="_onItemUnselected($event, 'deviceType')"></app-checkboxes-list-filter>
+      <span class="kGroupTitle">{{'app.engagement.metadata' | translate}}</span>
+      <app-category-filter [label]="'app.filters.category' | translate"
+                           [selectedFilters]="_selectedValues['categories']"
+                           [linkLabel]="'app.filters.selectCategory' | translate"
+                           (itemSelected)="_onItemSelected($event, 'categories')"
+                           (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+    </div>
+  </div>
+  <div class="kPopupFooter">
+    <button type="button" class="kButtonBranded" pButton
+            [label]="'app.common.apply' | translate"
+            (click)="_apply()"></button>
   </div>
 </div>
-
-
-<kPopupWidget #refineFilters [popupWidth]="460"
-              [closeBtn]="false"
-              [targetRef]="filterBtn"
-              [targetOffset]="{'x':-360, 'y': 35}"
-              (onOpen)="_onPopupOpen()"
-              (onClose)="_onPopupClose()">
-  <ng-template>
-    <div class="kPopupContainer">
-      <div class="kPopupContent">
-        <div class="kFilterContainer kOverrideFAIcons">
-          <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
-                                      [options]="_mediaTypes"
-                                      [selectedFilters]="_selectedValues['mediaType']"
-                                      (itemSelected)="_onItemSelected($event, 'mediaType')"
-                                      (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
-
-          <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
-                                      [options]="_applications"
-                                      [selectedFilters]="_selectedValues['applications']"
-                                      (itemSelected)="_onItemSelected($event, 'applications')"
-                                      (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
-
-          <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
-                                      [options]="_entrySources"
-                                      [selectedFilters]="_selectedValues['entrySources']"
-                                      (itemSelected)="_onItemSelected($event, 'entrySources')"
-                                      (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
-
-          <app-checkboxes-list-filter [label]="'app.filters.deviceType' | translate"
-                                      [options]="_deviceTypes"
-                                      [selectedFilters]="_selectedValues['deviceType']"
-                                      (itemSelected)="_onItemSelected($event, 'deviceType')"
-                                      (itemUnselected)="_onItemUnselected($event, 'deviceType')"></app-checkboxes-list-filter>
-          <span class="kGroupTitle">{{'app.engagement.metadata' | translate}}</span>
-          <app-category-filter [label]="'app.filters.category' | translate"
-                               [selectedFilters]="_selectedValues['categories']"
-                               [linkLabel]="'app.filters.selectCategory' | translate"
-                               (itemSelected)="_onItemSelected($event, 'categories')"
-                               (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
-        </div>
-      </div>
-      <div class="kPopupFooter">
-        <button type="button" class="kButtonBranded" pButton
-                [label]="'app.common.apply' | translate"
-                (click)="_apply()"></button>
-      </div>
-    </div>
-  </ng-template>
-</kPopupWidget>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
+import { animate, group, state, style, transition, trigger } from '@angular/animations';
 
 export interface OptionItem {
   value: any;
@@ -26,9 +27,41 @@ export type RefineFilter = { value: any, type: string }[];
 @Component({
   selector: 'app-refine-filter',
   templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.scss']
+  styleUrls: ['./filter.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      state('in', style({ height: '*', opacity: 0 })),
+      transition(':leave', [
+        style({ height: '*', opacity: 1 }),
+        
+        group([
+          animate(300, style({ height: 0 })),
+          animate('200ms ease-in-out', style({ 'opacity': '0' }))
+        ])
+      ]),
+      transition(':enter, :leave', [
+        style({ height: '0', opacity: 0 }),
+        
+        group([
+          animate(300, style({ height: '*' })),
+          animate('400ms ease-in-out', style({ 'opacity': '1' }))
+        ])
+      
+      ])
+    ])
+  ]
 })
 export class FilterComponent {
+  @Input() set opened(value: boolean) {
+    this._opened = !!value;
+    
+    if (this._opened) {
+      this._onPopupOpen();
+    } else {
+      this._onPopupClose();
+    }
+  }
+  
   @Input() set selectedFilters(value: RefineFilter) {
     this._updateSelectedValues(value);
   }
@@ -42,6 +75,7 @@ export class FilterComponent {
   private _appliedFilters: FilterItem[] = [];
   
   public _selectedValues: { [key: string]: string[]; }; // local state
+  public _opened = false;
   
   constructor(private _translate: TranslateService) {
     this._clearAll();

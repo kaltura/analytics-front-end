@@ -5,9 +5,13 @@
                     [reportType]="_reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-refine-filter #refineFilter [selectedFilters]="_selectedRefineFilters"
-                       (filterChange)="_onRefineFilterChange($event)"
-                       (filterTagsChange)="_onFilterTagsChange($event)"></app-refine-filter>
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>Filter</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
     <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
@@ -21,6 +25,14 @@
            (onTagRemove)="refineFilter.removeFilter($event)"
            (onRemoveAll)="refineFilter.removeAll()">
     </kTags>
+  </div>
+
+  <div class="kReportContainer" [class.kHidden]="!_refineFilterOpened">
+    <app-refine-filter #refineFilter
+                       [opened]="_refineFilterOpened"
+                       [selectedFilters]="_selectedRefineFilters"
+                       (filterChange)="_onRefineFilterChange($event)"
+                       (filterTagsChange)="_onFilterTagsChange($event)"></app-refine-filter>
   </div>
 
   <div class="kReportContainer">
