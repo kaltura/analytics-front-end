@@ -8,6 +8,9 @@
       "live": "Live"
     },
     "filters": {
+      "filter": "Filter",
+      "basicFilters": "Basic Filters",
+      "advancedFilters": "Advanced Filters",
       "mediaType": "Media Type",
       "deviceType": "Device Type",
       "applications": "Applications",

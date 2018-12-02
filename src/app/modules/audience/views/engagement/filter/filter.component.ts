@@ -77,6 +77,7 @@ export class FilterComponent {
   
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
+  public _showAdvancedFilters: boolean;
   
   get showFilters() {
     return this._showFilters;

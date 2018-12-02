@@ -1,4 +1,8 @@
-<div *ngIf="showFilters" [@state]="_state" (@state.done)="_animationDone($event)" class="kRefineFilters kReport">
+<div *ngIf="showFilters"
+     class="kRefineFilters kReport"
+     [class.kAdvancedFiltersShown]="_showAdvancedFilters"
+     [@state]="_state"
+     (@state.done)="_animationDone($event)" >
   <div class="kRefineFiltersMain">
     <div class="kFilterContainer kOverrideFAIcons">
       <div class="kListFilters">
@@ -30,6 +34,10 @@
     </div>
   </div>
   <div class="kRefineFiltersFooter">
+    <a (click)="_showAdvancedFilters = !_showAdvancedFilters">
+      <span *ngIf="_showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
+      <span *ngIf="!_showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
+    </a>
     <button type="button" class="kButtonBranded" pButton
             [label]="'app.common.apply' | translate"
             (click)="_apply()"></button>
