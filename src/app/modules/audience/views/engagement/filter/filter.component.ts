@@ -86,13 +86,7 @@ export class FilterComponent {
     { value: 'live', label: 'app.filters.live' },
     { value: 'audio', label: 'app.filters.audio' },
     { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' },
-  ];
-  
-  public _deviceTypes: OptionItem[] = [
-    { value: 'mobile', label: 'app.filters.mobile' },
-    { value: 'tablet', label: 'app.filters.tablet' },
-    { value: 'desktop', label: 'app.filters.desktop' },
-    { value: 'other', label: 'app.filters.other' },
+    { value: 'images', label: 'app.filters.images' },
   ];
   
   public _applications: OptionItem[] = [

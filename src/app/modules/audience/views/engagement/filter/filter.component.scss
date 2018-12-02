@@ -6,16 +6,20 @@
   height: 100%;
 }
 
-.kPopupContainer {
+.kRefineFilters {
   height: 490px;
   width: 100%;
 
-  .kPopupContent {
+  .kRefineFiltersMain {
     height: 424px;
     overflow-y: auto;
 
     .kFilterContainer {
       padding: 32px 24px;
+
+      .kListFilters {
+        display: flex;
+      }
     }
 
     .kGroupTitle {
@@ -27,7 +31,7 @@
     }
   }
 
-  .kPopupFooter {
+  .kRefineFiltersFooter {
     border-top: 1px solid $kGrayscale4;
     display: flex;
     justify-content: flex-end;
