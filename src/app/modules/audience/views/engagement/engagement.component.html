@@ -23,6 +23,13 @@
   </div>
 
   <div class="kReportContainer">
+    <div class="kMiniReportContainer">
+      <app-engagement-mini-highlights [dateFilter]="_dateFilter"
+                                      [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
+    </div>
+  </div>
+
+  <div class="kReportContainer">
     <app-engagement-highlights [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>

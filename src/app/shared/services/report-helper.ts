@@ -22,7 +22,11 @@ export class ReportHelper {
       
       return ReportHelper.numberWithCommas(x);
     }
-    
+  }
+
+  static integerOrZero(x: any, round = true): string {
+    x = parseInt(x);
+    return this.numberOrZero(x, round);
   }
   
   static time(x: any): string {
