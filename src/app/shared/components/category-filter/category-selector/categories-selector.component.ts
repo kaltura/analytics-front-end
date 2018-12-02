@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, TagsComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'shared/services';
+import { BrowserService } from 'src/app/shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoriesSearchService, CategoryData } from 'shared/services/categories-search.service';
 import { CategoriesTreeComponent } from 'shared/components/categories-tree/categories-tree.component';

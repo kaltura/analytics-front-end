@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
-import { OptionItem } from '../filter.component';
+import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, Output } from '@angular/core';
+import { OptionItem } from '../../../modules/audience/views/engagement/filter/filter.component';
+import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-checkboxes-list-filter',
-  templateUrl: './checkboxes-list-filter.component.html',
-  styleUrls: ['./checkboxes-list-filter.component.scss']
+  selector: 'app-autocomplete-filter',
+  templateUrl: './autocomplete-filter.component.html',
+  styleUrls: ['./autocomplete-filter.component.scss']
 })
-export class CheckboxesListFilterComponent {
+export class AutocompleteFilterComponent {
   @Input() set selectedFilters(value: string[]) {
     if (Array.isArray(value)) {
       this._selectedValue = value;
@@ -16,13 +17,14 @@ export class CheckboxesListFilterComponent {
   
   @Input() label: string;
   @Input() options: OptionItem[] = [];
-
+  
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
   
   private _listDiffer: IterableDiffer<any>;
-
+  
   public _selectedValue: string[] = [];
+  public _tagsProvider = new Subject<any>();
   
   constructor(private _listDiffers: IterableDiffers) {
     this._setDiffer();
@@ -45,5 +47,9 @@ export class CheckboxesListFilterComponent {
         this.itemUnselected.emit(record.item);
       });
     }
+  }
+  
+  public _searchTags(event: any): void {
+    console.warn(event);
   }
 }

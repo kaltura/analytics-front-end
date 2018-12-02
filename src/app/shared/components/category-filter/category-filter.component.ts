@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, ViewChild } from '@angular/core';
-import { OptionItem } from '../filter.component';
+import { OptionItem } from '../../../modules/audience/views/engagement/filter/filter.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoryData } from 'shared/services/categories-search.service';
 

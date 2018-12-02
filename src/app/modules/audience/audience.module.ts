@@ -32,10 +32,6 @@ import { TopBrowsersComponent } from './views/technology/top-browsers/top-browse
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
-import { CheckboxesListFilterComponent } from './views/engagement/filter/checkboxes-list-filter/checkboxes-list-filter.component';
-import { CategoryFilterComponent } from './views/engagement/filter/category-filter/category-filter.component';
-import { CategoriesSelectorComponent } from './views/engagement/filter/category-filter/category-selector/categories-selector.component';
-import { AutocompleteFilterComponent } from './views/engagement/filter/autocomplete-filter/autocomplete-filter.component';
 
 @NgModule({
   imports: [
@@ -75,10 +71,6 @@ import { AutocompleteFilterComponent } from './views/engagement/filter/autocompl
     TopOsComponent,
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
-    CheckboxesListFilterComponent,
-    CategoryFilterComponent,
-    CategoriesSelectorComponent,
-    AutocompleteFilterComponent,
   ],
   exports: [],
   providers: []

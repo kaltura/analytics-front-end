@@ -32,6 +32,10 @@ import { CategoriesSearchService } from 'shared/services/categories-search.servi
 import { CategoriesTreeComponent } from 'shared/components/categories-tree/categories-tree.component';
 import { CategoriesTreePropagationDirective } from 'shared/components/categories-tree/categories-tree-propagation.directive';
 import { TreeModule } from 'primeng/tree';
+import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list-filter/checkboxes-list-filter.component';
+import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
+import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
+import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
 
 @NgModule({
   imports: [
@@ -65,6 +69,10 @@ import { TreeModule } from 'primeng/tree';
     TrendValueComponent,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
+    CheckboxesListFilterComponent,
+    CategoryFilterComponent,
+    CategoriesSelectorComponent,
+    AutocompleteFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -82,6 +90,10 @@ import { TreeModule } from 'primeng/tree';
     TrendValueComponent,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
+    CheckboxesListFilterComponent,
+    CategoryFilterComponent,
+    CategoriesSelectorComponent,
+    AutocompleteFilterComponent,
   ],
   providers: [
   ]
