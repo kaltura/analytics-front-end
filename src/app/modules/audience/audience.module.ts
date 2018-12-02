@@ -15,6 +15,7 @@ import { TechnologyComponent } from './views/technology/technology.component';
 import { GeoLocationComponent } from './views/geo-location/geo-location.component';
 import { EngagementComponent } from './views/engagement/engagement.component';
 import { EngagementHighlightsComponent } from './views/engagement/highlights/highlights.component';
+import { EngagementMiniHighlightsComponent } from './views/engagement/mini-highlights/mini-highlights.component';
 import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
 import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
 import { EngagementImpressionsComponent } from './views/engagement/impressions/impressions.component';
@@ -60,6 +61,7 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
     GeoLocationComponent,
     EngagementComponent,
     EngagementHighlightsComponent,
+    EngagementMiniHighlightsComponent,
     EngagementTopVideosComponent,
     EngagementDurationComponent,
     EngagementImpressionsComponent,

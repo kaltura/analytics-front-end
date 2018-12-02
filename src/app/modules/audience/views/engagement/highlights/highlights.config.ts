@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import { fileSize } from 'shared/utils/file-size';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 
@@ -71,7 +70,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 3,
