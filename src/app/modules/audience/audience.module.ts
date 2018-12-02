@@ -33,6 +33,7 @@ import { TopBrowsersComponent } from './views/technology/top-browsers/top-browse
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
+import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-filter.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
     TopOsComponent,
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
+    TagsFilterComponent,
   ],
   exports: [],
   providers: []

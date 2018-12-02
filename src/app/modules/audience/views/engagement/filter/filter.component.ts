@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
-import { animate, group, state, style, transition, trigger } from '@angular/animations';
+import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
 
 export interface OptionItem {
   value: any;
@@ -125,6 +125,7 @@ export class FilterComponent {
       'applications': [],
       'entrySources': [],
       'categories': [],
+      'tags': [],
     };
   }
   
@@ -144,6 +145,9 @@ export class FilterComponent {
           label = category.name;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${category.fullName}`;
           return { value, type, label, tooltip };
+        case 'tags':
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;
+          return { value, type, label: value, tooltip };
         default:
           return null;
       }
@@ -162,7 +166,9 @@ export class FilterComponent {
         if (!this._selectedValues[item.type]) {
           this._selectedValues[item.type] = [item.value];
         } else {
-          this._selectedValues[item.type].push(item.value);
+          if (this._selectedValues[item.type].indexOf(item.value) === -1) {
+            this._selectedValues[item.type].push(item.value);
+          }
         }
       });
     } else {
@@ -202,7 +208,7 @@ export class FilterComponent {
     this.closeFilters.emit();
   }
   
-  public _animationDone(event: any): void {
+  public _animationDone(event: AnimationEvent): void {
     if (event.fromState === 'visible' && event.toState === 'hidden') {
       this._showFilters = false;
     }

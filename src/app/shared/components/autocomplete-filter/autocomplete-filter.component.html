@@ -6,8 +6,10 @@
                    [multiple]="true"
                    [limitToSuggestions]="false"
                    [minLength]="3"
-                   [suggestionsProvider]="_tagsProvider"
-                   (completeMethod)="_searchTags($event)"></kAutoComplete>
+                   [suggestionsProvider]="tagsProvider"
+                   (completeMethod)="searchTags.emit($event)"
+                   (ngModelChange)="_onSelectionChange()"
+                   [(ngModel)]="_selectedValue"></kAutoComplete>
   </div>
 </div>
 

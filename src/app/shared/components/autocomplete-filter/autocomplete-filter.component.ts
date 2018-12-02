@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./autocomplete-filter.component.scss']
 })
 export class AutocompleteFilterComponent {
+  @Input() tagsProvider = new Subject();
+
   @Input() set selectedFilters(value: string[]) {
     if (Array.isArray(value)) {
       this._selectedValue = value;
@@ -20,12 +22,12 @@ export class AutocompleteFilterComponent {
   
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
+  @Output() searchTags = new EventEmitter();
   
   private _listDiffer: IterableDiffer<any>;
   
   public _selectedValue: string[] = [];
-  public _tagsProvider = new Subject<any>();
-  
+
   constructor(private _listDiffers: IterableDiffers) {
     this._setDiffer();
   }
@@ -36,20 +38,18 @@ export class AutocompleteFilterComponent {
   }
   
   public _onSelectionChange(): void {
-    const changes = this._listDiffer.diff(this._selectedValue);
-    
-    if (changes) {
-      changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
-        this.itemSelected.emit(record.item);
-      });
-      
-      changes.forEachRemovedItem((record: IterableChangeRecord<any>) => {
-        this.itemUnselected.emit(record.item);
-      });
-    }
-  }
+    setTimeout(() => { // run in the next tick to get up-to-date selected value
+      const changes = this._listDiffer.diff(this._selectedValue);
   
-  public _searchTags(event: any): void {
-    console.warn(event);
+      if (changes) {
+        changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
+          this.itemSelected.emit(record.item);
+        });
+    
+        changes.forEachRemovedItem((record: IterableChangeRecord<any>) => {
+          this.itemUnselected.emit(record.item);
+        });
+      }
+    });
   }
 }
