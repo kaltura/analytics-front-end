@@ -69,7 +69,8 @@
       "tryAgain": "Try Again",
       "viewDetails": "View Details",
       "hideDetails": "Hide Details",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "details": "See Details"
     },
     "errors":{
       "errorHeader": "Error",
