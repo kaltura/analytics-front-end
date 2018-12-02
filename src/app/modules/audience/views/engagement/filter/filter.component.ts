@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
@@ -29,24 +28,22 @@ export type RefineFilter = { value: any, type: string }[];
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
   animations: [
-    trigger('slideInOut', [
-      state('in', style({ height: '*', opacity: 0 })),
-      transition(':leave', [
-        style({ height: '*', opacity: 1 }),
-        
-        group([
-          animate(300, style({ height: 0 })),
-          animate('200ms ease-in-out', style({ 'opacity': '0' }))
-        ])
-      ]),
-      transition(':enter, :leave', [
+    trigger('state', [
+      state('visible', style({ height: '*', opacity: 1 })),
+      state('hidden', style({ height: '0', opacity: 0 })),
+      transition('* => visible', [
         style({ height: '0', opacity: 0 }),
-        
         group([
           animate(300, style({ height: '*' })),
           animate('400ms ease-in-out', style({ 'opacity': '1' }))
         ])
-      
+      ]),
+      transition('visible => hidden', [
+        style({ height: '*', opacity: 1 }),
+        group([
+          animate(300, style({ height: 0 })),
+          animate('200ms ease-in-out', style({ 'opacity': '0' }))
+        ])
       ])
     ])
   ]
@@ -55,10 +52,10 @@ export class FilterComponent {
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
     
-    if (this._opened !== isOpened) {
-      this._opened = !!value;
-  
-      if (this._opened) {
+    if (this.showFilters !== isOpened) {
+      this.showFilters = !!value;
+      
+      if (this.showFilters) {
         this._onPopupOpen();
       } else {
         this._onPopupClose();
@@ -76,9 +73,23 @@ export class FilterComponent {
   
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
+  private _showFilters: boolean;
   
   public _selectedValues: { [key: string]: string[]; }; // local state
-  public _opened = false;
+  public _state: string;
+  
+  get showFilters() {
+    return this._showFilters;
+  }
+  
+  set showFilters(val: boolean) {
+    if (val) {
+      this._state = 'visible';
+      this._showFilters = true;
+    } else {
+      this._state = 'hidden';
+    }
+  }
   
   constructor(private _translate: TranslateService) {
     this._clearAll();
@@ -186,8 +197,14 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
     this.filterTagsChange.emit(this._prepareFilterTags());
-  
+    
     this.closeFilters.emit();
+  }
+  
+  public _animationDone(event: any): void {
+    if (event.fromState === 'visible' && event.toState === 'hidden') {
+      this._showFilters = false;
+    }
   }
   
   public removeFilter(item: { value: string, label: string, type: string }): void {

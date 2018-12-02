@@ -1,4 +1,4 @@
-<div *ngIf="_opened" [@slideInOut] class="kRefineFilters kReport">
+<div *ngIf="showFilters" [@state]="_state" (@state.done)="_animationDone($event)" class="kRefineFilters kReport">
   <div class="kRefineFiltersMain">
     <div class="kFilterContainer kOverrideFAIcons">
       <div class="kListFilters">
