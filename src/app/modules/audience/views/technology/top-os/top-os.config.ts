@@ -15,19 +15,24 @@ export class TopOsConfig extends ReportDataBaseConfig {
         fields: {
           'os': {
             format: value => value,
+            sortOrder: 1,
           },
           'os_family': {
             format: value => value,
+            sortOrder: 1,
           },
           'count_plays': {
             format: value => value,
+            sortOrder: 2,
           },
-          'avg_time_viewed': {
+          'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
-          }
+            sortOrder: 4,
+          },
         }
       },
       [ReportDataSection.totals]: {

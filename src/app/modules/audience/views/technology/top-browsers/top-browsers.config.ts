@@ -15,19 +15,24 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
         fields: {
           'browser': {
             format: value => value,
+            sortOrder: 1,
           },
           'browser_family': {
             format: value => value,
+            sortOrder: 1,
           },
           'count_plays': {
             format: value => value,
+            sortOrder: 2,
           },
-          'avg_time_viewed': {
+          'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
-          }
+            sortOrder: 4,
+          },
         }
       },
       [ReportDataSection.totals]: {
