@@ -179,11 +179,11 @@ export class FilterComponent {
         case 'location':
           const location = value as LocationsFilterValue;
           label = this._translate.instant(`app.filters.location`);
-          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country}`;
+          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.name}`;
           if (location.region) {
-            tooltip += ` > ${location.region}`;
+            tooltip += ` > ${location.region.name}`;
             if (location.city) {
-              tooltip += ` > ${location.city}`;
+              tooltip += ` > ${location.city.name}`;
             }
           }
           return { value: 'location', type: 'location', label, tooltip };
@@ -210,8 +210,6 @@ export class FilterComponent {
           }
         }
       });
-      // TODO fix filters initialization
-      console.warn(this._selectedValues);
     } else {
       this._clearSelectedValues();
     }
