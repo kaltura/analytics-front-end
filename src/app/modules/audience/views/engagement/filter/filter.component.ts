@@ -78,6 +78,7 @@ export class FilterComponent {
   
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
+  public _advancedFiltersState: string;
   public _showAdvancedFilters: boolean;
   
   get showFilters() {
@@ -90,6 +91,19 @@ export class FilterComponent {
       this._showFilters = true;
     } else {
       this._state = 'hidden';
+    }
+  }
+  
+  get showAdvancedFilters() {
+    return this._showAdvancedFilters;
+  }
+  
+  set showAdvancedFilters(val: boolean) {
+    if (val) {
+      this._advancedFiltersState = 'visible';
+      this._showAdvancedFilters = true;
+    } else {
+      this._advancedFiltersState = 'hidden';
     }
   }
   
@@ -215,9 +229,15 @@ export class FilterComponent {
     this.closeFilters.emit();
   }
   
-  public _animationDone(event: AnimationEvent): void {
+  public _filtersAnimationDone(event: AnimationEvent): void {
     if (event.fromState === 'visible' && event.toState === 'hidden') {
       this._showFilters = false;
+    }
+  }
+  
+  public _advancedFiltersAnimationDone(event: AnimationEvent): void {
+    if (event.fromState === 'visible' && event.toState === 'hidden') {
+      this._showAdvancedFilters = false;
     }
   }
   

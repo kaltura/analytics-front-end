@@ -13,30 +13,10 @@
 
   .kColumnLabel {
     font-weight: bold;
-  }
-
-  .kColumnLabel {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   /deep/ .ui-autocomplete {
     width: 100%;
   }
-}
-
-.kAutocompleteFilter /deep/ {
-  //.ui-autocomplete-multiple-container {
-  //  height: 34px !important;
-  //}
-  //
-  //li.ui-autocomplete-token {
-  //  height: 21px;
-  //  padding-top: 2px;
-  //  margin-bottom: 3px;
-  //  margin-top: 0;
-  //}
-  //
-  //.ui-autocomplete-input-token {
-  //
-  //}
 }

@@ -2,49 +2,62 @@
      class="kRefineFilters kReport"
      [class.kAdvancedFiltersShown]="_showAdvancedFilters"
      [@state]="_state"
-     (@state.done)="_animationDone($event)">
+     (@state.done)="_filtersAnimationDone($event)">
   <div class="kRefineFiltersMain">
     <div class="kFilterContainer kOverrideFAIcons">
-      <div class="kListFilters">
-        <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
-                                    [options]="_mediaTypes"
-                                    [selectedFilters]="_selectedValues['mediaType']"
-                                    (itemSelected)="_onItemSelected($event, 'mediaType')"
-                                    (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
+      <div class="kFilterContainerRow">
+        <div class="kListFilters">
+          <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
+                                      [options]="_mediaTypes"
+                                      [selectedFilters]="_selectedValues['mediaType']"
+                                      (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                      (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-        <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
-                                    [options]="_applications"
-                                    [selectedFilters]="_selectedValues['applications']"
-                                    (itemSelected)="_onItemSelected($event, 'applications')"
-                                    (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
+          <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
+                                      [options]="_applications"
+                                      [selectedFilters]="_selectedValues['applications']"
+                                      (itemSelected)="_onItemSelected($event, 'applications')"
+                                      (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
 
-        <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
-                                    [options]="_entrySources"
-                                    [selectedFilters]="_selectedValues['entrySources']"
-                                    (itemSelected)="_onItemSelected($event, 'entrySources')"
-                                    (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+          <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
+                                      [options]="_entrySources"
+                                      [selectedFilters]="_selectedValues['entrySources']"
+                                      (itemSelected)="_onItemSelected($event, 'entrySources')"
+                                      (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+        </div>
+        <div class="kMiscFilters">
+          <app-tags-filter [selectedFilters]="_selectedValues['tags']"
+                           (itemSelected)="_onItemSelected($event, 'tags')"
+                           (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
+
+          <app-owners-filter [selectedFilters]="_selectedValues['owners']"
+                             (itemSelected)="_onItemSelected($event, 'owners')"
+                             (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
+
+          <app-category-filter [label]="'app.filters.category' | translate"
+                               [selectedFilters]="_selectedValues['categories']"
+                               [linkLabel]="'app.filters.selectCategory' | translate"
+                               (itemSelected)="_onItemSelected($event, 'categories')"
+                               (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+        </div>
       </div>
-      <div class="kMiscFilters">
-        <app-tags-filter [selectedFilters]="_selectedValues['tags']"
-                         (itemSelected)="_onItemSelected($event, 'tags')"
-                         (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
-
-        <app-owners-filter [selectedFilters]="_selectedValues['owners']"
-                         (itemSelected)="_onItemSelected($event, 'owners')"
-                         (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
-
-        <app-category-filter [label]="'app.filters.category' | translate"
-                             [selectedFilters]="_selectedValues['categories']"
-                             [linkLabel]="'app.filters.selectCategory' | translate"
-                             (itemSelected)="_onItemSelected($event, 'categories')"
-                             (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+      <div *ngIf="showAdvancedFilters"
+           class="kFilterContainerRow"
+           [@state]="_advancedFiltersState"
+           (@state.done)="_advancedFiltersAnimationDone($event)">
+        <div class="kListFilters">
+          <div>TEST</div>
+          <div>TEST</div>
+          <div>TEST</div>
+        </div>
+        <div class="kMiscFilters">&nbsp;</div>
       </div>
     </div>
   </div>
   <div class="kRefineFiltersFooter">
-    <a (click)="_showAdvancedFilters = !_showAdvancedFilters">
-      <span *ngIf="_showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
-      <span *ngIf="!_showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
+    <a (click)="showAdvancedFilters = !showAdvancedFilters">
+      <span *ngIf="showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
+      <span *ngIf="!showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
     </a>
     <button type="button" class="kButtonBranded" pButton
             [label]="'app.common.apply' | translate"

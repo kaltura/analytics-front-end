@@ -7,22 +7,24 @@
 }
 
 .kRefineFilters {
-  height: 338px;
-  transition: height 0.15s ease-out;
   width: 100%;
-
-  &.kAdvancedFiltersShown {
-    height: 426px;
-    transition: height 0.25s ease-in;
-  }
+  height: auto;
 
   .kRefineFiltersMain {
-    overflow-y: auto;
     height: 100%;
+    overflow-y: auto;
 
     .kFilterContainer {
-      padding: 32px 24px;
+      padding: 32px 24px 16px 24px;
       display: flex;
+      flex-direction: column;
+
+      .kFilterContainerRow {
+        display: flex;
+        &:not(:first-child) {
+          margin-top: 24px;
+        }
+      }
 
       .kListFilters {
         display: flex;
