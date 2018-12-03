@@ -34,6 +34,8 @@ import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
+import { PageScrollService } from 'ngx-page-scroll';
+
 @NgModule({
   imports: [
     AreaBlockerModule,
@@ -75,7 +77,7 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
     EntryDetailsOverlayComponent,
   ],
   exports: [],
-  providers: []
+  providers: [PageScrollService]
 })
 export class AudienceModule {
 }
