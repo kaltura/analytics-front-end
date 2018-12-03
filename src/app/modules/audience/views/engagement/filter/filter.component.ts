@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
 import { KalturaUser } from 'kaltura-ngx-client';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 
 export interface OptionItem {
   value: any;
@@ -67,6 +68,8 @@ export class FilterComponent {
   @Input() set selectedFilters(value: RefineFilter) {
     this._updateSelectedValues(value);
   }
+  
+  @Input() dateFilter: DateChangeEvent;
   
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() filterTagsChange = new EventEmitter<FilterTagItem[]>();
@@ -150,7 +153,7 @@ export class FilterComponent {
   
   private _prepareFilterTags(): FilterTagItem[] {
     let label, tooltip;
-    return this._appliedFilters.map(({ value, type }) => {
+    const result = this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
         case 'deviceType':
@@ -172,10 +175,18 @@ export class FilterComponent {
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
           return { value, type, label, tooltip };
+        case 'country':
+        case 'region':
+        case 'city':
+          label = this._translate.instant(`app.filters.location`);
+          tooltip = this._translate.instant(`app.filters.location`);
+          return { value: 'location', type: 'location', label, tooltip };
         default:
           return null;
       }
     }).filter(Boolean);
+  
+    return result;
   }
   
   private _clearAll(): void {
@@ -201,9 +212,51 @@ export class FilterComponent {
   }
   
   public _onItemSelected(item: any, type: string): void {
-    this._currentFilters.push({ value: item, type });
+    const defaultAction = () => this._currentFilters.push({ value: item, type });
+    let selectedCityIndex, selectedRegionIndex, selectedCountryIndex;
+    const newItem = { value: item, type };
+    switch (type) {
+      case 'city':
+        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
+        if (selectedCityIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1, newItem);
+        } else {
+          defaultAction();
+        }
+        break;
+      case 'region':
+        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
+        selectedRegionIndex = this._currentFilters.findIndex(filter => filter.type === 'region');
+        if (selectedCityIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1);
+        }
+        if (selectedRegionIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1, newItem);
+        } else {
+          defaultAction();
+        }
+        break;
+      case 'country':
+        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
+        selectedRegionIndex = this._currentFilters.findIndex(filter => filter.type === 'region');
+        selectedCountryIndex = this._currentFilters.findIndex(filter => filter.type === 'country');
+        if (selectedCityIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1);
+        }
+        if (selectedRegionIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1);
+        }
+        if (selectedCountryIndex !== -1) {
+          this._currentFilters.splice(selectedCityIndex, 1, newItem);
+        } else {
+          defaultAction();
+        }
+        break;
+      default:
+        defaultAction();
+        break;
+    }
   }
-  
   public _onItemUnselected(item: any, type: string): void {
     const unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
     

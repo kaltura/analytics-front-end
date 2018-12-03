@@ -9,8 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
                          [disabled]="disabled"
                          [defaultLabel]="'app.filters.regionPlaceholder' | translate"
                          [selectedFilters]="selectedFilters"
-                         (itemSelected)="itemSelected.emit($event)"
-                         (itemUnselected)="itemUnselected.emit($event)"></app-dropdown-filter>
+                         (itemSelected)="itemSelected.emit($event)"></app-dropdown-filter>
   `,
 })
 export class RegionFilterComponent implements OnDestroy {

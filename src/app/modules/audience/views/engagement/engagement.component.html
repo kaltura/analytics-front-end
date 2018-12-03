@@ -32,6 +32,7 @@
   <div class="kReportContainer">
     <app-refine-filter #refineFilter
                        [opened]="_refineFilterOpened"
+                       [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
                        (closeFilters)="_refineFilterOpened = false"
                        (filterChange)="_onRefineFilterChange($event)"

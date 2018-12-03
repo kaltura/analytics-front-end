@@ -1,19 +1,18 @@
 <div class="kColumn kMultiselectFilter">
-  <div class="kColumnLabel">{{label}}</div>
+  <div class="kColumnLabel">
+    {{label}}&nbsp;
+    <h5 class="mini-loader" *ngIf="isLoading"><span></span><span></span></h5>
+  </div>
   <div class="kColumnContent">
     <p-dropdown appendTo="body"
                 filter="true"
                 [style]="{'width':'192px'}"
                 [placeholder]="defaultLabel"
                 [options]="options"
-                [disabled]="disabled"
+                [disabled]="disabled || !options?.length"
                 [filterPlaceholder]="filterPlaceHolder"
                 [(ngModel)]="_selectedValue"
                 (onChange)="_onSelectionChange()">
-      <ng-template [ngIf]="!!template"
-                   let-item pTemplate="item"
-                   [ngTemplateOutlet]="template">
-      </ng-template>
     </p-dropdown>
   </div>
 </div>

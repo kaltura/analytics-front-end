@@ -43,7 +43,8 @@
       "city": "City",
       "countryPlaceholder": "Select Country",
       "regionPlaceholder": "Select Region",
-      "cityPlaceholder": "Select City"
+      "cityPlaceholder": "Select City",
+      "location": "Location"
     },
     "categories": {
       "selectCategories": "Select Categories",

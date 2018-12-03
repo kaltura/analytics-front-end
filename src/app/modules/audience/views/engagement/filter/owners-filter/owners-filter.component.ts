@@ -4,6 +4,7 @@ import { Observable, Subject, Unsubscribable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranslateService } from '@ngx-translate/core';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 
 @Component({
   selector: 'app-owners-filter',
@@ -23,6 +24,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class OwnersFilterComponent implements OnDestroy {
   @Input() selectedFilters: KalturaUser[] = [];
+  @Input() dateFilter: DateChangeEvent;
+
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
   
