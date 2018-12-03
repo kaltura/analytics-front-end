@@ -4,6 +4,7 @@ import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { LocationsFilterService } from './location-filter/locations-filter.service';
 
 export interface OptionItem {
   value: any;
@@ -29,6 +30,7 @@ export type RefineFilter = { value: any, type: string }[];
   selector: 'app-refine-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
+  providers: [LocationsFilterService],
   animations: [
     trigger('state', [
       state('visible', style({ height: '*', opacity: 1 })),
@@ -145,15 +147,13 @@ export class FilterComponent {
       'categories': [],
       'tags': [],
       'owners': [],
-      'country': [],
-      'region': [],
-      'city': [],
+      'location': [],
     };
   }
   
   private _prepareFilterTags(): FilterTagItem[] {
     let label, tooltip;
-    const result = this._appliedFilters.map(({ value, type }) => {
+    return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
         case 'deviceType':
@@ -175,9 +175,7 @@ export class FilterComponent {
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
           return { value, type, label, tooltip };
-        case 'country':
-        case 'region':
-        case 'city':
+        case 'location':
           label = this._translate.instant(`app.filters.location`);
           tooltip = this._translate.instant(`app.filters.location`);
           return { value: 'location', type: 'location', label, tooltip };
@@ -185,8 +183,6 @@ export class FilterComponent {
           return null;
       }
     }).filter(Boolean);
-  
-    return result;
   }
   
   private _clearAll(): void {
@@ -212,50 +208,7 @@ export class FilterComponent {
   }
   
   public _onItemSelected(item: any, type: string): void {
-    const defaultAction = () => this._currentFilters.push({ value: item, type });
-    let selectedCityIndex, selectedRegionIndex, selectedCountryIndex;
-    const newItem = { value: item, type };
-    switch (type) {
-      case 'city':
-        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
-        if (selectedCityIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1, newItem);
-        } else {
-          defaultAction();
-        }
-        break;
-      case 'region':
-        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
-        selectedRegionIndex = this._currentFilters.findIndex(filter => filter.type === 'region');
-        if (selectedCityIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1);
-        }
-        if (selectedRegionIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1, newItem);
-        } else {
-          defaultAction();
-        }
-        break;
-      case 'country':
-        selectedCityIndex = this._currentFilters.findIndex(filter => filter.type === 'city');
-        selectedRegionIndex = this._currentFilters.findIndex(filter => filter.type === 'region');
-        selectedCountryIndex = this._currentFilters.findIndex(filter => filter.type === 'country');
-        if (selectedCityIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1);
-        }
-        if (selectedRegionIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1);
-        }
-        if (selectedCountryIndex !== -1) {
-          this._currentFilters.splice(selectedCityIndex, 1, newItem);
-        } else {
-          defaultAction();
-        }
-        break;
-      default:
-        defaultAction();
-        break;
-    }
+    this._currentFilters.push({ value: item, type });
   }
   public _onItemUnselected(item: any, type: string): void {
     const unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
