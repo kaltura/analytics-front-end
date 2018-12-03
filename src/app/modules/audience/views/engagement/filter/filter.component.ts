@@ -5,6 +5,7 @@ import { animate, AnimationEvent, group, state, style, transition, trigger } fro
 import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
+import { LocationsFilterValue } from './location-filter/location-filter.component';
 
 export interface OptionItem {
   value: any;
@@ -176,8 +177,15 @@ export class FilterComponent {
           label = user.screenName;
           return { value, type, label, tooltip };
         case 'location':
+          const location = value as LocationsFilterValue;
           label = this._translate.instant(`app.filters.location`);
-          tooltip = this._translate.instant(`app.filters.location`);
+          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country}`;
+          if (location.region) {
+            tooltip += ` > ${location.region}`;
+            if (location.city) {
+              tooltip += ` > ${location.city}`;
+            }
+          }
           return { value: 'location', type: 'location', label, tooltip };
         default:
           return null;
@@ -194,7 +202,7 @@ export class FilterComponent {
   private _updateSelectedValues(values: FilterItem[]): void {
     if (Array.isArray(values) && values.length) {
       values.forEach(item => {
-        if (!this._selectedValues[item.type]) {
+        if (!this._selectedValues[item.type] || item.type === 'location') {
           this._selectedValues[item.type] = [item.value];
         } else {
           if (this._selectedValues[item.type].indexOf(item.value) === -1) {
@@ -202,16 +210,30 @@ export class FilterComponent {
           }
         }
       });
+      // TODO fix filters initialization
+      console.warn(this._selectedValues);
     } else {
       this._clearSelectedValues();
     }
   }
   
   public _onItemSelected(item: any, type: string): void {
-    this._currentFilters.push({ value: item, type });
+    const value = { value: item, type };
+    if (type === 'location') {
+      const relevantFilterIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
+      if (relevantFilterIndex !== -1) {
+        this._currentFilters.splice(relevantFilterIndex, 1, value);
+      } else {
+        this._currentFilters.push(value);
+      }
+    } else {
+      this._currentFilters.push(value);
+    }
   }
   public _onItemUnselected(item: any, type: string): void {
-    const unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
+    const unselectedItemIndex = type === 'location'
+      ? this._currentFilters.findIndex(filter => filter.type === 'location')
+      : this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
     
     if (unselectedItemIndex !== -1) {
       this._currentFilters.splice(unselectedItemIndex, 1);
