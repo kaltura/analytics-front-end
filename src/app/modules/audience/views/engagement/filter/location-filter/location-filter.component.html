@@ -6,13 +6,17 @@
                      (itemSelected)="_onItemSelected($event, 'country')"></app-dropdown-filter>
 
 <app-dropdown-filter [label]="'app.filters.region' | translate"
+                     [options]="_locationFilterService.regionOptions | async"
                      [disabled]="!_selectedCountry"
+                     [isLoading]="_locationFilterService.isBusy('region')"
                      [defaultLabel]="'app.filters.regionPlaceholder' | translate"
                      [selectedFilters]="_selectedRegion"
                      (itemSelected)="_onItemSelected($event, 'region')"></app-dropdown-filter>
 
 <app-dropdown-filter [label]="'app.filters.city' | translate"
+                     [options]="_locationFilterService.citiesOptions | async"
                      [disabled]="!_selectedRegion"
+                     [isLoading]="_locationFilterService.isBusy('city')"
                      [defaultLabel]="'app.filters.cityPlaceholder' | translate"
                      [selectedFilters]="_selectedCity"
                      (itemSelected)="_onItemSelected($event, 'city')"></app-dropdown-filter>

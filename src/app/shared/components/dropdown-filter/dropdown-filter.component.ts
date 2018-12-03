@@ -7,8 +7,8 @@ import { OptionItem } from '../../../modules/audience/views/engagement/filter/fi
   styleUrls: ['./dropdown-filter.component.scss']
 })
 export class DropdownFilterComponent {
-  @Input() set selectedFilters(value: string[]) {
-    if (value) {
+  @Input() set selectedFilters(value: any) {
+    if (value !== undefined) {
       this._selectedValue = value;
     }
   }
@@ -24,8 +24,7 @@ export class DropdownFilterComponent {
   
   @Output() itemSelected = new EventEmitter();
   
-  public _options: OptionItem[] = [];
-  public _selectedValue: string[] = [];
+  public _selectedValue = null;
 
   public _onSelectionChange(): void {
     this.itemSelected.emit(this._selectedValue);

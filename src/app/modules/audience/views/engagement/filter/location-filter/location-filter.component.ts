@@ -12,9 +12,12 @@ export class LocationFilterComponent implements OnDestroy {
   @Input() selectedFilters: KalturaUser[] = [];
   
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._locationFilterService.updateDateFilter(event);
+    this._locationFilterService.updateDateFilter(event, () => {
+      this._selectedCountry = null;
+      this._selectedRegion = null;
+      this._selectedCity = null;
+    });
   }
-  
   @Output() itemSelected = new EventEmitter();
   
   public _selectedCountry: any;
@@ -28,7 +31,25 @@ export class LocationFilterComponent implements OnDestroy {
   
   }
   
-  public _onItemSelected(item: any, type: string): void {
+  public _onItemSelected(item: { id: string, name: string }, type: string): void {
+    switch (type) {
+      case 'country':
+        this._selectedCountry = item;
+        this._selectedRegion = null;
+        this._selectedCity = null;
+        this._locationFilterService.resetRegion(this._selectedCountry.name);
+        break;
+      case 'region':
+        this._selectedRegion = item;
+        this._selectedCity = null;
+        this._locationFilterService.resetCity(this._selectedCountry.name, this._selectedRegion.name);
+        break;
+      case 'city':
+        this._selectedCity = item;
+        break;
+      default:
+        break;
+    }
     console.warn(item, type);
   }
 }
