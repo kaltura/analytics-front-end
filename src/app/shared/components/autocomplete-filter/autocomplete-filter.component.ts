@@ -18,7 +18,6 @@ export class AutocompleteFilterComponent {
   }
   
   @Input() label: string;
-  @Input() options: OptionItem[] = [];
   @Input() tooltipResolver: string | Function;
   @Input() classField: string;
   @Input() suggestionLabelField: string;
