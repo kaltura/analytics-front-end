@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { FilterTagItem, RefineFilter } from './filter/filter.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-engagement',
@@ -27,10 +26,6 @@ export class EngagementComponent {
       searchInAdminTags: false
     }
   );
-  
-  constructor(private _translate: TranslateService) {
-  
-  }
   
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;

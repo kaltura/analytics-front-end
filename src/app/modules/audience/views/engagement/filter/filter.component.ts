@@ -72,8 +72,17 @@ export class FilterComponent {
     this._updateSelectedValues(value);
   }
   
-  @Input() dateFilter: DateChangeEvent;
+  @Input() set dateFilter(value: DateChangeEvent) {
+    if (value !== undefined) {
+      this._dateFilter = value;
   
+      setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
+        if (this._currentFilters.find(({ type }) => type === 'location')) {
+          this.removeFilter({ type: 'location', value: null, label: null });
+        }
+      });
+    }
+  }
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() filterTagsChange = new EventEmitter<FilterTagItem[]>();
   @Output() closeFilters = new EventEmitter<void>();
@@ -81,7 +90,9 @@ export class FilterComponent {
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
   private _showFilters: boolean;
+  private _firstTimeLoading = true;
   
+  public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
   public _advancedFiltersState: string;
@@ -228,6 +239,7 @@ export class FilterComponent {
       this._currentFilters.push(value);
     }
   }
+  
   public _onItemUnselected(item: any, type: string): void {
     const unselectedItemIndex = type === 'location'
       ? this._currentFilters.findIndex(filter => filter.type === 'location')

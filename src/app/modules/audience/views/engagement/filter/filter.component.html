@@ -46,7 +46,7 @@
            [@state]="_advancedFiltersState"
            (@state.done)="_advancedFiltersAnimationDone($event)">
         <div class="kListFilters">
-          <app-location-filters [dateFilter]="dateFilter"
+          <app-location-filters [dateFilter]="_dateFilter"
                                 [selectedFilters]="_selectedValues['location']"
                                 (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
         </div>

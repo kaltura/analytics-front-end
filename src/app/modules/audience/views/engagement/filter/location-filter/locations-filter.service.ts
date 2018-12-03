@@ -86,7 +86,7 @@ export class LocationsFilterService implements OnDestroy {
       pager: this._pager,
       order: null,
     };
-    this._reportService.getReport(reportConfig, this._reportConfig)
+    this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
           if (report.table && report.table.header && report.table.data) {
@@ -113,7 +113,7 @@ export class LocationsFilterService implements OnDestroy {
       order: null,
       objectIds: country,
     };
-    this._reportService.getReport(reportConfig, this._reportConfig)
+    this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
           if (report.table && report.table.header && report.table.data) {
@@ -143,7 +143,7 @@ export class LocationsFilterService implements OnDestroy {
       pager: this._pager,
       order: null,
     };
-    this._reportService.getReport(reportConfig, this._reportConfig)
+    this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
           if (report.table && report.table.header && report.table.data) {
