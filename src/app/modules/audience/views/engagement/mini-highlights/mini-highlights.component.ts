@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -47,6 +48,7 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
+              private pageScrollService: PageScrollService,
               private _dataConfigService: MiniHighlightsConfig) {
     super();
     
@@ -159,6 +161,12 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+  }
+
+  public scrollTo(target: string): void {
+    PageScrollConfig.defaultDuration = 500;
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
+    this.pageScrollService.start(pageScrollInstance);
   }
 
 }

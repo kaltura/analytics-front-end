@@ -1,7 +1,7 @@
 <div class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
-    <a class="kDetails">{{'app.common.details' | translate}}</a>
+    <a (click)="scrollTo('#highlights-report')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

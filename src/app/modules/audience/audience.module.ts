@@ -36,6 +36,8 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
 import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-filter.component';
 import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/owners-filter.component';
 
+import { PageScrollService } from 'ngx-page-scroll';
+
 @NgModule({
   imports: [
     AreaBlockerModule,
@@ -79,7 +81,7 @@ import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/o
     OwnersFilterComponent,
   ],
   exports: [],
-  providers: []
+  providers: [PageScrollService]
 })
 export class AudienceModule {
 }
