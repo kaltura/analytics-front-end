@@ -1,0 +1,24 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  margin-right: 24px;
+  margin-bottom: 20px;
+}
+
+.kColumn {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  .kColumnLabel {
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+}
+
+.kMultiselectFilter /deep/ {
+  .ui-multiselect {
+    width: 192px !important;
+  }
+}

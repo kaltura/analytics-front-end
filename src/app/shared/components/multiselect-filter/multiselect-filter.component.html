@@ -1,0 +1,22 @@
+<div class="kColumn kMultiselectFilter">
+  <div class="kColumnLabel">{{label}}</div>
+  <div class="kColumnContent">
+    <p-multiSelect appendTo="body"
+                   [options]="options"
+                   [maxSelectedLabels]="0"
+                   [selectedItemsLabel]="selectedItemsLabel"
+                   [filterPlaceHolder]="filterPlaceHolder"
+                   [showToggleAll]="false"
+                   [resetFilterOnHide]="true"
+                   [(ngModel)]="_selectedValue"
+                   [displaySelectedLabel]="false"
+                   (onChange)="_onSelectionChange()"
+                   [defaultLabel]="defaultLabel">
+      <ng-template [ngIf]="!!template"
+                   let-item pTemplate="item"
+                   [ngTemplateOutlet]="template">
+      </ng-template>
+    </p-multiSelect>
+  </div>
+</div>
+

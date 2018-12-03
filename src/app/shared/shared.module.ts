@@ -36,6 +36,8 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
+import { MultiselectFilterComponent } from 'shared/components/multiselect-filter/multiselect-filter.component';
+import { MultiSelectModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -52,6 +54,7 @@ import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filt
     AutoCompleteModule,
     TreeModule,
     AreaBlockerModule,
+    MultiSelectModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -73,6 +76,7 @@ import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filt
     CategoryFilterComponent,
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
+    MultiselectFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -94,6 +98,7 @@ import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filt
     CategoryFilterComponent,
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
+    MultiselectFilterComponent,
   ],
   providers: [
   ]
