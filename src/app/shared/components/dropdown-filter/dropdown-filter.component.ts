@@ -3,10 +3,10 @@ import { OptionItem } from '../../../modules/audience/views/engagement/filter/fi
 
 @Component({
   selector: 'app-dropdown-filter',
-  templateUrl: './multiselect-filter.component.html',
-  styleUrls: ['./multiselect-filter.component.scss']
+  templateUrl: './dropdown-filter.component.html',
+  styleUrls: ['./dropdown-filter.component.scss']
 })
-export class MultiselectFilterComponent {
+export class DropdownFilterComponent {
   @Input() set selectedFilters(value: string[]) {
     if (Array.isArray(value)) {
       this._selectedValue = value;
@@ -19,6 +19,7 @@ export class MultiselectFilterComponent {
   @Input() filterPlaceHolder: string;
   @Input() selectedItemsLabel: string;
   @Input() defaultLabel: string;
+  @Input() disabled: boolean;
   @Input() template: TemplateRef<any>;
   
   @Output() itemSelected = new EventEmitter();

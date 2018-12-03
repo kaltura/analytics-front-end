@@ -37,7 +37,13 @@
       "selectCategory": "Select Category",
       "tags": "Tags",
       "owners": "Owners",
-      "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
+      "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
+      "country": "Country",
+      "region": "Region",
+      "city": "City",
+      "countryPlaceholder": "Select Country",
+      "regionPlaceholder": "Select Region",
+      "cityPlaceholder": "Select City"
     },
     "categories": {
       "selectCategories": "Select Categories",

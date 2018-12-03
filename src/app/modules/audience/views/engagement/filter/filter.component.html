@@ -46,9 +46,13 @@
            [@state]="_advancedFiltersState"
            (@state.done)="_advancedFiltersAnimationDone($event)">
         <div class="kListFilters">
-          <app-dropdown-filter></app-dropdown-filter>
-          <app-dropdown-filter></app-dropdown-filter>
-          <app-dropdown-filter></app-dropdown-filter>
+          <app-country-filter [selectedFilters]="_selectedValues['country']"></app-country-filter>
+
+          <app-region-filter [selectedFilters]="_selectedValues['region']"
+                             [disabled]="!_selectedValues['country']?.length"></app-region-filter>
+
+          <app-city-filter [selectedFilters]="_selectedValues['city']"
+                           [disabled]="!_selectedValues['region']?.length"></app-city-filter>
         </div>
         <div class="kMiscFilters">&nbsp;</div>
       </div>

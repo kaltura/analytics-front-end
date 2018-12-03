@@ -37,6 +37,9 @@ import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-
 import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/owners-filter.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
+import { CountryFilterComponent } from './views/engagement/filter/country-filter/country-filter.component';
+import { RegionFilterComponent } from './views/engagement/filter/region-filter/region-filter.component';
+import { CityFilterComponent } from './views/engagement/filter/city-filter/city-filter.component';
 
 @NgModule({
   imports: [
@@ -79,6 +82,9 @@ import { PageScrollService } from 'ngx-page-scroll';
     EntryDetailsOverlayComponent,
     TagsFilterComponent,
     OwnersFilterComponent,
+    CountryFilterComponent,
+    RegionFilterComponent,
+    CityFilterComponent,
   ],
   exports: [],
   providers: [PageScrollService]

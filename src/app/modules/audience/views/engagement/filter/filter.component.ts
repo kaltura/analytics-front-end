@@ -142,6 +142,9 @@ export class FilterComponent {
       'categories': [],
       'tags': [],
       'owners': [],
+      'country': [],
+      'region': [],
+      'city': [],
     };
   }
   
