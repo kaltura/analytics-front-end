@@ -34,7 +34,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._selectedDevices = [];
       delete this._filter.deviceIn;
     }
-    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
+    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.indexOf(value) > -1);
     this._pager.pageIndex = 1;
     this._loadReport();
   }
@@ -269,11 +269,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _getDrillDownFilterPropByReportType(): string {
-    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].includes(this._reportType)) {
+    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].indexOf(this._reportType) > -1) {
       return 'browserFamilyIn';
     }
 
-    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].includes(this._reportType)) {
+    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].indexOf(this._reportType) > -1) {
       return 'operatingSystemFamilyIn';
     }
   }

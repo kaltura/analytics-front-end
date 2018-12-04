@@ -237,7 +237,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
-      if (this.allowedDevices.includes(item.device)) {
+      if (this.allowedDevices.indexOf(item.device) > -1) {
         data.push(item);
       } else {
         const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
@@ -408,7 +408,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   private _updateGraphStyle(): void {
     const data = this._rawChartData[this._selectedMetrics];
     const series = data.map(({ value, key }) => {
-      const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
+      const isActive = this._selectedValues.length === 0 || this._selectedValues.indexOf(key) > -1;
       const color = isActive ? '#00A784' : '#CCCCCC';
       return {
         value,
