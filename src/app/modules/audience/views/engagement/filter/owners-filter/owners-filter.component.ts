@@ -16,7 +16,6 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
                              [label]="'app.filters.owners' | translate"
                              [selectedFilters]="selectedFilters"
                              [provider]="_usersProvider"
-                             [onItemAdding]="_convertUserInputToValidValue"
                              (search)="_searchUsers($event)"
                              (itemSelected)="itemSelected.emit($event)"
                              (itemUnselected)="itemUnselected.emit($event)"></app-autocomplete-filter>
@@ -35,7 +34,6 @@ export class OwnersFilterComponent implements OnDestroy {
   
   constructor(private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService) {
-    this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this); // fix scope issues when binding to a property
   }
   
   ngOnDestroy() {
@@ -71,21 +69,6 @@ export class OwnersFilterComponent implements OnDestroy {
       (err) => {
         this._usersProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
-  }
-  
-  public _convertUserInputToValidValue(value: string): { id: string, screenName: string, __tooltip: string, __class: string } {
-    let result = null;
-    const tooltip = this._translate.instant('app.filters.userNotFoundTooltip', { 0: value });
-    if (value) {
-      result = {
-        id: value,
-        screenName: value,
-        __tooltip: tooltip,
-        __class: 'userAdded'
-      };
-    }
-    
-    return result;
   }
   
   private _searchUsersRequest(text: string): Observable<KalturaUser[]> {
