@@ -199,6 +199,6 @@ export class LocationsFilterService implements OnDestroy {
   }
   
   public isBusy(type: string): boolean {
-    return this._isBusy && this._currentlyLoading.includes(type);
+    return this._isBusy && this._currentlyLoading.indexOf(type) !== -1;
   }
 }
