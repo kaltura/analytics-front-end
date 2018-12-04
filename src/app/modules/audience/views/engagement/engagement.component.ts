@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { FilterTagItem, RefineFilter } from './filter/filter.component';
+import { RefineFilter } from './filter/filter.component';
 
 @Component({
   selector: 'app-engagement',
@@ -10,7 +10,6 @@ import { FilterTagItem, RefineFilter } from './filter/filter.component';
 })
 export class EngagementComponent {
   public _selectedRefineFilters: RefineFilter = null;
-  public _tags: FilterTagItem[] = [];
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _csvExportHeaders = '';
@@ -34,9 +33,4 @@ export class EngagementComponent {
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }
-  
-  public _onFilterTagsChange(event: FilterTagItem[]): void {
-    this._tags = event;
-  }
-  
 }

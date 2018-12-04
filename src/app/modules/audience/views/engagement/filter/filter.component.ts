@@ -78,13 +78,12 @@ export class FilterComponent {
   
       setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
         if (this._currentFilters.find(({ type }) => type === 'location')) {
-          this.removeFilter({ type: 'location', value: null, label: null });
+          this._removeFilter({ type: 'location', value: null, label: null });
         }
       });
     }
   }
   @Output() filterChange = new EventEmitter<RefineFilter>();
-  @Output() filterTagsChange = new EventEmitter<FilterTagItem[]>();
   @Output() closeFilters = new EventEmitter<void>();
   
   private _currentFilters: FilterItem[] = []; // local state
@@ -97,6 +96,7 @@ export class FilterComponent {
   public _state: string;
   public _advancedFiltersState: string;
   public _showAdvancedFilters: boolean;
+  public _tags: FilterTagItem[] = [];
   
   get showFilters() {
     return this._showFilters;
@@ -265,7 +265,7 @@ export class FilterComponent {
     this._appliedFilters = [...this._currentFilters];
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
-    this.filterTagsChange.emit(this._prepareFilterTags());
+    this._tags = this._prepareFilterTags();
     
     this.closeFilters.emit();
   }
@@ -282,12 +282,12 @@ export class FilterComponent {
     }
   }
   
-  public removeFilter(item: { value: string, label: string, type: string }): void {
+  public _removeFilter(item: { value: string, label: string, type: string }): void {
     this._onItemUnselected(item.value, item.type);
     this._apply();
   }
   
-  public removeAll(): void {
+  public _removeAll(): void {
     this._clearAll();
     this._currentFilters = [];
     this._apply();

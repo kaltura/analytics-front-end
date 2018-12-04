@@ -9,6 +9,7 @@
 .kRefineFilters {
   width: 100%;
   height: auto;
+  margin-bottom: 0 !important;
 
   .kRefineFiltersMain {
     height: 100%;
@@ -60,5 +61,17 @@
       width: 100px;
     }
   }
+}
 
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
 }
