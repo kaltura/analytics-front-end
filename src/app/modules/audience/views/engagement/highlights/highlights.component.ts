@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -160,16 +161,20 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
     
     if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(
+      const compareTableData = this._compareService.compareTableData(
         currentPeriod,
         comparePeriod,
         current.table,
         compare.table,
         this._dataConfig.table
       );
-      this._totalCount = current.table.totalCount;
-      this._columns = columns;
-      this._tableData = tableData;
+      
+      if (compareTableData) {
+        const { columns, tableData } = compareTableData;
+        this._totalCount = current.table.totalCount;
+        this._columns = columns;
+        this._tableData = tableData;
+      }
     }
     
     if (current.totals && compare.totals) {
@@ -193,7 +198,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._reportInterval,
         () => this._chartDataLoaded = true
       );
-      this._lineChartData = lineChartData;
+      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
   }
   
@@ -215,7 +220,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._reportInterval,
       () => this._chartDataLoaded = true
     );
-    this._lineChartData = lineChartData;
+    this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   
   public _onTabChange(tab: Tab): void {

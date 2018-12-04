@@ -46,3 +46,16 @@
     margin-left: 4px;
   }
 }
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}

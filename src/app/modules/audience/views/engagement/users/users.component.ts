@@ -169,26 +169,31 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
         this._dataConfig.graph,
         this._reportInterval
       );
-      this._barChartData = barChartData['default'];
+
+      this._barChartData = null;
+
+      if (barChartData['default']) {
+        this._barChartData = barChartData['default'];
   
-      const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
-      const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
+        const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
+        const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
   
-      const currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
-      const comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
-      const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
+        const currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
+        const comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
+        const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
   
-      const tooltip = `
+        const tooltip = `
         ${this._trendService.getTooltipRowString(currentPeriodTitle, currentTotal, '')}
         ${this._trendService.getTooltipRowString(comparePeriodTitle, compareTotal, '')}
       `;
   
-      this._totalUsersCompare = {
-        trend,
-        value,
-        tooltip,
-        units: '%'
-      };
+        this._totalUsersCompare = {
+          trend,
+          value,
+          tooltip,
+          units: '%'
+        };
+      }
     }
   }
 }
