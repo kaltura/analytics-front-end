@@ -5,11 +5,21 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-
     <div class="kReportContent">
+      <div class="kReportRow" *ngFor="let item of _tableData">
+        <div class="kReportRowIndex">{{item.index}}</div>
+        <div class="kReportRowThumbnail" #holder>
+          <img [src]="item.thumbnailUrl"
+               onError="this.onerror=null;this.style.display='none'"
+               (error)="holder.classList.add('error')">
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle">{{item.entry_name}}</span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
 
     </div>
-
   </k-area-blocker>
 </div>
 
