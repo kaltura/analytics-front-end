@@ -77,6 +77,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         }
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+
+        delete sections.totals;
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -175,17 +178,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._columns = columns;
         this._tableData = tableData;
       }
-    }
-    
-    if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(
-        currentPeriod,
-        comparePeriod,
-        current.totals,
-        compare.totals,
-        this._dataConfig.totals,
-        this._selectedMetrics
-      );
     }
     
     if (current.graphs.length && compare.graphs.length) {
