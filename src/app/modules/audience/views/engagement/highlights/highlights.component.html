@@ -1,14 +1,8 @@
 <div class="kReport kContent kOverrideFAIcons">
-  <div class="kFilters">
-    <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
-  </div>
-
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData"
-                       [compareMode]="_isCompareMode"
-                       (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units [dateFilter]="dateFilterComponent" [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
