@@ -373,3 +373,17 @@ p-multiselect /deep/ {
 .ui-overlaypanel-content {
   padding: 0;
 }
+
+ui-carousel /deep/ {
+  .ui-carousel-item {
+    background-color: #FFFFFF !important;
+  }
+
+  .dot {
+    background: $kGrayscale3 !important;
+
+    &.active {
+      background-color: $menuBkgColor !important;
+    }
+  }
+}

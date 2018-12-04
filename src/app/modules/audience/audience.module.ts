@@ -35,6 +35,7 @@ import { TopVideosTableComponent } from './views/engagement/top-videos/top-video
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
+import { UICarouselModule } from 'ui-carousel';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { PageScrollService } from 'ngx-page-scroll';
     CheckboxModule,
     RouterModule.forChild(routing),
     OverlayPanelModule,
+    UICarouselModule,
   ],
   declarations: [
     AudienceComponent,
