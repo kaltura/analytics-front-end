@@ -1,0 +1,15 @@
+<div class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
+    <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+
+    </div>
+
+  </k-area-blocker>
+</div>
+
