@@ -11,6 +11,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
 
 @Component({
   selector: 'app-date-filter',
@@ -100,10 +101,6 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   
   }
-
-  private _isEmptyObject(value: any): boolean {
-    return (value && !Object.keys(value).length);
-  }
   
   private _init(queryParams: Params): void {
     this._initCurrentFilterFromEventParams(queryParams);
@@ -116,7 +113,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _initCurrentFilterFromEventParams(params: Params): void {
-    if (this._isEmptyObject(params)) {
+    if (isEmptyObject(params)) {
       this._dateRangeType = this._defaultDateRageType;
       this._dateRange = this._defaultDateRange;
       this.compare = false;

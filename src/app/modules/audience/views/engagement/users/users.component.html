@@ -14,8 +14,11 @@
               <span class="kUnits">{{_totalUsersCompare.units}}</span>
             </span>
       </div>
-      <div class="kChart">
+      <div *ngIf="_barChartData"  class="kChart">
         <div echarts class="kChart" [options]="_barChartData"></div>
+      </div>
+      <div *ngIf="!_barChartData" class="kNoResults">
+        <span>{{'app.common.noResults' | translate}}</span>
       </div>
     </div>
   </k-area-blocker>
