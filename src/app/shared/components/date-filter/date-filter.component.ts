@@ -215,11 +215,20 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public openPopup(): void {
     this.selectedDateRange = this.lastSelectedDateRange;
   }
+  
+  public resetCompare(): void {
+    this.selectedComparePeriod = 'lastYear';
+  }
 
   public updateCompareMax(): void {
     setTimeout(() => { // use a timeout to allow binded variables to update before calculations
       this.compareMaxDate = this._dateFilterService.getMaxCompare(this.selectedDateRange);
     }, 0);
+  }
+  
+  public updateSpecificCompareStartDate(): void {
+    const maxCompareDate = this._dateFilterService.getMaxCompare(this._dateRange);
+    this.specificCompareStartDate = this.specificCompareStartDate > maxCompareDate ? maxCompareDate : this.specificCompareStartDate;
   }
 
   public exitCompare(): void {
