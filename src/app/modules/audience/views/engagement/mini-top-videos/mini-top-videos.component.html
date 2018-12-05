@@ -7,7 +7,11 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent" *ngIf="!_isCompareMode">
       <div class="kReportRow" *ngFor="let item of _tableData">
-        <div class="kReportRowIndex">{{item.index}}</div>
+        <div class="kReportRowIndex kFirst" *ngIf="item.index === 1">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{item.index}}</span>
+        </div>
+        <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
         <div class="kReportRowThumbnail" #holder>
           <img [src]="item.thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
@@ -23,7 +27,10 @@
     <div class="kReportContent" *ngIf="_isCompareMode">
       <span class="kDates">{{_currentDates}}</span>
       <div class="kReportRow" *ngIf="_tableData[0]">
-        <div class="kReportRowIndex">{{_tableData[0].index}}</div>
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_tableData[0].index}}</span>
+        </div>
         <div class="kReportRowThumbnail" #holder>
           <img [src]="_tableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
@@ -41,7 +48,10 @@
       </div>
       <span class="kDates">{{_compareDates}}</span>
       <div class="kReportRow" *ngIf="_compareTableData[0]">
-        <div class="kReportRowIndex">{{_compareTableData[0].index}}</div>
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_compareTableData[0].index}}</span>
+        </div>
         <div class="kReportRowThumbnail" #compareHolder>
           <img [src]="_compareTableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"

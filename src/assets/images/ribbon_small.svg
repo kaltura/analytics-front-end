@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="32px" viewBox="0 0 23 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Rectangle</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F7CB1C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M2,0 L21,-4.47641924e-13 C22.1045695,-4.4784483e-13 23,0.8954305 23,2 L23,30.5934091 C23,31.1456938 22.5522847,31.5934091 22,31.5934091 C21.8881599,31.5934091 21.777112,31.5746477 21.6714794,31.5379059 L11.8285206,28.114268 C11.6157583,28.0402638 11.3842417,28.0402638 11.1714794,28.114268 L1.32852062,31.5379059 C0.806889448,31.7193428 0.236940134,31.4435609 0.0555032033,30.9219297 C0.0187614101,30.816297 -1.16079565e-15,30.7052492 -7.77156117e-16,30.5934091 L0,2 C-1.3527075e-16,0.8954305 0.8954305,2.02906125e-16 2,0 Z" id="Rectangle" fill="url(#linearGradient-1)" fill-rule="nonzero"></path>
+    </g>
+</svg>
