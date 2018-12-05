@@ -28,6 +28,11 @@
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
+    <div class="kMiniReportContainer">
+      <app-engagement-mini-top-videos [dateFilter]="_dateFilter"
+                                      [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
+    </div>
+
     <!-- Example -->
     <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <!--<div class="kMiniReportContainer">-->
@@ -51,7 +56,7 @@
                                [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
 
-  <div class="kReportContainer">
+  <div id="top-videos" class="kReportContainer">
     <app-engagement-top-videos [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-top-videos>
   </div>

@@ -6,11 +6,14 @@
       <div class="kDimensions">
         <app-time-units [dateFilter]="dateFilterComponent" [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
-      <div *ngIf="_lineChartData[_selectedMetrics]" class="kChart">
-        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
-      </div>
-      <div *ngIf="!_lineChartData[_selectedMetrics]" class="kNoResults">
-        <span>{{'app.common.noResults' | translate}}</span>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)" class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
       </div>
 
       <div class="kTable">
