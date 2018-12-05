@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
-        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'" (ngModelChange)="updateCompareMax()"></p-calendar>
       </div>
       <hr>
       <div class="kCompare" *ngIf="showCompare">

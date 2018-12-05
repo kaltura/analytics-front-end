@@ -143,7 +143,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         const compareToDateObject = moment(compareTo);
         if (compareToDateObject.isValid()) {
           const compareToDate = compareToDateObject.toDate();
-          const maxCompareDate = this._dateFilterService.getMaxCompare(this._dateRange);
+          const maxCompareDate = this.selectedView === 'specific'
+            ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
+            : this._dateFilterService.getMaxCompare(this._dateRange);
           this.selectedComparePeriod = 'specific';
           this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
         } else {
@@ -222,12 +224,16 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   public updateCompareMax(): void {
     setTimeout(() => { // use a timeout to allow binded variables to update before calculations
-      this.compareMaxDate = this._dateFilterService.getMaxCompare(this.selectedDateRange);
+      this.compareMaxDate = this.selectedView === 'specific'
+        ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
+        : this._dateFilterService.getMaxCompare(this.selectedDateRange);
     }, 0);
   }
   
   public updateSpecificCompareStartDate(): void {
-    const maxCompareDate = this._dateFilterService.getMaxCompare(this._dateRange);
+    const maxCompareDate = this.selectedView === 'specific'
+      ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
+      : this._dateFilterService.getMaxCompare(this._dateRange);
     this.specificCompareStartDate = this.specificCompareStartDate > maxCompareDate ? maxCompareDate : this.specificCompareStartDate;
   }
 
