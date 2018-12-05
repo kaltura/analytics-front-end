@@ -63,7 +63,7 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
           height: 340,
           min: 0,
           max: 100,
-          minSize: '5%',
+          minSize: '0%',
           maxSize: '100%',
           sort: 'descending',
           gap: 0,
