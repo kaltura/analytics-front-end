@@ -9,15 +9,23 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="body" let-data>
       <tr class="kTopVideoRow">
-        <td [ngStyle]="{'width': '50px', 'text-align': 'center'}">{{data.index}}</td>
-        <td [ngStyle]="{'width': '155px'}">
+        <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
+          <div class="kReportRowIndex kFirst" *ngIf="data.index === 1">
+            <img src="assets/images/ribbon_large.svg">
+            <span>{{data.index}}</span>
+          </div>
+          <div class="kReportRowIndex" *ngIf="data.index !== 1">
+            <span>{{data.index}}</span>
+          </div>
+        </td>
+        <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
           <div class="kThumbnailHolder" #holder>
             <img [src]="data.thumbnailUrl"
                  onError="this.onerror=null;this.style.display='none'"
                  (error)="holder.classList.add('error')">
           </div>
         </td>
-        <td [ngStyle]="{'width': '30%'}">
+        <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
           <div class="kTopVideoEntryColumn">
             <span class="kTableColumn kEntryName"
                   (mouseleave)="_hideOverlay()"

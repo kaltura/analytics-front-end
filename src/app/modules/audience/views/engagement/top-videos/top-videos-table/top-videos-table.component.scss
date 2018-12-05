@@ -27,6 +27,39 @@
 
 .kTopVideoRow {
   height: 100px;
+
+  .kReportRowIndex {
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    color: $kGrayscale3;
+
+    span {
+      position: absolute;
+      top: -35px;
+      left: 4px;
+    }
+
+    &.kFirst {
+      margin-right: 28px;
+
+      img {
+        z-index: 1;
+        position: absolute;
+        top: -50px;
+        left: -7px;
+      }
+
+      span {
+        z-index: 2;
+        position: absolute;
+        top: -35px;
+        left: 4px;
+        color: $kGrayscale1
+      }
+
+    }
+  }
 }
 
 .kTableCell {
