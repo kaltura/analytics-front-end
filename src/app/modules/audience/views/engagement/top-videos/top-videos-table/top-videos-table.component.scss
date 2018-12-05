@@ -7,8 +7,22 @@
   display: inline-block;
 }
 
-.kEntryName {
+.kTopVideoEntryColumn {
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
+  font-weight: bold;
+  margin-top: -24px;
+
+  .kEntryName {
+    font-size: 18px;
+    color: $kGrayscale1;
+    margin-bottom: 12px;
+  }
+
+  .kEntryDetails {
+    color: $kGrayscale3;
+  }
 }
 
 .kTopVideoRow {
@@ -36,13 +50,18 @@
     color: #E1962E;
   }
 
-  .kTableColumn {
+  .kCellValue {
     font-weight: bold;
   }
 }
 
 .kScore {
-  color: $kGrayscale1;
-  font-size: 18px;
-  font-weight: bold;
+  text-align: right;
+
+  span {
+    color: $kGrayscale1;
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 24px;
+  }
 }

@@ -25,7 +25,7 @@ export class TopVideosTableComponent {
   @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _originalTable: any[] = [];
-  private _pageSize = 10;
+  private _pageSize = 5;
   private _currentOrderField = 'count_plays';
   private _currentOrderDirection = -1;
   
