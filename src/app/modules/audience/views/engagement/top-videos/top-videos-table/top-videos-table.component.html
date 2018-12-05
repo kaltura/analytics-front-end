@@ -1,89 +1,92 @@
 <div class="kTableContainer">
   <span class="kDates" *ngIf="dates">{{dates}}</span>
-  <p-table sortField="count_plays"
-           [class.kCompareMode]="isCompareMode"
-           [value]="_tableData"
-           [customSort]="true"
-           [sortOrder]="-1"
-           [defaultSortOrder]="-1"
-           (sortFunction)="_onSortChanged($event)">
-    <ng-template pTemplate="body" let-data>
-      <tr class="kTopVideoRow">
-        <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
-          <div class="kReportRowIndex kFirst" *ngIf="data.index === 1">
-            <img src="assets/images/ribbon_large.svg">
-            <span>{{data.index}}</span>
-          </div>
-          <div class="kReportRowIndex" *ngIf="data.index !== 1">
-            <span>{{data.index}}</span>
-          </div>
-        </td>
-        <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-          <div class="kThumbnailHolder" #holder>
-            <img [src]="data.thumbnailUrl"
-                 onError="this.onerror=null;this.style.display='none'"
-                 (error)="holder.classList.add('error')">
-          </div>
-        </td>
-        <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
-          <div class="kTopVideoEntryColumn"
-               (mouseleave)="_hideOverlay()"
-               (mouseenter)="_showOverlay($event, data['object_id'])">
-            <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
-            <div class="kEntryDetails">
+  <div class="kDividerWrapper">
+    <div class="kDivider" *ngIf="showDivider"></div>
+    <p-table sortField="count_plays"
+             [class.kCompareMode]="isCompareMode"
+             [value]="_tableData"
+             [customSort]="true"
+             [sortOrder]="-1"
+             [defaultSortOrder]="-1"
+             (sortFunction)="_onSortChanged($event)">
+      <ng-template pTemplate="body" let-data>
+        <tr class="kTopVideoRow">
+          <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
+            <div class="kReportRowIndex kFirst" *ngIf="data.index === 1">
+              <img src="assets/images/ribbon_large.svg">
+              <span>{{data.index}}</span>
+            </div>
+            <div class="kReportRowIndex" *ngIf="data.index !== 1">
+              <span>{{data.index}}</span>
+            </div>
+          </td>
+          <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
+            <div class="kThumbnailHolder" #holder>
+              <img [src]="data.thumbnailUrl"
+                   onError="this.onerror=null;this.style.display='none'"
+                   (error)="holder.classList.add('error')">
+            </div>
+          </td>
+          <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
+            <div class="kTopVideoEntryColumn"
+                 (mouseleave)="_hideOverlay()"
+                 (mouseenter)="_showOverlay($event, data['object_id'])">
+              <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
+              <div class="kEntryDetails">
               <span class="kTableColumn" [kTooltip]="'By Amy Lorimer • Jan 9, 2018'" [showOnEllipsis]="true">
                 By Amy Lorimer • Jan 9, 2018
               </span>
+              </div>
             </div>
-          </div>
-        </td>
-        <ng-container *ngIf="!isCompareMode">
-          <td>
-            <div class="kTableCell">
-              <i class="icon-small-play"></i>
-              <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
-              <span class="kTableColumn"
-                    [kTooltip]="'app.engagement.topVideosReport.count_plays' | translate"
-                    [showOnEllipsis]="true">
+          </td>
+          <ng-container *ngIf="!isCompareMode">
+            <td>
+              <div class="kTableCell">
+                <i class="icon-small-play"></i>
+                <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
+                <span class="kTableColumn"
+                      [kTooltip]="'app.engagement.topVideosReport.count_plays' | translate"
+                      [showOnEllipsis]="true">
               {{'app.engagement.topVideosReport.count_plays' | translate}}
             </span>
-            </div>
-          </td>
-          <td>
-            <div class="kTableCell">
-              <i class="icon-viewer-contributor"></i>
-              <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
-              <span class="kTableColumn"
-                    [kTooltip]="'app.engagement.topVideosReport.unique_known_users' | translate"
-                    [showOnEllipsis]="true">
+              </div>
+            </td>
+            <td>
+              <div class="kTableCell">
+                <i class="icon-viewer-contributor"></i>
+                <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
+                <span class="kTableColumn"
+                      [kTooltip]="'app.engagement.topVideosReport.unique_known_users' | translate"
+                      [showOnEllipsis]="true">
             {{'app.engagement.topVideosReport.unique_known_users' | translate}}
             </span>
-            </div>
-          </td>
-          <td>
-            <div class="kTableCell">
-              <i class="icon-small-time"></i>
-              <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
-              <span class="kTableColumn"
-                    [kTooltip]="'app.engagement.topVideosReport.avg_view_drop_off' | translate"
-                    [showOnEllipsis]="true">
+              </div>
+            </td>
+            <td>
+              <div class="kTableCell">
+                <i class="icon-small-time"></i>
+                <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
+                <span class="kTableColumn"
+                      [kTooltip]="'app.engagement.topVideosReport.avg_view_drop_off' | translate"
+                      [showOnEllipsis]="true">
               {{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}
             </span>
-            </div>
+              </div>
+            </td>
+          </ng-container>
+          <td class="kScore">
+            <span>n/10</span>
           </td>
-        </ng-container>
-        <td class="kScore">
-          <span>n/10</span>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <div class="emptymessage">
-        <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-        <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
-      </div>
-    </ng-template>
-  </p-table>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <div class="emptymessage">
+          <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+          <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
   <p-paginator [rows]="_pager.pageSize"
                [first]="(_pager.pageIndex - 1) * _pager.pageSize"
                [totalRecords]="_totalCount"
