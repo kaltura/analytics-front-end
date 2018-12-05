@@ -88,7 +88,7 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
             creator: user.fullName,
             creationDate: entry.createdAt,
             duration: entry.msDuration,
-            thumbnailUrl: `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${entry.id}/width/280/height/100?rnd=${Math.random()}`
+            thumbnailUrl: `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${entry.id}/width/560/height/200?rnd=${Math.random()}`
           };
         })
       )

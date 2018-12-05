@@ -34,10 +34,6 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value),
             sortOrder: 4,
           },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 5,
-          },
         }
       }
     };
