@@ -22,6 +22,14 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'region': {
+            format: value => value,
+            nonComparable: true,
+          },
+          'city': {
+            format: value => value,
+            nonComparable: true,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
@@ -30,6 +38,15 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value)
+          },
+          'country_coordinates': {
+            format: value => value
+          },
+          'region_coordinates': {
+            format: value => value
+          },
+          'city_coordinates': {
+            format: value => value
           }
         }
       },
@@ -75,8 +92,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           color: '#999999'
         },
         formatter: (params) => {
-          if (params.name && parseFloat(params.value) >= 0) {
-            let tooltip = params.seriesName + '<br/>' + params.name + ' : ' + params.value;
+          if (params.name && params.value && params.value.length === 3) {
+            let tooltip = params.name + '<br/>' + params.seriesName + ' : ' + params.value[2];
             if (params.seriesName === 'Avg. Drop Off') {
               tooltip = tooltip + '%';
             }
@@ -86,17 +103,44 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           }
         }
       },
+
       visualMap: {
+        type: 'continuous',
         min: 0,
         max: 1000000,
         left: 16,
+        center: [0, 0],
         realtime: false,
         calculable: true,
         inRange: {
           color: ['#B4E9FF', '#2541B8']
         }
       },
+      geo: {
+        name: 'World',
+        type: 'map',
+        map: 'world',
+        center: [0, 0],
+        top: 70,
+        zoom: 1.2,
+        roam: true,
+        label: {
+          emphasis: {
+            show: false
+          }
+        },
+        itemStyle: {
+          normal: {
+            areaColor: '#ebebeb',
+            borderColor: '#333333'
+          },
+          emphasis: {
+            areaColor: '#777777'
+          }
+        }
+      },
       series: [
+        /*
         {
           name: '',
           type: 'map',
@@ -112,6 +156,35 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             emphasis: {label: {show: true}, areaColor: '#F49616'}
           },
           data: []
+        },*/
+        {
+          name: 'Plays',
+          type: 'scatter',
+          mapType: 'world',
+          coordinateSystem: 'geo',
+          animationDurationUpdate: 200,
+          animationEasingUpdate: 'cubicInOut',
+          data: [],
+          symbolSize: 12,
+          label: {
+            normal: {
+              show: false
+            },
+            emphasis: {
+              show: false
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#f4e925',
+              shadowBlur: 5,
+              shadowColor: '#333'
+            },
+            emphasis: {
+              borderColor: '#fff',
+              borderWidth: 1
+            }
+          }
         }
       ]
     };

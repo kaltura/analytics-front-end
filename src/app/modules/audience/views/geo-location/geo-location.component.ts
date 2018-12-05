@@ -103,9 +103,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _onTabChange(tab: Tab): void {
     this.selectedTab = tab;
     this._selectedMetrics = tab.key;
-    if (this._drillDown.length === 0) {
-      this.updateMap();
-    }
+    this.updateMap();
     this._onSortChanged({data: this._tableData, field: tab.key, order: -1});
   }
 
@@ -155,18 +153,21 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public zoom(direction: string): void {
     if (direction === 'in' && this._mapZoom < 4) {
       this._mapZoom += 1;
-      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      //this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
     }
     if (direction === 'out' && this._mapZoom > 2) {
       this._mapZoom -= 1;
-      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      //this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
     }
+
     // update drag and center according to zoom
     if (this._mapZoom < 2) {
-      this.echartsIntance.setOption({series: [{roam: false}]}, false); // prevent move when zoomed out
-      this.echartsIntance.setOption({series: [{center: [0, 10]}]}, false); // center map upon zoom out
+      //this.echartsIntance.setOption({geo: [{roam: false}]}, false); // prevent move when zoomed out
+      this.echartsIntance.setOption({geo: [{center: [0, 10]}]}, false); // center map upon zoom out
     } else {
-      this.echartsIntance.setOption({series: [{roam: 'move'}]}, false); // allow move when zoomed in
+      //this.echartsIntance.setOption({geo: [{roam: 'move'}]}, false); // allow move when zoomed in
     }
   }
 
@@ -274,8 +275,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         this.unFilteredTableData.push(data);
       });
       this.updateSelectedCountries();
-      this.updateMap();
     }
+    this.updateMap();
   }
 
   private updateSelectedCountries(): void {
@@ -310,15 +311,24 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
-    this._tableData.forEach(data => {
-      mapConfig.series[0].data.push({
-        name: this._dataConfigService.getCountryName(data.object_id),
-        value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
+    if (this._drillDown.length === 2) {
+      this._tableData.forEach(data => {
+        const coords = data.city_coordinates.split(':');
+        let value = [coords[1], coords[0]];
+        value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
+        mapConfig.series[0].data.push({
+          name: data.city,
+          value
+        });
+        // mapConfig.series[0].data.push({
+        //   name: this._dataConfigService.getCountryName(data.object_id),
+        //   value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
+        // });
+        if (parseInt(data[this._selectedMetrics]) > maxValue) {
+          maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        }
       });
-      if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
-      }
-    });
+    }
     mapConfig.visualMap.max = maxValue;
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
