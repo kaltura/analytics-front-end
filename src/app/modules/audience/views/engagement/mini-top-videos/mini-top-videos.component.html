@@ -36,7 +36,9 @@
           <span class="kScore">n/10</span>
         </div>
       </div>
-      <div class="kReportRow" *ngIf="!_tableData[0]">{{'app.common.noResults' | translate}}</div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
       <span class="kDates">{{_compareDates}}</span>
       <div class="kReportRow" *ngIf="_compareTableData[0]">
         <div class="kReportRowIndex">{{_compareTableData[0].index}}</div>
@@ -52,7 +54,9 @@
           <span class="kScore">n/10</span>
         </div>
       </div>
-      <div class="kReportRow" *ngIf="!_compareTableData[0]">{{'app.common.noResults' | translate}}</div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
     </div>
   </k-area-blocker>
 </div>
