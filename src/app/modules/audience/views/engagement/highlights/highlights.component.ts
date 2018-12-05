@@ -30,7 +30,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
 
   public _columns: string[] = [];
   public _firstTimeLoading = true;
-  public _isBusy: boolean;
+  public _isBusy = true;
   public _chartDataLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -212,6 +212,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._reportInterval,
       () => this._chartDataLoaded = true
     );
+
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   

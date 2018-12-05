@@ -14,12 +14,17 @@
               <span class="kUnits">{{_totalUsersCompare.units}}</span>
             </span>
       </div>
-      <div *ngIf="_barChartData"  class="kChart">
-        <div echarts class="kChart" [options]="_barChartData"></div>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_barChartData && _barChartData?.series && _barChartData?.series[0]?.data?.length"
+             [options]="_barChartData"></div>
+
+        <div *ngIf="!_isBusy && (!_barChartData || !_barChartData?.series || !_barChartData?.series[0]?.data?.length)"
+             class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
       </div>
-      <div *ngIf="!_barChartData" class="kNoResults">
-        <span>{{'app.common.noResults' | translate}}</span>
-      </div>
+
     </div>
   </k-area-blocker>
 </div>

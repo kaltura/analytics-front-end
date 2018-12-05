@@ -31,7 +31,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   });
   
   public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy: boolean;
+  public _isBusy = true;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
