@@ -7,41 +7,82 @@
            [sortOrder]="-1"
            [defaultSortOrder]="-1"
            (sortFunction)="_onSortChanged($event)">
-    <ng-template pTemplate="header">
-      <tr>
-        <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topVideosReport.index' | translate}}</th>
-        <th [ngStyle]="{'width': '80px'}"></th>
-        <th *ngFor="let col of columns" [pSortableColumn]="col !== 'entry_name' && !isCompareMode ? col : null">
-          <div class="kColumnHeader">
-            <span [kTooltip]="'app.engagement.topVideosReport.' + col | translate" [showOnEllipsis]="true">
-              {{'app.engagement.topVideosReport.' + col | translate}}
-            </span>
-            <p-sortIcon *ngIf="col !== 'entry_name' && !isCompareMode ? col : null" [field]="col"></p-sortIcon>
-          </div>
-        </th>
-      </tr>
-    </ng-template>
+    <!--<ng-template pTemplate="header">-->
+    <!--<tr>-->
+    <!--<th [ngStyle]="{'width': '60px'}">{{'app.engagement.topVideosReport.index' | translate}}</th>-->
+    <!--<th [ngStyle]="{'width': '80px'}"></th>-->
+    <!--<th *ngFor="let col of columns" [pSortableColumn]="col !== 'entry_name' && !isCompareMode ? col : null">-->
+    <!--<div class="kColumnHeader">-->
+    <!--<span [kTooltip]="'app.engagement.topVideosReport.' + col | translate" [showOnEllipsis]="true">-->
+    <!--{{'app.engagement.topVideosReport.' + col | translate}}-->
+    <!--</span>-->
+    <!--<p-sortIcon *ngIf="col !== 'entry_name' && !isCompareMode ? col : null" [field]="col"></p-sortIcon>-->
+    <!--</div>-->
+    <!--</th>-->
+    <!--</tr>-->
+    <!--</ng-template>-->
     <ng-template pTemplate="body" let-data>
-      <tr>
-        <td>{{data.index}}</td>
-        <td>
+      <tr class="kTopVideoRow">
+        <td [ngStyle]="{'width': '30px'}">{{data.index}}</td>
+        <td [ngStyle]="{'width': '155px'}">
           <div class="kThumbnailHolder" #holder>
             <img [src]="data.thumbnailUrl"
                  onError="this.onerror=null;this.style.display='none'"
                  (error)="holder.classList.add('error')">
           </div>
         </td>
-        <td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">
-          <span *ngIf="col === 'entry_name'"
-                class="kTableColumn kEntryName"
+        <td>
+          <span class="kTableColumn kEntryName"
                 (mouseleave)="_hideOverlay()"
-                (mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</span>
-
-          <span *ngIf="col !== 'entry_name'"
-                class="kTableColumn"
-                [kTooltip]="data[col]"
-                [showOnEllipsis]="true">{{data[col]}}</span>
+                (mouseenter)="_showOverlay($event, data['object_id'])">{{data['entry_name']}}</span>
         </td>
+        <td>
+          <div class="kTableCell">
+            <i class="icon-small-play"></i>
+            {{data['count_plays']}}&nbsp;
+            <span class="kTableColumn"
+                  [kTooltip]="'app.engagement.topVideosReport.count_plays' | translate"
+                  [showOnEllipsis]="true">
+              {{'app.engagement.topVideosReport.count_plays' | translate}}
+            </span>
+          </div>
+        </td>
+        <td>
+          <div class="kTableCell">
+            <i class="icon-viewer-contributor"></i>
+            {{data['unique_known_users']}}&nbsp;
+            <span class="kTableColumn"
+                  [kTooltip]="'app.engagement.topVideosReport.unique_known_users' | translate"
+                  [showOnEllipsis]="true">
+            {{'app.engagement.topVideosReport.unique_known_users' | translate}}
+            </span>
+          </div>
+        </td>
+        <td>
+          <div class="kTableCell">
+            <i class="icon-small-time"></i>
+            {{data['avg_view_drop_off']}}&nbsp;
+            <span class="kTableColumn"
+                  [kTooltip]="'app.engagement.topVideosReport.avg_view_drop_off' | translate"
+                  [showOnEllipsis]="true">
+              {{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}
+            </span>
+          </div>
+        </td>
+        <td>
+          <span class="kScore">n/10</span>
+        </td>
+        <!--<td *ngFor="let col of columns; let i = index" [class.kHighlight]="i===0">-->
+        <!--<span *ngIf="col === 'entry_name'"-->
+        <!--class="kTableColumn kEntryName"-->
+        <!--(mouseleave)="_hideOverlay()"-->
+        <!--(mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</span>-->
+
+        <!--<span *ngIf="col !== 'entry_name'"-->
+        <!--class="kTableColumn"-->
+        <!--[kTooltip]="data[col]"-->
+        <!--[showOnEllipsis]="true">{{data[col]}}</span>-->
+        <!--</td>-->
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

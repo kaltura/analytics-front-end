@@ -39,7 +39,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _compareTableData: any[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
-  public _pager = new KalturaFilterPager({ pageSize: 100, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
   public _firstTimeLoading = true;
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
@@ -149,7 +149,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/108/height/60?rnd=${Math.random()}`;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
       return item;
     };
     this._columns = columns;

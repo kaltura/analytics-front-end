@@ -1,3 +1,5 @@
+@import '../../../../../../../styles/variables';
+
 .kDates {
   font-size: 15px;
   margin-left: 24px;
@@ -7,4 +9,40 @@
 
 .kEntryName {
   cursor: pointer;
+}
+
+.kTopVideoRow {
+  height: 100px;
+}
+
+.kTableCell {
+  color: $kGrayscale1;
+  display: flex;
+  align-items: center;
+
+  i {
+    margin-right: 10px;
+  }
+
+  .icon-small-play {
+    color: #487ADF;
+  }
+
+  .icon-viewer-contributor {
+    color: #31BEA6
+  }
+
+  .icon-small-time {
+    color: #E1962E;
+  }
+
+  .kTableColumn {
+    font-weight: bold;
+  }
+}
+
+.kScore {
+  color: $kGrayscale1;
+  font-size: 18px;
+  font-weight: bold;
 }
