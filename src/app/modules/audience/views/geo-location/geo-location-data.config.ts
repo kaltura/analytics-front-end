@@ -105,20 +105,16 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       },
 
       visualMap: {
-        type: 'continuous',
         min: 0,
         max: 1000000,
         left: 16,
         center: [0, 0],
-        realtime: false,
         calculable: true,
         inRange: {
           color: ['#B4E9FF', '#2541B8']
         }
       },
       geo: {
-        name: 'World',
-        type: 'map',
         map: 'world',
         center: [0, 0],
         top: 70,
@@ -126,7 +122,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         roam: true,
         label: {
           emphasis: {
-            show: false
+            show: true
           }
         },
         itemStyle: {
@@ -160,7 +156,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         {
           name: 'Plays',
           type: 'scatter',
-          mapType: 'world',
+          selectedMode: 'single',
           coordinateSystem: 'geo',
           animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',

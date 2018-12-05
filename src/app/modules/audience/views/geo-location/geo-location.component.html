@@ -55,7 +55,7 @@
 
       </div>
       <div class="kMap">
-        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartClick)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
         <div class="kZoomWidget">
           <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')" [disabled]="_mapZoom<2"></button>
           <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')" [disabled]="_mapZoom>4"></button>
