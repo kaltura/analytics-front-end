@@ -1,3 +1,5 @@
+@import '../../../../../../../styles/variables';
+
 .kDates {
   font-size: 15px;
   margin-left: 24px;
@@ -5,6 +7,102 @@
   display: inline-block;
 }
 
-.kEntryName {
+.kTopVideoEntryColumn {
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
+  font-weight: bold;
+  margin-top: -24px;
+
+  .kEntryName {
+    font-size: 18px;
+    color: $kGrayscale1;
+    margin-bottom: 12px;
+  }
+
+  .kEntryDetails {
+    color: $kGrayscale3;
+  }
+}
+
+.kTopVideoRow {
+  height: 100px;
+
+  .kReportRowIndex {
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    color: $kGrayscale3;
+
+    span {
+      position: absolute;
+      top: -35px;
+      left: 4px;
+    }
+
+    &.kFirst {
+      margin-right: 28px;
+
+      img {
+        z-index: 1;
+        position: absolute;
+        top: -50px;
+        left: -7px;
+      }
+
+      span {
+        z-index: 2;
+        position: absolute;
+        top: -35px;
+        left: 4px;
+        color: $kGrayscale1
+      }
+
+    }
+  }
+}
+
+.kTableCell {
+  color: $kGrayscale1;
+  display: flex;
+  align-items: center;
+
+  i {
+    margin-right: 10px;
+  }
+
+  .icon-small-play {
+    color: #487ADF;
+  }
+
+  .icon-viewer-contributor {
+    color: #31BEA6
+  }
+
+  .icon-small-time {
+    color: #E1962E;
+  }
+
+  .kCellValue {
+    font-weight: bold;
+  }
+}
+
+.kScore {
+  text-align: right;
+
+  span {
+    color: $kGrayscale1;
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 24px;
+  }
+}
+
+.kDividerWrapper {
+  display: flex;
+  .kDivider {
+    height: 500px;
+    border-left: 1px solid #d9d9d9;
+  }
 }
