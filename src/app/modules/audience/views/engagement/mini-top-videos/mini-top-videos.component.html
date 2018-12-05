@@ -14,7 +14,7 @@
                (error)="holder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle">{{item.entry_name}}</span>
+          <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
           <span class="kScore">n/10</span>
         </div>
       </div>
