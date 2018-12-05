@@ -38,7 +38,6 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: any[] = [];
   public _compareTableData: any[] = [];
-  public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
@@ -150,13 +149,12 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   }
   
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
       item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96?rnd=${Math.random()}`;
       return item;
     };
-    this._columns = columns;
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
@@ -165,7 +163,6 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this._columns = ['entry_name', 'count_plays'];
       this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
     }

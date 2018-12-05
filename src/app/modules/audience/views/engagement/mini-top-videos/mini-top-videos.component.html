@@ -5,7 +5,7 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
       <div class="kReportRow" *ngFor="let item of _tableData">
         <div class="kReportRowIndex">{{item.index}}</div>
         <div class="kReportRowThumbnail" #holder>
@@ -18,7 +18,41 @@
           <span class="kScore">n/10</span>
         </div>
       </div>
+    </div>
 
+    <div class="kReportContent" *ngIf="_isCompareMode">
+      <span class="kDates">{{_currentDates}}</span>
+      <div class="kReportRow" *ngIf="_tableData[0]">
+        <div class="kReportRowIndex">{{_tableData[0].index}}</div>
+        <div class="kReportRowThumbnail" #holder>
+          <img [src]="_tableData[0].thumbnailUrl"
+               onError="this.onerror=null;this.style.display='none'"
+               (error)="holder.classList.add('error')">
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_tableData[0].entry_name" [showOnEllipsis]="true">
+            {{_tableData[0].entry_name}}
+          </span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
+      <div class="kReportRow" *ngIf="!_tableData[0]">{{'app.common.noResults' | translate}}</div>
+      <span class="kDates">{{_compareDates}}</span>
+      <div class="kReportRow" *ngIf="_compareTableData[0]">
+        <div class="kReportRowIndex">{{_compareTableData[0].index}}</div>
+        <div class="kReportRowThumbnail" #compareHolder>
+          <img [src]="_compareTableData[0].thumbnailUrl"
+               onError="this.onerror=null;this.style.display='none'"
+               (error)="compareHolder.classList.add('error')">
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name" [showOnEllipsis]="true">
+            {{_compareTableData[0].entry_name}}
+          </span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
+      <div class="kReportRow" *ngIf="!_compareTableData[0]">{{'app.common.noResults' | translate}}</div>
     </div>
   </k-area-blocker>
 </div>
