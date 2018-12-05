@@ -84,6 +84,27 @@
       font-weight: bold;
       color: $kGrayscale3;
       margin-right: 18px;
+
+      &.kFirst {
+        position: relative;
+        margin-right: 28px;
+
+        img {
+          z-index: 1;
+          position: absolute;
+          top: -15px;
+          left: -7px;
+        }
+
+        span {
+          z-index: 2;
+          position: absolute;
+          top: -10px;
+          left: -1px;
+          color: $kGrayscale1
+        }
+
+      }
     }
 
     .kReportRowThumbnail {
