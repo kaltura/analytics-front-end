@@ -47,6 +47,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     }
   }
   
+  @Output() metricChanged = new EventEmitter<string>();
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
   @Output() exportDataChange = new EventEmitter<{
@@ -87,6 +88,7 @@ export class DevicesOverviewComponent implements OnDestroy {
               private _platformsConfigService: DevicesOverviewConfig) {
     this._dataConfig = _platformsConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this.metricChanged.emit(this._selectedMetrics);
   }
   
   ngOnDestroy() {
@@ -430,6 +432,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this.metricChanged.emit(this._selectedMetrics);
     this._updateGraphStyle();
   }
   
