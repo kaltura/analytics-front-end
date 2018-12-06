@@ -27,7 +27,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { getPrimaryColor } from 'shared/utils/colors';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
