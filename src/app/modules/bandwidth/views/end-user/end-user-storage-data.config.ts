@@ -28,6 +28,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
           'total_msecs': {
             format: value => Math.round(value / 60000),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
           },
         }
       },
