@@ -17,6 +17,22 @@ export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConf
 export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];
+
+  @Input() set selectedMetric(value: string) {
+    switch (value) {
+      case 'avg_time_viewed':
+      case 'sum_time_viewed':
+        this._distributionColorScheme = 'time';
+        break;
+      case 'unique_known_users':
+        this._distributionColorScheme = 'viewers';
+        break;
+      case 'count_plays':
+      default:
+        this._distributionColorScheme = 'default';
+        break;
+    }
+  }
   
   @Input() set deviceFilter(value: string[]) {
     this._devicesSelectActive = true;
@@ -64,6 +80,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _distributionColorScheme: string;
   public _drillDown: string = null;
   public _firstTimeLoading = true;
   public _devicesSelectActive = false;

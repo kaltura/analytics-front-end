@@ -78,7 +78,7 @@
                     </span>
                   </span>
                   <div *ngIf="col === 'plays_distribution'">
-                    <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
+                    <app-bullet [value]="data[col]" [colorScheme]="_distributionColorScheme" [formatter]="null"></app-bullet>
                   </div>
                   <a *ngIf="col === 'browser_family' || col === 'os_family'" (click)="_onDrillDown(data[col])">
                     {{data[col]}}

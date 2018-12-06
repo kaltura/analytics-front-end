@@ -1,6 +1,7 @@
 <app-devices-overview #overview
                       [filter]="_filterEvent"
                       [allowedDevices]="_allowedDevices"
+                      (metricChanged)="_selectedMetric = $event"
                       (exportDataChange)="_onExportDataChange($event)"
                       (devicesListChange)="_onDevicesListChange($event)"
                       (deviceFilterChange)="_onDeviceFilterChange($event)">
@@ -22,11 +23,13 @@
 </app-devices-overview>
 
 <app-top-browsers [filter]="_filterEvent"
+                  [selectedMetric]="_selectedMetric"
                   [devicesList]="_devicesList"
                   [deviceFilter]="_devicesFilter"
                   (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-browsers>
 
 <app-top-os [filter]="_filterEvent"
+            [selectedMetric]="_selectedMetric"
             [devicesList]="_devicesList"
             [deviceFilter]="_devicesFilter"
             (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-os>

@@ -4,6 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class HighlightsConfig extends ReportDataBaseConfig {
@@ -17,15 +18,19 @@ export class HighlightsConfig extends ReportDataBaseConfig {
         fields: {
           'count_plays': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'sum_time_viewed': {
             format: value => value,
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
           'unique_known_users': {
             format: value => value,
+            colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
           },
           'avg_view_drop_off': {
             format: value => value,
+            colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
           },
         }
       },
