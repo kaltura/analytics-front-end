@@ -21,6 +21,7 @@ export interface ReportDataItemConfig {
       hidden?: boolean;
       nonComparable?: boolean;
       sortOrder?: number;
+      colors?: string[];
     };
   };
 }

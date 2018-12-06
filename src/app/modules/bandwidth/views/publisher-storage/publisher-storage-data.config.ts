@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import { fileSize } from 'shared/utils/file-size';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class PublisherStorageDataConfig extends ReportDataBaseConfig {

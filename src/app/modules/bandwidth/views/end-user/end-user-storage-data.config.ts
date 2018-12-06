@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import { fileSize } from 'shared/utils/file-size';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class EndUserStorageDataConfig extends ReportDataBaseConfig {
@@ -16,35 +17,17 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'added_storage_mb': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-          },
-          'deleted_storage_mb': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-          },
-          'added_entries': {
-            format: value => value
-          },
-          'deleted_entries': {
-            format: value => value
-          },
-          'added_msecs': {
-            format: value => Math.round(value / 60000)
-          },
-          'deleted_msecs': {
-            format: value => Math.round(value / 60000)
-          },
           'total_storage_mb': {
             format: value => value,
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
           },
           'total_entries': {
             format: value => value,
+            colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
           },
           'total_msecs': {
-            format: value => Math.round(value / 60000)
+            format: value => Math.round(value / 60000),
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
         }
       },
@@ -96,7 +79,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
           },
           'total_msecs': {
             format: value => ReportHelper.numberOrZero(value / 60000),
-            sortOrder: 7
+            sortOrder: 7,
           },
         }
       },
@@ -114,14 +97,14 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_entries`),
             tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
-            sortOrder: 2
+            sortOrder: 2,
           },
           'total_msecs': {
             format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
             tooltip: this._translate.instant(`app.bandwidth.total_msecs_tt`),
             units: value => 'Min',
-            sortOrder: 3
+            sortOrder: 3,
           },
         }
       }

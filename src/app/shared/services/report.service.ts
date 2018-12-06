@@ -27,6 +27,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -265,6 +266,7 @@ export class ReportService implements OnDestroy {
           yAxisData.push(val);
         }
       });
+      const defaultColor = getPrimaryColor();
       const getFormatter = color => params => {
         const { name, value } = Array.isArray(params) ? params[0] : params;
         const formattedValue = typeof config.fields[graph.id].graphTooltip === 'function'
@@ -285,7 +287,7 @@ export class ReportService implements OnDestroy {
         grid: {
           top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
-        color: ['#F49616', '#149CC1'],
+        color: [config.fields[graph.id].colors ? config.fields[graph.id].colors[0] : defaultColor],
         xAxis: {
           type: 'category',
           boundaryGap: true,
@@ -329,7 +331,7 @@ export class ReportService implements OnDestroy {
           }
         },
         tooltip: {
-          formatter: getFormatter('#F49616'),
+          formatter: getFormatter(config.fields[graph.id].colors ? config.fields[graph.id].colors[0] : defaultColor),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -363,7 +365,7 @@ export class ReportService implements OnDestroy {
         grid: {
           top: 24, left: 24, bottom: 24, right: 24, containLabel: true
         },
-        color: ['#00a784'],
+        color: [config.fields[graph.id].colors ? config.fields[graph.id].colors[0] : defaultColor],
         xAxis: {
           type: 'category',
           data: xAxisData,
@@ -406,7 +408,7 @@ export class ReportService implements OnDestroy {
           }
         },
         tooltip: {
-          formatter: getFormatter('#00a784'),
+          formatter: getFormatter(config.fields[graph.id].colors ? config.fields[graph.id].colors[0] : defaultColor),
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
           borderWidth: 1,

@@ -7,6 +7,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TrendService } from 'shared/services/trend.service';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -78,6 +79,7 @@ export class CompareService implements OnDestroy {
         }
       });
   
+      const defaultColors = [getPrimaryColor(), getSecondaryColor()];
       const getFormatter = colors => params => {
         const [current, compare] = params;
         const currentValue = typeof config.fields[graph.id].graphTooltip === 'function'
@@ -103,7 +105,7 @@ export class CompareService implements OnDestroy {
         grid: {
           top: 24, left: 24, bottom: 64, right: 24, containLabel: true
         },
-        color: ['#F49616', '#FCDBA3'],
+        color: config.fields[graph.id].colors || defaultColors,
         xAxis: {
           type: 'category',
           boundaryGap: true,
@@ -147,7 +149,7 @@ export class CompareService implements OnDestroy {
           }
         },
         tooltip: {
-          formatter: getFormatter(['#F49616', '#FCDBA3']),
+          formatter: getFormatter(config.fields[graph.id].colors || defaultColors),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -205,7 +207,7 @@ export class CompareService implements OnDestroy {
         grid: {
           top: 24, left: 24, bottom: 64, right: 24, containLabel: true
         },
-        color: ['#00a784', '#66CAB5'],
+        color: config.fields[graph.id].colors || defaultColors,
         xAxis: {
           type: 'category',
           data: xAxisData,
@@ -248,7 +250,7 @@ export class CompareService implements OnDestroy {
           }
         },
         tooltip: {
-          formatter: getFormatter(['#00a784', '#66CAB5']),
+          formatter: getFormatter(config.fields[graph.id].colors || defaultColors),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',

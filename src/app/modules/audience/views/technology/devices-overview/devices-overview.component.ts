@@ -287,13 +287,14 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+    const config = this._dataConfig.totals.fields;
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
         textStyle: {
           fontFamily: 'Lato',
         },
         grid: { top: 24, left: 24, bottom: 24, right: 24, containLabel: true },
-        color: ['#00a784'],
+        color: [config[key].colors[0]],
         yAxis: {
           type: 'value',
           axisLabel: {
@@ -409,7 +410,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     const data = this._rawChartData[this._selectedMetrics];
     const series = data.map(({ value, key }) => {
       const isActive = this._selectedValues.length === 0 || this._selectedValues.indexOf(key) > -1;
-      const color = isActive ? '#00A784' : '#CCCCCC';
+      const color = isActive ? this._dataConfig.totals.fields[this._selectedMetrics].colors[0] : '#CCCCCC';
       return {
         value,
         itemStyle: { color }
