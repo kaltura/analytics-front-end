@@ -14,6 +14,7 @@ import { ImpressionsDataConfig } from './impressions-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import * as moment from 'moment';
+import { getColorPercent } from 'shared/utils/colors';
 
 export type funnelData = {
   impressions: number;
@@ -95,11 +96,26 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   public updateFunnel(): void {
-    this.echartsIntance.setOption({series: [{data: [
-          {value: 100, name: this._translate.instant('app.engagement.playerImpressions')},
-          {value: (this._funnelData.plays / this._funnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.plays')},
-          {value: (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)}
-        ]}]}, false);
+    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toPrecision(3);
+    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toPrecision(3);
+    this.echartsIntance.setOption({
+      series: [{
+        data: [
+          {
+            value: 100,
+            name: this._translate.instant('app.engagement.playerImpressions')},
+          {
+            value: plays,
+            name: this._translate.instant('app.engagement.plays')
+          },
+          {
+            value: playThrough,
+            name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)
+          }
+        ]
+      }]
+    }, false);
+    this.echartsIntance.setOption({color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))]});
   }
 
   public onPlaythroughChange(): void {
@@ -199,11 +215,23 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private updateCompareFunnel(): void {
+    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toPrecision(3);
+    const playThrough = (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toPrecision(3);
     this.compareEchartsIntance.setOption({series: [{data: [
-          {value: 100, name: this._translate.instant('app.engagement.playerImpressions')},
-          {value: (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.plays')},
-          {value: (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toPrecision(3), name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)}
+          {
+            value: 100,
+            name: this._translate.instant('app.engagement.playerImpressions')
+          },
+          {
+            value: plays,
+            name: this._translate.instant('app.engagement.plays')
+          },
+          {
+            value: playThrough,
+            name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)
+          }
         ]}]}, false);
+    this.compareEchartsIntance.setOption({color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))]});
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
