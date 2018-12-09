@@ -119,21 +119,22 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         center: [0, 0],
         top: 70,
         zoom: 1.2,
-        roam: true,
+        roam: false,
         label: {
           emphasis: {
             show: true
           }
         },
         itemStyle: {
-          normal: {
-            areaColor: '#ebebeb',
-            borderColor: '#333333'
-          },
+          areaColor: '#ebebeb',
+          borderColor: '#999999',
           emphasis: {
-            areaColor: '#777777'
+            label: {
+              show: true
+            },
+            areaColor: '#F49616'
           }
-        }
+        },
       },
       series: [
         /*
@@ -170,6 +171,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
               show: false
             }
           },
+
           itemStyle: {
             normal: {
               color: '#f4e925',
