@@ -66,6 +66,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
+  public _zoomInDisabled = false;
+  public _zoomOutDisabled = true;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -144,27 +146,17 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   public zoom(direction: string): void {
     if (direction === 'in') {
-      this._mapZoom = this._mapZoom === 3 ? 5 : this._mapZoom === 5 ? 7 : 2.4;
+      this._mapZoom = this._mapZoom * 2;
+      this._zoomInDisabled = true;
+      this._zoomOutDisabled = false;
     } else {
-      this._mapZoom = this._mapZoom === 5 ? 3 : this._mapZoom === 7 ? 5 : 1.2;
+      this._mapZoom = this._mapZoom / 2;
+      this._zoomInDisabled = false;
+      this._zoomOutDisabled = true;
     }
     this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
-      //this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
-    //   this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
-    // }
-    // if (direction === 'out' && this._mapZoom > 2) {
-    //   this._mapZoom -= 1;
-    //   //this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
-    //   this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
-    // }
-    //
-    // // update drag and center according to zoom
-    // if (this._mapZoom < 2) {
-    //   //this.echartsIntance.setOption({geo: [{roam: false}]}, false); // prevent move when zoomed out
-    //   // this.echartsIntance.setOption({geo: [{center: [0, 10]}]}, false); // center map upon zoom out
-    // } else {
-    //   //this.echartsIntance.setOption({geo: [{roam: 'move'}]}, false); // allow move when zoomed in
-    // }
+    const roam = this._mapZoom > 1.2 ? 'move' : 'false';
+    this.echartsIntance.setOption({geo: [{roam: roam}]}, false); // allow move when zoomed in
   }
 
   public _onCountrySelectChange(event): void {
@@ -325,7 +317,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     mapConfig.visualMap.max = maxValue;
     mapConfig.geo.center = this.mapCenter;
-    mapConfig.geo.zoom = this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 5;
+    mapConfig.geo.zoom = this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    this._zoomInDisabled = false;
+    this._zoomOutDisabled = true;
     mapConfig.geo.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
@@ -443,7 +437,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       if (!found && this._tableData.length) {
         this.mapCenter = [this._tableData[0]["country_coordinates"].split(':')[1], this._tableData[0]["country_coordinates"].split(':')[0]];
       }
-      this.echartsIntance.setOption({geo: [{center: this.mapCenter}]}, false);
     }
 
   }
