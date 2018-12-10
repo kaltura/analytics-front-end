@@ -27,7 +27,7 @@ export class UsersDataConfig extends ReportDataBaseConfig {
         fields: {
           'default': {
             format: value => value,
-            colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
+            colors: [getPrimaryColor(), getSecondaryColor()],
           }
         }
       }
