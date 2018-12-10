@@ -105,11 +105,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
             value: 100,
             name: this._translate.instant('app.engagement.playerImpressions')},
           {
-            value: plays,
+            value: Math.round(parseFloat(plays)),
             name: this._translate.instant('app.engagement.plays')
           },
           {
-            value: playThrough,
+            value: Math.round(parseFloat(playThrough)),
             name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)
           }
         ]
@@ -223,11 +223,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
             name: this._translate.instant('app.engagement.playerImpressions')
           },
           {
-            value: plays,
+            value: Math.round(parseFloat(plays)),
             name: this._translate.instant('app.engagement.plays')
           },
           {
-            value: playThrough,
+            value: Math.round(parseFloat(playThrough)),
             name: this._translate.instant('app.engagement.perc' + this._selectedPlaythrough)
           }
         ]}]}, false);

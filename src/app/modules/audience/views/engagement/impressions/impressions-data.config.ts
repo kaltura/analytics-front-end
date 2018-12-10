@@ -75,7 +75,11 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
             formatter: '{c}%',
             fontFamily: 'Lato',
             fontSize: 15,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            textShadowColor: 'rgba(29,70,148,0.80)',
+            textShadowBlur: 2,
+            textBorderWidth: 0,
+            color: '#ffffff'
           },
           labelLine: {
             show: false
