@@ -362,6 +362,12 @@ export class CompareService implements OnDestroy {
     });
 
     columns = columns.filter(header => config.fields.hasOwnProperty(header));
+    columns.sort((a, b) => {
+      const valA = config.fields[a].sortOrder || 0;
+      const valB = config.fields[b].sortOrder || 0;
+      return valA - valB;
+    });
+
 
     return { columns, tableData };
   }
