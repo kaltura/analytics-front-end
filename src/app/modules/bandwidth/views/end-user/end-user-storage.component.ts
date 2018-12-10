@@ -165,6 +165,7 @@ export class EndUserStorageComponent implements OnInit {
     this._isBusy = true;
     this._tableData = [];
     this._blockerMessage = null;
+    this.pager.pageIndex = 1;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections)
