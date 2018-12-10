@@ -246,6 +246,7 @@
         "errorLoadingEntry": "Failed to load entry data"
       },
       "topDomainsReport": {
+        "index": "#",
         "topDomains": "Top Domains",
         "count_plays": "Plays",
         "domain_name": "Domain Name",
@@ -254,6 +255,7 @@
         "count_loads": "Player Impressions",
         "load_play_ratio": "Play Impression Ratio",
         "count_plays_tt": "Plays",
+        "plays_distribution": "Plays Distribution",
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio"

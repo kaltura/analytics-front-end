@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
@@ -11,6 +11,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { SyndicationDataConfig } from './syndication-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { significantDigits } from 'shared/utils/significant-digits';
 
 @Component({
   selector: 'app-engagement-syndication',
@@ -19,6 +20,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
   providers: [ReportService, SyndicationDataConfig]
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
+  private _totalPlaysCount = 0;
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
@@ -29,6 +31,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     interval: this._reportInterval,
   });
   
+  public _drillDown: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _selectedMetrics: string;
@@ -57,11 +60,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   }
   
   
-  protected _loadReport(): void {
+  protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    this._reportService.getReport(reportConfig, { graph: null })
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
@@ -73,7 +76,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           pager: this._pager,
           order: null
         };
-        return this._reportService.getReport(compareReportConfig, { graph: null })
+        return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
@@ -83,14 +86,15 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           if (compare) {
             this._handleCompare(report, compare);
           } else {
+            // IMPORTANT to handle totals first, distribution rely on it
+            if (report.totals) {
+              this._handleTotals(report.totals); // handle totals
+            }
             if (report.table && report.table.header && report.table.data) {
               this._handleTable(report.table); // handle table
             }
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
-            }
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
             }
           }
           
@@ -156,6 +160,9 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    if (this._tabsData.length) {
+      this._totalPlaysCount = Number(this._tabsData[0].value);
+    }
   }
   
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
@@ -206,16 +213,35 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._insertColumnAfter('plays_distribution', 'count_plays', columns);
     this._totalCount = table.totalCount;
     this._columns = columns;
-    this._tableData = tableData;
-    console.warn(tableData);
+    this._tableData = tableData.map((row, index) => {
+      let playsDistribution = 0;
+      if (this._totalPlaysCount !== 0) {
+        const countPlays = parseFloat(row['count_plays']) || 0;
+        playsDistribution = (countPlays / this._totalPlaysCount) * 100;
+      }
+      playsDistribution = significantDigits(playsDistribution);
+      row['count_plays_raw'] = row['count_plays'];
+      row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
+      row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
+    
+      return row;
+    });
+  }
+  
+  private _insertColumnAfter(column: string, after: string, columns: string[]): void {
+    const countPlaysIndex = columns.indexOf(after);
+    if (countPlaysIndex !== -1) {
+      columns.splice(countPlaysIndex + 1, 0, column);
+    }
   }
   
   public _onPaginationChanged(event): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
-      this._loadReport();
+      this._loadReport({ table: null });
     }
   }
   
@@ -224,11 +250,13 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   }
   
   public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order && !this._isCompareMode) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+    const field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
+    if (event.data.length && field && event.order) {
+      const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
         this._order = order;
-        this._loadReport();
+        this._pager.pageIndex = 1;
+        this._loadReport({ table: null });
       }
     }
   }

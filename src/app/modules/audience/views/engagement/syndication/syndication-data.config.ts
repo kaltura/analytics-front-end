@@ -11,10 +11,10 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.graph]: {
-        fields: {
-        }
-      },
+      // [ReportDataSection.graph]: {
+      //   fields: {
+      //   }
+      // },
       [ReportDataSection.table]: {
         fields: {
           'object_id': {
@@ -52,21 +52,27 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.topDomainsReport.count_plays`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.count_plays_tt`),
+            sortOrder: 1,
           },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.topDomainsReport.count_loads`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.count_loads_tt`),
+            sortOrder: 2,
           },
           'load_play_ratio': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(value * 100),
             title: this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio_tt`),
+            sortOrder: 3,
+            units: value => '%',
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed_tt`),
+            units: value => 'Min',
+            sortOrder: 4,
           },
         }
       },

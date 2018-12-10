@@ -6,11 +6,13 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
-                       (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kChart">
-        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
-      </div>
+      <ng-container *ngIf="_drillDown">
+        <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
+                         (tabChange)="_onTabChange($event)"></app-report-tabs>
+        <div class="kChart">
+          <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
+        </div>
+      </ng-container>
 
       <div class="kTable">
         <div class="kTableContainer">
@@ -18,6 +20,7 @@
                    sortField="count_plays" [sortOrder]="-1" [defaultSortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
+                <th [ngStyle]="{'width': '42px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
@@ -28,8 +31,9 @@
                 </th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-data>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
+                <td><span>{{rowIndex + 1}}</span></td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
@@ -38,7 +42,12 @@
                                      [units]="data[col].units"
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
-                  <span *ngIf="!_isCompareMode || data[col]?.value === undefined">{{data[col]}}</span>
+                  <ng-container *ngIf="!_isCompareMode || data[col]?.value === undefined">
+                    <div *ngIf="col === 'plays_distribution'">
+                      <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
+                    </div>
+                    <span *ngIf="col !== 'plays_distribution'">{{data[col]}}</span>
+                  </ng-container>
                 </td>
               </tr>
             </ng-template>
