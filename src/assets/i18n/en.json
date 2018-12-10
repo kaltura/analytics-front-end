@@ -244,6 +244,22 @@
         "creationDate": "Creation Date",
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data"
+      },
+      "topDomainsReport": {
+        "topDomains": "Top Domains",
+        "count_plays": "Plays",
+        "domain_name": "Domain Name",
+        "object_id": "Domain Name",
+        "sum_time_viewed": "",
+        "avg_time_viewed": "",
+        "count_loads": "",
+        "load_play_ratio": "",
+        "count_plays_tt": "Plays",
+        "domain_name_tt": "",
+        "sum_time_viewed_tt": "",
+        "avg_time_viewed_tt": "",
+        "count_loads_tt": "",
+        "load_play_ratio_tt": ""
       }
     }
   }

@@ -23,58 +23,63 @@
   </div>
 
   <div class="kReportContainer">
-    <div class="kMiniReportContainer">
-      <app-engagement-mini-highlights [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
-    </div>
+    <!--<div class="kMiniReportContainer">-->
+      <!--<app-engagement-mini-highlights [dateFilter]="_dateFilter"-->
+                                      <!--[refineFilter]="_refineFilter"></app-engagement-mini-highlights>-->
+    <!--</div>-->
 
-    <div class="kMiniReportContainer">
-      <app-engagement-mini-top-videos [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
-    </div>
+    <!--<div class="kMiniReportContainer">-->
+      <!--<app-engagement-mini-top-videos [dateFilter]="_dateFilter"-->
+                                      <!--[refineFilter]="_refineFilter"></app-engagement-mini-top-videos>-->
+    <!--</div>-->
 
     <!-- Example -->
     <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <!--<div class="kMiniReportContainer">-->
-      <!--<ui-carousel [infinite]="false"-->
-                   <!--[autoPlay]="false"-->
-                   <!--[autoPlaySpeed]="5000"-->
-                   <!--[arrows]="false"-->
-                   <!--[fade]="false"-->
-                   <!--[speed]="200"-->
-                   <!--height="280px">-->
-        <!--<ui-carousel-item>-->
-          <!--<div class="kInsights">Some stuff</div>-->
-        <!--</ui-carousel-item>-->
-      <!--</ui-carousel>-->
+    <!--<ui-carousel [infinite]="false"-->
+    <!--[autoPlay]="false"-->
+    <!--[autoPlaySpeed]="5000"-->
+    <!--[arrows]="false"-->
+    <!--[fade]="false"-->
+    <!--[speed]="200"-->
+    <!--height="280px">-->
+    <!--<ui-carousel-item>-->
+    <!--<div class="kInsights">Some stuff</div>-->
+    <!--</ui-carousel-item>-->
+    <!--</ui-carousel>-->
     <!--</div>-->
   </div>
 
-  <div id="highlights-report" class="kReportContainer">
-    <app-engagement-highlights [dateFilterComponent]="dateFilter"
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-engagement-highlights>
-  </div>
+  <!--<div id="highlights-report" class="kReportContainer">-->
+    <!--<app-engagement-highlights [dateFilterComponent]="dateFilter"-->
+                               <!--[dateFilter]="_dateFilter"-->
+                               <!--[refineFilter]="_refineFilter"></app-engagement-highlights>-->
+  <!--</div>-->
 
-  <div id="top-videos" class="kReportContainer">
-    <app-engagement-top-videos [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-engagement-top-videos>
-  </div>
+  <!--<div id="top-videos" class="kReportContainer">-->
+    <!--<app-engagement-top-videos [dateFilter]="_dateFilter"-->
+                               <!--[refineFilter]="_refineFilter"></app-engagement-top-videos>-->
+  <!--</div>-->
+
+  <!--<div class="kReportContainer">-->
+    <!--<app-engagement-duration [dateFilter]="_dateFilter"-->
+                             <!--[refineFilter]="_refineFilter"></app-engagement-duration>-->
+  <!--</div>-->
+
+  <!--<div class="kReportContainer">-->
+    <!--<div class="kSmallReportContainer">-->
+      <!--<app-engagement-impressions [dateFilter]="_dateFilter"-->
+                                  <!--[refineFilter]="_refineFilter"></app-engagement-impressions>-->
+    <!--</div>-->
+    <!--<div class="kSmallReportContainer">-->
+      <!--<app-engagement-users [dateFilter]="_dateFilter"-->
+                            <!--[refineFilter]="_refineFilter"></app-engagement-users>-->
+    <!--</div>-->
+  <!--</div>-->
 
   <div class="kReportContainer">
-    <app-engagement-duration [dateFilter]="_dateFilter"
-                             [refineFilter]="_refineFilter"></app-engagement-duration>
-  </div>
-
-  <div class="kReportContainer">
-    <div class="kSmallReportContainer">
-      <app-engagement-impressions [dateFilter]="_dateFilter"
-                                  [refineFilter]="_refineFilter"></app-engagement-impressions>
-    </div>
-    <div class="kSmallReportContainer">
-      <app-engagement-users [dateFilter]="_dateFilter"
-                            [refineFilter]="_refineFilter"></app-engagement-users>
-    </div>
+    <app-engagement-syndication [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-engagement-syndication>
   </div>
 </div>
 

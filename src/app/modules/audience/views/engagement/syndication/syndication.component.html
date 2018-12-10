@@ -1,0 +1,63 @@
+<div class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.topDomainsReport.topDomains' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
+                       (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
+      </div>
+
+      <div class="kTable">
+        <div class="kTableContainer">
+          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"
+                   sortField="count_plays" [sortOrder]="-1" [defaultSortOrder]="-1">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.engagement.topDomainsReport.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                  <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
+                        class="kTrend"
+                        [kTooltip]="data[col].tooltip" [escape]="false">
+                    <app-trend-value [value]="data[col].value"
+                                     [units]="data[col].units"
+                                     [trend]="data[col].trend"></app-trend-value>
+                  </span>
+                  <span *ngIf="!_isCompareMode || data[col]?.value === undefined">{{data[col]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+
+</div>
+
