@@ -186,6 +186,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.cities : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
     this.loadReport();
   }
 
@@ -317,7 +318,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     mapConfig.visualMap.max = maxValue;
     mapConfig.geo.center = this.mapCenter;
-    mapConfig.geo.zoom = this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    mapConfig.geo.zoom = this._mapZoom;
     this._zoomInDisabled = false;
     this._zoomOutDisabled = true;
     mapConfig.geo.roam = this._drillDown.length === 0 ? 'false' : 'move';
@@ -438,7 +439,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         this.mapCenter = [this._tableData[0]["country_coordinates"].split(':')[1], this._tableData[0]["country_coordinates"].split(':')[0]];
       }
     }
-
   }
 
   ngOnDestroy() {}

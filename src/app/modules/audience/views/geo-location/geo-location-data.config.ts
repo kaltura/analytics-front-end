@@ -137,7 +137,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         },
       },
       series: [
-        {
+        /*{
           name: '',
           type: 'map',
           mapType: 'world',
@@ -152,7 +152,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             emphasis: {label: {show: true}, areaColor: '#F49616'}
           },
           data: []
-        },
+        },*/
         {
           name: 'Plays',
           type: 'scatter',
