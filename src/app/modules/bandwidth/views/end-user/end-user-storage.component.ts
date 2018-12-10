@@ -131,6 +131,7 @@ export class EndUserStorageComponent implements OnInit {
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
     this.filter.userIds = user.length ? user : this.selectedUsers;
+    this.pager.pageIndex = 1;
     if (this.compareFilter) {
       this.compareFilter.userIds = this.filter.userIds;
     }
@@ -165,7 +166,6 @@ export class EndUserStorageComponent implements OnInit {
     this._isBusy = true;
     this._tableData = [];
     this._blockerMessage = null;
-    this.pager.pageIndex = 1;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections)
@@ -236,6 +236,7 @@ export class EndUserStorageComponent implements OnInit {
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this.order) {
           this.order = order;
+          this.pager.pageIndex = 1;
           this.loadReport({ table: null });
         }
       }

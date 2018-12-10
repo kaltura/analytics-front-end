@@ -301,6 +301,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }
