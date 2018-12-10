@@ -250,16 +250,13 @@
         "count_plays": "Plays",
         "domain_name": "Domain Name",
         "object_id": "Domain Name",
-        "sum_time_viewed": "",
-        "avg_time_viewed": "",
-        "count_loads": "",
-        "load_play_ratio": "",
+        "sum_time_viewed": "Minutes Viewed",
+        "count_loads": "Player Impressions",
+        "load_play_ratio": "Play Impression Ratio",
         "count_plays_tt": "Plays",
-        "domain_name_tt": "",
-        "sum_time_viewed_tt": "",
-        "avg_time_viewed_tt": "",
-        "count_loads_tt": "",
-        "load_play_ratio_tt": ""
+        "sum_time_viewed_tt": "Minutes Viewed",
+        "count_loads_tt": "Player Impressions",
+        "load_play_ratio_tt": "Play Impression Ratio"
       }
     }
   }

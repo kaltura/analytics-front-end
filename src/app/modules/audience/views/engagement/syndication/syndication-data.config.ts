@@ -13,47 +13,6 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'month_id': {
-            format: value => value
-          },
-          'date_id': {
-            format: value => value
-          },
-          'bandwidth_consumption': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'average_storage': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'peak_storage': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'added_storage': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'deleted_storage': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'combined_bandwidth_storage': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          },
-          'transcoding_consumption': {
-            format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
-            units: value => 'MB',
-          }
         }
       },
       [ReportDataSection.table]: {
@@ -66,25 +25,24 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
           'domain_name': {
             format: value => value,
             nonComparable: true,
+            sortOrder: 1,
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
-          },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'avg_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            units: value => 'MB',
+            sortOrder: 2,
           },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
-            units: value => 'MB',
+            sortOrder: 4,
           },
           'load_play_ratio': {
+            format: value => `${ReportHelper.numberOrZero(value * 100)}%`,
+            sortOrder: 5,
+          },
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
-            units: value => 'MB',
-          }
+            sortOrder: 6,
+          },
         }
       },
       [ReportDataSection.totals]: {
