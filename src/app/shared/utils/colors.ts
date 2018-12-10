@@ -24,6 +24,6 @@ export function getSecondaryColor(type: string = 'default'): string {
 export function getColorPercent(percent: number, type: string = 'default'): string {
   const palette = palettes[type] ? type : 'default';
   let index = Math.round(percent / 100 * 8) - 1;
-  index = index < 0 ? 0 : index;
+  index = index < 1 ? 1 : index;
   return palettes[palette][index];
 }
