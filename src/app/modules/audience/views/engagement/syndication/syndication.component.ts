@@ -43,7 +43,6 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   public _totalUsers = null;
   public _tableData: any[] = [];
   public _tabsData: Tab[] = [];
-  public _chartType = 'line';
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
   
@@ -57,13 +56,20 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    const reportConfig: ReportConfig = {
+      reportType: this._reportType,
+      filter: this._filter,
+      pager: this._pager,
+      order: this._order,
+      objectIds: this._drillDown
+    };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -259,5 +265,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         this._loadReport({ table: null });
       }
     }
+  }
+  
+  public _onDrillDown(domain: string): void {
+    this._drillDown = domain;
+    this._pager.pageIndex = 1;
+    this._loadReport();
   }
 }

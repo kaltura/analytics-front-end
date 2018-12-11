@@ -11,10 +11,25 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      // [ReportDataSection.graph]: {
-      //   fields: {
-      //   }
-      // },
+      [ReportDataSection.graph]: {
+        fields: {
+          'count_plays': {
+            format: value => value,
+          },
+          'count_loads': {
+            format: value => value,
+          },
+          'load_play_ratio': {
+            format: value => value,
+          },
+          'sum_time_viewed': {
+            format: value => value,
+          },
+          'avg_view_drop_off': {
+            format: value => value,
+          },
+        }
+      },
       [ReportDataSection.table]: {
         fields: {
           'object_id': {
@@ -23,6 +38,11 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'domain_name': {
+            format: value => value,
+            nonComparable: true,
+            sortOrder: 1,
+          },
+          'referrer': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,
@@ -36,11 +56,15 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'load_play_ratio': {
-            format: value => `${ReportHelper.numberOrZero(value * 100)}%`,
+            format: value => ReportHelper.numberOrZero(value * 100) + '%',
             sortOrder: 5,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 6,
+          },
+          'avg_view_drop_off': {
+            format: value => ReportHelper.numberOrZero(value * 100) + '%',
             sortOrder: 6,
           },
         }
@@ -73,6 +97,13 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed_tt`),
             units: value => 'Min',
             sortOrder: 4,
+          },
+          'avg_view_drop_off': {
+            format: value => ReportHelper.numberOrZero(value * 100),
+            title: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`),
+            tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off_tt`),
+            units: value => '%',
+            sortOrder: 5,
           },
         }
       },

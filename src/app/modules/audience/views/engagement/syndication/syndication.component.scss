@@ -13,6 +13,10 @@
   margin-bottom: 24px;
 }
 
+.kIconfile-small {
+  font-size: 24px;
+}
+
 .kDomainIcon {
   overflow: hidden;
   position: relative;
@@ -23,7 +27,6 @@
   text-align: center;
   border-radius: 3px;
   margin-right: 10px;
-  font-size: 24px;
 
   &.error{
     border: 1px solid $kGrayscale4;
