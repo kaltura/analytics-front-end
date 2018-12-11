@@ -71,15 +71,15 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             sortOrder: 1
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000),
+            format: value => ReportHelper.numberOrZero(value / 60000, false),
             sortOrder: 8
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000),
+            format: value => ReportHelper.numberOrZero(value / 60000, false),
             sortOrder: 9
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000),
+            format: value => ReportHelper.numberOrZero(value / 60000, false),
             sortOrder: 7,
           },
         }
