@@ -34,7 +34,7 @@
                    sortField="count_plays" [sortOrder]="-1" [defaultSortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
-                <th [ngStyle]="{'width': '42px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
+                <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
                 <th [ngStyle]="{'width': '60px'}"></th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
                   <div class="kColumnHeader">
@@ -46,9 +46,9 @@
                 </th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-data>
               <tr>
-                <td><span>{{rowIndex + 1}}</span></td>
+                <td><span>{{data['index']}}</span></td>
                 <td>
                   <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
                     <img [src]="'http://' + data['domain_name'] + '/favicon.ico'"
