@@ -257,6 +257,7 @@ export class EndUserStorageComponent implements OnInit {
         this._dataConfig.table
       );
       this._columns = columns;
+      this._totalCount = compare.table.totalCount;
       this._tableData = tableData;
     }
 
