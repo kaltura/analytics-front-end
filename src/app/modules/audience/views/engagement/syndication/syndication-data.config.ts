@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class SyndicationDataConfig extends ReportDataBaseConfig {
@@ -15,18 +16,23 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
         fields: {
           'count_plays': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'count_loads': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'load_play_ratio': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'sum_time_viewed': {
             format: value => value,
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
           'avg_view_drop_off': {
             format: value => value,
+            colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
           },
         }
       },

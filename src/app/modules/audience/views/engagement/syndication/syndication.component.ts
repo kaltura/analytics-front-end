@@ -45,6 +45,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   public _tabsData: Tab[] = [];
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
+  public _distributionColorScheme: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -190,7 +191,10 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
-      this._tableData = tableData;
+      this._tableData = tableData.map((row, index) => {
+        row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
+        return row;
+      });
     }
     
     if (current.totals && compare.totals) {
@@ -253,6 +257,18 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+  
+    switch (this._selectedMetrics) {
+      case 'sum_time_viewed':
+        this._distributionColorScheme = 'time';
+        break;
+      case 'avg_view_drop_off':
+        this._distributionColorScheme = 'dropoff';
+        break;
+      default:
+        this._distributionColorScheme = 'default';
+        break;
+    }
   }
   
   public _onSortChanged(event) {

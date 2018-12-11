@@ -70,7 +70,7 @@
                   </span>
                   <ng-container *ngIf="!_isCompareMode || data[col]?.value === undefined">
                     <div *ngIf="col === 'plays_distribution'">
-                      <app-bullet [value]="data[col]" [formatter]="null"></app-bullet>
+                      <app-bullet [value]="data[col]" [colorScheme]="_distributionColorScheme" [formatter]="null"></app-bullet>
                     </div>
 
                     <span *ngIf="col !== 'plays_distribution' && col !== 'domain_name'">
