@@ -21,6 +21,7 @@
             <ng-template pTemplate="header">
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
+                <th [ngStyle]="{'width': '50px'}"></th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
@@ -34,6 +35,13 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td><span>{{rowIndex + 1}}</span></td>
+                <td>
+                  <div class="kDomainIcon" #holder>
+                    <img [src]="'http://' + data['domain_name'] + '/favicon.ico'"
+                         onError="this.onerror=null;this.style.display='none'"
+                         (error)="holder.classList.add('kIconfile-small')">
+                  </div>
+                </td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
