@@ -64,6 +64,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this._tableData = [];
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: this._filter,
