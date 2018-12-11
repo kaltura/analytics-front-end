@@ -247,6 +247,7 @@
       },
       "topDomainsReport": {
         "index": "#",
+        "domains": "{{0}} Domains",
         "topDomains": "Top Domains",
         "count_plays": "Plays",
         "domain_name": "Domain Name",

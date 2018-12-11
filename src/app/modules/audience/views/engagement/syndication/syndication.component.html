@@ -14,6 +14,10 @@
         </div>
       </ng-container>
 
+      <span *ngIf="_totalCount !== undefined" class="kTotalCount">
+        {{'app.engagement.topDomainsReport.domains' | translate: {'0': _totalCount} }}
+      </span>
+
       <div class="kTable">
         <div class="kTableContainer">
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"
@@ -36,11 +40,12 @@
               <tr>
                 <td><span>{{rowIndex + 1}}</span></td>
                 <td>
-                  <div class="kDomainIcon" #holder>
+                  <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
                     <img [src]="'http://' + data['domain_name'] + '/favicon.ico'"
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('kIconfile-small')">
                   </div>
+                  <div *ngIf="_drillDown" class="kDomainIcon kIconfile"></div>
                 </td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
