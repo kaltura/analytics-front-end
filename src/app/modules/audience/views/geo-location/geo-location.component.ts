@@ -154,9 +154,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._zoomInDisabled = false;
       this._zoomOutDisabled = true;
     }
-    this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    this.echartsIntance.setOption({geo: [{roam: roam}]}, false); // allow move when zoomed in
+    if (this._drillDown.length > 0) {
+      this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({geo: [{roam: roam}]}, false);
+    } else {
+      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({series: [{roam: roam}]}, false);
+    }
   }
 
   public _onCountrySelectChange(event): void {
@@ -298,7 +303,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
@@ -318,11 +323,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     });
 
     mapConfig.visualMap.max = maxValue;
-    mapConfig.geo.center = this.mapCenter;
-    mapConfig.geo.zoom = this._mapZoom;
+    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    map.center = this.mapCenter;
+    map.zoom = this._mapZoom;
     this._zoomInDisabled = false;
     this._zoomOutDisabled = true;
-    mapConfig.geo.roam = this._drillDown.length === 0 ? 'false' : 'move';
+    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
 

@@ -74,8 +74,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
     };
   }
 
-  public getMapConfig(): EChartOption {
-    return {
+  public getMapConfig(scatter: boolean): EChartOption {
+    let config =  {
       textStyle: {
         fontFamily: 'Lato',
       },
@@ -92,8 +92,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           color: '#999999'
         },
         formatter: (params) => {
-          if (params.name && params.value && params.value.length === 3) {
-            let tooltip = params.name + '<br/>' + params.seriesName + ' : ' + params.value[2];
+          if (params.name && params.data && params.data.value && params.data.value.length === 3) {
+            let tooltip = params.name + '<br/>' + params.seriesName + ' : ' + params.data.value[2];
             if (params.seriesName === 'Avg. Drop Off') {
               tooltip = tooltip + '%';
             }
@@ -114,45 +114,32 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           color: ['#B4E9FF', '#2541B8']
         }
       },
-      geo: {
+      series: []
+    };
+    if (scatter) {
+      config['geo'] = {
         map: 'world',
-        center: [0, 0],
-        top: 70,
-        zoom: 1.2,
-        roam: false,
-        label: {
+          center: [0, 0],
+          top: 70,
+          zoom: 1.2,
+          roam: false,
+          label: {
           emphasis: {
             show: true
           }
         },
         itemStyle: {
           areaColor: '#ebebeb',
-          borderColor: '#999999',
-          emphasis: {
+            borderColor: '#999999',
+            emphasis: {
             label: {
               show: true
             },
             areaColor: '#F49616'
           }
         },
-      },
-      series: [
-        /*{
-          name: '',
-          type: 'map',
-          mapType: 'world',
-          roam: false,
-          zoom: 1.2,
-          selectedMode: 'single',
-          animationDurationUpdate: 200,
-          animationEasingUpdate: 'cubicInOut',
-          itemStyle: {
-            areaColor: '#ebebeb',
-            borderColor: '#999999',
-            emphasis: {label: {show: true}, areaColor: '#F49616'}
-          },
-          data: []
-        },*/
+      };
+      config.series = [
         {
           name: 'Plays',
           type: 'scatter',
@@ -183,8 +170,32 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             }
           }
         }
-      ]
-    };
+      ];
+    } else {
+      config.series = [
+        {
+          name: '',
+          type: 'map',
+          mapType: 'world',
+          roam: false,
+          zoom: 1.2,
+          top: 60,
+          selectedMode: 'single',
+          animationDurationUpdate: 200,
+          animationEasingUpdate: 'cubicInOut',
+          itemStyle: {
+            areaColor: '#ebebeb',
+            borderColor: '#999999',
+            emphasis: {label: {show: true}, areaColor: '#F49616'}
+          },
+          data: []
+        }
+      ];
+      if (config['geo']) {
+        delete config['geo'];
+      }
+    }
+    return config;
   }
 
   public getCountryName(country: string): string {
