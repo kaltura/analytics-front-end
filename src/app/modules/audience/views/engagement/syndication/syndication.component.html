@@ -36,7 +36,12 @@
               <tr>
                 <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
                 <th [ngStyle]="{'width': '60px'}"></th>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
+                    [ngStyle]="{
+                      'width': col === 'plays_distribution' || col === 'domain_name' || col === 'referrer'
+                        ? '20%'
+                        : 'auto'
+                }">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
                       {{'app.engagement.topDomainsReport.' + col | translate}}
@@ -60,7 +65,7 @@
                 <td *ngFor="let col of _columns; let i = index"
                     [class.kHighlight]="i===0"
                     [kTooltip]="data[col]"
-                    [showOnEllipsis]="true">
+                    [showOnEllipsis]="col !== 'referrer'">
                   <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
                         [kTooltip]="data[col].tooltip" [escape]="false">
@@ -70,12 +75,15 @@
                   </span>
                   <ng-container *ngIf="!_isCompareMode || data[col]?.value === undefined">
                     <div *ngIf="col === 'plays_distribution'">
-                      <app-bullet [value]="data[col]" [colorScheme]="_distributionColorScheme" [formatter]="null"></app-bullet>
+                      <app-bullet [value]="data[col]" [colorScheme]="_distributionColorScheme"
+                                  [formatter]="null"></app-bullet>
                     </div>
 
-                    <span *ngIf="col !== 'plays_distribution' && col !== 'domain_name'">
+                    <span *ngIf="col !== 'plays_distribution' && col !== 'domain_name' && col !== 'referrer'">
                       {{data[col]}}
                     </span>
+
+                    <span *ngIf="col === 'referrer'" [appMiddleEllipsis]="data[col]"></span>
 
                     <a *ngIf="col === 'domain_name'" class="nameLink" (click)="_onDrillDown(data[col])">
                       {{data[col]}}

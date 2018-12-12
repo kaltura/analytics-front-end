@@ -28,6 +28,7 @@ import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { TrendValueComponent } from 'shared/components/trend-value/trend-value.component';
+import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { TrendValueComponent } from 'shared/components/trend-value/trend-value.c
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    MiddleEllipsisDirective,
   ],
   exports: [
     DateFilterComponent,
@@ -72,6 +74,7 @@ import { TrendValueComponent } from 'shared/components/trend-value/trend-value.c
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    MiddleEllipsisDirective,
   ],
   providers: [
   ]
