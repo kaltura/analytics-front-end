@@ -16,19 +16,19 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
           <div class="kListFilters">
-            <app-checkboxes-list-filter [label]="'app.filters.mediaType' | translate"
+            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
                                         [options]="_mediaTypes"
                                         [selectedFilters]="_selectedValues['mediaType']"
                                         (itemSelected)="_onItemSelected($event, 'mediaType')"
                                         (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter [label]="'app.filters.applications' | translate"
+            <app-checkboxes-list-filter [label]="'app.filters.applications.title' | translate"
                                         [options]="_applications"
                                         [selectedFilters]="_selectedValues['applications']"
                                         (itemSelected)="_onItemSelected($event, 'applications')"
                                         (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter [label]="'app.filters.entrySource' | translate"
+            <app-checkboxes-list-filter [label]="'app.filters.entrySources.title' | translate"
                                         [options]="_entrySources"
                                         [selectedFilters]="_selectedValues['entrySources']"
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"

@@ -3,11 +3,11 @@
   <div class="kColumnContent">
     <div class="kCheckboxGroup" *ngFor="let option of options">
       <p-checkbox name="mediaTypes"
-                  [inputId]="option.value"
+                  [inputId]="option.label"
                   [value]="option.value"
                   (onChange)="_onSelectionChange()"
                   [(ngModel)]="_selectedValue"></p-checkbox>
-      <label [for]="option.value">
+      <label [for]="option.label">
         <span class="kLabel">{{option.label | translate}}</span>
       </label>
     </div>

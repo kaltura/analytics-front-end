@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaMediaType, KalturaSourceType, KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -129,31 +129,30 @@ export class FilterComponent {
   }
   
   public _mediaTypes: OptionItem[] = [
-    { value: 'vod', label: 'app.filters.vod' },
-    { value: 'live', label: 'app.filters.live' },
-    { value: 'audio', label: 'app.filters.audio' },
-    { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' },
-    { value: 'images', label: 'app.filters.images' },
+    { value: KalturaMediaType.video, label: 'app.filters.mediaType.1' },
+    { value: KalturaMediaType.liveStreamFlash, label: 'app.filters.mediaType.201' },
+    { value: KalturaMediaType.audio, label: 'app.filters.mediaType.5' },
+    // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
+    { value: KalturaMediaType.image, label: 'app.filters.mediaType.2' },
   ];
   
   public _applications: OptionItem[] = [
-    { value: 'mediaSpace', label: 'app.filters.mediaSpace' },
-    { value: 'mediaSpaceGo', label: 'app.filters.mediaSpaceGo' },
-    { value: 'pitch', label: 'app.filters.pitch' },
-    { value: 'others', label: 'app.filters.others' },
+    { value: 'mediaSpace', label: 'app.filters.applications.mediaSpace' },
+    { value: 'mediaSpaceGo', label: 'app.filters.applications.mediaSpaceGo' },
+    { value: 'pitch', label: 'app.filters.applications.pitch' },
+    { value: 'others', label: 'app.filters.applications.others' },
   ];
-  
-  public _entrySources: OptionItem[] = [
-    { value: 'upload', label: 'app.filters.upload' },
-    { value: 'webcasting', label: 'app.filters.webcasting' },
-    { value: 'capture', label: 'app.filters.capture' },
-    { value: 'classroom', label: 'app.filters.classroom' },
+
+  public _entrySources: OptionItem[] = [ // TODO determine valid values
+    { value: 1, label: 'app.filters.entrySources.1' },
+    { value: 2, label: 'app.filters.entrySources.2' },
+    { value: -11, label: 'app.filters.entrySources.-11' },
+    { value: 37, label: 'app.filters.entrySources.37' },
   ];
   
   private _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
-      'deviceType': [],
       'applications': [],
       'entrySources': [],
       'categories': [],
@@ -168,11 +167,10 @@ export class FilterComponent {
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
-        case 'deviceType':
         case 'applications':
         case 'entrySources':
-          label = this._translate.instant(`app.filters.${value}`);
-          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${label}`;
+          label = this._translate.instant(`app.filters.${type}.${value}`);
+          tooltip = this._translate.instant(`app.filters.${type}.title`) + `: ${label}`;
           return { value, type, label, tooltip };
         case 'categories':
           const category = value as CategoryData;
