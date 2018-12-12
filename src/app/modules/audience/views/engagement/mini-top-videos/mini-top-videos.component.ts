@@ -148,6 +148,10 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
     this._loadReport();
   }
   
+  protected _updateRefineFilter(): void {
+  
+  }
+  
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
