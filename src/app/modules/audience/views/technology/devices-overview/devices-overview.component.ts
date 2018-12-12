@@ -47,6 +47,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     }
   }
   
+  @Output() metricChanged = new EventEmitter<string>();
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
   @Output() exportDataChange = new EventEmitter<{
@@ -87,6 +88,7 @@ export class DevicesOverviewComponent implements OnDestroy {
               private _platformsConfigService: DevicesOverviewConfig) {
     this._dataConfig = _platformsConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this.metricChanged.emit(this._selectedMetrics);
   }
   
   ngOnDestroy() {
@@ -237,7 +239,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
-      if (this.allowedDevices.includes(item.device)) {
+      if (this.allowedDevices.indexOf(item.device) > -1) {
         data.push(item);
       } else {
         const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
@@ -287,13 +289,14 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+    const config = this._dataConfig.totals.fields;
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
         textStyle: {
           fontFamily: 'Lato',
         },
         grid: { top: 24, left: 24, bottom: 24, right: 24, containLabel: true },
-        color: ['#00a784'],
+        color: [config[key].colors[0]],
         yAxis: {
           type: 'value',
           axisLabel: {
@@ -408,8 +411,8 @@ export class DevicesOverviewComponent implements OnDestroy {
   private _updateGraphStyle(): void {
     const data = this._rawChartData[this._selectedMetrics];
     const series = data.map(({ value, key }) => {
-      const isActive = this._selectedValues.length === 0 || this._selectedValues.includes(key);
-      const color = isActive ? '#00A784' : '#CCCCCC';
+      const isActive = this._selectedValues.length === 0 || this._selectedValues.indexOf(key) > -1;
+      const color = isActive ? this._dataConfig.totals.fields[this._selectedMetrics].colors[0] : '#CCCCCC';
       return {
         value,
         itemStyle: { color }
@@ -429,6 +432,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this.metricChanged.emit(this._selectedMetrics);
     this._updateGraphStyle();
   }
   

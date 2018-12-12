@@ -17,6 +17,22 @@ export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConf
 export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];
+
+  @Input() set selectedMetric(value: string) {
+    switch (value) {
+      case 'avg_time_viewed':
+      case 'sum_time_viewed':
+        this._distributionColorScheme = 'time';
+        break;
+      case 'unique_known_users':
+        this._distributionColorScheme = 'viewers';
+        break;
+      case 'count_plays':
+      default:
+        this._distributionColorScheme = 'default';
+        break;
+    }
+  }
   
   @Input() set deviceFilter(value: string[]) {
     this._devicesSelectActive = true;
@@ -34,7 +50,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._selectedDevices = [];
       delete this._filter.deviceIn;
     }
-    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.includes(value));
+    this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.indexOf(value) > -1);
     this._pager.pageIndex = 1;
     this._loadReport();
   }
@@ -64,6 +80,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _distributionColorScheme: string;
   public _drillDown: string = null;
   public _firstTimeLoading = true;
   public _devicesSelectActive = false;
@@ -269,11 +286,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _getDrillDownFilterPropByReportType(): string {
-    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].includes(this._reportType)) {
+    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].indexOf(this._reportType) > -1) {
       return 'browserFamilyIn';
     }
 
-    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].includes(this._reportType)) {
+    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].indexOf(this._reportType) > -1) {
       return 'operatingSystemFamilyIn';
     }
   }
@@ -284,6 +301,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }

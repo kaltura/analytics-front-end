@@ -37,6 +37,8 @@ import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-
 import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/owners-filter.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
+import { UICarouselModule } from 'ui-carousel';
+import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { LocationFilterComponent } from './views/engagement/filter/location-filter/location-filter.component';
 
 @NgModule({
@@ -59,6 +61,7 @@ import { LocationFilterComponent } from './views/engagement/filter/location-filt
     CheckboxModule,
     RouterModule.forChild(routing),
     OverlayPanelModule,
+    UICarouselModule,
   ],
   declarations: [
     AudienceComponent,
@@ -81,6 +84,7 @@ import { LocationFilterComponent } from './views/engagement/filter/location-filt
     TagsFilterComponent,
     OwnersFilterComponent,
     LocationFilterComponent,
+    MiniTopVideosComponent,
   ],
   exports: [],
   providers: [PageScrollService]

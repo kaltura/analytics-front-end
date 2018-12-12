@@ -12,6 +12,7 @@ import { KalturaEndUserReportInputFilter, KalturaReportType } from 'kaltura-ngx-
 export class TechnologyComponent implements OnInit {
   @ViewChild('overview') _overview: DevicesOverviewComponent;
 
+  public _selectedMetric: string;
   public _dateRange = DateRanges.Last30D;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;

@@ -1,8 +1,8 @@
 @import '../../../../../../../styles/variables';
 
 .kEntryDetailsOverlay {
-  width: 280px;
-  height: 220px;
+  width: 300px;
+  height: 260px;
 
   k-area-blocker {
     display: block;
@@ -11,8 +11,8 @@
   .kEntryThumbnail {
     overflow: hidden;
     position: relative;
-    width: 280px;
-    height: 100px;
+    width: 300px;
+    height: 140px;
     background-color: $kGrayscale6;
     white-space: nowrap;
     text-align: center;
@@ -30,7 +30,7 @@
       top: -100%;
       bottom: -100%;
       margin: auto;
-      width: 280px;
+      width: 300px;
       height: auto;
       border-radius: 3px;
     }

@@ -156,6 +156,12 @@
                 </td>
               </tr>
             </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
           </p-table>
         </div>
       </div>

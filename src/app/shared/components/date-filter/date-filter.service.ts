@@ -170,27 +170,36 @@ export class DateFilterService {
     return { startDate, endDate, label};
   }
 
-  public getMaxCompare(selectedDateRange: DateRanges): Date {
+  public getMaxCompare(startDate: Date, endDate: Date): Date;
+  public getMaxCompare(selectedDateRange: DateRanges): Date;
+  public getMaxCompare(selectedDateRange: DateRanges | Date, endDate?: Date): Date {
     const m = moment();
     let maxDate: Date;
 
-    switch (selectedDateRange) {
-      case DateRanges.Last7D:
-      case DateRanges.CurrentWeek:
-        maxDate = m.subtract(7, 'days').toDate();
-        break;
-      case DateRanges.Last30D:
-      case DateRanges.CurrentMonth:
-        maxDate = m.subtract(30, 'days').toDate();
-        break;
-      case DateRanges.Last3M:
-      case DateRanges.CurrentQuarter:
-        maxDate = m.subtract(3, 'months').toDate();
-        break;
-      case DateRanges.Last12M:
-      case DateRanges.CurrentYear:
-        maxDate = m.subtract(12, 'months').toDate();
-        break;
+    if (selectedDateRange instanceof Date && endDate instanceof Date) {
+      const fromDay = moment(selectedDateRange);
+      const toDay = moment(endDate);
+      const days = moment.duration(toDay.diff(fromDay)).asDays();
+      maxDate = fromDay.clone().subtract(days + 1, 'days').toDate();
+    } else {
+      switch (selectedDateRange) {
+        case DateRanges.Last7D:
+        case DateRanges.CurrentWeek:
+          maxDate = m.subtract(7, 'days').toDate();
+          break;
+        case DateRanges.Last30D:
+        case DateRanges.CurrentMonth:
+          maxDate = m.subtract(30, 'days').toDate();
+          break;
+        case DateRanges.Last3M:
+        case DateRanges.CurrentQuarter:
+          maxDate = m.subtract(3, 'months').toDate();
+          break;
+        case DateRanges.Last12M:
+        case DateRanges.CurrentYear:
+          maxDate = m.subtract(12, 'months').toDate();
+          break;
+      }
     }
     return maxDate;
   }

@@ -5,7 +5,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <div class="kTotalCount">
+      <div class="kTotalCount" *ngIf="(!_isCompareMode && _totalUsers !== null) || (_isCompareMode && _totalUsersCompare)">
         <span class="kTitle">{{'app.engagement.totalUsers' | translate}}</span>
         <span class="kValue" *ngIf="!_isCompareMode">{{_totalUsers}}</span>
         <span *ngIf="_isCompareMode && _totalUsersCompare" class="kTrend" [kTooltip]="_totalUsersCompare.tooltip" [escape]="false">
@@ -15,8 +15,16 @@
             </span>
       </div>
       <div class="kChart">
-        <div echarts class="kChart" [options]="_barChartData"></div>
+        <div echarts class="kChart"
+             *ngIf="_barChartData && _barChartData?.series && _barChartData?.series[0]?.data?.length"
+             [options]="_barChartData"></div>
+
+        <div *ngIf="!_isBusy && (!_barChartData || !_barChartData?.series || !_barChartData?.series[0]?.data?.length)"
+             class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
       </div>
+
     </div>
   </k-area-blocker>
 </div>

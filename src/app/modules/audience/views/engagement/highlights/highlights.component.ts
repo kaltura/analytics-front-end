@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -28,7 +29,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
 
   public _columns: string[] = [];
   public _firstTimeLoading = true;
-  public _isBusy: boolean;
+  public _isBusy = true;
   public _chartDataLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -75,6 +76,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         }
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+
+        delete sections.totals;
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -166,27 +170,20 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
     
     if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(
+      const compareTableData = this._compareService.compareTableData(
         currentPeriod,
         comparePeriod,
         current.table,
         compare.table,
         this._dataConfig.table
       );
-      this._totalCount = current.table.totalCount;
-      this._columns = columns;
-      this._tableData = tableData;
-    }
-    
-    if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(
-        currentPeriod,
-        comparePeriod,
-        current.totals,
-        compare.totals,
-        this._dataConfig.totals,
-        this._selectedMetrics
-      );
+      
+      if (compareTableData) {
+        const { columns, tableData } = compareTableData;
+        this._totalCount = current.table.totalCount;
+        this._columns = columns;
+        this._tableData = tableData;
+      }
     }
     
     if (current.graphs.length && compare.graphs.length) {
@@ -199,7 +196,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._reportInterval,
         () => this._chartDataLoaded = true
       );
-      this._lineChartData = lineChartData;
+      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
   }
   
@@ -221,7 +218,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._reportInterval,
       () => this._chartDataLoaded = true
     );
-    this._lineChartData = lineChartData;
+
+    this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   
   public _onTabChange(tab: Tab): void {

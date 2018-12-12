@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import { EChartOption } from 'echarts';
+import { getColorPalette } from 'shared/utils/colors';
 
 @Injectable()
 export class ImpressionsDataConfig extends ReportDataBaseConfig {
@@ -50,7 +51,7 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
         formatter: tooltipFormatter,
         trigger: 'item'
       },
-      color: ['#00745C', '#008569', '#00A784'],
+      color: getColorPalette(),
       calculable: true,
       series: [
         {
@@ -63,7 +64,7 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
           height: 340,
           min: 0,
           max: 100,
-          minSize: '5%',
+          minSize: '0%',
           maxSize: '100%',
           sort: 'descending',
           gap: 0,
@@ -74,7 +75,11 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
             formatter: '{c}%',
             fontFamily: 'Lato',
             fontSize: 15,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            textShadowColor: 'rgba(29,70,148,0.80)',
+            textShadowBlur: 2,
+            textBorderWidth: 0,
+            color: '#ffffff'
           },
           labelLine: {
             show: false

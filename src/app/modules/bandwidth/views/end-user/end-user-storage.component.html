@@ -71,10 +71,16 @@
                   </span>
                   <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
                     <span *ngIf="col !== 'name'">{{data[col]}}</span>
-                    <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])">{{data[col]}}</a>
+                    <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])" class="nameLink" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</a>
                   </ng-container>
                 </td>
               </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
             </ng-template>
           </p-table>
           <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>

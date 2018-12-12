@@ -339,8 +339,8 @@ p-multiselect /deep/ {
 .kThumbnailHolder {
   overflow: hidden;
   position: relative;
-  width: 54px;
-  height: 30px;
+  width: 128px;
+  height: 72px;
   background-color: $kGrayscale6;
   white-space: nowrap;
   text-align: center;
@@ -356,7 +356,7 @@ p-multiselect /deep/ {
     top: -100%;
     bottom: -100%;
     margin: auto;
-    width: 54px;
+    width: 128px;
     height: auto;
     border-radius: 3px;
   }
@@ -374,6 +374,16 @@ p-multiselect /deep/ {
   padding: 0;
 }
 
-li.userAdded{
-  background-color: transparentize($kPrimary, 0.5) !important;
+ui-carousel /deep/ {
+  .ui-carousel-item {
+    background-color: #FFFFFF !important;
+  }
+
+  .dot {
+    background: $kGrayscale3 !important;
+
+    &.active {
+      background-color: $menuBkgColor !important;
+    }
+  }
 }

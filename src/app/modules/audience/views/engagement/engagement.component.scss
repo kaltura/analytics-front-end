@@ -19,6 +19,10 @@
   .kMiniReportContainer{
     height: 280px;
     width: 50%;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 

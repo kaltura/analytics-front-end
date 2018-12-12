@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-viewer-contributor:before {
+  content: "\e909";
+}
 .icon-game-console:before {
   content: "\e908";
 }
@@ -45,6 +48,18 @@
 }
 .icon-bolt:before {
   content: "\e900";
+}
+.icon-small-contribution:before {
+  content: "\e90a";
+}
+.icon-small-play:before {
+  content: "\e90b";
+}
+.icon-small-time:before {
+  content: "\e90c";
+}
+.icon-small-viewer-contributor:before {
+  content: "\e90d";
 }
 .icon-progress:before {
   content: "\e901";

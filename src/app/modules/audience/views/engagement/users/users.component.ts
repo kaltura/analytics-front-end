@@ -31,13 +31,13 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   });
   
   public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy: boolean;
+  public _isBusy = true;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.uniqueUsersPlay;
   public _barChartData: any = {};
-  public _totalUsers = 0;
+  public _totalUsers = null;
   public _totalUsersCompare: {
     trend: number,
     tooltip: string,
@@ -79,6 +79,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
       }))
       .subscribe(({ report, compare }) => {
           this._barChartData = {};
+          this._totalUsers = null;
 
           if (compare) {
             this._handleCompare(report, compare);
@@ -158,7 +159,9 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
     this._barChartData = barChartData['default'];
   
-    this._totalUsers = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
+    this._totalUsers = this._barChartData.series[0].data.length
+      ? this._barChartData.series[0].data.reduce((a, b) => a + b, 0)
+      : null;
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -176,26 +179,31 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
         this._dataConfig.graph,
         this._reportInterval
       );
-      this._barChartData = barChartData['default'];
+
+      this._barChartData = null;
+
+      if (barChartData['default']) {
+        this._barChartData = barChartData['default'];
   
-      const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
-      const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
+        const currentTotal = this._barChartData.series[0].data.reduce((a, b) => a + b, 0);
+        const compareTotal = this._barChartData.series[1].data.reduce((a, b) => a + b, 0);
   
-      const currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
-      const comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
-      const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
+        const currentPeriodTitle = `${DateFilterUtils.formatMonthString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(currentPeriod.to, analyticsConfig.locale)}`;
+        const comparePeriodTitle = `${DateFilterUtils.formatMonthString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(comparePeriod.to, analyticsConfig.locale)}`;
+        const { value, direction: trend } = this._trendService.calculateTrend(currentTotal, compareTotal);
   
-      const tooltip = `
+        const tooltip = `
         ${this._trendService.getTooltipRowString(currentPeriodTitle, currentTotal, '')}
         ${this._trendService.getTooltipRowString(comparePeriodTitle, compareTotal, '')}
       `;
   
-      this._totalUsersCompare = {
-        trend,
-        value,
-        tooltip,
-        units: '%'
-      };
+        this._totalUsersCompare = {
+          trend,
+          value,
+          tooltip,
+          units: '%'
+        };
+      }
     }
   }
 }
