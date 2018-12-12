@@ -36,7 +36,7 @@
               <tr>
                 <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
                 <th [ngStyle]="{'width': '60px'}"></th>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'plays_distribution' ? null : col"
                     [ngStyle]="{
                       'width': col === 'plays_distribution' || col === 'domain_name' || col === 'referrer'
                         ? '20%'
@@ -46,7 +46,7 @@
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
                       {{'app.engagement.topDomainsReport.' + col | translate}}
                     </span>
-                    <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
+                    <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'plays_distribution'"></p-sortIcon>
                   </div>
                 </th>
               </tr>
