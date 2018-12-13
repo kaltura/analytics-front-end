@@ -22,6 +22,9 @@
           <span class="kScore">n/10</span>
         </div>
       </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
     </div>
 
     <div class="kReportContent" *ngIf="_isCompareMode">
