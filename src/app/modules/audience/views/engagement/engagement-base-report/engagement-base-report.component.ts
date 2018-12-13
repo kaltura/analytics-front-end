@@ -115,10 +115,12 @@ export abstract class EngagementBaseReportComponent {
       delete filter.citiesIn;
     }
     
-    // if (tags.length) {
-    //   filter.searchInTags = tags.join(',');
-    // } else {
-    //   delete filter.sourceTypeIn;
-    // }
+    if (tags.length) {
+      filter.searchInTags = true;
+      filter.keywords = tags.join(',');
+    } else {
+      filter.searchInTags = false;
+      delete filter.keywords;
+    }
   }
 }
