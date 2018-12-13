@@ -31,15 +31,12 @@ export class TrendService {
   public calculateTrend(current: number, compare: number): { value: string, direction: number } {
     current = parseFloat(current.toFixed(2));
     compare = parseFloat(compare.toFixed(2));
-    if (current === 0 && compare === 0) {
-      return { value: '0', direction: 0 };
-    }
     
     if (current === 0 && compare > 0) {
       return { value: '100', direction: -1 };
     }
 
-    if (compare === 0 && current > 0) {
+    if (compare === 0) {
       return { value: null, direction: 0 };
     }
 
