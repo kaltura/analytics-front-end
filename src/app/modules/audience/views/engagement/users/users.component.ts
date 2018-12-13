@@ -4,7 +4,7 @@ import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, 
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -20,11 +20,11 @@ import { TrendService } from 'shared/services/trend.service';
   providers: [ReportService, UsersDataConfig]
 })
 export class EngagementUsersComponent extends EngagementBaseReportComponent {
-  private _compareFilter: KalturaReportInputFilter = null;
+  private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _pager = new KalturaFilterPager();
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
     interval: this._reportInterval,
@@ -131,7 +131,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaReportInputFilter(
+      this._compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,
