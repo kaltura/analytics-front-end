@@ -30,7 +30,7 @@ export abstract class EngagementBaseReportComponent {
   protected abstract _updateRefineFilter(): void;
   
   protected _refineFilterToServerValue(filter: KalturaEndUserReportInputFilter): void {
-    let categories = [], mediaType = [], applications = [], sourceType = [],
+    let categories = [], mediaType = [], sourceType = [],
       tags = [], owners = [], country = [], region = [], city = [];
     
     this._refineFilter.forEach(item => {
@@ -40,9 +40,6 @@ export abstract class EngagementBaseReportComponent {
             ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
             : item.value;
           mediaType.push(value);
-          break;
-        case 'applications':
-          applications.push(item.value);
           break;
         case 'entrySources':
           sourceType.push(item.value);
@@ -58,34 +55,28 @@ export abstract class EngagementBaseReportComponent {
           break;
         case 'location':
           if (item.value.country) {
-            country.push(item.value.country);
+            country.push(item.value.country.name);
           }
           if (item.value.region) {
-            region.push(item.value.region);
+            region.push(item.value.region.name);
           }
           if (item.value.city) {
-            city.push(item.value.city);
+            city.push(item.value.city.name);
           }
           break;
       }
     });
     
     if (categories.length) {
-      filter.categories = categories.join(',');
+      filter.categoriesIdsIn = categories.join(',');
     } else {
-      delete filter.categories;
+      delete filter.categoriesIdsIn;
     }
     
     if (mediaType.length) {
       filter.mediaTypeIn = mediaType.join(',');
     } else {
       delete filter.mediaTypeIn;
-    }
-    
-    if (applications.length) {
-      filter.application = applications.join(',');
-    } else {
-      delete filter.application;
     }
     
     if (sourceType.length) {
