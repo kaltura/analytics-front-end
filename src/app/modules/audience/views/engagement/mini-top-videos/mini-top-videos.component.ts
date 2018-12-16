@@ -12,7 +12,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniTopVideosConfig } from './mini-top-videos.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -176,9 +176,16 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   }
   
   public scrollTo(target: string): void {
-    PageScrollConfig.defaultDuration = 500;
-    const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
-    this.pageScrollService.start(pageScrollInstance);
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
+      if (targetEl) {
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
+      this.pageScrollService.start(pageScrollInstance);
+    }
   }
   
 }

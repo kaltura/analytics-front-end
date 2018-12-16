@@ -40,17 +40,17 @@
     <!-- Example -->
     <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <!--<div class="kMiniReportContainer">-->
-      <!--<ui-carousel [infinite]="false"-->
-                   <!--[autoPlay]="false"-->
-                   <!--[autoPlaySpeed]="5000"-->
-                   <!--[arrows]="false"-->
-                   <!--[fade]="false"-->
-                   <!--[speed]="200"-->
-                   <!--height="280px">-->
-        <!--<ui-carousel-item>-->
-          <!--<div class="kInsights">Some stuff</div>-->
-        <!--</ui-carousel-item>-->
-      <!--</ui-carousel>-->
+    <!--<ui-carousel [infinite]="false"-->
+    <!--[autoPlay]="false"-->
+    <!--[autoPlaySpeed]="5000"-->
+    <!--[arrows]="false"-->
+    <!--[fade]="false"-->
+    <!--[speed]="200"-->
+    <!--height="280px">-->
+    <!--<ui-carousel-item>-->
+    <!--<div class="kInsights">Some stuff</div>-->
+    <!--</ui-carousel-item>-->
+    <!--</ui-carousel>-->
     <!--</div>-->
   </div>
 
@@ -79,6 +79,11 @@
       <app-engagement-users [dateFilter]="_dateFilter"
                             [refineFilter]="_refineFilter"></app-engagement-users>
     </div>
+  </div>
+
+  <div class="kReportContainer">
+    <app-engagement-syndication [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-engagement-syndication>
   </div>
 </div>
 

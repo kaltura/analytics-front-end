@@ -50,13 +50,13 @@
               <tr>
                 <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
                 <th *ngFor="let col of _columns"
-                    [pSortableColumn]="col !== 'plays_trend' ? col : null"
+                    [pSortableColumn]="col !== 'plays_trend' && col !== 'plays_distribution' ? col : null"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.technology.' + col | translate" [showOnEllipsis]="true">
                       {{'app.audience.technology.' + col | translate}}
                     </span>
-                    <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend'"></p-sortIcon>
+                    <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend' && col !== 'plays_distribution'"></p-sortIcon>
                   </div>
                 </th>
 

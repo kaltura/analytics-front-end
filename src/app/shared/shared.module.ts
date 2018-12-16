@@ -38,6 +38,7 @@ import { CategoriesSelectorComponent } from 'shared/components/category-filter/c
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
 import { DropdownModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
+import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,
@@ -92,6 +94,7 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,

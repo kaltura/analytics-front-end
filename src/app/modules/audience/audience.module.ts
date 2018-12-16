@@ -39,6 +39,7 @@ import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/o
 import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
+import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
 import { LocationFilterComponent } from './views/engagement/filter/location-filter/location-filter.component';
 
 @NgModule({
@@ -85,6 +86,7 @@ import { LocationFilterComponent } from './views/engagement/filter/location-filt
     OwnersFilterComponent,
     LocationFilterComponent,
     MiniTopVideosComponent,
+    SyndicationComponent,
   ],
   exports: [],
   providers: [PageScrollService]

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
+import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniHighlightsConfig } from './mini-highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement-mini-highlights',
@@ -164,9 +165,16 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   }
 
   public scrollTo(target: string): void {
-    PageScrollConfig.defaultDuration = 500;
-    const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
-    this.pageScrollService.start(pageScrollInstance);
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
+      if (targetEl) {
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
+      this.pageScrollService.start(pageScrollInstance);
+    }
   }
 
 }
