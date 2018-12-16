@@ -14,10 +14,10 @@
       "categories": "Categories",
       "mediaType": {
         "title": "Media Type",
-        "1": "VOD",
-        "201": "Live",
-        "5": "Audio",
-        "2": "Images"
+        "Video": "VOD",
+        "Live": "Live",
+        "Audio": "Audio",
+        "Image": "Images"
       },
       "applications": {
         "title": "Applications",
@@ -28,10 +28,10 @@
       },
       "entrySources": {
         "title": "Entry Source",
-        "1": "Upload",
-        "2": "Webcasting",
-        "-11": "Capture",
-        "37": "Classroom"
+        "Upload": "Upload",
+        "Webcasting": "Webcasting",
+        "Kaltura Capture": "Capture",
+        "Classroom Capture": "Classroom"
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",

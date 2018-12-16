@@ -36,7 +36,10 @@ export abstract class EngagementBaseReportComponent {
     this._refineFilter.forEach(item => {
       switch (item.type) {
         case 'mediaType':
-          mediaType.push(item.value);
+          const value = item.value === 'Live'
+            ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
+            : item.value;
+          mediaType.push(value);
           break;
         case 'applications':
           applications.push(item.value);

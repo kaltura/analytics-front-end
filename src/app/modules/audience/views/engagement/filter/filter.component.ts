@@ -129,11 +129,11 @@ export class FilterComponent {
   }
   
   public _mediaTypes: OptionItem[] = [
-    { value: KalturaMediaType.video, label: 'app.filters.mediaType.1' },
-    { value: KalturaMediaType.liveStreamFlash, label: 'app.filters.mediaType.201' },
-    { value: KalturaMediaType.audio, label: 'app.filters.mediaType.5' },
+    { value: 'Video', label: 'app.filters.mediaType.Video' },
+    { value: 'Live', label: 'app.filters.mediaType.Live' },
+    { value: 'Audio', label: 'app.filters.mediaType.Audio' },
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
-    { value: KalturaMediaType.image, label: 'app.filters.mediaType.2' },
+    { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
   
   public _applications: OptionItem[] = [
@@ -144,10 +144,10 @@ export class FilterComponent {
   ];
 
   public _entrySources: OptionItem[] = [ // TODO determine valid values
-    { value: 1, label: 'app.filters.entrySources.1' },
-    { value: 2, label: 'app.filters.entrySources.2' },
-    { value: -11, label: 'app.filters.entrySources.-11' },
-    { value: 37, label: 'app.filters.entrySources.37' },
+    { value: 'Upload', label: 'app.filters.entrySources.Upload' },
+    { value: 'Webcasting', label: 'app.filters.entrySources.Webcasting' },
+    { value: 'Kaltura Capture', label: 'app.filters.entrySources.Kaltura Capture' },
+    { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
   ];
   
   private _clearSelectedValues(): void {
