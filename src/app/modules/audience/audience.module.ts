@@ -37,6 +37,7 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
 import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
+import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
 
 @NgModule({
   imports: [
@@ -79,6 +80,7 @@ import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
+    SyndicationComponent,
   ],
   exports: [],
   providers: [PageScrollService]

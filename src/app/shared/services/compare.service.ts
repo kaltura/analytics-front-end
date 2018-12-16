@@ -360,8 +360,9 @@ export class CompareService implements OnDestroy {
         tableData.push(data);
       }
     });
+  
+    columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
 
-    columns = columns.filter(header => config.fields.hasOwnProperty(header));
     columns.sort((a, b) => {
       const valA = config.fields[a].sortOrder || 0;
       const valB = config.fields[b].sortOrder || 0;
