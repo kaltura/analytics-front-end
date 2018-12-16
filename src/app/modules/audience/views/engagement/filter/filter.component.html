@@ -22,12 +22,6 @@
                                         (itemSelected)="_onItemSelected($event, 'mediaType')"
                                         (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter [label]="'app.filters.applications.title' | translate"
-                                        [options]="_applications"
-                                        [selectedFilters]="_selectedValues['applications']"
-                                        (itemSelected)="_onItemSelected($event, 'applications')"
-                                        (itemUnselected)="_onItemUnselected($event, 'applications')"></app-checkboxes-list-filter>
-
             <app-checkboxes-list-filter [label]="'app.filters.entrySources.title' | translate"
                                         [options]="_entrySources"
                                         [selectedFilters]="_selectedValues['entrySources']"

@@ -135,13 +135,6 @@ export class FilterComponent {
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
-  
-  public _applications: OptionItem[] = [
-    { value: 'mediaSpace', label: 'app.filters.applications.mediaSpace' },
-    { value: 'mediaSpaceGo', label: 'app.filters.applications.mediaSpaceGo' },
-    { value: 'pitch', label: 'app.filters.applications.pitch' },
-    { value: 'others', label: 'app.filters.applications.others' },
-  ];
 
   public _entrySources: OptionItem[] = [ // TODO determine valid values
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
@@ -153,7 +146,6 @@ export class FilterComponent {
   private _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
-      'applications': [],
       'entrySources': [],
       'categories': [],
       'tags': [],
@@ -167,7 +159,6 @@ export class FilterComponent {
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
-        case 'applications':
         case 'entrySources':
           label = this._translate.instant(`app.filters.${type}.${value}`);
           tooltip = this._translate.instant(`app.filters.${type}.title`) + `: ${label}`;

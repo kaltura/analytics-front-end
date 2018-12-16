@@ -119,10 +119,8 @@ export abstract class EngagementBaseReportComponent {
     }
     
     if (tags.length) {
-      filter.searchInTags = true;
       filter.keywords = tags.join(',');
     } else {
-      filter.searchInTags = false;
       delete filter.keywords;
     }
   }
