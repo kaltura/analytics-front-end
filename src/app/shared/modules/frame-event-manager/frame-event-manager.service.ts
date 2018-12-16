@@ -9,13 +9,14 @@ export enum FrameEvents {
   AnalyticsInit = 'analytics-init',
   AnalyticsInitComplete = 'analytics-init-complete',
   Navigate = 'navigate',
-  UpdateFilters = 'updateFilters'
+  UpdateFilters = 'updateFilters',
+  ScrollTo = 'scrollTo',
 }
 
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
   private _parentEvents: { [key: string]: BehaviorSubject<{ payload: any }> } = {};
-  private _targetOrigin = window.location.origin;
+  private _targetOrigin = '*';
   private _ready = false;
   
   constructor() {
