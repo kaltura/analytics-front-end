@@ -75,8 +75,8 @@
     color: #487ADF;
   }
 
-  .icon-viewer-contributor {
-    color: #31BEA6
+  .icon-small-contribution {
+    color: #9B64E6;
   }
 
   .icon-small-time {
@@ -104,5 +104,21 @@
   .kDivider {
     height: 500px;
     border-left: 1px solid #d9d9d9;
+  }
+}
+
+.kUser {
+  width: 72px;
+  height: 72px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(49,190,166,0.2);
+
+  i {
+    display: inline-block;
+    font-size: 22px;
+    color: #31BEA6;
   }
 }

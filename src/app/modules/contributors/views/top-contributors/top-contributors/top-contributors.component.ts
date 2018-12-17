@@ -20,10 +20,6 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
   providers: [TopContributorsDataConfig, ReportService]
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
-  private _partnerId = analyticsConfig.pid;
-  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
-    ? analyticsConfig.kalturaServer.uri
-    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private _order = '-count_plays';
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
@@ -149,7 +145,6 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
       return item;
     };
     this._columns = columns;

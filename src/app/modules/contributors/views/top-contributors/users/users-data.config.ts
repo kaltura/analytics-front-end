@@ -17,7 +17,7 @@ export class UsersDataConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
-          'unique_known_users': {
+          'contributors': {
             format: value => value,
             sortOrder: 1,
           }

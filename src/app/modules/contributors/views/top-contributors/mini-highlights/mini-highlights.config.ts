@@ -13,23 +13,23 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
+          'contributors': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
+            title: this._translate.instant(`app.contributors.contributors`),
+            tooltip: this._translate.instant(`app.contributors.contributors_tt`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
+            title: this._translate.instant(`app.contributors.added_entries`),
+            tooltip: this._translate.instant(`app.contributors.added_entries_tt`),
             units: value => 'min',
             sortOrder: 3,
           },
-          'unique_known_users': {
+          'added_msecs': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
+            title: this._translate.instant(`app.contributors.added_msecs`),
+            tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             sortOrder: 2,
           }
         }

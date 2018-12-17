@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
@@ -16,76 +14,41 @@ export class HighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'count_plays': {
+          'added_entries': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
+            colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
           },
-          'sum_time_viewed': {
+          'added_msecs': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
-          'unique_known_users': {
+          'contributors': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
-          },
-          'avg_view_drop_off': {
-            format: value => value,
-            colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-          },
-        }
-      },
-      [ReportDataSection.table]: {
-        fields: {
-          'month_id': {
-            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
-            nonComparable: true,
-          },
-          'date_id': {
-            format: value => DateFilterUtils.formatDayString(value, analyticsConfig.locale),
-            nonComparable: true,
-          },
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'avg_view_drop_off': {
-            format: value => `${ReportHelper.numberOrZero(String(value * 100))} %`,
           },
         }
       },
       [ReportDataSection.totals]: {
         preSelected: 'count_plays',
         fields: {
-          'count_plays': {
+          'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
+            title: this._translate.instant(`app.contributors.added_entries`),
+            tooltip: this._translate.instant(`app.contributors.added_entries_tt`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'added_msecs': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
+            title: this._translate.instant(`app.contributors.added_msecs`),
+            tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             units: value => 'min',
             sortOrder: 2,
           },
-          'unique_known_users': {
+          'contributors': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
+            title: this._translate.instant(`app.contributors.contributors`),
+            tooltip: this._translate.instant(`app.contributors.contributors_tt`),
             sortOrder: 3,
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(String(value * 100)),
-            units: value => '%',
-            title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),
-            sortOrder: 4,
           }
         }
       }

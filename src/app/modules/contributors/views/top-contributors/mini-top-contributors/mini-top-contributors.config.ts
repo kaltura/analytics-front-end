@@ -13,16 +13,12 @@ export class MiniTopContributorsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
-            format: value => value,
-            hidden: true,
-          },
-          'entry_name': {
+          'user_name': {
             format: value => value,
             sortOrder: 1,
           },
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+          'contributions': {
+            format: value => value,
             sortOrder: 2,
           }
         }

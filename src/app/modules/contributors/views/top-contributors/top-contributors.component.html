@@ -1,6 +1,6 @@
 <div class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
-    <span class="kTitle">{{'app.engagement.title' | translate}}</span>
+    <span class="kTitle">{{'app.contributors.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
                     [reportType]="_reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
@@ -56,7 +56,7 @@
                                [refineFilter]="_refineFilter"></app-contributors-highlights>
   </div>
 
-  <div id="top-videos" class="kReportContainer">
+  <div id="top-contributors" class="kReportContainer">
     <app-contributors-top-contributors [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>

@@ -1,12 +1,12 @@
 <div class="kReport kOverrideFAIcons kUsers">
   <div class="kFilters">
-    <span class="kTitle">{{'app.engagement.users' | translate}}</span>
+    <span class="kTitle">{{'app.contributors.contributorsAmount' | translate}}</span>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
       <div class="kTotalCount" *ngIf="(!_isCompareMode && _totalUsers !== null) || (_isCompareMode && _totalUsersCompare)">
-        <span class="kTitle">{{'app.engagement.totalUsers' | translate}}</span>
+        <span class="kTitle">{{'app.contributors.returningContributors' | translate}}</span>
         <span class="kValue" *ngIf="!_isCompareMode">{{_totalUsers}}</span>
         <span *ngIf="_isCompareMode && _totalUsersCompare" class="kTrend" [kTooltip]="_totalUsersCompare.tooltip" [escape]="false">
               <i [class]="_totalUsersCompare.trend | appTrend"></i>

@@ -107,30 +107,19 @@
       }
     }
 
-    .kReportRowThumbnail {
-      overflow: hidden;
-      position: relative;
-      width: 86px;
+    .kUser {
+      width: 48px;
       height: 48px;
-      background-color: $kGrayscale6;
-      white-space: nowrap;
-      text-align: center;
       border-radius: 3px;
-      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(49,190,166,0.2);
 
-      &.error{
-        border: 1px solid $kGrayscale4;
-      }
-      img {
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        width: 86px;
-        height: auto;
-        border-radius: 3px;
+      i {
+        display: inline-block;
+        font-size: 22px;
+        color: #31BEA6;
       }
     }
 

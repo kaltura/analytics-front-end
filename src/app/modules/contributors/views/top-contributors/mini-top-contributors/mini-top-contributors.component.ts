@@ -24,11 +24,7 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 })
 export class MiniTopContributorsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
-  
-  private _partnerId = analyticsConfig.pid;
-  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
-    ? analyticsConfig.kalturaServer.uri
-    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
+
   private _order = '-count_plays';
   private _reportType = KalturaReportType.topContent;
   private _dataConfig: ReportDataConfig;
@@ -151,7 +147,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96?rnd=${Math.random()}`;
       return item;
     };
     this._tableData = tableData.map(extendTableRow);

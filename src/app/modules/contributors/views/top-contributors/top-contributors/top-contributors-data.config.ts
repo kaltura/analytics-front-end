@@ -12,25 +12,18 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
 
   public getConfig(): ReportDataConfig {
     return {
+      // TODO update config according to the server headers
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
-            format: value => value,
-            hidden: true,
-          },
-          'entry_name': {
-            format: value => value,
-            sortOrder: 1,
-          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'unique_known_users': {
+          'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'avg_view_drop_off': {
+          'added_msecs': {
             format: value => ReportHelper.percents(value),
             sortOrder: 4,
           },

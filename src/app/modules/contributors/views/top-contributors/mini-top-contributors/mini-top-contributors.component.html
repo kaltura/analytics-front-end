@@ -1,7 +1,7 @@
 <div class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
-    <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <span class="kTitle">{{'app.contributors.top-contributors' | translate}}</span>
+    <a (click)="scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -12,10 +12,8 @@
           <span>{{item.index}}</span>
         </div>
         <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
-        <div class="kReportRowThumbnail" #holder>
-          <img [src]="item.thumbnailUrl"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('error')">
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
@@ -31,10 +29,8 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_tableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #holder>
-          <img [src]="_tableData[0].thumbnailUrl"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('error')">
+        <div class="kUser">
+          <i class="kIconuser"></i>
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="_tableData[0].entry_name" [showOnEllipsis]="true">
