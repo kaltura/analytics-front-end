@@ -9,12 +9,14 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 import { routing } from './contributors.routes';
 import { ContributorsComponent } from './contributors.component';
-import { TopContributorsComponent } from './views/top-contributors/top-contributors.component';
 
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
+import { topContributorsComponentsList } from './views/top-contributors/components-list';
+import { CheckboxModule, PaginatorModule } from 'primeng/primeng';
+import { PageScrollService } from 'ngx-page-scroll';
 
 @NgModule({
   imports: [
@@ -29,13 +31,20 @@ import { TableModule } from 'primeng/table';
     TableModule,
     NgxEchartsModule,
     RouterModule.forChild(routing),
+    TagsModule,
+    PopupWidgetModule,
+    CheckboxModule,
+    PaginatorModule,
+    TooltipModule,
   ],
   declarations: [
     ContributorsComponent,
-    TopContributorsComponent
+    ...topContributorsComponentsList,
   ],
   exports: [],
-  providers: []
+  providers: [
+    PageScrollService,
+  ]
 })
 export class ContributorsModule {
 }

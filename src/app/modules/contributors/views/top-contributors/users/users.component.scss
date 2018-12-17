@@ -1,0 +1,61 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kUsers{
+  height: 100%;
+}
+
+.kFilters {
+  margin-bottom: 48px;
+}
+
+.kTotalCount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 24px;
+
+  color: $kGrayscale1;
+
+  .kTitle {
+    font-size: 18px;
+  }
+
+  .kValue {
+    font-size: 24px;
+  }
+}
+
+.kTrend {
+  .kValue {
+    font-size: 24px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+
+  .kUnits {
+    font-size: 13px;
+    font-weight: bold;
+    color: $kGrayscale3;
+    line-height: 20px;
+    margin-left: 4px;
+  }
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}

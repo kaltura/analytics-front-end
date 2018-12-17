@@ -1,5 +1,39 @@
-p{
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 20px;
+@import '../../../../../styles/variables';
+
+.kReport {
+  height: 100%;
+}
+
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  .kSmallReportContainer{
+    width: 60%;
+    height: 444px;
+    &:nth-child(even){
+      width: 40%;
+      padding-left: 24px;
+    }
+  }
+  .kMiniReportContainer{
+    height: 280px;
+    width: 50%;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
 }
