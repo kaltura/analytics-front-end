@@ -22,7 +22,8 @@
                                         (itemSelected)="_onItemSelected($event, 'mediaType')"
                                         (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter [label]="'app.filters.entrySources.title' | translate"
+            <app-checkboxes-list-filter class="kLastItem"
+                                        [label]="'app.filters.entrySources.title' | translate"
                                         [options]="_entrySources"
                                         [selectedFilters]="_selectedValues['entrySources']"
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"

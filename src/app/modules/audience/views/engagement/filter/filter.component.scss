@@ -29,14 +29,16 @@
 
       .kListFilters {
         display: flex;
-        flex: 2;
+
+        .kLastItem {
+          margin-right: 18px !important;
+        }
       }
 
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        flex: 1;
-        margin-left: 48px;
+        width: 432px;
       }
     }
 
