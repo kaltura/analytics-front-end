@@ -92,9 +92,9 @@ export class CompareService implements OnDestroy {
           <div class="kGraphTooltip">
             ${current.name}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
-            <span class="kValue">${current.seriesName}</span>&nbsp;${currentValue}<br/>
+            <span class="kValue kSeriesName">${current.seriesName}</span>&nbsp;${currentValue}<br/>
             <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;
-            <span class="kValue">${compare.seriesName}</span>&nbsp;${compareValue}
+            <span class="kValue kSeriesName">${compare.seriesName}</span>&nbsp;${compareValue}
           </div>
         `;
       };

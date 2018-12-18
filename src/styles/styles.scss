@@ -307,6 +307,10 @@ kpopupwidget{
     font-weight: bold;
     color: $kGrayscale1;
   }
+
+  .kSeriesName {
+    margin-right: 15px;
+  }
 }
 
 p-multiselect /deep/ {
