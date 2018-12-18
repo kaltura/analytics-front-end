@@ -167,8 +167,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     const currentValue = device.rawValue;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue.toFixed(this._fractions)))}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue.toFixed(this._fractions)))}
     `;
     device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
