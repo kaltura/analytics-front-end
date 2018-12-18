@@ -27,7 +27,7 @@
               <h5 class="mini-loader" *ngIf="summary.trend === undefined"><span></span><span></span></h5>
               <span *ngIf="summary.trend !== undefined" class="kTrend" [kTooltip]="summary.tooltip" [escape]="false">
                 <app-trend-value [value]="summary.trend"
-                                 [units]="summary.units"
+                                 [units]="summary.compareUnits"
                                  [trend]="summary.trendDirection"></app-trend-value>
               </span>
               <div>

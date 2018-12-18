@@ -18,6 +18,7 @@ export interface SummaryItem {
   value: number;
   rawValue: number;
   units: string;
+  compareUnits: string;
 }
 
 export interface Summary {
@@ -172,7 +173,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
     device['tooltip'] = tooltip;
-    device['units'] = value !== null ? '%' : '';
+    device['compareUnits'] = value !== null ? '%' : '';
   }
   
   private _loadTrendData(): void {
@@ -197,10 +198,12 @@ export class DevicesOverviewComponent implements OnDestroy {
             const { data } = this._getOverviewData(report.table, relevantFields);
             const compareData = this._getSummaryData(data, relevantFields);
             Object.keys(this._summaryData).forEach(key => {
-              const compare = compareData[key];
+              const compare = compareData[key] as SummaryItem[];
               if (compare) {
                 this._summaryData[key].forEach((device, index) => {
-                  this._setCompareData(device, compare[index].rawValue, currentPeriodTitle, comparePeriodTitle);
+                  const relevantCompareItem = compare.find(item => item.key === device.key);
+                  const rawValue = relevantCompareItem ? relevantCompareItem.rawValue : 0;
+                  this._setCompareData(device, rawValue, currentPeriodTitle, comparePeriodTitle);
                 });
               }
             });
