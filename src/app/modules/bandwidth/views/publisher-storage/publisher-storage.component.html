@@ -46,7 +46,7 @@
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                   <span *ngIf="isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
-                        [kTooltip]="data[col].tooltip" [escape]="false">
+                        [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                     <app-trend-value [value]="data[col].value"
                                      [units]="data[col].units"
                                      [trend]="data[col].trend"></app-trend-value>
@@ -72,7 +72,7 @@
         <div class="kItem" *ngFor="let item of _accumulativeStorage">
           <span class="kLabel">{{item.title}}</span>
           <div class="kValueContainer">
-            <span *ngIf="isCompareMode" class="kTrend" [kTooltip]="item.tooltip" [escape]="false">
+            <span *ngIf="isCompareMode" class="kTrend" [kTooltip]="item.tooltip" [maxWidth]="500" [escape]="false">
               <app-trend-value valueStyleClass="kValue"
                                [value]="item.value"
                                [trend]="item.trend"></app-trend-value>
