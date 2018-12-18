@@ -6,6 +6,7 @@ import { TopContributorsTableComponent } from './top-contributors/top-contributo
 import { ContributorsTopContributorsComponent } from './top-contributors/top-contributors.component';
 import { ContributorsUsersComponent } from './users/users.component';
 import { TopContributorsComponent } from './top-contributors.component';
+import { ContributorsSourcesComponent } from './sources/sources.component';
 
 export const topContributorsComponentsList = [
   TopContributorsComponent,
@@ -16,4 +17,5 @@ export const topContributorsComponentsList = [
   TopContributorsTableComponent,
   ContributorsTopContributorsComponent,
   ContributorsUsersComponent,
+  ContributorsSourcesComponent,
 ];

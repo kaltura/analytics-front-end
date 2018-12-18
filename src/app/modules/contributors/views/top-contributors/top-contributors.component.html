@@ -6,7 +6,7 @@
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
     <app-contributors-refine-filter [selectedFilters]="_selectedRefineFilters"
-                       (filterChange)="_onRefineFilterChange($event)"></app-contributors-refine-filter>
+                                    (filterChange)="_onRefineFilterChange($event)"></app-contributors-refine-filter>
     <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
@@ -25,12 +25,12 @@
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
       <app-contributors-mini-highlights [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
+                                        [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
     </div>
 
     <div class="kMiniReportContainer">
       <app-contributors-mini-top-videos [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-contributors-mini-top-videos>
+                                        [refineFilter]="_refineFilter"></app-contributors-mini-top-videos>
     </div>
 
     <!-- Example -->
@@ -52,22 +52,23 @@
 
   <div id="highlights-report" class="kReportContainer">
     <app-contributors-highlights [dateFilterComponent]="dateFilter"
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-contributors-highlights>
+                                 [dateFilter]="_dateFilter"
+                                 [refineFilter]="_refineFilter"></app-contributors-highlights>
   </div>
 
   <div id="top-contributors" class="kReportContainer">
     <app-contributors-top-contributors [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-contributors-top-contributors>
+                                       [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>
 
   <div class="kReportContainer">
     <div class="kSmallReportContainer">
-
+      <app-contributors-sources [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-contributors-sources>
     </div>
     <div class="kSmallReportContainer">
       <app-contributors-users [dateFilter]="_dateFilter"
-                            [refineFilter]="_refineFilter"></app-contributors-users>
+                              [refineFilter]="_refineFilter"></app-contributors-users>
     </div>
   </div>
 </div>

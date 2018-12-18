@@ -1,0 +1,22 @@
+<div class="kReport kSources kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.contributorsSources' | translate}}</span>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_barChartData && _barChartData[_selectedMetrics] && _barChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_barChartData[_selectedMetrics]"></div>
+
+        <div *ngIf="!_isBusy && (!_barChartData || !_barChartData[_selectedMetrics] || !_barChartData[_selectedMetrics]?.series[0]?.data?.length)" class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+
