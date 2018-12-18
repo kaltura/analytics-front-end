@@ -31,15 +31,15 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
         fields: {
           'added_entries': {
             format: value => value,
-            color: [getPrimaryColor('entries'), getSecondaryColor('entries')],
+            colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
           },
           'added_msecs': {
             format: value => value,
-            color: [getPrimaryColor('time'), getSecondaryColor('time')],
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
           'contributors': {
             format: value => value,
-            color: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
+            colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
           },
         }
       }
