@@ -17,4 +17,13 @@ export class TopOsComponent extends BaseDevicesReportComponent {
   protected _defaultReportType = KalturaReportType.operatingSystemFamilies;
   protected _drillDownReportType = KalturaReportType.operatingSystem;
   public _title = 'app.audience.technology.topOS';
+  
+  protected getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string } {
+    return tableData.find(item => {
+      if (this._drillDown) {
+        return item.os === row.os;
+      }
+      return item.os_family === row.os_family;
+    });
+  }
 }

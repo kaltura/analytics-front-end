@@ -102,6 +102,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     }
   );
   
+  protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
+  
   constructor(private _reportService: ReportService,
               private _trendService: TrendService,
               private _translate: TranslateService,
@@ -254,7 +256,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         if (report.table && report.table.header && report.table.data) {
           const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
           this._tableData.forEach(row => {
-            const relevantCompareRow = tableData.find(item => item.browser === row.browser);
+            const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
             const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
             this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
           });
