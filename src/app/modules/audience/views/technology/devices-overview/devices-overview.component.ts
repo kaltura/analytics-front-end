@@ -109,6 +109,12 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
+          this._tabsData = [];
+          this._columns = [];
+          this._barChartData = {};
+          this._rawChartData = {};
+          this._summaryData = {};
+
           // IMPORTANT to handle totals first, summary rely on totals
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
