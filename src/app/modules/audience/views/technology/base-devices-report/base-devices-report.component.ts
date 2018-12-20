@@ -17,6 +17,22 @@ export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConf
 export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];
+
+  @Input() set selectedMetric(value: string) {
+    switch (value) {
+      case 'avg_time_viewed':
+      case 'sum_time_viewed':
+        this._distributionColorScheme = 'time';
+        break;
+      case 'unique_known_users':
+        this._distributionColorScheme = 'viewers';
+        break;
+      case 'count_plays':
+      default:
+        this._distributionColorScheme = 'default';
+        break;
+    }
+  }
   
   @Input() set deviceFilter(value: string[]) {
     this._devicesSelectActive = true;
@@ -64,6 +80,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _distributionColorScheme: string;
   public _drillDown: string = null;
   public _firstTimeLoading = true;
   public _devicesSelectActive = false;
@@ -84,6 +101,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
+  
+  protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
   
   constructor(private _reportService: ReportService,
               private _trendService: TrendService,
@@ -237,7 +256,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         if (report.table && report.table.header && report.table.data) {
           const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
           this._tableData.forEach(row => {
-            const relevantCompareRow = tableData.find(item => item.browser === row.browser);
+            const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
             const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
             this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
           });
@@ -284,6 +303,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }

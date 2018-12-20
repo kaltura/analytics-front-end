@@ -29,21 +29,19 @@ export class TrendService {
   }
   
   public calculateTrend(current: number, compare: number): { value: string, direction: number } {
-    if (current === 0 && compare === 0) {
-      return { value: '0', direction: 0 };
-    }
+    current = parseFloat(current.toFixed(2));
+    compare = parseFloat(compare.toFixed(2));
     
     if (current === 0 && compare > 0) {
       return { value: '100', direction: -1 };
     }
 
-    if (compare === 0 && current > 0) {
+    if (compare === 0) {
       return { value: null, direction: 0 };
     }
 
     const value = Math.ceil(((current - compare) / compare) * 100);
     const direction = this._getTrendDirection(value);
-  
     return { value: ReportHelper.numberOrZero(String(Math.abs(value))), direction };
   }
 }

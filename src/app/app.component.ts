@@ -13,7 +13,7 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   providers: [KalturaLogger.createLogger('AppComponent')]
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -99,7 +99,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
       endpointUrl: getKalturaServerUri(),
-      clientTag: 'analytics'
+      clientTag: 'kmc-analytics:v0.1'
     });
     this._kalturaServerClient.setDefaultRequestOptions({
       ks: analyticsConfig.ks
