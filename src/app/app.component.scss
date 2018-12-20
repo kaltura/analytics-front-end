@@ -1,0 +1,52 @@
+/* Fix for IE11 not getting the style overwrite for p-table from styles.scss */
+@import './variables';
+
+:host /deep/ p-table .ui-table .ui-table-tbody > tr{
+  > td {
+    height: 48px;
+    padding-left: 24px;
+    a {
+      color: $kTertiary;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  }
+}
+:host /deep/ p-table .ui-table .ui-table-thead > tr > th {
+  padding-left: 24px;
+  &:last-child {
+    padding-right: 24px;
+  }
+}
+:host /deep/ p-table .ui-table .ui-widget-header.ui-table-scrollable-header {
+  height: inherit;
+}
+:host /deep/ p-table .ui-table .ui-table-tbody > tr > td:first-child {
+  border-top: 1px solid #d9d9d9;
+}
+:host /deep/ p-table .ui-table .ui-table-thead {
+  border-top: 1px solid #d9d9d9;
+}
+:host /deep/ p-table {
+  tr {
+    height: 31px;
+  }
+
+  .kColumnHeader {
+    display: flex;
+    align-items: center;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    p-sorticon {
+      margin-top: -4px;
+    }
+  }
+}
+:host /deep/ p-paginator .ui-paginator.ui-widget-header.ui-unselectable-text {
+  height: 34px;
+}
