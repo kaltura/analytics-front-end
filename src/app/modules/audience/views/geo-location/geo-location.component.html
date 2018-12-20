@@ -119,10 +119,10 @@
                   <span>{{rowIndex+1}}</span>
                 </td>
                 <td class="kFlagColumn" *ngIf="!_drillDown.length">
-                  <img class="kFlag" src="{{'assets/flags/'+data['country']+'.png'}}"/>
+                  <img class="kFlag" src="{{'assets/flags/'+data['object_id']+'.png'}}"/>
                 </td>
                 <td class="kHighlight">
-                  <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['object_id'])">{{data['object_id']}}</a>
+                  <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
                   <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                   <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
                 </td>

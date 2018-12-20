@@ -39,13 +39,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value)
           },
-          'country_coordinates': {
-            format: value => value
-          },
-          'region_coordinates': {
-            format: value => value
-          },
-          'city_coordinates': {
+          'coordinates': {
             format: value => value
           }
         }
