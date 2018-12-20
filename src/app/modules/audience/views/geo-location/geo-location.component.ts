@@ -197,7 +197,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.pager.pageIndex = 1;
-    this.reportType = this._drillDown.length === 2 ?  KalturaReportType.cities : KalturaReportType.mapOverlay;
+    this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : KalturaReportType.mapOverlay;
     this.loadReport();
   }
 
