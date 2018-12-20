@@ -51,7 +51,7 @@ export class PublisherStorageComponent implements OnInit {
     }
   );
 
-  private order = '-bandwidth_consumption';
+  private order = '-month_id';
 
   public get isCompareMode(): boolean {
     return this.compareFilter !== null;
