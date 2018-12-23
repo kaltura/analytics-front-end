@@ -8,16 +8,54 @@
       "live": "Live"
     },
     "filters": {
-      "mediaType": "Media Type",
-      "deviceType": "Device Type",
-      "vod": "VOD",
-      "live": "Live",
-      "audio": "Audio",
-      "interactiveVideo": "Interactive Video",
-      "mobile": "Mobile",
-      "tablet": "Tablet",
-      "desktop": "Desktop",
-      "other": "Other"
+      "filter": "Filter",
+      "basicFilters": "Basic Filters",
+      "advancedFilters": "Advanced Filters",
+      "categories": "Categories",
+      "mediaType": {
+        "title": "Media Type",
+        "Video": "VOD",
+        "Live": "Live",
+        "Audio": "Audio",
+        "Image": "Images"
+      },
+      "applications": {
+        "title": "Applications",
+        "mediaSpace": "Media Space",
+        "mediaSpaceGo": "Media Space Go",
+        "pitch": "Pitch",
+        "others": "Others"
+      },
+      "entrySources": {
+        "title": "Entry Source",
+        "Upload": "Upload",
+        "Webcasting": "Webcasting",
+        "Kaltura Capture": "Capture",
+        "Classroom Capture": "Classroom"
+      },
+      "selectCategories": "Select Categories",
+      "tags": "Tags",
+      "owners": "Owners",
+      "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
+      "country": "Country",
+      "region": "Region",
+      "city": "City",
+      "countryPlaceholder": "Select Country",
+      "regionPlaceholder": "Select Region",
+      "cityPlaceholder": "Select City",
+      "location": "Location"
+    },
+    "categories": {
+      "selectCategories": "Select Categories",
+      "searchCategories": "Find Category",
+      "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}",
+      "select": "Select",
+      "selected": "{{0}} Selected",
+      "change": "Change",
+      "selectCount": "Select {{0}}",
+      "loading": "Loading...",
+      "loadingError": "Failed to load children.",
+      "maxChildrenExceeded": "Number of categories exceeds {{childrenCount}}\nand cannot be displayed.\nPlease use the Search Category control."
     },
     "common":{
       "ok": "OK",

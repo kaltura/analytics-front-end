@@ -71,7 +71,7 @@ export class ReportService implements OnDestroy {
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
   }
   
-  public getReport(config: ReportConfig, sections: ReportDataConfig): Observable<Report> {
+  public getReport(config: ReportConfig, sections: ReportDataConfig, preventMultipleRequests = true): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
     
     return Observable.create(
@@ -96,7 +96,7 @@ export class ReportService implements OnDestroy {
           objectIds: config.objectIds ? config.objectIds : null
         });
         
-        if (this._querySubscription) {
+        if (this._querySubscription && preventMultipleRequests) {
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }

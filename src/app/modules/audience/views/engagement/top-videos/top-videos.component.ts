@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -25,10 +25,10 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private _order = '-count_plays';
-  private _compareFilter: KalturaReportInputFilter = null;
+  private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -83,6 +83,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
             this._handleTable(report.table, compare); // handle table
           }
           this._isBusy = false;
+          this._firstTimeLoading = false;
         },
         error => {
           this._isBusy = false;
@@ -129,7 +130,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaReportInputFilter(
+      this._compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,
@@ -142,6 +143,13 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     } else {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
+    }
+  }
+  
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
     }
   }
   

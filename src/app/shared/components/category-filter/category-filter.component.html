@@ -1,0 +1,22 @@
+<div class="kColumn">
+  <div class="kColumnLabel">{{label}}</div>
+  <div class="kColumnContent">
+    <a *ngIf="!_selectedValue.length" (click)="_openCategoriesBrowser()">{{linkLabel}}</a>
+    <span class="kSelected" *ngIf="_selectedValue.length">
+      {{'app.categories.selected' | translate:{'0': _selectedValue.length} }}
+      <a (click)="_openCategoriesBrowser()">{{'app.categories.change' | translate}}</a>
+    </span>
+  </div>
+</div>
+
+<kPopupWidget #categoriesPopup
+              [popupWidth]="560"
+              [popupHeight]="586"
+              [closeBtn]="false"
+              [modal]="true">
+  <ng-template>
+    <app-categories-selector [parentPopupWidget]="categoriesPopup"
+                             [value]="_selectedValue"
+                             (valueChange)="_updateCategories($event)"></app-categories-selector>
+  </ng-template>
+</kPopupWidget>

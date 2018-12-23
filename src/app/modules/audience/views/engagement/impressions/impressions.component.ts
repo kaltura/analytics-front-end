@@ -4,7 +4,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { SelectItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
@@ -50,13 +50,13 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   private reportType: KalturaReportType = KalturaReportType.contentDropoff;
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   private order = 'count_plays';
-  private filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  private filter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
     }
   );
-  private compareFilter: KalturaReportInputFilter = null;
+  private compareFilter: KalturaEndUserReportInputFilter = null;
   private _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   private _dataConfig: ReportDataConfig;
   public get isCompareMode(): boolean {
@@ -296,7 +296,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this.compareFilter = new KalturaReportInputFilter(
+      this.compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,
@@ -308,6 +308,13 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       );
     } else {
       this.compareFilter = null;
+    }
+  }
+  
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this.filter);
+    if (this.compareFilter) {
+      this._refineFilterToServerValue(this.compareFilter);
     }
   }
 }

@@ -1,48 +1,71 @@
-<div class="kFilter kOverrideFAIcons">
-
-  <div #filterBtn class="kDropDown">
-    <span>Filter</span>
-    <i class="kIcondropdown_arrow_bottom"></i>
+<div class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
   </div>
-</div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <div class="kFilterContainerRow">
+          <div class="kListFilters">
+            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
+                                        [options]="_mediaTypes"
+                                        [selectedFilters]="_selectedValues['mediaType']"
+                                        (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                        (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
+            <app-checkboxes-list-filter class="kLastItem"
+                                        [label]="'app.filters.entrySources.title' | translate"
+                                        [options]="_entrySources"
+                                        [selectedFilters]="_selectedValues['entrySources']"
+                                        (itemSelected)="_onItemSelected($event, 'entrySources')"
+                                        (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+          </div>
+          <div class="kMiscFilters">
+            <app-tags-filter [selectedFilters]="_selectedValues['tags']"
+                             (itemSelected)="_onItemSelected($event, 'tags')"
+                             (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
 
-<kPopupWidget #datesPopup [popupWidth]="460"
-              [closeBtn]="false"
-              [targetRef]="filterBtn"
-              [targetOffset]="{'x':-360, 'y': 42}">
-  <ng-template>
-    <div class="kFilterContainer kOverrideFAIcons">
-      <div class="kRow">
-        <div class="kRowLabel">{{'app.filters.mediaType' | translate}}</div>
-        <div class="kRowContent">
-          <div class="kCheckboxGroup" *ngFor="let type of _mediaTypes">
-            <p-checkbox name="mediaTypes"
-                        [inputId]="type.value"
-                        [value]="type.value"
-                        (onChange)="_onTypesSelectionChange()"
-                        [(ngModel)]="_selectedMediaTypes"></p-checkbox>
-            <label [for]="type.value">
-              <span class="kLabel">{{type.label | translate}}</span>
-            </label>
+            <app-owners-filter [selectedFilters]="_selectedValues['owners']"
+                               (itemSelected)="_onItemSelected($event, 'owners')"
+                               (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
+
+            <app-category-filter [label]="'app.filters.categories' | translate"
+                                 [selectedFilters]="_selectedValues['categories']"
+                                 [linkLabel]="'app.filters.selectCategories' | translate"
+                                 (itemSelected)="_onItemSelected($event, 'categories')"
+                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
           </div>
         </div>
-      </div>
-      <div class="kRow">
-        <div class="kRowLabel">{{'app.filters.deviceType' | translate}}</div>
-        <div class="kRowContent">
-          <div class="kCheckboxGroup" *ngFor="let type of _deviceTypes">
-            <p-checkbox name="deviceTypes"
-                        [inputId]="type.value"
-                        [value]="type.value"
-                        (onChange)="_onTypesSelectionChange()"
-                        [(ngModel)]="_selectedDeviceTypes"></p-checkbox>
-            <label [for]="type.value">
-              <span class="kLabel">{{type.label | translate}}</span>
-            </label>
+        <div *ngIf="showAdvancedFilters"
+             class="kFilterContainerRow"
+             [@state]="_advancedFiltersState"
+             (@state.done)="_advancedFiltersAnimationDone($event)">
+          <div class="kListFilters">
+            <app-location-filters [dateFilter]="_dateFilter"
+                                  [selectedFilters]="_selectedValues['location']"
+                                  (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
           </div>
+          <div class="kMiscFilters">&nbsp;</div>
         </div>
       </div>
     </div>
-  </ng-template>
-</kPopupWidget>
+    <div class="kRefineFiltersFooter">
+      <a (click)="showAdvancedFilters = !showAdvancedFilters">
+        <span *ngIf="showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
+        <span *ngIf="!showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
+      </a>
+      <button type="button" class="kButtonBranded" pButton
+              [label]="'app.common.apply' | translate"
+              (click)="_apply()"></button>
+    </div>
+  </div>
+</div>
