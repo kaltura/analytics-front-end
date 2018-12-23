@@ -22,6 +22,14 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'region': {
+            format: value => value,
+            nonComparable: true,
+          },
+          'city': {
+            format: value => value,
+            nonComparable: true,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
@@ -30,6 +38,9 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value)
+          },
+          'coordinates': {
+            format: value => value
           }
         }
       },
@@ -57,8 +68,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
     };
   }
 
-  public getMapConfig(): EChartOption {
-    return {
+  public getMapConfig(scatter: boolean): EChartOption {
+    let config =  {
       textStyle: {
         fontFamily: 'Lato',
       },
@@ -75,8 +86,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           color: '#999999'
         },
         formatter: (params) => {
-          if (params.name && parseFloat(params.value) >= 0) {
-            let tooltip = params.seriesName + '<br/>' + params.name + ' : ' + params.value;
+          if (params.name && params.data && params.data.value && params.data.value.length === 3) {
+            let tooltip = params.name + '<br/>' + params.seriesName + ' : ' + params.data.value[2];
             if (params.seriesName === 'Avg. Drop Off') {
               tooltip = tooltip + '%';
             }
@@ -86,23 +97,83 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           }
         }
       },
+
       visualMap: {
         min: 0,
         max: 1000000,
         left: 16,
-        realtime: false,
+        center: [0, 0],
         calculable: true,
         inRange: {
           color: ['#B4E9FF', '#2541B8']
         }
       },
-      series: [
+      series: []
+    };
+    if (scatter) {
+      config['geo'] = {
+        map: 'world',
+          center: [0, 0],
+          top: 70,
+          zoom: 1.2,
+          roam: false,
+          label: {
+          emphasis: {
+            show: true
+          }
+        },
+        itemStyle: {
+          areaColor: '#ebebeb',
+            borderColor: '#999999',
+            emphasis: {
+            label: {
+              show: true
+            },
+            areaColor: '#F49616'
+          }
+        },
+      };
+      config.series = [
+        {
+          name: 'Plays',
+          type: 'scatter',
+          selectedMode: 'single',
+          coordinateSystem: 'geo',
+          animationDurationUpdate: 200,
+          animationEasingUpdate: 'cubicInOut',
+          data: [],
+          symbolSize: 12,
+          label: {
+            normal: {
+              show: false
+            },
+            emphasis: {
+              show: false
+            }
+          },
+
+          itemStyle: {
+            normal: {
+              color: '#f4e925',
+              shadowBlur: 5,
+              shadowColor: '#333'
+            },
+            emphasis: {
+              borderColor: '#fff',
+              borderWidth: 1
+            }
+          }
+        }
+      ];
+    } else {
+      config.series = [
         {
           name: '',
           type: 'map',
           mapType: 'world',
           roam: false,
           zoom: 1.2,
+          top: 60,
           selectedMode: 'single',
           animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',
@@ -113,8 +184,12 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           },
           data: []
         }
-      ]
-    };
+      ];
+      if (config['geo']) {
+        delete config['geo'];
+      }
+    }
+    return config;
   }
 
   public getCountryName(country: string): string {

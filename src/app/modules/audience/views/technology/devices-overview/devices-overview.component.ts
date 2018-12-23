@@ -18,6 +18,7 @@ export interface SummaryItem {
   value: number;
   rawValue: number;
   units: string;
+  compareUnits: string;
 }
 
 export interface Summary {
@@ -108,6 +109,12 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
+          this._tabsData = [];
+          this._columns = [];
+          this._barChartData = {};
+          this._rawChartData = {};
+          this._summaryData = {};
+
           // IMPORTANT to handle totals first, summary rely on totals
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
@@ -166,13 +173,13 @@ export class DevicesOverviewComponent implements OnDestroy {
     const currentValue = device.rawValue;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
+      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue.toFixed(this._fractions)))}
+      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue.toFixed(this._fractions)))}
     `;
     device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
     device['tooltip'] = tooltip;
-    device['units'] = value !== null ? '%' : '';
+    device['compareUnits'] = value !== null ? '%' : '';
   }
   
   private _loadTrendData(): void {
@@ -197,10 +204,12 @@ export class DevicesOverviewComponent implements OnDestroy {
             const { data } = this._getOverviewData(report.table, relevantFields);
             const compareData = this._getSummaryData(data, relevantFields);
             Object.keys(this._summaryData).forEach(key => {
-              const compare = compareData[key];
+              const compare = compareData[key] as SummaryItem[];
               if (compare) {
                 this._summaryData[key].forEach((device, index) => {
-                  this._setCompareData(device, compare[index].rawValue, currentPeriodTitle, comparePeriodTitle);
+                  const relevantCompareItem = compare.find(item => item.key === device.key);
+                  const rawValue = relevantCompareItem ? relevantCompareItem.rawValue : 0;
+                  this._setCompareData(device, rawValue, currentPeriodTitle, comparePeriodTitle);
                 });
               }
             });

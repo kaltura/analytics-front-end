@@ -50,6 +50,8 @@ body{
           margin-left: auto;
           margin-right: 16px;
           white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
         }
       }
       .kBreadcrumbs{
@@ -183,67 +185,6 @@ body{
   }
 }
 
-p-table /deep/ .ui-table .ui-table-tbody > tr{
-  //&:nth-child(odd) {
-  //  background-color: #F8F8F8;
-  //  &:hover{
-  //    background-color: $kGrayscale7;
-  //  }
-  //}
-  > td {
-    height: 48px;
-    padding-left: 24px;
-    a {
-      color: $kTertiary;
-      text-decoration: none;
-      font-weight: 700;
-    }
-  }
-}
-p-table /deep/ .ui-table .ui-table-thead > tr > th {
-  padding-left: 24px;
-  &:last-child {
-    padding-right: 24px;
-  }
-}
-p-table /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
-  height: inherit;
-}
-p-table /deep/ .ui-table .ui-table-tbody > tr > td:first-child {
-  border-top: 1px solid #d9d9d9;
-}
-p-table /deep/ .ui-table .ui-table-thead {
-  border-top: 1px solid #d9d9d9;
-}
-p-table /deep/ {
-  tr {
-    height: 31px;
-  }
-
-  .kColumnHeader {
-    display: flex;
-    align-items: center;
-
-    span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    p-sorticon {
-      margin-top: -4px;
-    }
-  }
-}
-p-paginator /deep/ .ui-paginator.ui-widget-header.ui-unselectable-text {
-  height: 34px;
-}
-kpopupwidget{
-  .kPopupWidget{
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24) !important;
-  }
-}
-
 .ngx-charts .grid-panel.odd {
   display: none;
 }
@@ -306,6 +247,16 @@ kpopupwidget{
   .kValue {
     font-weight: bold;
     color: $kGrayscale1;
+  }
+
+  .kSeriesName {
+    margin-right: 15px;
+  }
+}
+
+kpopupwidget{
+  .kPopupWidget{
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24) !important;
   }
 }
 

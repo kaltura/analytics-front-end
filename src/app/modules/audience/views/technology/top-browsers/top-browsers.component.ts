@@ -17,4 +17,13 @@ export class TopBrowsersComponent extends BaseDevicesReportComponent {
   protected _defaultReportType = KalturaReportType.browsersFamilies;
   protected _drillDownReportType = KalturaReportType.browsers;
   public _title = 'app.audience.technology.topBrowsers';
+  
+  protected getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string } {
+    return tableData.find(item => {
+      if (this._drillDown) {
+        return item.browser === row.browser;
+      }
+      return item.browser_family === row.browser_family;
+    });
+  }
 }

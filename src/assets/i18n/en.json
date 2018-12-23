@@ -223,6 +223,7 @@
         "count_plays_tt": "Total number of plays in the selected timeframe",
         "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
         "unique_known_users_tt": "Total number of unique viewers in the selected timeframe",
+        "avg_time_viewed_tt": "Average minutes viewed in the selected timeframe",
         "plays_distribution": "Plays Distribution",
         "plays_trend": "Play Trend",
         "browser_family": "Name",

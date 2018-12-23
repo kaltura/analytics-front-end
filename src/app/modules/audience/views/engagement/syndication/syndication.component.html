@@ -68,7 +68,7 @@
                     [showOnEllipsis]="col !== 'referrer'">
                   <span *ngIf="_isCompareMode && data[col]?.value !== undefined"
                         class="kTrend"
-                        [kTooltip]="data[col].tooltip" [escape]="false">
+                        [kTooltip]="data[col].tooltip" [maxWidth]="500" [escape]="false">
                     <app-trend-value [value]="data[col].value"
                                      [units]="data[col].units"
                                      [trend]="data[col].trend"></app-trend-value>

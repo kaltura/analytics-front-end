@@ -28,7 +28,7 @@ export class LocationsFilterService implements OnDestroy {
       fields: {
         'country': { format: value => value },
         'object_id': { format: value => value },
-        'location_name': { format: value => value },
+        'region': { format: value => value },
         'city': { format: value => value },
       }
     }
@@ -53,8 +53,8 @@ export class LocationsFilterService implements OnDestroy {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
   
     this._countriesOptions.next(tableData.map(data => ({
-      value: { name: data.object_id, id: data.country.toLowerCase() },
-      label: data.object_id,
+      value: { name: data.country, id: data.object_id.toLowerCase() },
+      label: data.country,
     })));
   }
   
@@ -62,8 +62,8 @@ export class LocationsFilterService implements OnDestroy {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
   
     this._regionsOptions.next(tableData.map(data => ({
-      value: { name: data.object_id, id: data.location_name.toLowerCase() },
-      label: data.object_id,
+      value: { name: data.region, id: data.region },
+      label: data.region,
     })));
   }
   
@@ -71,8 +71,8 @@ export class LocationsFilterService implements OnDestroy {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
     
     this._citiesOptions.next(tableData.map(data => ({
-      value: { name: data.object_id, id: data.city.toLowerCase() },
-      label: data.object_id,
+      value: { name: data.city, id: data.city },
+      label: data.city,
     })));
   }
   
@@ -81,7 +81,7 @@ export class LocationsFilterService implements OnDestroy {
     this._currentlyLoading.push('country');
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.mapOverlay,
+      reportType: KalturaReportType.mapOverlayCountry,
       filter: this._filter,
       pager: this._pager,
       order: null,
@@ -106,13 +106,13 @@ export class LocationsFilterService implements OnDestroy {
     this._isBusy = true;
     this._currentlyLoading.push('region');
     
-    const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.mapOverlay,
+    let reportConfig: ReportConfig = {
+      reportType: KalturaReportType.mapOverlayRegion,
       filter: this._filter,
       pager: this._pager,
-      order: null,
-      objectIds: country,
+      order: null
     };
+    reportConfig.filter.countryIn = country;
     this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
@@ -138,7 +138,7 @@ export class LocationsFilterService implements OnDestroy {
     filter.regionIn = region;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.cities,
+      reportType: KalturaReportType.mapOverlayCity,
       filter: filter,
       pager: this._pager,
       order: null,
