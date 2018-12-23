@@ -248,13 +248,15 @@ export class EndUserStorageComponent implements OnInit {
     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
     const comparePeriod = { from: this.compareFilter.fromDay, to: this.compareFilter.toDay };
 
+    const dataKey = this._drillDown.length ? '' : 'kuser_id';
     if (current.table && compare.table) {
       const { columns, tableData } = this._compareService.compareTableData(
         currentPeriod,
         comparePeriod,
         current.table,
         compare.table,
-        this._dataConfig.table
+        this._dataConfig.table,
+        dataKey
       );
       this._columns = columns;
       this._totalCount = compare.table.totalCount;

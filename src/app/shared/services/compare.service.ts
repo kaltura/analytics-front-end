@@ -303,7 +303,8 @@ export class CompareService implements OnDestroy {
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportTable,
                           compare: KalturaReportTable,
-                          config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
+                          config: ReportDataItemConfig,
+                          dataKey: string = ''): { columns: string[], tableData: { [key: string]: string }[] } {
     if (!current.header || !current.data || !compare.header || !compare.data) {
       return;
     }
@@ -320,7 +321,21 @@ export class CompareService implements OnDestroy {
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
 
     currentData.forEach((valuesString, i) => {
-      const compareValuesString = compareData[i];
+      let compareValuesString = null;
+      if (dataKey.length) {
+        const dataIndex = columns.indexOf(dataKey.toLowerCase());
+        const key = valuesString.split(',')[dataIndex];
+        if (key && key.length) {
+          compareData.some(compareRow => {
+            if (compareRow.split(',')[dataIndex] === key) {
+              compareValuesString = compareRow;
+              return true;
+            }
+          });
+        }
+      } else {
+        compareValuesString = compareData[i];
+      }
       if (valuesString.length) {
         let data = {};
         const currentValues = valuesString.split(',');
