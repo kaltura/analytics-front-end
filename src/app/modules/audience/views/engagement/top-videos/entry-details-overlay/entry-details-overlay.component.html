@@ -5,7 +5,7 @@
         <img [src]="_data.thumbnailUrl"
              onError="this.onerror=null;this.style.display='none'"
              (error)="holder.classList.add('error')">
-
+        <div class="kProtector"></div>
         <div class="kEntryName">
           <span>{{_data.name}}</span>
         </div>
