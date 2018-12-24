@@ -358,10 +358,7 @@ export class CompareService implements OnDestroy {
               const { value: trend, direction } = hasConsistentData ? this._trendService.calculateTrend(Number(value), Number(compareValues[j])) : { value: 0, direction: 0 };
               const currentVal = fieldConfig.format(value);
               const compareVal = hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A';
-              const tooltip = `
-                ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}
-                ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}
-              `;
+              const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}`;
               result = {
                 value: hasConsistentData && trend !== null ? trend : '–',
                 tooltip: tooltip,
@@ -412,10 +409,7 @@ export class CompareService implements OnDestroy {
         const compareVal = field.format(compareData[index] || '0');
         tabsData.push({
           title: field.title,
-          tooltip: `
-            ${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}
-            ${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}
-          `,
+          tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}`,
           value: trend !== null ? trend : '–',
           selected: header === (selected || config.preSelected),
           units: trend !== null ? '%' : '',
