@@ -8,7 +8,7 @@ export function devicesFilterToServerValue(value: string[]): string {
   if (otherIndex !== -1) {
     result = [
       ...value.slice(0, otherIndex),
-      ...['DIGITAL_MEDIA_RECEIVER', 'GAME_CONSOLE', 'UNKNOWN', 'CDN', 'MEDIA_SERVER'],
+      ...['DIGITAL_MEDIA_RECEIVER', 'UNKNOWN', 'CDN', 'MEDIA_SERVER'],
       ...value.slice(otherIndex + 1),
     ];
   }
