@@ -27,7 +27,7 @@
                    (error)="holder.classList.add('error')">
             </div>
           </td>
-          <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
+          <td [ngStyle]="{'width': '100%'}">
             <div class="kTopVideoEntryColumn"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
@@ -40,7 +40,7 @@
             </div>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td>
+            <td [ngStyle]="{'width': '140px'}">
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
@@ -51,7 +51,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '200px'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
                 <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
@@ -62,7 +62,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
                 <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
@@ -74,7 +74,7 @@
               </div>
             </td>
           </ng-container>
-          <td class="kScore">
+          <td class="kScore" [ngStyle]="{'width': '120px'}">
             <span>n/10</span>
           </td>
         </tr>
