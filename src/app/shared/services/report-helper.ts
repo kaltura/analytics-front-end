@@ -4,7 +4,7 @@ export class ReportHelper {
   }
   
   static percents(x: any): string {
-    return this.numberWithCommas((parseFloat(x) * 100).toFixed(2)) + '%';
+    return x.length ? this.numberWithCommas((parseFloat(x) * 100).toFixed(2)) + '%' : 'N/A';
   }
   
   static numberOrNA(x: any): string {
