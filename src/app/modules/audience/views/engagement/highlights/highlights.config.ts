@@ -19,18 +19,22 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'sum_time_viewed': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'unique_known_users': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.unique_known_users`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_view_drop_off': {
             format: value => value,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
         }
       },
