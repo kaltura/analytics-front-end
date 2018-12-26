@@ -180,13 +180,13 @@
       },
       "added_entries_tt": "Added Entries Tooltip",
       "deleted_entries_tt": "Deleted Entries Tooltip",
-      "total_entries_tt": "Total Entries Tooltip",
+      "total_entries_tt": "The total number of entries at the end of the selected timeframe",
       "added_storage_mb_tt": "Added Storage Tooltip",
       "deleted_storage_mb_tt": "Deleted Storage Tooltip",
-      "total_storage_mb_tt": "Total Storage Tooltip",
+      "total_storage_mb_tt": "The total storage at the end of the selected timeframe",
       "added_msecs_tt": "Added Minutes Tooltip",
       "deleted_msecs_tt": "Deleted Minutes Tooltip",
-      "total_msecs_tt": "Total Minutes Tooltip",
+      "total_msecs_tt": "The total minutes at the end of the selected timeframe",
       "name": "User ID",
       "NAME": "User ID",
       "objectId": "Object Id"
@@ -282,7 +282,8 @@
         "creator": "Creator",
         "creationDate": "Creation Date",
         "duration": "Duration",
-        "errorLoadingEntry": "Failed to load entry data"
+        "errorLoadingEntry": "Failed to load entry data",
+        "by": "By"
       },
       "topDomainsReport": {
         "index": "#",

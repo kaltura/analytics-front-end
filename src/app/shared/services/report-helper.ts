@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 export class ReportHelper {
   static numberWithCommas(x: any): string {
     return x.toLocaleString(navigator.language, { maximumSignificantDigits: 10 });
@@ -74,7 +76,10 @@ export class ReportHelper {
         // format as number
         result = this.numberWithCommas(parseInt(value));
         break;
-      
+      case 'serverDate':
+        const date = new Date(Number(value) * 1000);
+        result = moment(date).format('MMM D, YYYY');
+        break;
       case 'avg_view_drop_off':
       case 'play_through_ratio':
       case 'load_play_ratio':
