@@ -125,7 +125,6 @@ body{
       .kTable{
         display: flex;
         flex-direction: column;
-        margin-bottom: 20px;
         .kToggle{
           display: flex;
           align-items: center;
@@ -337,4 +336,15 @@ ui-carousel /deep/ {
       background-color: $menuBkgColor !important;
     }
   }
+}
+
+.ui-paginator{
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+.ui-paginator .ui-paginator-pages{
+  margin-top: 1px;
+}
+.ui-paginator .ui-paginator-page{
+  width: 32px;
 }
