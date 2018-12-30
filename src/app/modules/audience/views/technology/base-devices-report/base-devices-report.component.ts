@@ -22,10 +22,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     switch (value) {
       case 'avg_time_viewed':
       case 'sum_time_viewed':
-        this._distributionColorScheme = 'time';
+        this._distributionColorScheme = 'default'; // 'time' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
       case 'unique_known_users':
-        this._distributionColorScheme = 'viewers';
+        this._distributionColorScheme = 'default'; // 'viewers' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
       case 'count_plays':
       default:
