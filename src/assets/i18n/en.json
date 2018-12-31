@@ -137,7 +137,7 @@
       "publisher_table": {
         "month_id": "Month",
         "date_id": "Date",
-        "bandwidth_consumption": "Bandwidth Consumption (MB)",
+        "bandwidth_consumption": "BW Consumption (MB)",
         "average_storage": "Average Storage (MB)",
         "peak_storage": "Peak Storage (MB)",
         "added_storage": "Added Storage (MB)",
@@ -234,10 +234,10 @@
         "filterDeviceType": "Filter Device Type",
         "index": "#",
         "devices": {
-          "COMPUTER": "Desktop",
-          "MOBILE": "Mobile",
-          "TABLET": "Tablet",
-          "GAME_CONSOLE": "Game Console",
+          "Computer": "Desktop",
+          "Mobile": "Mobile",
+          "Tablet": "Tablet",
+          "Game console": "Game Console",
           "OTHER": "Other"
         }
       }
