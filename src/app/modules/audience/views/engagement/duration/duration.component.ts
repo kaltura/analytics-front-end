@@ -17,4 +17,8 @@ export class EngagementDurationComponent extends EngagementBaseReportComponent i
   protected _updateFilter(): void {
     console.log('EngagementDurationComponent - updateFilter');
   }
+  
+  protected _updateRefineFilter(): void {
+  
+  }
 }

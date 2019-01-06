@@ -22,10 +22,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     switch (value) {
       case 'avg_time_viewed':
       case 'sum_time_viewed':
-        this._distributionColorScheme = 'time';
+        this._distributionColorScheme = 'default'; // 'time' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
       case 'unique_known_users':
-        this._distributionColorScheme = 'viewers';
+        this._distributionColorScheme = 'default'; // 'viewers' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
       case 'count_plays':
       default:
@@ -102,6 +102,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     }
   );
   
+  protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
+  
   constructor(private _reportService: ReportService,
               private _trendService: TrendService,
               private _translate: TranslateService,
@@ -169,6 +171,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       .subscribe(report => {
           this._tableData = [];
           this._totalPlaysCount = 0;
+          this._totalCount = 0;
 
           // IMPORTANT to handle totals first, distribution rely on it
           if (report.totals) {
@@ -254,7 +257,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         if (report.table && report.table.header && report.table.data) {
           const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
           this._tableData.forEach(row => {
-            const relevantCompareRow = tableData.find(item => item.browser === row.browser);
+            const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
             const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
             this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
           });

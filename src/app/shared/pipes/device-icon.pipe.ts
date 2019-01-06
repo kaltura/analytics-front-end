@@ -5,10 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DeviceIconPipe implements PipeTransform {
   devices = {
-    'COMPUTER': 'icon-desktop',
-    'TABLET': 'icon-tablet',
-    'MOBILE': 'icon-phone',
-    'GAME_CONSOLE': 'icon-game-console',
+    'Computer': 'icon-desktop',
+    'Tablet': 'icon-tablet',
+    'Mobile': 'icon-phone',
+    'Game console': 'icon-game-console',
     'OTHER': 'kIcondevices'
   };
 

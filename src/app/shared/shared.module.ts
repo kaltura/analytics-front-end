@@ -17,7 +17,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
@@ -28,6 +28,16 @@ import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { TrendValueComponent } from 'shared/components/trend-value/trend-value.component';
+import { CategoriesSearchService } from 'shared/services/categories-search.service';
+import { CategoriesTreeComponent } from 'shared/components/categories-tree/categories-tree.component';
+import { CategoriesTreePropagationDirective } from 'shared/components/categories-tree/categories-tree-propagation.directive';
+import { TreeModule } from 'primeng/tree';
+import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list-filter/checkboxes-list-filter.component';
+import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
+import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
+import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
+import { DropdownModule } from 'primeng/primeng';
+import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 
 @NgModule({
@@ -42,7 +52,10 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     RadioButtonModule,
     PopupWidgetModule,
     TooltipModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    TreeModule,
+    AreaBlockerModule,
+    DropdownModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -59,6 +72,13 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     OverlayComponent,
     TrendValueComponent,
     MiddleEllipsisDirective,
+    CategoriesTreePropagationDirective,
+    CategoriesTreeComponent,
+    CheckboxesListFilterComponent,
+    CategoryFilterComponent,
+    CategoriesSelectorComponent,
+    AutocompleteFilterComponent,
+    DropdownFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -75,6 +95,13 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     OverlayComponent,
     TrendValueComponent,
     MiddleEllipsisDirective,
+    CategoriesTreePropagationDirective,
+    CategoriesTreeComponent,
+    CheckboxesListFilterComponent,
+    CategoryFilterComponent,
+    CategoriesSelectorComponent,
+    AutocompleteFilterComponent,
+    DropdownFilterComponent,
   ],
   providers: [
   ]
@@ -89,6 +116,7 @@ export class SharedModule {
         ReportService,
         CompareService,
         TrendService,
+        CategoriesSearchService,
       ]
     };
   }

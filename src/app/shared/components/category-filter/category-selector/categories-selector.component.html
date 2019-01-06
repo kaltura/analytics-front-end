@@ -1,0 +1,42 @@
+<div class="kAddCategory kTreeContainer kOverrideFAIcons">
+  <div class="kHeader">
+    <span class="kTitle">{{'app.categories.selectCategories' | translate}}</span>
+  </div>
+
+  <div class="kMain">
+    <kAutoComplete #autoComplete
+                   [disabled]="!_categoriesLoaded"
+                   [multiple]="false"
+                   field="name"
+                   suggestionItemField="item"
+                   suggestionLabelField="name"
+                   suggestionSelectableField="isSelectable"
+                   [placeholder]="'app.categories.searchCategories' | translate"
+                   [minLength]="3"
+                   (onSelect)="_onAutoCompleteSelected()"
+                   [suggestionsProvider]="_categoriesProvider"
+                   (completeMethod)="_onAutoCompleteSearch($event)">
+    </kAutoComplete>
+
+
+    <app-categories-tree #categoriesTree
+                         [disablePropagation]="false"
+                         [(selectedCategories)]="_treeSelection"
+                         (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
+                         (onCategorySelected)="_onCategorySelected($event)"
+                         (onCategoryUnselected)="_onCategoryUnselected($event)"></app-categories-tree>
+  </div>
+
+  <div class="kFooter">
+    <div class="kActions">
+      <a (click)="_cancel()">{{'app.common.cancel' | translate}}</a>
+      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length <= 1"
+              [disabled]="!_selectedCategories.length"
+              [label]="'app.categories.select' | translate"
+              (click)="_apply()"></button>
+      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length >= 2"
+              [label]="'app.categories.selectCount' | translate:{'0': _selectedCategories.length}"
+              (click)="_apply()"></button>
+    </div>
+  </div>
+</div>

@@ -27,20 +27,18 @@
                    (error)="holder.classList.add('error')">
             </div>
           </td>
-          <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
+          <td [ngStyle]="{'width': '100%'}">
             <div class="kTopVideoEntryColumn"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
               <div class="kEntryDetails">
-              <span class="kTableColumn" [kTooltip]="'By Amy Lorimer • Jan 9, 2018'" [showOnEllipsis]="true">
-                By Amy Lorimer • Jan 9, 2018
-              </span>
+                <span class="kTableColumn">{{'app.engagement.topVideosReport.by' | translate}} {{data['creator_name']}} • {{data['created_at']}}</span>
               </div>
             </div>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td>
+            <td [ngStyle]="{'width': '140px'}">
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
@@ -51,7 +49,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '200px'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
                 <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
@@ -62,7 +60,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '230px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
                 <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
@@ -74,9 +72,9 @@
               </div>
             </td>
           </ng-container>
-          <td class="kScore">
+          <!--td class="kScore" [ngStyle]="{'width': '120px'}">
             <span>n/10</span>
-          </td>
+          </td-->
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">

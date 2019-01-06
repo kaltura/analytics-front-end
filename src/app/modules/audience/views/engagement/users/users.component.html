@@ -8,7 +8,7 @@
       <div class="kTotalCount" *ngIf="(!_isCompareMode && _totalUsers !== null) || (_isCompareMode && _totalUsersCompare)">
         <span class="kTitle">{{'app.engagement.totalUsers' | translate}}</span>
         <span class="kValue" *ngIf="!_isCompareMode">{{_totalUsers}}</span>
-        <span *ngIf="_isCompareMode && _totalUsersCompare" class="kTrend" [kTooltip]="_totalUsersCompare.tooltip" [escape]="false">
+        <span *ngIf="_isCompareMode && _totalUsersCompare" class="kTrend" [kTooltip]="_totalUsersCompare.tooltip" [maxWidth]="500" [escape]="false">
               <i [class]="_totalUsersCompare.trend | appTrend"></i>
               <span class="kValue">{{_totalUsersCompare.value}}</span>
               <span class="kUnits">{{_totalUsersCompare.units}}</span>

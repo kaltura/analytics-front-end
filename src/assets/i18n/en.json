@@ -8,16 +8,54 @@
       "live": "Live"
     },
     "filters": {
-      "mediaType": "Media Type",
-      "deviceType": "Device Type",
-      "vod": "VOD",
-      "live": "Live",
-      "audio": "Audio",
-      "interactiveVideo": "Interactive Video",
-      "mobile": "Mobile",
-      "tablet": "Tablet",
-      "desktop": "Desktop",
-      "other": "Other"
+      "filter": "Filter",
+      "basicFilters": "Basic Filters",
+      "advancedFilters": "Advanced Filters",
+      "categories": "Categories",
+      "mediaType": {
+        "title": "Media Type",
+        "Video": "VOD",
+        "Live": "Live",
+        "Audio": "Audio",
+        "Image": "Images"
+      },
+      "applications": {
+        "title": "Applications",
+        "mediaSpace": "Media Space",
+        "mediaSpaceGo": "Media Space Go",
+        "pitch": "Pitch",
+        "others": "Others"
+      },
+      "entrySources": {
+        "title": "Entry Source",
+        "Upload": "Upload",
+        "Webcasting": "Webcasting",
+        "Kaltura Capture": "Capture",
+        "Classroom Capture": "Classroom"
+      },
+      "selectCategories": "Select Categories",
+      "tags": "Tags",
+      "owners": "Owners",
+      "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
+      "country": "Country",
+      "region": "Region",
+      "city": "City",
+      "countryPlaceholder": "Select Country",
+      "regionPlaceholder": "Select Region",
+      "cityPlaceholder": "Select City",
+      "location": "Location"
+    },
+    "categories": {
+      "selectCategories": "Select Categories",
+      "searchCategories": "Find Category",
+      "failedToLoadCategoryData": "Could not load category data. Category ID: {{0}}",
+      "select": "Select",
+      "selected": "{{0}} Selected",
+      "change": "Change",
+      "selectCount": "Select {{0}}",
+      "loading": "Loading...",
+      "loadingError": "Failed to load children.",
+      "maxChildrenExceeded": "Number of categories exceeds {{childrenCount}}\nand cannot be displayed.\nPlease use the Search Category control."
     },
     "common":{
       "ok": "OK",
@@ -111,7 +149,7 @@
       "publisher_table": {
         "month_id": "Month",
         "date_id": "Date",
-        "bandwidth_consumption": "Bandwidth Consumption (MB)",
+        "bandwidth_consumption": "BW Consumption (MB)",
         "average_storage": "Average Storage (MB)",
         "peak_storage": "Peak Storage (MB)",
         "added_storage": "Added Storage (MB)",
@@ -154,13 +192,13 @@
       },
       "added_entries_tt": "Added Entries Tooltip",
       "deleted_entries_tt": "Deleted Entries Tooltip",
-      "total_entries_tt": "Total Entries Tooltip",
+      "total_entries_tt": "The total number of entries at the end of the selected timeframe",
       "added_storage_mb_tt": "Added Storage Tooltip",
       "deleted_storage_mb_tt": "Deleted Storage Tooltip",
-      "total_storage_mb_tt": "Total Storage Tooltip",
+      "total_storage_mb_tt": "The total storage at the end of the selected timeframe",
       "added_msecs_tt": "Added Minutes Tooltip",
       "deleted_msecs_tt": "Deleted Minutes Tooltip",
-      "total_msecs_tt": "Total Minutes Tooltip",
+      "total_msecs_tt": "The total minutes at the end of the selected timeframe",
       "name": "User ID",
       "NAME": "User ID",
       "objectId": "Object Id"
@@ -197,6 +235,7 @@
         "count_plays_tt": "Total number of plays in the selected timeframe",
         "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
         "unique_known_users_tt": "Total number of unique viewers in the selected timeframe",
+        "avg_time_viewed_tt": "Average minutes viewed in the selected timeframe",
         "plays_distribution": "Plays Distribution",
         "plays_trend": "Play Trend",
         "browser_family": "Name",
@@ -207,10 +246,10 @@
         "filterDeviceType": "Filter Device Type",
         "index": "#",
         "devices": {
-          "COMPUTER": "Desktop",
-          "MOBILE": "Mobile",
-          "TABLET": "Tablet",
-          "GAME_CONSOLE": "Game Console",
+          "Computer": "Desktop",
+          "Mobile": "Mobile",
+          "Tablet": "Tablet",
+          "Game console": "Game Console",
           "OTHER": "Other"
         }
       }
@@ -255,7 +294,8 @@
         "creator": "Creator",
         "creationDate": "Creation Date",
         "duration": "Duration",
-        "errorLoadingEntry": "Failed to load entry data"
+        "errorLoadingEntry": "Failed to load entry data",
+        "by": "By"
       },
       "topDomainsReport": {
         "index": "#",

@@ -1,0 +1,17 @@
+@import '../../../../styles/variables';
+
+
+.kColumn {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  .kColumnLabel {
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .kSelected a {
+    margin-left: 12px;
+  }
+}

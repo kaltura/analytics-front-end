@@ -22,7 +22,7 @@
       padding-left: 8px;
       display: flex;
       align-items: center;
-      width: 220px;
+      width: 200px;
       &.ui-state-focus{
         border: 1px solid $kGrayscale3;
       }
@@ -46,6 +46,12 @@
     }*/
     .ui-autocomplete-token {
       display: none;
+    }
+    .ui-autocomplete-panel .ui-autocomplete-list-item span{
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
     }
   }
 }

@@ -44,7 +44,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _tags: any[] = [];
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
-  public reportType: KalturaReportType = KalturaReportType.mapOverlay;
+  public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
   public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
@@ -61,10 +61,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _countryCodes: { value: string, label: string }[] = [];
   public _selectedCountries: SelectItem[] = [];
   public _drillDown: string[] = [];
+  private mapCenter = [0, 10];
 
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
+  public _zoomInDisabled = false;
+  public _zoomOutDisabled = true;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -103,9 +106,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _onTabChange(tab: Tab): void {
     this.selectedTab = tab;
     this._selectedMetrics = tab.key;
-    if (this._drillDown.length === 0) {
-      this.updateMap();
-    }
+    this.updateMap();
     this._onSortChanged({data: this._tableData, field: tab.key, order: -1});
   }
 
@@ -138,35 +139,28 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public onChartClick(event): void {
-    if (event.batch && event.batch.length && event.batch[0].name) {
-      let countryGotData = false;
-      this.unFilteredTableData.forEach(country => {
-        if (country.object_id === event.batch[0].name) {
-          countryGotData = true;
-        }
-      });
-      if (countryGotData) {
-        this._drillDown = [];
-        this._onDrillDown(event.batch[0].name);
-      }
+    if (event.data && event.data.name && this._drillDown.length < 2) {
+      this._onDrillDown(event.data.name);
     }
   }
 
   public zoom(direction: string): void {
-    if (direction === 'in' && this._mapZoom < 4) {
-      this._mapZoom += 1;
-      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
-    }
-    if (direction === 'out' && this._mapZoom > 2) {
-      this._mapZoom -= 1;
-      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
-    }
-    // update drag and center according to zoom
-    if (this._mapZoom < 2) {
-      this.echartsIntance.setOption({series: [{roam: false}]}, false); // prevent move when zoomed out
-      this.echartsIntance.setOption({series: [{center: [0, 10]}]}, false); // center map upon zoom out
+    if (direction === 'in') {
+      this._mapZoom = this._mapZoom * 2;
+      this._zoomInDisabled = true;
+      this._zoomOutDisabled = false;
     } else {
-      this.echartsIntance.setOption({series: [{roam: 'move'}]}, false); // allow move when zoomed in
+      this._mapZoom = this._mapZoom / 2;
+      this._zoomInDisabled = false;
+      this._zoomOutDisabled = true;
+    }
+    const roam = this._mapZoom > 1.2 ? 'move' : 'false';
+    if (this._drillDown.length > 0) {
+      this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({geo: [{roam: roam}]}, false);
+    } else {
+      this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
+      this.echartsIntance.setOption({series: [{roam: roam}]}, false);
     }
   }
 
@@ -196,12 +190,15 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     } else if (this._drillDown.length === 2) {
       this._drillDown.pop();
     }
-    this.reportType = this._drillDown.length === 2 ?  KalturaReportType.cities : KalturaReportType.mapOverlay;
+    this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    this.pager.pageIndex = 1;
     this.loadReport();
   }
 
   private loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
+    this.setMapCenter();
     this._tableData = [];
     this._blockerMessage = null;
 
@@ -270,12 +267,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (this._drillDown.length === 0) {
       this.unFilteredTableData = [];
       tableData.forEach(data => {
-        this._countryCodes.push({value: data.country.toLowerCase(), label: data.object_id});
+        this._countryCodes.push({label: data.country, value: data.object_id.toLowerCase()});
         this.unFilteredTableData.push(data);
       });
       this.updateSelectedCountries();
-      this.updateMap();
     }
+    this.updateMap();
   }
 
   private updateSelectedCountries(): void {
@@ -286,8 +283,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       } else {
         let found = false;
         this._selectedCountries.forEach(country => {
-          if (data.country.toLowerCase() === country) {
-            this._tags.push({country: data.object_id, data: country});
+          if (data.object_id.toLowerCase() === country) {
+            this._tags.push({country: data.country, data: country});
             found = true;
           }
         });
@@ -306,20 +303,31 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
+
     this._tableData.forEach(data => {
+      const coords = data['coordinates'].split('/');
+      let value = [coords[1], coords[0]];
+      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
       mapConfig.series[0].data.push({
-        name: this._dataConfigService.getCountryName(data.object_id),
-        value: parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''))
+        name: this._drillDown.length === 0 ? data.country : this._drillDown.length === 1 ? data.region : data.city,
+        value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
         maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
       }
     });
+
     mapConfig.visualMap.max = maxValue;
+    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    map.center = this.mapCenter;
+    map.zoom = this._mapZoom;
+    this._zoomInDisabled = false;
+    this._zoomOutDisabled = true;
+    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
 
@@ -409,15 +417,32 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
-    if (this.reportType === KalturaReportType.mapOverlay) {
-      reportConfig.objectIds = '';
-      if (this._drillDown.length === 1) {
-        reportConfig.objectIds = this._drillDown[0];
-      }
-    }
-    if (this._drillDown.length === 2) {
+    reportConfig.objectIds = '';
+
+    if (this._drillDown.length > 0) {
       reportConfig.filter.countryIn = this._drillDown[0];
+    }
+
+    if (this._drillDown.length > 1) {
       reportConfig.filter.regionIn = this._drillDown[1];
+    }
+  }
+
+  private setMapCenter(): void {
+    this.mapCenter = [0, 10];
+    if (this._drillDown.length > 0 ) {
+      const location = this._drillDown.length === 1 ? this._drillDown[0] : this._drillDown[1];
+      let found = false;
+      this._tableData.forEach(data => {
+        const name = this._drillDown.length === 1 ? data.country : data.region;
+        if (location === name ) {
+          found = true;
+          this.mapCenter = [data['coordinates'].split('/')[1], data['coordinates'].split('/')[0]];
+        }
+      });
+      if (!found && this._tableData.length) {
+        this.mapCenter = [this._tableData[0]["coordinates"].split('/')[1], this._tableData[0]["coordinates"].split('/')[0]];
+      }
     }
   }
 

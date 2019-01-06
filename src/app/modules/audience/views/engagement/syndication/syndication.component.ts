@@ -4,7 +4,7 @@ import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, 
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -21,11 +21,11 @@ import { significantDigits } from 'shared/utils/significant-digits';
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
   private _totalPlaysCount = 0;
-  private _compareFilter: KalturaReportInputFilter = null;
+  private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
   private _order = '-count_plays';
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
     interval: this._reportInterval,
@@ -142,6 +142,13 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         });
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
+  
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
@@ -150,7 +157,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaReportInputFilter(
+      this._compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,

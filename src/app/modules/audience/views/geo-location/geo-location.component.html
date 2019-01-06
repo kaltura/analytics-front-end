@@ -1,4 +1,4 @@
-<div class="kReport kOverrideFAIcons">
+<div class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
@@ -55,10 +55,10 @@
 
       </div>
       <div class="kMap">
-        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartMapSelectChanged)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
+        <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartClick)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
         <div class="kZoomWidget">
-          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')" [disabled]="_mapZoom<2"></button>
-          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')" [disabled]="_mapZoom>4"></button>
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')" [disabled]="_zoomOutDisabled"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')" [disabled]="_zoomInDisabled"></button>
         </div>
       </div>
       <div class="kTable">
@@ -119,11 +119,12 @@
                   <span>{{rowIndex+1}}</span>
                 </td>
                 <td class="kFlagColumn" *ngIf="!_drillDown.length">
-                  <img class="kFlag" src="{{'assets/flags/'+data['country']+'.png'}}"/>
+                  <img class="kFlag" src="{{'assets/flags/'+data['object_id']+'.png'}}"/>
                 </td>
                 <td class="kHighlight">
-                  <a (click)="_onDrillDown(data['object_id'])" *ngIf="!data['object_id']?.value && _drillDown.length < 2">{{data['object_id']}}</a>
-                  <span *ngIf="!data['object_id']?.value && _drillDown.length === 2">{{data['object_id']}}</span>
+                  <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
+                  <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+                  <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays'">
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
@@ -147,7 +148,7 @@
                 <td>
                   <span>
                     <h5 class="mini-loader" *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
-                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [escape]="false">
+                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
                       <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
                                        [units]="data[_selectedMetrics+'_trend']?.units"
                                        [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
