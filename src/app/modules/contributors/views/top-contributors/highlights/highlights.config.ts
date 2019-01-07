@@ -17,19 +17,22 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           'added_entries': {
             format: value => value,
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.added_entries`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'added_msecs': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.added_msecs`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'contributors': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.contributors`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'added_entries',
         fields: {
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
