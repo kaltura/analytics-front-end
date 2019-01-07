@@ -1,0 +1,69 @@
+<div class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.top-contributors' | translate}}</span>
+    <a (click)="scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
+      <div class="kReportRow" *ngFor="let item of _tableData">
+        <div class="kReportRowIndex kFirst" *ngIf="item.index === 1">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{item.index}}</span>
+        </div>
+        <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="item.creator_name" [showOnEllipsis]="true">{{item.creator_name}}</span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kReportContent" *ngIf="_isCompareMode">
+      <span class="kDates">{{_currentDates}}</span>
+      <div class="kReportRow" *ngIf="_tableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_tableData[0].index}}</span>
+        </div>
+        <div class="kUser">
+          <i class="kIconuser"></i>
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_tableData[0].creator_name" [showOnEllipsis]="true">
+            {{_tableData[0].creator_name}}
+          </span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+      <span class="kDates">{{_compareDates}}</span>
+      <div class="kReportRow" *ngIf="_compareTableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_compareTableData[0].index}}</span>
+        </div>
+        <div class="kReportRowThumbnail" #compareHolder>
+          <img [src]="_compareTableData[0].thumbnailUrl"
+               onError="this.onerror=null;this.style.display='none'"
+               (error)="compareHolder.classList.add('error')">
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_compareTableData[0].creator_name" [showOnEllipsis]="true">
+            {{_compareTableData[0].creator_name}}
+          </span>
+          <span class="kScore">n/10</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

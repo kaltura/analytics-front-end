@@ -1,52 +1,39 @@
-i{
-  color: #666666;
-  -webkit-animation-name: spin;
-  -webkit-animation-duration: 4000ms;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: spin;
-  -moz-animation-duration: 4000ms;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  -ms-animation-name: spin;
-  -ms-animation-duration: 4000ms;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-timing-function: linear;
+@import '../../../../../styles/variables';
 
-  animation-name: spin;
-  animation-duration: 4000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-
-}
-.gear2{
-  -webkit-animation-name: spin2;
-  -moz-animation-name: spin2;
-  -ms-animation-name: spin2;
-  animation-name: spin2;
-}
-@-moz-keyframes spin {
-  from { -moz-transform: rotate(0deg); }
-  to { -moz-transform: rotate(360deg); }
-}
-@-webkit-keyframes spin {
-  from { -webkit-transform: rotate(0deg); }
-  to { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-  from {transform:rotate(0deg);}
-  to {transform:rotate(360deg);}
+.kReport {
+  height: 100%;
 }
 
-@-moz-keyframes spin2 {
-  from { -moz-transform: rotate(360deg); }
-  to { -moz-transform: rotate(0deg); }
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  .kSmallReportContainer{
+    width: 60%;
+    height: 444px;
+    &:nth-child(even){
+      width: 40%;
+      padding-left: 24px;
+    }
+  }
+  .kMiniReportContainer{
+    height: 280px;
+    width: 50%;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
-@-webkit-keyframes spin2 {
-  from { -webkit-transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); }
-}
-@keyframes spin2 {
-  from {transform:rotate(360deg);}
-  to {transform:rotate(0deg);}
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
 }

@@ -117,7 +117,19 @@
       "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
     },
     "contributors": {
-      "top-contributors": "Top Contributors"
+      "title": "Contributors",
+      "top-contributors": "Top Contributors",
+      "highlights": "Highlights",
+      "added_entries": "Added Entries",
+      "added_msecs": "Added Minutes",
+      "contributors": "Contributors",
+      "added_entries_tt": "Added Entries",
+      "added_msecs_tt": "Added Minutes",
+      "contributors_tt": "Contributors",
+      "count_plays": "Plays",
+      "contributorsSources": "Which sources do contributors use most to add content?",
+      "contributorsAmount": "How many users contributed more than once?",
+      "returningContributors": "Returning Contributors"
     },
     "bandwidth":{
       "highlights": "Highlights",

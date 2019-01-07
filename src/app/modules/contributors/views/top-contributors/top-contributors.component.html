@@ -1,7 +1,76 @@
-<div style="display: flex; width: 100%; align-items: center; justify-content: center; margin-top: 100px">
-  <div style="font-family: kmcng-icon-pack; width: 50px; height: 30px; font-size: 24px; position: relative">
-    <i style="position: absolute" class="kIcongear"></i>
-    <i style="position: absolute; top: 11px; left: 18px" class="kIcongear gear2"></i>
+<div class="kReport kContent kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.contributors.title' | translate}}</span>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
+                    [reportType]="_reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
+                    [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
+    <app-contributors-refine-filter [selectedFilters]="_selectedRefineFilters"
+                                    (filterChange)="_onRefineFilterChange($event)"></app-contributors-refine-filter>
+    <app-date-filter #dateFilter [dateRange]="_dateRange" [selectedTimeUnit]="_timeUnit"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
-  <span style="color: #666666; font-size: 24px; font-weight: bold">Coming Soon...</span>
+
+  <div class="kReportContainer kTagsContainer" *ngIf="_tags.length">
+    <kTags [title]="''"
+           [data]="_tags"
+           [labelField]="'label'"
+           [tooltipField]="'label'"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_onRemoveTag($event)"
+           (onRemoveAll)="_onRemoveAllTags()">
+    </kTags>
+  </div>
+
+  <div class="kReportContainer">
+    <div class="kMiniReportContainer">
+      <app-contributors-mini-highlights [dateFilter]="_dateFilter"
+                                        [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
+    </div>
+
+    <div class="kMiniReportContainer">
+      <app-contributors-mini-top-videos [dateFilter]="_dateFilter"
+                                        [refineFilter]="_refineFilter"></app-contributors-mini-top-videos>
+    </div>
+
+    <!-- Example -->
+    <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
+    <!--<div class="kMiniReportContainer">-->
+    <!--<ui-carousel [infinite]="false"-->
+    <!--[autoPlay]="false"-->
+    <!--[autoPlaySpeed]="5000"-->
+    <!--[arrows]="false"-->
+    <!--[fade]="false"-->
+    <!--[speed]="200"-->
+    <!--height="280px">-->
+    <!--<ui-carousel-item>-->
+    <!--<div class="kInsights">Some stuff</div>-->
+    <!--</ui-carousel-item>-->
+    <!--</ui-carousel>-->
+    <!--</div>-->
+  </div>
+
+  <div id="highlights-report" class="kReportContainer">
+    <app-contributors-highlights [dateFilterComponent]="dateFilter"
+                                 [dateFilter]="_dateFilter"
+                                 [refineFilter]="_refineFilter"></app-contributors-highlights>
+  </div>
+
+  <div id="top-contributors" class="kReportContainer">
+    <app-contributors-top-contributors [dateFilter]="_dateFilter"
+                                       [refineFilter]="_refineFilter"></app-contributors-top-contributors>
+  </div>
+
+  <div class="kReportContainer">
+    <div class="kSmallReportContainer">
+      <app-contributors-sources [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-contributors-sources>
+    </div>
+    <div class="kSmallReportContainer">
+      <app-contributors-users [dateFilter]="_dateFilter"
+                              [refineFilter]="_refineFilter"></app-contributors-users>
+    </div>
+  </div>
 </div>
+
+
