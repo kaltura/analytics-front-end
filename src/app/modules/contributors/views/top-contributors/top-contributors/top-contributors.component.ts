@@ -20,7 +20,7 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
   providers: [TopContributorsDataConfig, ReportService]
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
-  private _order = '-count_plays';
+  private _order = '-added_entries';
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;

@@ -25,7 +25,7 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 export class MiniTopContributorsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
 
-  private _order = '-count_plays';
+  private _order = '-added_entries';
   private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
