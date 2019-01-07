@@ -10,7 +10,6 @@
 .kTopVideoEntryColumn {
   display: flex;
   flex-direction: column;
-  cursor: pointer;
   font-weight: bold;
   margin-top: -24px;
 
@@ -22,6 +21,10 @@
 
   .kEntryDetails {
     color: $kGrayscale3;
+  }
+
+  .kCreated{
+    margin-left: 4px;
   }
 }
 

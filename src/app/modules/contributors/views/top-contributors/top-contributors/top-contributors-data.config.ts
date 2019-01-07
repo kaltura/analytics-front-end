@@ -15,18 +15,26 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
       // TODO update config according to the server headers
       [ReportDataSection.table]: {
         fields: {
+          'creator_name': {
+            format: value => value,
+            sortOrder: 1,
+          },
+          'created_at': {
+            format: value => ReportHelper.format('serverDate', value),
+            sortOrder: 1,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 2,
+            sortOrder: 1,
           },
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 3,
+            sortOrder: 1,
           },
           'added_msecs': {
-            format: value => ReportHelper.percents(value),
-            sortOrder: 4,
-          },
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1,
+          }
         }
       }
     };

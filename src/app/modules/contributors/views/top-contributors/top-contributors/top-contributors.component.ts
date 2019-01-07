@@ -40,7 +40,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContent;
+  public _reportType = KalturaReportType.topContentContributors;
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,

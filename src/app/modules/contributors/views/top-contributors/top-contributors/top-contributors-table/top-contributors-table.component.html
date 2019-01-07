@@ -20,23 +20,22 @@
               <span>{{data.index}}</span>
             </div>
           </td>
-          <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
+          <td [ngStyle]="{'width': '105px', 'padding-left': '10px'}">
             <div class="kUser">
               <i class="icon-small-viewer-contributor"></i>
             </div>
           </td>
           <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
             <div class="kTopVideoEntryColumn">
-              <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
+              <span class="kTableColumn kEntryName">{{data['creator_name']}}</span>
               <div class="kEntryDetails">
-              <span class="kTableColumn" [kTooltip]="'Created Jan 9, 2018'" [showOnEllipsis]="true">
-                Created Jan 9, 2018
-              </span>
+              <span class="kTableColumn">{{'app.contributors.created' | translate}}</span>
+              <span class="kTableColumn kCreated">{{data['created_at']}}</span>
               </div>
             </div>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td>
+            <td [ngStyle]="{'width': '130px'}">
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
@@ -47,7 +46,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '180px'}">
               <div class="kTableCell">
                 <i class="icon-small-contribution"></i>
                 <span class="kCellValue">{{data['added_entries']}}</span>&nbsp;
@@ -58,7 +57,7 @@
             </span>
               </div>
             </td>
-            <td>
+            <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
                 <span class="kCellValue">{{data['added_msecs']}}</span>&nbsp;
@@ -71,7 +70,7 @@
             </td>
           </ng-container>
           <td class="kScore">
-            <span>n/10</span>
+            <!--span>n/10</span-->
           </td>
         </tr>
       </ng-template>
