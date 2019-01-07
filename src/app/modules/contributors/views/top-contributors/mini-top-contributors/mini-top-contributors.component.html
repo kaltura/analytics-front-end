@@ -16,7 +16,7 @@
           <i class="icon-small-viewer-contributor"></i>
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
+          <span class="kTitle" [kTooltip]="item.creator_name" [showOnEllipsis]="true">{{item.creator_name}}</span>
           <span class="kScore">n/10</span>
         </div>
       </div>
@@ -33,8 +33,8 @@
           <i class="kIconuser"></i>
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_tableData[0].entry_name" [showOnEllipsis]="true">
-            {{_tableData[0].entry_name}}
+          <span class="kTitle" [kTooltip]="_tableData[0].creator_name" [showOnEllipsis]="true">
+            {{_tableData[0].creator_name}}
           </span>
           <span class="kScore">n/10</span>
         </div>
@@ -54,8 +54,8 @@
                (error)="compareHolder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name" [showOnEllipsis]="true">
-            {{_compareTableData[0].entry_name}}
+          <span class="kTitle" [kTooltip]="_compareTableData[0].creator_name" [showOnEllipsis]="true">
+            {{_compareTableData[0].creator_name}}
           </span>
           <span class="kScore">n/10</span>
         </div>

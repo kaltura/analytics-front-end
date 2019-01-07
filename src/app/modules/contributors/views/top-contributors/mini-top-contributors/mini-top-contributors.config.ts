@@ -13,13 +13,13 @@ export class MiniTopContributorsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'user_name': {
+          'creator_name': {
             format: value => value,
             sortOrder: 1,
           },
-          'contributions': {
+          'count_plays': {
             format: value => value,
-            sortOrder: 2,
+            sortOrder: 1,
           }
         }
       }

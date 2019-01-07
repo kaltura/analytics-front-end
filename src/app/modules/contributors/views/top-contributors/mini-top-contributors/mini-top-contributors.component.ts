@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   @Input() dateFilterComponent: DateFilterComponent;
 
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.topContent;
+  private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
   public _isBusy: boolean;
@@ -37,9 +37,9 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   public _currentDates: string;
   public _compareDates: string;
   public _reportInterval = KalturaReportInterval.days;
-  public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _compareFilter: KalturaReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 3, pageIndex: 1 });
-  public _filter = new KalturaEndUserReportInputFilter({
+  public _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -64,7 +64,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -80,7 +80,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       .subscribe(({ report, compare }) => {
           this._tableData = [];
           this._compareTableData = [];
-          
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
           }
@@ -129,7 +128,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaEndUserReportInputFilter({
+      this._compareFilter = new KalturaReportInputFilter({
         searchInTags: true,
         searchInAdminTags: false,
         timeZoneOffset: this._dateFilter.timeZoneOffset,

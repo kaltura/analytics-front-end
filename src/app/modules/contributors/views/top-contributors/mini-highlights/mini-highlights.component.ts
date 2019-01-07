@@ -1,7 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -25,7 +32,7 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-month_id';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
   public _isBusy: boolean;
