@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { RefineChangeEvent } from './filter/filter.component';
 import { TranslateService } from '@ngx-translate/core';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
@@ -11,7 +10,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
   styleUrls: ['./top-contributors.component.scss']
 })
 export class TopContributorsComponent {
-  public _selectedRefineFilters: RefineChangeEvent = null;
+  public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _csvExportHeaders = '';
