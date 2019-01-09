@@ -3,7 +3,7 @@ import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportSe
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -19,11 +19,11 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
   providers: [ReportService, SourcesDataConfig]
 })
 export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent {
-  private _compareFilter: KalturaReportInputFilter = null;
+  private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _pager = new KalturaFilterPager();
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
     interval: this._reportInterval,
@@ -51,6 +51,12 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     this._dataConfig = _dataConfigService.getConfig();
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
   
   protected _loadReport(): void {
     this._isBusy = true;
@@ -118,7 +124,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaReportInputFilter(
+      this._compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,
