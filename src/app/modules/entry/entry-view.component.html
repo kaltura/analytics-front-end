@@ -3,8 +3,14 @@
     <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_back()">Back</button>
     <div class="kPlayer">
       <k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [lazy]="true" (kalturaPlayerReady)="onPlayerReady($event)"></k-player>
+      <div class="chartContainer">
+        <div echarts class="kChart" [options]="_chartOptions"></div>
+      </div>
+      <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed"></div>
     </div>
-    <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_togglePlayback()">Play / Pause</button>
+    <div class="playerFooter"></div>
+
+    <button style="width: 100px; margin-top: 40px; margin-bottom: 20px" (click)="_togglePlayback()">Play / Pause</button>
   </div>
 
 </div>
