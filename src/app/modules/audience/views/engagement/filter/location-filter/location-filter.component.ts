@@ -54,19 +54,20 @@ export class LocationFilterComponent implements OnDestroy {
   }
   
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
+    let countriesNames, regionsNames;
     switch (type) {
       case 'country':
         this._selectedCountries = items;
         this._selectedRegions = [];
         this._selectedCities = [];
-        const countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
+        countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
         this._locationFilterService.resetRegion(countriesNames);
         break;
       case 'region':
         this._selectedRegions = items;
         this._selectedCities = [];
-        const countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
-        const regionsNames = this._selectedRegions.map(({ name }) => name).join(',');
+        countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
+        regionsNames = this._selectedRegions.map(({ name }) => name).join(',');
         this._locationFilterService.resetCity(countriesNames, regionsNames);
         break;
       case 'city':
