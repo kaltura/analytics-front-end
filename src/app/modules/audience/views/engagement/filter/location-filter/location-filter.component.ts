@@ -8,9 +8,9 @@ export interface LocationsFilterValueItem {
 }
 
 export interface LocationsFilterValue {
-  country: LocationsFilterValueItem;
-  region: LocationsFilterValueItem;
-  city: LocationsFilterValueItem;
+  country: LocationsFilterValueItem[];
+  region: LocationsFilterValueItem[];
+  city: LocationsFilterValueItem[];
 }
 
 @Component({
@@ -22,29 +22,29 @@ export class LocationFilterComponent implements OnDestroy {
   @Input() set selectedFilters(value: LocationsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
       const result = value[0];
-      this._selectedCountry = result.country;
-      this._selectedRegion = result.region;
-      this._selectedCity = result.city;
+      this._selectedCountries = result.country;
+      this._selectedRegions = result.region;
+      this._selectedCities = result.city;
     } else {
-      this._selectedCountry = null;
-      this._selectedRegion = null;
-      this._selectedCity = null;
+      this._selectedCountries = [];
+      this._selectedRegions = [];
+      this._selectedCities = [];
     }
   };
   
   @Input() set dateFilter(event: DateChangeEvent) {
     this._locationFilterService.updateDateFilter(event, () => {
-      this._selectedCountry = null;
-      this._selectedRegion = null;
-      this._selectedCity = null;
+      this._selectedCountries = [];
+      this._selectedRegions = [];
+      this._selectedCities = [];
     });
   }
   
   @Output() itemSelected = new EventEmitter<LocationsFilterValue>();
   
-  public _selectedCountry: LocationsFilterValueItem;
-  public _selectedRegion: LocationsFilterValueItem;
-  public _selectedCity: LocationsFilterValueItem;
+  public _selectedCountries: LocationsFilterValueItem[];
+  public _selectedRegions: LocationsFilterValueItem[];
+  public _selectedCities: LocationsFilterValueItem[];
   
   constructor(public _locationFilterService: LocationsFilterService) {
   }
@@ -53,30 +53,33 @@ export class LocationFilterComponent implements OnDestroy {
   
   }
   
-  public _onItemSelected(item: { id: string, name: string }, type: string): void {
+  public _onItemSelected(items: { id: string, name: string }[], type: string): void {
     switch (type) {
       case 'country':
-        this._selectedCountry = item;
-        this._selectedRegion = null;
-        this._selectedCity = null;
-        this._locationFilterService.resetRegion(this._selectedCountry.name);
+        this._selectedCountries = items;
+        this._selectedRegions = [];
+        this._selectedCities = [];
+        const countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
+        this._locationFilterService.resetRegion(countriesNames);
         break;
       case 'region':
-        this._selectedRegion = item;
-        this._selectedCity = null;
-        this._locationFilterService.resetCity(this._selectedCountry.name, this._selectedRegion.name);
+        this._selectedRegions = items;
+        this._selectedCities = [];
+        const countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
+        const regionsNames = this._selectedRegions.map(({ name }) => name).join(',');
+        this._locationFilterService.resetCity(countriesNames, regionsNames);
         break;
       case 'city':
-        this._selectedCity = item;
+        this._selectedCities = items;
         break;
       default:
         break;
     }
     
     this.itemSelected.emit({
-      country: this._selectedCountry || null,
-      region: this._selectedRegion || null,
-      city: this._selectedCity || null,
+      country: this._selectedCountries || [],
+      region: this._selectedRegions || [],
+      city: this._selectedCities || [],
     });
   }
 }

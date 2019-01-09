@@ -164,12 +164,12 @@ export class LocationsFilterService implements OnDestroy {
     this.resetRegion();
   }
   
-  public resetRegion(country?: string): void {
+  public resetRegion(countries?: string): void {
     this._regionsOptions.next([]);
     this.resetCity();
     
-    if (country) {
-      this._loadRegionData(country);
+    if (countries) {
+      this._loadRegionData(countries);
     }
   }
   

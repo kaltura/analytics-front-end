@@ -21,6 +21,7 @@ export class DropdownFilterComponent {
   @Input() defaultLabel: string;
   @Input() disabled: boolean;
   @Input() template: TemplateRef<any>;
+  @Input() countryTemplate: boolean;
   
   @Output() itemSelected = new EventEmitter();
   

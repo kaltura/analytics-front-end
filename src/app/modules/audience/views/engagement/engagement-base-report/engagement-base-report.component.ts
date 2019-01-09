@@ -55,13 +55,13 @@ export abstract class EngagementBaseReportComponent {
           break;
         case 'location':
           if (item.value.country) {
-            country.push(item.value.country.name);
+            country.push(item.value.country.map(({ name }) => name));
           }
           if (item.value.region) {
-            region.push(item.value.region.name);
+            region.push(item.value.region.map(({ name }) => name));
           }
           if (item.value.city) {
-            city.push(item.value.city.name);
+            city.push(item.value.city.map(({ name }) => name));
           }
           break;
       }

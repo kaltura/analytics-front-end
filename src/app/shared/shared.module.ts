@@ -36,7 +36,7 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule } from 'primeng/primeng';
+import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 
@@ -56,6 +56,7 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     TreeModule,
     AreaBlockerModule,
     DropdownModule,
+    MultiSelectModule,
   ],
   declarations: [
     DateFilterComponent,
