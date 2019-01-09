@@ -1,0 +1,12 @@
+.kPlayer{
+  width: 100%;
+  height: 480px;
+}
+:host /deep/ #kaltura_player_analytics{
+  width: 100% !important;
+  height: 100% !important;
+}
+
+:host /deep/ .mwEmbedPlayer{
+  pointer-events: none !important;
+}

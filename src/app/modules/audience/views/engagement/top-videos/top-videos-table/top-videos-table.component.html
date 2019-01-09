@@ -29,6 +29,7 @@
           </td>
           <td [ngStyle]="{'width': '100%'}">
             <div class="kTopVideoEntryColumn"
+                 (click)="_drillDown(data['object_id'])"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>

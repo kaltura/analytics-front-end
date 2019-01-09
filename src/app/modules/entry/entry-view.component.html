@@ -1,0 +1,10 @@
+<div class="kReport kContent kOverrideFAIcons">
+  <div style="display: flex; flex-direction: column; width: 100%">
+    <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_back()">Back</button>
+    <div class="kPlayer">
+      <k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [lazy]="true" (kalturaPlayerReady)="onPlayerReady($event)"></k-player>
+    </div>
+    <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_togglePlayback()">Play / Pause</button>
+  </div>
+
+</div>

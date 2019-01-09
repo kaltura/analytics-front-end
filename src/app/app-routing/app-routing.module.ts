@@ -2,15 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { DashboardViewComponent } from '../modules/dashboard/dashboard-view.component';
+import { EntryViewComponent } from '../modules/entry/entry-view.component';
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
     children: [
-       {
+      {
           path: 'dashboard',
           component: DashboardViewComponent
+      },
+      {
+          path: 'entry/:id',
+          component: EntryViewComponent
       },
       {
         path: 'audience',
