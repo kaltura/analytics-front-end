@@ -1,6 +1,6 @@
 import { Input } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { RefineFilter } from '../filter/filter.component';
+import { RefineFilter } from '../../../../../shared/components/filter/filter.component';
 import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
 
 export abstract class EngagementBaseReportComponent {

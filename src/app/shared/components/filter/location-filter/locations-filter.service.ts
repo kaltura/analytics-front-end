@@ -1,5 +1,5 @@
 import { Injectable, KeyValueDiffer, KeyValueDiffers, OnDestroy } from '@angular/core';
-import { ReportConfig, ReportService } from 'shared/services';
+import { ReportConfig, ReportService } from 'src/app/shared/services';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';

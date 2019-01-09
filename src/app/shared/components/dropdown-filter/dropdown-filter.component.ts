@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, Output, TemplateRef } from '@angular/core';
-import { OptionItem } from '../../../modules/audience/views/engagement/filter/filter.component';
+import { OptionItem } from '../filter/filter.component';
 
 @Component({
   selector: 'app-dropdown-filter',
