@@ -4,7 +4,9 @@
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
-        <app-time-units [dateFilter]="dateFilterComponent" [selectedTimeUnit]="_reportInterval"></app-time-units>
+        <app-time-units applyIn="highlights"
+                        [dateFilter]="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
         <div echarts class="kChart"

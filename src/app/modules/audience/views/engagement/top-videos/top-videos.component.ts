@@ -33,6 +33,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     searchInAdminTags: false
   });
   
+  protected _componentId = 'top-videos';
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: any[] = [];

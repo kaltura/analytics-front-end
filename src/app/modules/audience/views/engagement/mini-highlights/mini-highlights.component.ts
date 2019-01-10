@@ -27,6 +27,8 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   private _order = '-month_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+  
+  protected _componentId = 'mini-highlights';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -142,7 +144,6 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
     } else {
       this._compareFilter = null;
     }
-    this._loadReport();
   }
   
   private _handleCompare(current: Report, compare: Report): void {

@@ -7,6 +7,8 @@ import { EngagementBaseReportComponent } from '../engagement-base-report/engagem
   styleUrls: ['./duration.component.scss']
 })
 export class EngagementDurationComponent extends EngagementBaseReportComponent implements OnInit {
+  protected _componentId = 'duration';
+
   ngOnInit() {
   }
   

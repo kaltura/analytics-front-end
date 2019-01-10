@@ -44,6 +44,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   public _chartLoaded = false;
   public _currentDates: string;
   public _compareDates: string;
+  
+  protected _componentId = 'impressions';
 
   private echartsIntance: any;
   private compareEchartsIntance: any;

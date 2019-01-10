@@ -209,9 +209,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this.triggerChangeEvent();
   }
 
-  public timeUnitsChange(timeUnit: KalturaReportInterval): void {
+  public timeUnitsChange(timeUnit: KalturaReportInterval, applyIn?: string): void {
     this.selectedTimeUnit = timeUnit;
-    this.triggerChangeEvent();
+    this.triggerChangeEvent(applyIn);
   }
 
   public openPopup(): void {
@@ -242,8 +242,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this.updateDataRanges();
   }
 
-  private triggerChangeEvent(): void {
+  private triggerChangeEvent(applyIn?: string): void {
     this.filterChange.emit({
+      applyIn: applyIn,
       startDate: DateFilterUtils.toServerDate(this.startDate),
       endDate: DateFilterUtils.toServerDate(this.endDate),
       startDay: DateFilterUtils.getDay(this.startDate),

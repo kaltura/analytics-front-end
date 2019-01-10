@@ -30,6 +30,8 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
     interval: this._reportInterval,
   });
   
+  protected _componentId = 'users';
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _isCompareMode: boolean;

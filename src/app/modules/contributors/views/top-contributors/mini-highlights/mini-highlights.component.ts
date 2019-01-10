@@ -35,6 +35,8 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
   private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
+  protected _componentId = 'mini-highlights';
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -149,7 +151,6 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
     } else {
       this._compareFilter = null;
     }
-    this._loadReport();
   }
   
   private _handleCompare(current: Report, compare: Report): void {
