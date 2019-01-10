@@ -86,6 +86,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
+          this._compareFirstTimeLoading = false;
         },
         error => {
           this._isBusy = false;
@@ -131,6 +132,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
+      this._compareFirstTimeLoading = true;
       this._isCompareMode = true;
       this._compareFilter = new KalturaEndUserReportInputFilter(
         {
@@ -170,7 +172,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
-      this._compareFirstTimeLoading = false;
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
