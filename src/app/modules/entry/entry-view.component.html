@@ -2,7 +2,7 @@
   <div class="kReportView">
     <div class="kReport kContent kOverrideFAIcons">
       <div class="kReportHeader">
-        <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_back()">Back</button>
+        <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()" [kTooltip]="'app.entry.back' | translate"></button>
         <span class="kTitle">{{_entryName}}</span>
         <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
                         [reportType]="_reportType"

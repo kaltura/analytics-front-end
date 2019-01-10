@@ -326,7 +326,8 @@
       "plays": "Plays",
       "viewers": "Unique Viewers",
       "minutes": "Minutes Viewed",
-      "watched": "Avg. Completion Rate"
+      "watched": "Avg. Completion Rate",
+      "back": "Back"
     }
   }
 }
