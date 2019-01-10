@@ -17,7 +17,7 @@ import { MiniTopContributorsConfig } from './mini-top-contributors.config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 
 @Component({
-  selector: 'app-contributors-mini-top-videos',
+  selector: 'app-contributors-mini-top-contributors',
   templateUrl: './mini-top-contributors.component.html',
   styleUrls: ['./mini-top-contributors.component.scss'],
   providers: [MiniTopContributorsConfig, ReportService]
@@ -28,6 +28,8 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   private _order = '-added_entries';
   private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
+  
+  protected _componentId = 'mini-top-contributors';
   
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -146,7 +148,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     } else {
       this._compareFilter = null;
     }
-    this._loadReport();
   }
   
   private _handleTable(table: KalturaReportTable, compare?: Report): void {

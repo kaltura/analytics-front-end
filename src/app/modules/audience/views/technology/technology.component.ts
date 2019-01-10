@@ -18,7 +18,7 @@ export class TechnologyComponent implements OnInit {
   public _isBusy = false;
   public _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console'];
   public _filterEvent: DateChangeEvent = null;
-  public _devicesFilter: string[] = null;
+  public _devicesFilter: string[] = [];
   public _devicesList: { value: string, label: string; }[] = [];
   public _exportData: { headers: string, totalCount: number, filter: KalturaEndUserReportInputFilter, selectedMetrics: string; } = null;
   public _reportType = KalturaReportType.platforms;

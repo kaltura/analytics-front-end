@@ -34,6 +34,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   private _reportType = KalturaReportType.topContent;
   private _dataConfig: ReportDataConfig;
   
+  protected _componentId = 'mini-top-videos';
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: any[] = [];
@@ -145,7 +147,6 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
     } else {
       this._compareFilter = null;
     }
-    this._loadReport();
   }
   
   protected _updateRefineFilter(): void {

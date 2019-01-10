@@ -1,5 +1,5 @@
 export function devicesFilterToServerValue(value: string[]): string {
-  if (!Array.isArray(value)) {
+  if (!Array.isArray(value) || !value.length) {
     return null;
   }
   
