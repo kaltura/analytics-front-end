@@ -11,6 +11,7 @@ import { significantDigits } from 'shared/utils/significant-digits';
 import { TrendService } from 'shared/services/trend.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { isArrayEquals } from 'shared/utils/is-array-equals';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -35,6 +36,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   @Input() set deviceFilter(value: string[]) {
+    const hasChanges = isArrayEquals(this._devices, value);
+
     this._devicesSelectActive = true;
     
     if (!Array.isArray(value)) {
@@ -46,13 +49,16 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._selectedDevices = value;
       this._filter.deviceIn = devicesFilterToServerValue(this._devices);
     } else {
-      this._devices = null;
+      this._devices = [];
       this._selectedDevices = [];
       delete this._filter.deviceIn;
     }
     this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.indexOf(value) > -1);
     this._pager.pageIndex = 1;
-    this._loadReport();
+    
+    if (hasChanges) {
+      this._loadReport();
+    }
   }
   
   @Input() set filter(value: DateChangeEvent) {
