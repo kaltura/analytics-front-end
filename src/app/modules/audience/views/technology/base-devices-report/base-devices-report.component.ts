@@ -36,7 +36,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   @Input() set deviceFilter(value: string[]) {
-    const hasChanges = isArrayEquals(this._devices, value);
+    const hasChanges = !isArrayEquals(this._devices, value);
 
     this._devicesSelectActive = true;
     
