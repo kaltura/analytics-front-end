@@ -348,3 +348,33 @@ ui-carousel /deep/ {
 .ui-paginator .ui-paginator-page{
   width: 32px;
 }
+
+
+.kFlag {
+  width: 24px;
+  height: 24px;
+}
+
+.ui-multiselect-item {
+  display: flex !important;
+  align-items: center;
+  height: 40px;
+}
+
+.ui-widget-header {
+  border: 0;
+}
+
+.kCountryList {
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  max-width: 275px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  img {
+    margin-right: 8px;
+    margin-left: 4px;
+  }
+}

@@ -21,7 +21,7 @@ import { EngagementDurationComponent } from './views/engagement/duration/duratio
 import { EngagementImpressionsComponent } from './views/engagement/impressions/impressions.component';
 import { EngagementUsersComponent } from './views/engagement/users/users.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
-import { FilterComponent } from './views/engagement/filter/filter.component';
+import { FilterComponent } from '../../shared/components/filter/filter.component';
 
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
@@ -33,14 +33,14 @@ import { TopBrowsersComponent } from './views/technology/top-browsers/top-browse
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
-import { TagsFilterComponent } from './views/engagement/filter/tags-filter/tags-filter.component';
-import { OwnersFilterComponent } from './views/engagement/filter/owners-filter/owners-filter.component';
+import { TagsFilterComponent } from '../../shared/components/filter/tags-filter/tags-filter.component';
+import { OwnersFilterComponent } from '../../shared/components/filter/owners-filter/owners-filter.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
-import { LocationFilterComponent } from './views/engagement/filter/location-filter/location-filter.component';
+import { LocationFilterComponent } from '../../shared/components/filter/location-filter/location-filter.component';
 
 @NgModule({
   imports: [
@@ -75,16 +75,12 @@ import { LocationFilterComponent } from './views/engagement/filter/location-filt
     EngagementDurationComponent,
     EngagementImpressionsComponent,
     EngagementUsersComponent,
-    FilterComponent,
     ContentInteractionsComponent,
     DevicesOverviewComponent,
     TopBrowsersComponent,
     TopOsComponent,
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
-    TagsFilterComponent,
-    OwnersFilterComponent,
-    LocationFilterComponent,
     MiniTopVideosComponent,
     SyndicationComponent,
   ],

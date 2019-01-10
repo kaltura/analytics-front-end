@@ -17,7 +17,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { AreaBlockerModule, PopupWidgetModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
@@ -36,9 +36,10 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule } from 'primeng/primeng';
+import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
+import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 
 @NgModule({
   imports: [
@@ -56,6 +57,8 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     TreeModule,
     AreaBlockerModule,
     DropdownModule,
+    MultiSelectModule,
+    TagsModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -79,6 +82,7 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    ...FilterComponentsList,
   ],
   exports: [
     DateFilterComponent,
@@ -102,6 +106,7 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    ...FilterComponentsList,
   ],
   providers: [
   ]

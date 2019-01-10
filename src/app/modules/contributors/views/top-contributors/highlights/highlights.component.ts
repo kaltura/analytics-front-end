@@ -58,6 +58,13 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
+  
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;

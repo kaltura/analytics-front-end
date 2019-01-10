@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -21,10 +21,10 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
   private _order = '-added_entries';
-  private _compareFilter: KalturaReportInputFilter = null;
+  private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -55,6 +55,13 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   
   
   ngOnInit() {
+  }
+  
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _loadReport(): void {
@@ -125,7 +132,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaReportInputFilter(
+      this._compareFilter = new KalturaEndUserReportInputFilter(
         {
           searchInTags: true,
           searchInAdminTags: false,

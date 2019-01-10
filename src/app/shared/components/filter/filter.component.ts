@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaMediaType, KalturaSourceType, KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -75,7 +75,7 @@ export class FilterComponent {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value !== undefined) {
       this._dateFilter = value;
-  
+      
       setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
         if (this._currentFilters.find(({ type }) => type === 'location')) {
           this._removeFilter({ type: 'location', value: null, label: null });
@@ -83,6 +83,7 @@ export class FilterComponent {
       });
     }
   }
+  
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() closeFilters = new EventEmitter<void>();
   
@@ -135,7 +136,7 @@ export class FilterComponent {
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
-
+  
   public _entrySources: OptionItem[] = [ // TODO determine valid values
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
     { value: 'Webcasting', label: 'app.filters.entrySources.Webcasting' },
@@ -179,11 +180,11 @@ export class FilterComponent {
         case 'location':
           const location = value as LocationsFilterValue;
           label = this._translate.instant(`app.filters.location`);
-          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.name}`;
+          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({ name }) => name)}`;
           if (location.region) {
-            tooltip += ` > ${location.region.name}`;
+            tooltip += ` > ${location.region.map(({ name }) => name)}`;
             if (location.city) {
-              tooltip += ` > ${location.city.name}`;
+              tooltip += ` > ${location.city.map(({ name }) => name)}`;
             }
           }
           return { value: 'location', type: 'location', label, tooltip };

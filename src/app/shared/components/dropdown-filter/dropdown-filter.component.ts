@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, Output, TemplateRef } from '@angular/core';
-import { OptionItem } from '../../../modules/audience/views/engagement/filter/filter.component';
+import { OptionItem } from '../filter/filter.component';
 
 @Component({
   selector: 'app-dropdown-filter',
@@ -21,6 +21,7 @@ export class DropdownFilterComponent {
   @Input() defaultLabel: string;
   @Input() disabled: boolean;
   @Input() template: TemplateRef<any>;
+  @Input() countryTemplate: boolean;
   
   @Output() itemSelected = new EventEmitter();
   
