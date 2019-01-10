@@ -306,7 +306,7 @@ export class CompareService implements OnDestroy {
                           config: ReportDataItemConfig,
                           dataKey: string = ''): { columns: string[], tableData: { [key: string]: string }[] } {
     if (!current.header || !current.data) {
-      return;
+      return { columns: [], tableData: [] };
     }
 
     // parse table columns
@@ -392,7 +392,7 @@ export class CompareService implements OnDestroy {
                            config: ReportDataItemConfig,
                            selected?: string): Tab[] {
     if (!current.header || !current.data) {
-      return;
+      return [];
     }
 
     const tabsData = [];
