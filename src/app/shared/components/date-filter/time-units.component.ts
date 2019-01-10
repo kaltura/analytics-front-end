@@ -15,6 +15,8 @@ export class TimeUnitsComponent implements OnInit {
       this._selectedTimeUnit = value;
     }
   }
+  
+  @Input() applyIn: string;
 
   @Input() dateFilter: DateFilterComponent;
   
@@ -32,6 +34,6 @@ export class TimeUnitsComponent implements OnInit {
     }
   }
   public onTimeUnitsChange(): void {
-    this.dateFilter.timeUnitsChange(this._selectedTimeUnit);
+    this.dateFilter.timeUnitsChange(this._selectedTimeUnit, this.applyIn);
   }
 }

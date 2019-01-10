@@ -29,6 +29,8 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     searchInAdminTags: false
   });
   
+  protected _componentId = 'top-contributors';
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: any[] = [];

@@ -30,6 +30,8 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
     interval: this._reportInterval,
   });
   
+  protected _componentId = 'users';
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _isCompareMode: boolean;

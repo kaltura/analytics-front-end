@@ -31,6 +31,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     interval: this._reportInterval,
   });
   
+  protected _componentId = 'syndication';
+  
   public _drillDown: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;

@@ -7,8 +7,11 @@ export abstract class EngagementBaseReportComponent {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
       this._dateFilter = value;
-      this._updateFilter();
-      this._loadReport();
+      
+      if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
+        this._updateFilter();
+        this._loadReport();
+      }
     }
   }
   
@@ -19,9 +22,11 @@ export abstract class EngagementBaseReportComponent {
       this._loadReport();
     }
   }
-  
+
   protected _dateFilter: DateChangeEvent;
   protected _refineFilter: RefineFilter = [];
+  
+  protected abstract _componentId: string;
   
   protected abstract _loadReport(): void;
   

@@ -35,6 +35,7 @@ export type DateChangeEvent = {
   endDay: string;
   timeUnits: KalturaReportInterval;
   timeZoneOffset: number;
+  applyIn?: string;
   compare: {
     active: boolean;
     startDate: number;

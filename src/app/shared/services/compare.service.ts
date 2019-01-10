@@ -305,8 +305,8 @@ export class CompareService implements OnDestroy {
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig,
                           dataKey: string = ''): { columns: string[], tableData: { [key: string]: string }[] } {
-    if (!current.header || !current.data || !compare.header || !compare.data) {
-      return;
+    if (!current.header || !current.data) {
+      return { columns: [], tableData: [] };
     }
 
     // parse table columns
@@ -315,7 +315,7 @@ export class CompareService implements OnDestroy {
 
     // parse table data
     const currentData = current.data.split(';');
-    const compareData = compare.data.split(';');
+    const compareData = compare.data ? compare.data.split(';') : [];
 
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
@@ -391,13 +391,13 @@ export class CompareService implements OnDestroy {
                            compare: KalturaReportTotal,
                            config: ReportDataItemConfig,
                            selected?: string): Tab[] {
-    if (!current.header || !current.data || !compare.header || !compare.data) {
-      return;
+    if (!current.header || !current.data) {
+      return [];
     }
 
     const tabsData = [];
     const data = current.data.split(',');
-    const compareData = compare.data.split(',');
+    const compareData = compare.data ? compare.data.split(',') : [];
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
 

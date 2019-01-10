@@ -26,6 +26,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _order = '-month_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+  
+  protected _componentId = 'highlights';
 
   public _columns: string[] = [];
   public _firstTimeLoading = true;

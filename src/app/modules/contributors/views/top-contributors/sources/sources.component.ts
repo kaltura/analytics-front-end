@@ -29,6 +29,8 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     interval: this._reportInterval,
   });
   
+  protected _componentId = 'sources';
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _isCompareMode: boolean;

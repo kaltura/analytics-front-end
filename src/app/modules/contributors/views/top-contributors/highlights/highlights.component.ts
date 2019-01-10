@@ -26,6 +26,8 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
   private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
+  protected _componentId = 'highlights';
+  
   public _firstTimeLoading = true;
   public _isBusy = true;
   public _chartDataLoaded = false;
