@@ -2,21 +2,25 @@
                      [options]="_locationFilterService.countriesOptions | async"
                      [isLoading]="_locationFilterService.isBusy('country')"
                      [defaultLabel]="'app.filters.countryPlaceholder' | translate"
-                     [selectedFilters]="_selectedCountry"
+                     [selectedItemsLabel]="'app.filters.countriesSelected' | translate"
+                     [selectedFilters]="_selectedCountries"
+                     [countryTemplate]="true"
                      (itemSelected)="_onItemSelected($event, 'country')"></app-dropdown-filter>
 
 <app-dropdown-filter [label]="'app.filters.region' | translate"
                      [options]="_locationFilterService.regionOptions | async"
-                     [disabled]="!_selectedCountry"
+                     [disabled]="!_selectedCountries.length"
                      [isLoading]="_locationFilterService.isBusy('region')"
                      [defaultLabel]="'app.filters.regionPlaceholder' | translate"
-                     [selectedFilters]="_selectedRegion"
+                     [selectedItemsLabel]="'app.filters.regionsSelected' | translate"
+                     [selectedFilters]="_selectedRegions"
                      (itemSelected)="_onItemSelected($event, 'region')"></app-dropdown-filter>
 
 <app-dropdown-filter [label]="'app.filters.city' | translate"
                      [options]="_locationFilterService.citiesOptions | async"
-                     [disabled]="!_selectedRegion"
+                     [disabled]="!_selectedRegions.length"
                      [isLoading]="_locationFilterService.isBusy('city')"
                      [defaultLabel]="'app.filters.cityPlaceholder' | translate"
-                     [selectedFilters]="_selectedCity"
+                     [selectedItemsLabel]="'app.filters.citiesSelected' | translate"
+                     [selectedFilters]="_selectedCities"
                      (itemSelected)="_onItemSelected($event, 'city')"></app-dropdown-filter>

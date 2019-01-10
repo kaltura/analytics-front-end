@@ -57,15 +57,15 @@
           <div class="kMiscFilters">&nbsp;</div>
         </div>
       </div>
-    </div>
-    <div class="kRefineFiltersFooter">
-      <a (click)="showAdvancedFilters = !showAdvancedFilters">
-        <span *ngIf="showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
-        <span *ngIf="!showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
-      </a>
-      <button type="button" class="kButtonBranded" pButton
-              [label]="'app.common.apply' | translate"
-              (click)="_apply()"></button>
+      <div class="kRefineFiltersFooter">
+        <a (click)="showAdvancedFilters = !showAdvancedFilters">
+          <span *ngIf="showAdvancedFilters">{{'app.filters.basicFilters' | translate}}</span>
+          <span *ngIf="!showAdvancedFilters">{{'app.filters.advancedFilters' | translate}}</span>
+        </a>
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
     </div>
   </div>
 </div>

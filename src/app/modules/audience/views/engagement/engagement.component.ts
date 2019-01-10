@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { RefineFilter } from './filter/filter.component';
+import { RefineFilter } from '../../../../shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-engagement',

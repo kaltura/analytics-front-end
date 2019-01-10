@@ -4,17 +4,26 @@
     <h5 class="mini-loader" *ngIf="isLoading"><span></span><span></span></h5>
   </div>
   <div class="kColumnContent">
-    <p-dropdown appendTo="body"
-                filter="true"
-                dataKey="id"
-                [style]="{'width':'192px'}"
-                [placeholder]="defaultLabel"
-                [options]="options"
-                [disabled]="disabled || !options?.length"
-                [filterPlaceholder]="filterPlaceHolder"
-                [(ngModel)]="_selectedValue"
-                (onChange)="_onSelectionChange()">
-    </p-dropdown>
+    <p-multiSelect appendTo="body"
+                   [style]="{'width':'192px'}"
+                   [options]="options"
+                   [maxSelectedLabels]="1"
+                   [disabled]="disabled || !options?.length"
+                   [selectedItemsLabel]="selectedItemsLabel"
+                   [filterPlaceHolder]="filterPlaceHolder"
+                   [showToggleAll]="false"
+                   [resetFilterOnHide]="true"
+                   [(ngModel)]="_selectedValue"
+                   (onChange)="_onSelectionChange()"
+                   [defaultLabel]="defaultLabel">
+      <ng-template let-item pTemplate="item">
+        <div class="kCountryList" *ngIf="countryTemplate">
+          <img *ngIf="item.value" class="kFlag" src="{{'assets/flags/' + item?.value?.id.toUpperCase() + '.png'}}"/>
+          {{item.label}}
+        </div>
+        <div *ngIf="!countryTemplate">{{item.label}}</div>
+      </ng-template>
+    </p-multiSelect>
   </div>
 </div>
 

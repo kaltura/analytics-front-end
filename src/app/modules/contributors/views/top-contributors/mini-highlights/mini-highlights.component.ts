@@ -63,6 +63,13 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
     this._dataConfig = _dataConfigService.getConfig();
   }
   
+  protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
+  }
+  
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
