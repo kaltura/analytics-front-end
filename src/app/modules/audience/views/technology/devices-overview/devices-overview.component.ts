@@ -11,8 +11,8 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TrendService } from 'shared/services/trend.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, last, map, skipUntil, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export interface SummaryItem {
   key: string;
@@ -206,7 +206,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
-          const waitForDevicesData = this._devicesDataLoaded // make sure main data has loaded 
+          const waitForDevicesData = this._devicesDataLoaded // make sure main data has loaded
             .asObservable()
             .pipe(filter(Boolean))
             .subscribe(() => {
