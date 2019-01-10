@@ -1,0 +1,40 @@
+@import '../../../../../styles/variables';
+.kTotals {
+  margin-bottom: 0px !important;
+}
+.kTotalsContainer{
+  width: 100%;
+  height: 100px;
+  display: flex;
+  .kTotalContainer{
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    &:not(:last-child){
+      border-right: 1px solid $kGrayscale6;
+    }
+    .kMiniIcon{
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+      &.blue{
+        background-color: rgba(72,122,223,0.2);
+        color: #487ADF;
+      }
+      &.green{
+        background-color: rgba(49,190,166,0.2);
+        color: #31BEA6;
+
+      }
+      &.orange{
+        background-color: rgba(225,150,46,0.2);
+        color: #E1962E;
+      }
+    }
+  }
+}

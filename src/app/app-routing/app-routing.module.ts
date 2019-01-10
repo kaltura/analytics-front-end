@@ -14,20 +14,20 @@ const routes: Routes = [
           component: DashboardViewComponent
       },
       {
-          path: 'entry/:id',
-          component: EntryViewComponent
+        path: 'entry/:id',
+        loadChildren: '../modules/entry/entry.module#EntryModule'
       },
       {
         path: 'audience',
-        loadChildren: '../modules/audience//audience.module#AudienceModule'
+        loadChildren: '../modules/audience/audience.module#AudienceModule'
       },
       {
         path: 'contributors',
-        loadChildren: '../modules/contributors//contributors.module#ContributorsModule'
+        loadChildren: '../modules/contributors/contributors.module#ContributorsModule'
       },
       {
         path: 'bandwidth',
-        loadChildren: '../modules/bandwidth//bandwidth.module#BandwidthModule'
+        loadChildren: '../modules/bandwidth/bandwidth.module#BandwidthModule'
       },
       {
         path: 'live', children: [

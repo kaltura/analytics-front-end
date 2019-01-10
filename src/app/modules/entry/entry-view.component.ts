@@ -1,9 +1,21 @@
 import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, KalturaPlayerComponent} from '@kaltura-ng/kaltura-ui';
 import { ISubscription } from 'rxjs/Subscription';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
+import {
+  BaseEntryGetAction, KalturaBaseEntry, KalturaClient,
+  KalturaDetachedResponseProfile, KalturaReportInputFilter, KalturaMediaEntry,
+  KalturaMultiResponse, KalturaReportInterval, KalturaReportType,
+  KalturaResponseProfileType, KalturaUser
+} from "kaltura-ngx-client";
+import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {map} from "rxjs/operators";
+import {EntryDetailsOverlayData} from "../audience/views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component";
+import {Unsubscribable} from "rxjs";
+import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
+import {RefineFilter} from "shared/components/filter/filter.component";
 
 @Component({
   selector: 'app-entry',
@@ -12,7 +24,25 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 })
 export class EntryViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  public _selectedRefineFilters: RefineFilter = null;
+  public _dateRange = DateRanges.Last30D;
+  public _timeUnit = KalturaReportInterval.days;
+  public _csvExportHeaders = '';
+  public _totalCount: number;
+  public _reportType: KalturaReportType = KalturaReportType.userUsage;
+  public _selectedMetrics: string;
+  public _dateFilter: DateChangeEvent = null;
+  public _refineFilter: RefineFilter = null;
+  public _refineFilterOpened = false;
+  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+    {
+      searchInTags: true,
+      searchInAdminTags: false
+    }
+  );
+
   private subscription: ISubscription;
+  private requestSubscription: ISubscription;
   private playerInstance: any = null;
   private playing = false;
   private playerInitialized = false;
@@ -27,11 +57,12 @@ export class EntryViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('player') player: KalturaPlayerComponent;
 
-  constructor(private location: Location, private route: ActivatedRoute, private zone: NgZone) { }
+  constructor(private location: Location, private route: ActivatedRoute, private zone: NgZone, private _kalturaClient: KalturaClient) { }
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe(params => {
       this._entryId = params['id'];
+      this.loadEntryDetails();
       this.initPlayer();
       this.loadReport();
     });
@@ -92,6 +123,37 @@ export class EntryViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
+  }
+
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+  }
+
+  private loadEntryDetails(): void {
+    const request = new BaseEntryGetAction({ entryId: this._entryId })
+      .setRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'name'
+        })
+      });
+
+    this.requestSubscription = this._kalturaClient
+      .request(request)
+      .pipe(
+        cancelOnDestroy(this)
+      )
+      .subscribe(
+        (entry: KalturaBaseEntry) => {
+          this._entryName = entry.name;
+        },
+        error => {
+          console.error("Failed to load entry name: " + error.message);
+        });
   }
 
   private loadReport() {
