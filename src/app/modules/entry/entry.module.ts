@@ -11,6 +11,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './entry.routes';
 import { EntryViewComponent } from './entry-view.component';
 import { EntryTotalsComponent } from './views/entry-totals/entry-totals.component';
+import { EntryPreviewComponent } from './views/entry-preview/entry-preview.component';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
@@ -34,6 +35,7 @@ import { TableModule } from 'primeng/table';
   declarations: [
     EntryViewComponent,
     EntryTotalsComponent,
+    EntryPreviewComponent,
     KalturaPlayerComponent
   ],
   exports: [],

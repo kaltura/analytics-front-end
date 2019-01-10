@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EntryTotalsConfig extends ReportDataBaseConfig {
+export class EntryPreviewConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }

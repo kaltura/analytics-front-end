@@ -321,6 +321,12 @@
         "load_play_ratio_tt": "Play Impression Ratio",
         "avg_view_drop_off_tt": "Drop Off Rate"
       }
+    },
+    "entry": {
+      "plays": "Plays",
+      "viewers": "Unique Viewers",
+      "minutes": "Minutes Viewed",
+      "watched": "Avg. Completion Rate"
     }
   }
 }

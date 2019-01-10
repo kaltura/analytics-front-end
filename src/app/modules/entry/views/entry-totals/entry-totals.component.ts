@@ -32,6 +32,7 @@ export class EntryTotalsComponent {
       this._loadReport();
     }
   }
+  @Input() entryId = '';
 
 
   public _isBusy: boolean;
@@ -65,6 +66,11 @@ export class EntryTotalsComponent {
     this._blockerMessage = null;
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    if (reportConfig['objectIds__null']) {
+      delete reportConfig['objectIds__null'];
+    }
+    reportConfig.objectIds = this.entryId;
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -146,7 +152,6 @@ export class EntryTotalsComponent {
     } else {
       this._compareFilter = null;
     }
-    this._loadReport();
   }
   
   private _handleCompare(current: Report, compare: Report): void {
