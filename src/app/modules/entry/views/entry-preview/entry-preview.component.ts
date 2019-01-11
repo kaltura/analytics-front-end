@@ -1,18 +1,16 @@
-import {Component, Input, NgZone, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import {AreaBlockerMessage, AreaBlockerMessageButton, KalturaPlayerComponent} from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval } from 'kaltura-ngx-client';
+import { AreaBlockerMessage, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryPreviewConfig } from './entry-preview.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import {analyticsConfig, getKalturaServerUri} from 'configuration/analytics-config';
-import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
-import {ISubscription} from "rxjs-compat/Subscription";
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { EntryBase } from '../entry-base/entry-base';
 
 @Component({
   selector: 'app-entry-preview',
@@ -20,19 +18,13 @@ import {ISubscription} from "rxjs-compat/Subscription";
   styleUrls: ['./entry-preview.component.scss'],
   providers: [EntryPreviewConfig, ReportService]
 })
-export class EntryPreviewComponent implements OnInit {
-
-  private _dataConfig: ReportDataConfig;
-  private _dateFilter: DateChangeEvent;
-  @Input() set dateFilter(value: DateChangeEvent) {
-    if (value) {
-      this._dateFilter = value;
-      this._updateFilter();
-      this._loadReport();
-    }
-  }
+export class EntryPreviewComponent extends EntryBase implements OnInit {
   @Input() entryId = '';
 
+  private _dataConfig: ReportDataConfig;
+
+  protected _dateFilter: DateChangeEvent;
+  protected _componentId = 'preview';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -70,7 +62,7 @@ export class EntryPreviewComponent implements OnInit {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _dataConfigService: EntryPreviewConfig) {
-    
+    super();
     this._dataConfig = _dataConfigService.getConfig();
   }
 
