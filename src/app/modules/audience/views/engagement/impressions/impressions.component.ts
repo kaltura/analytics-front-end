@@ -38,7 +38,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _playthroughs: SelectItem[] = [{label: '25%', value: 25}, {label: '50%', value: 50}, {label: '75%', value: 75}, {label: '100%', value: 100}];
-  public _selectedPlaythrough = 25;
+  public _selectedPlaythrough = 50;
   public _chartData: EChartOption = {};
   public _compareChartData: EChartOption = {};
   public _chartLoaded = false;
