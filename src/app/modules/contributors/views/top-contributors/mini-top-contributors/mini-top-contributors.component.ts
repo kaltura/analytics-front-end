@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType, KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -137,14 +137,9 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaEndUserReportInputFilter({
-        searchInTags: true,
-        searchInAdminTags: false,
-        timeZoneOffset: this._dateFilter.timeZoneOffset,
-        interval: this._dateFilter.timeUnits,
-        fromDay: compare.startDay,
-        toDay: compare.endDay,
-      });
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
     }
