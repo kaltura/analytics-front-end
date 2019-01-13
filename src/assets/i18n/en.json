@@ -327,7 +327,16 @@
       "viewers": "Unique Viewers",
       "minutes": "Minutes Viewed",
       "watched": "Avg. Completion Rate",
-      "back": "Back"
+      "back": "Back",
+      "owner": "Owner:",
+      "seeAll": "See All Details",
+      "entryType": {
+        "video": "Video",
+        "audio": "Audio",
+        "image": "Image",
+        "live": "Live",
+        "unknown": "Unknown"
+      }
     }
   }
 }

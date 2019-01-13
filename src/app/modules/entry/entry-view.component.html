@@ -19,6 +19,15 @@
                          (filterChange)="_onDateFilterChange($event)"></app-date-filter>
       </div>
 
+      <div class="kEntryDetails">
+        <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
+        <span>{{_entryType | mediaType: true}}</span>
+        <div class="kSeparator"></div>
+        <span>{{'app.entry.owner' | translate}}</span>
+        <span class="kOwner">{{_owner}}</span>
+        <div class="kSeparator"></div>
+        <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
+      </div>
       <div class="kReportContainer">
         <app-refine-filter [opened]="_refineFilterOpened"
                            [dateFilter]="_dateFilter"

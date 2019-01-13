@@ -19,6 +19,32 @@
       color: $kPrimary;
     }
   }
+  .kReportHeader{
+    height: 60px;
+  }
+  .kEntryDetails{
+    display: flex;
+    font-size: 14px;
+    color: $kGrayscale2;
+    height: 36px;
+    .kIconMediaType{
+      margin-right: 8px;
+    }
+    .kOwner{
+      margin-left: 8px;
+    }
+    .kSeparator{
+      width: 1px;
+      height: 12px;
+      margin-top: 2px;
+      background-color: $kGrayscale4;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+    .link{
+      font-size: 14px;
+    }
+  }
 }
 .kFilter {
   display: flex;

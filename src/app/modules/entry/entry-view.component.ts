@@ -3,10 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ISubscription } from 'rxjs/Subscription';
 import {
-  BaseEntryGetAction, KalturaBaseEntry, KalturaClient,
-  KalturaDetachedResponseProfile, KalturaReportInputFilter,
-  KalturaReportInterval, KalturaReportType,
-  KalturaResponseProfileType
+  BaseEntryGetAction,
+  KalturaBaseEntry,
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaMediaEntry,
+  KalturaMediaType,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
+  KalturaReportType,
+  KalturaRequestOptions,
+  KalturaResponseProfileType, KalturaUser,
+  UserGetAction
 } from "kaltura-ngx-client";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
@@ -42,6 +52,8 @@ export class EntryViewComponent implements OnInit, OnDestroy {
 
   public _entryId = '';
   public _entryName = '';
+  public _entryType: KalturaMediaType = null;
+  public _owner = '';
 
   constructor(private location: Location, private route: ActivatedRoute, private zone: NgZone, private _kalturaClient: KalturaClient) { }
 
@@ -70,22 +82,37 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   private loadEntryDetails(): void {
-    const request = new BaseEntryGetAction({ entryId: this._entryId })
-      .setRequestOptions({
-        responseProfile: new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'name'
-        })
-      });
+    const request = new KalturaMultiRequest(
+      new BaseEntryGetAction({ entryId: this._entryId })
+        .setRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'name,mediaType'
+          })
+        }),
+      new UserGetAction({ userId: null })
+        .setRequestOptions(
+          new KalturaRequestOptions({
+            responseProfile: new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'id,fullName'
+            })
+          }).setDependency(['userId', 0, 'userId'])
+        )
+    );
 
     this.requestSubscription = this._kalturaClient
-      .request(request)
+      .multiRequest(request)
       .pipe(
         cancelOnDestroy(this)
       )
       .subscribe(
-        (entry: KalturaBaseEntry) => {
+        (responses: KalturaMultiResponse) => {
+          const entry = responses[0].result as KalturaMediaEntry;
+          const user = responses[1].result as KalturaUser;
           this._entryName = entry.name;
+          this._entryType = entry.mediaType;
+          this._owner = user.fullName;
           this.requestSubscription = null;
         },
         error => {
@@ -96,6 +123,10 @@ export class EntryViewComponent implements OnInit, OnDestroy {
 
   public _back(): void {
     this.location.back();
+  }
+
+  public _navigateToEntry(): void {
+    // TODO - send to parent app new navigation URL: '/content/entries/entry/' + this._entryId;
   }
 
 }
