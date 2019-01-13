@@ -236,10 +236,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     const currentValue = parseFloat(row['count_plays_raw']) || 0;
     compareValue = parseFloat(compareValue) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
-    `;
+    const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}`;
     row['plays_trend'] = {
       trend: value !== null ? value : '–',
       trendDirection: direction,
