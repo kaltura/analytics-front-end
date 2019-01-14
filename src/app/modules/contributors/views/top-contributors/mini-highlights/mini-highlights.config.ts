@@ -13,7 +13,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'contributors': {
+          'unique_contributors': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contributors.title`),
             tooltip: this._translate.instant(`app.contributors.contributors_tt`),
