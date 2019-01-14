@@ -205,6 +205,8 @@ export class FilterComponent {
   }
   
   private _updateSelectedValues(values: FilterItem[]): void {
+    this._clearSelectedValues();
+
     if (Array.isArray(values) && values.length) {
       values.forEach(item => {
         if (!this._selectedValues[item.type] || item.type === 'location') {
@@ -215,8 +217,6 @@ export class FilterComponent {
           }
         }
       });
-    } else {
-      this._clearSelectedValues();
     }
   }
 
