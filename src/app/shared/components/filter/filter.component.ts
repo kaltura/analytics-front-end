@@ -76,11 +76,13 @@ export class FilterComponent {
     if (value !== undefined) {
       this._dateFilter = value;
       
-      setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
-        if (this._currentFilters.find(({ type }) => type === 'location')) {
-          this._removeFilter({ type: 'location', value: null, label: null });
-        }
-      });
+      if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
+        setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
+          if (this._currentFilters.find(({ type }) => type === 'location')) {
+            this._removeFilter({ type: 'location', value: null, label: null });
+          }
+        });
+      }
     }
   }
   
@@ -90,8 +92,7 @@ export class FilterComponent {
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
   private _showFilters: boolean;
-  private _firstTimeLoading = true;
-  
+
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
