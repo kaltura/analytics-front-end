@@ -9,11 +9,12 @@
         <div class="chartContainer">
           <div echarts class="kChart" [options]="_chartOptions"></div>
         </div>
+        <div class="playPauseBtn" (click)="_togglePlayback()">
+          <i [ngClass]="_isPlaying ? 'icon-bolt' : 'icon-small-play'"></i>
+        </div>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed"></div>
       </div>
       <div class="playerFooter"></div>
-
-      <button style="width: 100px; margin-top: 20px; margin-bottom: 20px" (click)="_togglePlayback()">Play / Pause</button>
     </div>
   </k-area-blocker>
 </div>

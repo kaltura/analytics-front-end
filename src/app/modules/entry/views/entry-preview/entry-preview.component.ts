@@ -44,7 +44,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   });
 
   private playerInstance: any = null;
-  private playing = false;
+  public _isPlaying = false;
   private playerInitialized = false;
 
   public _playerConfig: any = {};
@@ -197,9 +197,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   }
 
   public _togglePlayback(): void {
-    this.playing = !this.playing;
+    this._isPlaying = !this._isPlaying;
     this._playerPlayed = true;
-    const command = this.playing ? 'doPlay' : 'doPause';
+    const command = this._isPlaying ? 'doPlay' : 'doPause';
     this.playerInstance.sendNotification(command);
   }
 
