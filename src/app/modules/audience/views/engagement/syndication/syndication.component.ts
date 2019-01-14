@@ -92,6 +92,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       .subscribe(({ report, compare }) => {
           this._lineChartData = {};
           this._totalUsers = null;
+          this._totalCount = 0;
           
           if (compare) {
             this._handleCompare(report, compare);
