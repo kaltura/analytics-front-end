@@ -6,6 +6,7 @@ import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 export interface OptionItem {
   value: any;
@@ -110,6 +111,7 @@ export class FilterComponent {
     } else {
       this._state = 'hidden';
     }
+    this.updateLayout();
   }
   
   get showAdvancedFilters() {
@@ -123,9 +125,10 @@ export class FilterComponent {
     } else {
       this._advancedFiltersState = 'hidden';
     }
+    this.updateLayout();
   }
   
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService, private _frameEventManager: FrameEventManagerService) {
     this._clearAll();
   }
   
@@ -214,6 +217,12 @@ export class FilterComponent {
     } else {
       this._clearSelectedValues();
     }
+  }
+
+  private updateLayout(): void {
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 350);
   }
   
   public _onItemSelected(item: any, type: string): void {
