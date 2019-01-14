@@ -9,6 +9,7 @@ export enum FrameEvents {
   AnalyticsInit = 'analytics-init',
   AnalyticsInitComplete = 'analytics-init-complete',
   Navigate = 'navigate',
+  NavigateTo = 'navigateTo',
   UpdateFilters = 'updateFilters',
   ScrollTo = 'scrollTo',
 }

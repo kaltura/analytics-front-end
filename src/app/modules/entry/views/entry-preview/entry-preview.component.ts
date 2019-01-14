@@ -1,7 +1,12 @@
 import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
+import {
+  KalturaFilterPager,
+  KalturaObjectBaseFactory,
+  KalturaReportInputFilter,
+  KalturaReportInterval
+} from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -10,6 +15,7 @@ import { EntryPreviewConfig } from './entry-preview.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../entry-base/entry-base';
 
 @Component({
@@ -135,14 +141,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaReportInputFilter({
-        searchInTags: true,
-        searchInAdminTags: false,
-        timeZoneOffset: this._dateFilter.timeZoneOffset,
-        interval: this._dateFilter.timeUnits,
-        fromDay: compare.startDay,
-        toDay: compare.endDay,
-      });
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.endDay;
+      this._compareFilter.toDay = this._dateFilter.endDay;
     } else {
       this._compareFilter = null;
     }

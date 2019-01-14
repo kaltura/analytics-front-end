@@ -27,6 +27,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
 import { MediaTypePipe } from 'shared/pipes/media-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
+import { KalturaPlayerComponent } from 'shared/player';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { TrendValueComponent } from 'shared/components/trend-value/trend-value.component';
 import { CategoriesSearchService } from 'shared/services/categories-search.service';
@@ -84,6 +85,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    KalturaPlayerComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -101,6 +103,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    KalturaPlayerComponent,
     MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,

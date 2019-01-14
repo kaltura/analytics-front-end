@@ -21,6 +21,7 @@ import {
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 @Component({
   selector: 'app-entry',
@@ -55,7 +56,11 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _entryType: KalturaMediaType = null;
   public _owner = '';
 
-  constructor(private location: Location, private route: ActivatedRoute, private zone: NgZone, private _kalturaClient: KalturaClient) { }
+  constructor(private location: Location,
+              private route: ActivatedRoute,
+              private zone: NgZone,
+              private _kalturaClient: KalturaClient,
+              private _frameEventManager: FrameEventManagerService) { }
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe(params => {
@@ -126,7 +131,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(): void {
-    // TODO - send to parent app new navigation URL: '/content/entries/entry/' + this._entryId;
+    this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
   }
 
 }
