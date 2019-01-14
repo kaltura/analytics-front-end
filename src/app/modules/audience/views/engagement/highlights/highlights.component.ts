@@ -66,7 +66,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this._tableData = [];
     this._isBusy = true;
     this._blockerMessage = null;
     
