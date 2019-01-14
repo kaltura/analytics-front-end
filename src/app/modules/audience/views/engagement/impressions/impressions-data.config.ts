@@ -44,9 +44,11 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
         borderWidth: 1,
+        padding: 10,
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
         textStyle: {
-          color: '#999999'
+          color: '#999999',
+          fontFamily: 'Lato'
         },
         formatter: tooltipFormatter,
         trigger: 'item'
