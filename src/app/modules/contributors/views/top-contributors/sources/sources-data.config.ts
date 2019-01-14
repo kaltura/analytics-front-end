@@ -21,7 +21,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 2,
           },
-          'contributors': {
+          'unique_contributors': {
             format: value => value,
             sortOrder: 3,
           },
@@ -37,7 +37,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
-          'contributors': {
+          'unique_contributors': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
           },

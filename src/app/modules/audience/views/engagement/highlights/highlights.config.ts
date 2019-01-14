@@ -45,7 +45,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'date_id': {
-            format: value => DateFilterUtils.formatDayString(value, analyticsConfig.locale),
+            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
             nonComparable: true,
           },
           'count_plays': {

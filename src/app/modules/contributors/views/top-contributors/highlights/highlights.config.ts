@@ -24,7 +24,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.added_msecs`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'contributors': {
+          'unique_contributors': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.contributors`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
@@ -47,7 +47,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             units: value => 'min',
             sortOrder: 2,
           },
-          'contributors': {
+          'unique_contributors': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contributors.contributors`),
             tooltip: this._translate.instant(`app.contributors.contributors_tt`),

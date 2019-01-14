@@ -6,6 +6,7 @@ import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 export interface OptionItem {
   value: any;
@@ -76,11 +77,13 @@ export class FilterComponent {
     if (value !== undefined) {
       this._dateFilter = value;
       
-      setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
-        if (this._currentFilters.find(({ type }) => type === 'location')) {
-          this._removeFilter({ type: 'location', value: null, label: null });
-        }
-      });
+      if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
+        setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
+          if (this._currentFilters.find(({ type }) => type === 'location')) {
+            this._removeFilter({ type: 'location', value: null, label: null });
+          }
+        });
+      }
     }
   }
   
@@ -90,8 +93,7 @@ export class FilterComponent {
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
   private _showFilters: boolean;
-  private _firstTimeLoading = true;
-  
+
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
@@ -110,6 +112,7 @@ export class FilterComponent {
     } else {
       this._state = 'hidden';
     }
+    this.updateLayout();
   }
   
   get showAdvancedFilters() {
@@ -123,9 +126,10 @@ export class FilterComponent {
     } else {
       this._advancedFiltersState = 'hidden';
     }
+    this.updateLayout();
   }
   
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService, private _frameEventManager: FrameEventManagerService) {
     this._clearAll();
   }
   
@@ -201,6 +205,8 @@ export class FilterComponent {
   }
   
   private _updateSelectedValues(values: FilterItem[]): void {
+    this._clearSelectedValues();
+
     if (Array.isArray(values) && values.length) {
       values.forEach(item => {
         if (!this._selectedValues[item.type] || item.type === 'location') {
@@ -211,9 +217,13 @@ export class FilterComponent {
           }
         }
       });
-    } else {
-      this._clearSelectedValues();
     }
+  }
+
+  private updateLayout(): void {
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 350);
   }
   
   public _onItemSelected(item: any, type: string): void {
