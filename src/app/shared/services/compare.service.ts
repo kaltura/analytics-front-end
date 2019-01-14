@@ -55,7 +55,7 @@ export class CompareService implements OnDestroy {
           const currentLabel = currentValue.split(',')[0];
           let currentName = currentLabel;
 
-          if (!config.fields[graph.id].nonDateCompareLabel) {
+          if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);

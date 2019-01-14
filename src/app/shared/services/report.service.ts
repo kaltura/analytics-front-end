@@ -250,9 +250,13 @@ export class ReportService implements OnDestroy {
       data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
-          const name = reportInterval === KalturaReportInterval.months
-            ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-            : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          let name = label;
+  
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            name = reportInterval === KalturaReportInterval.months
+              ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
+              : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          }
           let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
           if (isNaN(val)) {
             val = 0;

@@ -22,7 +22,7 @@ export interface ReportDataItemConfig {
       nonComparable?: boolean;
       sortOrder?: number;
       colors?: string[];
-      nonDateCompareLabel?: boolean;
+      nonDateGraphLabel?: boolean;
     };
   };
 }
