@@ -209,7 +209,7 @@ export class ReportService implements OnDestroy {
     return { columns, tableData };
   }
   
-  public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+  public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(',');
     

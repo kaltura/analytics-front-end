@@ -1,9 +1,17 @@
 import { Component } from '@angular/core';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaObjectBaseFactory, KalturaReportGraph,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
+  KalturaReportTable, KalturaReportTotal,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -11,6 +19,9 @@ import { SourcesDataConfig } from './sources-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import * as moment from "moment";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {isEmptyObject} from "shared/utils/is-empty-object";
 
 @Component({
   selector: 'app-contributors-sources',
@@ -36,8 +47,10 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _reportType = KalturaReportType.uniqueUsersPlay;
+  public _reportType = KalturaReportType.topSources;
   public _barChartData: any = {};
+  public _tableData: any[] = [];
+  public _compareTableData: any[] = [];
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];
   
@@ -81,7 +94,13 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       }))
       .subscribe(({ report, compare }) => {
           this._barChartData = {};
-          
+          this._tableData = [];
+          this._compareTableData = [];
+
+          if (report.table && report.table.header && report.table.data) {
+            this._handleTable(report.table, compare); // handle table
+          }
+
           this._isBusy = false;
         },
         error => {
@@ -138,4 +157,17 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
   }
+
+  private _handleTable(table: KalturaReportTable, compare?: Report): void {
+    this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._tableData = tableData;
+
+    if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      this._compareTableData = compareTableData;
+      this._compareFirstTimeLoading = false;
+    }
+  }
+
 }
