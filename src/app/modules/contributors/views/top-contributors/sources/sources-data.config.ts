@@ -61,17 +61,17 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
           'added_entries': {
             format: value => value,
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
-            nonDateCompareLabel: true,
+            nonDateGraphLabel: true,
           },
           'added_msecs': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            nonDateCompareLabel: true,
+            nonDateGraphLabel: true,
           },
           'unique_contributors': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
-            nonDateCompareLabel: true,
+            nonDateGraphLabel: true,
           },
         }
       }
