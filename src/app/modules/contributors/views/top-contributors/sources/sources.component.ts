@@ -1,27 +1,19 @@
 import { Component } from '@angular/core';
-import {AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import {
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory, KalturaReportGraph,
-  KalturaReportInputFilter,
-  KalturaReportInterval,
-  KalturaReportTable, KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { SourcesDataConfig } from './sources-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import * as moment from "moment";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {isEmptyObject} from "shared/utils/is-empty-object";
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { getPrimaryColor } from 'shared/utils/colors';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-contributors-sources',
@@ -49,8 +41,6 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.topSources;
   public _barChartData: any = {};
-  public _tableData: any[] = [];
-  public _compareTableData: any[] = [];
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];
   
@@ -64,6 +54,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   protected _updateRefineFilter(): void {
@@ -94,8 +85,6 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       }))
       .subscribe(({ report, compare }) => {
           this._barChartData = {};
-          this._tableData = [];
-          this._compareTableData = [];
 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
@@ -160,14 +149,26 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
 
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
-    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._tableData = tableData;
-
+    
     if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      this._compareTableData = compareTableData;
+      const currentData = this._reportService.convertTableDataToGraphData(tableData, this._dataConfig);
+      const compareData = this._reportService.convertTableDataToGraphData(compareTableData, this._dataConfig);
+      const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
+      const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+      const { barChartData } = this._compareService.compareGraphData(
+        currentPeriod,
+        comparePeriod,
+        currentData,
+        compareData,
+        this._dataConfig.graph,
+        this._reportInterval
+      );
+      this._barChartData = barChartData;
       this._compareFirstTimeLoading = false;
+    } else {
+      this._barChartData = this._reportService.getGraphDataFromTable(table, this._dataConfig, this._reportInterval).barChartData;
     }
   }
-
 }

@@ -431,5 +431,18 @@ export class ReportService implements OnDestroy {
     });
     return { barChartData, lineChartData };
   }
+  
+  public getGraphDataFromTable(table: KalturaReportTable, dataConfig: ReportDataConfig, reportInterval: KalturaReportInterval) {
+    const { tableData } = this.parseTableData(table, dataConfig.table);
+    const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
+    return this.parseGraphs(graphData, dataConfig.graph, reportInterval);
+  }
+  
+  
+  public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
+    return Object.keys(dataConfig.graph.fields).map(
+      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source},${val[field]};`, acc), '') })
+    );
+  }
 }
 

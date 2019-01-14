@@ -53,11 +53,14 @@ export class CompareService implements OnDestroy {
         const compareValue = compareData[j];
         if (currentValue && currentValue.length && compareValue && compareValue.length) {
           const currentLabel = currentValue.split(',')[0];
+          let currentName = currentLabel;
 
-          const currentName = reportInterval === KalturaReportInterval.months
-            ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
-            : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
-
+          if (!config.fields[graph.id].nonDateCompareLabel) {
+            currentName = reportInterval === KalturaReportInterval.months
+              ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
+              : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+          }
+          
           let currentVal = Math.ceil(parseFloat(currentValue.split(',')[1])); // publisher storage report should round up graph values
           let compareVal = Math.ceil(parseFloat(compareValue.split(',')[1])); // publisher storage report should round up graph values
           if (isNaN(currentVal)) {
