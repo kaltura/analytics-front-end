@@ -1,11 +1,11 @@
 <div class="kContributorDetailsOverlay">
   <k-area-blocker [showLoader]="_loading" [message]="_errorMessage">
     <ng-container *ngIf="_data">
-      <div class="kContributorName">{{_data.name}}</div>
+      <div class="kContributorName">{{_data.fullName}}</div>
       <div class="kContributorDetails">
         <div class="kDetailsRow">
           <div class="kLabel">{{'app.contributors.topContributorsReport.role' | translate}}</div>
-          <div class="kValue">{{_data.role.name}}</div>
+          <div class="kValue">{{_data.roleNames}}</div>
         </div>
 
         <div class="kDetailsRow">
@@ -15,13 +15,13 @@
 
         <div class="kDetailsRow">
           <div class="kLabel">{{'app.contributors.topContributorsReport.creationDate' | translate}}</div>
-          <div class="kValue">{{_data.creationDate | date:'MM/d/yy'}}</div>
+          <div class="kValue">{{_data.createdAt | date:'MM/d/yy'}}</div>
         </div>
 
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.contributors.topContributorsReport.lastUpload' | translate}}</div>
-          <div class="kValue">{{_data.lastUpload | date:'MM/d/yy'}}</div>
-        </div>
+        <!--<div class="kDetailsRow">-->
+          <!--<div class="kLabel">{{'app.contributors.topContributorsReport.lastUpload' | translate}}</div>-->
+          <!--<div class="kValue">{{_data.lastUpload | date:'MM/d/yy'}}</div>-->
+        <!--</div>-->
       </div>
     </ng-container>
   </k-area-blocker>
