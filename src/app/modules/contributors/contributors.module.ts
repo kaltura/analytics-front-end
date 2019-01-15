@@ -15,7 +15,7 @@ import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from 
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { topContributorsComponentsList } from './views/top-contributors/components-list';
-import { CheckboxModule, PaginatorModule } from 'primeng/primeng';
+import { CheckboxModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
 import { PageScrollService } from 'ngx-page-scroll';
 
 @NgModule({
@@ -36,6 +36,7 @@ import { PageScrollService } from 'ngx-page-scroll';
     CheckboxModule,
     PaginatorModule,
     TooltipModule,
+    OverlayPanelModule,
   ],
   declarations: [
     ContributorsComponent,

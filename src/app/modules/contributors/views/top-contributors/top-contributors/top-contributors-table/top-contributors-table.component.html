@@ -26,7 +26,9 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '30%', 'padding-left': '0'}">
-            <div class="kTopVideoEntryColumn">
+            <div class="kTopVideoEntryColumn"
+                 (mouseleave)="_hideOverlay()"
+                 (mouseenter)="_showOverlay($event, data['user_id'])">
               <span class="kTableColumn kEntryName">{{data['creator_name']}}</span>
               <div class="kEntryDetails">
               <span class="kTableColumn">{{'app.contributors.created' | translate}}</span>
@@ -87,3 +89,7 @@
                [totalRecords]="_totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-contributor-details-overlay *ngIf="_userId" [userId]="_userId"></app-contributor-details-overlay>
+</k-overlayPanel>
