@@ -50,10 +50,10 @@ export class CompareService implements OnDestroy {
       const currentData = graph.data.split(';');
       const compareData = compare[i].data ? compare[i].data.split(';') : currentData.map(() => 'N\A,0');
 
-      currentData.forEach((currentValue, j) => {
-        const compareValue = compareData[j] || 'N\A,0';
-        if (currentValue && currentValue.length && compareValue && compareValue.length) {
+      currentData.forEach((currentValue) => {
+        if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(',')[0];
+          const compareValue = compareData.find(item => item.split(',')[0] === currentLabel) || 'N\A,0';
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
