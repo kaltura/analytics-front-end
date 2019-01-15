@@ -22,6 +22,7 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-entry',
@@ -127,7 +128,11 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   public _back(): void {
-    this.location.back();
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
+    } else {
+      this.location.back();
+    }
   }
 
   public _navigateToEntry(): void {

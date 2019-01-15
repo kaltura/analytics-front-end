@@ -12,6 +12,7 @@ export enum FrameEvents {
   NavigateTo = 'navigateTo',
   UpdateFilters = 'updateFilters',
   ScrollTo = 'scrollTo',
+  EntryNavigateBack = 'entryNavigateBack'
 }
 
 @Injectable()
