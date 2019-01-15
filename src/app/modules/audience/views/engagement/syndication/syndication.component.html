@@ -9,9 +9,8 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-
     <div class="kReportContent">
-      <ng-container *ngIf="_drillDown">
+      <ng-container *ngIf="_drillDown && !_isBusy">
         <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
                          (tabChange)="_onTabChange($event)"></app-report-tabs>
         <div class="kChart">
