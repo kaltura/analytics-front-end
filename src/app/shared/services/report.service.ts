@@ -262,8 +262,6 @@ export class ReportService implements OnDestroy {
             val = config.fields[graph.id].format(val);
           }
   
-          val = Math.ceil(val);
-          
           xAxisData.push(name);
           yAxisData.push(val);
         }
