@@ -146,7 +146,9 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
 
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
-    
+  
+    const columnsCount = table.data ? table.data.split(';').length : 0;
+    const graphOptions = { xAxisLabelRotation: columnsCount > 3 ? 45 : 0 };
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
@@ -162,7 +164,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
         this._dataConfig.graph,
         this._reportInterval,
         null,
-        { xAxisLabelRotation: 45 }
+        graphOptions
       );
       this._barChartData = barChartData;
       this._compareFirstTimeLoading = false;
@@ -171,7 +173,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
         table,
         this._dataConfig,
         this._reportInterval,
-        { xAxisLabelRotation: 45 }
+        graphOptions
         ).barChartData;
     }
   }
