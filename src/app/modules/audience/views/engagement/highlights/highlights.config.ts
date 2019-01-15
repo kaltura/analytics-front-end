@@ -32,9 +32,9 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.unique_known_users`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_view_drop_off': {
-            format: value => value,
+            format: value => value * 100,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`)}:&nbsp;${value}%</span>`
           },
         }
       },

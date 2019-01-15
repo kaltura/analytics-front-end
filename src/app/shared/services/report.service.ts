@@ -258,7 +258,7 @@ export class ReportService implements OnDestroy {
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
           }
-          let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
+          let val = parseFloat(value.split(',')[1]);
           if (isNaN(val)) {
             val = 0;
           }
@@ -266,7 +266,7 @@ export class ReportService implements OnDestroy {
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-          
+  
           xAxisData.push(name);
           yAxisData.push(val);
         }
