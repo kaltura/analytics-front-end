@@ -236,7 +236,8 @@ export class ReportService implements OnDestroy {
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
-                     dataLoadedCb?: Function): GraphsData {
+                     dataLoadedCb?: Function,
+                     graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -284,6 +285,8 @@ export class ReportService implements OnDestroy {
           </div>
         `;
       };
+      const xAxisLabelRotation = graphOptions ? graphOptions.xAxisLabelRotation : null;
+      const yAxisLabelRotation = graphOptions ? graphOptions.yAxisLabelRotation : null;
       lineChartData[graph.id] = {
         textStyle: {
           fontFamily: 'Lato',
@@ -300,7 +303,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -320,7 +324,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false
@@ -377,7 +382,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -397,7 +403,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false
@@ -436,10 +443,13 @@ export class ReportService implements OnDestroy {
     return { barChartData, lineChartData };
   }
   
-  public getGraphDataFromTable(table: KalturaReportTable, dataConfig: ReportDataConfig, reportInterval: KalturaReportInterval) {
+  public getGraphDataFromTable(table: KalturaReportTable,
+                               dataConfig: ReportDataConfig,
+                               reportInterval: KalturaReportInterval,
+                               graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
     const { tableData } = this.parseTableData(table, dataConfig.table);
     const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
-    return this.parseGraphs(graphData, dataConfig.graph, reportInterval);
+    return this.parseGraphs(graphData, dataConfig.graph, reportInterval, null, graphOptions);
   }
   
   

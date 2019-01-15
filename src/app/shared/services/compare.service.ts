@@ -24,7 +24,8 @@ export class CompareService implements OnDestroy {
                           compare: KalturaReportGraph[],
                           config: ReportDataItemConfig,
                           reportInterval: KalturaReportInterval,
-                          dataLoadedCb?: Function): GraphsData {
+                          dataLoadedCb?: Function,
+                          graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
 
@@ -39,7 +40,7 @@ export class CompareService implements OnDestroy {
     }
 
     current.forEach((graph: KalturaReportGraph, i) => {
-      if (!config.fields[graph.id] || !graph.data || !compare[i].data) {
+      if (!config.fields[graph.id] || !graph.data) {
         return;
       }
       let xAxisData = [];
@@ -47,10 +48,10 @@ export class CompareService implements OnDestroy {
       let yAxisCompareData = [];
 
       const currentData = graph.data.split(';');
-      const compareData = compare[i].data.split(';');
+      const compareData = compare[i].data ? compare[i].data.split(';') : currentData.map(() => 'N\A,0');
 
       currentData.forEach((currentValue, j) => {
-        const compareValue = compareData[j];
+        const compareValue = compareData[j] || 'N\A,0';
         if (currentValue && currentValue.length && compareValue && compareValue.length) {
           const currentLabel = currentValue.split(',')[0];
           let currentName = currentLabel;
@@ -101,6 +102,8 @@ export class CompareService implements OnDestroy {
           </div>
         `;
       };
+      const xAxisLabelRotation = graphOptions ? graphOptions.xAxisLabelRotation : null;
+      const yAxisLabelRotation = graphOptions ? graphOptions.yAxisLabelRotation : null;
       lineChartData[graph.id] = {
         textStyle: {
           fontFamily: 'Lato',
@@ -117,7 +120,8 @@ export class CompareService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -137,7 +141,8 @@ export class CompareService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false
@@ -218,7 +223,8 @@ export class CompareService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -238,7 +244,8 @@ export class CompareService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false

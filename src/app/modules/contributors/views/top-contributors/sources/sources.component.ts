@@ -11,9 +11,6 @@ import { SourcesDataConfig } from './sources-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { getPrimaryColor } from 'shared/utils/colors';
-import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-contributors-sources',
@@ -163,12 +160,19 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
         currentData,
         compareData,
         this._dataConfig.graph,
-        this._reportInterval
+        this._reportInterval,
+        null,
+        { xAxisLabelRotation: 45 }
       );
       this._barChartData = barChartData;
       this._compareFirstTimeLoading = false;
     } else {
-      this._barChartData = this._reportService.getGraphDataFromTable(table, this._dataConfig, this._reportInterval).barChartData;
+      this._barChartData = this._reportService.getGraphDataFromTable(
+        table,
+        this._dataConfig,
+        this._reportInterval,
+        { xAxisLabelRotation: 45 }
+        ).barChartData;
     }
   }
 }
