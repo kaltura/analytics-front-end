@@ -31,7 +31,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
           'avg_view_drop_off': {
-            format: value => value,
+            format: value => value * 100,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
           },
         }
