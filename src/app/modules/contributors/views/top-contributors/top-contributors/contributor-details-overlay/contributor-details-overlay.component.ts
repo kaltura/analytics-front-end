@@ -1,9 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { KalturaClient, KalturaDetachedResponseProfile, KalturaMultiRequest, KalturaMultiResponse, KalturaResponseProfileType, KalturaUser, KalturaUserRole, UserGetAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
 import { Unsubscribable } from 'rxjs';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { map } from 'rxjs/operators';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -17,7 +15,7 @@ export class ContributorDetailsOverlayComponent implements OnInit, OnDestroy {
   private _requestSubscription: Unsubscribable;
   public _data: KalturaUser;
   public _loading = false;
-  public _errorMessage: AreaBlockerMessage;
+  public _errorMessage: string;
   
   constructor(private _kalturaClient: KalturaClient,
               private _translate: TranslateService) {
@@ -35,7 +33,7 @@ export class ContributorDetailsOverlayComponent implements OnInit, OnDestroy {
       this._requestSubscription.unsubscribe();
       this._requestSubscription = null;
     }
-  
+    
     const action = new UserGetAction({ userId: this.userId }).setRequestOptions({
       responseProfile: new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
@@ -52,11 +50,7 @@ export class ContributorDetailsOverlayComponent implements OnInit, OnDestroy {
         },
         error => {
           this._loading = false;
-          this._errorMessage = new AreaBlockerMessage({
-            title: this._translate.instant('app.common.error'),
-            message: error.message,
-            buttons: []
-          });
+          this._errorMessage = error.message;
         });
   }
   

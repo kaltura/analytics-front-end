@@ -1,6 +1,6 @@
 <div class="kContributorDetailsOverlay">
-  <k-area-blocker [showLoader]="_loading" [message]="_errorMessage">
-    <ng-container *ngIf="_data">
+  <k-area-blocker [showLoader]="_loading">
+    <ng-container *ngIf="_data && !_errorMessage">
       <div class="kContributorName">{{_data.fullName}}</div>
       <div class="kContributorDetails">
         <div class="kDetailsRow">
@@ -19,10 +19,13 @@
         </div>
 
         <!--<div class="kDetailsRow">-->
-          <!--<div class="kLabel">{{'app.contributors.topContributorsReport.lastUpload' | translate}}</div>-->
-          <!--<div class="kValue">{{_data.lastUpload | date:'MM/d/yy'}}</div>-->
+        <!--<div class="kLabel">{{'app.contributors.topContributorsReport.lastUpload' | translate}}</div>-->
+        <!--<div class="kValue">{{_data.lastUpload | date:'MM/d/yy'}}</div>-->
         <!--</div>-->
       </div>
     </ng-container>
+    <div *ngIf="_errorMessage" class="kErrorMessage">
+      {{_errorMessage}}
+    </div>
   </k-area-blocker>
 </div>
