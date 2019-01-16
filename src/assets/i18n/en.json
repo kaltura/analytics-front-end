@@ -329,6 +329,11 @@
       "back": "Back",
       "owner": "Owner:",
       "seeAll": "See All Details",
+      "videoPerformance": "Video performance over time",
+      "count_plays": "Plays",
+      "sum_time_viewed": "Minutes Viewed",
+      "count_loads": "Player Impressions",
+      "avg_time_viewed": "Avg. View Time",
       "entryType": {
         "video": "Video",
         "audio": "Audio",

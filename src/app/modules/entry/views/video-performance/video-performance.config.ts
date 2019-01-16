@@ -12,6 +12,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
+        preSelected: 'count_plays',
         fields: {
           'count_plays': {
             format: value => value,

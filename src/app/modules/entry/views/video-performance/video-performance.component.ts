@@ -58,6 +58,7 @@ export class VideoPerformanceComponent extends EntryBase {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.graph.preSelected;
   }
   
   protected _loadReport(sections = this._dataConfig): void {
