@@ -38,6 +38,9 @@
   display: flex !important;
   align-items: center;
 }
+:host {
+  margin-bottom: 24px;
+}
 .kCountryList {
   vertical-align: middle;
   display: flex;
