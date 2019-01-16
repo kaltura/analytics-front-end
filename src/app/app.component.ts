@@ -128,9 +128,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private mapRoutes(kmcRoute: string): string {
     let analyticsRoute = kmcRoute;
     switch (kmcRoute) {
-      case '/analytics/dashboard':
-        analyticsRoute = '/dashboard';
-        break;
       case '/analytics/contributors':
         analyticsRoute = '/contributors/top-contributors';
         break;

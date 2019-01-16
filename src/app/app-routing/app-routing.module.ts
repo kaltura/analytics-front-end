@@ -9,10 +9,6 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
-          path: 'dashboard',
-          component: DashboardViewComponent
-      },
-      {
         path: 'entry/:id',
         loadChildren: '../modules/entry/entry.module#EntryModule'
       },

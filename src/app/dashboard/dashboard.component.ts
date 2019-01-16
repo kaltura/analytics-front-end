@@ -1,20 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
-
-  constructor() {
+export class DashboardComponent {
+  
+  constructor(private _router: Router) {
+    _router.navigateByUrl('/audience/engagement');
   }
-
-  ngOnInit() {
-  }
-
-
-
-
 }

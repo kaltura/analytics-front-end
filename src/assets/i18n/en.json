@@ -1,9 +1,8 @@
 {
   "app":{
     "modules":{
-      "dashboard": "Dashboard",
       "audience": "Audience",
-      "bandwidth": "Bandwidth & Storage Reports",
+      "bandwidth": "Usage",
       "contributors": "Contributors",
       "live": "Live"
     },
