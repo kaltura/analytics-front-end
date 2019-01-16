@@ -1,0 +1,75 @@
+<div class="kReport kTotals kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kTotalsContainer">
+      <div class="kTotalContainer">
+        <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+        <div class="kTotal">
+          <span class="kLable">{{_tabsData[0]?.title}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[0]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[0]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+            <app-trend-value valueStyleClass="kValue"
+                             unitsStyleClass="kUnits"
+                             [value]="_tabsData[0]?.value"
+                             [units]="_tabsData[0]?.units"
+                             [trend]="_tabsData[0]?.trend"></app-trend-value>
+          </span>
+        </div>
+      </div>
+      <div class="kTotalContainer">
+        <div class="kMiniIcon green"><i class="icon-small-viewer-contributor"></i></div>
+        <div class="kTotal">
+          <span class="kLable">{{_tabsData[1]?.title}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[1]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[1]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+            <app-trend-value valueStyleClass="kValue"
+                             unitsStyleClass="kUnits"
+                             [value]="_tabsData[1]?.value"
+                             [units]="_tabsData[1]?.units"
+                             [trend]="_tabsData[1]?.trend"></app-trend-value>
+          </span>
+        </div>
+      </div>
+      <div class="kTotalContainer">
+        <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
+        <div class="kTotal">
+          <span class="kLable">{{_tabsData[2]?.title}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[2]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+            <app-trend-value valueStyleClass="kValue"
+                             unitsStyleClass="kUnits"
+                             [value]="_tabsData[2]?.value"
+                             [units]="_tabsData[2]?.units"
+                             [trend]="_tabsData[2]?.trend"></app-trend-value>
+          </span>
+        </div>
+      </div>
+      <div class="kTotalContainer">
+        <div class="kMiniIcon darkgreen"><i class="kIconcomplete"></i></div>
+        <div class="kTotal">
+          <span class="kLable">{{_tabsData[3]?.title}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[3]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[3]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+            <app-trend-value valueStyleClass="kValue"
+                             unitsStyleClass="kUnits"
+                             [value]="_tabsData[3]?.value"
+                             [units]="_tabsData[3]?.units"
+                             [trend]="_tabsData[3]?.trend"></app-trend-value>
+          </span>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+
