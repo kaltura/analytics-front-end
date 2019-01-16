@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { VideoPerformanceConfig } from './video-performance.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
+import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 
 @Component({
   selector: 'app-video-performance',
@@ -21,14 +22,17 @@ import { EntryBase } from '../entry-base/entry-base';
 })
 export class VideoPerformanceComponent extends EntryBase {
   @Input() entryId = '';
-
+  @Input() dateFilterComponent: DateFilterComponent;
+  
   private _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
   protected _dateFilter: DateChangeEvent;
-  protected _componentId = 'totals';
-
+  protected _componentId = 'video-performance';
+  
+  public _lineChartData: { [key: string]: any[] } = {};
+  public _selectedMetrics: string;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -52,7 +56,7 @@ export class VideoPerformanceComponent extends EntryBase {
               private _authService: AuthService,
               private _dataConfigService: VideoPerformanceConfig) {
     super();
-
+    
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -65,7 +69,7 @@ export class VideoPerformanceComponent extends EntryBase {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
-
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -80,8 +84,8 @@ export class VideoPerformanceComponent extends EntryBase {
           if (compare) {
             this._handleCompare(report, compare);
           } else {
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
+            if (report.graphs) {
+              this._handleGraphs(report.graphs); // handle totals
             }
           }
           this._isBusy = false;
@@ -148,19 +152,27 @@ export class VideoPerformanceComponent extends EntryBase {
     const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
     
-    if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(
+    if (current.graphs.length && compare.graphs.length) {
+      const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
         comparePeriod,
-        current.totals,
-        compare.totals,
-        this._dataConfig.totals
+        current.graphs,
+        compare.graphs,
+        this._dataConfig.graph,
+        this._reportInterval,
       );
+      this._lineChartData = lineChartData;
     }
   }
-
-  private _handleTotals(totals: KalturaReportTotal): void {
-    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+  
+  
+  private _handleGraphs(graphs: KalturaReportGraph[]): void {
+    const { lineChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      this._reportInterval
+    );
+    this._lineChartData = lineChartData;
   }
-
+  
 }

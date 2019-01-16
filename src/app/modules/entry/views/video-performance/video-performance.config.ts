@@ -11,29 +11,28 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.totals]: {
+      [ReportDataSection.graph]: {
         fields: {
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
             title: this._translate.instant(`app.entry.plays`),
             sortOrder: 1,
           },
           'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.minutes`),
-            units: value => 'min',
-            sortOrder: 3,
-          },
-          'unique_known_users': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entry.viewers`),
+            format: value => value,
+            title: this._translate.instant(`app.entry.sum_time_viewed`),
             sortOrder: 2,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value),
-            title: this._translate.instant(`app.entry.watched`),
+          'avg_time_viewed': {
+            format: value => value,
+            title: this._translate.instant(`app.entry.avg_time_viewed`),
+            sortOrder: 3,
+          },
+          'count_loads': {
+            format: value => value,
+            title: this._translate.instant(`app.entry.count_loads`),
             sortOrder: 4,
-          }
+          },
         }
       }
     };
