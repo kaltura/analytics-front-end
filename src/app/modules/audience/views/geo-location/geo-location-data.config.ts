@@ -131,7 +131,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             label: {
               show: true
             },
-            areaColor: '#F49616'
+            areaColor: '#F8A61A'
           }
         },
       };
