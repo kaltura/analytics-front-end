@@ -56,17 +56,18 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,type,createdAt,msDuration'
+            fields: 'id,name,type,createdAt,msDuration,userId'
           })
         }),
-      new UserGetAction({ userId: null })
+      new UserGetAction({ userId: '' })
+        .setDependency(['userId', 0, 'userId'])
         .setRequestOptions(
           new KalturaRequestOptions({
             responseProfile: new KalturaDetachedResponseProfile({
               type: KalturaResponseProfileType.includeFields,
               fields: 'id,fullName'
             })
-          }).setDependency(['userId', 0, 'userId'])
+          })
         )
     );
     
