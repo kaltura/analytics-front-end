@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { Router } from '@angular/router';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -36,7 +38,8 @@ export class TopVideosTableComponent {
   public _tableData: any[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router,
+              private _frameEventManager: FrameEventManagerService) {
 
   }
   
@@ -89,6 +92,11 @@ export class TopVideosTableComponent {
   }
 
   public _drillDown(entryId: string): void {
-    this._router.navigate(['/entry', entryId]);
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}`);
+    } else {
+      this._router.navigate(['entry', entryId]);
+    }
+    
   }
 }

@@ -23,6 +23,7 @@ import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-fi
 import {RefineFilter} from "shared/components/filter/filter.component";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { analyticsConfig } from 'configuration/analytics-config';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-entry',
@@ -64,15 +65,33 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _frameEventManager: FrameEventManagerService) { }
 
   ngOnInit() {
-    this.subscription = this.route.params.subscribe(params => {
-      this._entryId = params['id'];
-      this.loadEntryDetails();
-    });
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager
+        .listen(FrameEvents.UpdateFilters)
+        .pipe(cancelOnDestroy(this), filter(Boolean))
+        .subscribe(({ queryParams }) => {
+          this._entryId = queryParams['id'];
+          if (this._entryId) {
+            this.loadEntryDetails();
+          }
+        });
+    } else {
+      this.subscription = this.route.params.subscribe(params => {
+        this._entryId = params['id'];
+        if (this._entryId) {
+          this.loadEntryDetails();
+        }
+      });
+    }
 
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
+    
     if (this.requestSubscription) {
       this.requestSubscription.unsubscribe();
       this.requestSubscription = null;
@@ -110,12 +129,17 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     this.requestSubscription = this._kalturaClient
       .multiRequest(request)
       .pipe(
-        cancelOnDestroy(this)
+        cancelOnDestroy(this),
+        map((responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            throw Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
+          }
+  
+          return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
+        })
       )
       .subscribe(
-        (responses: KalturaMultiResponse) => {
-          const entry = responses[0].result as KalturaMediaEntry;
-          const user = responses[1].result as KalturaUser;
+        ([entry, user]) => {
           this._entryName = entry.name;
           this._entryType = entry.mediaType;
           this._owner = user.fullName;

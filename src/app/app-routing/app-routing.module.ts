@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { DashboardViewComponent } from '../modules/dashboard/dashboard-view.component';
-import { EntryViewComponent } from '../modules/entry/entry-view.component';
 
 const routes: Routes = [
   {
@@ -15,6 +14,10 @@ const routes: Routes = [
       },
       {
         path: 'entry/:id',
+        loadChildren: '../modules/entry/entry.module#EntryModule'
+      },
+      {
+        path: 'entry',
         loadChildren: '../modules/entry/entry.module#EntryModule'
       },
       {
