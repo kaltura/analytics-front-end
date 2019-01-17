@@ -12,6 +12,7 @@ export class CategoryFilterComponent {
   @Input() set selectedFilters(value: CategoryData[]) {
     if (Array.isArray(value)) {
       this._selectedValue = value;
+      this._setDiffer();
     }
   }
   
