@@ -189,7 +189,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         comparePeriod,
         current.table,
         compare.table,
-        this._dataConfig.table
+        this._dataConfig.table,
+        'object_id'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
