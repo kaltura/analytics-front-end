@@ -35,7 +35,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _totalCount = 0;
   public _tableData: any[] = [];
   public _firstTimeLoading = true;
-  public _lineChartData: { [key: string]: { name: string, value: string }[] } = {};
+  public _lineChartData: { [key: string]: any } = {};
   public _selectedMetrics: string;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -189,7 +189,7 @@ export class VideoPerformanceComponent extends EntryBase {
     this._parseTableDataFromGraph(lineChartData);
   }
   
-  private _parseTableDataFromGraph(chartData: { [key: string]: { name: string, value: string }[] }): void {
+  private _parseTableDataFromGraph(chartData: { [key: string]: any }): void {
     const tableFieldsConfig = this._dataConfig[ReportDataSection.table].fields;
     const dateColumn = this._reportInterval === KalturaReportInterval.months ? 'month_id' : 'date_id';
     this._columns = [dateColumn, ...Object.keys(this._dataConfig[ReportDataSection.totals].fields)];
