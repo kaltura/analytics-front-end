@@ -40,6 +40,12 @@
 
       <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
 
+      <div class="kReportContainer">
+        <app-video-performance [dateFilterComponent]="dateFilter"
+                               [dateFilter]="_dateFilter"
+                               [entryId]="_entryId"></app-video-performance>
+      </div>
+
     </div>
   </div>
 </div>
