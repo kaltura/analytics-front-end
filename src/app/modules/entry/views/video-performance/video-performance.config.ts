@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Injectable()
 export class VideoPerformanceConfig extends ReportDataBaseConfig {
@@ -12,6 +14,30 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
+      [ReportDataSection.table]: {
+        fields: {
+          'month_id': {
+            format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
+            nonComparable: true,
+          },
+          'date_id': {
+            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
+            nonComparable: true,
+          },
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
+          'sum_time_viewed': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
+          'avg_time_viewed': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
+        }
+      },
       [ReportDataSection.graph]: {
         fields: {
           'count_plays': {

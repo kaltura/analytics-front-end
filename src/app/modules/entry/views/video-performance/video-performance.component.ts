@@ -190,13 +190,18 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   private _parseTableDataFromGraph(chartData: { [key: string]: { name: string, value: string }[] }): void {
+    const tableFieldsConfig = this._dataConfig[ReportDataSection.table].fields;
     const dateColumn = this._reportInterval === KalturaReportInterval.months ? 'month_id' : 'date_id';
     this._columns = [dateColumn, ...Object.keys(this._dataConfig[ReportDataSection.totals].fields)];
     this._tableData = chartData[this._selectedMetrics].xAxis.data.map((item, index) =>
-      this._columns.reduce(
-        (res, col) => (res[col] = col === dateColumn ? item : chartData[col].series[0].data[index], res),
-        {}
-      )
+      this._columns.reduce((res, col) => {
+          res[col] = col === dateColumn
+            ? item
+            : tableFieldsConfig[col].format(chartData[col].series[0].data[index]);
+        
+          return res;
+        },
+        {})
     );
     this._totalCount = this._tableData.length;
   }

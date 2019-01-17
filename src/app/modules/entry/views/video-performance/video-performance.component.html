@@ -34,9 +34,9 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : null">
                   {{'app.entry.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="false"></p-sortIcon>
                 </th>
 
               </tr>
@@ -65,10 +65,10 @@
             </ng-template>
           </p-table>
 
-          <p-paginator [rows]="_pager.pageSize"
-                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                       [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+          <!--<p-paginator [rows]="_pager.pageSize"-->
+                       <!--[first]="(_pager.pageIndex -1) * _pager.pageSize"-->
+                       <!--[totalRecords]="_totalCount"-->
+                       <!--(onPageChange)="_onPaginationChanged($event)"></p-paginator>-->
         </div>
       </div>
     </div>
