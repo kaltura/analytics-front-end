@@ -209,7 +209,7 @@ export class ReportService implements OnDestroy {
     return { columns, tableData };
   }
   
-  public parseTotals(totals: KalturaReportTotal, config: ReportDataItemConfig, selected?: string): Tab[] {
+  public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(',');
     
@@ -236,7 +236,8 @@ export class ReportService implements OnDestroy {
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      reportInterval: KalturaReportInterval,
-                     dataLoadedCb?: Function): GraphsData {
+                     dataLoadedCb?: Function,
+                     graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -250,10 +251,14 @@ export class ReportService implements OnDestroy {
       data.forEach((value) => {
         if (value.length) {
           const label = value.split(',')[0];
-          const name = reportInterval === KalturaReportInterval.months
-            ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-            : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
-          let val = Math.ceil(parseFloat(value.split(',')[1])); // publisher storage report should round up graph values
+          let name = label;
+  
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            name = reportInterval === KalturaReportInterval.months
+              ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
+              : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          }
+          let val = parseFloat(value.split(',')[1]);
           if (isNaN(val)) {
             val = 0;
           }
@@ -261,7 +266,7 @@ export class ReportService implements OnDestroy {
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-          
+  
           xAxisData.push(name);
           yAxisData.push(val);
         }
@@ -280,6 +285,8 @@ export class ReportService implements OnDestroy {
           </div>
         `;
       };
+      const xAxisLabelRotation = graphOptions ? graphOptions.xAxisLabelRotation : null;
+      const yAxisLabelRotation = graphOptions ? graphOptions.yAxisLabelRotation : null;
       lineChartData[graph.id] = {
         textStyle: {
           fontFamily: 'Lato',
@@ -296,7 +303,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -316,7 +324,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false
@@ -373,7 +382,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
           },
           axisTick: {
             length: 8,
@@ -393,7 +403,8 @@ export class ReportService implements OnDestroy {
             color: '#999999',
             fontSize: 12,
             fontWeight: 'bold',
-            fontFamily: 'Lato'
+            fontFamily: 'Lato',
+            rotate: yAxisLabelRotation ? yAxisLabelRotation : 0
           },
           axisLine: {
             show: false
@@ -430,6 +441,22 @@ export class ReportService implements OnDestroy {
       }
     });
     return { barChartData, lineChartData };
+  }
+  
+  public getGraphDataFromTable(table: KalturaReportTable,
+                               dataConfig: ReportDataConfig,
+                               reportInterval: KalturaReportInterval,
+                               graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
+    const { tableData } = this.parseTableData(table, dataConfig.table);
+    const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
+    return this.parseGraphs(graphData, dataConfig.graph, reportInterval, null, graphOptions);
+  }
+  
+  
+  public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
+    return Object.keys(dataConfig.graph.fields).map(
+      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source},${val[field]};`, acc), '') })
+    );
   }
 }
 

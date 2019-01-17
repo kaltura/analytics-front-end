@@ -132,7 +132,14 @@
       "created": "Created",
       "contributorsSources": "Which sources do contributors use most to add content?",
       "contributorsAmount": "How many users contributed more than once?",
-      "returningContributors": "Returning Contributors"
+      "returningContributors": "Returning Contributors",
+      "topContributorsReport": {
+        "role": "User Role",
+        "email": "Email",
+        "creationDate": "Registration Date",
+        "lastUpload": "Last Upload",
+        "errorLoadingUser": "Failed to load user data"
+      }
     },
     "bandwidth":{
       "highlights": "Highlights",

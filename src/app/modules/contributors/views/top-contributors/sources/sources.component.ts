@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { SourcesDataConfig } from './sources-data.config';
@@ -36,7 +36,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _reportType = KalturaReportType.uniqueUsersPlay;
+  public _reportType = KalturaReportType.topSources;
   public _barChartData: any = {};
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];
@@ -51,6 +51,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   protected _updateRefineFilter(): void {
@@ -81,7 +82,11 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       }))
       .subscribe(({ report, compare }) => {
           this._barChartData = {};
-          
+
+          if (report.table && report.table.header && report.table.data) {
+            this._handleTable(report.table, compare); // handle table
+          }
+
           this._isBusy = false;
         },
         error => {
@@ -137,5 +142,39 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+  }
+
+  private _handleTable(table: KalturaReportTable, compare?: Report): void {
+    this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
+  
+    const columnsCount = table.data ? table.data.split(';').length : 0;
+    const graphOptions = { xAxisLabelRotation: columnsCount > 3 ? 45 : 0 };
+    if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      const currentData = this._reportService.convertTableDataToGraphData(tableData, this._dataConfig);
+      const compareData = this._reportService.convertTableDataToGraphData(compareTableData, this._dataConfig);
+      const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
+      const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+      const { barChartData } = this._compareService.compareGraphData(
+        currentPeriod,
+        comparePeriod,
+        currentData,
+        compareData,
+        this._dataConfig.graph,
+        this._reportInterval,
+        null,
+        graphOptions
+      );
+      this._barChartData = barChartData;
+      this._compareFirstTimeLoading = false;
+    } else {
+      this._barChartData = this._reportService.getGraphDataFromTable(
+        table,
+        this._dataConfig,
+        this._reportInterval,
+        graphOptions
+        ).barChartData;
+    }
   }
 }

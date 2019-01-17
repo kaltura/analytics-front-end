@@ -32,7 +32,7 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
   
   public _data: EntryDetailsOverlayData;
   public _loading = false;
-  public _errorMessage: AreaBlockerMessage;
+  public _errorMessage: string;
   
   constructor(private _kalturaClient: KalturaClient,
               private _translate: TranslateService) {
@@ -56,17 +56,18 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,type,createdAt,msDuration'
+            fields: 'id,name,type,createdAt,msDuration,userId'
           })
         }),
-      new UserGetAction({ userId: null })
+      new UserGetAction({ userId: '' })
+        .setDependency(['userId', 0, 'userId'])
         .setRequestOptions(
           new KalturaRequestOptions({
             responseProfile: new KalturaDetachedResponseProfile({
               type: KalturaResponseProfileType.includeFields,
               fields: 'id,fullName'
             })
-          }).setDependency(['userId', 0, 'userId'])
+          })
         )
     );
     
@@ -99,11 +100,7 @@ export class EntryDetailsOverlayComponent implements OnInit, OnDestroy {
         },
         error => {
           this._loading = false;
-          this._errorMessage = new AreaBlockerMessage({
-            title: this._translate.instant('app.common.error'),
-            message: error.message,
-            buttons: []
-          });
+          this._errorMessage = error.message;
         });
   }
   

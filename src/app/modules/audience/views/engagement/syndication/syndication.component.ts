@@ -39,7 +39,6 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   public _selectedMetrics: string;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
-  public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.topSyndication;
   public _lineChartData: any = {};
   public _totalUsers = null;
@@ -165,7 +164,6 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
-      this._compareFirstTimeLoading = true;
     }
   }
   
