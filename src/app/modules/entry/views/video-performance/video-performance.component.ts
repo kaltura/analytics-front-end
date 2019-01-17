@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { VideoPerformanceConfig } from './video-performance.config';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
@@ -31,11 +31,16 @@ export class VideoPerformanceComponent extends EntryBase {
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
   
-  public _lineChartData: { [key: string]: any[] } = {};
+  public _columns: string[] = [];
+  public _totalCount = 0;
+  public _tableData: any[] = [];
+  public _firstTimeLoading = true;
+  public _lineChartData: { [key: string]: { name: string, value: string }[] } = {};
   public _selectedMetrics: string;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
+  public _showTable = false;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
@@ -58,7 +63,7 @@ export class VideoPerformanceComponent extends EntryBase {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetrics = this._dataConfig.graph.preSelected;
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   protected _loadReport(sections = this._dataConfig): void {
@@ -88,8 +93,12 @@ export class VideoPerformanceComponent extends EntryBase {
             if (report.graphs) {
               this._handleGraphs(report.graphs); // handle totals
             }
+            if (report.totals) {
+              this._handleTotals(report.totals); // handle totals
+            }
           }
           this._isBusy = false;
+          this._firstTimeLoading = false;
         },
         error => {
           this._isBusy = false;
@@ -166,6 +175,9 @@ export class VideoPerformanceComponent extends EntryBase {
     }
   }
   
+  private _handleTotals(totals: KalturaReportTotal): void {
+    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+  }
   
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
     const { lineChartData } = this._reportService.parseGraphs(
@@ -174,6 +186,39 @@ export class VideoPerformanceComponent extends EntryBase {
       this._reportInterval
     );
     this._lineChartData = lineChartData;
+    this._parseTableDataFromGraph(lineChartData);
+  }
+  
+  private _parseTableDataFromGraph(lineChartData: { [key: string]: { name: string, value: string }[] }): void {
+    console.warn(lineChartData);
+  }
+  
+  public _onTabChange(tab: Tab): void {
+    this._selectedMetrics = tab.key;
+  }
+  
+  public _toggleTable(): void {
+    this._showTable = !this._showTable;
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 0);
+  }
+  
+  public _onPaginationChanged(event: any): void {
+    if (event.page !== (this._pager.pageIndex - 1)) {
+      this._pager.pageIndex = event.page + 1;
+      // this._loadReport({ table: null });
+    }
+  }
+  
+  public _onSortChanged(event) {
+    if (event.data.length && event.field && event.order && !this._isCompareMode) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        // this._loadReport({ table: null });
+      }
+    }
   }
   
 }

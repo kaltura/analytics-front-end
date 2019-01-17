@@ -341,6 +341,10 @@
       "sum_time_viewed": "Minutes Viewed",
       "count_loads": "Player Impressions",
       "avg_time_viewed": "Avg. View Time",
+      "count_plays_tt": "Plays",
+      "sum_time_viewed_tt": "Minutes Viewed",
+      "count_loads_tt": "Player Impressions",
+      "avg_time_viewed_tt": "Avg. View Time",
       "entryType": {
         "video": "Video",
         "audio": "Audio",
