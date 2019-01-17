@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import {
   BaseEntryGetAction,
@@ -58,7 +57,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _entryType: KalturaMediaType = null;
   public _owner = '';
 
-  constructor(private location: Location,
+  constructor(private _router: Router,
               private route: ActivatedRoute,
               private zone: NgZone,
               private _kalturaClient: KalturaClient,
@@ -155,7 +154,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
     } else {
-      this.location.back();
+      this._router.navigateByUrl('/audience/engagement');
     }
   }
 

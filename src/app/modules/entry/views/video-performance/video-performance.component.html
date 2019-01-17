@@ -6,7 +6,9 @@
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions" *ngIf="dateFilterComponent">
-        <app-time-units [dateFilter]="dateFilterComponent" [applyIn]="'video-performance'"></app-time-units>
+        <app-time-units [selectedTimeUnit]="_reportInterval"
+                        [dateFilter]="dateFilterComponent"
+                        [applyIn]="'video-performance'"></app-time-units>
       </div>
       <div class="kChart">
         <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
@@ -33,7 +35,7 @@
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
-                  {{'app.engagement.highlightsReport.' + col | translate}}
+                  {{'app.entry.' + col | translate}}
                   <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                 </th>
 

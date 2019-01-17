@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { VideoPerformanceConfig } from './video-performance.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -42,9 +42,9 @@ export class VideoPerformanceComponent extends EntryBase {
   public _tabsData: Tab[] = [];
   public _showTable = false;
   public _reportInterval = KalturaReportInterval.days;
-  public _compareFilter: KalturaReportInputFilter = null;
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _filter = new KalturaReportInputFilter({
+  public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -135,10 +135,10 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
-    // this._refineFilterToServerValue(this._filter);
-    // if (this._compareFilter) {
-    //   this._refineFilterToServerValue(this._compareFilter);
-    // }
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _updateFilter(): void {
@@ -189,8 +189,16 @@ export class VideoPerformanceComponent extends EntryBase {
     this._parseTableDataFromGraph(lineChartData);
   }
   
-  private _parseTableDataFromGraph(lineChartData: { [key: string]: { name: string, value: string }[] }): void {
-    console.warn(lineChartData);
+  private _parseTableDataFromGraph(chartData: { [key: string]: { name: string, value: string }[] }): void {
+    const dateColumn = this._reportInterval === KalturaReportInterval.months ? 'month_id' : 'date_id';
+    this._columns = [dateColumn, ...Object.keys(this._dataConfig[ReportDataSection.totals].fields)];
+    this._tableData = chartData[this._selectedMetrics].xAxis.data.map((item, index) =>
+      this._columns.reduce(
+        (res, col) => (res[col] = col === dateColumn ? item : chartData[col].series[0].data[index], res),
+        {}
+      )
+    );
+    this._totalCount = this._tableData.length;
   }
   
   public _onTabChange(tab: Tab): void {
@@ -200,7 +208,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _toggleTable(): void {
     this._showTable = !this._showTable;
     setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
     }, 0);
   }
   

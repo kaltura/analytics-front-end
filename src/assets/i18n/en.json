@@ -337,6 +337,8 @@
       "owner": "Owner:",
       "seeAll": "See All Details",
       "videoPerformance": "Video performance over time",
+      "month_id": "Month",
+      "date_id": "Date",
       "count_plays": "Plays",
       "sum_time_viewed": "Minutes Viewed",
       "count_loads": "Player Impressions",
