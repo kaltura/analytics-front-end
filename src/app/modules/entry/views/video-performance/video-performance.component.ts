@@ -161,7 +161,11 @@ export class VideoPerformanceComponent extends EntryBase {
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
-    
+
+    if (current.totals) {
+      this._handleTotals(current.totals); // handle totals
+    }
+
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
