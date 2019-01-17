@@ -1,9 +1,8 @@
 {
   "app":{
     "modules":{
-      "dashboard": "Dashboard",
       "audience": "Audience",
-      "bandwidth": "Bandwidth & Storage Reports",
+      "bandwidth": "Usage",
       "contributors": "Contributors",
       "live": "Live"
     },
@@ -327,6 +326,22 @@
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
         "avg_view_drop_off_tt": "Drop Off Rate"
+      }
+    },
+    "entry": {
+      "plays": "Plays",
+      "viewers": "Unique Viewers",
+      "minutes": "Minutes Viewed",
+      "watched": "Avg. Completion Rate",
+      "back": "Back",
+      "owner": "Owner:",
+      "seeAll": "See All Details",
+      "entryType": {
+        "video": "Video",
+        "audio": "Audio",
+        "image": "Image",
+        "live": "Live",
+        "unknown": "Unknown"
       }
     }
   }

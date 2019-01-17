@@ -71,6 +71,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   private startDate: Date;
   private endDate: Date;
   
+  private _queryParams: { [key: string]: string } = {};
+  
   public get _applyDisabled(): boolean {
     return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2;
   }
@@ -89,6 +91,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         .pipe(cancelOnDestroy(this), filter(Boolean))
         .subscribe(({ queryParams }) => {
           this._init(queryParams);
+          this._queryParams = queryParams;
         });
     } else {
       const params = this._route.snapshot.queryParams;
@@ -156,11 +159,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _updateRouteParams(): void {
-    let queryParams = null;
+    let queryParams = this._queryParams;
     if (this.selectedView === 'preset') {
-      queryParams = { dateBy: this.selectedDateRange };
+      queryParams = {...this._queryParams, dateBy: this.selectedDateRange };
     } else if (this.selectedView === 'specific') {
       queryParams = {
+        ...this._queryParams,
         dateFrom: DateFilterUtils.getDay(this.startDate),
         dateTo: DateFilterUtils.getDay(this.endDate),
       };
