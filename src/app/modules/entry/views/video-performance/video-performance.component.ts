@@ -13,6 +13,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-video-performance',
@@ -41,6 +42,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
+  public _metricsOptions: SelectItem[] = [];
   public _showTable = false;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -66,6 +68,10 @@ export class VideoPerformanceComponent extends EntryBase {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+    this._metricsOptions = Object.keys(this._dataConfig[ReportDataSection.totals].fields).map(field => ({
+      label: this._translate.instant(`app.entry.${field}`),
+      value: field
+    }));
   }
   
   protected _loadReport(sections = this._dataConfig): void {
