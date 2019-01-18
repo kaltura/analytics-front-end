@@ -28,6 +28,7 @@ export class VideoPerformanceComponent extends EntryBase {
   private _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
+  private _metricsCompareTo: string = null;
   
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
@@ -193,6 +194,10 @@ export class VideoPerformanceComponent extends EntryBase {
         this._reportInterval,
       );
       this._lineChartData = lineChartData;
+  
+      if (this._metricsCompareTo) {
+        this._onCompareTo(this._metricsCompareTo);
+      }
     }
   }
   
@@ -208,6 +213,10 @@ export class VideoPerformanceComponent extends EntryBase {
     );
     this._lineChartData = lineChartData;
     this._parseTableDataFromGraph(lineChartData);
+    
+    if (this._metricsCompareTo) {
+      this._onCompareTo(this._metricsCompareTo);
+    }
   }
   
   private _parseTableDataFromGraph(chartData: { [key: string]: any }): void {
@@ -259,6 +268,7 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _onCompareTo(field: string): void {
     if (field) {
+      this._metricsCompareTo = field;
       this._metricsLineChartData = this._compareService.compareToMetric(
         this._dataConfig.graph,
         this._lineChartData,
@@ -269,6 +279,7 @@ export class VideoPerformanceComponent extends EntryBase {
       );
     } else {
       this._metricsLineChartData = null;
+      this._metricsCompareTo = null;
     }
   }
 }
