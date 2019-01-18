@@ -43,6 +43,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _metricsOptions: SelectItem[] = [];
+  public _metricsColors: { [key: string]: string; } = {};
   public _showTable = false;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -68,10 +69,17 @@ export class VideoPerformanceComponent extends EntryBase {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
-    this._metricsOptions = Object.keys(this._dataConfig[ReportDataSection.totals].fields).map(field => ({
-      label: this._translate.instant(`app.entry.${field}`),
-      value: field
-    }));
+  
+    const totalsConfig = this._dataConfig[ReportDataSection.totals].fields;
+    const graphConfig = this._dataConfig[ReportDataSection.graph].fields;
+    Object.keys(totalsConfig).forEach(field => {
+      this._metricsOptions.push({
+        label: this._translate.instant(`app.entry.${field}`),
+        value: field
+      });
+
+      this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
+    });
   }
   
   protected _loadReport(sections = this._dataConfig): void {

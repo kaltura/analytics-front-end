@@ -1,14 +1,22 @@
 <div class="kCompareMetric" *ngIf="_options.length">
   <span class="kCompareMetricLabel">{{ 'app.common.compareMetricTo' | translate:{ 'metricName': _metric } }}</span>
 
-  <p-dropdown [style]="{'min-width': '172px'}"
+  <p-dropdown [style]="{'width': '172px'}"
               [options]="_options"
               [(ngModel)]="selectedOption">
     <ng-template let-option pTemplate="selectedItem">
-      {{option.label}}
+      <div class="kOptionsLabelWrapper">
+        <i *ngIf="option.value" class="kCompareMetricBullet"
+           [style.color]="colors ? (colors[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+        <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+      </div>
     </ng-template>
     <ng-template let-option pTemplate="item">
-      {{option.label}}
+      <div class="kOptionsLabelWrapper kItemLabel">
+        <i *ngIf="option.value" class="kCompareMetricBullet"
+           [style.color]="colors ? (colors[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+        <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+      </div>
     </ng-template>
   </p-dropdown>
 

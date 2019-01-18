@@ -7,6 +7,7 @@
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-compare-metric [metric]="_selectedMetricsLabel"
+                            [colors]="_metricsColors"
                             [options]="_metricsOptions"></app-compare-metric>
         <app-time-units *ngIf="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"
