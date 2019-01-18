@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { getPrimaryColor } from 'shared/utils/colors';
@@ -9,15 +9,19 @@ import { getPrimaryColor } from 'shared/utils/colors';
   styleUrls: ['./compare-metric.component.scss'],
 })
 export class CompareMetricComponent {
-  @Input() selectedOption: SelectItem = null;
-  
   @Input() colors: { [key: string]: string } = {};
+
+  @Input() set defaultSelection(value: string) {
+    setTimeout(() => { // run in the next loop to make sure *_originalOptions* is defined
+      this._selected = this._originalOptions.find(item => item.value === value) || null;
+    });
+  }
   
   @Input() set metric(value: string) {
     setTimeout(() => { // run in the next loop to make sure *_originalOptions* is defined
       this._metric = value;
       this._options = this._originalOptions.filter(item => item.label !== value);
-      this.selectedOption = null;
+      this._selected = null;
     });
   }
   
@@ -30,11 +34,14 @@ export class CompareMetricComponent {
     }
   }
   
+  @Output() compareTo = new EventEmitter<string>();
+  
   private _originalOptions: SelectItem[] = [];
   
   public _options: SelectItem[] = [];
   public _metric: string = null;
   public _defaultColor = getPrimaryColor();
+  public _selected: SelectItem = null;
   
   constructor(private _translate: TranslateService) {
   }

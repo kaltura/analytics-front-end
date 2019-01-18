@@ -37,6 +37,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _tableData: any[] = [];
   public _firstTimeLoading = true;
   public _lineChartData: { [key: string]: any } = {};
+  public _metricsLineChartData: { [key: string]: any } = null;
   public _selectedMetrics: string;
   public _selectedMetricsLabel: string;
   public _isBusy: boolean;
@@ -69,7 +70,7 @@ export class VideoPerformanceComponent extends EntryBase {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
-  
+    
     const totalsConfig = this._dataConfig[ReportDataSection.totals].fields;
     const graphConfig = this._dataConfig[ReportDataSection.graph].fields;
     Object.keys(totalsConfig).forEach(field => {
@@ -77,7 +78,7 @@ export class VideoPerformanceComponent extends EntryBase {
         label: this._translate.instant(`app.entry.${field}`),
         value: field
       });
-
+      
       this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
     });
   }
@@ -177,11 +178,11 @@ export class VideoPerformanceComponent extends EntryBase {
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
     const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
-
+    
     if (current.totals) {
       this._handleTotals(current.totals); // handle totals
     }
-
+    
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
@@ -218,7 +219,7 @@ export class VideoPerformanceComponent extends EntryBase {
           res[col] = col === dateColumn
             ? item
             : tableFieldsConfig[col].format(chartData[col].series[0].data[index]);
-        
+          
           return res;
         },
         {})
@@ -229,6 +230,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+    this._metricsLineChartData = null;
   }
   
   public _toggleTable(): void {
@@ -255,4 +257,18 @@ export class VideoPerformanceComponent extends EntryBase {
     }
   }
   
+  public _onCompareTo(field: string): void {
+    if (field) {
+      this._metricsLineChartData = this._compareService.compareToMetric(
+        this._dataConfig.graph,
+        this._lineChartData,
+        this._selectedMetrics,
+        field,
+        this._selectedMetricsLabel,
+        this._translate.instant(`app.entry.${field}`)
+      );
+    } else {
+      this._metricsLineChartData = null;
+    }
+  }
 }

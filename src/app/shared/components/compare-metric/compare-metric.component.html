@@ -3,7 +3,8 @@
 
   <p-dropdown [style]="{'width': '172px'}"
               [options]="_options"
-              [(ngModel)]="selectedOption">
+              (ngModelChange)="compareTo.emit($event)"
+              [(ngModel)]="_selected">
     <ng-template let-option pTemplate="selectedItem">
       <div class="kOptionsLabelWrapper">
         <i *ngIf="option.value" class="kCompareMetricBullet"

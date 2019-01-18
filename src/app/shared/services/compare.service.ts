@@ -8,16 +8,17 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import get = Reflect.get;
 
 @Injectable()
 export class CompareService implements OnDestroy {
   constructor(private _translate: TranslateService,
               private _trendService: TrendService) {
   }
-
+  
   ngOnDestroy() {
   }
-
+  
   public compareGraphData(currentPeriod: { from: string, to: string },
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportGraph[],
@@ -28,7 +29,7 @@ export class CompareService implements OnDestroy {
                           graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
-
+    
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
     if (reportInterval === KalturaReportInterval.months) {
@@ -38,7 +39,7 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
     }
-
+    
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id] || !graph.data) {
         return;
@@ -46,16 +47,16 @@ export class CompareService implements OnDestroy {
       let xAxisData = [];
       let yAxisCurrentData = [];
       let yAxisCompareData = [];
-
+      
       const currentData = graph.data.split(';');
       const compareData = compare[i].data ? compare[i].data.split(';') : currentData.map(() => 'N\A,0');
-
+      
       currentData.forEach((currentValue) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(',')[0];
           const compareValue = compareData.find(item => item.split(',')[0] === currentLabel) || 'N\A,0';
           let currentName = currentLabel;
-
+          
           if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
@@ -67,22 +68,22 @@ export class CompareService implements OnDestroy {
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
-
+          
           if (isNaN(compareVal)) {
             compareVal = 0;
           }
-
+          
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
             compareVal = config.fields[graph.id].format(compareVal);
           }
-
+          
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
           yAxisCompareData.push(compareVal);
         }
       });
-  
+      
       const defaultColors = [getPrimaryColor(), getSecondaryColor()];
       const getFormatter = colors => params => {
         const [current, compare] = params;
@@ -196,17 +197,17 @@ export class CompareService implements OnDestroy {
           symbolSize: 8,
           showSymbol: false
         },
-        {
-          name: comparePeriodTitle,
-          data: yAxisCompareData,
-          type: 'line',
-          lineStyle: {
-            width: 3
-          },
-          symbol: 'circle',
-          symbolSize: 8,
-          showSymbol: false
-        }]
+          {
+            name: comparePeriodTitle,
+            data: yAxisCompareData,
+            type: 'line',
+            lineStyle: {
+              width: 3
+            },
+            symbol: 'circle',
+            symbolSize: 8,
+            showSymbol: false
+          }]
       };
       barChartData[graph.id] = {
         textStyle: {
@@ -291,24 +292,24 @@ export class CompareService implements OnDestroy {
           barGap: 0,
           type: 'bar'
         },
-        {
-          name: comparePeriodTitle,
-          data: yAxisCompareData,
-          barGap: 0,
-          type: 'bar'
-        }]
+          {
+            name: comparePeriodTitle,
+            data: yAxisCompareData,
+            barGap: 0,
+            type: 'bar'
+          }]
       };
-
+      
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();
         }, 200);
       }
     });
-
+    
     return { barChartData, lineChartData };
   }
-
+  
   public compareTableData(currentPeriod: { from: string, to: string },
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportTable,
@@ -318,18 +319,18 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return { columns: [], tableData: [] };
     }
-
+    
     // parse table columns
     let columns = current.header.toLowerCase().split(',');
     const tableData = [];
-
+    
     // parse table data
     const currentData = current.data.split(';');
     const compareData = compare.data ? compare.data.split(';') : [];
-
+    
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
-
+    
     currentData.forEach((valuesString, i) => {
       let compareValuesString = null;
       if (dataKey.length) {
@@ -357,7 +358,7 @@ export class CompareService implements OnDestroy {
         } else {
           compareValues = currentValues.map(() => 'N/A');
         }
-
+        
         currentValues.forEach((value, j) => {
           const fieldConfig = config.fields[columns[j]];
           if (fieldConfig) {
@@ -382,19 +383,19 @@ export class CompareService implements OnDestroy {
         tableData.push(data);
       }
     });
-  
+    
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
-
+    
     columns.sort((a, b) => {
       const valA = config.fields[a].sortOrder || 0;
       const valB = config.fields[b].sortOrder || 0;
       return valA - valB;
     });
-
-
+    
+    
     return { columns, tableData };
   }
-
+  
   public compareTotalsData(currentPeriod: { from: string, to: string },
                            comparePeriod: { from: string, to: string },
                            current: KalturaReportTotal,
@@ -404,13 +405,13 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return [];
     }
-
+    
     const tabsData = [];
     const data = current.data.split(',');
     const compareData = compare.data ? compare.data.split(',') : [];
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
-
+    
     current.header.split(',').forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
@@ -429,10 +430,71 @@ export class CompareService implements OnDestroy {
         });
       }
     });
-  
+    
     return tabsData.sort((a, b) => {
       return a.sortOrder - b.sortOrder;
     });
+  }
+  
+  public compareToMetric(config: ReportDataItemConfig,
+                         graphsData: { [key: string]: any },
+                         currentMetric: string,
+                         compareMetric: string,
+                         currentMetricLabel: string,
+                         compareMetricLabel: string): any {
+    const current = graphsData[currentMetric];
+    const compare = graphsData[compareMetric];
+  
+    const getFormatter = colors => params => {
+      const [current, compare] = params;
+      const currentValue = typeof config.fields[currentMetric].graphTooltip === 'function'
+        ? config.fields[currentMetric].graphTooltip(current.value)
+        : current.value;
+      const compareValue = typeof config.fields[compareMetric].graphTooltip === 'function'
+        ? config.fields[compareMetric].graphTooltip(compare.value)
+        : compare.value;
+      return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
+          </div>
+        `;
+    };
+    
+    return {
+      'textStyle': { ...current.textStyle },
+      'grid': { ...current.grid },
+      'xAxis': { ...current.xAxis },
+      'tooltip':  {
+        ...current.tooltip,
+        formatter: getFormatter([current.color[0], compare.color[0]])
+      },
+      'color': [
+        current.color[0],
+        compare.color[0],
+      ],
+      'yAxis': [
+        { ...current.yAxis },
+        { ...compare.yAxis },
+      ],
+      'series': [
+        current.series[0],
+        {...compare.series[0], yAxisIndex: 1 },
+      ],
+      'legend': {
+        data: [currentMetricLabel, compareMetricLabel],
+        icon: 'circle',
+        left: 'left',
+        bottom: 0,
+        padding: [16, 0, 0, 80],
+        selectedMode: false,
+        textStyle: {
+          fontSize: 12,
+          fontWeight: 'bold'
+        }
+      },
+    };
   }
 }
 
