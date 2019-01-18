@@ -8,7 +8,6 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
-import get = Reflect.get;
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -470,17 +469,13 @@ export class CompareService implements OnDestroy {
         ...current.tooltip,
         formatter: getFormatter([current.color[0], compare.color[0]])
       },
-      'color': [
-        current.color[0],
-        compare.color[0],
-      ],
       'yAxis': [
         { ...current.yAxis },
         { ...compare.yAxis },
       ],
       'series': [
-        current.series[0],
-        {...compare.series[0], yAxisIndex: 1 },
+        ...current.series.map((item, index) => ({ ...item, lineStyle: { width: 3, color: current.color[index] } })),
+        ...compare.series.map((item, index) => ({ ...item, yAxisIndex: 1, lineStyle: { width: 3, color: compare.color[index] } })),
       ],
       'legend': {
         data: [currentMetricLabel, compareMetricLabel],
