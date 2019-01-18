@@ -37,6 +37,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _firstTimeLoading = true;
   public _lineChartData: { [key: string]: any } = {};
   public _selectedMetrics: string;
+  public _selectedMetricsLabel: string;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -64,6 +65,7 @@ export class VideoPerformanceComponent extends EntryBase {
     
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
   }
   
   protected _loadReport(sections = this._dataConfig): void {
@@ -212,6 +214,7 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
   }
   
   public _toggleTable(): void {

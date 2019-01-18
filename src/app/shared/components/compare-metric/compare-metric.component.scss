@@ -1,0 +1,13 @@
+:host {
+  display: inline-block;
+  margin: 0 16px;
+}
+
+.kCompareMetric {
+  display: flex;
+  align-items: center;
+
+  .kCompareMetricLabel {
+    margin-right: 12px;
+  }
+}

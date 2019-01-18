@@ -42,6 +42,7 @@ import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
+    CompareMetricComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -112,6 +114,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    CompareMetricComponent,
     ...FilterComponentsList,
   ],
   providers: [

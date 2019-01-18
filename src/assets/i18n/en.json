@@ -79,7 +79,9 @@
       "viewDetails": "View Details",
       "hideDetails": "Hide Details",
       "clearAll": "Clear All",
-      "details": "See Details"
+      "details": "See Details",
+      "compareMetricTo": "{{metricName}} compare to",
+      "none": "None"
     },
     "errors":{
       "errorHeader": "Error",
