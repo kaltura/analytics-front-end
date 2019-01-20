@@ -113,6 +113,7 @@
       position: relative;
       width: 86px;
       height: 48px;
+      flex: 0 0 auto;
       background-color: $kGrayscale6;
       white-space: nowrap;
       text-align: center;
@@ -143,10 +144,7 @@
       .kTitle {
         color: $kGrayscale1;
         font-weight: bold;
-        margin-bottom: 8px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 22px;
       }
 
       .kScore {
