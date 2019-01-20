@@ -269,6 +269,8 @@
     "engagement": {
       "title": "Engagement",
       "highlights": "Highlights",
+      "insights": "Insights",
+      "peak": "Peak day",
       "userHighlights": "User Highlights",
       "topVideos": "Top Videos",
       "duration": "Which video duration leads to better engagement?",
