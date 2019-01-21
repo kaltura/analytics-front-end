@@ -185,9 +185,9 @@ export class FilterComponent {
           const location = value as LocationsFilterValue;
           label = this._translate.instant(`app.filters.location`);
           tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({ name }) => name)}`;
-          if (location.region) {
+          if (location.region && location.region.length) {
             tooltip += ` > ${location.region.map(({ name }) => name)}`;
-            if (location.city) {
+            if (location.city && location.city.length) {
               tooltip += ` > ${location.city.map(({ name }) => name)}`;
             }
           }
