@@ -1,5 +1,8 @@
 @import '../../../../../../../styles/variables';
-
+.kTableContainer{
+  display: flex;
+  flex-direction: column;
+}
 .kDates {
   font-size: 15px;
   margin-left: 24px;
