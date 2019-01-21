@@ -28,10 +28,8 @@
                    (onChange)="_onCountrySelectChange($event)"
                    [defaultLabel]="'app.audience.geo.selectCountry' | translate">
       <ng-template let-country pTemplate="item">
-            <div class="kCountryList">
-              <img class="kFlag" src="{{'assets/flags/' + country.value.toUpperCase() + '.png'}}"/>
-              {{country.label}}
-            </div>
+          <img class="kFlag" src="{{'assets/flags/' + country.value.toUpperCase() + '.png'}}" style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"/>
+          <span style="margin-top:2px; position: absolute">{{country.label}}</span>
       </ng-template>
     </p-multiSelect>
   </div>
