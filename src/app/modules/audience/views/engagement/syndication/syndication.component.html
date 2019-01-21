@@ -33,7 +33,9 @@
                    sortField="count_plays" [sortOrder]="-1" [defaultSortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
-                <th [ngStyle]="{'width': '60px'}">{{'app.engagement.topDomainsReport.index' | translate}}</th>
+                <th [ngStyle]="{'width': '60px'}">
+                  <span *ngIf="_tableData?.length">{{'app.engagement.topDomainsReport.index' | translate}}</span>
+                </th>
                 <th [ngStyle]="{'width': '60px'}"></th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'plays_distribution' ? null : col"
                     [ngStyle]="{

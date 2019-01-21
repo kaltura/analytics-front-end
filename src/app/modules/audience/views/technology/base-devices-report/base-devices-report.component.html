@@ -48,7 +48,9 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th [ngStyle]="{'width': '42px'}">{{'app.audience.technology.index' | translate}}</th>
+                <th [ngStyle]="{'width': '42px'}">
+                  <span *ngIf="_tableData?.length">{{'app.audience.technology.index' | translate}}</span>
+                </th>
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="col !== 'plays_trend' && col !== 'plays_distribution' && col !== 'os_family' && col !== 'os' && col !== 'browser' && col !== 'browser_family' ? col : null"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
