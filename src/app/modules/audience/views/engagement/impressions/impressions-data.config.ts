@@ -78,8 +78,8 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
             fontFamily: 'Lato',
             fontSize: 15,
             fontWeight: 'bold',
-            textShadowColor: 'rgba(29,70,148,0.80)',
-            textShadowBlur: 2,
+            textShadowColor: 'rgba(29,70,148,0.90)',
+            textShadowBlur: 5,
             textBorderWidth: 0,
             color: '#ffffff'
           },

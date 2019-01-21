@@ -1,7 +1,6 @@
 @import '../../../../../../../styles/variables';
-.kTableContainer{
-  display: flex;
-  flex-direction: column;
+:host{
+  width: 100%;
 }
 .kDates {
   font-size: 15px;
