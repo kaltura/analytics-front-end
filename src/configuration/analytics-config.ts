@@ -38,6 +38,21 @@ export function getKalturaServerUri(suffix: string = ''): string {
   }
 }
 
+export function buildCDNUrl(suffix: string): string {
+  let protocol =  (location.protocol || '').toLowerCase();
+  if (protocol[protocol.length - 1] === ':') {
+    protocol =  location.protocol.substring(0, location.protocol.length - 1);
+  }
+  let baseUrl = '';
+  if (protocol === 'https') {
+    baseUrl = analyticsConfig.cdnServers.securedServerUri;
+  } else {
+    baseUrl = analyticsConfig.cdnServers.serverUri;
+  }
+
+  return `${baseUrl}${suffix}`;
+}
+
 export const analyticsConfig: AnalyticsConfig = <any>{
   appVersion: '0.1'
 };
