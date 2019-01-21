@@ -183,15 +183,19 @@ export class FilterComponent {
           return { value, type, label, tooltip };
         case 'location':
           const location = value as LocationsFilterValue;
-          label = this._translate.instant(`app.filters.location`);
-          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({ name }) => name)}`;
-          if (location.region && location.region.length) {
-            tooltip += ` > ${location.region.map(({ name }) => name)}`;
-            if (location.city && location.city.length) {
-              tooltip += ` > ${location.city.map(({ name }) => name)}`;
+          if (location.country && location.country.length) {
+            label = this._translate.instant(`app.filters.location`);
+            tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({name}) => name)}`;
+            if (location.region && location.region.length) {
+              tooltip += ` > ${location.region.map(({name}) => name)}`;
+              if (location.city && location.city.length) {
+                tooltip += ` > ${location.city.map(({name}) => name)}`;
+              }
             }
+            return {value: 'location', type: 'location', label, tooltip};
+          } else {
+            return null;
           }
-          return { value: 'location', type: 'location', label, tooltip };
         default:
           return null;
       }
