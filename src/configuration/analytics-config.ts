@@ -1,5 +1,6 @@
 export interface AnalyticsConfig {
   appVersion: string;
+  valueSeparator: string;
   kalturaServer?: {
       uri?: string,
     previewUIConf?: number
@@ -53,6 +54,7 @@ export function buildCDNUrl(suffix: string): string {
   return `${baseUrl}${suffix}`;
 }
 
-export const analyticsConfig: AnalyticsConfig = <any>{
-  appVersion: '0.1'
+export const analyticsConfig: AnalyticsConfig = {
+  appVersion: '0.1',
+  valueSeparator: ',',
 };

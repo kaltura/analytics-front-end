@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import { getColorPercent } from 'shared/utils/colors';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export type funnelData = {
   impressions: number;
@@ -202,7 +203,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.echartsIntance.setOption({series: [{left: '0%'}]}, false);
     this.compareEchartsIntance.setOption({series: [{left: '0%'}]}, false);
 
-    const data = compare.totals.data.split(',');
+    const data = compare.totals.data.split(analyticsConfig.valueSeparator);
     this.compareFunnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,
@@ -239,7 +240,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   private handleTotals(totals: KalturaReportTotal): void {
     this.echartsIntance.setOption({series: [{width: '60%'}]}, false);
     this.echartsIntance.setOption({series: [{left: '35%'}]}, false);
-    const data = totals.data.split(',');
+    const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,

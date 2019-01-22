@@ -1,3 +1,5 @@
+import { analyticsConfig } from 'configuration/analytics-config';
+
 export function devicesFilterToServerValue(value: string[]): string {
   if (!Array.isArray(value) || !value.length) {
     return null;
@@ -13,5 +15,5 @@ export function devicesFilterToServerValue(value: string[]): string {
     ];
   }
   
-  return result.join(',');
+  return result.join(analyticsConfig.valueSeparator);
 }

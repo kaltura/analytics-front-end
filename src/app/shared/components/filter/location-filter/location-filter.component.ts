@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './locations-filter.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface LocationsFilterValueItem {
   name: string;
@@ -60,14 +61,14 @@ export class LocationFilterComponent implements OnDestroy {
         this._selectedCountries = items;
         this._selectedRegions = [];
         this._selectedCities = [];
-        countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
+        countriesNames = this._selectedCountries.map(({ name }) => name).join(analyticsConfig.valueSeparator);
         this._locationFilterService.resetRegion(countriesNames);
         break;
       case 'region':
         this._selectedRegions = items;
         this._selectedCities = [];
-        countriesNames = this._selectedCountries.map(({ name }) => name).join(',');
-        regionsNames = this._selectedRegions.map(({ name }) => name).join(',');
+        countriesNames = this._selectedCountries.map(({ name }) => name).join(analyticsConfig.valueSeparator);
+        regionsNames = this._selectedRegions.map(({ name }) => name).join(analyticsConfig.valueSeparator);
         this._locationFilterService.resetCity(countriesNames, regionsNames);
         break;
       case 'city':

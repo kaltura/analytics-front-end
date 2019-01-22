@@ -48,12 +48,14 @@ export class CompareService implements OnDestroy {
       let yAxisCompareData = [];
 
       const currentData = graph.data.split(';');
-      const compareData = compare[i].data ? compare[i].data.split(';') : currentData.map(() => 'N\A,0');
+      const compareData = compare[i].data
+        ? compare[i].data.split(';')
+        : currentData.map(() => `N/A${analyticsConfig.valueSeparator}0`);
 
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
-          const currentLabel = currentValue.split(',')[0];
-          const compareValue = compareData[j] || 'N\A,0';
+          const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
+          const compareValue = compareData[j] || `N/A${analyticsConfig.valueSeparator}0`;
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
@@ -62,8 +64,8 @@ export class CompareService implements OnDestroy {
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
           }
           
-          let currentVal = Math.ceil(parseFloat(currentValue.split(',')[1])); // publisher storage report should round up graph values
-          let compareVal = Math.ceil(parseFloat(compareValue.split(',')[1])); // publisher storage report should round up graph values
+          let currentVal = Math.ceil(parseFloat(currentValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
+          let compareVal = Math.ceil(parseFloat(compareValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
@@ -320,7 +322,7 @@ export class CompareService implements OnDestroy {
     }
 
     // parse table columns
-    let columns = current.header.toLowerCase().split(',');
+    let columns = current.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
 
     // parse table data
@@ -334,10 +336,10 @@ export class CompareService implements OnDestroy {
       let compareValuesString = null;
       if (dataKey.length) {
         const dataIndex = columns.indexOf(dataKey.toLowerCase());
-        const key = valuesString.split(',')[dataIndex];
+        const key = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
         if (key && key.length) {
           compareData.some(compareRow => {
-            if (compareRow.split(',')[dataIndex] === key) {
+            if (compareRow.split(analyticsConfig.valueSeparator)[dataIndex] === key) {
               compareValuesString = compareRow;
               return true;
             }
@@ -348,12 +350,12 @@ export class CompareService implements OnDestroy {
       }
       if (valuesString.length) {
         let data = {};
-        const currentValues = valuesString.split(',');
+        const currentValues = valuesString.split(analyticsConfig.valueSeparator);
         let hasConsistentData = false;
         let compareValues = [];
         if (compareValuesString) {
           hasConsistentData = true;
-          compareValues = compareValuesString.split(',');
+          compareValues = compareValuesString.split(analyticsConfig.valueSeparator);
         } else {
           compareValues = currentValues.map(() => 'N/A');
         }
@@ -406,12 +408,12 @@ export class CompareService implements OnDestroy {
     }
 
     const tabsData = [];
-    const data = current.data.split(',');
-    const compareData = compare.data ? compare.data.split(',') : [];
+    const data = current.data.split(analyticsConfig.valueSeparator);
+    const compareData = compare.data ? compare.data.split(analyticsConfig.valueSeparator) : [];
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
 
-    current.header.split(',').forEach((header, index) => {
+    current.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
         const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index] || 0), Number(compareData[index] || 0));
