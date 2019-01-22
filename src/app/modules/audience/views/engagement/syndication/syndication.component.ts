@@ -170,7 +170,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     if (this._tabsData.length) {
-      this._totalPlaysCount = Number(this._tabsData[0].value);
+      this._totalPlaysCount = Number(this._tabsData[0].rawValue);
     }
   }
   

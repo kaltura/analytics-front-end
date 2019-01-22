@@ -220,6 +220,7 @@ export class ReportService implements OnDestroy {
           title: field.title,
           tooltip: field.tooltip,
           value: field.format(data[index]),
+          rawValue: data[index],
           selected: header === (selected || config.preSelected),
           units: field.units ? field.units(data[index]) : (config.units || ''),
           key: header,
