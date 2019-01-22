@@ -238,8 +238,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this.echartsIntance.setOption({series: [{width: '60%'}]}, false);
-    this.echartsIntance.setOption({series: [{left: '35%'}]}, false);
+    this.echartsIntance.setOption({series: [{width: '30%'}]}, false);
+    this.echartsIntance.setOption({series: [{left: '65%'}]}, false);
     const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,

@@ -59,10 +59,10 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
         {
           name: 'Player Impressions',
           type: 'funnel',
-          left: '35%',
+          left: '65%',
           top: 10,
           bottom: 10,
-          width: '60%',
+          width: '30%',
           height: 340,
           min: 0,
           max: 100,
