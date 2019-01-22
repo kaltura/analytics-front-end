@@ -14,7 +14,9 @@
               [popupWidth]="560"
               [popupHeight]="586"
               [closeBtn]="false"
-              [modal]="true">
+              [modal]="true"
+              (onOpen)="_updateHost(true)"
+              (onClose)="_updateHost(false)">
   <ng-template>
     <app-categories-selector [parentPopupWidget]="categoriesPopup"
                              [value]="_selectedValue"
