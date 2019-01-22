@@ -237,7 +237,6 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       }
       playsDistribution = significantDigits(playsDistribution);
       row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
-      row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
     
       return row;
