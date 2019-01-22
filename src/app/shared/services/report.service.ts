@@ -183,14 +183,14 @@ export class ReportService implements OnDestroy {
   
   public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
-    let columns = table.header.toLowerCase().split(',');
+    let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
     
     // parse table data
     table.data.split(';').forEach(valuesString => {
       if (valuesString.length) {
         let data = {};
-        valuesString.split(',').forEach((value, index) => {
+        valuesString.split(analyticsConfig.valueSeparator).forEach((value, index) => {
           if (config.fields[columns[index]]) {
             data[columns[index]] = config.fields[columns[index]].format(value);
           }
@@ -211,9 +211,9 @@ export class ReportService implements OnDestroy {
   
   public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
-    const data = totals.data.split(',');
+    const data = totals.data.split(analyticsConfig.valueSeparator);
     
-    totals.header.split(',').forEach((header, index) => {
+    totals.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
         tabsData.push({
@@ -250,7 +250,7 @@ export class ReportService implements OnDestroy {
       
       data.forEach((value) => {
         if (value.length) {
-          const label = value.split(',')[0];
+          const label = value.split(analyticsConfig.valueSeparator)[0];
           let name = label;
   
           if (!config.fields[graph.id].nonDateGraphLabel) {
@@ -258,7 +258,7 @@ export class ReportService implements OnDestroy {
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
           }
-          let val = parseFloat(value.split(',')[1]);
+          let val = parseFloat(value.split(analyticsConfig.valueSeparator)[1]);
           if (isNaN(val)) {
             val = 0;
           }
