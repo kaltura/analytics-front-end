@@ -66,8 +66,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
-  public _zoomInDisabled = false;
-  public _zoomOutDisabled = true;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -147,12 +145,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public zoom(direction: string): void {
     if (direction === 'in') {
       this._mapZoom = this._mapZoom * 2;
-      this._zoomInDisabled = true;
-      this._zoomOutDisabled = false;
     } else {
       this._mapZoom = this._mapZoom / 2;
-      this._zoomInDisabled = false;
-      this._zoomOutDisabled = true;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
     if (this._drillDown.length > 0) {
@@ -191,7 +185,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
     this.loadReport();
   }
@@ -325,8 +319,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
     map.zoom = this._mapZoom;
-    this._zoomInDisabled = false;
-    this._zoomOutDisabled = true;
     map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }

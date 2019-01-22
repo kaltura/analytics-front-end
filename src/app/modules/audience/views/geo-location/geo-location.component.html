@@ -49,14 +49,11 @@
 
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kDimensions">
-
-      </div>
       <div class="kMap">
         <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartClick)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
         <div class="kZoomWidget">
-          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')" [disabled]="_zoomOutDisabled"></button>
-          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')" [disabled]="_zoomInDisabled"></button>
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')"></button>
         </div>
       </div>
       <div class="kTable">
