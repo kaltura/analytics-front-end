@@ -54,7 +54,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
             sortOrder: 2,
           },
           'count_loads': {
