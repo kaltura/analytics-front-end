@@ -42,7 +42,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
     return this._compareFilter !== null;
   }
 
-  public _peakDayData: any = {};
+  public _peakDayData: any = null;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
@@ -73,6 +73,8 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._peakDayData = null;
+
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
           }
