@@ -28,6 +28,9 @@ import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { getPrimaryColor } from 'shared/utils/colors';
+import * as moment from 'moment';
+import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
+import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -228,9 +231,27 @@ export class ReportService implements OnDestroy {
         });
       }
     });
-
+    
     return tabsData.sort((a, b) => {
       return a.sortOrder - b.sortOrder;
+    });
+  }
+  
+  private _getMissingDatesValues(startDate: moment.Moment,
+                                 endDate: moment.Moment,
+                                 reportInterval: KalturaReportInterval,
+                                 formatFn: Function): { name: string, value: number }[] {
+    const dates = reportInterval === KalturaReportInterval.days
+      ? enumerateDaysBetweenDates(startDate, endDate)
+      : enumerateMonthsBetweenDates(startDate, endDate);
+    
+    return dates.map(date => {
+      const name = reportInterval === KalturaReportInterval.months
+        ? DateFilterUtils.formatMonthString(date.format('YYYYMMDD'), analyticsConfig.locale)
+        : DateFilterUtils.formatFullDateString(date.format('YYYYMMDD'), analyticsConfig.locale);
+      const value = typeof formatFn === 'function' ? formatFn(0) : 0;
+      
+      return { name, value };
     });
   }
   
@@ -249,11 +270,11 @@ export class ReportService implements OnDestroy {
       let yAxisData = [];
       const data = graph.data.split(';');
       
-      data.forEach((value) => {
+      data.forEach((value, index) => {
         if (value.length) {
           const label = value.split(analyticsConfig.valueSeparator)[0];
           let name = label;
-  
+          
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
@@ -267,9 +288,30 @@ export class ReportService implements OnDestroy {
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-  
+          
           xAxisData.push(name);
           yAxisData.push(val);
+          
+          const nextValue = data[index + 1];
+          if (nextValue) {
+            let nextValueDate, actualNextValueDate;
+            if (reportInterval === KalturaReportInterval.days) {
+              nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
+              actualNextValueDate = moment(label).startOf('day').add(1, 'days');
+            } else {
+              nextValueDate = DateFilterUtils.parseMonthString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
+              actualNextValueDate = DateFilterUtils.parseMonthString(label).startOf('month').add(1, 'months');
+            }
+
+            if (!actualNextValueDate.isSame(nextValueDate)) {
+              this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
+                .forEach(result => {
+                  xAxisData.push(result.name);
+                  yAxisData.push(result.value);
+                });
+            }
+          }
+          
         }
       });
       const defaultColor = getPrimaryColor();

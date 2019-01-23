@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class DateFilterUtils {
 
   static getTimeZoneOffset(): number {
@@ -65,5 +67,12 @@ export class DateFilterUtils {
     const day: string = value.substring(6, 8);
     const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
     return `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
+  }
+  
+  static parseMonthString(value: string): moment.Moment {
+    const year = Number(value.substring(0, 4));
+    const month = Number(value.substring(4, 6));
+  
+    return moment({ year, month });
   }
 }
