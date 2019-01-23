@@ -291,27 +291,28 @@ export class ReportService implements OnDestroy {
           
           xAxisData.push(name);
           yAxisData.push(val);
-          
-          const nextValue = data[index + 1];
-          if (nextValue) {
-            let nextValueDate, actualNextValueDate;
-            if (reportInterval === KalturaReportInterval.days) {
-              nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
-              actualNextValueDate = moment(label).startOf('day').add(1, 'days');
-            } else {
-              nextValueDate = DateFilterUtils.parseMonthString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
-              actualNextValueDate = DateFilterUtils.parseMonthString(label).startOf('month').add(1, 'months');
-            }
-
-            if (!actualNextValueDate.isSame(nextValueDate)) {
-              this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
-                .forEach(result => {
-                  xAxisData.push(result.name);
-                  yAxisData.push(result.value);
-                });
+  
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            const nextValue = data[index + 1];
+            if (nextValue) {
+              let nextValueDate, actualNextValueDate;
+              if (reportInterval === KalturaReportInterval.days) {
+                nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
+                actualNextValueDate = moment(label).startOf('day').add(1, 'days');
+              } else {
+                nextValueDate = DateFilterUtils.parseMonthString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
+                actualNextValueDate = DateFilterUtils.parseMonthString(label).startOf('month').add(1, 'months');
+              }
+    
+              if (!actualNextValueDate.isSame(nextValueDate)) {
+                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
+                  .forEach(result => {
+                    xAxisData.push(result.name);
+                    yAxisData.push(result.value);
+                  });
+              }
             }
           }
-          
         }
       });
       const defaultColor = getPrimaryColor();
