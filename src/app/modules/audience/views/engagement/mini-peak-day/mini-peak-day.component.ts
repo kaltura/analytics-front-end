@@ -118,8 +118,8 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
-    this._filter.interval = this._dateFilter.timeUnits;
-    this._reportInterval = this._dateFilter.timeUnits;
+    this._filter.interval = KalturaReportInterval.days;
+    this._reportInterval = KalturaReportInterval.days;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
