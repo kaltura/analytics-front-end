@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { environment } from '../../../../environments/environment';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
@@ -71,7 +70,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   private startDate: Date;
   private endDate: Date;
   
-  private _queryParams: { [key: string]: string } = {};
+  private _queryParams: { [key: string]: string } = null;
   
   public get _applyDisabled(): boolean {
     return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2;
@@ -90,8 +89,11 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         .listen(FrameEvents.UpdateFilters)
         .pipe(cancelOnDestroy(this), filter(Boolean))
         .subscribe(({ queryParams }) => {
-          this._init(queryParams);
-          this._queryParams = queryParams;
+          // query params are flat, so string compare is okay
+          if (JSON.stringify(this._queryParams) !== JSON.stringify(queryParams) ) {
+            this._init(queryParams);
+            this._queryParams = queryParams;
+          }
         });
     } else {
       const params = this._route.snapshot.queryParams;
@@ -159,7 +161,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _updateRouteParams(): void {
-    let queryParams = this._queryParams;
+    let queryParams = this._queryParams || {};
     if (this.selectedView === 'preset') {
       queryParams = {...this._queryParams, dateBy: this.selectedDateRange };
     } else if (this.selectedView === 'specific') {
