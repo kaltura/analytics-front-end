@@ -24,18 +24,29 @@ export class CompareService implements OnDestroy {
   private _getMissingDatesValues(startDate: moment.Moment,
                                  endDate: moment.Moment,
                                  reportInterval: KalturaReportInterval,
-                                 formatFn: Function): { name: string, value: number }[] {
+                                 formatFn: Function,
+                                 compareData: string[]): { name: string, value: number, compare: number }[] {
+    const formatValue = value => typeof formatFn === 'function' ? formatFn(value) : value;
     const dates = reportInterval === KalturaReportInterval.days
       ? enumerateDaysBetweenDates(startDate, endDate)
       : enumerateMonthsBetweenDates(startDate, endDate);
     
     return dates.map(date => {
+      const label = date.format('YYYYMMDD');
+
+      const compareString = compareData.find(item => {
+        const compareLabel = (item.split(analyticsConfig.valueSeparator)[0] || '').substr(4); // ignore year
+        const currentLabel = label.substr(4); // ignore year
+        return compareLabel === currentLabel;
+      });
+  
+      const compareValue = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : 0;
+
       const name = reportInterval === KalturaReportInterval.months
-        ? DateFilterUtils.formatMonthOnlyString(date.format('YYYYMMDD'), analyticsConfig.locale)
-        : DateFilterUtils.formatShortDateString(date.format('YYYYMMDD'), analyticsConfig.locale);
-      const value = typeof formatFn === 'function' ? formatFn(0) : 0;
+        ? DateFilterUtils.formatMonthOnlyString(label, analyticsConfig.locale)
+        : DateFilterUtils.formatShortDateString(label, analyticsConfig.locale);
       
-      return { name, value };
+      return { name, value: formatValue(0), compare: formatValue(compareValue) };
     });
   }
 
@@ -76,7 +87,7 @@ export class CompareService implements OnDestroy {
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
-          const compareValue = compareData[j] || `N/A${analyticsConfig.valueSeparator}0`;
+          const compareValue = compareData[j] || `${currentLabel}${analyticsConfig.valueSeparator}0`;
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
@@ -117,11 +128,11 @@ export class CompareService implements OnDestroy {
               }
       
               if (!actualNextValueDate.isSame(nextValueDate)) {
-                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
+                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData)
                   .forEach(result => {
                     xAxisData.push(result.name);
                     yAxisCurrentData.push(result.value);
-                    yAxisCompareData.push(result.value);
+                    yAxisCompareData.push(result.compare);
                   });
               }
             }
