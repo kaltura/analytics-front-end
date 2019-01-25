@@ -25,7 +25,8 @@ export class CompareService implements OnDestroy {
                                  endDate: moment.Moment,
                                  reportInterval: KalturaReportInterval,
                                  formatFn: Function,
-                                 compareData: string[]): { name: string, value: number, compare: number }[] {
+                                 compareData: string[],
+                                 datesDiff: number): { name: string, value: number, compare: number }[] {
     const formatValue = value => typeof formatFn === 'function' ? formatFn(value) : value;
     const dates = reportInterval === KalturaReportInterval.days
       ? enumerateDaysBetweenDates(startDate, endDate)
@@ -33,13 +34,12 @@ export class CompareService implements OnDestroy {
     
     return dates.map(date => {
       const label = date.format('YYYYMMDD');
-
-      const compareString = compareData.find(item => {
-        const compareLabel = (item.split(analyticsConfig.valueSeparator)[0] || '').substr(4); // ignore year
-        const currentLabel = label.substr(4); // ignore year
-        return compareLabel === currentLabel;
-      });
-  
+      const relevantDate = moment(date).subtract(datesDiff);
+      const relevantLabelString = reportInterval === KalturaReportInterval.days
+        ? relevantDate.format('YYYYMMDD')
+        : relevantDate.format('YYYYMM');
+      
+      const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
       const compareValue = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : 0;
 
       const name = reportInterval === KalturaReportInterval.months
@@ -128,7 +128,8 @@ export class CompareService implements OnDestroy {
               }
       
               if (!actualNextValueDate.isSame(nextValueDate)) {
-                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData)
+                const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
+                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
                   .forEach(result => {
                     xAxisData.push(result.name);
                     yAxisCurrentData.push(result.value);
