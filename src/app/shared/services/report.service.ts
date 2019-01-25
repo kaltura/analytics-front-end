@@ -347,10 +347,7 @@ export class ReportService implements OnDestroy {
               }
 
               if (currentDate.isBefore(toDate)) {
-                if (reportInterval === KalturaReportInterval.days) {
-                  toDate = toDate.clone().add(1, 'days');
-                }
-  
+                toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
                 this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format)
                   .forEach(result => {
                     xAxisData.push(result.name);
