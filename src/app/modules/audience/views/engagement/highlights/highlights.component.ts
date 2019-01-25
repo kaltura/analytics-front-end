@@ -78,13 +78,16 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
 
-        delete sections.totals;
-
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+    
+          if (report.totals && !this._tabsData.length) {
+            this._handleTotals(report.totals); // handle totals
+          }
+
           if (compare) {
             this._handleCompare(report, compare);
           } else {
@@ -94,9 +97,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             if (report.graphs.length) {
               this._chartDataLoaded = false;
               this._handleGraphs(report.graphs); // handle graphs
-            }
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
             }
           }
           this._firstTimeLoading = false;
