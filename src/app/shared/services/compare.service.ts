@@ -123,8 +123,8 @@ export class CompareService implements OnDestroy {
                 nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
                 actualNextValueDate = moment(currentLabel).startOf('day').add(1, 'days');
               } else {
-                nextValueDate = DateFilterUtils.parseMonthString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
-                actualNextValueDate = DateFilterUtils.parseMonthString(currentLabel).startOf('month').add(1, 'months');
+                nextValueDate = DateFilterUtils.parseDateString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
+                actualNextValueDate = DateFilterUtils.parseDateString(currentLabel).startOf('month').add(1, 'months');
               }
       
               if (!actualNextValueDate.isSame(nextValueDate)) {

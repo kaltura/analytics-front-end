@@ -69,10 +69,13 @@ export class DateFilterUtils {
     return `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
   }
   
-  static parseMonthString(value: string): moment.Moment {
-    const year = Number(value.substring(0, 4));
-    const month = Number(value.substring(4, 6));
+  static parseDateString(value: string): moment.Moment {
+    const day = Number(value.substring(6, 8));
+    
+    if (!day) {
+      value += '01'; // add the first day of a month to correct parsing
+    }
   
-    return moment({ year, month });
+    return moment(value);
   }
 }

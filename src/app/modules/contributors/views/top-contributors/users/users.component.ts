@@ -150,7 +150,12 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
   
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
-    const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { barChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval
+    );
     this._barChartData = barChartData['default'];
     
     this._totalUsers = this._barChartData.series[0].data.length

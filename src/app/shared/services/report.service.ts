@@ -257,6 +257,7 @@ export class ReportService implements OnDestroy {
   
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
+                     period: { from: string, to: string },
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function,
                      graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
@@ -269,6 +270,27 @@ export class ReportService implements OnDestroy {
       let xAxisData = [];
       let yAxisData = [];
       const data = graph.data.split(';');
+  
+      if (!config.fields[graph.id].nonDateGraphLabel) {
+        let fromDate = DateFilterUtils.parseDateString(period.from);
+        let currentDate = DateFilterUtils.parseDateString((data[0] || '').split(analyticsConfig.valueSeparator)[0] || '');
+
+        if (reportInterval === KalturaReportInterval.days) {
+          fromDate = fromDate.clone().startOf('day');
+          currentDate = currentDate.clone().startOf('day');
+        } else {
+          fromDate = fromDate.clone().startOf('month');
+          currentDate = currentDate.clone().startOf('month');
+        }
+
+        if (fromDate.isBefore(currentDate)) {
+          this._getMissingDatesValues(fromDate, currentDate, reportInterval, config.fields[graph.id].format)
+            .forEach(result => {
+              xAxisData.push(result.name);
+              yAxisData.push(result.value);
+            });
+        }
+      }
       
       data.forEach((value, index) => {
         if (value.length) {
@@ -294,18 +316,42 @@ export class ReportService implements OnDestroy {
   
           if (!config.fields[graph.id].nonDateGraphLabel) {
             const nextValue = data[index + 1];
+            
             if (nextValue) {
               let nextValueDate, actualNextValueDate;
               if (reportInterval === KalturaReportInterval.days) {
                 nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
                 actualNextValueDate = moment(label).startOf('day').add(1, 'days');
               } else {
-                nextValueDate = DateFilterUtils.parseMonthString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
-                actualNextValueDate = DateFilterUtils.parseMonthString(label).startOf('month').add(1, 'months');
+                nextValueDate = DateFilterUtils.parseDateString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
+                actualNextValueDate = DateFilterUtils.parseDateString(label).startOf('month').add(1, 'months');
               }
     
               if (!actualNextValueDate.isSame(nextValueDate)) {
                 this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
+                  .forEach(result => {
+                    xAxisData.push(result.name);
+                    yAxisData.push(result.value);
+                  });
+              }
+            } else {
+              let currentDate = DateFilterUtils.parseDateString(label);
+              let toDate = DateFilterUtils.parseDateString(period.to);
+  
+              if (reportInterval === KalturaReportInterval.days) {
+                toDate = toDate.clone().startOf('day');
+                currentDate = currentDate.clone().startOf('day');
+              } else {
+                toDate = toDate.clone().startOf('month');
+                currentDate = currentDate.clone().startOf('month');
+              }
+
+              if (currentDate.isBefore(toDate)) {
+                if (reportInterval === KalturaReportInterval.days) {
+                  toDate = toDate.clone().add(1, 'days');
+                }
+  
+                this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format)
                   .forEach(result => {
                     xAxisData.push(result.name);
                     yAxisData.push(result.value);
@@ -489,11 +535,12 @@ export class ReportService implements OnDestroy {
   
   public getGraphDataFromTable(table: KalturaReportTable,
                                dataConfig: ReportDataConfig,
+                               period: { from: string, to: string },
                                reportInterval: KalturaReportInterval,
                                graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
     const { tableData } = this.parseTableData(table, dataConfig.table);
     const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
-    return this.parseGraphs(graphData, dataConfig.graph, reportInterval, null, graphOptions);
+    return this.parseGraphs(graphData, dataConfig.graph, period, reportInterval, null, graphOptions);
   }
   
   
