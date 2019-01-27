@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { SyndicationDataConfig } from './syndication-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
+import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 
 @Component({
   selector: 'app-engagement-syndication',
@@ -20,19 +21,21 @@ import { significantDigits } from 'shared/utils/significant-digits';
   providers: [ReportService, SyndicationDataConfig]
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
+  @Input() dateFilterComponent: DateFilterComponent;
+  
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
-  private _reportInterval = KalturaReportInterval.months;
   private _order = '-count_plays';
   private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
-    interval: this._reportInterval,
+    interval: KalturaReportInterval.days,
   });
   
   protected _componentId = 'syndication';
   
+  public _reportInterval = KalturaReportInterval.days;
   public _drillDown: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;

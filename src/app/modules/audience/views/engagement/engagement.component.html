@@ -87,7 +87,8 @@
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-syndication [dateFilter]="_dateFilter"
+    <app-engagement-syndication [dateFilterComponent]="dateFilter"
+                                [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-engagement-syndication>
   </div>
 </div>
