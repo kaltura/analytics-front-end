@@ -5,7 +5,7 @@
     <span class="kTitle">{{'app.audience.technology.devicesOverview' | translate}}</span>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
 
     <div class="kReportContent">
       <ng-container *ngIf="_summaryData[_selectedMetrics]">

@@ -4,7 +4,7 @@
     <a (click)="scrollTo('#highlights-report')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
 
     <div class="kReportContent">
       <div class="kVal">

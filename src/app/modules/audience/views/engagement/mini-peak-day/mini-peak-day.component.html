@@ -3,7 +3,7 @@
     <span class="kTitle">{{'app.engagement.insights' | translate}}</span>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div class="kReportContent" *ngIf="_peakDayData">
       <div class="peakDayHolder">
         <span class="peakDay">{{_peakDayData?.date_id}}</span>

@@ -1,5 +1,5 @@
 <div class="kReport kTotals kOverrideFAIcons">
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div style="display: flex; flex-direction: column; width: 100%">
       <div class="kPlayer">
         <app-k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"

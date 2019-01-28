@@ -1,5 +1,5 @@
 <div class="kEntryDetailsOverlay">
-  <k-area-blocker [showLoader]="_loading">
+  <k-area-blocker [showLoader]="_loading" [appAreaBlockerTimeout]="_loading">
     <ng-container *ngIf="_data && !_errorMessage">
       <div class="kEntryThumbnail" #holder>
         <img [src]="_data.thumbnailUrl"

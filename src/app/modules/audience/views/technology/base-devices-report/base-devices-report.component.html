@@ -25,7 +25,7 @@
     </p-multiSelect>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
 
     <div class="kReportContent">
       <kTags *ngIf="_tags.length"

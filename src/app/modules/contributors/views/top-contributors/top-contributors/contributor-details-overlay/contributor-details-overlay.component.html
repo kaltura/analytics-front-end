@@ -1,5 +1,5 @@
 <div class="kContributorDetailsOverlay">
-  <k-area-blocker [showLoader]="_loading">
+  <k-area-blocker [showLoader]="_loading" [appAreaBlockerTimeout]="_loading">
     <ng-container *ngIf="_data && !_errorMessage">
       <div class="kContributorName">{{_data.fullName}}</div>
       <div class="kContributorDetails">
