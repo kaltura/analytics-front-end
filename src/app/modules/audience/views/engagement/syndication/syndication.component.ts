@@ -157,6 +157,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
+    this._filter.interval = this._dateFilter.timeUnits;
+    this._reportInterval = this._dateFilter.timeUnits;
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       this._isCompareMode = true;
