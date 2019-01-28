@@ -208,6 +208,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
           }
+          this.updateMap();
           this.prepareCsvExportHeaders();
           this._isBusy = false;
           this._loadTrendData();
@@ -266,7 +267,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       });
       this.updateSelectedCountries();
     }
-    this.updateMap();
   }
 
   private updateSelectedCountries(): void {
