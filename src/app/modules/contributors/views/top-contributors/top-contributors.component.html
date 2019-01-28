@@ -16,7 +16,7 @@
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
-  <div class="kReportContainer" [class.kHide]="!_refineFilterOpened">
+  <div class="kReportContainer">
     <app-refine-filter [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"

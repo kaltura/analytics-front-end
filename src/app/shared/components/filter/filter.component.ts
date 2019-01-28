@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
@@ -55,8 +55,12 @@ export type RefineFilter = { value: any, type: string }[];
   ]
 })
 export class FilterComponent {
+  @HostBinding('style.padding-bottom') _bottomPadding = '0';
+
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
+  
+    this._bottomPadding = isOpened || this._tags.length ? '24px' : '0';
     
     if (this.showFilters !== isOpened) {
       this.showFilters = !!value;
@@ -270,6 +274,8 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
     this._tags = this._prepareFilterTags();
+  
+    this._bottomPadding = this._tags.length ? '24px' : '0';
     
     this.closeFilters.emit();
   }
