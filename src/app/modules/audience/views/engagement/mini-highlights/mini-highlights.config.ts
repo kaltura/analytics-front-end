@@ -14,13 +14,13 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
             sortOrder: 1,
           },
           'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
             units: value => 'min',

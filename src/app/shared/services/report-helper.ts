@@ -2,7 +2,7 @@ import * as moment from "moment";
 
 export class ReportHelper {
   static numberWithCommas(x: any): string {
-    return x.toLocaleString(navigator.language, { maximumSignificantDigits: 10 });
+    return parseFloat(x).toLocaleString(navigator.language, { maximumSignificantDigits: 20 });
   }
   
   static percents(x: any): string {
