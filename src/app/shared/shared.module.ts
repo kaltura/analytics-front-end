@@ -42,6 +42,7 @@ import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { AreaBlockerTimeoutDirective } from 'shared/directives/area-blocker-timeout.directive';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     OverlayComponent,
     TrendValueComponent,
     MiddleEllipsisDirective,
+    AreaBlockerTimeoutDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,
@@ -105,6 +107,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     TrendValueComponent,
     KalturaPlayerComponent,
     MiddleEllipsisDirective,
+    AreaBlockerTimeoutDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,

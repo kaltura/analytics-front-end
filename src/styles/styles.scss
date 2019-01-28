@@ -382,3 +382,10 @@ ui-carousel /deep/ {
 .kNoPadding {
   padding: 0 !important;
 }
+
+.area-blocker-warning {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  color: $kGrayscale2;
+}
