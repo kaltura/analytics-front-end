@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export enum HeaderTypes {
     error = 1,
@@ -33,6 +34,7 @@ export class BrowserService {
         // this is the default confirmation dialog provided by the browser.
         if (confirm(confirmation.message)) {
             if (confirmation.accept) {
+                this._frameEventManager.publish(FrameEvents.ModalOpened);
                 confirmation.accept.apply(null);
             }
 
@@ -41,6 +43,7 @@ export class BrowserService {
             }
         } else {
             if (confirmation.reject) {
+                this._frameEventManager.publish(FrameEvents.ModalClosed);
                 confirmation.reject.apply(null);
             }
 
@@ -50,7 +53,8 @@ export class BrowserService {
         }
     }
 
-    constructor(private _translateService: TranslateService) {
+    constructor(private _translateService: TranslateService,
+                private _frameEventManager: FrameEventManagerService) {
     }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
