@@ -84,7 +84,8 @@
     "errors":{
       "errorHeader": "Error",
       "general": "An error occurred",
-      "invalidKS": "Your session has expired. Please log-in again."
+      "invalidKS": "Your session has expired. Please log-in again.",
+      "failedRequestTimeout": "Looks like the server is taking to long to respond, please try again in sometime"
     },
     "entryType": {
       "video": "Video",

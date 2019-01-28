@@ -28,6 +28,8 @@ import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { getPrimaryColor } from 'shared/utils/colors';
+import { catchError, timeout } from 'rxjs/operators';
+import { TimeoutError } from 'rxjs';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -150,7 +152,15 @@ export class ReportService implements OnDestroy {
               observer.error(error);
               this._querySubscription = null;
             });
-      });
+      }).pipe(
+        timeout(analyticsConfig.kalturaServer.failRequestTimeout),
+        catchError(error => {
+          if (error instanceof TimeoutError) {
+            throw Error(this._translate.instant('app.errors.failedRequestTimeout'));
+          }
+          throw Error(error.message);
+        })
+    );
   }
   
   public exportToCsv(args: ReportGetUrlForReportAsCsvActionArgs): Observable<string> {

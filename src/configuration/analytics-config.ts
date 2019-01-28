@@ -2,8 +2,10 @@ export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   kalturaServer?: {
-      uri?: string,
-    previewUIConf?: number
+      uri?: string;
+      previewUIConf?: number;
+      warnRequestTimeout?: number;
+      failRequestTimeout?: number;
   };
   cdnServers?: {
     serverUri?: string,
@@ -57,4 +59,8 @@ export function buildCDNUrl(suffix: string): string {
 export const analyticsConfig: AnalyticsConfig = {
   appVersion: '0.1',
   valueSeparator: ',',
+  kalturaServer: {
+    warnRequestTimeout: 5e3, // 5 sec
+    failRequestTimeout: 25e3, // 25 sec
+  }
 };
