@@ -86,7 +86,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           reportType: this._reportType,
           filter: this._compareFilter,
           pager: this._pager,
-          order: null
+          order: null,
+          objectIds: this._drillDown,
         };
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
@@ -194,7 +195,6 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         current.table,
         compare.table,
         this._dataConfig.table,
-        'object_id'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
