@@ -302,7 +302,15 @@ export class ReportService implements OnDestroy {
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
           }
-          let val = parseFloat(value.split(analyticsConfig.valueSeparator)[1]);
+
+          let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
+  
+          if (config.fields[graph.id] && config.fields[graph.id].parse) {
+            val = config.fields[graph.id].parse(val) as number;
+          } else {
+            val = parseFloat(val) as number;
+          }
+
           if (isNaN(val)) {
             val = 0;
           }
