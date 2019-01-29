@@ -158,28 +158,28 @@ export class CompareService implements OnDestroy {
                     yAxisCurrentData.push(result.value);
                     yAxisCompareData.push(result.compare);
                   });
+              }
+            } else {
+              let currentDate = DateFilterUtils.parseDateString(currentLabel);
+              let toDate = DateFilterUtils.parseDateString(currentPeriod.to);
+  
+              if (reportInterval === KalturaReportInterval.days) {
+                toDate = toDate.clone().startOf('day');
+                currentDate = currentDate.clone().startOf('day');
               } else {
-                let currentDate = DateFilterUtils.parseDateString(currentLabel);
-                let toDate = DateFilterUtils.parseDateString(currentPeriod.to);
+                toDate = toDate.clone().startOf('month');
+                currentDate = currentDate.clone().startOf('month');
+              }
   
-                if (reportInterval === KalturaReportInterval.days) {
-                  toDate = toDate.clone().startOf('day');
-                  currentDate = currentDate.clone().startOf('day');
-                } else {
-                  toDate = toDate.clone().startOf('month');
-                  currentDate = currentDate.clone().startOf('month');
-                }
-  
-                if (currentDate.isBefore(toDate)) {
-                  toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+              if (currentDate.isBefore(toDate)) {
+                toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
     
-                  this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
-                    .forEach(result => {
-                      xAxisData.push(result.name);
-                      yAxisCurrentData.push(result.value);
-                      yAxisCompareData.push(result.compare);
-                    });
-                }
+                this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
+                  .forEach(result => {
+                    xAxisData.push(result.name);
+                    yAxisCurrentData.push(result.value);
+                    yAxisCompareData.push(result.compare);
+                  });
               }
             }
           }
