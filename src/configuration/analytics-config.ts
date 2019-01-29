@@ -55,6 +55,6 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '0.1',
+  appVersion: '0.2',
   valueSeparator: ',',
 };

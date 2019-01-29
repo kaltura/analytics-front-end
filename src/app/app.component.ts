@@ -76,6 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private _initApp(configuration = null): void {
+    this._logger.info(`Running Analytics version: ${analyticsConfig.appVersion}`);
     let config  = null;
     if (!configuration && !window['analyticsConfig']) {
       return;
