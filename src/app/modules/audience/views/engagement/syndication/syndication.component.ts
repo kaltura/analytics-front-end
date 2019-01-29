@@ -180,7 +180,12 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   }
   
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
-    const { lineChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { lineChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval
+    );
     this._lineChartData = lineChartData;
   }
   

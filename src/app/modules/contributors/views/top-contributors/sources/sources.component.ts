@@ -172,6 +172,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       this._barChartData = this._reportService.getGraphDataFromTable(
         table,
         this._dataConfig,
+        { from: this._filter.fromDay, to: this._filter.toDay },
         this._reportInterval,
         graphOptions
         ).barChartData;

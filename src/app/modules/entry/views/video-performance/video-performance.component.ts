@@ -187,6 +187,7 @@ export class VideoPerformanceComponent extends EntryBase {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval
     );
     this._lineChartData = lineChartData;

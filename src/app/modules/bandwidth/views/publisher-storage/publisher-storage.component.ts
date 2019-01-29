@@ -263,6 +263,7 @@ export class PublisherStorageComponent implements OnInit {
     const { lineChartData, barChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
+      { from: this.filter.fromDay, to: this.filter.toDay },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );

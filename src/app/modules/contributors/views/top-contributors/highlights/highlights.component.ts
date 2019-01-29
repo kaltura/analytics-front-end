@@ -177,6 +177,7 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );
