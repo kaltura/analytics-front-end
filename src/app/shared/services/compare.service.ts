@@ -126,13 +126,10 @@ export class CompareService implements OnDestroy {
             currentVal = config.fields[graph.id].parse(currentVal);
             compareVal = config.fields[graph.id].parse(compareVal);
           } else {
-            currentVal = parseFloat(currentVal);
-            compareVal = parseFloat(compareVal);
+            currentVal = Math.ceil(parseFloat(currentVal));
+            compareVal = Math.ceil(parseFloat(compareVal));
           }
   
-          currentVal = Math.ceil(currentVal as number);
-          compareVal = Math.ceil(compareVal as number);
-
           if (isNaN(currentVal)) {
             currentVal = 0;
           }

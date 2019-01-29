@@ -99,8 +99,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   public updateFunnel(): void {
-    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(2);
-    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(2);
+    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
+    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(1);
     this.echartsIntance.setOption({
       series: [{
         data: [
@@ -218,7 +218,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private updateCompareFunnel(): void {
-    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(2);
+    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
     const playThrough = (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
     this.compareEchartsIntance.setOption({series: [{data: [
           {
@@ -273,7 +273,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       } else if (params.dataIndex === 2) {
         compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
       }
-      // const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      // const trend = (compareValue / value * 100).toFixed(1) + '%'; // TODO - calc trend by formula, add arrow and colors
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
     } else {
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;

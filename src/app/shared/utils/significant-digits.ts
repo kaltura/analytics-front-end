@@ -1,4 +1,4 @@
-export function significantDigits(number: any, fractions = 2): number {
+export function significantDigits(number: any, fractions = 1): number {
   number = parseFloat(number) || 0;
   if (number % 1 !== 0) {
     if (number > 0 && number < 1) { // 0.n
