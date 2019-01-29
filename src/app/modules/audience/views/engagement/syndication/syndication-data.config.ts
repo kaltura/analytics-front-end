@@ -25,7 +25,8 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'load_play_ratio': {
-            format: value => value * 100,
+            format: value => value,
+            parse: value => parseFloat(value) * 100,
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           },
@@ -35,7 +36,8 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
           },
           'avg_view_drop_off': {
-            format: value => value * 100,
+            format: value => value,
+            parse: value => parseFloat(value) * 100,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           },
