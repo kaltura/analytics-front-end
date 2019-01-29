@@ -87,7 +87,7 @@ export class CompareService implements OnDestroy {
   
       if (!config.fields[graph.id].nonDateGraphLabel) {
         let fromDate = DateFilterUtils.parseDateString(currentPeriod.from);
-        let currentDate = DateFilterUtils.parseDateString((compareData[0] || '').split(analyticsConfig.valueSeparator)[0] || '');
+        let currentDate = DateFilterUtils.parseDateString((currentData[0] || '').split(analyticsConfig.valueSeparator)[0] || '');
     
         if (reportInterval === KalturaReportInterval.days) {
           fromDate = fromDate.clone().startOf('day');
