@@ -42,6 +42,7 @@ import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    BrowserImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -96,6 +98,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    BrowserImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,

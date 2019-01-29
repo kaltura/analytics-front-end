@@ -82,7 +82,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   protected abstract _defaultReportType: KalturaReportType;
   protected abstract _drillDownReportType: KalturaReportType;
-  
+
+  protected _iconType: string = null;
   protected _order = '-count_plays';
   protected _totalPlaysCount = 0;
   protected _devices: string[] = [];
@@ -111,6 +112,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
+  
+  protected get _showIcon(): boolean {
+    return false;
+  };
   
   protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
   
