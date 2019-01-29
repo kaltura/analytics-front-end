@@ -119,8 +119,20 @@ export class CompareService implements OnDestroy {
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
           }
           
-          let currentVal = Math.ceil(parseFloat(currentValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
-          let compareVal = Math.ceil(parseFloat(compareValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
+          let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
+          let compareVal: string | number = compareValue.split(analyticsConfig.valueSeparator)[1];
+  
+          if (config.fields[graph.id] && config.fields[graph.id].parse) {
+            currentVal = config.fields[graph.id].parse(currentVal);
+            compareVal = config.fields[graph.id].parse(compareVal);
+          } else {
+            currentVal = parseFloat(currentVal);
+            compareVal = parseFloat(compareVal);
+          }
+  
+          currentVal = Math.ceil(currentVal as number);
+          compareVal = Math.ceil(compareVal as number);
+
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
