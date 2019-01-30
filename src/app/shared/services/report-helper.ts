@@ -5,8 +5,10 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString(navigator.language, { maximumSignificantDigits: 20 });
   }
   
-  static percents(x: any): string {
-    return x.length ? this.numberWithCommas((parseFloat(x) * 100).toFixed(2)) + '%' : 'N/A';
+  static percents(x: any, round = true): string {
+    x = parseFloat(x) * 100;
+    x = round ? Math.round(x) : x;
+    return !isNaN(x) ? this.numberWithCommas(x.toFixed(1)) + '%' : 'N/A';
   }
   
   static numberOrNA(x: any): string {
@@ -20,7 +22,7 @@ export class ReportHelper {
     } else {
       x = x % 1 === 0
         ? round ? Math.round(x) : x
-        : x.toFixed(2);
+        : x.toFixed(1);
       
       return ReportHelper.numberWithCommas(x);
     }

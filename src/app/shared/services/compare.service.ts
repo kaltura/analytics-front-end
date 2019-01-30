@@ -130,9 +130,6 @@ export class CompareService implements OnDestroy {
             compareVal = parseFloat(compareVal);
           }
   
-          currentVal = Math.ceil(currentVal as number);
-          compareVal = Math.ceil(compareVal as number);
-
           if (isNaN(currentVal)) {
             currentVal = 0;
           }

@@ -306,9 +306,9 @@ export class ReportService implements OnDestroy {
           let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
   
           if (config.fields[graph.id] && config.fields[graph.id].parse) {
-            val = config.fields[graph.id].parse(val) as number;
+            val = config.fields[graph.id].parse(val);
           } else {
-            val = parseFloat(val) as number;
+            val = parseFloat(val);
           }
 
           if (isNaN(val)) {

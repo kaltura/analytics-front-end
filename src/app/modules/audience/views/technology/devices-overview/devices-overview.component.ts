@@ -60,7 +60,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     selectedMetrics: string
   }>();
   
-  private _fractions = 2;
+  private _fractions = 1;
   private _columns: string[] = [];
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   
