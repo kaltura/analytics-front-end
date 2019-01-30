@@ -7,7 +7,7 @@ export class ReportHelper {
   
   static percents(x: any, round = true): string {
     x = parseFloat(x) * 100;
-    x = round ? Math.ceil(x) : x;
+    x = round ? Math.round(x) : x;
     return !isNaN(x) ? this.numberWithCommas(x.toFixed(1)) + '%' : 'N/A';
   }
   
