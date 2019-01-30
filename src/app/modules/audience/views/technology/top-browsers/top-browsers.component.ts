@@ -20,8 +20,8 @@ export class TopBrowsersComponent extends BaseDevicesReportComponent {
 
   public _title = 'app.audience.technology.topBrowsers';
   
-  protected get _showIcon(): boolean {
-    return !this._drillDown;
+  protected get showIcon(): boolean {
+    return this._showIcon;
   }
   
   protected getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string } {

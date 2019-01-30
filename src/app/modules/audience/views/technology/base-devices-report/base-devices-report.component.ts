@@ -113,9 +113,10 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     }
   );
   
-  protected get _showIcon(): boolean {
+  protected _showIcon = false;
+  protected get showIcon(): boolean {
     return false;
-  };
+  }
   
   protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
   
@@ -198,6 +199,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           
           this._isBusy = false;
           this._firstTimeLoading = false;
+          this._showIcon = !this._drillDown;
     
           this._devicesDataLoaded.next(true);
         },
