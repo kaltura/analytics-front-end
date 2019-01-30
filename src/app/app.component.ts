@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
     } else { // hosted
       this._frameEventManager.listen(FrameEvents.Init)
         .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(config => this._initApp(config));
+        .subscribe(config => this._initApp(config, true));
     }
     
     this._frameEventManager.listen(FrameEvents.Navigate)
