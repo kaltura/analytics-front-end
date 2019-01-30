@@ -60,6 +60,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);

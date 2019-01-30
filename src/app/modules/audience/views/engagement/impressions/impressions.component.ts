@@ -308,6 +308,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
   
   protected _updateRefineFilter(): void {
+    this.pager.pageIndex = 1;
     this._refineFilterToServerValue(this.filter);
     if (this.compareFilter) {
       this._refineFilterToServerValue(this.compareFilter);
