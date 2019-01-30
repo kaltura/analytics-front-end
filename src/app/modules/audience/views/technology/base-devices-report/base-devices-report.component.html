@@ -51,6 +51,7 @@
                 <th [ngStyle]="{'width': '42px'}">
                   <span *ngIf="_tableData?.length">{{'app.audience.technology.index' | translate}}</span>
                 </th>
+                <th [ngStyle]="{'width': '50px', 'padding-left': '16px'}" *ngIf="_showIcon"></th>
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="col !== 'plays_trend' && col !== 'plays_distribution' && col !== 'os_family' && col !== 'os' && col !== 'browser' && col !== 'browser_family' ? col : null"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
@@ -67,6 +68,15 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td><span>{{rowIndex+1}}</span></td>
+                <td [ngStyle]="{'width': '50px', 'padding-left': '16px', 'text-align': 'center'}" *ngIf="_showIcon">
+                  <ng-container *ngIf="_iconType === 'browser'">
+                    <img class="kBrowserIcon" *ngIf="data['browser_family'] | appBrowserImage;else defaultIcon"
+                         [src]="data['browser_family'] | appBrowserImage"/>
+                    <ng-template #defaultIcon>
+                      <i class="kIconglobe kBrowserIcon"></i>
+                    </ng-template>
+                  </ng-container>
+                </td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0" [kTooltip]="data[col]" [showOnEllipsis]="true">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend' && col !== 'browser_family' && col !== 'os_family'">
                     {{data[col]}}
