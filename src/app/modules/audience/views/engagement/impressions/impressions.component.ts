@@ -100,7 +100,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
 
   public updateFunnel(): void {
     const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
-    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(1);
+    const playThrough = this._funnelData.plays === 0 ? "0" : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(1);
     this.echartsIntance.setOption({
       series: [{
         data: [
