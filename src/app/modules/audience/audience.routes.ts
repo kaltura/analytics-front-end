@@ -10,7 +10,7 @@ export const routing: Route[] = [
   {
     path: '', component: AudienceComponent,
     children: [
-      { path: '', redirectTo: 'technology', pathMatch: 'full' },
+      { path: '', redirectTo: 'engagement', pathMatch: 'full' },
       { path: 'technology', component: TechnologyComponent },
       { path: 'geo-location', component: GeoLocationComponent },
       { path: 'engagement', component: EngagementComponent },

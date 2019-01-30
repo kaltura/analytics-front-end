@@ -16,6 +16,7 @@ import {
 } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { publishReplay, refCount } from 'rxjs/operators';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface CategoryData {
   parentId?: number;
@@ -201,7 +202,7 @@ export class CategoriesSearchService implements OnDestroy {
     }
     
     if (categoriesList && categoriesList.length) {
-      filter.idIn = categoriesList.join(',');
+      filter.idIn = categoriesList.join(analyticsConfig.valueSeparator);
     }
     
     const responseProfile = this._createResponseProfile();

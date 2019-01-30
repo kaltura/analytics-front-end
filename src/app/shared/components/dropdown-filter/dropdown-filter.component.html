@@ -16,13 +16,13 @@
                    [(ngModel)]="_selectedValue"
                    (onChange)="_onSelectionChange()"
                    [defaultLabel]="defaultLabel">
+
       <ng-template let-item pTemplate="item">
-        <div class="kCountryList" *ngIf="countryTemplate">
-          <img *ngIf="item.value" class="kFlag" src="{{'assets/flags/' + item?.value?.id.toUpperCase() + '.png'}}"/>
-          {{item.label}}
-        </div>
-        <div *ngIf="!countryTemplate">{{item.label}}</div>
+        <img *ngIf="countryTemplate && item.value" class="kFlag" src="{{'assets/flags/' + item?.value?.id.toUpperCase() + '.png'}}" style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"/>
+        <span *ngIf="countryTemplate" style="margin-top:2px; position: absolute">{{item.label}}</span>
+        <span *ngIf="!countryTemplate" style="margin-top:2px; position: absolute">{{item.label}}</span>
       </ng-template>
+
     </p-multiSelect>
   </div>
 </div>

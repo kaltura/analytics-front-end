@@ -3,7 +3,7 @@ import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, 
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -60,6 +60,7 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -137,18 +138,11 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
     this._filter.toDay = this._dateFilter.endDay;
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
-      const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaEndUserReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: this._dateFilter.timeZoneOffset,
-          interval: this._dateFilter.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
+      const compare = this._dateFilter.compare;
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
@@ -157,7 +151,12 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
   
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
-    const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { barChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval
+    );
     this._barChartData = barChartData['default'];
     
     this._totalUsers = this._barChartData.series[0].data.length

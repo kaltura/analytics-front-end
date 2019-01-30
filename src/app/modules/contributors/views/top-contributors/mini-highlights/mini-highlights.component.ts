@@ -3,7 +3,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import {
   KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
+  KalturaFilterPager, KalturaObjectBaseFactory,
   KalturaReportInterval,
   KalturaReportTable,
   KalturaReportTotal,
@@ -66,6 +66,7 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -140,14 +141,9 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaEndUserReportInputFilter({
-        searchInTags: true,
-        searchInAdminTags: false,
-        timeZoneOffset: this._dateFilter.timeZoneOffset,
-        interval: this._dateFilter.timeUnits,
-        fromDay: compare.startDay,
-        toDay: compare.endDay,
-      });
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
     }

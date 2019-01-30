@@ -25,7 +25,9 @@ import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { NumberFormatPipe } from 'shared/pipes/number-formatter';
 import { TrendService } from 'shared/services/trend.service';
 import { EntryTypePipe } from 'shared/pipes/entry-type.pipe';
+import { MediaTypePipe } from 'shared/pipes/media-type.pipe';
 import { DurationPipe } from 'shared/pipes/duration.pipe';
+import { KalturaPlayerComponent } from 'shared/player';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { TrendValueComponent } from 'shared/components/trend-value/trend-value.component';
 import { CategoriesSearchService } from 'shared/services/categories-search.service';
@@ -40,6 +42,7 @@ import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 
 @NgModule({
   imports: [
@@ -68,9 +71,11 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    BrowserImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
+    MediaTypePipe,
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
@@ -82,6 +87,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    KalturaPlayerComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -92,12 +98,15 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
     BulletComponent,
     TimeUnitsComponent,
     TrendPipe,
+    BrowserImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
+    MediaTypePipe,
     DurationPipe,
     OverlayComponent,
     TrendValueComponent,
+    KalturaPlayerComponent,
     MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,

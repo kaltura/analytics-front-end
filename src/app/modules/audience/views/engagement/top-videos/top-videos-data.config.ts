@@ -39,7 +39,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             sortOrder: 5,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value),
+            format: value => ReportHelper.percents(value, false),
             sortOrder: 4,
           },
         }

@@ -1,9 +1,8 @@
 {
   "app":{
     "modules":{
-      "dashboard": "Dashboard",
       "audience": "Audience",
-      "bandwidth": "Bandwidth & Storage Reports",
+      "bandwidth": "Usage",
       "contributors": "Contributors",
       "live": "Live"
     },
@@ -133,7 +132,14 @@
       "created": "Created",
       "contributorsSources": "Which sources do contributors use most to add content?",
       "contributorsAmount": "How many users contributed more than once?",
-      "returningContributors": "Returning Contributors"
+      "returningContributors": "Returning Contributors",
+      "topContributorsReport": {
+        "role": "User Role",
+        "email": "Email",
+        "creationDate": "Registration Date",
+        "lastUpload": "Last Upload",
+        "errorLoadingUser": "Failed to load user data"
+      }
     },
     "bandwidth":{
       "highlights": "Highlights",
@@ -261,6 +267,8 @@
     "engagement": {
       "title": "Engagement",
       "highlights": "Highlights",
+      "insights": "Insights",
+      "peak": "Peak day",
       "userHighlights": "User Highlights",
       "topVideos": "Top Videos",
       "duration": "Which video duration leads to better engagement?",
@@ -285,7 +293,7 @@
         "count_plays_tt": "Total plays in the selected timeframe",
         "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
         "unique_known_users_tt": "Total unique viewers in the selected timeframe",
-        "avg_view_drop_off_tt": "Average view period in the selected timeframe"
+        "avg_view_drop_off_tt": "Average drop off rate in the selected timeframe"
       },
       "topVideosReport": {
         "entry_name": "Name",
@@ -320,6 +328,33 @@
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
         "avg_view_drop_off_tt": "Drop Off Rate"
+      }
+    },
+    "entry": {
+      "plays": "Plays",
+      "viewers": "Unique Viewers",
+      "minutes": "Minutes Viewed",
+      "watched": "Avg. Completion Rate",
+      "back": "Back",
+      "owner": "Owner:",
+      "seeAll": "See All Details",
+      "videoPerformance": "Video performance over time",
+      "month_id": "Month",
+      "date_id": "Date",
+      "count_plays": "Plays",
+      "sum_time_viewed": "Minutes Viewed",
+      "count_loads": "Player Impressions",
+      "avg_time_viewed": "Avg. View Time",
+      "count_plays_tt": "Plays",
+      "sum_time_viewed_tt": "Minutes Viewed",
+      "count_loads_tt": "Player Impressions",
+      "avg_time_viewed_tt": "Avg. View Time",
+      "entryType": {
+        "video": "Video",
+        "audio": "Audio",
+        "image": "Image",
+        "live": "Live",
+        "unknown": "Unknown"
       }
     }
   }

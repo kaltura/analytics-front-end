@@ -1,6 +1,6 @@
 <div class="kEntryDetailsOverlay">
-  <k-area-blocker [showLoader]="_loading" [message]="_errorMessage">
-    <ng-container *ngIf="_data">
+  <k-area-blocker [showLoader]="_loading">
+    <ng-container *ngIf="_data && !_errorMessage">
       <div class="kEntryThumbnail" #holder>
         <img [src]="_data.thumbnailUrl"
              onError="this.onerror=null;this.style.display='none'"
@@ -13,7 +13,7 @@
       <div class="kEntryDetails">
         <div class="kDetailsRow">
           <div class="kLabel">{{'app.engagement.topVideosReport.type' | translate}}</div>
-          <div class="kValue">{{_data.type | appEntryType}}</div>
+          <div class="kValue">{{_data.type | mediaType: true}}</div>
         </div>
 
         <div class="kDetailsRow">
@@ -32,5 +32,8 @@
         </div>
       </div>
     </ng-container>
+    <div *ngIf="_errorMessage" class="kErrorMessage">
+      {{_errorMessage}}
+    </div>
   </k-area-blocker>
 </div>

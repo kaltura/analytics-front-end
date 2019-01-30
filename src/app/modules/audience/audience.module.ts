@@ -16,6 +16,7 @@ import { GeoLocationComponent } from './views/geo-location/geo-location.componen
 import { EngagementComponent } from './views/engagement/engagement.component';
 import { EngagementHighlightsComponent } from './views/engagement/highlights/highlights.component';
 import { EngagementMiniHighlightsComponent } from './views/engagement/mini-highlights/mini-highlights.component';
+import { MiniPeakDayComponent } from './views/engagement/mini-peak-day/mini-peak-day.component';
 import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
 import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
 import { EngagementImpressionsComponent } from './views/engagement/impressions/impressions.component';
@@ -82,6 +83,7 @@ import { LocationFilterComponent } from '../../shared/components/filter/location
     TopVideosTableComponent,
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
+    MiniPeakDayComponent,
     SyndicationComponent,
   ],
   exports: [],

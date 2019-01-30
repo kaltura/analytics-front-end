@@ -17,22 +17,29 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'count_loads': {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'load_play_ratio': {
             format: value => value,
+            parse: value => Math.round(parseFloat(value) * 100),
             colors: [getPrimaryColor(), getSecondaryColor()],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           },
           'sum_time_viewed': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
           },
           'avg_view_drop_off': {
             format: value => value,
+            parse: value => Math.round(parseFloat(value) * 100),
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           },
         }
       },
@@ -54,7 +61,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
             sortOrder: 2,
           },
           'count_loads': {
@@ -62,7 +69,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'load_play_ratio': {
-            format: value => ReportHelper.numberOrZero(value * 100) + '%',
+            format: value => ReportHelper.numberOrZero(Math.round(value * 100)) + '%',
             sortOrder: 5,
           },
           'sum_time_viewed': {
@@ -70,7 +77,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 6,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(value * 100) + '%',
+            format: value => ReportHelper.numberOrZero(Math.round(value * 100)) + '%',
             sortOrder: 6,
           },
         }
@@ -91,7 +98,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'load_play_ratio': {
-            format: value => ReportHelper.numberOrZero(value * 100),
+            format: value => ReportHelper.numberOrZero(Math.round(value * 100)),
             title: this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio_tt`),
             sortOrder: 3,
@@ -105,7 +112,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(value * 100),
+            format: value => ReportHelper.numberOrZero(Math.round(value * 100)),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off_tt`),
             units: value => '%',

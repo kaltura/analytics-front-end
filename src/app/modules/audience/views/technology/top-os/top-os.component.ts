@@ -18,6 +18,10 @@ export class TopOsComponent extends BaseDevicesReportComponent {
   protected _drillDownReportType = KalturaReportType.operatingSystem;
   public _title = 'app.audience.technology.topOS';
   
+  protected get showIcon(): boolean {
+    return false;
+  }
+  
   protected getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string } {
     return tableData.find(item => {
       if (this._drillDown) {

@@ -16,7 +16,13 @@ import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-dev
 export class TopBrowsersComponent extends BaseDevicesReportComponent {
   protected _defaultReportType = KalturaReportType.browsersFamilies;
   protected _drillDownReportType = KalturaReportType.browsers;
+  protected _iconType = 'browser';
+
   public _title = 'app.audience.technology.topBrowsers';
+  
+  protected get showIcon(): boolean {
+    return this._showIcon;
+  }
   
   protected getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string } {
     return tableData.find(item => {

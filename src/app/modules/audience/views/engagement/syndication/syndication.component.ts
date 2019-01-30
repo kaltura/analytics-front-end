@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -12,6 +12,7 @@ import { SyndicationDataConfig } from './syndication-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
+import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 
 @Component({
   selector: 'app-engagement-syndication',
@@ -20,26 +21,27 @@ import { significantDigits } from 'shared/utils/significant-digits';
   providers: [ReportService, SyndicationDataConfig]
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
+  @Input() dateFilterComponent: DateFilterComponent;
+  
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
-  private _reportInterval = KalturaReportInterval.months;
   private _order = '-count_plays';
   private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
-    interval: this._reportInterval,
+    interval: KalturaReportInterval.days,
   });
   
   protected _componentId = 'syndication';
   
+  public _reportInterval = KalturaReportInterval.days;
   public _drillDown: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _selectedMetrics: string;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
-  public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.topSyndication;
   public _lineChartData: any = {};
   public _totalUsers = null;
@@ -84,14 +86,15 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           reportType: this._reportType,
           filter: this._compareFilter,
           pager: this._pager,
-          order: null
+          order: null,
+          objectIds: this._drillDown,
         };
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          this._lineChartData = {};
           this._totalUsers = null;
+          this._totalCount = 0;
           
           if (compare) {
             this._handleCompare(report, compare);
@@ -145,6 +148,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -155,35 +159,34 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
+    this._filter.interval = this._dateFilter.timeUnits;
+    this._reportInterval = this._dateFilter.timeUnits;
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
-      const compare = this._dateFilter.compare;
       this._isCompareMode = true;
-      this._compareFilter = new KalturaEndUserReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: this._dateFilter.timeZoneOffset,
-          interval: this._dateFilter.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
+      const compare = this._dateFilter.compare;
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
-      this._compareFirstTimeLoading = true;
     }
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     if (this._tabsData.length) {
-      this._totalPlaysCount = Number(this._tabsData[0].value);
+      this._totalPlaysCount = Number(this._tabsData[0].rawValue);
     }
   }
   
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
-    const { lineChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { lineChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval
+    );
     this._lineChartData = lineChartData;
   }
   
@@ -197,7 +200,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         comparePeriod,
         current.table,
         compare.table,
-        this._dataConfig.table
+        this._dataConfig.table,
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;

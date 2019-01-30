@@ -4,7 +4,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { SelectItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import { getColorPercent } from 'shared/utils/colors';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export type funnelData = {
   impressions: number;
@@ -38,7 +39,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _playthroughs: SelectItem[] = [{label: '25%', value: 25}, {label: '50%', value: 50}, {label: '75%', value: 75}, {label: '100%', value: 100}];
-  public _selectedPlaythrough = 25;
+  public _selectedPlaythrough = 50;
   public _chartData: EChartOption = {};
   public _compareChartData: EChartOption = {};
   public _chartLoaded = false;
@@ -98,8 +99,8 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   public updateFunnel(): void {
-    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(2);
-    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(2);
+    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
+    const playThrough = this._funnelData.plays === 0 ? "0" : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(1);
     this.echartsIntance.setOption({
       series: [{
         data: [
@@ -202,7 +203,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.echartsIntance.setOption({series: [{left: '0%'}]}, false);
     this.compareEchartsIntance.setOption({series: [{left: '0%'}]}, false);
 
-    const data = compare.totals.data.split(',');
+    const data = compare.totals.data.split(analyticsConfig.valueSeparator);
     this.compareFunnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,
@@ -217,7 +218,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private updateCompareFunnel(): void {
-    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(2);
+    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
     const playThrough = (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
     this.compareEchartsIntance.setOption({series: [{data: [
           {
@@ -237,9 +238,9 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this.echartsIntance.setOption({series: [{width: '60%'}]}, false);
-    this.echartsIntance.setOption({series: [{left: '35%'}]}, false);
-    const data = totals.data.split(',');
+    this.echartsIntance.setOption({series: [{width: '30%'}]}, false);
+    this.echartsIntance.setOption({series: [{left: '65%'}]}, false);
+    const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,
@@ -272,7 +273,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       } else if (params.dataIndex === 2) {
         compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
       }
-      // const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      // const trend = (compareValue / value * 100).toFixed(1) + '%'; // TODO - calc trend by formula, add arrow and colors
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
     } else {
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
@@ -298,22 +299,16 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this.compareFilter = new KalturaEndUserReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: this._dateFilter.timeZoneOffset,
-          interval: this._dateFilter.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
+      this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
+      this.compareFilter.fromDay = compare.startDay;
+      this.compareFilter.toDay = compare.endDay;
     } else {
       this.compareFilter = null;
     }
   }
   
   protected _updateRefineFilter(): void {
+    this.pager.pageIndex = 1;
     this._refineFilterToServerValue(this.filter);
     if (this.compareFilter) {
       this._refineFilterToServerValue(this.compareFilter);

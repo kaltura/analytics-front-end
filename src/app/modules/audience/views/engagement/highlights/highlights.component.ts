@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -66,7 +66,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this._tableData = [];
     this._isBusy = true;
     this._blockerMessage = null;
     
@@ -79,13 +78,16 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
 
-        delete sections.totals;
-
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+    
+          if (report.totals && !this._tabsData.length) {
+            this._handleTotals(report.totals); // handle totals
+          }
+
           if (compare) {
             this._handleCompare(report, compare);
           } else {
@@ -95,9 +97,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             if (report.graphs.length) {
               this._chartDataLoaded = false;
               this._handleGraphs(report.graphs); // handle graphs
-            }
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
             }
           }
           this._firstTimeLoading = false;
@@ -147,20 +146,16 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
-      this._compareFilter = new KalturaEndUserReportInputFilter({
-        searchInTags: true,
-        searchInAdminTags: false,
-        timeZoneOffset: this._dateFilter.timeZoneOffset,
-        interval: this._dateFilter.timeUnits,
-        fromDay: compare.startDay,
-        toDay: compare.endDay,
-      });
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
     }
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -217,6 +212,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );

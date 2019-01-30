@@ -8,6 +8,7 @@
 
 .kImpressions{
   height: 100%;
+  margin-bottom: 0 !important;
 }
 
 .kCharts{
@@ -32,7 +33,7 @@
   }
 }
 .kData{
-  width: 60%;
+  width: 78%;
   position: absolute;
   margin-top: 10px;
   height: 340px;
@@ -71,15 +72,12 @@
   &.compare {
     top: 264px;
   }
-  .kLabel.block{
-    display: block;
-  }
 }
 :host /deep/ p-dropdown{
   .ui-dropdown {
     margin-left: 8px;
     margin-right: 8px;
-    width: 74px !important;
+    width: 84px !important;
   }
 }
 

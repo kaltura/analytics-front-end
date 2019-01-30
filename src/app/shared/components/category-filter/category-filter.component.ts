@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, Output, ViewChild } from '@angular/core';
 import { OptionItem } from '../filter/filter.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoryData } from 'shared/services/categories-search.service';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-category-filter',
@@ -12,6 +14,7 @@ export class CategoryFilterComponent {
   @Input() set selectedFilters(value: CategoryData[]) {
     if (Array.isArray(value)) {
       this._selectedValue = value;
+      this._setDiffer();
     }
   }
   
@@ -28,7 +31,8 @@ export class CategoryFilterComponent {
   
   public _selectedValue: CategoryData[] = [];
   
-  constructor(private _listDiffers: IterableDiffers) {
+  constructor(private _listDiffers: IterableDiffers,
+              private _frameEventManager: FrameEventManagerService) {
     this._setDiffer();
   }
   
@@ -54,6 +58,12 @@ export class CategoryFilterComponent {
       changes.forEachRemovedItem((record: IterableChangeRecord<any>) => {
         this.itemUnselected.emit(record.item);
       });
+    }
+  }
+  
+  public _updateHost(opened: boolean): void {
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(opened ? FrameEvents.ModalOpened : FrameEvents.ModalClosed);
     }
   }
 }

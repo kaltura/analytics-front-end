@@ -30,7 +30,7 @@ export class TopContributorsTableComponent {
   private _currentOrderField = 'count_plays';
   private _currentOrderDirection = -1;
   
-  public _entryId: string;
+  public _userId: string;
   public _totalCount = 0;
   public _tableData: any[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
@@ -66,6 +66,20 @@ export class TopContributorsTableComponent {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
+    }
+  }
+  
+  public _showOverlay(event: any, userId: string): void {
+    if (this._overlay) {
+      this._userId = userId;
+      this._overlay.show(event);
+    }
+  }
+  
+  public _hideOverlay(): void {
+    if (this._overlay) {
+      this._userId = null;
+      this._overlay.hide();
     }
   }
 }

@@ -66,8 +66,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
-  public _zoomInDisabled = false;
-  public _zoomOutDisabled = true;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -113,8 +111,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
       event.data.sort((data1, data2) => {
-        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
-        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
+        let value1 = parseInt(data1[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
@@ -130,12 +128,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public getValue(val: string): number {
-    return parseFloat(val.split(',').join(''));
+    return parseFloat(val.split(analyticsConfig.valueSeparator).join(''));
   }
 
   public getPercent(val: string): number {
-    const total: number = parseFloat(this.selectedTab.value.split(',').join(''));
-    return parseFloat(val.split(',').join('')) / total * 100;
+    const total: number = parseFloat(this.selectedTab.value.split(analyticsConfig.valueSeparator).join(''));
+    return parseFloat(val.split(analyticsConfig.valueSeparator).join('')) / total * 100;
   }
 
   public onChartClick(event): void {
@@ -147,12 +145,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public zoom(direction: string): void {
     if (direction === 'in') {
       this._mapZoom = this._mapZoom * 2;
-      this._zoomInDisabled = true;
-      this._zoomOutDisabled = false;
     } else {
       this._mapZoom = this._mapZoom / 2;
-      this._zoomInDisabled = false;
-      this._zoomOutDisabled = true;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
     if (this._drillDown.length > 0) {
@@ -191,7 +185,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
     this.loadReport();
   }
@@ -214,6 +208,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
           }
+          this.updateMap();
           this.prepareCsvExportHeaders();
           this._isBusy = false;
           this._loadTrendData();
@@ -272,7 +267,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       });
       this.updateSelectedCountries();
     }
-    this.updateMap();
   }
 
   private updateSelectedCountries(): void {
@@ -311,13 +305,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
+      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0 ? data.country : this._drillDown.length === 1 ? data.region : data.city,
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
       }
     });
 
@@ -325,8 +319,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
     map.zoom = this._mapZoom;
-    this._zoomInDisabled = false;
-    this._zoomOutDisabled = true;
     map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }

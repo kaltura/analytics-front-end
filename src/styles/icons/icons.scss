@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-globe:before {
+  content: "\e910";
+}
+.icon-bullet-hollow:before {
+  content: "\e90e";
+}
+.icon-bullet:before {
+  content: "\e90f";
+}
 .icon-viewer-contributor:before {
   content: "\e909";
 }

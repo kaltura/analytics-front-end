@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
@@ -6,6 +6,7 @@ import { KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 export interface OptionItem {
   value: any;
@@ -54,8 +55,12 @@ export type RefineFilter = { value: any, type: string }[];
   ]
 })
 export class FilterComponent {
+  @HostBinding('style.padding-bottom') _bottomPadding = '0';
+
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
+  
+    this._bottomPadding = isOpened || this._tags.length ? '24px' : '0';
     
     if (this.showFilters !== isOpened) {
       this.showFilters = !!value;
@@ -76,11 +81,13 @@ export class FilterComponent {
     if (value !== undefined) {
       this._dateFilter = value;
       
-      setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
-        if (this._currentFilters.find(({ type }) => type === 'location')) {
-          this._removeFilter({ type: 'location', value: null, label: null });
-        }
-      });
+      if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
+        setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
+          if (this._currentFilters.find(({ type }) => type === 'location')) {
+            this._removeFilter({ type: 'location', value: null, label: null });
+          }
+        });
+      }
     }
   }
   
@@ -90,8 +97,7 @@ export class FilterComponent {
   private _currentFilters: FilterItem[] = []; // local state
   private _appliedFilters: FilterItem[] = [];
   private _showFilters: boolean;
-  private _firstTimeLoading = true;
-  
+
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
@@ -110,6 +116,7 @@ export class FilterComponent {
     } else {
       this._state = 'hidden';
     }
+    this.updateLayout();
   }
   
   get showAdvancedFilters() {
@@ -123,9 +130,10 @@ export class FilterComponent {
     } else {
       this._advancedFiltersState = 'hidden';
     }
+    this.updateLayout();
   }
   
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService, private _frameEventManager: FrameEventManagerService) {
     this._clearAll();
   }
   
@@ -179,15 +187,19 @@ export class FilterComponent {
           return { value, type, label, tooltip };
         case 'location':
           const location = value as LocationsFilterValue;
-          label = this._translate.instant(`app.filters.location`);
-          tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({ name }) => name)}`;
-          if (location.region) {
-            tooltip += ` > ${location.region.map(({ name }) => name)}`;
-            if (location.city) {
-              tooltip += ` > ${location.city.map(({ name }) => name)}`;
+          if (location.country && location.country.length) {
+            label = this._translate.instant(`app.filters.location`);
+            tooltip = this._translate.instant(`app.filters.location`) + `: ${location.country.map(({name}) => name)}`;
+            if (location.region && location.region.length) {
+              tooltip += ` > ${location.region.map(({name}) => name)}`;
+              if (location.city && location.city.length) {
+                tooltip += ` > ${location.city.map(({name}) => name)}`;
+              }
             }
+            return {value: 'location', type: 'location', label, tooltip};
+          } else {
+            return null;
           }
-          return { value: 'location', type: 'location', label, tooltip };
         default:
           return null;
       }
@@ -201,6 +213,8 @@ export class FilterComponent {
   }
   
   private _updateSelectedValues(values: FilterItem[]): void {
+    this._clearSelectedValues();
+
     if (Array.isArray(values) && values.length) {
       values.forEach(item => {
         if (!this._selectedValues[item.type] || item.type === 'location') {
@@ -211,9 +225,13 @@ export class FilterComponent {
           }
         }
       });
-    } else {
-      this._clearSelectedValues();
     }
+  }
+
+  private updateLayout(): void {
+    setTimeout(() => {
+      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
+    }, 350);
   }
   
   public _onItemSelected(item: any, type: string): void {
@@ -256,6 +274,8 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
     this.filterChange.emit([...this._appliedFilters]);
     this._tags = this._prepareFilterTags();
+  
+    this._bottomPadding = this._tags.length ? '24px' : '0';
     
     this.closeFilters.emit();
   }

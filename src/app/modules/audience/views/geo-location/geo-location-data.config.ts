@@ -81,13 +81,15 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
         borderWidth: 1,
+        padding: 8,
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
         textStyle: {
-          color: '#999999'
+          color: '#333333',
+          fontWeight: 'bold'
         },
         formatter: (params) => {
           if (params.name && params.data && params.data.value && params.data.value.length === 3) {
-            let tooltip = params.name + '<br/>' + params.seriesName + ' : ' + params.data.value[2];
+            let tooltip = '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2];
             if (params.seriesName === 'Avg. Drop Off') {
               tooltip = tooltip + '%';
             }
@@ -129,7 +131,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             label: {
               show: true
             },
-            areaColor: '#F49616'
+            areaColor: '#F8A61A'
           }
         },
       };
@@ -173,7 +175,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           mapType: 'world',
           roam: false,
           zoom: 1.2,
-          top: 60,
+          top: 40,
           selectedMode: 'single',
           animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',

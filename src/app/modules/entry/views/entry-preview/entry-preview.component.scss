@@ -1,0 +1,64 @@
+@import '../../../../../styles/variables';
+.kReport{
+  border-radius: 0px !important;
+}
+.kPlayer {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  .chartContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    .kChart {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .playPauseBtn{
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.kScrubber {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 0%;
+  height: 100%;
+  border: none;
+  border-bottom: 20px solid $kSecondary;
+  border-right: 2px solid $kSecondary;
+  pointer-events: none;
+}
+
+.playerFooter{
+  width: 100%;
+  height: 20px;
+  background-color: $kGrayscale1;
+}
+
+:host {
+  margin-top: 28px;
+}
+
+/* Player overrides start */
+:host /deep/ #kaltura_player_analytics{
+  width: 100% !important;
+  height: 100% !important;
+}
+/* Player overrides end */

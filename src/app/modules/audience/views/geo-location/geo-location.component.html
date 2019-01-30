@@ -28,10 +28,8 @@
                    (onChange)="_onCountrySelectChange($event)"
                    [defaultLabel]="'app.audience.geo.selectCountry' | translate">
       <ng-template let-country pTemplate="item">
-            <div class="kCountryList">
-              <img class="kFlag" src="{{'assets/flags/' + country.value.toUpperCase() + '.png'}}"/>
-              {{country.label}}
-            </div>
+          <img class="kFlag" src="{{'assets/flags/' + country.value.toUpperCase() + '.png'}}" style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"/>
+          <span style="margin-top:2px; position: absolute">{{country.label}}</span>
       </ng-template>
     </p-multiSelect>
   </div>
@@ -51,14 +49,11 @@
 
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kDimensions">
-
-      </div>
       <div class="kMap">
         <div echarts class="kChart" [options]="_mapChartData[_selectedMetrics]" (chartClick)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
         <div class="kZoomWidget">
-          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')" [disabled]="_zoomOutDisabled"></button>
-          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')" [disabled]="_zoomInDisabled"></button>
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')"></button>
         </div>
       </div>
       <div class="kTable">
@@ -66,7 +61,9 @@
           <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="count_plays" [defaultSortOrder]="-1" [sortOrder]="-1" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
-                <th [ngStyle]="{'width': '42px'}">{{'app.audience.geo.index' | translate}}</th>
+                <th [ngStyle]="{'width': '42px'}">
+                  <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+                </th>
                 <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">

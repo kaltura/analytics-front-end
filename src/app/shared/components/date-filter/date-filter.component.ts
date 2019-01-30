@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { environment } from '../../../../environments/environment';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
@@ -71,6 +70,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   private startDate: Date;
   private endDate: Date;
   
+  private _queryParams: { [key: string]: string } = null;
+  
   public get _applyDisabled(): boolean {
     return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2;
   }
@@ -88,7 +89,11 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         .listen(FrameEvents.UpdateFilters)
         .pipe(cancelOnDestroy(this), filter(Boolean))
         .subscribe(({ queryParams }) => {
-          this._init(queryParams);
+          // query params are flat, so string compare is okay
+          if (JSON.stringify(this._queryParams) !== JSON.stringify(queryParams) ) {
+            this._init(queryParams);
+            this._queryParams = queryParams;
+          }
         });
     } else {
       const params = this._route.snapshot.queryParams;
@@ -156,11 +161,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _updateRouteParams(): void {
-    let queryParams = null;
+    let queryParams = this._queryParams || {};
     if (this.selectedView === 'preset') {
-      queryParams = { dateBy: this.selectedDateRange };
+      queryParams = {...this._queryParams, dateBy: this.selectedDateRange };
     } else if (this.selectedView === 'specific') {
       queryParams = {
+        ...this._queryParams,
         dateFrom: DateFilterUtils.getDay(this.startDate),
         dateTo: DateFilterUtils.getDay(this.endDate),
       };
@@ -211,7 +217,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   public timeUnitsChange(timeUnit: KalturaReportInterval, applyIn?: string): void {
     this.selectedTimeUnit = timeUnit;
-    this.triggerChangeEvent(applyIn);
+    this.triggerChangeEvent(applyIn, 'timeUnits');
   }
 
   public openPopup(): void {
@@ -242,9 +248,10 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this.updateDataRanges();
   }
 
-  private triggerChangeEvent(applyIn?: string): void {
+  private triggerChangeEvent(applyIn?: string, changeOnly?: string): void {
     this.filterChange.emit({
       applyIn: applyIn,
+      changeOnly: changeOnly,
       startDate: DateFilterUtils.toServerDate(this.startDate),
       endDate: DateFilterUtils.toServerDate(this.endDate),
       startDay: DateFilterUtils.getDay(this.startDate),

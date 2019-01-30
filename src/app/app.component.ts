@@ -38,11 +38,13 @@ export class AppComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
-    this._initApp();
-  
-    this._frameEventManager.listen(FrameEvents.Init)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(config => this._initApp(config));
+    if (window['analyticsConfig']) { // standalone
+      this._initApp(window['analyticsConfig']);
+    } else { // hosted
+      this._frameEventManager.listen(FrameEvents.Init)
+        .pipe(cancelOnDestroy(this), filter(Boolean))
+        .subscribe(config => this._initApp(config, true));
+    }
     
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
@@ -75,17 +77,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
-  private _initApp(configuration = null): void {
-    let config  = null;
-    if (!configuration && !window['analyticsConfig']) {
+  private _initApp(config = null, hosted = false): void {
+    if (!config) {
       return;
     }
-    if (!configuration && window['analyticsConfig']) { // stand alone
-      config = window['analyticsConfig'];
-    } else {
-      config = configuration;
-      this.hosted = true; // hosted;
-    }
+
+    this._logger.info(`Running Analytics version: ${analyticsConfig.appVersion}`);
+
+    this.hosted = hosted; // hosted;
+    
     analyticsConfig.ks = config.ks;
     analyticsConfig.pid = config.pid;
     analyticsConfig.locale = config.locale;
@@ -128,9 +128,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private mapRoutes(kmcRoute: string): string {
     let analyticsRoute = kmcRoute;
     switch (kmcRoute) {
-      case '/analytics/dashboard':
-        analyticsRoute = '/dashboard';
-        break;
       case '/analytics/contributors':
         analyticsRoute = '/contributors/top-contributors';
         break;
@@ -154,6 +151,9 @@ export class AppComponent implements OnInit, OnDestroy {
         break;
       case '/analytics/live':
         analyticsRoute = '/live/live-reports';
+        break;
+      case '/analytics/entry':
+        analyticsRoute = '/entry';
         break;
       default:
         break;

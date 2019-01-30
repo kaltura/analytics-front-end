@@ -12,6 +12,8 @@ import { TrendService } from 'shared/services/trend.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isArrayEquals } from 'shared/utils/is-array-equals';
+import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -76,9 +78,12 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   
+  private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
+  
   protected abstract _defaultReportType: KalturaReportType;
   protected abstract _drillDownReportType: KalturaReportType;
-  
+
+  protected _iconType: string = null;
   protected _order = '-count_plays';
   protected _totalPlaysCount = 0;
   protected _devices: string[] = [];
@@ -108,6 +113,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     }
   );
   
+  protected _showIcon = false;
+  protected get showIcon(): boolean {
+    return false;
+  }
+  
   protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
   
   constructor(private _reportService: ReportService,
@@ -124,7 +134,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   ngOnDestroy() {
-  
+    this._devicesDataLoaded.complete();
   }
   
   private _insertColumnAfter(column: string, after: string, columns: string[]): void {
@@ -172,7 +182,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       pager: this._pager,
       order: this._order
     };
-    this._reportService.getReport(reportConfig, this._dataConfig)
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           this._tableData = [];
@@ -189,8 +199,9 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           
           this._isBusy = false;
           this._firstTimeLoading = false;
-          
-          this._loadTrendData();
+          this._showIcon = !this._drillDown;
+    
+          this._devicesDataLoaded.next(true);
         },
         error => {
           this._isBusy = false;
@@ -224,16 +235,15 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
             buttons
           });
         });
+  
+    this._loadTrendData();
   }
   
   private _setPlaysTrend(row: any, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string): void {
     const currentValue = parseFloat(row['count_plays_raw']) || 0;
     compareValue = parseFloat(compareValue) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}
-    `;
+    const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue))}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue))}`;
     row['plays_trend'] = {
       trend: value !== null ? value : '–',
       trendDirection: direction,
@@ -247,31 +257,40 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
     
-    const filter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    filter.fromDay = startDay;
-    filter.toDay = endDay;
+    const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+    compareFilter.fromDay = startDay;
+    compareFilter.toDay = endDay;
     
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
-      filter: filter,
+      filter: compareFilter,
       pager: this._pager,
       order: this._order
     };
-    this._reportService.getReport(reportConfig, this._dataConfig)
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
-        if (report.table && report.table.header && report.table.data) {
-          const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
-          this._tableData.forEach(row => {
-            const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
-            const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
-            this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
+        const waitForDevicesData = this._devicesDataLoaded // make sure main data has loaded
+          .asObservable()
+          .pipe(filter(Boolean))
+          .subscribe(() => {
+            this._devicesDataLoaded.next(false);
+            if (waitForDevicesData) {
+              waitForDevicesData.unsubscribe();
+            }
+            if (report.table && report.table.header && report.table.data) {
+              const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
+              this._tableData.forEach(row => {
+                const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
+                const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
+                this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
+              });
+            } else {
+              this._tableData.forEach(row => {
+                this._setPlaysTrend(row, 0, currentPeriodTitle, comparePeriodTitle);
+              });
+            }
           });
-        } else {
-          this._tableData.forEach(row => {
-            this._setPlaysTrend(row, 0, currentPeriodTitle, comparePeriodTitle);
-          });
-        }
       }, error => {
         const err: ErrorDetails = this._errorsManager.getError(error);
         if (err.forceLogout) {

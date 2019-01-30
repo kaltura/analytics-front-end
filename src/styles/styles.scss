@@ -97,7 +97,6 @@ body{
         display: flex;
         flex-direction: column;
         width: 100%;
-        height:100%;
         background-color: white;
         .kDimensions{
           width: 100%;
@@ -356,7 +355,7 @@ ui-carousel /deep/ {
 }
 
 .ui-multiselect-item {
-  display: flex !important;
+  display: flex;
   align-items: center;
   height: 40px;
 }
@@ -377,4 +376,14 @@ ui-carousel /deep/ {
     margin-right: 8px;
     margin-left: 4px;
   }
+}
+
+.kNoPadding {
+  padding: 0 !important;
+}
+
+.kBrowserIcon {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
 }
