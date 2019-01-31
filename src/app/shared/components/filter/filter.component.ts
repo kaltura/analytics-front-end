@@ -7,6 +7,8 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface OptionItem {
   value: any;
@@ -32,7 +34,7 @@ export type RefineFilter = { value: any, type: string }[];
   selector: 'app-refine-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
-  providers: [LocationsFilterService],
+  providers: [LocationsFilterService, KalturaLogger.createLogger('FilterComponent')],
   animations: [
     trigger('state', [
       state('visible', style({ height: '*', opacity: 1 })),
@@ -79,6 +81,7 @@ export class FilterComponent {
   
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value !== undefined) {
+      this._logger.debug('Update date filter', () => value);
       this._dateFilter = value;
       
       if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
@@ -133,7 +136,9 @@ export class FilterComponent {
     this.updateLayout();
   }
   
-  constructor(private _translate: TranslateService, private _frameEventManager: FrameEventManagerService) {
+  constructor(private _translate: TranslateService,
+              private _frameEventManager: FrameEventManagerService,
+              private _logger: KalturaLogger) {
     this._clearAll();
   }
   
@@ -207,6 +212,7 @@ export class FilterComponent {
   }
   
   private _clearAll(): void {
+    this._logger.trace('Clear all tags called');
     this._clearSelectedValues();
     this._currentFilters = [];
     this._appliedFilters = [];
@@ -229,12 +235,17 @@ export class FilterComponent {
   }
 
   private updateLayout(): void {
-    setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
-    }, 350);
+    if (analyticsConfig.isHosted) {
+      const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+      this._logger.info('Send update layout event to the host app', { height });
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 350);
+    }
   }
   
   public _onItemSelected(item: any, type: string): void {
+    this._logger.trace('Item selected by user', { item, type });
     const value = { value: item, type };
     if (type === 'location') {
       const relevantFilterIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
@@ -249,6 +260,7 @@ export class FilterComponent {
   }
   
   public _onItemUnselected(item: any, type: string): void {
+    this._logger.trace('Item removed by user', { item, type });
     const unselectedItemIndex = type === 'location'
       ? this._currentFilters.findIndex(filter => filter.type === 'location')
       : this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
@@ -259,16 +271,20 @@ export class FilterComponent {
   }
   
   public _onPopupOpen(): void {
+    this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
   }
   
   public _onPopupClose(): void {
+    this._logger.trace('Filters is closed by user, update selected values');
     this._currentFilters = [];
     this._updateSelectedValues(this._currentFilters);
   }
   
   public _apply(): void {
+    this._logger.trace('User applied filters, emit update event and close filters');
+  
     // using spread to prevent passing by reference to avoid unwanted mutations
     this._appliedFilters = [...this._currentFilters];
     this._updateSelectedValues(this._currentFilters);
@@ -293,11 +309,13 @@ export class FilterComponent {
   }
   
   public _removeFilter(item: { value: string, label: string, type: string }): void {
+    this._logger.trace('Item remove action is selected by user', { item });
     this._onItemUnselected(item.value, item.type);
     this._apply();
   }
   
   public _removeAll(): void {
+    this._logger.trace('Remove all filters action is selected by user');
     this._clearAll();
     this._currentFilters = [];
     this._apply();
