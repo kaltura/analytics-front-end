@@ -57,7 +57,8 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: MiniHighlightsConfig) {
+              private _dataConfigService: MiniHighlightsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -167,9 +168,11 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   }
 
   public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {
+        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop });
         this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
       }
     } else {

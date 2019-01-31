@@ -58,7 +58,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopVideosDataConfig) {
+              private _dataConfigService: TopVideosDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -180,6 +181,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _onSortChanged(field: string): void {
     const order = `-${field}`;
     if (order !== this._order) {
+      this._logger.trace('Handle sort changed action by user', { order });
       this._order = order;
       this._loadReport();
     }

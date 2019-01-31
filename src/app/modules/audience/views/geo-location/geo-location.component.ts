@@ -15,12 +15,13 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as echarts from 'echarts';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-geo-location',
   templateUrl: './geo-location.component.html',
   styleUrls: ['./geo-location.component.scss'],
-  providers: [GeoLocationDataConfig]
+  providers: [GeoLocationDataConfig, KalturaLogger.createLogger('GeoLocationComponent')]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
   private _dataConfig: ReportDataConfig;
@@ -73,7 +74,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
               private _authService: AuthService,
               private _trendService: TrendService,
               private http: HttpClient,
-              private _dataConfigService: GeoLocationDataConfig) {
+              private _dataConfigService: GeoLocationDataConfig,
+              private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -92,6 +94,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._logger.trace('Handle date filter change action by user', { event });
     this.filter.timeZoneOffset = this.trendFilter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
     this.filter.toDay = event.endDay;
@@ -102,6 +105,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this.selectedTab = tab;
     this._selectedMetrics = tab.key;
     this.updateMap();
@@ -110,6 +114,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
+      this._logger.trace(
+        'Handle sort changed action by user',
+        () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
+      );
       event.data.sort((data1, data2) => {
         let value1 = parseInt(data1[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
         let value2 = parseInt(data2[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
@@ -137,12 +145,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public onChartClick(event): void {
+    this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
       this._onDrillDown(event.data.name);
     }
   }
 
   public zoom(direction: string): void {
+    this._logger.trace('Handle zoom action by user', { direction });
     if (direction === 'in') {
       this._mapZoom = this._mapZoom * 2;
     } else {
@@ -163,6 +173,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onRemoveTag(country: any): void {
+    this._logger.trace('Handle tag remove action by user', { country });
     const index = this._selectedCountries.indexOf(country.data);
     if (index > -1) {
       this._selectedCountries.splice(index, 1);
@@ -171,12 +182,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onRemoveAllTags(): void {
+    this._logger.trace('Handle all tag remove action by user');
     this._tags = [];
     this._selectedCountries = [];
     this.updateSelectedCountries();
   }
 
   public _onDrillDown(country: string): void {
+    this._logger.trace('Handle drill down to country action by user', { country });
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {

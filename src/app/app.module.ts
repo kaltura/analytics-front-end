@@ -61,7 +61,7 @@ export class AppModule {
     if (environment.production) {
       _kalturaLogger.setOptions({ level: 'Error' });
     } else {
-      _kalturaLogger.setOptions({ level: 'All' });
+      _kalturaLogger.setOptions({ level: 'Warn' });
     }
   }
 }
