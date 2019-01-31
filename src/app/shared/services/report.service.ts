@@ -31,6 +31,7 @@ import { getPrimaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
 import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -66,7 +67,9 @@ export class ReportService implements OnDestroy {
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
-              private _kalturaClient: KalturaClient) {
+              private _kalturaClient: KalturaClient,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('ReportService');
   }
   
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
@@ -76,6 +79,8 @@ export class ReportService implements OnDestroy {
   
   public getReport(config: ReportConfig, sections: ReportDataConfig, preventMultipleRequests = true): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
+    const logger = this._logger.subLogger(`Report #${config.reportType}`);
+    logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
     
     return Observable.create(
       observer => {
@@ -100,6 +105,7 @@ export class ReportService implements OnDestroy {
         });
         
         if (this._querySubscription && preventMultipleRequests) {
+          logger.info('Another report request is in progress, cancel previous one');
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
@@ -143,6 +149,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
+  
+                logger.info('Report has loaded');
+                
                 setTimeout(() => {
                   this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
                 }, 0);
@@ -150,6 +159,7 @@ export class ReportService implements OnDestroy {
               this._querySubscription = null;
             },
             error => {
+              logger.error('Report loading has failed', error);
               observer.error(error);
               this._querySubscription = null;
             });

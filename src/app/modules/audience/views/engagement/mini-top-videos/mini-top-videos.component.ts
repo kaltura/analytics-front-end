@@ -16,12 +16,17 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
   templateUrl: './mini-top-videos.component.html',
   styleUrls: ['./mini-top-videos.component.scss'],
-  providers: [MiniTopVideosConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('MiniTopVideosComponent'),
+    MiniTopVideosConfig,
+    ReportService,
+  ]
 })
 export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;

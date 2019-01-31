@@ -16,6 +16,7 @@ import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import { getColorPercent } from 'shared/utils/colors';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export type funnelData = {
   impressions: number;
@@ -32,7 +33,11 @@ export type funnelData = {
   selector: 'app-engagement-impressions',
   templateUrl: './impressions.component.html',
   styleUrls: ['./impressions.component.scss'],
-  providers: [ImpressionsDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementImpressionsComponent'),
+    ImpressionsDataConfig,
+    ReportService,
+  ],
 })
 export class EngagementImpressionsComponent extends EngagementBaseReportComponent implements OnInit {
 

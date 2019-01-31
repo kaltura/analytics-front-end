@@ -12,12 +12,17 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-top-videos',
   templateUrl: './top-videos.component.html',
   styleUrls: ['./top-videos.component.scss'],
-  providers: [TopVideosDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementTopVideosComponent'),
+    TopVideosDataConfig,
+    ReportService
+  ]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
   private _partnerId = analyticsConfig.pid;

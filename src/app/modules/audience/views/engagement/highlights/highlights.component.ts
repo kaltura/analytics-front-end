@@ -13,12 +13,17 @@ import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-highlights',
   templateUrl: './highlights.component.html',
   styleUrls: ['./highlights.component.scss'],
-  providers: [HighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementHighlightsComponent'),
+    HighlightsConfig,
+    ReportService
+  ],
 })
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;

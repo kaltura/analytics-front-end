@@ -14,12 +14,17 @@ import { MiniHighlightsConfig } from './mini-highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-mini-highlights',
   templateUrl: './mini-highlights.component.html',
   styleUrls: ['./mini-highlights.component.scss'],
-  providers: [MiniHighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementMiniHighlightsComponent'),
+    MiniHighlightsConfig,
+    ReportService,
+  ]
 })
 export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;

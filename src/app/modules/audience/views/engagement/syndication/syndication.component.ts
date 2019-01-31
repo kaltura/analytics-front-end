@@ -13,12 +13,17 @@ import { TrendService } from 'shared/services/trend.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-syndication',
   templateUrl: './syndication.component.html',
   styleUrls: ['./syndication.component.scss'],
-  providers: [ReportService, SyndicationDataConfig]
+  providers: [
+    KalturaLogger.createLogger('SyndicationComponent'),
+    ReportService,
+    SyndicationDataConfig,
+  ]
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;

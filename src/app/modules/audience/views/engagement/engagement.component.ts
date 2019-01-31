@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { RefineFilter } from '../../../../shared/components/filter/filter.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-engagement',
   templateUrl: './engagement.component.html',
-  styleUrls: ['./engagement.component.scss']
+  styleUrls: ['./engagement.component.scss'],
+  providers: [KalturaLogger.createLogger('EngagementComponent')]
 })
 export class EngagementComponent {
   public _selectedRefineFilters: RefineFilter = null;
