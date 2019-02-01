@@ -15,6 +15,7 @@ export enum FrameEvents {
   EntryNavigateBack = 'entryNavigateBack',
   ModalOpened = 'modalOpened',
   ModalClosed = 'modalClosed',
+  SetLogsLevel = 'setLogsLevel',
 }
 
 @Injectable()
