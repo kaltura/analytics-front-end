@@ -12,12 +12,17 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopContributorsDataConfig } from './top-contributors-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-top-contributors',
   templateUrl: './top-contributors.component.html',
   styleUrls: ['./top-contributors.component.scss'],
-  providers: [TopContributorsDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('ContributorsTopContributorsComponent'),
+    TopContributorsDataConfig,
+    ReportService,
+  ]
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
   private _order = '-added_entries';
@@ -49,7 +54,8 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopContributorsDataConfig) {
+              private _dataConfigService: TopContributorsDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -168,6 +174,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _onSortChanged(field: string): void {
     const order = `-${field}`;
     if (order !== this._order) {
+      this._logger.trace('Handle sort changed action by user', { order });
       this._order = order;
       this._loadReport();
     }
