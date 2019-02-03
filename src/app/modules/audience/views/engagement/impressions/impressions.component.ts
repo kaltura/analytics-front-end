@@ -99,13 +99,13 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   public updateFunnel(): void {
-    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
+    const plays = this._funnelData.impressions === 0 ? "0" : (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
     const playThrough = this._funnelData.plays === 0 ? "0" : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toFixed(1);
     this.echartsIntance.setOption({
       series: [{
         data: [
           {
-            value: 100,
+            value: this._funnelData.impressions === 0 ? 0 : 100,
             name: this._translate.instant('app.engagement.playerImpressions')},
           {
             value: Math.round(parseFloat(plays)),
@@ -218,11 +218,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private updateCompareFunnel(): void {
-    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
-    const playThrough = (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
+    const plays = this.compareFunnelData.impressions === 0 ? "0" : (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
+    const playThrough = this.compareFunnelData.impressions === 0 ? "0" : (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
     this.compareEchartsIntance.setOption({series: [{data: [
           {
-            value: 100,
+            value: this.compareFunnelData.impressions === 0 ? 0 : 100,
             name: this._translate.instant('app.engagement.playerImpressions')
           },
           {
