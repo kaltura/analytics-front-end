@@ -150,6 +150,8 @@
         color: $kGrayscale1;
         font-weight: bold;
         line-height: 22px;
+        max-height: 44px;
+        overflow-y: hidden;
       }
 
       .kScore {
