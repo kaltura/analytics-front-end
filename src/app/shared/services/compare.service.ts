@@ -24,6 +24,16 @@ export class CompareService implements OnDestroy {
   ngOnDestroy() {
   }
   
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
+    const relevantDate = moment(date).subtract(datesDiff);
+    const relevantLabelString = reportInterval === KalturaReportInterval.days
+      ? relevantDate.format('YYYYMMDD')
+      : relevantDate.format('YYYYMM');
+  
+    const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
+    return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
+  }
+  
   private _getMissingDatesValues(startDate: moment.Moment,
                                  endDate: moment.Moment,
                                  reportInterval: KalturaReportInterval,
@@ -44,13 +54,7 @@ export class CompareService implements OnDestroy {
     
     return dates.map(date => {
       const label = date.format('YYYYMMDD');
-      const relevantDate = moment(date).subtract(datesDiff);
-      const relevantLabelString = reportInterval === KalturaReportInterval.days
-        ? relevantDate.format('YYYYMMDD')
-        : relevantDate.format('YYYYMM');
-      
-      const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
-      const compareValue = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : 0;
+      const compareValue = this._getCompareValue(compareData, date, datesDiff, reportInterval);
 
       const name = reportInterval === KalturaReportInterval.months
         ? DateFilterUtils.formatMonthOnlyString(label, analyticsConfig.locale)
@@ -132,7 +136,19 @@ export class CompareService implements OnDestroy {
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
-          const compareValue = compareData[j] || `${currentLabel}${analyticsConfig.valueSeparator}0`;
+          let compareValue;
+          
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            compareValue = this._getCompareValue(
+              compareData,
+              DateFilterUtils.parseDateString(currentLabel),
+              datesDiff,
+              reportInterval
+            ) || '0';
+          } else {
+            compareValue = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel) || '0';
+          }
+          
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
@@ -144,32 +160,31 @@ export class CompareService implements OnDestroy {
           }
           
           let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
-          let compareVal: string | number = compareValue.split(analyticsConfig.valueSeparator)[1];
   
           if (config.fields[graph.id] && config.fields[graph.id].parse) {
             currentVal = config.fields[graph.id].parse(currentVal);
-            compareVal = config.fields[graph.id].parse(compareVal);
+            compareValue = config.fields[graph.id].parse(compareValue);
           } else {
             currentVal = parseFloat(currentVal);
-            compareVal = parseFloat(compareVal);
+            compareValue = parseFloat(compareValue);
           }
   
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
 
-          if (isNaN(compareVal)) {
-            compareVal = 0;
+          if (isNaN(compareValue)) {
+            compareValue = 0;
           }
 
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
-            compareVal = config.fields[graph.id].format(compareVal);
+            compareValue = config.fields[graph.id].format(compareValue);
           }
 
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
-          yAxisCompareData.push(compareVal);
+          yAxisCompareData.push(compareValue);
   
           if (!config.fields[graph.id].nonDateGraphLabel) {
             const nextValue = currentData[j + 1];
