@@ -12,12 +12,17 @@ import { UsersDataConfig } from './users-data.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TrendService } from 'shared/services/trend.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  providers: [ReportService, UsersDataConfig]
+  providers: [
+    KalturaLogger.createLogger('EngagementUsersComponent'),
+    ReportService,
+    UsersDataConfig,
+  ]
 })
 export class EngagementUsersComponent extends EngagementBaseReportComponent {
   private _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -143,6 +148,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);

@@ -12,12 +12,17 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-top-videos',
   templateUrl: './top-videos.component.html',
   styleUrls: ['./top-videos.component.scss'],
-  providers: [TopVideosDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementTopVideosComponent'),
+    TopVideosDataConfig,
+    ReportService
+  ]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
   private _partnerId = analyticsConfig.pid;
@@ -53,7 +58,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopVideosDataConfig) {
+              private _dataConfigService: TopVideosDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -144,6 +150,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -174,6 +181,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _onSortChanged(field: string): void {
     const order = `-${field}`;
     if (order !== this._order) {
+      this._logger.trace('Handle sort changed action by user', { order });
       this._order = order;
       this._loadReport();
     }

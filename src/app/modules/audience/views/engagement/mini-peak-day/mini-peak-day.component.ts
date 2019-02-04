@@ -11,13 +11,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniPeakDayConfig } from './mini-peak-day.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import * as moment from 'moment';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+
 
 @Component({
   selector: 'app-engagement-mini-peak-day',
   templateUrl: './mini-peak-day.component.html',
   styleUrls: ['./mini-peak-day.component.scss'],
-  providers: [MiniPeakDayConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('MiniPeakDayComponent'),
+    MiniPeakDayConfig,
+    ReportService,
+  ]
 })
 export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -132,6 +137,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);

@@ -3,12 +3,14 @@ import { ReportService } from 'shared/services';
 import { KalturaReportType } from 'kaltura-ngx-client';
 import { TopBrowsersConfig } from './top-browsers.config';
 import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-devices-report/base-devices-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-top-browsers',
   templateUrl: '../base-devices-report/base-devices-report.component.html',
   styleUrls: ['../base-devices-report/base-devices-report.component.scss'],
   providers: [
+    KalturaLogger.createLogger('TopBrowsersComponent'),
     { provide: BaseDevicesReportConfig, useClass: TopBrowsersConfig },
     ReportService
   ]

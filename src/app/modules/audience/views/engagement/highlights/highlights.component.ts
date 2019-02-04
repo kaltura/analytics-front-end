@@ -13,12 +13,18 @@ import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement-highlights',
   templateUrl: './highlights.component.html',
   styleUrls: ['./highlights.component.scss'],
-  providers: [HighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementHighlightsComponent'),
+    HighlightsConfig,
+    ReportService
+  ],
 })
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -58,7 +64,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: HighlightsConfig) {
+              private _dataConfigService: HighlightsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -155,6 +162,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -220,18 +228,26 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
   }
   
   public _toggleTable(): void {
+    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
-    setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
-    }, 0);
+    
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+        this._logger.trace('Send update layout event to the host app', { height });
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 0);
+    }
   }
   
   public _onPaginationChanged(event: any): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport({ table: null });
     }
@@ -241,7 +257,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     if (event.data.length && event.field && event.order && !this._isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
+        this._logger.trace('Handle sort changed action by user', { order });
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport({ table: null });
       }
     }
