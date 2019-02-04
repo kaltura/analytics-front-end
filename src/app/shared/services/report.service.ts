@@ -398,7 +398,8 @@ export class ReportService implements OnDestroy {
 
               if (currentDate.isBefore(toDate)) {
                 toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
-
+                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+  
                 this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
                   endDate: currentDate,
                   correctEndDate: toDate,
