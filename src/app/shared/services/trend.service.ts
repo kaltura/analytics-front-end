@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services/report-helper';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class TrendService {
+  constructor(private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('TrendService');
+  }
+  
   private _getTrendDirection(trend: number): number {
     return trend > 0 ? 1 : trend < 0 ? -1 : 0;
   }
@@ -46,6 +51,9 @@ export class TrendService {
 
     const value = Math.ceil(((current - compare) / compare) * 100);
     const direction = this._getTrendDirection(value);
+  
+    this._logger.trace('Calculated trend from', { current, compare, value, direction });
+
     return { value: ReportHelper.numberOrZero(String(Math.abs(value))), direction };
   }
 }

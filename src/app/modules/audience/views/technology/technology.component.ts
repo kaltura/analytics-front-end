@@ -3,11 +3,13 @@ import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { DevicesOverviewComponent } from './devices-overview/devices-overview.component';
 import { KalturaEndUserReportInputFilter, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-technology',
   templateUrl: './technology.component.html',
   styleUrls: ['./technology.component.scss'],
+  providers: [KalturaLogger.createLogger('TechnologyComponent')]
 })
 export class TechnologyComponent implements OnInit {
   @ViewChild('overview') _overview: DevicesOverviewComponent;

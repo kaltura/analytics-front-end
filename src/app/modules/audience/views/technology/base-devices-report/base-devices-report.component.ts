@@ -14,6 +14,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { isArrayEquals } from 'shared/utils/is-array-equals';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -125,6 +126,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
               private _translate: TranslateService,
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService,
+              private _logger: KalturaLogger,
               @Inject(BaseDevicesReportConfig) _configService: ReportDataBaseConfig) {
     this._dataConfig = _configService.getConfig();
     
@@ -328,6 +330,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     if (event.data.length && field && event.order) {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
+        this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport();
@@ -337,27 +340,35 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public _onPaginationChanged(event): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport();
     }
   }
   
   public _onDeviceFilterChange(): void {
+    this._logger.trace('Handle device filter apply action by user', { selectedFilters: this._selectedDevices });
     this.deviceFilter = this._selectedDevices;
     this.deviceFilterChange.emit(this._selectedDevices);
   }
   
   public _onRemoveTag(item: { value: string, label: string }): void {
+    this._logger.trace('Handle remove filter action by user', { item });
     this._selectedDevices = this._selectedDevices.filter(device => device !== item.value);
     this._onDeviceFilterChange();
   }
   
   public _onRemoveAllTags(): void {
+    this._logger.trace('Handle remove all filters action by user');
     this._selectedDevices = [];
     this._onDeviceFilterChange();
   }
   
   public _onDrillDown(family: string): void {
+    this._logger.trace(
+      'Handle drill down to family action by user, reset page index to 1',
+      { family, reportType: this._drillDownReportType }
+    );
     this._drillDown = family;
     this._reportType = family ? this._drillDownReportType : this._defaultReportType;
     this._pager.pageIndex = 1;

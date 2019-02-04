@@ -3,11 +3,16 @@ import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-top-contributors',
   templateUrl: './top-contributors.component.html',
-  styleUrls: ['./top-contributors.component.scss']
+  styleUrls: ['./top-contributors.component.scss'],
+  providers: [
+    KalturaLogger.createLogger('TopContributorsComponent'),
+  ]
+  
 })
 export class TopContributorsComponent {
   public _selectedRefineFilters: RefineFilter = null;
