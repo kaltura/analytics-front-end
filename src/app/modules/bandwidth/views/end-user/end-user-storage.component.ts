@@ -275,6 +275,7 @@ export class EndUserStorageComponent implements OnInit {
         current.table,
         compare.table,
         this._dataConfig.table,
+        this._reportInterval,
         dataKey
       );
       this._columns = columns;
