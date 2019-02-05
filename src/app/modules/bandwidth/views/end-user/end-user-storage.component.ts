@@ -250,7 +250,7 @@ export class EndUserStorageComponent implements OnInit {
 
   _onSortChanged(event) {
     setTimeout(() => {
-      if (event.data.length && event.field && event.order && !this.isCompareMode) {
+      if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this.order) {
           this._logger.trace('Handle sort changed action by user', { order });
@@ -258,9 +258,10 @@ export class EndUserStorageComponent implements OnInit {
           this.pager.pageIndex = 1;
           this.loadReport({ table: null });
         }
+      } else {
+        return 1;
       }
     }, 0);
-
   }
 
   private handleCompare(current: Report, compare: Report): void {
