@@ -32,7 +32,6 @@ import * as moment from 'moment';
 import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
 import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { st } from '@angular/core/src/render3';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
