@@ -1,6 +1,9 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle" *ngIf="!_drillDown">{{'app.engagement.topDomainsReport.topDomains' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.engagement.topDomainsReport.topDomains_tt' | translate}}</span>
+    </kInputHelper>
     <div class="kBreadcrumbs" *ngIf="_drillDown">
       <a (click)="_onDrillDown(null)">{{'app.engagement.topDomainsReport.topDomains' | translate}}</a>
       <span class="separator">/</span>
