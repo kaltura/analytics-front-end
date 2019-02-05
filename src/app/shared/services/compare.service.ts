@@ -506,9 +506,9 @@ export class CompareService implements OnDestroy {
         relevantLabelString = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
       } else {
         const currentLabel = (valuesString || '').split(analyticsConfig.valueSeparator)[0];
-        const currentLabelDate = DateFilterUtils.parseDateString(currentLabel);
+        const currentLabelDate = currentLabel ? DateFilterUtils.parseDateString(currentLabel) : null;
         
-        if (currentLabelDate.isValid()) {
+        if (currentLabelDate && currentLabelDate.isValid()) {
           const relevantDate = moment(currentLabelDate).subtract(datesDiff);
           relevantLabelString = reportInterval === KalturaReportInterval.days
             ? relevantDate.format('YYYYMMDD')
@@ -518,7 +518,9 @@ export class CompareService implements OnDestroy {
         }
       }
   
-      compareValuesString = compareData.find(item => item.split(analyticsConfig.valueSeparator)[0] === relevantLabelString);
+      compareValuesString = relevantLabelString
+        ? compareData.find(item => item.split(analyticsConfig.valueSeparator)[0] === relevantLabelString)
+        : null;
 
       if (valuesString.length) {
         let data = {};
