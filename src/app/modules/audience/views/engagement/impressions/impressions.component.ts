@@ -15,6 +15,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import { getColorPercent } from 'shared/utils/colors';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export type funnelData = {
   impressions: number;
@@ -31,7 +33,11 @@ export type funnelData = {
   selector: 'app-engagement-impressions',
   templateUrl: './impressions.component.html',
   styleUrls: ['./impressions.component.scss'],
-  providers: [ImpressionsDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementImpressionsComponent'),
+    ImpressionsDataConfig,
+    ReportService,
+  ],
 })
 export class EngagementImpressionsComponent extends EngagementBaseReportComponent implements OnInit {
 
@@ -98,13 +104,13 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   public updateFunnel(): void {
-    const plays = (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(2);
-    const playThrough = (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.plays * 100).toFixed(2);
+    const plays = this._funnelData.impressions === 0 ? "0" : (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
+    const playThrough = this._funnelData.plays === 0 ? "0" : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toFixed(1);
     this.echartsIntance.setOption({
       series: [{
         data: [
           {
-            value: 100,
+            value: this._funnelData.impressions === 0 ? 0 : 100,
             name: this._translate.instant('app.engagement.playerImpressions')},
           {
             value: Math.round(parseFloat(plays)),
@@ -202,7 +208,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
     this.echartsIntance.setOption({series: [{left: '0%'}]}, false);
     this.compareEchartsIntance.setOption({series: [{left: '0%'}]}, false);
 
-    const data = compare.totals.data.split(',');
+    const data = compare.totals.data.split(analyticsConfig.valueSeparator);
     this.compareFunnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,
@@ -217,11 +223,11 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private updateCompareFunnel(): void {
-    const plays = (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(2);
-    const playThrough = (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
+    const plays = this.compareFunnelData.impressions === 0 ? "0" : (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
+    const playThrough = this.compareFunnelData.impressions === 0 ? "0" : (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
     this.compareEchartsIntance.setOption({series: [{data: [
           {
-            value: 100,
+            value: this.compareFunnelData.impressions === 0 ? 0 : 100,
             name: this._translate.instant('app.engagement.playerImpressions')
           },
           {
@@ -237,9 +243,9 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
-    this.echartsIntance.setOption({series: [{width: '60%'}]}, false);
-    this.echartsIntance.setOption({series: [{left: '35%'}]}, false);
-    const data = totals.data.split(',');
+    this.echartsIntance.setOption({series: [{width: '30%'}]}, false);
+    this.echartsIntance.setOption({series: [{left: '65%'}]}, false);
+    const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
       plays: data[0].length ? parseInt(data[0]) : 0,
@@ -272,7 +278,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
       } else if (params.dataIndex === 2) {
         compareValue = this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough];
       }
-      // const trend = (compareValue / value * 100).toFixed(2) + '%'; // TODO - calc trend by formula, add arrow and colors
+      // const trend = (compareValue / value * 100).toFixed(1) + '%'; // TODO - calc trend by formula, add arrow and colors
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)} </b></span>`; // <span> ${trend}</span> // TODO add trend if needed
     } else {
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
@@ -307,6 +313,7 @@ export class EngagementImpressionsComponent extends EngagementBaseReportComponen
   }
   
   protected _updateRefineFilter(): void {
+    this.pager.pageIndex = 1;
     this._refineFilterToServerValue(this.filter);
     if (this.compareFilter) {
       this._refineFilterToServerValue(this.compareFilter);

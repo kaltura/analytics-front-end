@@ -14,6 +14,7 @@ export class TopVideosTableComponent {
   @Input() set tableData(value: any[]) {
     value = Array.isArray(value) ? value : [];
     this._originalTable = [...value];
+    this._pager.pageIndex = 1;
     this._tableData = value.slice(0, this._pageSize);
     this._totalCount = value.length;
   }

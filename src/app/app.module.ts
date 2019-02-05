@@ -16,6 +16,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { SharedModule } from './shared/shared.module';
 import { FrameEventManagerModule } from 'shared/modules/frame-event-manager/frame-event-manager.module';
+import { KalturaLogger, KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
@@ -43,7 +45,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    KalturaLoggerModule.forRoot('AnalyticsNG'),
   ],
   providers: [
     BrowserService,
@@ -53,4 +56,12 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(_kalturaLogger: KalturaLogger) {
+    if (environment.production) {
+      _kalturaLogger.setOptions({ level: 'Error' });
+    } else {
+      _kalturaLogger.setOptions({ level: 'Warn' });
+    }
+  }
+}

@@ -11,13 +11,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniPeakDayConfig } from './mini-peak-day.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import * as moment from 'moment';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+
 
 @Component({
   selector: 'app-engagement-mini-peak-day',
   templateUrl: './mini-peak-day.component.html',
   styleUrls: ['./mini-peak-day.component.scss'],
-  providers: [MiniPeakDayConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('MiniPeakDayComponent'),
+    MiniPeakDayConfig,
+    ReportService,
+  ]
 })
 export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -42,7 +47,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
     return this._compareFilter !== null;
   }
 
-  public _peakDayData: any = {};
+  public _peakDayData: any = null;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
@@ -73,6 +78,8 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._peakDayData = null;
+
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
           }
@@ -116,8 +123,8 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
-    this._filter.interval = this._dateFilter.timeUnits;
-    this._reportInterval = this._dateFilter.timeUnits;
+    this._filter.interval = KalturaReportInterval.days;
+    this._reportInterval = KalturaReportInterval.days;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
@@ -130,6 +137,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);

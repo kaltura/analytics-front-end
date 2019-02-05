@@ -7,6 +7,7 @@ export type Tab = {
   selected: boolean;
   units: string;
   key: string;
+  rawValue: number | string;
   trend?: string;
   sortOrder?: number;
 };

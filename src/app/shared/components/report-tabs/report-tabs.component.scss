@@ -14,6 +14,9 @@
     height: 120px;
     background-color: white;
     cursor: pointer;
+    &.kNarrow{
+      height: 100px;
+    }
     &:hover{
       background-color: $kGrayscale7;
     }

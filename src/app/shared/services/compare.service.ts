@@ -8,14 +8,28 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import * as moment from 'moment';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CompareService implements OnDestroy {
   constructor(private _translate: TranslateService,
-              private _trendService: TrendService) {
+              private _trendService: TrendService,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('CompareService');
   }
   
   ngOnDestroy() {
+  }
+  
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
+    const relevantDate = moment(date).subtract(datesDiff);
+    const relevantLabelString = reportInterval === KalturaReportInterval.days
+      ? relevantDate.format('YYYYMMDD')
+      : relevantDate.format('YYYYMM');
+    
+    const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
+    return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
   
   public compareGraphData(currentPeriod: { from: string, to: string },
@@ -28,6 +42,7 @@ export class CompareService implements OnDestroy {
                           graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
+    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
     
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
@@ -38,7 +53,12 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
     }
-    
+  
+    this._logger.trace(
+      'Compare graph data',
+      () => ({ currentPeriod, comparePeriod, reportInterval, graphIds: current.map(({ id }) => id).join(', ') })
+    );
+
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id] || !graph.data) {
         return;
@@ -48,22 +68,46 @@ export class CompareService implements OnDestroy {
       let yAxisCompareData = [];
       
       const currentData = graph.data.split(';');
-      const compareData = compare[i].data ? compare[i].data.split(';') : currentData.map(() => 'N\A,0');
+      const compareData = compare[i].data
+        ? compare[i].data.split(';')
+        : currentData.map(() => `N/A${analyticsConfig.valueSeparator}0`);
       
       currentData.forEach((currentValue) => {
         if (currentValue && currentValue.length) {
-          const currentLabel = currentValue.split(',')[0];
-          const compareValue = compareData.find(item => item.split(',')[0] === currentLabel) || 'N\A,0';
+          const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
+          let compareValue;
+          
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            compareValue = this._getCompareValue(
+              compareData,
+              DateFilterUtils.parseDateString(currentLabel),
+              datesDiff,
+              reportInterval
+            ) || '0';
+          } else {
+            compareValue = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel) || '0';
+          }
+          
           let currentName = currentLabel;
           
           if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+          } else {
+            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
           
-          let currentVal = Math.ceil(parseFloat(currentValue.split(',')[1])); // publisher storage report should round up graph values
-          let compareVal = Math.ceil(parseFloat(compareValue.split(',')[1])); // publisher storage report should round up graph values
+          let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
+  
+          if (config.fields[graph.id] && config.fields[graph.id].parse) {
+            currentVal = config.fields[graph.id].parse(currentVal);
+            compareValue = config.fields[graph.id].parse(compareValue);
+          } else {
+            currentVal = parseFloat(currentVal);
+            compareValue = parseFloat(compareValue);
+          }
+  
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
@@ -74,12 +118,71 @@ export class CompareService implements OnDestroy {
           
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
-            compareVal = config.fields[graph.id].format(compareVal);
+            compareValue = config.fields[graph.id].format(compareValue);
           }
           
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
-          yAxisCompareData.push(compareVal);
+          yAxisCompareData.push(compareValue);
+  
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            const nextValue = currentData[j + 1];
+
+            if (nextValue) {
+              let nextValueDate, actualNextValueDate;
+              if (reportInterval === KalturaReportInterval.days) {
+                nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
+                actualNextValueDate = moment(currentLabel).startOf('day').add(1, 'days');
+              } else {
+                nextValueDate = DateFilterUtils.parseDateString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
+                actualNextValueDate = DateFilterUtils.parseDateString(currentLabel).startOf('month').add(1, 'months');
+              }
+      
+              if (!actualNextValueDate.isSame(nextValueDate)) {
+                this._logger.debug('Next date is not correct – fill missing dates with zeros', {
+                  nextDate: actualNextValueDate,
+                  correctNextDate: nextValueDate,
+                });
+
+                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
+                  .forEach(result => {
+                    xAxisData.push(result.name);
+                    yAxisCurrentData.push(result.value);
+                    yAxisCompareData.push(result.compare);
+                  });
+              }
+            } else {
+              let currentDate = DateFilterUtils.parseDateString(currentLabel);
+              let toDate = DateFilterUtils.parseDateString(currentPeriod.to);
+  
+              if (reportInterval === KalturaReportInterval.days) {
+                toDate = toDate.clone().startOf('day');
+                currentDate = currentDate.clone().startOf('day');
+              } else {
+                toDate = toDate.clone().startOf('month');
+                currentDate = currentDate.clone().startOf('month');
+              }
+  
+              if (currentDate.isBefore(toDate)) {
+                toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+  
+                this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
+                  endDate: currentDate,
+                  correctEndDate: toDate,
+                });
+    
+                this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
+                  .forEach(result => {
+                    xAxisData.push(result.name);
+                    yAxisCurrentData.push(result.value);
+                    yAxisCompareData.push(result.compare);
+                  });
+              }
+            }
+          } else {
+            this._logger.debug('Graph label is not a date, skip end date manipulations');
+          }
         }
       });
       
@@ -318,9 +421,11 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return { columns: [], tableData: [] };
     }
-    
+  
+    this._logger.trace('Parse table data', { headers: current.header });
+
     // parse table columns
-    let columns = current.header.toLowerCase().split(',');
+    let columns = current.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
     
     // parse table data
@@ -334,10 +439,10 @@ export class CompareService implements OnDestroy {
       let compareValuesString = null;
       if (dataKey.length) {
         const dataIndex = columns.indexOf(dataKey.toLowerCase());
-        const key = valuesString.split(',')[dataIndex];
+        const key = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
         if (key && key.length) {
           compareData.some(compareRow => {
-            if (compareRow.split(',')[dataIndex] === key) {
+            if (compareRow.split(analyticsConfig.valueSeparator)[dataIndex] === key) {
               compareValuesString = compareRow;
               return true;
             }
@@ -348,12 +453,12 @@ export class CompareService implements OnDestroy {
       }
       if (valuesString.length) {
         let data = {};
-        const currentValues = valuesString.split(',');
+        const currentValues = valuesString.split(analyticsConfig.valueSeparator);
         let hasConsistentData = false;
         let compareValues = [];
         if (compareValuesString) {
           hasConsistentData = true;
-          compareValues = compareValuesString.split(',');
+          compareValues = compareValuesString.split(analyticsConfig.valueSeparator);
         } else {
           compareValues = currentValues.map(() => 'N/A');
         }
@@ -404,14 +509,16 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return [];
     }
-    
+  
+    this._logger.trace('Parse totals data', { headers: current.header });
+
     const tabsData = [];
-    const data = current.data.split(',');
-    const compareData = compare.data ? compare.data.split(',') : [];
+    const data = current.data.split(analyticsConfig.valueSeparator);
+    const compareData = compare.data ? compare.data.split(analyticsConfig.valueSeparator) : [];
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
-    
-    current.header.split(',').forEach((header, index) => {
+
+    current.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
         const { value: trend, direction } = this._trendService.calculateTrend(Number(data[index] || 0), Number(compareData[index] || 0));

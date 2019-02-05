@@ -15,12 +15,13 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as echarts from 'echarts';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-geo-location',
   templateUrl: './geo-location.component.html',
   styleUrls: ['./geo-location.component.scss'],
-  providers: [GeoLocationDataConfig]
+  providers: [GeoLocationDataConfig, KalturaLogger.createLogger('GeoLocationComponent')]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
   private _dataConfig: ReportDataConfig;
@@ -66,8 +67,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
-  public _zoomInDisabled = false;
-  public _zoomOutDisabled = true;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -75,7 +74,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
               private _authService: AuthService,
               private _trendService: TrendService,
               private http: HttpClient,
-              private _dataConfigService: GeoLocationDataConfig) {
+              private _dataConfigService: GeoLocationDataConfig,
+              private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -94,6 +94,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._logger.trace('Handle date filter change action by user', { event });
     this.filter.timeZoneOffset = this.trendFilter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
     this.filter.toDay = event.endDay;
@@ -104,6 +105,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this.selectedTab = tab;
     this._selectedMetrics = tab.key;
     this.updateMap();
@@ -112,9 +114,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   public _onSortChanged(event) {
     if (event.data.length && event.field && event.order) {
+      this._logger.trace(
+        'Handle sort changed action by user',
+        () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
+      );
       event.data.sort((data1, data2) => {
-        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
-        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
+        let value1 = parseInt(data1[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
@@ -130,29 +136,27 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public getValue(val: string): number {
-    return parseFloat(val.split(',').join(''));
+    return parseFloat(val.split(analyticsConfig.valueSeparator).join(''));
   }
 
   public getPercent(val: string): number {
-    const total: number = parseFloat(this.selectedTab.value.split(',').join(''));
-    return parseFloat(val.split(',').join('')) / total * 100;
+    const total: number = parseFloat(this.selectedTab.value.split(analyticsConfig.valueSeparator).join(''));
+    return parseFloat(val.split(analyticsConfig.valueSeparator).join('')) / total * 100;
   }
 
   public onChartClick(event): void {
+    this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
       this._onDrillDown(event.data.name);
     }
   }
 
   public zoom(direction: string): void {
+    this._logger.trace('Handle zoom action by user', { direction });
     if (direction === 'in') {
       this._mapZoom = this._mapZoom * 2;
-      this._zoomInDisabled = true;
-      this._zoomOutDisabled = false;
     } else {
       this._mapZoom = this._mapZoom / 2;
-      this._zoomInDisabled = false;
-      this._zoomOutDisabled = true;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
     if (this._drillDown.length > 0) {
@@ -169,6 +173,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onRemoveTag(country: any): void {
+    this._logger.trace('Handle tag remove action by user', { country });
     const index = this._selectedCountries.indexOf(country.data);
     if (index > -1) {
       this._selectedCountries.splice(index, 1);
@@ -177,12 +182,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onRemoveAllTags(): void {
+    this._logger.trace('Handle all tag remove action by user');
     this._tags = [];
     this._selectedCountries = [];
     this.updateSelectedCountries();
   }
 
   public _onDrillDown(country: string): void {
+    this._logger.trace('Handle drill down to country action by user', { country });
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {
@@ -191,7 +198,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._drillDown.length === 1 ? 3 : 6;
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
     this.loadReport();
   }
@@ -214,6 +221,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           if (report.table && report.table.header && report.table.data) {
             this.handleTable(report.table); // handle table
           }
+          this.updateMap();
           this.prepareCsvExportHeaders();
           this._isBusy = false;
           this._loadTrendData();
@@ -272,7 +280,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       });
       this.updateSelectedCountries();
     }
-    this.updateMap();
   }
 
   private updateSelectedCountries(): void {
@@ -311,13 +318,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
+      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0 ? data.country : this._drillDown.length === 1 ? data.region : data.city,
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
       }
     });
 
@@ -325,8 +332,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
     map.zoom = this._mapZoom;
-    this._zoomInDisabled = false;
-    this._zoomOutDisabled = true;
     map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }

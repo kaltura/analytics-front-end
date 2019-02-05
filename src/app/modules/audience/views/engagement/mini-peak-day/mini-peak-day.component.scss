@@ -2,11 +2,13 @@
 :host{
   height: 100%;
 }
+
+.kFilters {
+  height: 93px !important;
+}
+
 .kReport{
   height: 100%;
-  .kReportContent{
-    height: 100%;
-  }
   .peakDayHolder{
     padding-top: 24px;
     margin-bottom: 24px;
@@ -48,4 +50,16 @@
     }
   }
 
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
 }

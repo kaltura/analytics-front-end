@@ -59,10 +59,10 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
         {
           name: 'Player Impressions',
           type: 'funnel',
-          left: '35%',
+          left: '65%',
           top: 10,
           bottom: 10,
-          width: '60%',
+          width: '30%',
           height: 340,
           min: 0,
           max: 100,
@@ -78,8 +78,8 @@ export class ImpressionsDataConfig extends ReportDataBaseConfig {
             fontFamily: 'Lato',
             fontSize: 15,
             fontWeight: 'bold',
-            textShadowColor: 'rgba(29,70,148,0.80)',
-            textShadowBlur: 2,
+            textShadowColor: 'rgba(29,70,148,0.90)',
+            textShadowBlur: 5,
             textBorderWidth: 0,
             color: '#ffffff'
           },

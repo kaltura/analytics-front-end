@@ -2,6 +2,7 @@ import { Input } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export abstract class TopContributorsBaseReportComponent {
   @Input() set dateFilter(value: DateChangeEvent) {
@@ -73,49 +74,49 @@ export abstract class TopContributorsBaseReportComponent {
     });
     
     if (categories.length) {
-      filter.categoriesIdsIn = categories.join(',');
+      filter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.categoriesIdsIn;
     }
     
     if (mediaType.length) {
-      filter.mediaTypeIn = mediaType.join(',');
+      filter.mediaTypeIn = mediaType.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.mediaTypeIn;
     }
     
     if (sourceType.length) {
-      filter.sourceTypeIn = sourceType.join(',');
+      filter.sourceTypeIn = sourceType.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.sourceTypeIn;
     }
     
     if (owners.length) {
-      filter.userIds = owners.join(',');
+      filter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
     } else {
-      delete filter.userIds;
+      delete filter.ownerIdsIn;
     }
     
     if (country.length) {
-      filter.countryIn = country.join(',');
+      filter.countryIn = country.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.countryIn;
     }
     
     if (region.length) {
-      filter.regionIn = region.join(',');
+      filter.regionIn = region.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.regionIn;
     }
     
     if (city.length) {
-      filter.citiesIn = city.join(',');
+      filter.citiesIn = city.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.citiesIn;
     }
     
     if (tags.length) {
-      filter.keywords = tags.join(',');
+      filter.keywords = tags.join(analyticsConfig.valueSeparator);
     } else {
       delete filter.keywords;
     }

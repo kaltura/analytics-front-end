@@ -8,6 +8,7 @@
 
 .kImpressions{
   height: 100%;
+  margin-bottom: 0 !important;
 }
 
 .kCharts{
@@ -32,7 +33,7 @@
   }
 }
 .kData{
-  width: 60%;
+  width: 78%;
   position: absolute;
   margin-top: 10px;
   height: 340px;
@@ -42,6 +43,7 @@
   &.compare{
     width: 77%;
     margin-top: 27px;
+    top: 0px;
   }
   .kDataContainer{
     width: 100%;

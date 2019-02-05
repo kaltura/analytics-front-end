@@ -35,21 +35,9 @@
   }
 }
 :host /deep/ .ui-multiselect-item{
-  display: flex !important;
+  display: flex;
   align-items: center;
 }
 :host {
   margin-bottom: 24px;
-}
-.kCountryList {
-  vertical-align: middle;
-  display: flex;
-  align-items: center;
-  max-width: 275px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  img{
-    margin-right: 8px;
-    margin-left: 4px;
-  }
 }

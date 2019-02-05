@@ -18,7 +18,7 @@
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
-  <div class="kReportContainer">
+  <div class="kReportContainer kNoPadding">
     <app-refine-filter [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
@@ -87,7 +87,8 @@
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-syndication [dateFilter]="_dateFilter"
+    <app-engagement-syndication [dateFilterComponent]="dateFilter"
+                                [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-engagement-syndication>
   </div>
 </div>
