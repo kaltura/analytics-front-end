@@ -14,12 +14,17 @@ import { MiniHighlightsConfig } from './mini-highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-mini-highlights',
   templateUrl: './mini-highlights.component.html',
   styleUrls: ['./mini-highlights.component.scss'],
-  providers: [MiniHighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('EngagementMiniHighlightsComponent'),
+    MiniHighlightsConfig,
+    ReportService,
+  ]
 })
 export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -52,7 +57,8 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: MiniHighlightsConfig) {
+              private _dataConfigService: MiniHighlightsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -162,9 +168,11 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   }
 
   public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {
+        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop });
         this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
       }
     } else {

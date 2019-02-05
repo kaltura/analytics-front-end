@@ -11,12 +11,17 @@ import { of as ObservableOf } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { CompareService } from 'shared/services/compare.service';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './publisher-storage.component.html',
   styleUrls: ['./publisher-storage.component.scss'],
-  providers: [PublisherStorageDataConfig]
+  providers: [
+    KalturaLogger.createLogger('PublisherStorageComponent'),
+    PublisherStorageDataConfig,
+  ]
 })
 export class PublisherStorageComponent implements OnInit {
   private _dataConfig: ReportDataConfig;
@@ -63,7 +68,8 @@ export class PublisherStorageComponent implements OnInit {
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _authService: AuthService,
-              private _dataConfigService: PublisherStorageDataConfig) {
+              private _dataConfigService: PublisherStorageDataConfig,
+              private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -73,6 +79,7 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
@@ -99,12 +106,14 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
     this.updateChartType();
   }
 
   public _onPaginationChanged(event): void {
     if (event.page !== (this.pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this.pager.pageIndex = event.page + 1;
       this.loadReport({table: null});
     }
@@ -114,6 +123,7 @@ export class PublisherStorageComponent implements OnInit {
     if (event.data.length && event.field && event.order && !this.isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this.order) {
+        this._logger.trace('Handle sort changed action by user', { order });
         this.order = order;
         this.loadReport({table: null});
       }
@@ -121,10 +131,15 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public toggleTable(): void {
+    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
-    setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
-    }, 0);
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+        this._logger.trace('Send update layout event to the host app', { height });
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 0);
+    }
   }
 
   private loadReport(sections = this._dataConfig): void {

@@ -31,6 +31,8 @@ import { getPrimaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
 import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { st } from '@angular/core/src/render3';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -66,7 +68,9 @@ export class ReportService implements OnDestroy {
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
-              private _kalturaClient: KalturaClient) {
+              private _kalturaClient: KalturaClient,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('ReportService');
   }
   
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
@@ -76,6 +80,8 @@ export class ReportService implements OnDestroy {
   
   public getReport(config: ReportConfig, sections: ReportDataConfig, preventMultipleRequests = true): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
+    const logger = this._logger.subLogger(`Report #${config.reportType}`);
+    logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
     
     return Observable.create(
       observer => {
@@ -100,6 +106,7 @@ export class ReportService implements OnDestroy {
         });
         
         if (this._querySubscription && preventMultipleRequests) {
+          logger.info('Another report request is in progress, cancel previous one');
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
@@ -143,6 +150,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
+  
+                logger.info('Report has loaded');
+                
                 setTimeout(() => {
                   this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
                 }, 0);
@@ -150,6 +160,7 @@ export class ReportService implements OnDestroy {
               this._querySubscription = null;
             },
             error => {
+              logger.error('Report loading has failed', error);
               observer.error(error);
               this._querySubscription = null;
             });
@@ -157,6 +168,8 @@ export class ReportService implements OnDestroy {
   }
   
   public exportToCsv(args: ReportGetUrlForReportAsCsvActionArgs): Observable<string> {
+    const logger = this._logger.subLogger(`Report #${args.reportType}`);
+    logger.info('Request for export csv link', { title: args.reportTitle });
     return Observable.create(
       observer => {
         const exportAction = new ReportGetUrlForReportAsCsvAction(args);
@@ -172,10 +185,12 @@ export class ReportService implements OnDestroy {
               observer.next(response);
               observer.complete();
               this._exportSubscription = null;
+              logger.info('Export request successful', { url: response });
             },
             error => {
               observer.error(error);
               this._exportSubscription = null;
+              logger.error('Failed to export csv', error);
             });
       });
   }
@@ -188,6 +203,8 @@ export class ReportService implements OnDestroy {
     // parse table columns
     let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
+  
+    this._logger.trace('Parse table data', { headers: table.header });
     
     // parse table data
     table.data.split(';').forEach(valuesString => {
@@ -215,7 +232,9 @@ export class ReportService implements OnDestroy {
   public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(analyticsConfig.valueSeparator);
-    
+  
+    this._logger.trace('Parse totals data', { headers: totals.header });
+
     totals.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
@@ -244,6 +263,12 @@ export class ReportService implements OnDestroy {
     const dates = reportInterval === KalturaReportInterval.days
       ? enumerateDaysBetweenDates(startDate, endDate)
       : enumerateMonthsBetweenDates(startDate, endDate);
+  
+    this._logger.debug('Get missing dates for', () => ({
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+      interval: reportInterval,
+    }));
     
     return dates.map(date => {
       const name = reportInterval === KalturaReportInterval.months
@@ -261,6 +286,11 @@ export class ReportService implements OnDestroy {
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function,
                      graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
+    this._logger.trace(
+      'Parse graph data',
+      () => ({ period, reportInterval, graphIds: graphs.map(({ id }) => id).join(', ') })
+    );
+    
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -284,12 +314,18 @@ export class ReportService implements OnDestroy {
         }
 
         if (fromDate.isBefore(currentDate)) {
+          this._logger.debug('Graphs period starts before first date in the response – fill missing dates with zeros', {
+            startDate: currentDate,
+            correctStartDate: fromDate
+          });
           this._getMissingDatesValues(fromDate, currentDate, reportInterval, config.fields[graph.id].format)
             .forEach(result => {
               xAxisData.push(result.name);
               yAxisData.push(result.value);
             });
         }
+      } else {
+        this._logger.debug('Graph label is not a date, skip start date manipulations');
       }
       
       data.forEach((value, index) => {
@@ -301,6 +337,8 @@ export class ReportService implements OnDestroy {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          } else {
+            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
 
           let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
@@ -336,6 +374,10 @@ export class ReportService implements OnDestroy {
               }
     
               if (!actualNextValueDate.isSame(nextValueDate)) {
+                this._logger.debug('Next date is not correct – fill missing dates with zeros', {
+                  nextDate: actualNextValueDate,
+                  correctNextDate: nextValueDate,
+                });
                 this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
                   .forEach(result => {
                     xAxisData.push(result.name);
@@ -356,6 +398,13 @@ export class ReportService implements OnDestroy {
 
               if (currentDate.isBefore(toDate)) {
                 toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+  
+                this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
+                  endDate: currentDate,
+                  correctEndDate: toDate,
+                });
+
                 this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format)
                   .forEach(result => {
                     xAxisData.push(result.name);
@@ -363,6 +412,8 @@ export class ReportService implements OnDestroy {
                   });
               }
             }
+          } else {
+            this._logger.debug('Graph label is not a date, skip end date manipulations');
           }
         }
       });
@@ -543,6 +594,8 @@ export class ReportService implements OnDestroy {
                                period: { from: string, to: string },
                                reportInterval: KalturaReportInterval,
                                graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
+    this._logger.trace('Parse graph data from table data', { headers: table.header, period });
+
     const { tableData } = this.parseTableData(table, dataConfig.table);
     const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
     return this.parseGraphs(graphData, dataConfig.graph, period, reportInterval, null, graphOptions);
@@ -550,6 +603,7 @@ export class ReportService implements OnDestroy {
   
   
   public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
+    this._logger.trace('Convert table data to graph data', { graphIds: Object.keys(dataConfig.graph.fields) });
     return Object.keys(dataConfig.graph.fields).map(
       field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source},${val[field]};`, acc), '') })
     );

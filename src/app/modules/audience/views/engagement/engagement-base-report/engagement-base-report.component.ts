@@ -92,9 +92,9 @@ export abstract class EngagementBaseReportComponent {
     }
     
     if (owners.length) {
-      filter.userIds = owners.join(analyticsConfig.valueSeparator);
+      filter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
     } else {
-      delete filter.userIds;
+      delete filter.ownerIdsIn;
     }
   
     if (country.length) {

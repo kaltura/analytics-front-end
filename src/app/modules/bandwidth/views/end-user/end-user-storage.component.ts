@@ -12,12 +12,17 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './end-user-storage.component.html',
   styleUrls: ['./end-user-storage.component.scss'],
-  providers: [EndUserStorageDataConfig]
+  providers: [
+    KalturaLogger.createLogger('EndUserStorageComponent'),
+    EndUserStorageDataConfig,
+  ]
 })
 export class EndUserStorageComponent implements OnInit {
 
@@ -67,7 +72,8 @@ export class EndUserStorageComponent implements OnInit {
               private _reportService: ReportService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: EndUserStorageDataConfig) {
+              private _dataConfigService: EndUserStorageDataConfig,
+              private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -77,6 +83,7 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
@@ -104,11 +111,13 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
     this.updateChartType();
   }
 
   public _onSearchUsersChange(users): void {
+    this._logger.trace('Handle search users action by user', { users });
     let usersIds = [];
     this._tags = users;
     users.forEach((user: KalturaUser) => {
@@ -128,6 +137,7 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   public _onDrillDown(user: string): void {
+    this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', { user });
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
     this.filter.userIds = user.length ? user : this.selectedUsers;
@@ -141,24 +151,32 @@ export class EndUserStorageComponent implements OnInit {
   }
 
   public toggleTable(): void {
+    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
-    setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
-    }, 0);
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+        this._logger.trace('Send update layout event to the host app', { height });
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 0);
+    }
   }
 
   public _onPaginationChanged(event): void {
     if (event.page !== (this.pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this.pager.pageIndex = event.page + 1;
       this.loadReport({ table: null });
     }
   }
 
   public _onRemoveTag(user: KalturaUser): void {
+    this._logger.trace('Handle clear user filter action by user', { userId: user.id });
     this.userFilter.removeUser(user.id);
   }
 
   public _onRemoveAllTags(): void {
+    this._logger.trace('Handle clear all users filter action by user');
     this.userFilter.removeAll();
   }
 
@@ -232,16 +250,18 @@ export class EndUserStorageComponent implements OnInit {
 
   _onSortChanged(event) {
     setTimeout(() => {
-      if (event.data.length && event.field && event.order && !this.isCompareMode) {
+      if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this.order) {
+          this._logger.trace('Handle sort changed action by user', { order });
           this.order = order;
           this.pager.pageIndex = 1;
           this.loadReport({ table: null });
         }
+      } else {
+        return 1;
       }
     }, 0);
-
   }
 
   private handleCompare(current: Report, compare: Report): void {

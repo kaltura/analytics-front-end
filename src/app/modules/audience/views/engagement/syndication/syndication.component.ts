@@ -13,12 +13,17 @@ import { TrendService } from 'shared/services/trend.service';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-syndication',
   templateUrl: './syndication.component.html',
   styleUrls: ['./syndication.component.scss'],
-  providers: [ReportService, SyndicationDataConfig]
+  providers: [
+    KalturaLogger.createLogger('SyndicationComponent'),
+    ReportService,
+    SyndicationDataConfig,
+  ]
 })
 export class SyndicationComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -57,7 +62,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
               private _trendService: TrendService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: SyndicationDataConfig) {
+              private _dataConfigService: SyndicationDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -201,6 +207,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         current.table,
         compare.table,
         this._dataConfig.table,
+        'object_id'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
@@ -263,12 +270,15 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   public _onPaginationChanged(event): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport({ table: null });
     }
   }
   
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
+
     this._selectedMetrics = tab.key;
   
     switch (this._selectedMetrics) {
@@ -282,6 +292,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         this._distributionColorScheme = 'default';
         break;
     }
+  
+    this._logger.trace(
+      'Update distribution color schema according to selected metric',
+      { selectedMetric: this._selectedMetrics, schema: this._distributionColorScheme },
+    );
   }
   
   public _onSortChanged(event) {
@@ -289,6 +304,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     if (event.data.length && field && event.order) {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {
+        this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport({ table: null });
@@ -297,6 +313,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   }
   
   public _onDrillDown(domain: string): void {
+    this._logger.trace('Handle drill down to domain action by user, reset page index to 1', { domain });
     this._drillDown = domain;
     this._pager.pageIndex = 1;
     this._loadReport();

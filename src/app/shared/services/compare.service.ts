@@ -11,14 +11,27 @@ import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CompareService implements OnDestroy {
   constructor(private _translate: TranslateService,
-              private _trendService: TrendService) {
+              private _trendService: TrendService,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('CompareService');
   }
 
   ngOnDestroy() {
+  }
+  
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
+    const relevantDate = moment(date).subtract(datesDiff);
+    const relevantLabelString = reportInterval === KalturaReportInterval.days
+      ? relevantDate.format('YYYYMMDD')
+      : relevantDate.format('YYYYMM');
+  
+    const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
+    return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
   
   private _getMissingDatesValues(startDate: moment.Moment,
@@ -31,16 +44,17 @@ export class CompareService implements OnDestroy {
     const dates = reportInterval === KalturaReportInterval.days
       ? enumerateDaysBetweenDates(startDate, endDate)
       : enumerateMonthsBetweenDates(startDate, endDate);
+  
+    this._logger.debug('Get missing dates for', () => ({
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+      interval: reportInterval,
+      datesDiff,
+    }));
     
     return dates.map(date => {
       const label = date.format('YYYYMMDD');
-      const relevantDate = moment(date).subtract(datesDiff);
-      const relevantLabelString = reportInterval === KalturaReportInterval.days
-        ? relevantDate.format('YYYYMMDD')
-        : relevantDate.format('YYYYMM');
-      
-      const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
-      const compareValue = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : 0;
+      const compareValue = this._getCompareValue(compareData, date, datesDiff, reportInterval);
 
       const name = reportInterval === KalturaReportInterval.months
         ? DateFilterUtils.formatMonthOnlyString(label, analyticsConfig.locale)
@@ -71,6 +85,11 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
     }
+  
+    this._logger.trace(
+      'Compare graph data',
+      () => ({ currentPeriod, comparePeriod, reportInterval, graphIds: current.map(({ id }) => id).join(', ') })
+    );
 
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id] || !graph.data) {
@@ -98,6 +117,11 @@ export class CompareService implements OnDestroy {
         }
     
         if (fromDate.isBefore(currentDate)) {
+          this._logger.debug('Graphs period starts before first date in the response – fill missing dates with zeros', {
+            startDate: currentDate,
+            correctStartDate: fromDate
+          });
+
           this._getMissingDatesValues(fromDate, currentDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
             .forEach(result => {
               xAxisData.push(result.name);
@@ -105,47 +129,62 @@ export class CompareService implements OnDestroy {
               yAxisCompareData.push(result.compare);
             });
         }
+      } else {
+        this._logger.debug('Graph label is not a date, skip start date manipulations');
       }
 
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
-          const compareValue = compareData[j] || `${currentLabel}${analyticsConfig.valueSeparator}0`;
+          let compareValue;
+          
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            compareValue = this._getCompareValue(
+              compareData,
+              DateFilterUtils.parseDateString(currentLabel),
+              datesDiff,
+              reportInterval
+            ) || '0';
+          } else {
+            compareValue = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel) || '0';
+          }
+          
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+          } else {
+            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
           
           let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
-          let compareVal: string | number = compareValue.split(analyticsConfig.valueSeparator)[1];
   
           if (config.fields[graph.id] && config.fields[graph.id].parse) {
             currentVal = config.fields[graph.id].parse(currentVal);
-            compareVal = config.fields[graph.id].parse(compareVal);
+            compareValue = config.fields[graph.id].parse(compareValue);
           } else {
             currentVal = parseFloat(currentVal);
-            compareVal = parseFloat(compareVal);
+            compareValue = parseFloat(compareValue);
           }
   
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
 
-          if (isNaN(compareVal)) {
-            compareVal = 0;
+          if (isNaN(compareValue)) {
+            compareValue = 0;
           }
 
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
-            compareVal = config.fields[graph.id].format(compareVal);
+            compareValue = config.fields[graph.id].format(compareValue);
           }
 
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
-          yAxisCompareData.push(compareVal);
+          yAxisCompareData.push(compareValue);
   
           if (!config.fields[graph.id].nonDateGraphLabel) {
             const nextValue = currentData[j + 1];
@@ -161,6 +200,11 @@ export class CompareService implements OnDestroy {
               }
       
               if (!actualNextValueDate.isSame(nextValueDate)) {
+                this._logger.debug('Next date is not correct – fill missing dates with zeros', {
+                  nextDate: actualNextValueDate,
+                  correctNextDate: nextValueDate,
+                });
+
                 this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
                   .forEach(result => {
                     xAxisData.push(result.name);
@@ -182,6 +226,12 @@ export class CompareService implements OnDestroy {
   
               if (currentDate.isBefore(toDate)) {
                 toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
+  
+                this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
+                  endDate: currentDate,
+                  correctEndDate: toDate,
+                });
     
                 this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
                   .forEach(result => {
@@ -191,6 +241,8 @@ export class CompareService implements OnDestroy {
                   });
               }
             }
+          } else {
+            this._logger.debug('Graph label is not a date, skip end date manipulations');
           }
         }
       });
@@ -430,6 +482,8 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return { columns: [], tableData: [] };
     }
+  
+    this._logger.trace('Parse table data', { headers: current.header });
 
     // parse table columns
     let columns = current.header.toLowerCase().split(analyticsConfig.valueSeparator);
@@ -516,6 +570,8 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return [];
     }
+  
+    this._logger.trace('Parse totals data', { headers: current.header });
 
     const tabsData = [];
     const data = current.data.split(analyticsConfig.valueSeparator);
