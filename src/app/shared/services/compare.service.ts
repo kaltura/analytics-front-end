@@ -10,6 +10,8 @@ import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
+import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -30,6 +32,36 @@ export class CompareService implements OnDestroy {
     
     const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
+  }
+  
+  private _getMissingDatesValues(startDate: moment.Moment,
+                                 endDate: moment.Moment,
+                                 reportInterval: KalturaReportInterval,
+                                 formatFn: Function,
+                                 compareData: string[],
+                                 datesDiff: number): { name: string, value: number, compare: number }[] {
+    const formatValue = value => typeof formatFn === 'function' ? formatFn(value) : value;
+    const dates = reportInterval === KalturaReportInterval.days
+      ? enumerateDaysBetweenDates(startDate, endDate)
+      : enumerateMonthsBetweenDates(startDate, endDate);
+    
+    this._logger.debug('Get missing dates for', () => ({
+      startDate: startDate.format('YYYYMMDD'),
+      endDate: endDate.format('YYYYMMDD'),
+      interval: reportInterval,
+      datesDiff,
+    }));
+    
+    return dates.map(date => {
+      const label = date.format('YYYYMMDD');
+      const compareValue = this._getCompareValue(compareData, date, datesDiff, reportInterval);
+      
+      const name = reportInterval === KalturaReportInterval.months
+        ? DateFilterUtils.formatMonthOnlyString(label, analyticsConfig.locale)
+        : DateFilterUtils.formatShortDateString(label, analyticsConfig.locale);
+      
+      return { name, value: formatValue(0), compare: formatValue(compareValue) };
+    });
   }
   
   public compareGraphData(currentPeriod: { from: string, to: string },
@@ -72,7 +104,7 @@ export class CompareService implements OnDestroy {
         ? compare[i].data.split(';')
         : currentData.map(() => `N/A${analyticsConfig.valueSeparator}0`);
       
-      currentData.forEach((currentValue) => {
+      currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
           let compareValue;
@@ -112,8 +144,8 @@ export class CompareService implements OnDestroy {
             currentVal = 0;
           }
           
-          if (isNaN(compareVal)) {
-            compareVal = 0;
+          if (isNaN(compareValue)) {
+            compareValue = 0;
           }
           
           if (config.fields[graph.id]) {
