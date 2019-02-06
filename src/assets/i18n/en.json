@@ -342,6 +342,8 @@
       "minutes": "Minutes Viewed",
       "watched": "Avg. Completion Rate",
       "back": "Back",
+      "viewDetails": "View Engagement Per User",
+      "hideDetails": "Hide Engagement Per User",
       "owner": "Owner:",
       "seeAll": "See All Details",
       "videoPerformance": "Video performance over time",
