@@ -478,6 +478,7 @@ export class CompareService implements OnDestroy {
                           current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig,
+                          reportInterval: KalturaReportInterval,
                           dataKey: string = ''): { columns: string[], tableData: { [key: string]: string }[] } {
     if (!current.header || !current.data) {
       return { columns: [], tableData: [] };
@@ -495,23 +496,32 @@ export class CompareService implements OnDestroy {
 
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
+    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
 
-    currentData.forEach((valuesString, i) => {
+    currentData.forEach(valuesString => {
       let compareValuesString = null;
+      let relevantLabelString;
       if (dataKey.length) {
         const dataIndex = columns.indexOf(dataKey.toLowerCase());
-        const key = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
-        if (key && key.length) {
-          compareData.some(compareRow => {
-            if (compareRow.split(analyticsConfig.valueSeparator)[dataIndex] === key) {
-              compareValuesString = compareRow;
-              return true;
-            }
-          });
-        }
+        relevantLabelString = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
       } else {
-        compareValuesString = compareData[i];
+        const currentLabel = (valuesString || '').split(analyticsConfig.valueSeparator)[0];
+        const currentLabelDate = currentLabel ? DateFilterUtils.parseDateString(currentLabel) : null;
+        
+        if (currentLabelDate && currentLabelDate.isValid()) {
+          const relevantDate = moment(currentLabelDate).subtract(datesDiff);
+          relevantLabelString = reportInterval === KalturaReportInterval.days
+            ? relevantDate.format('YYYYMMDD')
+            : relevantDate.format('YYYYMM');
+        } else {
+          relevantLabelString = currentLabel;
+        }
       }
+  
+      compareValuesString = relevantLabelString
+        ? compareData.find(item => item.split(analyticsConfig.valueSeparator)[0] === relevantLabelString)
+        : null;
+
       if (valuesString.length) {
         let data = {};
         const currentValues = valuesString.split(analyticsConfig.valueSeparator);

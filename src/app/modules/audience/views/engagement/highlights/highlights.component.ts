@@ -179,7 +179,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         comparePeriod,
         current.table,
         compare.table,
-        this._dataConfig.table
+        this._dataConfig.table,
+        this._reportInterval,
       );
       
       if (compareTableData) {
