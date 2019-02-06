@@ -6,16 +6,29 @@
                   [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
                   [flashvars]="_playerConfig.flashvars" [lazy]="true"
                   (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
-        <div class="chartContainer">
-          <div echarts class="kChart" [options]="_chartOptions"></div>
-        </div>
-        <div class="playPauseBtn" (click)="_togglePlayback()">
-          <i [ngClass]="_isPlaying ? 'icon-bolt' : 'icon-small-play'"></i>
-        </div>
-        <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed"></div>
+
       </div>
-      <div class="playerFooter"></div>
+
+      <div class="chartContainer">
+        <div echarts class="kChart" [options]="_chartOptions"></div>
+        <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
+          <div class="kFiller">
+            <span class="kCurrentTime" *ngIf="_playProgress < 100">{{_currentTime | appDuration}}</span>
+          </div>
+        </div>
+        <div class="kFooter">
+          <span>00:00</span>
+          <span class="kDuration">{{_duration | appDuration}}</span>
+        </div>
     </div>
+
+    <div class="kTable">
+      <div class="kToggle">
+        <i [class.kIcondropdown_arrow_bottom]="!_showHeatmap" [class.kIcondropdown_arrow_top]="_showHeatmap"></i>
+        <a (click)="toggleHeatmap()">{{(_showHeatmap ? 'app.entry.hideDetails' : 'app.entry.viewDetails') | translate}}</a>
+      </div>
+    </div>
+  </div>
   </k-area-blocker>
 </div>
 
