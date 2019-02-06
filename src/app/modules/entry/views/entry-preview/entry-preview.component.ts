@@ -129,7 +129,11 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       series: [{
         data: [820, 932, 901, 934, 1290, 1330, 1320],
         type: 'line',
-        color: '#487adf'
+        color: '#487adf',
+        lineStyle: {
+          color: '#487adf',
+          width: 2
+        }
       }]
     };
   }
@@ -189,7 +193,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     // register to playhead update event to update our scrubber
     this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(2)) * 100;
+        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
