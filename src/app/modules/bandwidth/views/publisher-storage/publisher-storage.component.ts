@@ -221,7 +221,8 @@ export class PublisherStorageComponent implements OnInit {
           comparePeriod,
           current.table,
           compare.table,
-          this._dataConfig.table
+          this._dataConfig.table,
+          this._reportInterval,
         );
         this._totalCount = current.table.totalCount;
         this._columns = columns;
