@@ -594,30 +594,50 @@ export class CompareService implements OnDestroy {
     const compare = graphsData[compareMetric];
   
     const getFormatter = colors => params => {
-      const [current, compare] = params;
+      const [current, compare, metric, metricCompare] = params;
       const currentValue = typeof config.fields[currentMetric].graphTooltip === 'function'
         ? config.fields[currentMetric].graphTooltip(current.value)
         : current.value;
       const compareValue = typeof config.fields[compareMetric].graphTooltip === 'function'
         ? config.fields[compareMetric].graphTooltip(compare.value)
         : compare.value;
+
+      if (metric !== undefined && metricCompare !== undefined) {
+        const metricValue = typeof config.fields[currentMetric].graphTooltip === 'function'
+          ? config.fields[currentMetric].graphTooltip(metric.value)
+          : metric.value;
+        const compareMetricValue = typeof config.fields[compareMetric].graphTooltip === 'function'
+          ? config.fields[compareMetric].graphTooltip(metricCompare.value)
+          : metricCompare.value;
+        return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
+            ${compare.name}<br/>
+            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
+            <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}
+          </div>
+      `;
+      }
+  
       return `
           <div class="kGraphTooltip">
             ${current.name}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
             <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
           </div>
-        `;
+      `;
     };
     
     return {
-      'color': [current.color[0], compare.color[0]],
+      'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
       'textStyle': { ...current.textStyle },
       'grid': { ...current.grid, top: 48 },
       'xAxis': { ...current.xAxis },
       'tooltip':  {
         ...current.tooltip,
-        formatter: getFormatter([current.color[0], compare.color[0]])
+        formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
       },
       'yAxis': [
         { ...current.yAxis, name: currentMetricLabel },
