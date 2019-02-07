@@ -504,20 +504,20 @@ export class CompareService implements OnDestroy {
   
     const getFormatter = colors => params => {
       const [current, compare, metric, metricCompare] = params;
-      const currentValue = typeof config.fields[currentMetric].graphTooltip === 'function'
-        ? config.fields[currentMetric].graphTooltip(current.value)
-        : current.value;
-      const compareValue = typeof config.fields[compareMetric].graphTooltip === 'function'
-        ? config.fields[compareMetric].graphTooltip(compare.value)
-        : compare.value;
+      const currentFormatFn = val => typeof config.fields[currentMetric].graphTooltip === 'function'
+        ? config.fields[currentMetric].graphTooltip(val)
+        : val;
+      const compareFormatFn = val => typeof config.fields[compareMetric].graphTooltip === 'function'
+        ? config.fields[compareMetric].graphTooltip(val)
+        : val;
+
+      const currentValue = currentFormatFn(current.value);
+      const compareValue = compareFormatFn(compare.value);
 
       if (metric !== undefined && metricCompare !== undefined) {
-        const metricValue = typeof config.fields[currentMetric].graphTooltip === 'function'
-          ? config.fields[currentMetric].graphTooltip(metric.value)
-          : metric.value;
-        const compareMetricValue = typeof config.fields[compareMetric].graphTooltip === 'function'
-          ? config.fields[compareMetric].graphTooltip(metricCompare.value)
-          : metricCompare.value;
+        const metricValue = currentFormatFn(metric.value);
+        const compareMetricValue = compareFormatFn(metricCompare.value);
+
         return `
           <div class="kGraphTooltip">
             ${current.name}<br/>
