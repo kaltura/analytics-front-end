@@ -10,8 +10,6 @@ import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
-import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -33,37 +31,7 @@ export class CompareService implements OnDestroy {
     const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
-  
-  private _getMissingDatesValues(startDate: moment.Moment,
-                                 endDate: moment.Moment,
-                                 reportInterval: KalturaReportInterval,
-                                 formatFn: Function,
-                                 compareData: string[],
-                                 datesDiff: number): { name: string, value: number, compare: number }[] {
-    const formatValue = value => typeof formatFn === 'function' ? formatFn(value) : value;
-    const dates = reportInterval === KalturaReportInterval.days
-      ? enumerateDaysBetweenDates(startDate, endDate)
-      : enumerateMonthsBetweenDates(startDate, endDate);
-    
-    this._logger.debug('Get missing dates for', () => ({
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-      interval: reportInterval,
-      datesDiff,
-    }));
-    
-    return dates.map(date => {
-      const label = date.format('YYYYMMDD');
-      const compareValue = this._getCompareValue(compareData, date, datesDiff, reportInterval);
-      
-      const name = reportInterval === KalturaReportInterval.months
-        ? DateFilterUtils.formatMonthOnlyString(label, analyticsConfig.locale)
-        : DateFilterUtils.formatShortDateString(label, analyticsConfig.locale);
-      
-      return { name, value: formatValue(0), compare: formatValue(compareValue) };
-    });
-  }
-  
+
   public compareGraphData(currentPeriod: { from: string, to: string },
                           comparePeriod: { from: string, to: string },
                           current: KalturaReportGraph[],
@@ -103,7 +71,7 @@ export class CompareService implements OnDestroy {
       const compareData = compare[i].data
         ? compare[i].data.split(';')
         : currentData.map(() => `N/A${analyticsConfig.valueSeparator}0`);
-      
+
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
@@ -156,65 +124,6 @@ export class CompareService implements OnDestroy {
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
           yAxisCompareData.push(compareValue);
-  
-          if (!config.fields[graph.id].nonDateGraphLabel) {
-            const nextValue = currentData[j + 1];
-
-            if (nextValue) {
-              let nextValueDate, actualNextValueDate;
-              if (reportInterval === KalturaReportInterval.days) {
-                nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
-                actualNextValueDate = moment(currentLabel).startOf('day').add(1, 'days');
-              } else {
-                nextValueDate = DateFilterUtils.parseDateString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
-                actualNextValueDate = DateFilterUtils.parseDateString(currentLabel).startOf('month').add(1, 'months');
-              }
-      
-              if (!actualNextValueDate.isSame(nextValueDate)) {
-                this._logger.debug('Next date is not correct – fill missing dates with zeros', {
-                  nextDate: actualNextValueDate,
-                  correctNextDate: nextValueDate,
-                });
-
-                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
-                  .forEach(result => {
-                    xAxisData.push(result.name);
-                    yAxisCurrentData.push(result.value);
-                    yAxisCompareData.push(result.compare);
-                  });
-              }
-            } else {
-              let currentDate = DateFilterUtils.parseDateString(currentLabel);
-              let toDate = DateFilterUtils.parseDateString(currentPeriod.to);
-  
-              if (reportInterval === KalturaReportInterval.days) {
-                toDate = toDate.clone().startOf('day');
-                currentDate = currentDate.clone().startOf('day');
-              } else {
-                toDate = toDate.clone().startOf('month');
-                currentDate = currentDate.clone().startOf('month');
-              }
-  
-              if (currentDate.isBefore(toDate)) {
-                toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
-                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
-  
-                this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
-                  endDate: currentDate,
-                  correctEndDate: toDate,
-                });
-    
-                this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format, compareData, datesDiff)
-                  .forEach(result => {
-                    xAxisData.push(result.name);
-                    yAxisCurrentData.push(result.value);
-                    yAxisCompareData.push(result.compare);
-                  });
-              }
-            }
-          } else {
-            this._logger.debug('Graph label is not a date, skip end date manipulations');
-          }
         }
       });
       
