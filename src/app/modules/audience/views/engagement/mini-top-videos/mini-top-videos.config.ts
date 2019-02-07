@@ -24,6 +24,10 @@ export class MiniTopVideosConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
+          },
+          'engagement_ranking': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           }
         }
       }

@@ -12,8 +12,9 @@
       <div class="chartContainer">
         <div echarts class="kChart" [options]="_chartOptions"></div>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
+          <div class="kLine"></div>
           <div class="kFiller">
-            <span class="kCurrentTime" *ngIf="_playProgress < 100">{{_currentTime | appDuration}}</span>
+            <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
           </div>
         </div>
         <div class="kFooter">

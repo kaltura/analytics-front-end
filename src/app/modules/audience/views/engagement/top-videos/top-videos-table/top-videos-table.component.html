@@ -39,7 +39,7 @@
             </div>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td [ngStyle]="{'width': '140px'}">
+            <td [ngStyle]="{'width': '120px'}">
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
@@ -50,7 +50,7 @@
             </span>
               </div>
             </td>
-            <td [ngStyle]="{'width': '200px'}">
+            <td [ngStyle]="{'width': '190px'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
                 <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
@@ -61,7 +61,7 @@
             </span>
               </div>
             </td>
-            <td [ngStyle]="{'width': '230px'}">
+            <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
                 <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
@@ -73,9 +73,9 @@
               </div>
             </td>
           </ng-container>
-          <!--td class="kScore" [ngStyle]="{'width': '120px'}">
-            <span>n/10</span>
-          </td-->
+          <td class="kScore" [ngStyle]="{'width': '110px'}">
+            <span>{{data['engagement_ranking']}}/10</span>
+          </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
