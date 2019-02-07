@@ -29,7 +29,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-count_plays';
+  private _order = '-engagement_ranking';
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;

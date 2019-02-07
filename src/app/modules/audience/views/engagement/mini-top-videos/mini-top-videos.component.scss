@@ -144,19 +144,23 @@
     .kReportRowDetails {
       display: flex;
       flex-direction: column;
-      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
       width: 100%;
+      min-width: 0;
 
       .kTitle {
         color: $kGrayscale1;
         font-weight: bold;
         line-height: 22px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         max-height: 44px;
-        overflow-y: hidden;
       }
 
       .kScore {
         color: $kGrayscale3;
+        margin-top: 8px;
       }
 
     }

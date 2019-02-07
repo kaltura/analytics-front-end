@@ -35,8 +35,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-count_plays';
-  private _reportType = KalturaReportType.topContent;
+  private _order = '-engagement_ranking';
+  private _reportType = KalturaReportType.topContentCreator;
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-top-videos';
