@@ -43,7 +43,6 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
-import { DateFilterSinceCreationRangePipe } from 'shared/components/date-filter/date-filter-since-creation-range.pipe';
 
 @NgModule({
   imports: [
@@ -89,7 +88,6 @@ import { DateFilterSinceCreationRangePipe } from 'shared/components/date-filter/
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
-    DateFilterSinceCreationRangePipe,
     ...FilterComponentsList,
   ],
   exports: [
@@ -117,7 +115,6 @@ import { DateFilterSinceCreationRangePipe } from 'shared/components/date-filter/
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
-    DateFilterSinceCreationRangePipe,
     ...FilterComponentsList,
   ],
   providers: [
