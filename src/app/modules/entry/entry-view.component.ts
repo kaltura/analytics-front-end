@@ -31,7 +31,7 @@ import * as moment from 'moment';
   styleUrls: ['./entry-view.component.scss']
 })
 export class EntryViewComponent implements OnInit, OnDestroy {
-  
+  public _loadingEntry = false;
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
@@ -108,6 +108,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   private loadEntryDetails(): void {
+    this._loadingEntry = true;
     const request = new KalturaMultiRequest(
       new BaseEntryGetAction({ entryId: this._entryId })
         .setRequestOptions({
@@ -146,10 +147,12 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           this._creationDate = moment(entry.createdAt);
           this._owner = user.fullName;
           this.requestSubscription = null;
+          this._loadingEntry = false;
         },
         error => {
           console.error("Failed to load entry name: " + error.message);
           this.requestSubscription = null;
+          this._loadingEntry = false;
         });
   }
 
