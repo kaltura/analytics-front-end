@@ -78,6 +78,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this.initPlayer();
 
     this._chartOptions = {
+      backgroundColor: '#333333',
       grid: {
         left: 0,
         right: 0,
@@ -115,7 +116,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         splitLine: {
           show: true,
           lineStyle: {
-            color: '#f2f2f2'
+            color: '#535353'
           }
         },
         axisLabel: {
@@ -123,11 +124,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           margin: 4,
           verticalAlign: 'top',
           padding: [8, 0, 0, 0],
-          color: '#999999'
+          color: '#FFFFFF'
         }
       },
       series: [{
         data: [820, 932, 901, 934, 1290, 1330, 1320],
+        symbol: 'circle',
+        symbolSize: 8,
         type: 'line',
         color: '#487adf',
         lineStyle: {
