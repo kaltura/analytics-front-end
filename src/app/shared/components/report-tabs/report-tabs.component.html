@@ -1,9 +1,13 @@
 <div class="kReportTabs kOverrideFAIcons">
   <div class="kTab" [class.kNarrow]="tabs.length<4" *ngFor="let tab of tabs"
        [class.active]="tab.selected" [class.noContent]="!showValue"
-       [kTooltip]="tab.tooltip" [escape]="false" [maxWidth]="500"
        (click)="tabClick(tab)" >
-    <span class="kTabTitle">{{tab.title}}</span>
+    <span class="kTabTitle">
+      {{tab.title}}
+      <kInputHelper *ngIf="tab.tooltip">
+        <span>{{tab.tooltip}}</span>
+    </kInputHelper>
+    </span>
     <div class="kValueContainer" *ngIf="showValue">
       <span *ngIf="compareMode" class="kTrend">
         <app-trend-value valueStyleClass="kValue"

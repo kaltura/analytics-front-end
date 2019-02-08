@@ -90,20 +90,17 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
           'total_storage_mb': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
-            tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
             units: value => fileSize(value).units,
             sortOrder: 1
           },
           'total_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_entries`),
-            tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
             sortOrder: 2,
           },
           'total_msecs': {
             format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
-            tooltip: this._translate.instant(`app.bandwidth.total_msecs_tt`),
             units: value => 'Min',
             sortOrder: 3,
           },
