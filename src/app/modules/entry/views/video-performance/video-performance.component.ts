@@ -151,8 +151,8 @@ export class VideoPerformanceComponent extends EntryBase {
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.endDay;
-      this._compareFilter.toDay = this._dateFilter.endDay;
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
     }

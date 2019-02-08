@@ -23,6 +23,7 @@ import {RefineFilter} from "shared/components/filter/filter.component";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-entry',
@@ -30,7 +31,8 @@ import { filter, map } from 'rxjs/operators';
   styleUrls: ['./entry-view.component.scss']
 })
 export class EntryViewComponent implements OnInit, OnDestroy {
-
+  
+  public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
@@ -111,7 +113,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'name,mediaType'
+            fields: 'name,mediaType,createdAt'
           })
         }),
       new UserGetAction({ userId: null })
@@ -141,6 +143,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         ([entry, user]) => {
           this._entryName = entry.name;
           this._entryType = entry.mediaType;
+          this._creationDate = moment(entry.createdAt);
           this._owner = user.fullName;
           this.requestSubscription = null;
         },

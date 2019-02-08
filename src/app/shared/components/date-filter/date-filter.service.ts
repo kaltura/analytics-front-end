@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
+import { cr } from '@angular/core/src/render3';
 
 export enum DateRanges {
   Last7D = 'last7days',
@@ -13,7 +14,8 @@ export enum DateRanges {
   CurrentMonth = 'currentMonth',
   CurrentQuarter = 'currentQuarter',
   CurrentYear = 'currentYear',
-  PreviousMonth = 'previousMonth'
+  PreviousMonth = 'previousMonth',
+  SinceCreation = 'sinceCreation',
 }
 
 export enum DateFilterQueryParams {
@@ -72,13 +74,15 @@ export class DateFilterService {
         return DateRanges.CurrentYear;
       case 'previousMonth':
         return DateRanges.PreviousMonth;
+      case 'sinceCreation':
+        return DateRanges.SinceCreation;
       default:
         return null;
     }
   }
   
 
-  public getDateRange(dateRangeType: DateRangeType, period: string): SelectItem[] {
+  public getDateRange(dateRangeType: DateRangeType, period: string, creationDate?: moment.Moment): SelectItem[] {
     let selectItemArr: SelectItem[] = [];
 
     switch (dateRangeType) {
@@ -100,6 +104,13 @@ export class DateFilterService {
             label: this._translate.instant('app.dateFilter.last12m'),
             value: {val: DateRanges.Last12M, tooltip: this.getDateRangeDetails(DateRanges.Last12M).label}
             });
+
+          if (creationDate) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.sinceCreation'),
+              value: {val: DateRanges.SinceCreation, tooltip: this.getDateRangeDetails(DateRanges.SinceCreation, creationDate).label}
+            });
+          }
         }
         if (period === 'current') {
           selectItemArr.push({
@@ -129,7 +140,7 @@ export class DateFilterService {
     return selectItemArr;
   }
 
-  public getDateRangeDetails(selectedDateRange: DateRanges): { startDate: Date,  endDate: Date, label: string} {
+  public getDateRangeDetails(selectedDateRange: DateRanges, creationDate?: moment.Moment): { startDate: Date,  endDate: Date, label: string} {
     const today: Date = new Date();
     const m = moment();
     let startDate, endDate: Date;
@@ -167,14 +178,22 @@ export class DateFilterService {
         startDate = m.startOf('year').toDate();
         endDate = today;
         break;
+      case DateRanges.SinceCreation:
+        if (creationDate) {
+          startDate = creationDate.startOf('day').toDate();
+          endDate = today;
+        } else {
+          throw Error('creationDate is not provided!');
+        }
+        break;
     }
     const label = moment(startDate).format('MMM D, YYYY') + ' - ' + moment(endDate).format('MMM D, YYYY');
     return { startDate, endDate, label};
   }
 
   public getMaxCompare(startDate: Date, endDate: Date): Date;
-  public getMaxCompare(selectedDateRange: DateRanges): Date;
-  public getMaxCompare(selectedDateRange: DateRanges | Date, endDate?: Date): Date {
+  public getMaxCompare(selectedDateRange: DateRanges, creationDate?: moment.Moment): Date;
+  public getMaxCompare(selectedDateRange: DateRanges | Date, endDate?: Date | moment.Moment): Date {
     const m = moment();
     let maxDate: Date;
 
@@ -201,6 +220,11 @@ export class DateFilterService {
         case DateRanges.CurrentYear:
           maxDate = m.subtract(12, 'months').toDate();
           break;
+        case DateRanges.SinceCreation:
+          const fromDay = (endDate as moment.Moment).clone(); // creationDate
+          const toDay = moment();
+          const days = moment.duration(toDay.diff(fromDay)).asDays();
+          maxDate = fromDay.clone().subtract(days + 1, 'days').toDate();
       }
     }
     return maxDate;
