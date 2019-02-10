@@ -38,20 +38,17 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contributors.added_entries`),
-            tooltip: this._translate.instant(`app.contributors.added_entries_tt`),
             sortOrder: 1,
           },
           'added_msecs': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contributors.added_msecs`),
-            tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             units: value => 'min',
             sortOrder: 2,
           },
           'unique_contributors': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contributors.contributors`),
-            tooltip: this._translate.instant(`app.contributors.contributors_tt`),
             sortOrder: 3,
           }
         }
