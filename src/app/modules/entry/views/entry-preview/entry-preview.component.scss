@@ -5,7 +5,7 @@
     width: 100%;
     height: 248px;
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
     .kChart {
       height: 200px;
       width: 100%;
@@ -16,14 +16,14 @@
       top: 0;
       left: 0;
       width: 0;
-      height: 232px;
+      height: 229px;
       border: none;
       .kLine{
         position: absolute;
         top: 0;
         right: 0;
         height: 100%;
-        width: 1px;
+        width: 2px;
         background-color:  #01accd;
       }
       .kFiller{
@@ -36,7 +36,7 @@
           width: 120px;
           right: -130px;
           bottom: -22px;
-          color: #487adf;
+          color: #01accd;
           font-size: 12px;
         }
       }

@@ -179,7 +179,39 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
         pid: analyticsConfig.pid,
         entryid: this.entryId,
-        flashvars: { 'ks': analyticsConfig.ks }
+        flashvars: {
+          'ks': analyticsConfig.ks,
+          "IframeCustomPluginCss1" : "../assets/player.css",
+          "controlBarContainer": {
+            "plugin": true,
+            "hover": false
+          },
+          "durationLabel": {
+            "plugin": false
+          },
+          "currentTimeLabel": {
+            "plugin": false
+          },
+          "theme": {
+            "applyToLargePlayButton": true,
+            "buttonsSize": 12,
+            "buttonsColor": "rgb(51, 51, 51)",
+            "buttonsIconColor": "rgb(204, 204, 204)",
+            "sliderColor": "rgb(91, 91, 91)",
+            "scrubberColor": "rgb(1, 172, 205)",
+            "controlsBkgColor": "rgb(51, 51, 51)",
+            "watchedSliderColor": "rgb(1, 172, 205)",
+            "bufferedSliderColor": "#AFAFAF",
+            "timeLabelColor": "rgb(204, 204, 204)",
+            "buttonsIconColorDropShadow": true,
+            "plugin": true
+          },
+          "scrubber": {
+            "plugin": true,
+            'insertMode': 'lastChild',
+            'sliderPreview': false
+          }
+        }
       };
       setTimeout(() => {
         this.player.Embed();
@@ -212,7 +244,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     });
     this.playerInstance.kBind('seeked', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(2)) * 100;
+        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
