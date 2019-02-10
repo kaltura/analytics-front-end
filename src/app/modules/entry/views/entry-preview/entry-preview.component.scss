@@ -26,19 +26,13 @@
         width: 2px;
         background-color:  #01accd;
       }
-      .kFiller{
-        width: 100%;
-        height: 200px;
-        background-color: rgba(72, 122, 223, 0.08);
-        position: relative;
-        .kCurrentTime{
-          position: absolute;
-          width: 120px;
-          right: -130px;
-          bottom: -22px;
-          color: #01accd;
-          font-size: 12px;
-        }
+      .kCurrentTime{
+        position: absolute;
+        width: 120px;
+        right: -130px;
+        bottom: 8px;
+        color: #01accd;
+        font-size: 12px;
       }
       pointer-events: none;
     }

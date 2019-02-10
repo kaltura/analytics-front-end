@@ -192,6 +192,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           "currentTimeLabel": {
             "plugin": false
           },
+          "fullScreenBtn": {
+            "plugin": false
+          },
           "theme": {
             "applyToLargePlayButton": true,
             "buttonsSize": 12,
