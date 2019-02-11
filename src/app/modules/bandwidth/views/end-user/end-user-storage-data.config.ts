@@ -26,7 +26,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
           },
           'total_msecs': {
-            format: value => Math.round(value / 60000),
+            format: value => Math.round(ReportHelper.minutes(value)),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
           },
@@ -71,15 +71,15 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             sortOrder: 1
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 8
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 9
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 7,
           },
         }
@@ -99,7 +99,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
+            format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.minutes(value))),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
             units: value => 'Min',
             sortOrder: 3,
