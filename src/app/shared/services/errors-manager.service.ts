@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BrowserService } from './browser.service';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { KalturaAPIException } from 'kaltura-ngx-client';
+import { AuthService } from 'shared/services/auth.service';
 
 export type ErrorDetails = {
   title: string;
@@ -8,10 +11,20 @@ export type ErrorDetails = {
   forceLogout: boolean;
 };
 
+export type AreaBlockerMessageActions = { [key: string]: Function };
+
 @Injectable()
 export class ErrorsManagerService {
 
-    constructor(private _translate: TranslateService, private _browserService: BrowserService) {
+    constructor(private _translate: TranslateService,
+                private _browserService: BrowserService,
+                private _authService: AuthService) {
+    }
+    
+    private _executeAction(actions: AreaBlockerMessageActions, action: string): void {
+      if (typeof actions[action] === 'function') {
+        actions[action]();
+      }
     }
 
     public getError(error: any): ErrorDetails {
@@ -31,6 +44,37 @@ export class ErrorsManagerService {
       }
       return { title, message, forceLogout};
     }
+  
+  public getErrorMessage(error: KalturaAPIException, actions: AreaBlockerMessageActions): AreaBlockerMessage {
+    const err: ErrorDetails = this.getError(error);
+    let buttons: AreaBlockerMessageButton[] = [];
+    if (err.forceLogout) {
+      buttons = [{
+        label: this._translate.instant('app.common.ok'),
+        action: () => {
+          this._authService.logout();
+          this._executeAction(actions, 'close');
+        }
+      }];
+    } else {
+      buttons = [
+        {
+          label: this._translate.instant('app.common.close'),
+          action: () => this._executeAction(actions, 'close')
+        },
+        {
+          label: this._translate.instant('app.common.retry'),
+          action: () => this._executeAction(actions, 'retry')
+        }
+      ];
+    }
+  
+    return new AreaBlockerMessage({
+      title: err.title,
+      message: err.message,
+      buttons
+    });
+  }
 
 }
 
