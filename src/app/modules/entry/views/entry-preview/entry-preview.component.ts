@@ -78,6 +78,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this.initPlayer();
 
     this._chartOptions = {
+      backgroundColor: '#333333',
       grid: {
         left: 0,
         right: 0,
@@ -115,7 +116,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         splitLine: {
           show: true,
           lineStyle: {
-            color: '#f2f2f2'
+            color: '#535353'
           }
         },
         axisLabel: {
@@ -123,11 +124,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           margin: 4,
           verticalAlign: 'top',
           padding: [8, 0, 0, 0],
-          color: '#999999'
+          color: '#FFFFFF'
         }
       },
       series: [{
         data: [820, 932, 901, 934, 1290, 1330, 1320],
+        symbol: 'circle',
+        symbolSize: 8,
         type: 'line',
         color: '#487adf',
         lineStyle: {
@@ -176,7 +179,42 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
         pid: analyticsConfig.pid,
         entryid: this.entryId,
-        flashvars: { 'ks': analyticsConfig.ks }
+        flashvars: {
+          'ks': analyticsConfig.ks,
+          "IframeCustomPluginCss1" : "../assets/player.css",
+          "controlBarContainer": {
+            "plugin": true,
+            "hover": false
+          },
+          "durationLabel": {
+            "plugin": false
+          },
+          "currentTimeLabel": {
+            "plugin": false
+          },
+          "fullScreenBtn": {
+            "plugin": false
+          },
+          "theme": {
+            "applyToLargePlayButton": true,
+            "buttonsSize": 12,
+            "buttonsColor": "rgb(51, 51, 51)",
+            "buttonsIconColor": "rgb(204, 204, 204)",
+            "sliderColor": "rgb(91, 91, 91)",
+            "scrubberColor": "rgb(1, 172, 205)",
+            "controlsBkgColor": "rgb(51, 51, 51)",
+            "watchedSliderColor": "rgb(1, 172, 205)",
+            "bufferedSliderColor": "#AFAFAF",
+            "timeLabelColor": "rgb(204, 204, 204)",
+            "buttonsIconColorDropShadow": true,
+            "plugin": true
+          },
+          "scrubber": {
+            "plugin": true,
+            'insertMode': 'lastChild',
+            'sliderPreview': false
+          }
+        }
       };
       setTimeout(() => {
         this.player.Embed();
@@ -209,7 +247,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     });
     this.playerInstance.kBind('seeked', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(2)) * 100;
+        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });

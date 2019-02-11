@@ -23,7 +23,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => value,
+            format: value => ReportHelper.minutes(value),
             sortOrder: 2,
           },
           'unique_contributors': {
@@ -38,20 +38,17 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contributors.added_entries`),
-            tooltip: this._translate.instant(`app.contributors.added_entries_tt`),
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             title: this._translate.instant(`app.contributors.added_msecs`),
-            tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             units: value => 'min',
             sortOrder: 2,
           },
           'unique_contributors': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contributors.contributors`),
-            tooltip: this._translate.instant(`app.contributors.contributors_tt`),
             sortOrder: 3,
           }
         }
@@ -65,7 +62,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             nonDateGraphLabel: true,
           },
           'added_msecs': {
-            format: value => Math.round(value / 60000),
+            format: value => Math.round(ReportHelper.minutes(value)),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
             nonDateGraphLabel: true,

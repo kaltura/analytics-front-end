@@ -105,7 +105,6 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
           'bandwidth_consumption': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.bandwidth_consumption`),
-            tooltip: this._translate.instant(`app.bandwidth.bandwidth_consumption_tt`),
             units: value => fileSize(value).units,
           },
           'average_storage': {
@@ -123,13 +122,11 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
           'added_storage': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.added_storage`),
-            tooltip: this._translate.instant(`app.bandwidth.added_storage_tt`),
             units: value => fileSize(value).units,
           },
           'deleted_storage': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.deleted_storage`),
-            tooltip: this._translate.instant(`app.bandwidth.deleted_storage_tt`),
             units: value => fileSize(value).units,
           },
           'combined_bandwidth_storage': {
@@ -141,7 +138,6 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
           'transcoding_consumption': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.transcoding_consumption`),
-            tooltip: this._translate.instant(`app.bandwidth.transcoding_consumption_tt`),
             units: value => fileSize(value).units,
           },
         }
