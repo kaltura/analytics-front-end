@@ -15,7 +15,8 @@ import * as moment from 'moment';
 import { getColorPercent } from 'shared/utils/colors';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { EntryBase } from '../entry-base/entry-base';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export type funnelData = {
   impressions: number;
@@ -29,18 +30,40 @@ export type funnelData = {
 };
 
 @Component({
-  selector: 'app-entry-impressions',
+  selector: 'app-impressions',
   templateUrl: './impressions.component.html',
   styleUrls: ['./impressions.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EntryImpressionsComponent'),
+    KalturaLogger.createLogger('ImpressionsComponent'),
     ImpressionsDataConfig,
     ReportService,
   ],
 })
-export class EntryImpressionsComponent extends EntryBase implements OnInit {
+export class ImpressionsComponent implements OnInit {
+  @Input() set dateFilter(value: DateChangeEvent) {
+    if (value) {
+      this._dateFilter = value;
+      
+      if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
+        this._updateFilter();
+        this._loadReport();
+      }
+    }
+  }
+  
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._refineFilter = value;
+      this._updateRefineFilter();
+      this._loadReport();
+    }
+  }
+  
   @Input() entryId: string;
-
+  
+  private _dateFilter: DateChangeEvent;
+  private _refineFilter: RefineFilter = [];
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _playthroughs: SelectItem[] = [{ label: '25%', value: 25 }, { label: '50%', value: 50 }, { label: '75%', value: 75 }, { label: '100%', value: 100 }];
@@ -51,7 +74,7 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
   public _currentDates: string;
   public _compareDates: string;
   
-  protected _componentId = 'impressions';
+  private _componentId = 'impressions';
   
   private echartsIntance: any;
   private compareEchartsIntance: any;
@@ -81,7 +104,6 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
               private _authService: AuthService,
               private _compareService: CompareService,
               private _dataConfigService: ImpressionsDataConfig) {
-    super();
     this._dataConfig = _dataConfigService.getConfig();
     
     this._chartData = _dataConfigService.getChartConfig((params) => {
@@ -136,7 +158,7 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
     }
   }
   
-  protected _loadReport(): void {
+  private _loadReport(): void {
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
@@ -145,26 +167,21 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
     if (this._dateFilter.compare.active) {
     
     }
-    const reportConfig: ReportConfig = {
-      reportType: this.reportType,
-      filter: this.filter,
-      pager: this.pager,
-      order: this.order,
-      objectIds: this.entryId,
-    };
+    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
+    
+    if (this.entryId) {
+      reportConfig.objectIds = this.entryId;
+    }
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = {
-          reportType: this.reportType,
-          filter: this.filter,
-          pager: this.pager,
-          order: this.order,
-          objectIds: this.entryId,
-        };
+        const compareReportConfig: ReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        if (this.entryId) {
+          compareReportConfig.objectIds = this.entryId;
+        }
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -314,7 +331,7 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
     return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)}</b></span>`;
   }
   
-  protected _updateFilter(): void {
+  private _updateFilter(): void {
     this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this.filter.fromDay = this._dateFilter.startDay;
     this.filter.toDay = this._dateFilter.endDay;
@@ -331,11 +348,98 @@ export class EntryImpressionsComponent extends EntryBase implements OnInit {
     }
   }
   
-  protected _updateRefineFilter(): void {
+  private _updateRefineFilter(): void {
     this.pager.pageIndex = 1;
     this._refineFilterToServerValue(this.filter);
     if (this.compareFilter) {
       this._refineFilterToServerValue(this.compareFilter);
+    }
+  }
+  
+  private _refineFilterToServerValue(filter: KalturaEndUserReportInputFilter): void {
+    let categories = [], mediaType = [], sourceType = [],
+      tags = [], owners = [], country = [], region = [], city = [];
+    
+    this._refineFilter.forEach(item => {
+      switch (item.type) {
+        case 'mediaType':
+          const value = item.value === 'Live'
+            ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
+            : item.value;
+          mediaType.push(value);
+          break;
+        case 'entrySources':
+          sourceType.push(item.value);
+          break;
+        case 'categories':
+          categories.push(item.value.id);
+          break;
+        case 'tags':
+          tags.push(item.value);
+          break;
+        case 'owners':
+          owners.push(item.value.id);
+          break;
+        case 'location':
+          if (item.value.country) {
+            country.push(item.value.country.map(({ name }) => name));
+          }
+          if (item.value.region) {
+            region.push(item.value.region.map(({ name }) => name));
+          }
+          if (item.value.city) {
+            city.push(item.value.city.map(({ name }) => name));
+          }
+          break;
+      }
+    });
+    
+    if (categories.length) {
+      filter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.categoriesIdsIn;
+    }
+    
+    if (mediaType.length) {
+      filter.mediaTypeIn = mediaType.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.mediaTypeIn;
+    }
+    
+    if (sourceType.length) {
+      filter.sourceTypeIn = sourceType.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.sourceTypeIn;
+    }
+    
+    if (owners.length) {
+      filter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.ownerIdsIn;
+    }
+    
+    if (country.length) {
+      filter.countryIn = country.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.countryIn;
+    }
+    
+    if (region.length) {
+      filter.regionIn = region.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.regionIn;
+    }
+    
+    if (city.length) {
+      filter.citiesIn = city.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.citiesIn;
+    }
+    
+    if (tags.length) {
+      filter.keywords = tags.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.keywords;
     }
   }
 }

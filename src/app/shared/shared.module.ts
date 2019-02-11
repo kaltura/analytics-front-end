@@ -43,6 +43,7 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
+import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
+    ImpressionsComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -115,6 +117,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    ImpressionsComponent,
     ...FilterComponentsList,
   ],
   providers: [
