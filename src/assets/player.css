@@ -8,4 +8,8 @@
 }
 .scrubber .handle-wrapper{
   bottom: 3px !important;
+  margin: 0px !important;
+}
+.controlsContainer{
+  border-top: none !important;
 }
