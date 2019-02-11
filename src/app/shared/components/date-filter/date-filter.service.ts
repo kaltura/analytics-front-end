@@ -3,7 +3,6 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { cr } from '@angular/core/src/render3';
 
 export enum DateRanges {
   Last7D = 'last7days',

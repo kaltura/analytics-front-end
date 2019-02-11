@@ -24,8 +24,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService } from 'shared/services';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { ErrorsManagerService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -69,7 +69,6 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
               private _frameEventManager: FrameEventManagerService) { }
 
   ngOnInit() {
@@ -161,37 +160,15 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         error => {
           this.requestSubscription = null;
           this._loadingEntry = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [
-              {
-                label: this._translate.instant('app.common.close'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this.loadEntryDetails();
-                }
-              }
-            ];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this.loadEntryDetails();
+            }
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
 
