@@ -38,7 +38,7 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             sortOrder: 1,
           }
         }
