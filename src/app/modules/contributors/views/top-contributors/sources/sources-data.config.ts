@@ -23,7 +23,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => value,
+            format: value => ReportHelper.minutes(value),
             sortOrder: 2,
           },
           'unique_contributors': {
@@ -41,7 +41,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             title: this._translate.instant(`app.contributors.added_msecs`),
             units: value => 'min',
             sortOrder: 2,
@@ -62,7 +62,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             nonDateGraphLabel: true,
           },
           'added_msecs': {
-            format: value => Math.round(value / 60000),
+            format: value => Math.round(ReportHelper.minutes(value)),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
             nonDateGraphLabel: true,
