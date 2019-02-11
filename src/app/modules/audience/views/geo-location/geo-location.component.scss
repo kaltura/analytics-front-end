@@ -38,6 +38,9 @@
   display: flex;
   align-items: center;
 }
+:host /deep/ .ui-multiselect-panel .ui-multiselect-items-wrapper{
+  overflow-x: hidden;
+}
 :host {
   margin-bottom: 24px;
 }

@@ -27,6 +27,13 @@ export class ReportHelper {
       return ReportHelper.numberWithCommas(x);
     }
   }
+  
+  static minutes(x: number): number {
+    x = typeof x === 'number' ? x : parseFloat(x);
+    x = !isNaN(x) ? x : 0;
+  
+    return x / 60000;
+  }
 
   static integerOrZero(x: any, round = true): string {
     x = parseInt(x);

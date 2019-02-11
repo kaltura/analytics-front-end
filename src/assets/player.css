@@ -1,0 +1,15 @@
+.scrubber .playHead {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+  width: 10px !important;
+  height: 14px !important;
+}
+.scrubber .handle-wrapper{
+  bottom: 3px !important;
+  margin: 0px !important;
+}
+.controlsContainer{
+  border-top: none !important;
+}

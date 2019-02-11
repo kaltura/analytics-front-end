@@ -28,11 +28,7 @@ import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { getPrimaryColor } from 'shared/utils/colors';
-import * as moment from 'moment';
-import { enumerateMonthsBetweenDates } from 'shared/utils/enumerateMonthsBetweenDates';
-import { enumerateDaysBetweenDates } from 'shared/utils/enumerateDaysBetweenDates';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { st } from '@angular/core/src/render3';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -256,30 +252,6 @@ export class ReportService implements OnDestroy {
     });
   }
   
-  private _getMissingDatesValues(startDate: moment.Moment,
-                                 endDate: moment.Moment,
-                                 reportInterval: KalturaReportInterval,
-                                 formatFn: Function): { name: string, value: number }[] {
-    const dates = reportInterval === KalturaReportInterval.days
-      ? enumerateDaysBetweenDates(startDate, endDate)
-      : enumerateMonthsBetweenDates(startDate, endDate);
-  
-    this._logger.debug('Get missing dates for', () => ({
-      startDate: startDate.format('YYYYMMDD'),
-      endDate: endDate.format('YYYYMMDD'),
-      interval: reportInterval,
-    }));
-    
-    return dates.map(date => {
-      const name = reportInterval === KalturaReportInterval.months
-        ? DateFilterUtils.formatMonthString(date.format('YYYYMMDD'), analyticsConfig.locale)
-        : DateFilterUtils.formatFullDateString(date.format('YYYYMMDD'), analyticsConfig.locale);
-      const value = typeof formatFn === 'function' ? formatFn(0) : 0;
-      
-      return { name, value };
-    });
-  }
-  
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      period: { from: string, to: string },
@@ -300,33 +272,6 @@ export class ReportService implements OnDestroy {
       let xAxisData = [];
       let yAxisData = [];
       const data = graph.data.split(';');
-  
-      if (!config.fields[graph.id].nonDateGraphLabel) {
-        let fromDate = DateFilterUtils.parseDateString(period.from);
-        let currentDate = DateFilterUtils.parseDateString((data[0] || '').split(analyticsConfig.valueSeparator)[0] || '');
-
-        if (reportInterval === KalturaReportInterval.days) {
-          fromDate = fromDate.clone().startOf('day');
-          currentDate = currentDate.clone().startOf('day');
-        } else {
-          fromDate = fromDate.clone().startOf('month');
-          currentDate = currentDate.clone().startOf('month');
-        }
-
-        if (fromDate.isBefore(currentDate)) {
-          this._logger.debug('Graphs period starts before first date in the response – fill missing dates with zeros', {
-            startDate: currentDate,
-            correctStartDate: fromDate
-          });
-          this._getMissingDatesValues(fromDate, currentDate, reportInterval, config.fields[graph.id].format)
-            .forEach(result => {
-              xAxisData.push(result.name);
-              yAxisData.push(result.value);
-            });
-        }
-      } else {
-        this._logger.debug('Graph label is not a date, skip start date manipulations');
-      }
       
       data.forEach((value, index) => {
         if (value.length) {
@@ -359,62 +304,6 @@ export class ReportService implements OnDestroy {
           
           xAxisData.push(name);
           yAxisData.push(val);
-  
-          if (!config.fields[graph.id].nonDateGraphLabel) {
-            const nextValue = data[index + 1];
-            
-            if (nextValue) {
-              let nextValueDate, actualNextValueDate;
-              if (reportInterval === KalturaReportInterval.days) {
-                nextValueDate = moment(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('day');
-                actualNextValueDate = moment(label).startOf('day').add(1, 'days');
-              } else {
-                nextValueDate = DateFilterUtils.parseDateString(nextValue.split(analyticsConfig.valueSeparator)[0]).startOf('month');
-                actualNextValueDate = DateFilterUtils.parseDateString(label).startOf('month').add(1, 'months');
-              }
-    
-              if (!actualNextValueDate.isSame(nextValueDate)) {
-                this._logger.debug('Next date is not correct – fill missing dates with zeros', {
-                  nextDate: actualNextValueDate,
-                  correctNextDate: nextValueDate,
-                });
-                this._getMissingDatesValues(actualNextValueDate, nextValueDate, reportInterval, config.fields[graph.id].format)
-                  .forEach(result => {
-                    xAxisData.push(result.name);
-                    yAxisData.push(result.value);
-                  });
-              }
-            } else {
-              let currentDate = DateFilterUtils.parseDateString(label);
-              let toDate = DateFilterUtils.parseDateString(period.to);
-  
-              if (reportInterval === KalturaReportInterval.days) {
-                toDate = toDate.clone().startOf('day');
-                currentDate = currentDate.clone().startOf('day');
-              } else {
-                toDate = toDate.clone().startOf('month');
-                currentDate = currentDate.clone().startOf('month');
-              }
-
-              if (currentDate.isBefore(toDate)) {
-                toDate = toDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
-                currentDate = currentDate.clone().add(1, reportInterval === KalturaReportInterval.days ? 'days' : 'months');
-  
-                this._logger.debug('Graphs period ends after last date in the response – fill missing dates with zeros', {
-                  endDate: currentDate,
-                  correctEndDate: toDate,
-                });
-
-                this._getMissingDatesValues(currentDate, toDate, reportInterval, config.fields[graph.id].format)
-                  .forEach(result => {
-                    xAxisData.push(result.name);
-                    yAxisData.push(result.value);
-                  });
-              }
-            }
-          } else {
-            this._logger.debug('Graph label is not a date, skip end date manipulations');
-          }
         }
       });
       const defaultColor = getPrimaryColor();

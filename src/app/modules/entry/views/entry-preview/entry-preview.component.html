@@ -13,9 +13,7 @@
         <div echarts class="kChart" [options]="_chartOptions"></div>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
           <div class="kLine"></div>
-          <div class="kFiller">
-            <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
-          </div>
+          <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
         </div>
         <div class="kFooter">
           <span>00:00</span>

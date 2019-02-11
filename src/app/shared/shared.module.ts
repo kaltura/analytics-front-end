@@ -17,7 +17,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, InputHelperModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
@@ -63,6 +63,7 @@ import { ImpressionsComponent } from 'shared/components/impressions-report/impre
     DropdownModule,
     MultiSelectModule,
     TagsModule,
+    InputHelperModule,
   ],
   declarations: [
     DateFilterComponent,
