@@ -1,10 +1,11 @@
 <div class="kReportTabs kOverrideFAIcons">
   <div class="kTab" [class.kNarrow]="tabs.length<4" *ngFor="let tab of tabs"
        [class.active]="tab.selected" [class.noContent]="!showValue"
+       [kTooltip]="compareMode ? tab.tooltip : null" [maxWidth]="500" [escape]="false"
        (click)="tabClick(tab)" >
     <span class="kTabTitle">
       {{tab.title}}
-      <kInputHelper *ngIf="tab.tooltip">
+      <kInputHelper *ngIf="tab.tooltip && !compareMode">
         <span>{{tab.tooltip}}</span>
     </kInputHelper>
     </span>
