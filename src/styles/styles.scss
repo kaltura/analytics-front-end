@@ -3,6 +3,7 @@ $mc-theme-font-path : '~@kaltura-ng/mc-theme/themes/default/fonts';
 @import '~@kaltura-ng/mc-theme/themes/default/scss/index.scss';
 @import './icons/icons.scss';
 @import './mini-loader';
+@import './flags';
 
 $appBkgColor: #f2f2f2;
 body{
