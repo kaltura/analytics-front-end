@@ -44,6 +44,7 @@ import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.direc
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import { ImpressionsComponent } from 'shared/components/impressions-report/impre
     MultiSelectModule,
     TagsModule,
     InputHelperModule,
+    NgxEchartsModule,
   ],
   declarations: [
     DateFilterComponent,
