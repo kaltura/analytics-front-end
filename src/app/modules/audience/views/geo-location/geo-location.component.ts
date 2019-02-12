@@ -148,10 +148,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getValue(val: string): number {
-    return parseFloat(val.split(analyticsConfig.valueSeparator).join(''));
-  }
-
   public getPercent(val: string): number {
     const total: number = parseFloat(this.selectedTab.value.split(analyticsConfig.valueSeparator).join(''));
     return parseFloat(val.split(analyticsConfig.valueSeparator).join('')) / total * 100;
@@ -221,10 +217,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         error => {
           this._isBusy = false;
           const actions = {
-            'logout': () => {
-              this._blockerMessage = null;
-              this._authService.logout();
-            },
             'close': () => {
               this._blockerMessage = null;
             },

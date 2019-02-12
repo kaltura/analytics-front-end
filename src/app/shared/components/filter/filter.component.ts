@@ -268,7 +268,7 @@ export class FilterComponent {
     if (type === 'location') {
       unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
     } else if (type === 'countries') {
-      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === item && filterItem.type === type);
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === item.id && filterItem.type === type);
     } else {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
     }
