@@ -38,6 +38,7 @@ import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
+import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import { SyndicationComponent } from './views/engagement/syndication/syndication
     MiniTopVideosComponent,
     MiniPeakDayComponent,
     SyndicationComponent,
+    GeoFilterComponent,
   ],
   exports: [],
   providers: [PageScrollService]

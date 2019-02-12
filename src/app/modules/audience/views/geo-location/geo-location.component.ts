@@ -16,6 +16,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as echarts from 'echarts';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-geo-location',
@@ -43,6 +44,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _columns: string[] = [];
   public _totalCount: number;
   public _tags: any[] = [];
+  public _refineFilterOpened = false;
+  public _dateFilter: DateChangeEvent = null;
+  public _selectedRefineFilters: RefineFilter = null;
+  public _refineFilter: RefineFilter = null;
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
@@ -94,6 +99,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', { event });
     this.filter.timeZoneOffset = this.trendFilter.timeZoneOffset = event.timeZoneOffset;
     this.filter.fromDay = event.startDay;
@@ -102,6 +108,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
     this.loadReport();
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
   }
 
   public _onTabChange(tab: Tab): void {

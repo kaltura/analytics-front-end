@@ -97,9 +97,9 @@ export class FilterComponent {
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() closeFilters = new EventEmitter<void>();
   
-  private _currentFilters: FilterItem[] = []; // local state
-  private _appliedFilters: FilterItem[] = [];
-  private _showFilters: boolean;
+  protected _currentFilters: FilterItem[] = []; // local state
+  protected _appliedFilters: FilterItem[] = [];
+  protected _showFilters: boolean;
 
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
@@ -119,7 +119,7 @@ export class FilterComponent {
     } else {
       this._state = 'hidden';
     }
-    this.updateLayout();
+    this._updateLayout();
   }
   
   get showAdvancedFilters() {
@@ -133,7 +133,7 @@ export class FilterComponent {
     } else {
       this._advancedFiltersState = 'hidden';
     }
-    this.updateLayout();
+    this._updateLayout();
   }
   
   constructor(private _translate: TranslateService,
@@ -157,7 +157,7 @@ export class FilterComponent {
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
   ];
   
-  private _clearSelectedValues(): void {
+  protected _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
       'entrySources': [],
@@ -168,7 +168,7 @@ export class FilterComponent {
     };
   }
   
-  private _prepareFilterTags(): FilterTagItem[] {
+  protected _prepareFilterTags(): FilterTagItem[] {
     let label, tooltip;
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
@@ -211,14 +211,14 @@ export class FilterComponent {
     }).filter(Boolean);
   }
   
-  private _clearAll(): void {
+  protected _clearAll(): void {
     this._logger.trace('Clear all tags called');
     this._clearSelectedValues();
     this._currentFilters = [];
     this._appliedFilters = [];
   }
   
-  private _updateSelectedValues(values: FilterItem[]): void {
+  protected _updateSelectedValues(values: FilterItem[]): void {
     this._clearSelectedValues();
 
     if (Array.isArray(values) && values.length) {
@@ -234,7 +234,7 @@ export class FilterComponent {
     }
   }
 
-  private updateLayout(): void {
+  protected _updateLayout(): void {
     if (analyticsConfig.isHosted) {
       const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
       this._logger.info('Send update layout event to the host app', { height });

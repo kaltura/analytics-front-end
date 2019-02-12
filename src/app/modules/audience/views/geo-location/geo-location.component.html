@@ -3,7 +3,24 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
+
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
+
     <app-date-filter #dateFilter [dateRange]="_dateRange" [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)" [showCompare]="false"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer kNoPadding">
+    <app-geo-filter [opened]="_refineFilterOpened"
+                    [dateFilter]="_dateFilter"
+                    [selectedFilters]="_selectedRefineFilters"
+                    (closeFilters)="_refineFilterOpened = false"
+                    (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>
   </div>
 
   <div class="kFilters">

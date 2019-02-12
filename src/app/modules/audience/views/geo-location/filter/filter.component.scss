@@ -1,0 +1,78 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kRefineFilters {
+  width: 100%;
+  height: auto;
+  margin-bottom: 0 !important;
+
+  .kRefineFiltersMain {
+    height: 100%;
+    overflow-y: auto;
+
+    .kFilterContainer {
+      padding: 32px 24px 16px 24px;
+      display: flex;
+      flex-direction: column;
+
+      .kFilterContainerRow {
+        display: flex;
+        &:not(:first-child) {
+          margin-top: 24px;
+        }
+      }
+
+      .kListFilters {
+        display: flex;
+
+        .kLastItem {
+          margin-right: 18px !important;
+        }
+      }
+
+      .kMiscFilters {
+        display: flex;
+        flex-direction: column;
+        width: 432px;
+      }
+    }
+
+    .kGroupTitle {
+      display: inline-block;
+      color: $kGrayscale3;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .kRefineFiltersFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 66px;
+      padding: 0 24px;
+
+      button {
+        width: 100px;
+      }
+    }
+  }
+}
+
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
+}

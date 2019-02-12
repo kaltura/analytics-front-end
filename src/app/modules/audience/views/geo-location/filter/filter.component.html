@@ -1,0 +1,26 @@
+<div class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
+  </div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <h1>IT WORKS!</h1>
+      </div>
+      <div class="kRefineFiltersFooter">
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
+    </div>
+  </div>
+</div>
