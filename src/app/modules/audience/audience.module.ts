@@ -19,7 +19,6 @@ import { EngagementMiniHighlightsComponent } from './views/engagement/mini-highl
 import { MiniPeakDayComponent } from './views/engagement/mini-peak-day/mini-peak-day.component';
 import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
 import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
-import { EngagementImpressionsComponent } from './views/engagement/impressions/impressions.component';
 import { EngagementUsersComponent } from './views/engagement/users/users.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
 
@@ -73,7 +72,6 @@ import { CountryFilterComponent } from './views/geo-location/filter/country-filt
     EngagementMiniHighlightsComponent,
     EngagementTopVideosComponent,
     EngagementDurationComponent,
-    EngagementImpressionsComponent,
     EngagementUsersComponent,
     ContentInteractionsComponent,
     DevicesOverviewComponent,
