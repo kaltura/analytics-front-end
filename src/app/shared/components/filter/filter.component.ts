@@ -268,7 +268,8 @@ export class FilterComponent {
     if (type === 'location') {
       unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
     } else if (type === 'countries') {
-      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === item.id && filterItem.type === type);
+      const value = typeof item === 'string' ? item : item.id;
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === value && filterItem.type === type);
     } else {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
     }
