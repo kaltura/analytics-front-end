@@ -335,7 +335,8 @@
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
-        "avg_view_drop_off_tt": "Drop Off Rate"
+        "avg_view_drop_off_tt": "Drop Off Rate",
+        "openLink": "Open page URL in a new browser tab"
       }
     },
     "entry": {
