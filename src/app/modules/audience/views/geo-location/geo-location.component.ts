@@ -368,6 +368,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     if (this._drillDown.length > 0) {
       reportConfig.filter.countryIn = this._drillDown[0];
+    } else if (countriesFilterApplied) {
+      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
     }
 
     if (this._drillDown.length > 1) {
