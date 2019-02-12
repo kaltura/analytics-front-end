@@ -35,17 +35,6 @@
     </div>
   </div>
 
-  <kTags *ngIf="_tags.length"
-         [title]="''"
-         [data]="_tags"
-         [labelField]="'country'"
-         [tooltipField]="'country'"
-         [clearAllLabel]="'app.common.clearAll' | translate"
-         [class.kHidden]="_drillDown.length>0"
-         (onTagRemove)="_onRemoveTag($event)"
-         (onRemoveAll)="_onRemoveAllTags()">
-  </kTags>
-
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">

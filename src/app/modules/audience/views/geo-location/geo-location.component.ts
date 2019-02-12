@@ -1,22 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TrendService } from 'shared/services/trend.service';
 import { SelectItem } from 'primeng/api';
+import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
-import * as echarts from 'echarts';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 @Component({
   selector: 'app-geo-location',
@@ -33,7 +34,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _dateRange = DateRanges.Last30D;
 
   public _tableData: any[] = [];
-  private unFilteredTableData: any[] = [];
   private selectedTab: Tab;
   public _tabsData: Tab[] = [];
   public _mapChartData: any = {'count_plays': {}};
@@ -43,21 +43,20 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
-  public _tags: any[] = [];
   public _refineFilterOpened = false;
   public _dateFilter: DateChangeEvent = null;
   public _selectedRefineFilters: RefineFilter = null;
-  public _refineFilter: RefineFilter = null;
+  public _refineFilter: RefineFilter = [];
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
-  public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  public filter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
     }
   );
-  private trendFilter: KalturaReportInputFilter = new KalturaReportInputFilter(
+  private trendFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
@@ -110,10 +109,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {
-    console.warn(event);
+    this._refineFilter = event;
+  
+    refineFilterToServerValue(this._refineFilter, this.filter);
+    refineFilterToServerValue(this._refineFilter, this.trendFilter);
   
     this._onDrillDown('');
-    this._refineFilter = event;
   }
 
   public _onTabChange(tab: Tab): void {
@@ -178,26 +179,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this.echartsIntance.setOption({series: [{zoom: this._mapZoom}]}, false);
       this.echartsIntance.setOption({series: [{roam: roam}]}, false);
     }
-  }
-
-  public _onCountrySelectChange(event): void {
-    this.updateSelectedCountries();
-  }
-
-  public _onRemoveTag(country: any): void {
-    this._logger.trace('Handle tag remove action by user', { country });
-    const index = this._selectedCountries.indexOf(country.data);
-    if (index > -1) {
-      this._selectedCountries.splice(index, 1);
-      this.updateSelectedCountries();
-    }
-  }
-
-  public _onRemoveAllTags(): void {
-    this._logger.trace('Handle all tag remove action by user');
-    this._tags = [];
-    this._selectedCountries = [];
-    this.updateSelectedCountries();
   }
 
   public _onDrillDown(country: string): void {
@@ -265,24 +246,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
     this._tableData = tableData;
-  }
-
-  private updateSelectedCountries(): void {
-    this._tags = [];
-    this._tableData = this.unFilteredTableData.filter(data => {
-      if (this._selectedCountries.length === 0) {
-        return true;
-      } else {
-        let found = false;
-        this._selectedCountries.forEach(country => {
-          if (data.object_id.toLowerCase() === country) {
-            this._tags.push({country: data.country, data: country});
-            found = true;
-          }
-        });
-        return found;
-      }
-    });
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
@@ -398,7 +361,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private updateReportConfig(reportConfig: ReportConfig): void {
-    if (reportConfig.filter['countryIn']) {
+    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
+    
+    if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
     }
     if (reportConfig.filter['regionIn']) {
