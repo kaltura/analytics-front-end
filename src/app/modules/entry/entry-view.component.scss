@@ -86,3 +86,10 @@
   }
 }
 
+.kReportContainer {
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+}
+
