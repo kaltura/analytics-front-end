@@ -3,12 +3,13 @@ import { LocationsFilterService } from 'shared/components/filter/location-filter
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { FilterComponent } from 'shared/components/filter/filter.component';
+import { ReportService } from 'shared/services';
 
 @Component({
   selector: 'app-geo-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
-  providers: [LocationsFilterService, KalturaLogger.createLogger('GeoFilterComponent')],
+  providers: [ReportService, LocationsFilterService, KalturaLogger.createLogger('GeoFilterComponent')],
   animations: [
     trigger('state', [
       state('visible', style({ height: '*', opacity: 1 })),

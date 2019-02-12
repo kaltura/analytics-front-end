@@ -14,10 +14,22 @@
        (@state.done)="_filtersAnimationDone($event)">
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
-        <app-country-filter [dateFilter]="_dateFilter"
-                            [selectedFilters]="_selectedValues['countries']"
-                            (itemSelected)="_onItemSelected($event, 'countries')"
-                            (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+        <div class="kFilterContainerRow">
+          <app-country-filter [dateFilter]="_dateFilter"
+                              [selectedFilters]="_selectedValues['countries']"
+                              (itemSelected)="_onItemSelected($event, 'countries')"
+                              (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+
+          <app-tags-filter [selectedFilters]="_selectedValues['tags']"
+                           (itemSelected)="_onItemSelected($event, 'tags')"
+                           (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
+
+          <app-category-filter [label]="'app.filters.categories' | translate"
+                               [selectedFilters]="_selectedValues['categories']"
+                               [linkLabel]="'app.filters.selectCategories' | translate"
+                               (itemSelected)="_onItemSelected($event, 'categories')"
+                               (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+        </div>
       </div>
       <div class="kRefineFiltersFooter">
         <button type="button" class="kButtonBranded" pButton
