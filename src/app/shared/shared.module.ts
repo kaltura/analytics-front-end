@@ -45,6 +45,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
 
 @NgModule({
   imports: [
@@ -93,6 +94,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
     DropdownFilterComponent,
     KalturaPlayerComponent,
     ImpressionsComponent,
+    SyndicationComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -121,6 +123,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     ImpressionsComponent,
+    SyndicationComponent,
     ...FilterComponentsList,
   ],
   providers: [

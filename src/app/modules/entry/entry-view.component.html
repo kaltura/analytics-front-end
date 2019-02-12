@@ -55,6 +55,13 @@
           <app-impressions [dateFilter]="_dateFilter"
                            [entryId]="_entryId"></app-impressions>
         </div>
+
+        <div class="kReportContainer">
+          <app-syndication [entryId]="_entryId"
+                           [dateFilterComponent]="dateFilter"
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-syndication>
+        </div>
       </div>
     </div>
   </k-area-blocker>

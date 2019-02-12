@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -14,9 +13,12 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
-  selector: 'app-engagement-syndication',
+  selector: 'app-syndication',
   templateUrl: './syndication.component.html',
   styleUrls: ['./syndication.component.scss'],
   providers: [
@@ -25,9 +27,32 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     SyndicationDataConfig,
   ]
 })
-export class SyndicationComponent extends EngagementBaseReportComponent {
+export class SyndicationComponent {
+  @Input() set dateFilter(value: DateChangeEvent) {
+    if (value) {
+      this._dateFilter = value;
+      
+      if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
+        this._updateFilter();
+        this._loadReport();
+      }
+    }
+  }
+  
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._refineFilter = value;
+      this._updateRefineFilter();
+      this._loadReport();
+    }
+  }
+  
+  @Input() entryId: string;
+  
   @Input() dateFilterComponent: DateFilterComponent;
   
+  private _dateFilter: DateChangeEvent;
+  private _refineFilter: RefineFilter = [];
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
@@ -38,7 +63,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     interval: KalturaReportInterval.days,
   });
   
-  protected _componentId = 'syndication';
+  private _componentId = 'syndication';
   
   public _reportInterval = KalturaReportInterval.days;
   public _drillDown: string = null;
@@ -64,14 +89,12 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
               private _compareService: CompareService,
               private _dataConfigService: SyndicationDataConfig,
               private _logger: KalturaLogger) {
-    super();
-    
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   
-  protected _loadReport(sections = this._dataConfig): void {
+  private _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._tableData = [];
@@ -82,6 +105,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       order: this._order,
       objectIds: this._drillDown
     };
+  
+    if (this.entryId) {
+      // TODO utilize entryId once supported by the server
+    }
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -95,6 +123,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           order: null,
           objectIds: this._drillDown,
         };
+  
+        if (this.entryId) {
+          // TODO utilize entryId once supported by the server
+        }
+        
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -133,7 +166,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         });
   }
   
-  protected _updateRefineFilter(): void {
+  private _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
@@ -141,7 +174,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     }
   }
   
-  protected _updateFilter(): void {
+  private _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
@@ -237,7 +270,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-    
+      
       return row;
     });
   }
@@ -256,7 +289,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       this._loadReport({ table: null });
     }
   }
-
+  
   public _openLink(data): void {
     if (data && data.referrer) {
       window.open(data.referrer, '_blank');
@@ -265,9 +298,9 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
-
+    
     this._selectedMetrics = tab.key;
-  
+    
     switch (this._selectedMetrics) {
       case 'sum_time_viewed':
         this._distributionColorScheme = 'time';
@@ -279,7 +312,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         this._distributionColorScheme = 'default';
         break;
     }
-  
+    
     this._logger.trace(
       'Update distribution color schema according to selected metric',
       { selectedMetric: this._selectedMetrics, schema: this._distributionColorScheme },
@@ -304,5 +337,93 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     this._drillDown = domain;
     this._pager.pageIndex = 1;
     this._loadReport();
+  }
+  
+  // TODO refactor after geo filter will be merged to utilize this function from a shared place
+  private _refineFilterToServerValue(filter: KalturaEndUserReportInputFilter): void {
+    let categories = [], mediaType = [], sourceType = [],
+      tags = [], owners = [], country = [], region = [], city = [];
+    
+    this._refineFilter.forEach(item => {
+      switch (item.type) {
+        case 'mediaType':
+          const value = item.value === 'Live'
+            ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
+            : item.value;
+          mediaType.push(value);
+          break;
+        case 'entrySources':
+          sourceType.push(item.value);
+          break;
+        case 'categories':
+          categories.push(item.value.id);
+          break;
+        case 'tags':
+          tags.push(item.value);
+          break;
+        case 'owners':
+          owners.push(item.value.id);
+          break;
+        case 'location':
+          if (item.value.country) {
+            country.push(item.value.country.map(({ name }) => name));
+          }
+          if (item.value.region) {
+            region.push(item.value.region.map(({ name }) => name));
+          }
+          if (item.value.city) {
+            city.push(item.value.city.map(({ name }) => name));
+          }
+          break;
+      }
+    });
+    
+    if (categories.length) {
+      filter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.categoriesIdsIn;
+    }
+    
+    if (mediaType.length) {
+      filter.mediaTypeIn = mediaType.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.mediaTypeIn;
+    }
+    
+    if (sourceType.length) {
+      filter.sourceTypeIn = sourceType.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.sourceTypeIn;
+    }
+    
+    if (owners.length) {
+      filter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.ownerIdsIn;
+    }
+    
+    if (country.length) {
+      filter.countryIn = country.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.countryIn;
+    }
+    
+    if (region.length) {
+      filter.regionIn = region.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.regionIn;
+    }
+    
+    if (city.length) {
+      filter.citiesIn = city.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.citiesIn;
+    }
+    
+    if (tags.length) {
+      filter.keywords = tags.join(analyticsConfig.valueSeparator);
+    } else {
+      delete filter.keywords;
+    }
   }
 }
