@@ -67,6 +67,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
+  public _mapDataReady = false;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -85,6 +86,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     // load works map data
     this.http.get('assets/world.json')
       .subscribe(data => {
+        this._mapDataReady = true;
         echarts.registerMap('world', data);
       });
   }
