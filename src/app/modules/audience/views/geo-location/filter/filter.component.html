@@ -16,7 +16,8 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <app-country-filter [dateFilter]="_dateFilter"
                             [selectedFilters]="_selectedValues['countries']"
-                            (itemSelected)="_onItemSelected($event, 'countries')"></app-country-filter>
+                            (itemSelected)="_onItemSelected($event, 'countries')"
+                            (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
       </div>
       <div class="kRefineFiltersFooter">
         <button type="button" class="kButtonBranded" pButton

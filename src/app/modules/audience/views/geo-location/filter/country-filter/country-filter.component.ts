@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterValueItem } from 'shared/components/filter/location-filter/location-filter.component';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
@@ -23,22 +23,44 @@ export class CountryFilterComponent implements OnDestroy {
     });
   }
   
-  @Output() itemSelected = new EventEmitter<LocationsFilterValueItem[]>();
+  @Output() itemSelected = new EventEmitter<LocationsFilterValueItem>();
+  @Output() itemUnselected = new EventEmitter<LocationsFilterValueItem>();
+  
+  private _listDiffer: IterableDiffer<any>;
   
   public _selectedCountries: LocationsFilterValueItem[];
-  
-  constructor(public _locationFilterService: LocationsFilterService) {
+
+  constructor(private _listDiffers: IterableDiffers,
+              public _locationFilterService: LocationsFilterService) {
+    this._setDiffer();
   }
   
   ngOnDestroy() {
   
   }
   
+  private _setDiffer(): void {
+    this._listDiffer = this._listDiffers.find([]).create();
+    this._listDiffer.diff(this._selectedCountries);
+  }
+  
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
-    if (type === 'country') {
-      this._selectedCountries = items;
+    if (type !== 'country') {
+      return;
     }
+  
+    this._selectedCountries = items;
+
+    const changes = this._listDiffer.diff(items);
+  
+    if (changes) {
+      changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
+        this.itemSelected.emit(record.item);
+      });
     
-    this.itemSelected.emit(this._selectedCountries || []);
+      changes.forEachRemovedItem((record: IterableChangeRecord<any>) => {
+        this.itemUnselected.emit(record.item);
+      });
+    }
   }
 }

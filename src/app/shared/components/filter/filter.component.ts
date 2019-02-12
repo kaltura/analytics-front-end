@@ -207,8 +207,7 @@ export class FilterComponent {
             return null;
           }
         case 'countries':
-          console.warn(value);
-          return null;
+          return { value: value.id, type, label: value.name, tooltip: value.name };
         default:
           return null;
       }
@@ -265,10 +264,15 @@ export class FilterComponent {
   
   public _onItemUnselected(item: any, type: string): void {
     this._logger.trace('Item removed by user', { item, type });
-    const unselectedItemIndex = type === 'location'
-      ? this._currentFilters.findIndex(filter => filter.type === 'location')
-      : this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
-    
+    let unselectedItemIndex = -1;
+    if (type === 'location') {
+      unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
+    } else if (type === 'countries') {
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === item && filterItem.type === type);
+    } else {
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
+    }
+
     if (unselectedItemIndex !== -1) {
       this._currentFilters.splice(unselectedItemIndex, 1);
     }
