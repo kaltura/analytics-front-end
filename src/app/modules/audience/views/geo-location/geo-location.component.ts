@@ -64,7 +64,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   );
 
-  public _countryCodes: { value: string, label: string }[] = [];
   public _selectedCountries: SelectItem[] = [];
   public _drillDown: string[] = [];
   private mapCenter = [0, 10];
@@ -112,7 +111,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   
   public _onRefineFilterChange(event: RefineFilter): void {
     console.warn(event);
-
+  
+    this._onDrillDown('');
     this._refineFilter = event;
   }
 
@@ -226,7 +226,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._reportService.getReport(reportConfig, sections)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
-          this._countryCodes = [];
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
@@ -266,16 +265,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
     this._tableData = tableData;
-
-    // set countries filter data
-    if (this._drillDown.length === 0) {
-      this.unFilteredTableData = [];
-      tableData.forEach(data => {
-        this._countryCodes.push({label: data.country, value: data.object_id.toLowerCase()});
-        this.unFilteredTableData.push(data);
-      });
-      this.updateSelectedCountries();
-    }
   }
 
   private updateSelectedCountries(): void {

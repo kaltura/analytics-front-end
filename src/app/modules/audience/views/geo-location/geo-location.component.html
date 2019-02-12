@@ -33,22 +33,6 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
-    <p-multiSelect class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
-                   [options]="_countryCodes"
-                   [maxSelectedLabels]="0"
-                   [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
-                   [filterPlaceHolder]="'app.audience.geo.findCountry' | translate"
-                   [showToggleAll]="false"
-                   [resetFilterOnHide]="true"
-                   [(ngModel)]="_selectedCountries"
-                   [displaySelectedLabel]="false"
-                   (onChange)="_onCountrySelectChange($event)"
-                   [defaultLabel]="'app.audience.geo.selectCountry' | translate">
-      <ng-template let-country pTemplate="item">
-        <i class="kFlag" [ngClass]="'kFlag-' + country.value.toUpperCase()" style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"></i>
-          <span style="margin-top:2px; position: absolute">{{country.label}}</span>
-      </ng-template>
-    </p-multiSelect>
   </div>
 
   <kTags *ngIf="_tags.length"

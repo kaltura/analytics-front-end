@@ -59,6 +59,9 @@ export abstract class EngagementBaseReportComponent {
         case 'owners':
           owners.push(item.value.id);
           break;
+        case 'countries':
+          country.push(item.value.name);
+          break;
         case 'location':
           if (item.value.country) {
             country.push(item.value.country.map(({ name }) => name));
