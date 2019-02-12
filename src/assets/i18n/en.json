@@ -108,6 +108,7 @@
       "last12m": "12 Months",
       "monthly": "Monthly",
       "daily": "Daily",
+      "sinceCreation": "Since Creation",
       "error": "'From Date' must be before 'To Date'",
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
