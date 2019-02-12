@@ -14,7 +14,9 @@
        (@state.done)="_filtersAnimationDone($event)">
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
-        <h1>IT WORKS!</h1>
+        <app-country-filter [dateFilter]="_dateFilter"
+                            [selectedFilters]="_selectedValues['countries']"
+                            (itemSelected)="_onItemSelected($event, 'countries')"></app-country-filter>
       </div>
       <div class="kRefineFiltersFooter">
         <button type="button" class="kButtonBranded" pButton

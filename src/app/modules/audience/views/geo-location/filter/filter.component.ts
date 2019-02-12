@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
@@ -31,5 +31,4 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
   ]
 })
 export class GeoFilterComponent extends FilterComponent {
-  // @HostBinding('style.padding-bottom') _bottomPadding = '0';
 }

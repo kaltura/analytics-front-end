@@ -111,6 +111,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {
+    console.warn(event);
+
     this._refineFilter = event;
   }
 

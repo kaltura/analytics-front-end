@@ -165,6 +165,7 @@ export class FilterComponent {
       'tags': [],
       'owners': [],
       'location': [],
+      'countries': [],
     };
   }
   
@@ -205,6 +206,9 @@ export class FilterComponent {
           } else {
             return null;
           }
+        case 'countries':
+          console.warn(value);
+          return null;
         default:
           return null;
       }
