@@ -18,6 +18,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { significantDigits } from 'shared/utils/significant-digits';
 
 @Component({
   selector: 'app-geo-location',
@@ -148,11 +149,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getPercent(val: string): number {
-    const total: number = parseFloat(this.selectedTab.value.split(analyticsConfig.valueSeparator).join(''));
-    return parseFloat(val.split(analyticsConfig.valueSeparator).join('')) / total * 100;
-  }
-
   public onChartClick(event): void {
     this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
@@ -237,7 +233,22 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let tmp = this._columns.pop();
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
-    this._tableData = tableData;
+    
+    this._tableData = tableData.map((row, index) => {
+      const calculateDistribution = (key: string): number => {
+        const tab = this._tabsData.find(item => item.key === key);
+        const total = tab ? parseFloat(tab.rawValue as string) : 0;
+        const rowValue = parseFloat(row[key]) || 0;
+        return significantDigits((rowValue / total) * 100);
+      };
+      const playsDistribution = calculateDistribution('count_plays');
+      const usersDistribution = calculateDistribution('unique_known_users');
+
+      row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
+      row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+
+      return row;
+    });
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
@@ -390,7 +401,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         }
       });
       if (!found && this._tableData.length) {
-        this.mapCenter = [this._tableData[0]["coordinates"].split('/')[1], this._tableData[0]["coordinates"].split('/')[0]];
+        this.mapCenter = [this._tableData[0]['coordinates'].split('/')[1], this._tableData[0]['coordinates'].split('/')[0]];
       }
     }
   }

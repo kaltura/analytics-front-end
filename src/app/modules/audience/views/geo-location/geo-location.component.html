@@ -118,7 +118,7 @@
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.valuee">
                   <div>
-                    <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
+                    <app-bullet [value]="data['plays_distribution']"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='unique_known_users'">
@@ -126,7 +126,7 @@
                 </td>
                 <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value">
                   <div>
-                    <app-bullet [value]="getPercent(data['unique_known_users'])"></app-bullet>
+                    <app-bullet [value]="data['unique_users_distribution']"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
