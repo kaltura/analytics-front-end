@@ -36,6 +36,8 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
 import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
+import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
+import { CountryFilterComponent } from './views/geo-location/filter/country-filter/country-filter.component';
 
 @NgModule({
   imports: [
@@ -78,6 +80,8 @@ import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
+    GeoFilterComponent,
+    CountryFilterComponent,
   ],
   exports: [],
   providers: [PageScrollService]

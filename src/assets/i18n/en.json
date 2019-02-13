@@ -45,7 +45,8 @@
       "location": "Location",
       "countriesSelected": "{0} Countries Selected",
       "regionsSelected": "{0} Regions Selected",
-      "citiesSelected": "{0} Cities Selected"
+      "citiesSelected": "{0} Cities Selected",
+      "filterCountries": "Filter Countries"
     },
     "categories": {
       "selectCategories": "Select Categories",
