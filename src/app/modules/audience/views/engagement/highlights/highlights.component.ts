@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -15,6 +15,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { HighlightsSharedStoreService } from '../highlights-shared-store.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -26,7 +28,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
     ReportService
   ],
 })
-export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
+export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-month_id';
@@ -38,7 +40,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = true;
-  public _chartDataLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _tableData: any[] = [];
@@ -61,6 +62,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
+              private _sharedStoreService: HighlightsSharedStoreService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
@@ -70,47 +72,21 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._prepare();
   }
   
-  protected _loadReport(sections = this._dataConfig): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-        
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+  ngOnDestroy() {
+  
+  }
+  
+  protected _prepare(): void {
+    this._sharedStoreService.data$.status
+      .pipe(cancelOnDestroy(this))
+      .subscribe(({ loading, error }) => {
+        this._blockerMessage = null;
+        this._isBusy = loading;
 
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          this._tableData = [];
-    
-          if (report.totals && !this._tabsData.length) {
-            this._handleTotals(report.totals); // handle totals
-          }
-
-          if (compare) {
-            this._handleCompare(report, compare);
-          } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.handleTable(report.table); // handle table
-            }
-            if (report.graphs.length) {
-              this._chartDataLoaded = false;
-              this._handleGraphs(report.graphs); // handle graphs
-            }
-          }
-          this._firstTimeLoading = false;
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
+        if (error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -120,11 +96,42 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        }
+      });
+
+    this._sharedStoreService.data$.report
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(({ current, compare }) => {
+          this._tableData = [];
+      
+          if (current.totals && !this._tabsData.length) {
+            this._handleTotals(current.totals); // handle totals
+          }
+      
+          if (compare) {
+            this._handleCompare(current, compare);
+          } else {
+            if (current.table && current.table.header && current.table.data) {
+              this.handleTable(current.table); // handle table
+            }
+            if (current.graphs.length) {
+              this._handleGraphs(current.graphs); // handle graphs
+            }
+          }
+          this._firstTimeLoading = false;
+          this._isBusy = false;
         });
   }
   
+  protected _loadReport(sections = this._dataConfig): void {
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    const compareReportConfig = this._isCompareMode
+      ? { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order }
+      : null;
+    this._sharedStoreService.loadData(sections, reportConfig, compareReportConfig);
+  }
+  
   protected _updateFilter(): void {
-    this._chartDataLoaded = false;
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
@@ -179,7 +186,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         compare.graphs,
         this._dataConfig.graph,
         this._reportInterval,
-        () => this._chartDataLoaded = true
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
@@ -202,7 +208,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._dataConfig.graph,
       { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
-      () => this._chartDataLoaded = true
     );
 
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
