@@ -43,7 +43,10 @@
 
         <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
 
-        <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
+        <div class="kReportContainer kEntryPreview">
+          <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
+          <app-user-engagement [dateFilter]="_dateFilter" [entryId]="_entryId"></app-user-engagement>
+        </div>
 
         <div class="kReportContainer">
           <app-video-performance [dateFilterComponent]="dateFilter"

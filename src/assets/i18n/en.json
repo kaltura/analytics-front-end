@@ -360,6 +360,8 @@
       "sum_time_viewed_tt": "Minutes Viewed",
       "count_loads_tt": "Player Impressions",
       "avg_time_viewed_tt": "Avg. View Time",
+      "name": "Name",
+      "avg_view_drop_off": "Avg. drop off",
       "entryType": {
         "video": "Video",
         "audio": "Audio",

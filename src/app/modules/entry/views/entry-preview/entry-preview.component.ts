@@ -54,7 +54,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _currentTime = 0;
 
   public _chartOptions = {};
-  public _showHeatmap = false;
 
   @ViewChild('player') player: KalturaPlayerComponent;
 
@@ -178,11 +177,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       this._compareFilter = null;
     }
   }
-
-  public toggleHeatmap(): void {
-    this._showHeatmap = !this._showHeatmap;
-  }
-
 
   /* ------------------------ start of player logic --------------------------*/
 
