@@ -86,7 +86,6 @@ export class UserEngagementComponent extends EntryBase {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          console.warn(report);
           if (compare) {
             this._handleCompare(report, compare);
           } else {
