@@ -3,7 +3,24 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
+
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
+
     <app-date-filter #dateFilter [dateRange]="_dateRange" [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)" [showCompare]="false"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer kNoPadding">
+    <app-geo-filter [opened]="_refineFilterOpened"
+                    [dateFilter]="_dateFilter"
+                    [selectedFilters]="_selectedRefineFilters"
+                    (closeFilters)="_refineFilterOpened = false"
+                    (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>
   </div>
 
   <div class="kFilters">
@@ -16,34 +33,7 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
-    <p-multiSelect class="kCountryFilter" [class.kHidden]="_drillDown.length>0"
-                   [options]="_countryCodes"
-                   [maxSelectedLabels]="0"
-                   [selectedItemsLabel]="'app.audience.geo.countriesSelected' | translate"
-                   [filterPlaceHolder]="'app.audience.geo.findCountry' | translate"
-                   [showToggleAll]="false"
-                   [resetFilterOnHide]="true"
-                   [(ngModel)]="_selectedCountries"
-                   [displaySelectedLabel]="false"
-                   (onChange)="_onCountrySelectChange($event)"
-                   [defaultLabel]="'app.audience.geo.selectCountry' | translate">
-      <ng-template let-country pTemplate="item">
-        <i class="kFlag" [ngClass]="'kFlag-' + country.value.toUpperCase()" style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"></i>
-          <span style="margin-top:2px; position: absolute">{{country.label}}</span>
-      </ng-template>
-    </p-multiSelect>
   </div>
-
-  <kTags *ngIf="_tags.length"
-         [title]="''"
-         [data]="_tags"
-         [labelField]="'country'"
-         [tooltipField]="'country'"
-         [clearAllLabel]="'app.common.clearAll' | translate"
-         [class.kHidden]="_drillDown.length>0"
-         (onTagRemove)="_onRemoveTag($event)"
-         (onRemoveAll)="_onRemoveAllTags()">
-  </kTags>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
@@ -131,7 +121,7 @@
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.valuee">
                   <div>
-                    <app-bullet [value]="getPercent(data['count_plays'])"></app-bullet>
+                    <app-bullet [value]="data['plays_distribution']"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='unique_known_users'">
@@ -139,7 +129,7 @@
                 </td>
                 <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value">
                   <div>
-                    <app-bullet [value]="getPercent(data['unique_known_users'])"></app-bullet>
+                    <app-bullet [value]="data['unique_users_distribution']"></app-bullet>
                   </div>
                 </td>
                 <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
