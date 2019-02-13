@@ -1,20 +1,20 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Inject, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AuthService, ErrorsManagerService, Report, ReportService } from 'shared/services';
+import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { Report, ReportService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TranslateService } from '@ngx-translate/core';
 import { MiniHighlightsConfig } from './mini-highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { HighlightsSharedStoreService } from '../highlights-shared-store.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { HighlightsSharedStore } from '../engagement-shared-stores';
+import { SharedReportBaseStore } from 'shared/services/shared-report-base-store';
 
 @Component({
   selector: 'app-engagement-mini-highlights',
@@ -48,7 +48,7 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
               private _compareService: CompareService,
               private _pageScrollService: PageScrollService,
               private _dataConfigService: MiniHighlightsConfig,
-              private _sharedStoreService: HighlightsSharedStoreService,
+              @Inject(HighlightsSharedStore) private _sharedStoreService: SharedReportBaseStore,
               private _logger: KalturaLogger) {
     super();
     
@@ -61,14 +61,14 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   }
   
   protected _prepare(): void {
-    this._sharedStoreService.data$.status
+    this._sharedStoreService.status$
       .pipe(cancelOnDestroy(this))
       .subscribe(({ loading }) => {
         this._isBusy = loading;
         
         // don't handle errors here
       });
-    this._sharedStoreService.data$.report
+    this._sharedStoreService.report$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ current, compare }) => {
         if (compare) {

@@ -25,8 +25,6 @@ export class TopVideosTableComponent {
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
   
-  @Output() sortFieldChanged = new EventEmitter<string>();
-  
   @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _originalTable: any[] = [];
@@ -42,33 +40,6 @@ export class TopVideosTableComponent {
   constructor(private _router: Router,
               private _frameEventManager: FrameEventManagerService) {
 
-  }
-  
-  public _onSortChanged(event: { data: any[], field: string, mode: string, order: number }): void {
-    const { field, order } = event;
-    if (!event.data.length || !field || !order || (this._currentOrderDirection === order && this._currentOrderField === field)) {
-      return;
-    }
-    
-    if (field !== this._currentOrderField) {
-      this._currentOrderField = field;
-      this.sortFieldChanged.emit(this._currentOrderField);
-      return;
-    }
-    
-    if (event.order !== this._currentOrderDirection) {
-      this._currentOrderDirection = order;
-      this._pager.pageIndex = 1;
-
-      this._tableData = this._originalTable
-        .sort((a, b) => {
-          const valA = a.index;
-          const valB = b.index;
-          
-          return this._currentOrderDirection < 0 ? valA - valB : valB - valA;
-        }).slice(0, this._pageSize);
-      return;
-    }
   }
   
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {

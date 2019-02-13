@@ -4,7 +4,7 @@
     <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [showLoader]="_isBusy">
     <div class="kReportContent" *ngIf="!_isCompareMode">
       <div class="kReportRow" *ngFor="let item of _tableData">
         <div class="kReportRowIndex kFirst" *ngIf="item.index === 1">

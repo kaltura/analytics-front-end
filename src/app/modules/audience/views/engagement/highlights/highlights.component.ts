@@ -1,11 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Inject, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { filter } from 'rxjs/operators';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,8 +14,9 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { HighlightsSharedStoreService } from '../highlights-shared-store.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { HighlightsSharedStore } from '../engagement-shared-stores';
+import { SharedReportBaseStore } from 'shared/services/shared-report-base-store';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -62,7 +62,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
-              private _sharedStoreService: HighlightsSharedStoreService,
+              @Inject(HighlightsSharedStore) private _sharedStoreService: SharedReportBaseStore,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
@@ -80,7 +80,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _prepare(): void {
-    this._sharedStoreService.data$.status
+    this._sharedStoreService.status$
       .pipe(cancelOnDestroy(this))
       .subscribe(({ loading, error }) => {
         this._blockerMessage = null;
@@ -99,7 +99,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         }
       });
 
-    this._sharedStoreService.data$.report
+    this._sharedStoreService.report$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ current, compare }) => {
           this._tableData = [];
@@ -119,7 +119,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             }
           }
           this._firstTimeLoading = false;
-          this._isBusy = false;
         });
   }
   

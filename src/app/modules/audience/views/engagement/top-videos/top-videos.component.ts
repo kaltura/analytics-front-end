@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -13,6 +13,9 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { HighlightsSharedStore, TopVideosSharedStore } from '../engagement-shared-stores';
+import { SharedReportBaseStore } from 'shared/services/shared-report-base-store';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -24,7 +27,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     ReportService
   ]
 })
-export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
+export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy {
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
@@ -52,50 +55,33 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = KalturaReportType.topContentCreator;
-
+  
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
               private _dataConfigService: TopVideosDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              @Inject(TopVideosSharedStore) private _sharedStoreService: SharedReportBaseStore) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._prepare();
   }
   
   
-  ngOnInit() {
+  ngOnDestroy() {
   }
   
-  protected _loadReport(): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, this._dataConfig)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
+  protected _prepare(): void {
+    this._sharedStoreService.status$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(({ loading, error }) => {
+        this._blockerMessage = null;
+        this._isBusy = loading;
         
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-        return this._reportService.getReport(compareReportConfig, this._dataConfig)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          this._tableData = [];
-          this._compareTableData = [];
-          
-          if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table, compare); // handle table
-          }
-          this._isBusy = false;
-          this._firstTimeLoading = false;
-          this._compareFirstTimeLoading = false;
-        },
-        error => {
-          this._isBusy = false;
+        if (error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -105,7 +91,29 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
+        }
+      });
+    
+    this._sharedStoreService.report$
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(({ current, compare }) => {
+        this._tableData = [];
+        this._compareTableData = [];
+  
+        if (current.table && current.table.header && current.table.data) {
+          this._handleTable(current.table, compare); // handle table
+        }
+        this._firstTimeLoading = false;
+        this._compareFirstTimeLoading = false;
+      });
+  }
+  
+  protected _loadReport(): void {
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    const compareReportConfig = this._isCompareMode
+      ? { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order }
+      : null;
+    this._sharedStoreService.loadData(this._dataConfig, reportConfig, compareReportConfig);
   }
   
   protected _updateFilter(): void {
@@ -155,15 +163,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-    }
-  }
-  
-  public _onSortChanged(field: string): void {
-    const order = `-${field}`;
-    if (order !== this._order) {
-      this._logger.trace('Handle sort changed action by user', { order });
-      this._order = order;
-      this._loadReport();
     }
   }
 }

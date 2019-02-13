@@ -3,8 +3,7 @@ import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { HighlightsSharedStoreService } from './highlights-shared-store.service';
-import { TopVideosSharedStoreService } from './top-videos-shared-store.service';
+import { HighlightsSharedStore, provideSharedStore, TopVideosSharedStore } from './engagement-shared-stores';
 
 @Component({
   selector: 'app-engagement',
@@ -12,8 +11,8 @@ import { TopVideosSharedStoreService } from './top-videos-shared-store.service';
   styleUrls: ['./engagement.component.scss'],
   providers: [
     KalturaLogger.createLogger('EngagementComponent'),
-    HighlightsSharedStoreService,
-    TopVideosSharedStoreService,
+    provideSharedStore(HighlightsSharedStore),
+    provideSharedStore(TopVideosSharedStore),
   ]
 })
 export class EngagementComponent {
