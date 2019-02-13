@@ -15,7 +15,7 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 @Component({
   selector: 'app-syndication',
@@ -105,7 +105,7 @@ export class SyndicationComponent {
       order: this._order,
       objectIds: this._drillDown
     };
-  
+    
     if (this.entryId) {
       // TODO utilize entryId once supported by the server
     }
@@ -123,7 +123,7 @@ export class SyndicationComponent {
           order: null,
           objectIds: this._drillDown,
         };
-  
+        
         if (this.entryId) {
           // TODO utilize entryId once supported by the server
         }
@@ -168,9 +168,9 @@ export class SyndicationComponent {
   
   private _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-    this._refineFilterToServerValue(this._filter);
+    refineFilterToServerValue(this._refineFilter, this._filter);
     if (this._compareFilter) {
-      this._refineFilterToServerValue(this._compareFilter);
+      refineFilterToServerValue(this._refineFilter, this._compareFilter);
     }
   }
   
@@ -337,93 +337,5 @@ export class SyndicationComponent {
     this._drillDown = domain;
     this._pager.pageIndex = 1;
     this._loadReport();
-  }
-  
-  // TODO refactor after geo filter will be merged to utilize this function from a shared place
-  private _refineFilterToServerValue(filter: KalturaEndUserReportInputFilter): void {
-    let categories = [], mediaType = [], sourceType = [],
-      tags = [], owners = [], country = [], region = [], city = [];
-    
-    this._refineFilter.forEach(item => {
-      switch (item.type) {
-        case 'mediaType':
-          const value = item.value === 'Live'
-            ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
-            : item.value;
-          mediaType.push(value);
-          break;
-        case 'entrySources':
-          sourceType.push(item.value);
-          break;
-        case 'categories':
-          categories.push(item.value.id);
-          break;
-        case 'tags':
-          tags.push(item.value);
-          break;
-        case 'owners':
-          owners.push(item.value.id);
-          break;
-        case 'location':
-          if (item.value.country) {
-            country.push(item.value.country.map(({ name }) => name));
-          }
-          if (item.value.region) {
-            region.push(item.value.region.map(({ name }) => name));
-          }
-          if (item.value.city) {
-            city.push(item.value.city.map(({ name }) => name));
-          }
-          break;
-      }
-    });
-    
-    if (categories.length) {
-      filter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.categoriesIdsIn;
-    }
-    
-    if (mediaType.length) {
-      filter.mediaTypeIn = mediaType.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.mediaTypeIn;
-    }
-    
-    if (sourceType.length) {
-      filter.sourceTypeIn = sourceType.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.sourceTypeIn;
-    }
-    
-    if (owners.length) {
-      filter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.ownerIdsIn;
-    }
-    
-    if (country.length) {
-      filter.countryIn = country.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.countryIn;
-    }
-    
-    if (region.length) {
-      filter.regionIn = region.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.regionIn;
-    }
-    
-    if (city.length) {
-      filter.citiesIn = city.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.citiesIn;
-    }
-    
-    if (tags.length) {
-      filter.keywords = tags.join(analyticsConfig.valueSeparator);
-    } else {
-      delete filter.keywords;
-    }
   }
 }
