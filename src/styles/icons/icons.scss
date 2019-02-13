@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-operating_system:before {
+  content: "\e911";
+}
 .icon-globe:before {
   content: "\e910";
 }
