@@ -45,6 +45,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 
 @NgModule({
   imports: [
@@ -76,6 +77,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -104,6 +106,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
