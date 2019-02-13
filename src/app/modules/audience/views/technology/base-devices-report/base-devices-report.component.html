@@ -76,6 +76,13 @@
                       <i class="kIconglobe kBrowserIcon"></i>
                     </ng-template>
                   </ng-container>
+                  <ng-container *ngIf="_iconType === 'os'">
+                    <img class="kBrowserIcon" *ngIf="data['os_family'] | appOSImage;else defaultIcon"
+                         [src]="data['os_family'] | appOSImage"/>
+                    <ng-template #defaultIcon>
+                      <i class="icon-operating_system kBrowserIcon"></i>
+                    </ng-template>
+                  </ng-container>
                 </td>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0" [kTooltip]="data[col]" [showOnEllipsis]="true">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend' && col !== 'browser_family' && col !== 'os_family'">
