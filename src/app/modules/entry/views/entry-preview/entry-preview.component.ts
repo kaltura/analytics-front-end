@@ -77,6 +77,14 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   ngOnInit() {
     this.initPlayer();
 
+    /* -------  mockup data ------- */
+    let xData = [];
+    let yData = [];
+    for (let i = 0; i <= 100; i++) {
+      xData.push(i);
+      yData.push(Math.floor(Math.random() * i * 5) + 500);
+    }
+
     this._chartOptions = {
       backgroundColor: '#333333',
       grid: {
@@ -89,10 +97,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         show: false,
         boundaryGap : false,
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: xData
       },
       tooltip : {
-        trigger: 'item',
+        trigger: 'axis',
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
         borderWidth: 1,
@@ -101,10 +109,16 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         textStyle: {
           color: '#333333',
           fontWeight: 'bold'
+        },
+        axisPointer: {
+          lineStyle: {
+            color: '#ffffff'
+          },
+          z: 1
         }
       },
       yAxis: {
-        zlevel: 1,
+        zlevel: 0,
         type: 'value',
         position: 'right',
         axisLine: {
@@ -128,7 +142,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         }
       },
       series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: yData,
         symbol: 'circle',
         symbolSize: 8,
         type: 'line',
