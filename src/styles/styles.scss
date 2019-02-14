@@ -136,6 +136,10 @@ body{
             color: $kTertiary;
             font-size: 12px;
             margin-left: 24px;
+            margin-right: 8px;
+          }
+          span {
+            cursor: pointer;
           }
         }
         .kTableContainer{

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { HeatMapPoints, HeatMapStoreService } from './heat-map-store.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,8 +24,39 @@ export class HeatMapComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
   
+  @ViewChild('follower') _follower: ElementRef;
+  
+  @HostListener('mousemove', ['$event'])
+  public onMouseMove(event: MouseEvent): void {
+    if (!this._follower || !this._el) {
+      return;
+    }
+    const threshold = 2;
+    const follower = this._follower.nativeElement as HTMLElement;
+    const el = this._el.nativeElement as HTMLElement;
+    const rect = el.getClientRects()[0] as ClientRect;
+    const mouseX = Math.min(event.pageX - rect.left, el.offsetWidth) - threshold;
+    
+    if (mouseX < 0) {
+      mouseX = 0;
+    }
+    
+    this._renderer.setStyle(follower, 'display', 'block');
+    this._renderer.setStyle(follower, 'left', `${mouseX}px`);
+  }
+  
+  @HostListener('mouseleave')
+  public onMouseLeave(): void {
+    if (this._follower) {
+      this._renderer.setStyle(this._follower.nativeElement, 'display', 'none');
+    }
+  }
+  
+  
   constructor(private _heatMapStore: HeatMapStoreService,
-              private _translate: TranslateService) {
+              private _translate: TranslateService,
+              private _el: ElementRef,
+              private _renderer: Renderer2) {
   }
   
   ngOnInit() {
@@ -70,7 +101,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
       }, [])
       .map((item, index, array) => {
         item.width = `${item.count / array.length * 100}%`;
-  
+        
         const message = this._translate.instant(`app.entry.heatMap.tooltip.${item.plays > 2 ? 'n' : item.plays}`);
         item.tooltip = `
           <div class="kHeatMapTooltip">
@@ -78,7 +109,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
             <span class="kMessage">${message}</span>
           </div>
         `;
-
+        
         return item;
       });
   }

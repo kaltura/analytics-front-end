@@ -1,7 +1,9 @@
 <div class="kTable">
   <div class="kToggle">
-    <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-    <a (click)="_toggleTable()">{{(_showTable ? 'app.entry.hideDetails' : 'app.entry.viewDetails') | translate}}</a>
+    <span (click)="_toggleTable()">
+      <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+      <a>{{(_showTable ? 'app.entry.hideDetails' : 'app.entry.viewDetails') | translate}}</a>
+    </span>
   </div>
 
   <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">

@@ -13,8 +13,18 @@
   height: 100%;
   width: 100%;
   background-color: #dfe9ff;
+  position: relative;
 
   .kHeatMapItem {
     height: 100%;
   }
+}
+
+.kFollower {
+  display: none;
+  position: absolute;
+  background-color: #FFFFFF;
+  width: 1px;
+  height: 48px;
+  z-index: 2;
 }

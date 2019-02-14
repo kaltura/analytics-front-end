@@ -92,6 +92,7 @@ export class UserEngagementComponent extends EntryBase {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._tableData = [];
           if (compare) {
             this._handleCompare(report, compare);
           } else {
