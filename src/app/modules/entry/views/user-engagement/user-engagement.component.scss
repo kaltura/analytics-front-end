@@ -1,5 +1,16 @@
 @import '../../../../../styles/variables';
 
+.kTableHeader {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  justify-content: space-between;
+
+  .kTotalCount {
+    display: inline-block;
+    font-size: 15px;
+  }
+}
+
 .kNoResults {
   display: flex;
   width: 100%;

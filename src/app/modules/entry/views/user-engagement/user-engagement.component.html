@@ -5,7 +5,14 @@
   </div>
 
   <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+
+    <div class="kTableHeader">
+      <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: {'0': _totalCount} }}</span>
+      <div class="kSearch"></div>
+    </div>
+
     <p-table sortField="count_plays"
+             dataKey="name"
              [value]="_tableData"
              [customSort]="true"
              [defaultSortOrder]="-1"
@@ -13,6 +20,7 @@
              (sortFunction)="_onSortChanged($event)">
       <ng-template pTemplate="header">
         <tr>
+          <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
           <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : null">
             {{'app.entry.' + col | translate}}
             <p-sortIcon [field]="col" *ngIf="false"></p-sortIcon>
@@ -20,8 +28,14 @@
 
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-data>
+      <ng-template pTemplate="body" let-data let-expanded="expanded">
         <tr>
+          <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
+            <a [pRowToggler]="data">
+              <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
+                 style="font-size: 1.25em"></i>
+            </a>
+          </td>
           <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
             <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name'"
                   class="kTrend">
@@ -45,6 +59,13 @@
           <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
           <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
         </div>
+      </ng-template>
+      <ng-template let-profile pTemplate="rowexpansion">
+        <tr>
+          <td [attr.colspan]="_columns.length + 1" [ngStyle]="{'padding': 0}">
+            <div [ngStyle]="{background: 'blue', height: '100%'}">&nbsp;</div>
+          </td>
+        </tr>
       </ng-template>
     </p-table>
 

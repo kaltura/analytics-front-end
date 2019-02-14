@@ -161,6 +161,10 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   public _toggleTable(): void {
+    if (this._isBusy) {
+      return;
+    }
+
     this._showTable = !this._showTable;
     setTimeout(() => {
       this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });

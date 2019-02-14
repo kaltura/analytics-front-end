@@ -362,6 +362,7 @@
       "avg_time_viewed_tt": "Avg. View Time",
       "name": "Name",
       "avg_view_drop_off": "Avg. drop off",
+      "totalViewersCount": "{{0}} Viewers",
       "entryType": {
         "video": "Video",
         "audio": "Audio",
