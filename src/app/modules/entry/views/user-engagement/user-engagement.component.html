@@ -60,11 +60,10 @@
           <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
         </div>
       </ng-template>
-      <ng-template let-profile pTemplate="rowexpansion">
+      <ng-template let-data pTemplate="rowexpansion">
         <tr>
           <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-            <div [ngStyle]="{background: 'blue', height: '100%'}">&nbsp;</div>
-            <!--<h5 class="mini-loader"><span></span><span></span></h5>-->
+            <app-heat-map [userId]="data['name']"></app-heat-map>
           </td>
         </tr>
       </ng-template>

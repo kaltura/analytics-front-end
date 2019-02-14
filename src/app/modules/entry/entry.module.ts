@@ -17,6 +17,7 @@ import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltur
 import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
 import { UserEngagementComponent } from './views/user-engagement/user-engagement.component';
+import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.component';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { UserEngagementComponent } from './views/user-engagement/user-engagement
     EntryPreviewComponent,
     VideoPerformanceComponent,
     UserEngagementComponent,
+    HeatMapComponent,
   ],
   exports: [],
   providers: []

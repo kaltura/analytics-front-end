@@ -390,3 +390,22 @@ ui-carousel /deep/ {
   height: 24px;
   font-size: 24px;
 }
+
+.kHeatMapTooltip {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+
+  .kBullet {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+
+  .kMessage {
+    font-size: 15px;
+    font-weight: bold;
+  }
+}

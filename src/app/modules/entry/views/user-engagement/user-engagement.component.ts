@@ -12,12 +12,17 @@ import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
+import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 
 @Component({
   selector: 'app-user-engagement',
   templateUrl: './user-engagement.component.html',
   styleUrls: ['./user-engagement.component.scss'],
-  providers: [UserEngagementConfig, ReportService]
+  providers: [
+    HeatMapStoreService,
+    UserEngagementConfig,
+    ReportService
+  ]
 })
 export class UserEngagementComponent extends EntryBase {
   @Input() entryId = '';
@@ -52,6 +57,7 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   constructor(private _frameEventManager: FrameEventManagerService,
+              private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -111,6 +117,7 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
+    this._heatMapStore.clearCache();
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -118,6 +125,7 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   protected _updateFilter(): void {
+    this._heatMapStore.clearCache();
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
