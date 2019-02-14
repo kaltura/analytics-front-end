@@ -23,3 +23,8 @@
     color: $kGrayscale3;
   }
 }
+
+:host /deep/ .kRowExpansion {
+  padding: 0 !important;
+  text-align: center;
+}

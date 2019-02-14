@@ -62,8 +62,9 @@
       </ng-template>
       <ng-template let-profile pTemplate="rowexpansion">
         <tr>
-          <td [attr.colspan]="_columns.length + 1" [ngStyle]="{'padding': 0}">
+          <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
             <div [ngStyle]="{background: 'blue', height: '100%'}">&nbsp;</div>
+            <!--<h5 class="mini-loader"><span></span><span></span></h5>-->
           </td>
         </tr>
       </ng-template>
