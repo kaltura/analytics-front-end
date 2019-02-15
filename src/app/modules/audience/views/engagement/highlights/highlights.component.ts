@@ -38,7 +38,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = true;
-  public _chartDataLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _tableData: any[] = [];
@@ -98,11 +97,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           if (compare) {
             this._handleCompare(report, compare);
           } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.handleTable(report.table); // handle table
-            }
             if (report.graphs.length) {
-              this._chartDataLoaded = false;
+              this._handleTable(report.graphs); // handle table
               this._handleGraphs(report.graphs); // handle graphs
             }
           }
@@ -124,7 +120,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _updateFilter(): void {
-    this._chartDataLoaded = false;
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDay = this._dateFilter.startDay;
     this._filter.toDay = this._dateFilter.endDay;
@@ -179,15 +174,19 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         compare.graphs,
         this._dataConfig.graph,
         this._reportInterval,
-        () => this._chartDataLoaded = true
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
   }
   
-  private handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
+  private _handleTable(graphs: KalturaReportGraph[]): void {
+    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
+      graphs,
+      this._dataConfig.table,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval,
+    );
+    this._totalCount = totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }
@@ -202,7 +201,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._dataConfig.graph,
       { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
-      () => this._chartDataLoaded = true
     );
 
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
