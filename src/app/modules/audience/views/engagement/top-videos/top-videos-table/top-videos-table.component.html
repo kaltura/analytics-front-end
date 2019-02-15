@@ -27,7 +27,7 @@
                    (error)="holder.classList.add('error')">
             </div>
           </td>
-          <td [ngStyle]="{'width': '100%'}">
+          <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"
                  (click)="_drillDown(data['object_id'])"
                  (mouseleave)="_hideOverlay()"

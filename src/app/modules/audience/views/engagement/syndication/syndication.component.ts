@@ -259,7 +259,8 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
 
   public _openLink(data): void {
     if (data && data.referrer) {
-      window.open(data.referrer, '_blank');
+      const link = data.referrer.startsWith('http') ? data.referrer : `https://${data.referrer}`;
+      window.open(link, '_blank');
     }
   }
   
