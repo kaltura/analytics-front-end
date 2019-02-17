@@ -220,9 +220,10 @@ export class CompareService implements OnDestroy {
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
           icon: 'circle',
-          left: 'left',
-          bottom: 0,
-          padding: [16, 0, 0, 80],
+          itemWidth: 11,
+          left: 0,
+          bottom: 24,
+          padding: [0, 0, 0, 24],
           selectedMode: false,
           textStyle: {
             fontSize: 12,
@@ -320,9 +321,10 @@ export class CompareService implements OnDestroy {
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
           icon: 'circle',
-          left: 'left',
-          bottom: 0,
-          padding: [16, 0, 0, 80],
+          itemWidth: 11,
+          left: 0,
+          bottom: 24,
+          padding: [0, 0, 0, 24],
           selectedMode: false,
           textStyle: {
             fontSize: 12,
