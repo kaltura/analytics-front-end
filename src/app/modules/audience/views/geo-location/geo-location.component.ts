@@ -273,7 +273,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       let value = [coords[1], coords[0]];
       value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
-        name: this._drillDown.length === 0 ? data.country : this._drillDown.length === 1 ? data.region : data.city,
+        name: this._drillDown.length === 0
+          ? this._dataConfigService.getCountryName(data.country)
+          : this._drillDown.length === 1
+            ? data.region
+            : data.city,
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
