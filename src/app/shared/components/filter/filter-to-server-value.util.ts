@@ -1,4 +1,4 @@
-import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaESearchEntryFieldName, KalturaESearchEntryItem, KalturaESearchEntryOperator, KalturaESearchItemType, KalturaESearchOperatorType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
@@ -84,11 +84,22 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   } else {
     delete serverFilter.citiesIn;
   }
-  
+
   if (tags.length) {
-    serverFilter.keywords = tags.join(analyticsConfig.valueSeparator);
+    serverFilter.entryOperator = new KalturaESearchEntryOperator({
+        operator: KalturaESearchOperatorType.orOp,
+        searchItems: []
+      }
+    );
+    tags.forEach( tag => {
+      serverFilter.entryOperator.searchItems.push(new KalturaESearchEntryItem({
+        itemType: KalturaESearchItemType.exactMatch,
+        fieldName: KalturaESearchEntryFieldName.tags,
+        searchTerm: tag
+      }));
+    });
   } else {
-    delete serverFilter.keywords;
+    delete serverFilter.entryOperator;
   }
 }
 

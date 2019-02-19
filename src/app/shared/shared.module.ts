@@ -45,6 +45,7 @@ import { components as FilterComponentsList } from 'shared/components/filter/com
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
 import { TableModule } from 'primeng/table';
 
@@ -80,6 +81,7 @@ import { TableModule } from 'primeng/table';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -109,6 +111,7 @@ import { TableModule } from 'primeng/table';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
