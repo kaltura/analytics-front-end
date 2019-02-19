@@ -45,7 +45,9 @@
 
         <div class="kReportContainer kEntryPreview">
           <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
-          <app-user-engagement [dateFilter]="_dateFilter" [entryId]="_entryId"></app-user-engagement>
+          <app-user-engagement [dateFilter]="_dateFilter"
+                               [duration]="_duration"
+                               [entryId]="_entryId"></app-user-engagement>
         </div>
 
         <div class="kReportContainer">

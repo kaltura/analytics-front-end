@@ -18,6 +18,22 @@
   .kHeatMapItem {
     height: 100%;
   }
+
+  .kTimelineStart, .kTimelineEnd {
+    position: absolute;
+    bottom: 2px;
+    display: inline-block;
+    font-size: 12px;
+    color: #FFFFFF;
+  }
+
+  .kTimelineStart {
+    left: 2px;
+  }
+
+  .kTimelineEnd {
+    right: 2px;
+  }
 }
 
 .kFollower {

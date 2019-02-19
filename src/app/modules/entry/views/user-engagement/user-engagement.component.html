@@ -65,7 +65,7 @@
         <ng-template let-data pTemplate="rowexpansion">
           <tr>
             <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-              <app-heat-map [userId]="data['name']"></app-heat-map>
+              <app-heat-map [userId]="data['name']" [duration]="duration"></app-heat-map>
             </td>
           </tr>
         </ng-template>

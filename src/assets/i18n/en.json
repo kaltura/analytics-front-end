@@ -367,6 +367,7 @@
       "avg_completion_rate": "Avg. Completion Rate",
       "unique_known_users": "Unique Viewers",
       "heatMap": {
+        "duration": "Duration {{0}}",
         "tooltip": {
           "0": "Never saw this part",
           "1": "Saw this part once",

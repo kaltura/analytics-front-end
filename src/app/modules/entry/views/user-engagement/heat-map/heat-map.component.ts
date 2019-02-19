@@ -1,7 +1,8 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { HeatMapPoints, HeatMapStoreService } from './heat-map-store.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranslateService } from '@ngx-translate/core';
+import { ReportHelper } from 'shared/services';
 
 export interface HeatMapItem {
   color: string;
@@ -18,6 +19,7 @@ export interface HeatMapItem {
 })
 export class HeatMapComponent implements OnInit, OnDestroy {
   @Input() userId: string;
+  @Input() duration: number;
   
   private _heatMapColorScheme = ['#dfe9ff', '#487adf', '#2655b0', '#1d4694'];
   
@@ -31,7 +33,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
     if (!this._follower || !this._el) {
       return;
     }
-    const threshold = 2;
+    const threshold = 3;
     const follower = this._follower.nativeElement as HTMLElement;
     const el = this._el.nativeElement as HTMLElement;
     const rect = el.getClientRects()[0] as ClientRect;
@@ -43,6 +45,17 @@ export class HeatMapComponent implements OnInit, OnDestroy {
     
     this._renderer.setStyle(follower, 'display', 'block');
     this._renderer.setStyle(follower, 'left', `${mouseX}px`);
+    
+    setTimeout(() => { // let tooltip render on page
+      const durationTooltipElement = document.querySelector('.kHeatMapTooltipWrapper .kDuration');
+      if (durationTooltipElement) {
+        this._zone.runOutsideAngular(() => { // run outside of angular to prevent unwanted change detections
+          const progressPercent = Math.round((mouseX + threshold) / el.offsetWidth * 100) / 100;
+          const progressValue = ReportHelper.time(String(progressPercent * this.duration));
+          durationTooltipElement.innerHTML = this._translate.instant('app.entry.heatMap.duration', [progressValue]);
+        });
+      }
+    }, 0);
   }
   
   @HostListener('mouseleave')
@@ -56,6 +69,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
   constructor(private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _el: ElementRef,
+              private _zone: NgZone,
               private _renderer: Renderer2) {
   }
   
@@ -104,9 +118,12 @@ export class HeatMapComponent implements OnInit, OnDestroy {
         
         const message = this._translate.instant(`app.entry.heatMap.tooltip.${item.plays > 2 ? 'n' : item.plays}`);
         item.tooltip = `
-          <div class="kHeatMapTooltip">
-            <i class="kBullet" style="background-color: ${item.color}"></i>
-            <span class="kMessage">${message}</span>
+          <div class="kHeatMapTooltipWrapper">
+            <div class="kDuration"></div>
+            <div class="kHeatMapTooltip">
+              <i class="kBullet" style="background-color: ${item.color}"></i>
+              <span class="kMessage">${message}</span>
+            </div>
           </div>
         `;
         

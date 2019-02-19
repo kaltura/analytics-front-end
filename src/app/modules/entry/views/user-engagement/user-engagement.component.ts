@@ -28,6 +28,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 })
 export class UserEngagementComponent extends EntryBase {
   @Input() entryId = '';
+  @Input() duration = 0;
   
   private _order = '-count_plays';
   private _reportType = KalturaReportType.userTopContent;
