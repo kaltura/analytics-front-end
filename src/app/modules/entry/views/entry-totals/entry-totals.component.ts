@@ -72,7 +72,11 @@ export class EntryTotalsComponent extends EntryBase {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        if (compareReportConfig['objectIds__null']) {
+          delete compareReportConfig['objectIds__null'];
+        }
+        compareReportConfig.objectIds = this.entryId;
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))

@@ -20,3 +20,8 @@
     width: 100%;
   }
 }
+
+:host /deep/ kautocomplete .ui-autocomplete-multiple-container{
+  height: auto !important;
+}
+

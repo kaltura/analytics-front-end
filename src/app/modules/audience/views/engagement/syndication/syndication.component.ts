@@ -256,6 +256,13 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       this._loadReport({ table: null });
     }
   }
+
+  public _openLink(data): void {
+    if (data && data.referrer) {
+      const link = data.referrer.indexOf('http') === 0 ? data.referrer : `http://${data.referrer}`;
+      window.open(link, '_blank');
+    }
+  }
   
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });

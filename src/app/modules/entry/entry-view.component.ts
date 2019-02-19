@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import {
   BaseEntryGetAction,
-  KalturaBaseEntry,
   KalturaClient,
   KalturaDetachedResponseProfile,
   KalturaMediaEntry,
@@ -14,15 +13,20 @@ import {
   KalturaReportInterval,
   KalturaReportType,
   KalturaRequestOptions,
-  KalturaResponseProfileType, KalturaUser,
+  KalturaResponseProfileType,
+  KalturaUser,
   UserGetAction
-} from "kaltura-ngx-client";
-import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
-import {RefineFilter} from "shared/components/filter/filter.component";
-import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
+} from 'kaltura-ngx-client';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { ErrorsManagerService } from 'shared/services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-entry',
@@ -30,7 +34,8 @@ import { filter, map } from 'rxjs/operators';
   styleUrls: ['./entry-view.component.scss']
 })
 export class EntryViewComponent implements OnInit, OnDestroy {
-
+  public _loadingEntry = false;
+  public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
@@ -41,6 +46,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
+  public _blockerMessage: AreaBlockerMessage = null;
   public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
@@ -60,7 +66,9 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   constructor(private _router: Router,
               private route: ActivatedRoute,
               private zone: NgZone,
+              private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
+              private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService) { }
 
   ngOnInit() {
@@ -106,12 +114,15 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   private loadEntryDetails(): void {
+    this._loadingEntry = true;
+    this._blockerMessage = null;
+
     const request = new KalturaMultiRequest(
       new BaseEntryGetAction({ entryId: this._entryId })
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'name,mediaType'
+            fields: 'name,mediaType,createdAt'
           })
         }),
       new UserGetAction({ userId: null })
@@ -141,12 +152,23 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         ([entry, user]) => {
           this._entryName = entry.name;
           this._entryType = entry.mediaType;
+          this._creationDate = moment(entry.createdAt);
           this._owner = user.fullName;
           this.requestSubscription = null;
+          this._loadingEntry = false;
         },
         error => {
-          console.error("Failed to load entry name: " + error.message);
           this.requestSubscription = null;
+          this._loadingEntry = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this.loadEntryDetails();
+            }
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
 

@@ -217,10 +217,6 @@ export class EndUserStorageComponent implements OnInit {
         error => {
           this._isBusy = false;
           const actions = {
-            'logout': () => {
-              this._blockerMessage = null;
-              this._authService.logout();
-            },
             'close': () => {
               this._blockerMessage = null;
             },

@@ -99,8 +99,8 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           }
         }
       },
-
       visualMap: {
+        show: false,
         min: 0,
         max: 1000000,
         left: 16,

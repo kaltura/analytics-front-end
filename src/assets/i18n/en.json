@@ -45,7 +45,8 @@
       "location": "Location",
       "countriesSelected": "{0} Countries Selected",
       "regionsSelected": "{0} Regions Selected",
-      "citiesSelected": "{0} Cities Selected"
+      "citiesSelected": "{0} Cities Selected",
+      "filterCountries": "Filter Countries"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -110,6 +111,7 @@
       "last12m": "12 Months",
       "monthly": "Monthly",
       "daily": "Daily",
+      "sinceCreation": "Since Creation",
       "error": "'From Date' must be before 'To Date'",
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
@@ -335,7 +337,8 @@
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
-        "avg_view_drop_off_tt": "Drop Off Rate"
+        "avg_view_drop_off_tt": "Drop Off Rate",
+        "openLink": "Open page URL in a new browser tab"
       }
     },
     "entry": {

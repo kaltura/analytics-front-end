@@ -8,6 +8,9 @@
       <a (click)="_onDrillDown(null)">{{'app.engagement.topDomainsReport.topDomains' | translate}}</a>
       <span class="separator">/</span>
       <span>{{_drillDown}}</span>
+      <i class="kIconexternal_link kOpenLink"
+         [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"
+         (click)="_openLink({ referrer: _drillDown })"></i>
     </div>
   </div>
 
@@ -69,7 +72,7 @@
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('kIconfile-small')">
                   </div>
-                  <i *ngIf="_drillDown" class="kIconfile-small"></i>
+                  <i *ngIf="_drillDown" class="kIconexternal_link kOpenLink" (click)="_openLink(data)" [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"></i>
                 </td>
                 <td *ngFor="let col of _columns; let i = index"
                     [class.kHighlight]="i===0"

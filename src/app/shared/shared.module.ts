@@ -43,6 +43,9 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
+import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
 
 @NgModule({
@@ -64,6 +67,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     MultiSelectModule,
     TagsModule,
     InputHelperModule,
+    NgxEchartsModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -74,6 +78,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -90,6 +95,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
+    ImpressionsComponent,
     CompareMetricComponent,
     ...FilterComponentsList,
   ],
@@ -102,6 +108,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -118,6 +125,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    ImpressionsComponent,
     CompareMetricComponent,
     ...FilterComponentsList,
   ],

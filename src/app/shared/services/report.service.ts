@@ -7,6 +7,7 @@ import {
   KalturaReportGraph,
   KalturaReportInputFilter,
   KalturaReportInterval,
+  KalturaReportResponseOptions,
   KalturaReportTable,
   KalturaReportTotal,
   KalturaReportType,
@@ -78,19 +79,26 @@ export class ReportService implements OnDestroy {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
     const logger = this._logger.subLogger(`Report #${config.reportType}`);
     logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
-    
+
+    const responseOptions: KalturaReportResponseOptions = new KalturaReportResponseOptions({
+      delimiter: analyticsConfig.valueSeparator,
+      skipEmptyDates: analyticsConfig.skipEmptyBuckets
+    });
+
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         const getGraphs = new ReportGetGraphsAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         const getTable = new ReportGetTableAction({
@@ -98,7 +106,8 @@ export class ReportService implements OnDestroy {
           reportInputFilter: config.filter,
           pager: config.pager,
           order: config.order,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         if (this._querySubscription && preventMultipleRequests) {
@@ -494,7 +503,7 @@ export class ReportService implements OnDestroy {
   public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
     this._logger.trace('Convert table data to graph data', { graphIds: Object.keys(dataConfig.graph.fields) });
     return Object.keys(dataConfig.graph.fields).map(
-      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source},${val[field]};`, acc), '') })
+      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source}${analyticsConfig.valueSeparator}${val[field]};`, acc), '') })
     );
   }
 }

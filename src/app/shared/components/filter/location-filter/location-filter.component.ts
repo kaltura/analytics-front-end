@@ -31,7 +31,7 @@ export class LocationFilterComponent implements OnDestroy {
       this._selectedRegions = [];
       this._selectedCities = [];
     }
-  };
+  }
   
   @Input() set dateFilter(event: DateChangeEvent) {
     this._locationFilterService.updateDateFilter(event, () => {
