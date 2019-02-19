@@ -89,7 +89,7 @@ app-tags-filter, app-category-filter, app-country-filter {
   }
 
   .ui-autocomplete-multiple-container {
-    height: 34px !important;
+    min-height: 34px;
     padding: 1px 6px !important;
   }
 }
