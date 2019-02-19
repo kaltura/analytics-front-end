@@ -12,12 +12,17 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopContributorsDataConfig } from './top-contributors-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-top-contributors',
   templateUrl: './top-contributors.component.html',
   styleUrls: ['./top-contributors.component.scss'],
-  providers: [TopContributorsDataConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('ContributorsTopContributorsComponent'),
+    TopContributorsDataConfig,
+    ReportService,
+  ]
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
   private _order = '-added_entries';
@@ -49,7 +54,8 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopContributorsDataConfig) {
+              private _dataConfigService: TopContributorsDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -60,6 +66,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -91,35 +98,15 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -167,6 +154,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _onSortChanged(field: string): void {
     const order = `-${field}`;
     if (order !== this._order) {
+      this._logger.trace('Handle sort changed action by user', { order });
       this._order = order;
       this._loadReport();
     }

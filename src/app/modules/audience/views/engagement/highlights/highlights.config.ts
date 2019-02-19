@@ -32,7 +32,8 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.unique_known_users`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_view_drop_off': {
-            format: value => value * 100,
+            format: value => value,
+            parse: value => Math.round(parseFloat(value) * 100),
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`)}:&nbsp;${value}%</span>`
           },
@@ -58,7 +59,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           },
           'avg_view_drop_off': {
-            format: value => `${ReportHelper.numberOrZero(String(value * 100))} %`,
+            format: value => `${ReportHelper.numberOrZero(String(Math.round(value * 100)))} %`,
           },
         }
       },
@@ -85,7 +86,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             sortOrder: 3,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(String(value * 100)),
+            format: value => ReportHelper.numberOrZero(String(Math.round(value * 100))),
             units: value => '%',
             title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),

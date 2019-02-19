@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class DateFilterUtils {
 
   static getTimeZoneOffset(): number {
@@ -65,5 +67,15 @@ export class DateFilterUtils {
     const day: string = value.substring(6, 8);
     const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
     return `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
+  }
+  
+  static parseDateString(value: string): moment.Moment {
+    const day = Number(value.substring(6, 8));
+    
+    if (!day) {
+      value += '01'; // add the first day of a month to correct parsing
+    }
+  
+    return moment(value);
   }
 }

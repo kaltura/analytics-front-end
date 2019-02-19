@@ -15,12 +15,17 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { MiniTopContributorsConfig } from './mini-top-contributors.config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-mini-top-contributors',
   templateUrl: './mini-top-contributors.component.html',
   styleUrls: ['./mini-top-contributors.component.scss'],
-  providers: [MiniTopContributorsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('MiniTopContributorsComponent'),
+    MiniTopContributorsConfig,
+    ReportService,
+  ]
 })
 export class MiniTopContributorsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -57,13 +62,15 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: MiniTopContributorsConfig) {
+              private _dataConfigService: MiniTopContributorsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -96,35 +103,15 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -165,6 +152,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   }
   
   public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {

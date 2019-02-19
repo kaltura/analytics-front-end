@@ -7,6 +7,7 @@ import {
   KalturaReportGraph,
   KalturaReportInputFilter,
   KalturaReportInterval,
+  KalturaReportResponseOptions,
   KalturaReportTable,
   KalturaReportTotal,
   KalturaReportType,
@@ -28,6 +29,7 @@ import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { getPrimaryColor } from 'shared/utils/colors';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { catchError, timeout } from 'rxjs/operators';
 import { TimeoutError } from 'rxjs';
 
@@ -65,7 +67,9 @@ export class ReportService implements OnDestroy {
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
-              private _kalturaClient: KalturaClient) {
+              private _kalturaClient: KalturaClient,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('ReportService');
   }
   
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
@@ -75,19 +79,28 @@ export class ReportService implements OnDestroy {
   
   public getReport(config: ReportConfig, sections: ReportDataConfig, preventMultipleRequests = true): Observable<Report> {
     sections = sections === null ? { table: null } : sections; // table is mandatory section
-    
+    const logger = this._logger.subLogger(`Report #${config.reportType}`);
+    logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
+
+    const responseOptions: KalturaReportResponseOptions = new KalturaReportResponseOptions({
+      delimiter: analyticsConfig.valueSeparator,
+      skipEmptyDates: analyticsConfig.skipEmptyBuckets
+    });
+
     return Observable.create(
       observer => {
         const getTotal = new ReportGetTotalAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         const getGraphs = new ReportGetGraphsAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         const getTable = new ReportGetTableAction({
@@ -95,10 +108,12 @@ export class ReportService implements OnDestroy {
           reportInputFilter: config.filter,
           pager: config.pager,
           order: config.order,
-          objectIds: config.objectIds ? config.objectIds : null
+          objectIds: config.objectIds ? config.objectIds : null,
+          responseOptions
         });
         
         if (this._querySubscription && preventMultipleRequests) {
+          logger.info('Another report request is in progress, cancel previous one');
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
@@ -142,6 +157,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
+  
+                logger.info('Report has loaded');
+                
                 setTimeout(() => {
                   this._frameEventManager.publish(FrameEvents.UpdateLayout, {'height': document.getElementById('analyticsApp').getBoundingClientRect().height});
                 }, 0);
@@ -149,6 +167,7 @@ export class ReportService implements OnDestroy {
               this._querySubscription = null;
             },
             error => {
+              logger.error('Report loading has failed', error);
               observer.error(error);
               this._querySubscription = null;
             });
@@ -164,6 +183,8 @@ export class ReportService implements OnDestroy {
   }
   
   public exportToCsv(args: ReportGetUrlForReportAsCsvActionArgs): Observable<string> {
+    const logger = this._logger.subLogger(`Report #${args.reportType}`);
+    logger.info('Request for export csv link', { title: args.reportTitle });
     return Observable.create(
       observer => {
         const exportAction = new ReportGetUrlForReportAsCsvAction(args);
@@ -179,10 +200,12 @@ export class ReportService implements OnDestroy {
               observer.next(response);
               observer.complete();
               this._exportSubscription = null;
+              logger.info('Export request successful', { url: response });
             },
             error => {
               observer.error(error);
               this._exportSubscription = null;
+              logger.error('Failed to export csv', error);
             });
       });
   }
@@ -195,6 +218,8 @@ export class ReportService implements OnDestroy {
     // parse table columns
     let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
+  
+    this._logger.trace('Parse table data', { headers: table.header });
     
     // parse table data
     table.data.split(';').forEach(valuesString => {
@@ -222,7 +247,9 @@ export class ReportService implements OnDestroy {
   public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(analyticsConfig.valueSeparator);
-    
+  
+    this._logger.trace('Parse totals data', { headers: totals.header });
+
     totals.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
@@ -238,7 +265,7 @@ export class ReportService implements OnDestroy {
         });
       }
     });
-
+    
     return tabsData.sort((a, b) => {
       return a.sortOrder - b.sortOrder;
     });
@@ -246,9 +273,15 @@ export class ReportService implements OnDestroy {
   
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
+                     period: { from: string, to: string },
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function,
                      graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
+    this._logger.trace(
+      'Parse graph data',
+      () => ({ period, reportInterval, graphIds: graphs.map(({ id }) => id).join(', ') })
+    );
+    
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -259,17 +292,27 @@ export class ReportService implements OnDestroy {
       let yAxisData = [];
       const data = graph.data.split(';');
       
-      data.forEach((value) => {
+      data.forEach((value, index) => {
         if (value.length) {
           const label = value.split(analyticsConfig.valueSeparator)[0];
           let name = label;
-  
+          
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+          } else {
+            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
-          let val = parseFloat(value.split(analyticsConfig.valueSeparator)[1]);
+
+          let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
+  
+          if (config.fields[graph.id] && config.fields[graph.id].parse) {
+            val = config.fields[graph.id].parse(val);
+          } else {
+            val = parseFloat(val);
+          }
+
           if (isNaN(val)) {
             val = 0;
           }
@@ -277,7 +320,7 @@ export class ReportService implements OnDestroy {
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-  
+          
           xAxisData.push(name);
           yAxisData.push(val);
         }
@@ -456,17 +499,21 @@ export class ReportService implements OnDestroy {
   
   public getGraphDataFromTable(table: KalturaReportTable,
                                dataConfig: ReportDataConfig,
+                               period: { from: string, to: string },
                                reportInterval: KalturaReportInterval,
                                graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
+    this._logger.trace('Parse graph data from table data', { headers: table.header, period });
+
     const { tableData } = this.parseTableData(table, dataConfig.table);
     const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
-    return this.parseGraphs(graphData, dataConfig.graph, reportInterval, null, graphOptions);
+    return this.parseGraphs(graphData, dataConfig.graph, period, reportInterval, null, graphOptions);
   }
   
   
   public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
+    this._logger.trace('Convert table data to graph data', { graphIds: Object.keys(dataConfig.graph.fields) });
     return Object.keys(dataConfig.graph.fields).map(
-      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source},${val[field]};`, acc), '') })
+      field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source}${analyticsConfig.valueSeparator}${val[field]};`, acc), '') })
     );
   }
 }

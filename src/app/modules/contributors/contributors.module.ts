@@ -11,7 +11,7 @@ import { routing } from './contributors.routes';
 import { ContributorsComponent } from './contributors.component';
 
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule, InputHelperModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { topContributorsComponentsList } from './views/top-contributors/components-list';
@@ -32,6 +32,7 @@ import { PageScrollService } from 'ngx-page-scroll';
     NgxEchartsModule,
     RouterModule.forChild(routing),
     TagsModule,
+    InputHelperModule,
     PopupWidgetModule,
     CheckboxModule,
     PaginatorModule,

@@ -1,6 +1,7 @@
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
+  skipEmptyBuckets: boolean;
   kalturaServer?: {
       uri?: string;
       previewUIConf?: number;
@@ -57,8 +58,9 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '0.1',
-  valueSeparator: ',',
+  appVersion: '0.3',
+  valueSeparator: '|',
+  skipEmptyBuckets: false,
   kalturaServer: {
     warnRequestTimeout: 5e3, // 5 sec
     failRequestTimeout: 25e3, // 25 sec

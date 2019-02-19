@@ -20,7 +20,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.added_entries`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'added_msecs': {
-            format: value => value,
+            format: value => ReportHelper.minutes(value),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contributors.added_msecs`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
@@ -41,7 +41,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             title: this._translate.instant(`app.contributors.added_msecs`),
             tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             units: value => 'min',

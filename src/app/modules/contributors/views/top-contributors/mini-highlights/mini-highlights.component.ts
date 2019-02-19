@@ -21,12 +21,17 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-mini-highlights',
   templateUrl: './mini-highlights.component.html',
   styleUrls: ['./mini-highlights.component.scss'],
-  providers: [MiniHighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('ContributorsMiniHighlightsComponent'),
+    MiniHighlightsConfig,
+    ReportService,
+  ]
 })
 export class ContributorsMiniHighlightsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -59,13 +64,15 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: MiniHighlightsConfig) {
+              private _dataConfigService: MiniHighlightsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -99,35 +106,15 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -168,6 +155,7 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
   }
   
   public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {

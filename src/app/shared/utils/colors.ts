@@ -18,7 +18,7 @@ export function getPrimaryColor(type: string = 'default'): string {
 
 export function getSecondaryColor(type: string = 'default'): string {
   const palette = palettes[type] ? type : 'default';
-  return palettes[palette][2];
+  return palettes[palette][1];
 }
 
 export function getColorPercent(percent: number, type: string = 'default'): string {

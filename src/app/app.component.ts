@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, enableProdMode, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -9,6 +9,7 @@ import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
+import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -38,15 +39,21 @@ export class AppComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient) {
-    this._initApp();
-  
-    this._frameEventManager.listen(FrameEvents.Init)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(config => this._initApp(config));
+    if (window['analyticsConfig']) { // standalone
+      this._initApp(window['analyticsConfig']);
+    } else { // hosted
+      this._frameEventManager.listen(FrameEvents.Init)
+        .pipe(cancelOnDestroy(this), filter(Boolean))
+        .subscribe(config => this._initApp(config, true));
+    }
     
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ url }) => this._router.navigateByUrl(this.mapRoutes(url)));
+  
+    this._frameEventManager.listen(FrameEvents.SetLogsLevel)
+      .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
+      .subscribe(({ level }) => _logger.setOptions({ level }));
   }
 
   ngOnInit() {
@@ -75,17 +82,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
-  private _initApp(configuration = null): void {
-    let config  = null;
-    if (!configuration && !window['analyticsConfig']) {
+  private _initApp(config = null, hosted = false): void {
+    if (!config) {
       return;
     }
-    if (!configuration && window['analyticsConfig']) { // stand alone
-      config = window['analyticsConfig'];
+
+    if (environment.production) {
+      enableProdMode();
+      console.log(`Running Analytics version '${analyticsConfig.appVersion}' (Production mode)`);
     } else {
-      config = configuration;
-      this.hosted = true; // hosted;
+      console.log(`Running Analytics version '${analyticsConfig.appVersion}' (Development mode)`);
     }
+
+    this.hosted = hosted; // hosted;
+    
     analyticsConfig.ks = config.ks;
     analyticsConfig.pid = config.pid;
     analyticsConfig.locale = config.locale;

@@ -7,8 +7,16 @@
   font-size: 13px;
   font-weight: 700;
 }
+
 .kMini{
   height: 100%;
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0px;
+    }
+  }
   .kDetails {
     margin-left: auto;
     white-space: nowrap;

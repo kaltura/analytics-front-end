@@ -5,8 +5,10 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString(navigator.language, { maximumSignificantDigits: 20 });
   }
   
-  static percents(x: any): string {
-    return x.length ? this.numberWithCommas((parseFloat(x) * 100).toFixed(2)) + '%' : 'N/A';
+  static percents(x: any, round = true): string {
+    x = parseFloat(x) * 100;
+    x = round ? Math.round(x) : x;
+    return !isNaN(x) ? this.numberWithCommas(x.toFixed(1)) + '%' : 'N/A';
   }
   
   static numberOrNA(x: any): string {
@@ -20,10 +22,17 @@ export class ReportHelper {
     } else {
       x = x % 1 === 0
         ? round ? Math.round(x) : x
-        : x.toFixed(2);
+        : x.toFixed(1);
       
       return ReportHelper.numberWithCommas(x);
     }
+  }
+  
+  static minutes(x: number): number {
+    x = typeof x === 'number' ? x : parseFloat(x);
+    x = !isNaN(x) ? x : 0;
+  
+    return x / 60000;
   }
 
   static integerOrZero(x: any, round = true): string {
@@ -87,29 +96,6 @@ export class ReportHelper {
         const perc = parseFloat(value) * 100;
         result = this.numberWithCommas(perc) + '%';
         break;
-      /*
-            case 'sum_time_viewed':
-            case 'avg_time_viewed':
-              // format as HH:MM:SS
-              return KTimeUtil.formatTime2(Number(value) * 60);
-              break;
-            case 'event_date_id':
-              return new Date(Number(value) * 1000).toDatestring();
-              break;
-      
-            case 'entry_media_source_name':
-              return getLocalised('sourceTypes', value);
-              break;
-      
-            case 'country':
-              return getLocalised('map', value);
-              break;
-            case 'date_id':
-              return FormattingUtil.formatFullDatestring(value);
-              break;
-            case 'month_id':
-              return FormattingUtil.formatMonthstring(value);
-              break;*/
       case 'bandwidth_consumption':
       case 'storage_used':
       case 'used_storage':

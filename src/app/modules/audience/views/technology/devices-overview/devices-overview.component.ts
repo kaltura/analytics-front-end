@@ -13,6 +13,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface SummaryItem {
   key: string;
@@ -31,7 +32,11 @@ export interface Summary {
   selector: 'app-devices-overview',
   templateUrl: './devices-overview.component.html',
   styleUrls: ['./devices-overview.component.scss'],
-  providers: [DevicesOverviewConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('DevicesOverviewComponent'),
+    DevicesOverviewConfig,
+    ReportService,
+  ]
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
@@ -60,7 +65,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     selectedMetrics: string
   }>();
   
-  private _fractions = 2;
+  private _fractions = 1;
   private _columns: string[] = [];
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   
@@ -89,7 +94,8 @@ export class DevicesOverviewComponent implements OnDestroy {
               private _translate: TranslateService,
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService,
-              private _platformsConfigService: DevicesOverviewConfig) {
+              private _platformsConfigService: DevicesOverviewConfig,
+              private _logger: KalturaLogger) {
     this._dataConfig = _platformsConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this.metricChanged.emit(this._selectedMetrics);
@@ -140,35 +146,15 @@ export class DevicesOverviewComponent implements OnDestroy {
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this.loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this.loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   
     this._loadTrendData();
@@ -446,6 +432,7 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   public _onSelectionChange(updateGraph = true): void {
+    this._logger.trace('Handle device filter apply action by user', { selectedFilters: this._selectedValues, updateGraph });
     if (updateGraph) {
       this._updateGraphStyle();
     }
@@ -454,12 +441,14 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
     this.metricChanged.emit(this._selectedMetrics);
     this._updateGraphStyle();
   }
   
   public resetDeviceFilters(emit = false, updateGraph = true): void {
+    this._logger.trace('Handle reset device filters action by user', { emit, updateGraph });
     this._selectedValues = [];
     
     if (updateGraph) {

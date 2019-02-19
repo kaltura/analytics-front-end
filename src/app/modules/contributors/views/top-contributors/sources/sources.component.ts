@@ -11,12 +11,17 @@ import { SourcesDataConfig } from './sources-data.config';
 import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-sources',
   templateUrl: './sources.component.html',
   styleUrls: ['./sources.component.scss'],
-  providers: [ReportService, SourcesDataConfig]
+  providers: [
+    KalturaLogger.createLogger('ContributorsSourcesComponent'),
+    ReportService,
+    SourcesDataConfig,
+  ]
 })
 export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent {
   private _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -47,7 +52,8 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
               private _trendService: TrendService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: SourcesDataConfig) {
+              private _dataConfigService: SourcesDataConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -55,6 +61,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -91,35 +98,15 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -141,6 +128,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   }
   
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
   }
 
@@ -172,6 +160,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       this._barChartData = this._reportService.getGraphDataFromTable(
         table,
         this._dataConfig,
+        { from: this._filter.fromDay, to: this._filter.toDay },
         this._reportInterval,
         graphOptions
         ).barChartData;

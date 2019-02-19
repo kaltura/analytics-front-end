@@ -7,6 +7,11 @@
   font-size: 13px;
   font-weight: 700;
 }
+
+.kFilters {
+  height: 93px !important;
+}
+
 .kMini{
   height: 100%;
   .kDetails {
@@ -127,13 +132,13 @@
     .kReportRowDetails {
       display: flex;
       flex-direction: column;
-      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
 
       .kTitle {
         color: $kGrayscale1;
         font-weight: bold;
         margin-bottom: 8px;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }

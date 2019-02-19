@@ -17,6 +17,12 @@
   font-size: 24px;
 }
 
+.kOpenLink {
+  color: $kGrayscale3;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 .kDomainIcon {
   overflow: hidden;
   position: relative;
@@ -46,4 +52,9 @@
 
 td span {
   white-space: nowrap;
+}
+
+.kTitle{
+  width: auto !important;
+  padding-right: 0px !important;
 }

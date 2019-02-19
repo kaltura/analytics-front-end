@@ -13,12 +13,17 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-contributors-highlights',
   templateUrl: './highlights.component.html',
   styleUrls: ['./highlights.component.scss'],
-  providers: [HighlightsConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('ContributorsHighlightsComponent'),
+    HighlightsConfig,
+    ReportService,
+  ]
 })
 export class ContributorsHighlightsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -53,7 +58,8 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: HighlightsConfig) {
+              private _dataConfigService: HighlightsConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -61,6 +67,7 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -102,35 +109,15 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -177,6 +164,7 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );
@@ -185,6 +173,7 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
   }
   
   public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
   }
 }

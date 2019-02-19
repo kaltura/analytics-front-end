@@ -16,12 +16,17 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
   templateUrl: './mini-top-videos.component.html',
   styleUrls: ['./mini-top-videos.component.scss'],
-  providers: [MiniTopVideosConfig, ReportService]
+  providers: [
+    KalturaLogger.createLogger('MiniTopVideosComponent'),
+    MiniTopVideosConfig,
+    ReportService,
+  ]
 })
 export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
@@ -30,8 +35,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-count_plays';
-  private _reportType = KalturaReportType.topContent;
+  private _order = '-engagement_ranking';
+  private _reportType = KalturaReportType.topContentCreator;
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-top-videos';
@@ -62,7 +67,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: MiniTopVideosConfig) {
+              private _dataConfigService: MiniTopVideosConfig,
+              private _logger: KalturaLogger) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -95,35 +101,15 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -145,6 +131,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -172,9 +159,11 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   }
   
   public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {
+        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop });
         this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
       }
     } else {

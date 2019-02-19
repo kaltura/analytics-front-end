@@ -26,7 +26,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
           },
           'total_msecs': {
-            format: value => Math.round(value / 60000),
+            format: value => Math.round(ReportHelper.minutes(value)),
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
           },
@@ -71,15 +71,15 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             sortOrder: 1
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 8
           },
           'deleted_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 9
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(value / 60000, false),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 7,
           },
         }
@@ -90,20 +90,17 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
           'total_storage_mb': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.total_storage_mb`),
-            tooltip: this._translate.instant(`app.bandwidth.total_storage_mb_tt`),
             units: value => fileSize(value).units,
             sortOrder: 1
           },
           'total_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.total_entries`),
-            tooltip: this._translate.instant(`app.bandwidth.total_entries_tt`),
             sortOrder: 2,
           },
           'total_msecs': {
-            format: value => ReportHelper.numberOrZero(Math.round(value / 60000)),
+            format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.minutes(value))),
             title: this._translate.instant(`app.bandwidth.total_msecs`),
-            tooltip: this._translate.instant(`app.bandwidth.total_msecs_tt`),
             units: value => 'Min',
             sortOrder: 3,
           },

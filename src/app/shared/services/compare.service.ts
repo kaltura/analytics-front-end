@@ -8,14 +8,28 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import * as moment from 'moment';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CompareService implements OnDestroy {
   constructor(private _translate: TranslateService,
-              private _trendService: TrendService) {
+              private _trendService: TrendService,
+              private _logger: KalturaLogger) {
+    this._logger = _logger.subLogger('CompareService');
   }
 
   ngOnDestroy() {
+  }
+  
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
+    const relevantDate = moment(date).subtract(datesDiff);
+    const relevantLabelString = reportInterval === KalturaReportInterval.days
+      ? relevantDate.format('YYYYMMDD')
+      : relevantDate.format('YYYYMM');
+  
+    const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
+    return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
 
   public compareGraphData(currentPeriod: { from: string, to: string },
@@ -28,6 +42,7 @@ export class CompareService implements OnDestroy {
                           graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
+    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
 
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
@@ -38,6 +53,11 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
     }
+  
+    this._logger.trace(
+      'Compare graph data',
+      () => ({ currentPeriod, comparePeriod, reportInterval, graphIds: current.map(({ id }) => id).join(', ') })
+    );
 
     current.forEach((graph: KalturaReportGraph, i) => {
       if (!config.fields[graph.id] || !graph.data) {
@@ -55,33 +75,55 @@ export class CompareService implements OnDestroy {
       currentData.forEach((currentValue, j) => {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
-          const compareValue = compareData[j] || `N/A${analyticsConfig.valueSeparator}0`;
+          let compareValue;
+          
+          if (!config.fields[graph.id].nonDateGraphLabel) {
+            compareValue = this._getCompareValue(
+              compareData,
+              DateFilterUtils.parseDateString(currentLabel),
+              datesDiff,
+              reportInterval
+            ) || '0';
+          } else {
+            compareValue = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel) || '0';
+          }
+          
           let currentName = currentLabel;
 
           if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
               : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+          } else {
+            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
           
-          let currentVal = Math.ceil(parseFloat(currentValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
-          let compareVal = Math.ceil(parseFloat(compareValue.split(analyticsConfig.valueSeparator)[1])); // publisher storage report should round up graph values
+          let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
+  
+          if (config.fields[graph.id] && config.fields[graph.id].parse) {
+            currentVal = config.fields[graph.id].parse(currentVal);
+            compareValue = config.fields[graph.id].parse(compareValue);
+          } else {
+            currentVal = parseFloat(currentVal);
+            compareValue = parseFloat(compareValue);
+          }
+  
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
 
-          if (isNaN(compareVal)) {
-            compareVal = 0;
+          if (isNaN(compareValue)) {
+            compareValue = 0;
           }
 
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
-            compareVal = config.fields[graph.id].format(compareVal);
+            compareValue = config.fields[graph.id].format(compareValue);
           }
 
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
-          yAxisCompareData.push(compareVal);
+          yAxisCompareData.push(compareValue);
         }
       });
   
@@ -178,9 +220,10 @@ export class CompareService implements OnDestroy {
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
           icon: 'circle',
-          left: 'left',
-          bottom: 0,
-          padding: [16, 0, 0, 80],
+          itemWidth: 11,
+          left: 0,
+          bottom: 24,
+          padding: [0, 0, 0, 24],
           selectedMode: false,
           textStyle: {
             fontSize: 12,
@@ -278,9 +321,10 @@ export class CompareService implements OnDestroy {
         legend: {
           data: [currentPeriodTitle, comparePeriodTitle],
           icon: 'circle',
-          left: 'left',
-          bottom: 0,
-          padding: [16, 0, 0, 80],
+          itemWidth: 11,
+          left: 0,
+          bottom: 24,
+          padding: [0, 0, 0, 24],
           selectedMode: false,
           textStyle: {
             fontSize: 12,
@@ -316,10 +360,13 @@ export class CompareService implements OnDestroy {
                           current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig,
+                          reportInterval: KalturaReportInterval,
                           dataKey: string = ''): { columns: string[], tableData: { [key: string]: string }[] } {
     if (!current.header || !current.data) {
       return { columns: [], tableData: [] };
     }
+  
+    this._logger.trace('Parse table data', { headers: current.header });
 
     // parse table columns
     let columns = current.header.toLowerCase().split(analyticsConfig.valueSeparator);
@@ -331,23 +378,32 @@ export class CompareService implements OnDestroy {
 
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
+    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
 
-    currentData.forEach((valuesString, i) => {
+    currentData.forEach(valuesString => {
       let compareValuesString = null;
+      let relevantLabelString;
       if (dataKey.length) {
         const dataIndex = columns.indexOf(dataKey.toLowerCase());
-        const key = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
-        if (key && key.length) {
-          compareData.some(compareRow => {
-            if (compareRow.split(analyticsConfig.valueSeparator)[dataIndex] === key) {
-              compareValuesString = compareRow;
-              return true;
-            }
-          });
-        }
+        relevantLabelString = valuesString.split(analyticsConfig.valueSeparator)[dataIndex];
       } else {
-        compareValuesString = compareData[i];
+        const currentLabel = (valuesString || '').split(analyticsConfig.valueSeparator)[0];
+        const currentLabelDate = currentLabel ? DateFilterUtils.parseDateString(currentLabel) : null;
+        
+        if (currentLabelDate && currentLabelDate.isValid()) {
+          const relevantDate = moment(currentLabelDate).subtract(datesDiff);
+          relevantLabelString = reportInterval === KalturaReportInterval.days
+            ? relevantDate.format('YYYYMMDD')
+            : relevantDate.format('YYYYMM');
+        } else {
+          relevantLabelString = currentLabel;
+        }
       }
+  
+      compareValuesString = relevantLabelString
+        ? compareData.find(item => item.split(analyticsConfig.valueSeparator)[0] === relevantLabelString)
+        : null;
+
       if (valuesString.length) {
         let data = {};
         const currentValues = valuesString.split(analyticsConfig.valueSeparator);
@@ -406,6 +462,8 @@ export class CompareService implements OnDestroy {
     if (!current.header || !current.data) {
       return [];
     }
+  
+    this._logger.trace('Parse totals data', { headers: current.header });
 
     const tabsData = [];
     const data = current.data.split(analyticsConfig.valueSeparator);

@@ -12,12 +12,17 @@ import { UsersDataConfig } from './users-data.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TrendService } from 'shared/services/trend.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'app-engagement-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  providers: [ReportService, UsersDataConfig]
+  providers: [
+    KalturaLogger.createLogger('EngagementUsersComponent'),
+    ReportService,
+    UsersDataConfig,
+  ]
 })
 export class EngagementUsersComponent extends EngagementBaseReportComponent {
   private _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -93,35 +98,15 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -143,6 +128,7 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -151,7 +137,12 @@ export class EngagementUsersComponent extends EngagementBaseReportComponent {
   
   private _handleGraph(table: KalturaReportTable): void {
     const graphs = [{ id: 'default', data: table.data } as KalturaReportGraph];
-    const { barChartData } = this._reportService.parseGraphs(graphs, this._dataConfig.graph, this._reportInterval);
+    const { barChartData } = this._reportService.parseGraphs(
+      graphs,
+      this._dataConfig.graph,
+      { from: this._filter.fromDay, to: this._filter.toDay },
+      this._reportInterval
+    );
     this._barChartData = barChartData['default'];
   
     this._totalUsers = this._barChartData.series[0].data.length

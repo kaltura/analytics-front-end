@@ -26,7 +26,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'added_msecs': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             title: this._translate.instant(`app.contributors.added_msecs`),
             tooltip: this._translate.instant(`app.contributors.added_msecs_tt`),
             sortOrder: 3,
