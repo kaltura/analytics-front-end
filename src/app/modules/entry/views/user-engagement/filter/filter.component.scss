@@ -32,7 +32,7 @@
 
 :host /deep/ {
   .ui-autocomplete-multiple-container {
-    width: 200px;
+    width: 200px !important;
     min-height: 34px;
     padding: 3px 6px !important;
   }

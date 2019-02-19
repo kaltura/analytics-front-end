@@ -9,6 +9,7 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
   selector: 'app-engagement-users-filter',
   template: `
     <kAutoComplete #searchUsers
+                   appendTo="body"
                    suggestionItemField="item"
                    suggestionLabelField="name"
                    field="screenName"

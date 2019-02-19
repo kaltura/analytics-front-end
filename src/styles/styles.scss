@@ -413,3 +413,16 @@ ui-carousel /deep/ {
     font-weight: bold;
   }
 }
+
+.ui-autocomplete-panel {
+  width: 200px !important;
+
+  .ui-autocomplete-list-item {
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:hover {
+      background-color: $kGrayscale6;
+    }
+  }
+}
