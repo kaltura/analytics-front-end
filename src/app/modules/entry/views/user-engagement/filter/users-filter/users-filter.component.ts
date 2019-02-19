@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { KalturaClient, KalturaFilterPager, KalturaUser, KalturaUserFilter, UserListAction } from 'kaltura-ngx-client';
 import { Observable, Subject, Unsubscribable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,6 +21,11 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
   `,
 })
 export class UsersFilterComponent implements OnDestroy {
+  @Input() set selectedUsers(value: KalturaUser[]) {
+    if (Array.isArray(value)) {
+      this._selectedUsers = value;
+    }
+  }
   @Output() itemSelected = new EventEmitter();
   
   @ViewChild('searchUsers') _autoComplete: AutoComplete = null;

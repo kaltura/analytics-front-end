@@ -14,6 +14,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-user-engagement',
@@ -200,7 +201,22 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {
-    console.warn(event);
-    this._refineFilter = event;
+    const userIds = event.length ? event.map(({ value }) => value.id).join(analyticsConfig.valueSeparator) : null;
+    
+    if (userIds) {
+      this._filter.userIds = userIds;
+  
+      if (this._compareFilter) {
+        this._compareFilter.userIds = userIds;
+      }
+    } else {
+      delete this._filter.userIds;
+      
+      if (this._compareFilter) {
+        delete this._compareFilter.userIds;
+      }
+    }
+  
+    this._loadReport();
   }
 }
