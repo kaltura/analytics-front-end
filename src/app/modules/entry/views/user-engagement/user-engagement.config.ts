@@ -20,8 +20,8 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'avg_view_drop_off': {
-            format: value => Math.round(parseFloat(value) * 100),
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
             units: () => '%',
           }
         }
