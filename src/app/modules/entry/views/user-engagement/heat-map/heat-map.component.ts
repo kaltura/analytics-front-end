@@ -35,7 +35,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
     const follower = this._follower.nativeElement as HTMLElement;
     const el = this._el.nativeElement as HTMLElement;
     const rect = el.getClientRects()[0] as ClientRect;
-    const mouseX = Math.min(event.pageX - rect.left, el.offsetWidth) - threshold;
+    let mouseX = Math.min(event.pageX - rect.left, el.offsetWidth) - threshold;
     
     if (mouseX < 0) {
       mouseX = 0;
