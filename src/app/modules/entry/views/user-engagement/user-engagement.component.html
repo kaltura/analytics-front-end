@@ -7,11 +7,10 @@
   </div>
 
   <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-
-    <div class="kTableHeader">
-      <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: {'0': _totalCount} }}</span>
-      <div class="kSearch"></div>
-    </div>
+    <app-user-engagement-filter [totalCount]="_totalCount"
+                                [dateFilter]="_dateFilter"
+                                [selectedFilters]="_selectedRefineFilters"
+                                (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
     <p-table sortField="count_plays"
              dataKey="name"

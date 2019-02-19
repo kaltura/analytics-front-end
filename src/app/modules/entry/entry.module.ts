@@ -18,6 +18,9 @@ import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
 import { UserEngagementComponent } from './views/user-engagement/user-engagement.component';
 import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.component';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { UserEngagementFilterComponent } from './views/user-engagement/filter/filter.component';
+import { UsersFilterComponent } from './views/user-engagement/filter/users-filter/users-filter.component';
 
 @NgModule({
   imports: [
@@ -34,6 +37,7 @@ import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.comp
     TooltipModule,
     NgxEchartsModule,
     RouterModule.forChild(routing),
+    AutoCompleteModule,
   ],
   declarations: [
     EntryViewComponent,
@@ -42,6 +46,8 @@ import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.comp
     VideoPerformanceComponent,
     UserEngagementComponent,
     HeatMapComponent,
+    UsersFilterComponent,
+    UserEngagementFilterComponent,
   ],
   exports: [],
   providers: []

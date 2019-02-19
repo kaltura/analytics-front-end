@@ -166,6 +166,7 @@ export class FilterComponent {
       'owners': [],
       'location': [],
       'countries': [],
+      'users': [],
     };
   }
   
@@ -187,6 +188,7 @@ export class FilterComponent {
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;
           return { value, type, label: value, tooltip };
         case 'owners':
+        case 'users':
           const user = value as KalturaUser;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;

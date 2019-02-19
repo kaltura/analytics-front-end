@@ -13,6 +13,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-user-engagement',
@@ -34,6 +35,7 @@ export class UserEngagementComponent extends EntryBase {
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
   
+  public _selectedRefineFilters: RefineFilter = null;
   public _columns: string[] = [];
   public _totalCount = 0;
   public _tableData: any[] = [];
@@ -195,5 +197,10 @@ export class UserEngagementComponent extends EntryBase {
         this._loadReport({ table: null });
       }
     }
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    console.warn(event);
+    this._refineFilter = event;
   }
 }
