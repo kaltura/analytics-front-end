@@ -361,8 +361,10 @@
       "count_loads_tt": "Player Impressions",
       "avg_time_viewed_tt": "Avg. View Time",
       "name": "Name",
-      "avg_view_drop_off": "Avg. drop off",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
       "totalViewersCount": "{{0}} Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "unique_known_users": "Unique Viewers",
       "heatMap": {
         "tooltip": {
           "0": "Never saw this part",
