@@ -7,7 +7,7 @@ import {
   KalturaReportInterval
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
+import {AuthService, ErrorsManagerService, ReportService} from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,15 +44,17 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   });
 
   private playerInstance: any = null;
-  public _isPlaying = false;
   private playerInitialized = false;
 
   public _playerConfig: any = {};
   public serverUri = getKalturaServerUri();
   public _playerPlayed = false;
   public _playProgress = 0;
+  public _duration = 0;
+  public _currentTime = 0;
 
   public _chartOptions = {};
+  public _showHeatmap = false;
 
   @ViewChild('player') player: KalturaPlayerComponent;
 
@@ -75,7 +77,16 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   ngOnInit() {
     this.initPlayer();
 
+    /* -------  mockup data ------- */
+    let xData = [];
+    let yData = [];
+    for (let i = 0; i <= 100; i++) {
+      xData.push(i);
+      yData.push(Math.floor(Math.random() * i * 5) + 500);
+    }
+
     this._chartOptions = {
+      backgroundColor: '#333333',
       grid: {
         left: 0,
         right: 0,
@@ -86,19 +97,28 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         show: false,
         boundaryGap : false,
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: xData
       },
       tooltip : {
         trigger: 'axis',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        padding: 8,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#333333',
+          fontWeight: 'bold'
+        },
         axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985'
-          }
+          lineStyle: {
+            color: '#ffffff'
+          },
+          z: 1
         }
       },
       yAxis: {
-        zlevel: 1,
+        zlevel: 0,
         type: 'value',
         position: 'right',
         axisLine: {
@@ -108,19 +128,29 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           show: false
         },
         splitLine: {
-          show: false
+          show: true,
+          lineStyle: {
+            color: '#535353'
+          }
         },
         axisLabel: {
           inside: true,
           margin: 4,
-          verticalAlign: 'bottom',
-          color: '#ffffff'
+          verticalAlign: 'top',
+          padding: [8, 0, 0, 0],
+          color: '#FFFFFF'
         }
       },
       series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: yData,
+        symbol: 'circle',
+        symbolSize: 8,
         type: 'line',
-        areaStyle: {}
+        color: '#487adf',
+        lineStyle: {
+          color: '#487adf',
+          width: 2
+        }
       }]
     };
   }
@@ -149,6 +179,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
   }
 
+  public toggleHeatmap(): void {
+    this._showHeatmap = !this._showHeatmap;
+  }
+
 
   /* ------------------------ start of player logic --------------------------*/
 
@@ -160,9 +194,40 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         pid: analyticsConfig.pid,
         entryid: this.entryId,
         flashvars: {
-          'controlBarContainer': {'plugin': false},
-          'largePlayBtn': {'plugin': false},
-          'ks': analyticsConfig.ks
+          'ks': analyticsConfig.ks,
+          "IframeCustomPluginCss1" : "../assets/player.css",
+          "controlBarContainer": {
+            "plugin": true,
+            "hover": false
+          },
+          "durationLabel": {
+            "plugin": false
+          },
+          "currentTimeLabel": {
+            "plugin": false
+          },
+          "fullScreenBtn": {
+            "plugin": false
+          },
+          "theme": {
+            "applyToLargePlayButton": true,
+            "buttonsSize": 12,
+            "buttonsColor": "rgb(51, 51, 51)",
+            "buttonsIconColor": "rgb(204, 204, 204)",
+            "sliderColor": "rgb(91, 91, 91)",
+            "scrubberColor": "rgb(1, 172, 205)",
+            "controlsBkgColor": "rgb(51, 51, 51)",
+            "watchedSliderColor": "rgb(1, 172, 205)",
+            "bufferedSliderColor": "#AFAFAF",
+            "timeLabelColor": "rgb(204, 204, 204)",
+            "buttonsIconColorDropShadow": true,
+            "plugin": true
+          },
+          "scrubber": {
+            "plugin": true,
+            'insertMode': 'lastChild',
+            'sliderPreview': false
+          }
         }
       };
       setTimeout(() => {
@@ -173,11 +238,15 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
 
   public onPlayerReady(player): void {
     this.playerInstance = player;
-    const entryDuration = this.playerInstance.evaluate('{duration}');
+    setTimeout(() => {
+      this._duration = parseFloat(this.playerInstance.evaluate('{duration}')) * 1000;
+    }, 0);
+
     // register to playhead update event to update our scrubber
     this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(2)) * 100;
+        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._currentTime = parseFloat(event) * 1000;
       });
     });
     this.playerInstance.kBind('playerPlayEnd', (event) => {
@@ -185,22 +254,18 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         this._playProgress = 100;
       });
     });
+    this.playerInstance.kBind('firstPlay', (event) => {
+      this.zone.run(() => {
+        this._playerPlayed = true;
+      });
+    });
+    this.playerInstance.kBind('seeked', (event) => {
+      this.zone.run(() => {
+        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._currentTime = parseFloat(event) * 1000;
+      });
+    });
 
-    // we need to disable the player receiving clicks that toggle playback
-    setTimeout(() => {
-      const playerIframe = document.getElementById('kaltura_player_analytics_ifp');
-      const doc = playerIframe['contentDocument'] || playerIframe['contentWindow'].document;
-      if (doc) {
-        doc.getElementsByClassName('mwEmbedPlayer')[0].style.pointerEvents = 'none';
-      }
-    }, 250); // use a timeout as player ready event still issues some async initialization calls
-  }
-
-  public _togglePlayback(): void {
-    this._isPlaying = !this._isPlaying;
-    this._playerPlayed = true;
-    const command = this._isPlaying ? 'doPlay' : 'doPause';
-    this.playerInstance.sendNotification(command);
   }
 
   /* -------------------------- end of player logic --------------------------*/

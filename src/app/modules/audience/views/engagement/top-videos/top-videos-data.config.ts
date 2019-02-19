@@ -40,8 +40,12 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, false),
-            sortOrder: 4,
+            sortOrder: 6,
           },
+          'engagement_ranking': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 7,
+          }
         }
       }
     };

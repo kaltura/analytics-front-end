@@ -17,7 +17,7 @@ import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, InputHelperModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
@@ -43,6 +43,9 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
+import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 
 @NgModule({
   imports: [
@@ -62,6 +65,8 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     DropdownModule,
     MultiSelectModule,
     TagsModule,
+    InputHelperModule,
+    NgxEchartsModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -72,6 +77,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -88,6 +94,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
+    ImpressionsComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -99,6 +106,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
+    OsImagePipe,
     NumberFormatPipe,
     DeviceIconPipe,
     EntryTypePipe,
@@ -115,6 +123,7 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
     CategoriesSelectorComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
+    ImpressionsComponent,
     ...FilterComponentsList,
   ],
   providers: [

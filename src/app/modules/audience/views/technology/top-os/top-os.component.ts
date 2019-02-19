@@ -20,6 +20,8 @@ export class TopOsComponent extends BaseDevicesReportComponent {
   protected _drillDownReportType = KalturaReportType.operatingSystem;
   public _title = 'app.audience.technology.topOS';
   
+  protected _iconType = 'os';
+  
   protected get showIcon(): boolean {
     return false;
   }

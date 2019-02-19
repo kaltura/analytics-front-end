@@ -82,7 +82,11 @@ export class VideoPerformanceComponent extends EntryBase {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        if (compareReportConfig['objectIds__null']) {
+          delete compareReportConfig['objectIds__null'];
+        }
+        compareReportConfig.objectIds = this.entryId;
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -102,35 +106,15 @@ export class VideoPerformanceComponent extends EntryBase {
         },
         error => {
           this._isBusy = false;
-          const err: ErrorDetails = this._errorsManager.getError(error);
-          let buttons: AreaBlockerMessageButton[] = [];
-          if (err.forceLogout) {
-            buttons = [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }];
-          } else {
-            buttons = [{
-              label: this._translate.instant('app.common.close'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
             },
-              {
-                label: this._translate.instant('app.common.retry'),
-                action: () => {
-                  this._loadReport();
-                }
-              }];
-          }
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons
-          });
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
@@ -151,8 +135,8 @@ export class VideoPerformanceComponent extends EntryBase {
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.endDay;
-      this._compareFilter.toDay = this._dateFilter.endDay;
+      this._compareFilter.fromDay = compare.startDay;
+      this._compareFilter.toDay = compare.endDay;
     } else {
       this._compareFilter = null;
     }

@@ -97,9 +97,9 @@ export class FilterComponent {
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() closeFilters = new EventEmitter<void>();
   
-  private _currentFilters: FilterItem[] = []; // local state
-  private _appliedFilters: FilterItem[] = [];
-  private _showFilters: boolean;
+  protected _currentFilters: FilterItem[] = []; // local state
+  protected _appliedFilters: FilterItem[] = [];
+  protected _showFilters: boolean;
 
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
@@ -119,7 +119,7 @@ export class FilterComponent {
     } else {
       this._state = 'hidden';
     }
-    this.updateLayout();
+    this._updateLayout();
   }
   
   get showAdvancedFilters() {
@@ -133,7 +133,7 @@ export class FilterComponent {
     } else {
       this._advancedFiltersState = 'hidden';
     }
-    this.updateLayout();
+    this._updateLayout();
   }
   
   constructor(private _translate: TranslateService,
@@ -157,7 +157,7 @@ export class FilterComponent {
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
   ];
   
-  private _clearSelectedValues(): void {
+  protected _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
       'entrySources': [],
@@ -165,10 +165,11 @@ export class FilterComponent {
       'tags': [],
       'owners': [],
       'location': [],
+      'countries': [],
     };
   }
   
-  private _prepareFilterTags(): FilterTagItem[] {
+  protected _prepareFilterTags(): FilterTagItem[] {
     let label, tooltip;
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
@@ -205,20 +206,22 @@ export class FilterComponent {
           } else {
             return null;
           }
+        case 'countries':
+          return { value: value.id, type, label: value.name, tooltip: value.name };
         default:
           return null;
       }
     }).filter(Boolean);
   }
   
-  private _clearAll(): void {
+  protected _clearAll(): void {
     this._logger.trace('Clear all tags called');
     this._clearSelectedValues();
     this._currentFilters = [];
     this._appliedFilters = [];
   }
   
-  private _updateSelectedValues(values: FilterItem[]): void {
+  protected _updateSelectedValues(values: FilterItem[]): void {
     this._clearSelectedValues();
 
     if (Array.isArray(values) && values.length) {
@@ -234,7 +237,7 @@ export class FilterComponent {
     }
   }
 
-  private updateLayout(): void {
+  protected _updateLayout(): void {
     if (analyticsConfig.isHosted) {
       const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
       this._logger.info('Send update layout event to the host app', { height });
@@ -261,10 +264,16 @@ export class FilterComponent {
   
   public _onItemUnselected(item: any, type: string): void {
     this._logger.trace('Item removed by user', { item, type });
-    const unselectedItemIndex = type === 'location'
-      ? this._currentFilters.findIndex(filter => filter.type === 'location')
-      : this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
-    
+    let unselectedItemIndex = -1;
+    if (type === 'location') {
+      unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
+    } else if (type === 'countries') {
+      const value = typeof item === 'string' ? item : item.id;
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === value && filterItem.type === type);
+    } else {
+      unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
+    }
+
     if (unselectedItemIndex !== -1) {
       this._currentFilters.splice(unselectedItemIndex, 1);
     }

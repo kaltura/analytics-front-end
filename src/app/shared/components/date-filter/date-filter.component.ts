@@ -37,6 +37,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     }
   }
   @Input() showCompare = true;
+  
+  @Input() creationDate: moment.Moment = null;
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
@@ -109,7 +111,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   
   private _init(queryParams: Params): void {
     this._initCurrentFilterFromEventParams(queryParams);
-    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last');
+    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.creationDate);
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
@@ -150,7 +152,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
           const compareToDate = compareToDateObject.toDate();
           const maxCompareDate = this.selectedView === 'specific'
             ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-            : this._dateFilterService.getMaxCompare(this._dateRange);
+            : this._dateFilterService.getMaxCompare(this._dateRange, this.creationDate);
           this.selectedComparePeriod = 'specific';
           this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
         } else {
@@ -190,7 +192,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public updateDataRanges(): void {
     this.lastSelectedDateRange = this.selectedDateRange;
     if (this.selectedView === 'preset') {
-      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange);
+      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, this.creationDate);
       this.startDate = dates.startDate;
       this.endDate = dates.endDate;
       this._dateRangeLabel = dates.label;
@@ -232,14 +234,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     setTimeout(() => { // use a timeout to allow binded variables to update before calculations
       this.compareMaxDate = this.selectedView === 'specific'
         ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-        : this._dateFilterService.getMaxCompare(this.selectedDateRange);
+        : this._dateFilterService.getMaxCompare(this.selectedDateRange, this.creationDate);
     }, 0);
   }
   
   public updateSpecificCompareStartDate(): void {
     const maxCompareDate = this.selectedView === 'specific'
       ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-      : this._dateFilterService.getMaxCompare(this._dateRange);
+      : this._dateFilterService.getMaxCompare(this._dateRange, this.creationDate);
     this.specificCompareStartDate = this.specificCompareStartDate > maxCompareDate ? maxCompareDate : this.specificCompareStartDate;
   }
 

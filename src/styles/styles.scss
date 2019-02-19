@@ -3,6 +3,7 @@ $mc-theme-font-path : '~@kaltura-ng/mc-theme/themes/default/fonts';
 @import '~@kaltura-ng/mc-theme/themes/default/scss/index.scss';
 @import './icons/icons.scss';
 @import './mini-loader';
+@import './flags';
 
 $appBkgColor: #f2f2f2;
 body{
@@ -28,6 +29,7 @@ body{
   width: 100%;
   .kReportView{
     width: 100%;
+    min-height: calc(100vh - 50px);
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -98,6 +100,7 @@ body{
         flex-direction: column;
         width: 100%;
         background-color: white;
+        min-width: 0;
         .kDimensions{
           width: 100%;
           margin-top: 16px;

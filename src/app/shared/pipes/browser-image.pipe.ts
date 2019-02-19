@@ -11,6 +11,7 @@ export class BrowserImagePipe implements PipeTransform {
     'Firefox': 'FF',
     'Opera': 'Opera',
     'Safari': 'Safari',
+    'Vivaldi': 'Vivaldi'
   };
 
   transform(device: string): string {

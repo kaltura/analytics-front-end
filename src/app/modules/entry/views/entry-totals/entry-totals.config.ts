@@ -8,7 +8,7 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
@@ -29,8 +29,8 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.viewers`),
             sortOrder: 2,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value),
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
             title: this._translate.instant(`app.entry.watched`),
             sortOrder: 4,
           }
