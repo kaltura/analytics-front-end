@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
@@ -26,24 +26,10 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
     ReportService,
   ]
 })
-export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
+export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  @Input() set highlights$(value: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>) {
-    value
-      .pipe(cancelOnDestroy(this))
-      .subscribe(({ current, compare, busy, error }) => {
-        this._isBusy = busy;
-        this._blockerMessage = error;
-        if (compare) {
-          this._handleCompare(current, compare);
-        } else {
-          if (current && current.totals) {
-            this._handleTotals(current.totals); // handle totals
-          }
-        }
-      });
-  }
+  @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>;
   
   private _dataConfig: ReportDataConfig;
   
@@ -76,6 +62,24 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+  }
+  
+  ngOnInit(): void {
+    if (this.highlights$) {
+      this.highlights$
+        .pipe(cancelOnDestroy(this))
+        .subscribe(({ current, compare, busy, error }) => {
+          this._isBusy = busy;
+          this._blockerMessage = error;
+          if (compare) {
+            this._handleCompare(current, compare);
+          } else {
+            if (current && current.totals) {
+              this._handleTotals(current.totals); // handle totals
+            }
+          }
+        });
+    }
   }
   
   ngOnDestroy(): void {
