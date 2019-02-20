@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
     ReportService
   ],
 })
-export class EngagementHighlightsComponent extends EngagementBaseReportComponent {
+export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-month_id';
@@ -34,6 +34,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'highlights';
+  
+  public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>({ current: null, compare: null, busy: false, error: null });
 
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -72,7 +74,12 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
+  ngOnDestroy() {
+    this.highlights$.complete();
+  }
+  
   protected _loadReport(sections = this._dataConfig): void {
+    this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
     
@@ -97,8 +104,10 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
 
           if (compare) {
             this._handleCompare(report, compare);
+            this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
           } else {
             if (report.table && report.table.header && report.table.data) {
+              this.highlights$.next({ current: report, compare: null, busy: false, error: null });
               this.handleTable(report.table); // handle table
             }
             if (report.graphs.length) {
@@ -120,6 +129,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          this.highlights$.next({ current: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions) });
         });
   }
   
