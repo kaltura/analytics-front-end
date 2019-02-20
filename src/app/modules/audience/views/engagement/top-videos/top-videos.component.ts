@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -24,7 +24,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     ReportService
   ]
 })
-export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
+export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit, OnDestroy {
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
@@ -39,6 +39,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   });
   
   protected _componentId = 'top-videos';
+
+  public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
@@ -70,6 +72,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   }
   
   protected _loadReport(): void {
+    this.topVideos$.next({table: null, compare: null, busy: true, error: null});
     this._isBusy = true;
     this._blockerMessage = null;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -89,6 +92,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
+            this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
@@ -104,6 +108,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               this._loadReport();
             },
           };
+          this.topVideos$.next({table: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions)});
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
@@ -165,5 +170,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._order = order;
       this._loadReport();
     }
+  }
+
+  ngOnDestroy() {
+    this.topVideos$.complete();
   }
 }
