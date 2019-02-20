@@ -390,3 +390,21 @@ ui-carousel /deep/ {
   height: 24px;
   font-size: 24px;
 }
+
+k-area-blocker {
+  .kErrorMessageContainer{
+    width: 100%;
+    .kErrorMessage{
+      max-width: 586px;
+      width: 80% !important;
+      padding: 12px 12px 18px 12px !important;
+      .kErrorButtons{
+        margin-top: 24px !important;
+      }
+      .kErrorMessageText{
+        overflow-x: hidden;
+      }
+    }
+  }
+
+}
