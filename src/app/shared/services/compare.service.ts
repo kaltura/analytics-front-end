@@ -32,8 +32,8 @@ export class CompareService implements OnDestroy {
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
 
-  public compareGraphData(currentPeriod: { from: string, to: string },
-                          comparePeriod: { from: string, to: string },
+  public compareGraphData(currentPeriod: { from: number, to: number },
+                          comparePeriod: { from: number, to: number },
                           current: KalturaReportGraph[],
                           compare: KalturaReportGraph[],
                           config: ReportDataItemConfig,
@@ -358,8 +358,8 @@ export class CompareService implements OnDestroy {
     return { barChartData, lineChartData };
   }
 
-  public compareTableData(currentPeriod: { from: string, to: string },
-                          comparePeriod: { from: string, to: string },
+  public compareTableData(currentPeriod: { from: number, to: number },
+                          comparePeriod: { from: number, to: number },
                           current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig,
@@ -456,8 +456,8 @@ export class CompareService implements OnDestroy {
     return { columns, tableData };
   }
 
-  public compareTotalsData(currentPeriod: { from: string, to: string },
-                           comparePeriod: { from: string, to: string },
+  public compareTotalsData(currentPeriod: { from: number, to: number },
+                           comparePeriod: { from: number, to: number },
                            current: KalturaReportTotal,
                            compare: KalturaReportTotal,
                            config: ReportDataItemConfig,

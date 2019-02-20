@@ -45,8 +45,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     if (value) {
       this._chartDataLoaded = false;
       this._filter.timeZoneOffset = value.timeZoneOffset;
-      this._filter.fromDay = value.startDay;
-      this._filter.toDay = value.endDay;
+      this._filter.fromDate = value.startDate;
+      this._filter.toDate = value.endDate;
       this._filter.interval = value.timeUnits;
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
@@ -171,13 +171,13 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private _loadTrendData(): void {
-    const { startDay, endDay } = this._trendService.getCompareDates(this._filter.fromDay, this._filter.toDay);
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
+    const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
   
     const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    compareFilter.fromDay = startDay;
-    compareFilter.toDay = endDay;
+    compareFilter.fromDate = startDate;
+    compareFilter.toDate = endDate;
 
     const reportConfig: ReportConfig = {
       reportType: KalturaReportType.platforms,

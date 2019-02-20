@@ -24,49 +24,120 @@ export class DateFilterUtils {
     return num > 9 ? num.toString() : ( '0' + num.toString());
   }
 
-  static formatMonthString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-    return date.toLocaleString(locale, { month: 'long' }) + ' ' + date.getFullYear();
-  }
-
-  static formatFullDateString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const day: string = value.substring(6, 8);
-    // const date: date = new Date( parseFloat(year) , parseFloat(month) - 1 , parseFloat(day) );
-    return month + '/' + day + '/' + year;
+  static formatMonthString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+      result = date.toLocaleString(locale, { month: 'long' }) + ' ' + date.getFullYear();
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = date.toLocaleString(locale, { month: 'long' }) + ' ' + date.getFullYear();
+    } else if (value instanceof Date) {
+      result = value.toLocaleString(locale, { month: 'long' }) + ' ' + value.getFullYear();
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
   }
   
-  static formatDayString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const day: string = value.substring(6, 8);
-    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-    return `${date.toLocaleString(locale, { month: 'short' })} ${day}`;
+  static formatFullDateString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const day: string = value.substring(6, 8);
+      result = month + '/' + day + '/' + year;
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = date.getMonth() + '/' + date.getDay() + '/' + date.getFullYear();
+    } else if (value instanceof Date) {
+      result = value.getMonth() + '/' + value.getDay() + '/' + value.getFullYear();
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
+  }
+  
+  static formatDayString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const day: string = value.substring(6, 8);
+      const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${day}`;
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDay()}`;
+    } else if (value instanceof Date) {
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDay()}`;
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
   }
 
-  static formatMonthOnlyString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-    return date.toLocaleString(locale, { month: 'long' });
+  static formatMonthOnlyString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+      result = date.toLocaleString(locale, { month: 'long' });
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = date.toLocaleString(locale, { month: 'long' });
+    } else if (value instanceof Date) {
+      result = value.toLocaleString(locale, { month: 'long' });
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
   }
 
-  static formatShortDateString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const day: string = value.substring(6, 8);
-    return month + '/' + day;
+  static formatShortDateString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const day: string = value.substring(6, 8);
+      result = month + '/' + day;
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = date.getMonth() + '/' + date.getDay();
+    } else if (value instanceof Date) {
+      result = value.getMonth() + '/' + value.getDay();
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
   }
 
-  static formatMonthDayString(value: string, locale: string): string {
-    const year: string = value.substring(0, 4);
-    const month: string = value.substring(4, 6);
-    const day: string = value.substring(6, 8);
-    const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-    return `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
+  static formatMonthDayString(value: string | number | Date, locale: string): string {
+    let result = '';
+    if (typeof value === 'string') {
+      const year: string = value.substring(0, 4);
+      const month: string = value.substring(4, 6);
+      const day: string = value.substring(6, 8);
+      const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+    } else if (value instanceof Date) {
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDay()}, ${value.getFullYear()}`;
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+  
+    return result;
   }
   
   static parseDateString(value: string): moment.Moment {

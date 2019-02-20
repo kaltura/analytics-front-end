@@ -314,16 +314,16 @@ export class ImpressionsComponent implements OnInit {
   
   private _updateFilter(): void {
     this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this.filter.fromDay = this._dateFilter.startDay;
-    this.filter.toDay = this._dateFilter.endDay;
+    this.filter.fromDate = this._dateFilter.startDate;
+    this.filter.toDate = this._dateFilter.endDate;
     this.filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this.pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
-      this.compareFilter.fromDay = compare.startDay;
-      this.compareFilter.toDay = compare.endDay;
+      this.compareFilter.fromDate = compare.startDate;
+      this.compareFilter.toDate = compare.endDate;
     } else {
       this.compareFilter = null;
     }
