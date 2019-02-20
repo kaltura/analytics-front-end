@@ -463,6 +463,7 @@ export class ReportService implements OnDestroy {
           }
         },
         tooltip: {
+          trigger: 'axis',
           formatter: getFormatter(config.fields[graph.id].colors ? config.fields[graph.id].colors[0] : defaultColor),
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -470,6 +471,12 @@ export class ReportService implements OnDestroy {
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
           textStyle: {
             color: '#999999'
+          },
+          axisPointer: {
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(150,150,150,0.1)'
+            }
           }
         },
         series: [{
