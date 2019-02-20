@@ -304,7 +304,7 @@ export class DevicesOverviewComponent implements OnDestroy {
         textStyle: {
           fontFamily: 'Lato',
         },
-        grid: { top: 24, left: 24, bottom: 24, right: 24, containLabel: true },
+        grid: { top: 24, left: 24, bottom: 0, right: 24, containLabel: true },
         color: [config[key].colors[0]],
         yAxis: {
           type: 'value',
@@ -348,12 +348,19 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
         },
         tooltip: {
+          trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
           borderWidth: 1,
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
           textStyle: {
             color: '#999999'
+          },
+          axisPointer: {
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(150,150,150,0.1)'
+            }
           }
         },
         series: [{
