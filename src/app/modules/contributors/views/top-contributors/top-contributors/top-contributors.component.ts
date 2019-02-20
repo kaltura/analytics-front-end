@@ -95,6 +95,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
             this._handleTable(report.table, compare); // handle table
           }
           this._isBusy = false;
+          this._firstTimeLoading = false;
         },
         error => {
           this._isBusy = false;

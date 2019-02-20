@@ -76,9 +76,9 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
         .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
           this._isBusy = data.busy;
           this._blockerMessage = data.error;
+          this._tableData = [];
+          this._compareTableData = [];
           if (data.table && data.table.header && data.table.data) {
-            this._tableData = [];
-            this._compareTableData = [];
             this._handleTable(data.table, data.compare); // handle table
           }
         });

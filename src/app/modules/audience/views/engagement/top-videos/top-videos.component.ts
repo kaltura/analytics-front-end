@@ -93,6 +93,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
             this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+          } else {
+            this.topVideos$.next({table: null, compare: null, busy: false, error: null});
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
