@@ -34,7 +34,7 @@ export class CheckboxesListFilterComponent {
   }
   
   public _onSelectionChange(): void {
-    const changes = this._listDiffer.diff(this._selectedValue);
+    const changes = this._listDiffer.diff(this._selectedValue || []);
     
     if (changes) {
       changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
