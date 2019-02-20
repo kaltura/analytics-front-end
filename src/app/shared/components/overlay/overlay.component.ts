@@ -29,7 +29,6 @@ import { DomHandler, OverlayPanel } from 'primeng/primeng';
       transition('visible => void', animate('195ms ease-in'))
     ])
   ],
-  providers: [DomHandler]
 })
 export class OverlayComponent extends OverlayPanel {
   @Input() offset = 10;
@@ -38,15 +37,15 @@ export class OverlayComponent extends OverlayPanel {
   private _absolutePosition(element: any, target: any): void {
     let elementDimensions = element.offsetParent
       ? { width: element.offsetWidth, height: element.offsetHeight }
-      : this.domHandler.getHiddenElementDimensions(element);
+      : DomHandler.getHiddenElementDimensions(element);
     let elementOuterHeight = elementDimensions.height;
     let elementOuterWidth = elementDimensions.width;
     let targetOuterHeight = target.offsetHeight;
     let targetOuterWidth = target.offsetWidth;
     let targetOffset = target.getBoundingClientRect();
-    let windowScrollTop = this.domHandler.getWindowScrollTop();
-    let windowScrollLeft = this.domHandler.getWindowScrollLeft();
-    let viewport = this.domHandler.getViewport();
+    let windowScrollTop = DomHandler.getWindowScrollTop();
+    let windowScrollLeft = DomHandler.getWindowScrollLeft();
+    let viewport = DomHandler.getViewport();
     let top, left;
     
     if (this.openDirection === 'up') {
@@ -94,7 +93,8 @@ export class OverlayComponent extends OverlayPanel {
         break;
       
       case 'void':
-        this.onOverlayHide();
+        this.onContainerDestroy();
+        this.onHide.emit({});
         break;
     }
   }

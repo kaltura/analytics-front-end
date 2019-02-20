@@ -391,6 +391,18 @@ ui-carousel /deep/ {
   font-size: 24px;
 }
 
+div, span, tr, td, li {
+  outline: none !important;
+}
+
+.ui-datepicker-trigger {
+  position: absolute;
+}
+
+.ui-table p-sorticon {
+  vertical-align: unset;
+}
+
 k-area-blocker {
   .kErrorMessageContainer{
     width: 100%;
