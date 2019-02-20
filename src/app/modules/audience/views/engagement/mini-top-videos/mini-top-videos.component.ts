@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
@@ -28,16 +29,19 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 })
 export class MiniTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy{
   @Input() dateFilterComponent: DateFilterComponent;
-  @Input() set topVideos$ (topVideos: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> ) {
-    this.subscription = topVideos.subscribe( (data: {table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}) => {
-      this._isBusy = data.busy;
-      this._blockerMessage = data.error;
-      if (data.table && data.table.header && data.table.data) {
-        this._tableData = [];
-        this._compareTableData = [];
-        this._handleTable(data.table, data.compare); // handle table
-      }
-    });
+  
+  @Input() set topVideos$(topVideos: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }>) {
+    topVideos
+      .pipe(cancelOnDestroy(this))
+      .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
+        this._isBusy = data.busy;
+        this._blockerMessage = data.error;
+        if (data.table && data.table.header && data.table.data) {
+          this._tableData = [];
+          this._compareTableData = [];
+          this._handleTable(data.table, data.compare); // handle table
+        }
+      });
   }
   
   protected _componentId = 'mini-top-videos';
@@ -142,10 +146,6 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   }
 
   ngOnDestroy() {
-    if (this. subscription) {
-      this. subscription.unsubscribe();
-      this. subscription = null;
-    }
   }
   
 }

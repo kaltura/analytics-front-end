@@ -28,7 +28,8 @@
 
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
-      <app-engagement-mini-highlights [dateFilter]="_dateFilter"
+      <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
+                                      [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
@@ -60,7 +61,8 @@
   </div>
 
   <div id="highlights-report" class="kReportContainer">
-    <app-engagement-highlights [dateFilterComponent]="dateFilter"
+    <app-engagement-highlights #highlights
+                               [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
