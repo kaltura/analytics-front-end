@@ -19,8 +19,8 @@ export class TrendService {
   }
 
   public getCompareDates(from: string | number | Date, to: string | number | Date): any {
-    const fromDay = moment(from);
-    const toDay = moment(to);
+    const fromDay = DateFilterUtils.getMomentDate(from);
+    const toDay = DateFilterUtils.getMomentDate(to);
     const days = moment.duration(toDay.diff(fromDay)).asDays();
     const startDate = fromDay.clone().subtract(days + 1, 'days').toDate();
     const endDate = fromDay.clone().subtract(1, 'days').toDate();

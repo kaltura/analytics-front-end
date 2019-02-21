@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 
 export class DateFilterUtils {
-
   static getTimeZoneOffset(): number {
     const today: Date = new Date();
     return today.getTimezoneOffset();
@@ -52,9 +51,9 @@ export class DateFilterUtils {
       result = month + '/' + day + '/' + year;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = date.getMonth() + '/' + date.getDay() + '/' + date.getFullYear();
+      result = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
     } else if (value instanceof Date) {
-      result = value.getMonth() + '/' + value.getDay() + '/' + value.getFullYear();
+      result = value.getMonth() + '/' + value.getDate() + '/' + value.getFullYear();
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -72,9 +71,9 @@ export class DateFilterUtils {
       result = `${date.toLocaleString(locale, { month: 'short' })} ${day}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDay()}`;
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDate()}`;
     } else if (value instanceof Date) {
-      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDay()}`;
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDate()}`;
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -110,9 +109,9 @@ export class DateFilterUtils {
       result = month + '/' + day;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = date.getMonth() + '/' + date.getDay();
+      result = date.getMonth() + '/' + date.getDate();
     } else if (value instanceof Date) {
-      result = value.getMonth() + '/' + value.getDay();
+      result = value.getMonth() + '/' + value.getDate();
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -130,14 +129,23 @@ export class DateFilterUtils {
       result = `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
     } else if (value instanceof Date) {
-      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDay()}, ${value.getFullYear()}`;
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDate()}, ${value.getFullYear()}`;
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
   
     return result;
+  }
+  
+  static getMomentDate(value: string | number | Date | moment.Moment): moment.Moment {
+    let result = value;
+    if (typeof value === 'number') {
+      result = this._isUnixDate(value) ? this.fromServerDate(value) : moment(value);
+    }
+  
+    return moment(result);
   }
   
   static parseDateString(value: string): moment.Moment {
@@ -148,5 +156,9 @@ export class DateFilterUtils {
     }
   
     return moment(value);
+  }
+  
+  private static _isUnixDate(number: number): boolean {
+    return number.toString().length === 10;
   }
 }

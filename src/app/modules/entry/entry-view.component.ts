@@ -27,6 +27,7 @@ import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-entry',
@@ -152,7 +153,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         ([entry, user]) => {
           this._entryName = entry.name;
           this._entryType = entry.mediaType;
-          this._creationDate = moment(entry.createdAt);
+          this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
           this._owner = user.fullName;
           this.requestSubscription = null;
           this._loadingEntry = false;
