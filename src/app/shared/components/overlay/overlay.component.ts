@@ -31,7 +31,7 @@ import { DomHandler, OverlayPanel } from 'primeng/primeng';
   ],
 })
 export class OverlayComponent extends OverlayPanel {
-  @Input() offset = 10;
+  @Input() offset = 20;
   @Input() openDirection: 'up' | 'down' = 'up';
   
   private _absolutePosition(element: any, target: any): void {
