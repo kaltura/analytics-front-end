@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { type } from 'os';
 
 export class DateFilterUtils {
   static getTimeZoneOffset(): number {
@@ -142,9 +143,12 @@ export class DateFilterUtils {
   static getMomentDate(value: string | number | Date | moment.Moment): moment.Moment {
     let result = value;
     if (typeof value === 'number') {
-      result = this._isUnixDate(value) ? this.fromServerDate(value) : moment(value);
+      result = this._isUnixDate(value) ? this.fromServerDate(value) : new Date(value);
     }
-  
+    
+    if (typeof value === 'string') {
+      result = new Date(value);
+    }
     return moment(result);
   }
   

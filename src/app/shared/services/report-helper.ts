@@ -87,8 +87,7 @@ export class ReportHelper {
         result = this.numberWithCommas(parseInt(value));
         break;
       case 'serverDate':
-        const date = DateFilterUtils.fromServerDate(Number(value));
-        result = DateFilterUtils.getMomentDate(value).format('MMM D, YYYY');
+        result = DateFilterUtils.getMomentDate(Number(value)).format('MMM D, YYYY');
         break;
       case 'avg_view_drop_off':
       case 'play_through_ratio':
