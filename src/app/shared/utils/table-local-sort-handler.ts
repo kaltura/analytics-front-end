@@ -18,7 +18,7 @@ export function getTableLocalSortHandler(event: SortEvent): (data1: TableRow, da
     if (typeof value1 === 'string' && typeof value2 === 'string') {
       result = value1.localeCompare(value2, undefined, { numeric: true });
     } else {
-      result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+      result = (value1 > value2) ? -1 : (value1 < value2) ? 1 : 0;
     }
     return (event.order * result);
   };
