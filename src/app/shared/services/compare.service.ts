@@ -315,7 +315,10 @@ export class CompareService implements OnDestroy {
             color: '#999999'
           },
           axisPointer: {
-            type: 'shadow'
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(150,150,150,0.1)'
+            }
           }
         },
         legend: {

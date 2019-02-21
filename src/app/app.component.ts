@@ -1,15 +1,14 @@
-import {Component, enableProdMode, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
-import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
+import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
-import { BrowserService } from './shared/services/browser.service';
+import { BrowserService } from 'shared/services';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
-import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -85,13 +84,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private _initApp(config = null, hosted = false): void {
     if (!config) {
       return;
-    }
-
-    if (environment.production) {
-      enableProdMode();
-      console.log(`Running Analytics version '${analyticsConfig.appVersion}' (Production mode)`);
-    } else {
-      console.log(`Running Analytics version '${analyticsConfig.appVersion}' (Development mode)`);
     }
 
     this.hosted = hosted; // hosted;

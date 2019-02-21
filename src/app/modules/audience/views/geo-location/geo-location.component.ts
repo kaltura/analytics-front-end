@@ -180,7 +180,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {
-      this._drillDown.push(country);
+      this._drillDown.push(this._dataConfigService.getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
       this._drillDown.pop();
     }
@@ -274,7 +274,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
-          ? this._dataConfigService.getCountryName(data.country)
+          ? this._dataConfigService.getCountryName(data.country, false)
           : this._drillDown.length === 1
             ? data.region
             : data.city,

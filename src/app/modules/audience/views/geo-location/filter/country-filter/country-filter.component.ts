@@ -12,6 +12,7 @@ export class CountryFilterComponent implements OnDestroy {
   @Input() set selectedFilters(value: LocationsFilterValueItem[]) {
     if (Array.isArray(value) && value.length) {
       this._selectedCountries = value;
+      this._setDiffer();
     } else {
       this._selectedCountries = [];
     }
