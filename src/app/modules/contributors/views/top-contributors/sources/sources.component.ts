@@ -112,15 +112,15 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._isCompareMode = false;
     if (this._dateFilter.compare.active) {
       this._isCompareMode = true;
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
@@ -142,8 +142,8 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       const currentData = this._reportService.convertTableDataToGraphData(tableData, this._dataConfig);
       const compareData = this._reportService.convertTableDataToGraphData(compareTableData, this._dataConfig);
-      const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
-      const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+      const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+      const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
       const { barChartData } = this._compareService.compareGraphData(
         currentPeriod,
         comparePeriod,
@@ -160,7 +160,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       this._barChartData = this._reportService.getGraphDataFromTable(
         table,
         this._dataConfig,
-        { from: this._filter.fromDay, to: this._filter.toDay },
+        { from: this._filter.fromDate, to: this._filter.toDate },
         this._reportInterval,
         graphOptions
         ).barChartData;

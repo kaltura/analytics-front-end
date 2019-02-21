@@ -82,8 +82,8 @@ export class PublisherStorageComponent implements OnInit {
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
-    this.filter.fromDay = event.startDay;
-    this.filter.toDay = event.endDay;
+    this.filter.fromDate = event.startDate;
+    this.filter.toDate = event.endDate;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
@@ -192,8 +192,8 @@ export class PublisherStorageComponent implements OnInit {
    }
 
    private handleCompare(current: Report, compare: Report): void {
-     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
-     const comparePeriod = { from: this.compareFilter.fromDay, to: this.compareFilter.toDay };
+     const currentPeriod = { from: this.filter.fromDate, to: this.filter.toDate };
+     const comparePeriod = { from: this.compareFilter.fromDate, to: this.compareFilter.toDate };
 
       if (current.table && compare.table) {
         const { columns, tableData } = this._compareService.compareTableData(
@@ -259,7 +259,7 @@ export class PublisherStorageComponent implements OnInit {
     const { lineChartData, barChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
-      { from: this.filter.fromDay, to: this.filter.toDay },
+      { from: this.filter.fromDate, to: this.filter.toDate },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );

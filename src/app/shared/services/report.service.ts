@@ -263,7 +263,7 @@ export class ReportService implements OnDestroy {
   
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
-                     period: { from: string, to: string },
+                     period: { from: number, to: number },
                      reportInterval: KalturaReportInterval,
                      dataLoadedCb?: Function,
                      graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
@@ -496,7 +496,7 @@ export class ReportService implements OnDestroy {
   
   public getGraphDataFromTable(table: KalturaReportTable,
                                dataConfig: ReportDataConfig,
-                               period: { from: string, to: string },
+                               period: { from: number, to: number },
                                reportInterval: KalturaReportInterval,
                                graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }) {
     this._logger.trace('Parse graph data from table data', { headers: table.header, period });

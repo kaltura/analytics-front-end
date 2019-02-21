@@ -93,6 +93,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
             this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+          } else {
+            this.topVideos$.next({table: null, compare: null, busy: false, error: null});
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
@@ -115,8 +117,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
@@ -126,8 +128,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._isCompareMode = true;
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
@@ -158,8 +160,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._columns = ['entry_name', 'count_plays'];
-      this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-      this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
     }
   }
   
