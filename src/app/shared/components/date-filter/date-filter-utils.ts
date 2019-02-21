@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import { type } from 'os';
 
 export class DateFilterUtils {
   static getTimeZoneOffset(): number {
