@@ -184,8 +184,8 @@ export class LocationsFilterService implements OnDestroy {
   public updateDateFilter(event: DateChangeEvent, callback: () => void): void {
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
-      this._filter.fromDay = event.startDay;
-      this._filter.toDay = event.endDay;
+      this._filter.fromDate = event.startDate;
+      this._filter.toDate = event.endDate;
       this._filter.interval = event.timeUnits;
       this._pager.pageIndex = 1;
   

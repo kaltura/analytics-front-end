@@ -28,12 +28,13 @@
 
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
-      <app-engagement-mini-highlights [dateFilter]="_dateFilter"
+      <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
+                                      [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
     <div class="kMiniReportContainer">
-      <app-engagement-mini-top-videos [dateFilter]="_dateFilter"
+      <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
     </div>
 
@@ -60,13 +61,15 @@
   </div>
 
   <div id="highlights-report" class="kReportContainer">
-    <app-engagement-highlights [dateFilterComponent]="dateFilter"
+    <app-engagement-highlights #highlights
+                               [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
 
   <div id="top-videos" class="kReportContainer">
-    <app-engagement-top-videos [dateFilter]="_dateFilter"
+    <app-engagement-top-videos #topVideos
+                               [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-top-videos>
   </div>
 

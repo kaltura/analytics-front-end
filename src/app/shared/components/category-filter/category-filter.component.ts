@@ -48,7 +48,7 @@ export class CategoryFilterComponent {
   public _updateCategories(value: CategoryData[]): void {
     this._selectedValue = value;
 
-    const changes = this._listDiffer.diff(this._selectedValue);
+    const changes = this._listDiffer.diff(this._selectedValue || []);
   
     if (changes) {
       changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
