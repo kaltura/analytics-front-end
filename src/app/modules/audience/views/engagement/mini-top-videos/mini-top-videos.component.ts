@@ -76,9 +76,9 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
         .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
           this._isBusy = data.busy;
           this._blockerMessage = data.error;
+          this._tableData = [];
+          this._compareTableData = [];
           if (data.table && data.table.header && data.table.data) {
-            this._tableData = [];
-            this._compareTableData = [];
             this._handleTable(data.table, data.compare); // handle table
           }
         });
@@ -91,16 +91,16 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
 
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
     }
@@ -129,8 +129,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
       const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-      this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
+      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
     }
   }
   

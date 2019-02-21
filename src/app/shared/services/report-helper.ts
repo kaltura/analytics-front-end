@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export class ReportHelper {
   static numberWithCommas(x: any): string {
@@ -86,8 +87,7 @@ export class ReportHelper {
         result = this.numberWithCommas(parseInt(value));
         break;
       case 'serverDate':
-        const date = new Date(Number(value) * 1000);
-        result = moment(date).format('MMM D, YYYY');
+        result = DateFilterUtils.getMomentDate(Number(value)).format('MMM D, YYYY');
         break;
       case 'avg_view_drop_off':
       case 'play_through_ratio':
