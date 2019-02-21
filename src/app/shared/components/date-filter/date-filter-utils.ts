@@ -7,7 +7,8 @@ export class DateFilterUtils {
   }
 
   static toServerDate(value: Date): number {
-    return value ? Math.round(value.getTime() / 1000) : null;
+    const timeZoneOffset = this.getTimeZoneOffset() * 60000 * (-1);
+    return value ? Math.round((value.getTime() + timeZoneOffset) / 1000) : null;
   }
 
   static fromServerDate(value: number): Date {
