@@ -16,7 +16,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
-import { getTableLocalSortHandler } from 'shared/utils/table-local-sort-handler';
+import { tableLocalSortHandler } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -236,12 +236,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   public _onSortChanged(event: SortEvent) {
-    if (event.data.length && event.field && event.order && !this._isCompareMode) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this._order) {
-        this._logger.trace('Handle local sort changed action by user', { order });
-        event.data.sort(getTableLocalSortHandler(event));
-      }
-    }
+    this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
+    tableLocalSortHandler(event, this._isCompareMode);
   }
 }
