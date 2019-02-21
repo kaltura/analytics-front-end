@@ -34,8 +34,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 export type ReportConfig = {
   reportType: KalturaReportType,
   filter: KalturaReportInputFilter,
-  pager: KalturaFilterPager,
   order: string,
+  pager?: KalturaFilterPager,
   objectIds?: string
 };
 
@@ -104,7 +104,7 @@ export class ReportService implements OnDestroy {
         const getTable = new ReportGetTableAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
-          pager: config.pager,
+          pager: config.pager || new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
           order: config.order,
           objectIds: config.objectIds ? config.objectIds : null,
           responseOptions
@@ -516,7 +516,6 @@ export class ReportService implements OnDestroy {
   
   public tableFromGraph(graphs: KalturaReportGraph[],
                         config: ReportDataItemConfig,
-                        period: { from: string, to: string },
                         reportInterval: KalturaReportInterval): { columns: string[], tableData: { [key: string]: string }[], totalCount: number } {
     const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
     let columns = [];

@@ -15,6 +15,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { SortEvent } from 'primeng/api';
+import { getTableLocalSortHandler } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -29,7 +31,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private _order = '-month_id';
+  private readonly _order = '-month_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
   
@@ -49,7 +51,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
-  public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _pageSize = analyticsConfig.defaultPageSize;
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
@@ -82,14 +84,14 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._isBusy = true;
     this._blockerMessage = null;
     
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
 
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
@@ -107,7 +109,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           } else {
             if (report.table && report.table.header && report.table.data) {
               this.highlights$.next({ current: report, compare: null, busy: false, error: null });
-              this.handleTable(report.table); // handle table
             }
             if (report.graphs.length) {
               this._handleTable(report.graphs); // handle table
@@ -138,7 +139,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._filter.toDay = this._dateFilter.endDay;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
-    this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -150,7 +150,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _updateRefineFilter(): void {
-    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -196,7 +195,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
       graphs,
       this._dataConfig.table,
-      { from: this._filter.fromDay, to: this._filter.toDay },
       this._reportInterval,
     );
     this._totalCount = totalCount;
@@ -237,22 +235,12 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     }
   }
   
-  public _onPaginationChanged(event: any): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
-      this._pager.pageIndex = event.page + 1;
-      this._loadReport({ table: null });
-    }
-  }
-  
-  public _onSortChanged(event) {
+  public _onSortChanged(event: SortEvent) {
     if (event.data.length && event.field && event.order && !this._isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
-        this._logger.trace('Handle sort changed action by user', { order });
-        this._order = order;
-        this._pager.pageIndex = 1;
-        this._loadReport({ table: null });
+        this._logger.trace('Handle local sort changed action by user', { order });
+        event.data.sort(getTableLocalSortHandler(event));
       }
     }
   }

@@ -2,6 +2,7 @@ export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   skipEmptyBuckets: boolean;
+  defaultPageSize: number;
   kalturaServer?: {
       uri?: string,
     previewUIConf?: number
@@ -58,5 +59,6 @@ export function buildCDNUrl(suffix: string): string {
 export const analyticsConfig: AnalyticsConfig = {
   appVersion: '0.3',
   valueSeparator: '|',
-  skipEmptyBuckets: false
+  skipEmptyBuckets: false,
+  defaultPageSize: 25,
 };
