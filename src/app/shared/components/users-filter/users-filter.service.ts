@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaUserFilter, KalturaFilterPager, UserListAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaUserFilter, KalturaFilterPager, UserListAction, KalturaUser } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -10,7 +10,7 @@ export class UsersFilterService implements OnDestroy {
   constructor(private _kalturaClient: KalturaClient) {
   }
 
-  public searchUsers(text: string): Observable<any[]> {
+  public searchUsers(text: string): Observable<KalturaUser[]> {
     return Observable.create(
       observer => {
         const requestSubscription: ISubscription = this._kalturaClient.request(

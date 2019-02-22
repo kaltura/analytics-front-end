@@ -1,6 +1,6 @@
 import { SortEvent } from 'primeng/api';
 
-export type TableRow = { [key: string]: string };
+export type TableRow<T = any> = { [key: string]: T };
 
 const dateKeys = ['month_id', 'date_id'];
 

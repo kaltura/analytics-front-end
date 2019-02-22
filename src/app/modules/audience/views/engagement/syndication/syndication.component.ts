@@ -14,6 +14,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-syndication',
@@ -50,7 +51,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   public _reportType = KalturaReportType.topSyndication;
   public _lineChartData: any = {};
   public _totalUsers = null;
-  public _tableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
   public _tabsData: Tab[] = [];
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });

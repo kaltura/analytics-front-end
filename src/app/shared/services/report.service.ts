@@ -30,6 +30,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { getPrimaryColor } from 'shared/utils/colors';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -516,7 +517,7 @@ export class ReportService implements OnDestroy {
   
   public tableFromGraph(graphs: KalturaReportGraph[],
                         config: ReportDataItemConfig,
-                        reportInterval: KalturaReportInterval): { columns: string[], tableData: { [key: string]: string }[], totalCount: number } {
+                        reportInterval: KalturaReportInterval): { columns: string[], tableData: TableRow[], totalCount: number } {
     const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
     let columns = [];
     const data = [];

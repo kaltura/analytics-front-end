@@ -15,6 +15,7 @@ import { isArrayEquals } from 'shared/utils/is-array-equals';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -102,7 +103,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
   public _columns: string[] = [];
-  public _tableData: any[] = [];
+  public _tableData: TableRow<any>[] = [];
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;

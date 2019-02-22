@@ -13,6 +13,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-video-performance',
@@ -33,7 +34,7 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _columns: string[] = [];
   public _totalCount = 0;
-  public _tableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
   public _firstTimeLoading = true;
   public _lineChartData: { [key: string]: any } = {};
   public _selectedMetrics: string;

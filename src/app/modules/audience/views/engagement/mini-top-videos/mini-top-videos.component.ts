@@ -16,6 +16,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
@@ -42,8 +43,8 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableData: any[] = [];
-  public _compareTableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
+  public _compareTableData: TableRow<string>[] = [];
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;

@@ -14,6 +14,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -32,7 +33,7 @@ export class EndUserStorageComponent implements OnInit {
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
-  public _tableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
   public _tabsData: Tab[] = [];
   public _lineChartData: any = {'bandwidth_consumption': []};
   public _barChartData: any = {'bandwidth_consumption': []};
