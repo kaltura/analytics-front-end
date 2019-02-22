@@ -78,6 +78,9 @@ export class VideoPerformanceComponent extends EntryBase {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
+  
+    sections = { ...sections }; // make local copy
+    delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
