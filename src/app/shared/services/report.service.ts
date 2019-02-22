@@ -117,7 +117,11 @@ export class ReportService implements OnDestroy {
           this._querySubscription = null;
         }
         
-        let request: KalturaRequest<any>[] = [getTable];
+        let request: KalturaRequest<any>[] = [];
+        
+        if (sections.table) {
+          request.push(getTable);
+        }
         
         if (sections.graph) {
           request.push(getGraphs);
