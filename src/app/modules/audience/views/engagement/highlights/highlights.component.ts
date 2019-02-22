@@ -159,25 +159,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
-    if (current.table && compare.table) {
-      const compareTableData = this._compareService.compareTableData(
-        currentPeriod,
-        comparePeriod,
-        current.table,
-        compare.table,
-        this._dataConfig.table,
-        this._reportInterval,
-      );
-      
-      if (compareTableData) {
-        const { columns, tableData } = compareTableData;
-        this._totalCount = current.table.totalCount;
-        this._columns = columns;
-        this._tableData = tableData;
-      }
-    }
-    
+
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
@@ -188,6 +170,22 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._reportInterval,
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+  
+      const compareTableData = this._compareService.compareTableFromGraph(
+        currentPeriod,
+        comparePeriod,
+        current.graphs,
+        compare.graphs,
+        this._dataConfig.table,
+        this._reportInterval,
+      );
+  
+      if (compareTableData) {
+        const { columns, tableData } = compareTableData;
+        this._totalCount = current.table.totalCount;
+        this._columns = columns;
+        this._tableData = tableData;
+      }
     }
   }
   

@@ -10,6 +10,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import * as moment from 'moment';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Injectable()
 export class CompareService implements OnDestroy {
@@ -454,6 +455,83 @@ export class CompareService implements OnDestroy {
 
 
     return { columns, tableData };
+  }
+  
+  public compareTableFromGraph(currentPeriod: { from: number, to: number },
+                               comparePeriod: { from: number, to: number },
+                               current: KalturaReportGraph[],
+                               compare: KalturaReportGraph[],
+                               config: ReportDataItemConfig,
+                               reportInterval: KalturaReportInterval,
+                               dataKey: string = ''): { columns: string[], tableData: TableRow<string>[] } | any {
+    let columns = current
+      .map(item => item.id)
+      .filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
+
+    const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
+    const getTableData = data => data[0].filter(Boolean).map((item, i) => {
+      return columns.reduce(
+        (acc, val, j) => (acc[val] = data[j][i].split(analyticsConfig.valueSeparator)[1], acc),
+        { [firstColumn]: item.split(analyticsConfig.valueSeparator)[0] }
+      );
+    });
+    const currentData = getTableData(current.map(item => item.data.split(';')));
+    const compareData = getTableData(compare.map(item => item.data.split(';')));
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
+    const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
+    const tableData = [];
+  
+    // depends on array index since server returns 0 values,
+    // if this behavior changes consider refactoring of this part to get relevant compare row
+    currentData.forEach((currentRow, index) => {
+      let data = {};
+      const rowColumns = Object.keys(currentRow);
+      const compareRow = compareData[index];
+  
+      rowColumns.forEach(column => {
+        const fieldConfig = config.fields[column];
+        if (fieldConfig) {
+          let result;
+          const currentValue = currentRow[column];
+          if (fieldConfig.nonComparable) {
+            result = fieldConfig.format(currentValue);
+          } else {
+            const compareValue = compareRow[column];
+            const { value: trend, direction } = this._trendService.calculateTrend(Number(currentValue), Number(compareValue));
+            const currentVal = fieldConfig.format(currentValue);
+            const compareVal = fieldConfig.format(compareValue);
+            const tooltip = `${
+              this._trendService.getTooltipRowString(
+                currentPeriodTitle,
+                currentVal,
+                fieldConfig.units ? fieldConfig.units(currentValue) : (config.units || ''))
+            }${
+              this._trendService.getTooltipRowString(
+                comparePeriodTitle,
+                compareVal,
+                (fieldConfig.units ? fieldConfig.units(compareValue) : (config.units || '')))
+            }`;
+            result = {
+              value: trend !== null ? trend : '–',
+              tooltip: tooltip,
+              trend: direction,
+              units: trend !== null ? '%' : ''
+            };
+          }
+          data[column] = result;
+        }
+      });
+      tableData.push(data);
+    });
+    columns.sort((a, b) => {
+      const valA = config.fields[a].sortOrder || 0;
+      const valB = config.fields[b].sortOrder || 0;
+      return valA - valB;
+    });
+    columns = [firstColumn, ...columns];
+  
+    return { columns, tableData, totalCount: tableData.length };
   }
 
   public compareTotalsData(currentPeriod: { from: number, to: number },
