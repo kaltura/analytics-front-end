@@ -319,7 +319,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     this._barChartData = this._getGraphData(data, relevantFields)[this._selectedMetric];
     this._summaryData = this._getSummaryData(data, relevantFields)[this._selectedMetric];
     if (this._summaryData.length > 3) {
-      this._summaryDataRight = this._summaryData.slice(4);
+      this._summaryDataRight = this._summaryData.slice(3);
       this._summaryData = this._summaryData.slice(0, 3);
     }
   }
