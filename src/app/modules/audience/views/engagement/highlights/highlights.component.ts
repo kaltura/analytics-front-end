@@ -182,8 +182,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       );
   
       if (compareTableData) {
-        const { columns, tableData } = compareTableData;
-        this._totalCount = current.table.totalCount;
+        const { columns, tableData, totalCount } = compareTableData;
+        this._totalCount = totalCount;
         this._columns = columns;
         this._tableData = tableData;
       }

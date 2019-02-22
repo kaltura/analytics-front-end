@@ -463,7 +463,7 @@ export class CompareService implements OnDestroy {
                                compare: KalturaReportGraph[],
                                config: ReportDataItemConfig,
                                reportInterval: KalturaReportInterval,
-                               dataKey: string = ''): { columns: string[], tableData: TableRow<string>[] } | any {
+                               dataKey: string = ''): { columns: string[], tableData: TableRow<string>[], totalCount: number } {
     let columns = current
       .map(item => item.id)
       .filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
