@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { HighlightsConfig } from './highlights.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
@@ -83,6 +83,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
+  
+    sections = { ...sections }; // make local copy
+    delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections)
@@ -99,17 +102,15 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       .subscribe(({ report, compare }) => {
           this._tableData = [];
     
+          this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
+    
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
           }
 
           if (compare) {
             this._handleCompare(report, compare);
-            this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
           } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.highlights$.next({ current: report, compare: null, busy: false, error: null });
-            }
             if (report.graphs.length) {
               this._handleTable(report.graphs); // handle table
               this._handleGraphs(report.graphs); // handle graphs
