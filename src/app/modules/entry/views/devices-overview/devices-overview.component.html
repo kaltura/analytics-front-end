@@ -1,6 +1,4 @@
 <div class="kReport kOverrideFAIcons">
-  <ng-content></ng-content>
-
   <div class="kFilters">
     <span class="kTitle">{{'app.audience.technology.devicesOverview' | translate}}</span>
   </div>
@@ -8,40 +6,47 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <ng-container *ngIf="_summaryData">
-        <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <ng-container *ngIf="_summaryData.length">
         <div class="kOverview">
-          <div class="kSummary">
-            <div class="kSummaryRow" *ngFor="let summary of _summaryData">
-              <div class="kSummaryCheckbox">
-                <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
-                <span class="kLabel">{{summary.name}}</span>
-              </div>
-              <div class="kSummaryValue">
-                <h5 class="mini-loader" *ngIf="summary.trend === undefined"><span></span><span></span></h5>
-                <span *ngIf="summary.trend !== undefined" class="kTrend" [kTooltip]="summary.tooltip" [escape]="false"
-                      [maxWidth]="500">
-                <app-trend-value [value]="summary.trend"
-                                 [units]="summary.compareUnits"
-                                 [trend]="summary.trendDirection"></app-trend-value>
-              </span>
-                <div>
-                  <span class="kValue">{{summary.value}}</span>
-                  <span class="kUnits">{{summary.units}}</span>
+          <div class="kSummaryWrapper">
+            <div class="kSummary">
+              <div class="kSummaryRow" *ngFor="let summary of _summaryData">
+                <div class="kSummaryCheckbox">
+                  <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
+                  <span class="kLabel">{{summary.name}}</span>
+                </div>
+                <div class="kSummaryValue">
+                  <div>
+                    <span class="kValue">{{summary.value}}</span>
+                    <span class="kUnits">{{summary.units}}</span>
+                  </div>
                 </div>
               </div>
-
+            </div>
+            <div class="kSummary" *ngIf="_summaryDataRight.length">
+              <div class="kSummaryRow" *ngFor="let summary of _summaryDataRight">
+                <div class="kSummaryCheckbox">
+                  <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
+                  <span class="kLabel">{{summary.name}}</span>
+                </div>
+                <div class="kSummaryValue">
+                  <div>
+                    <span class="kValue">{{summary.value}}</span>
+                    <span class="kUnits">{{summary.units}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="kSummaryChart">
 
-              <div echarts class="kChart" [options]="_barChartData"></div>
-            </div>
+          <div class="kSummaryChart">
+            <div echarts class="kChart" [options]="_barChartData"></div>
+          </div>
 
         </div>
       </ng-container>
 
-      <div *ngIf="!_summaryData" class="kNoResults">
+      <div *ngIf="!_summaryData.length" class="kNoResults">
         <span *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</span>
       </div>
     </div>

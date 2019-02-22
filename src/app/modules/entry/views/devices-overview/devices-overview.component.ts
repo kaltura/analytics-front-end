@@ -3,7 +3,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { DevicesOverviewConfig } from './devices-overview.config';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -48,13 +48,15 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
   public _barChartData: { [key: string]: any; } = {};
-  public _summaryData: Summary = {};
+  public _summaryData: SummaryItem[] = [];
+  public _summaryDataRight: SummaryItem[] = [];
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _tabsData: Tab[] = [];
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _dataConfig: ReportDataConfig;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _selectedMetric: string;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
@@ -73,6 +75,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
+    this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
   }
   
   ngOnDestroy() {
@@ -117,7 +120,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       .subscribe(report => {
           this._tabsData = [];
           this._barChartData = {};
-          this._summaryData = {};
+          this._summaryData = [];
           
           // IMPORTANT to handle totals first, summary rely on totals
           if (report.totals) {
@@ -311,13 +314,17 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
-    const { data, columns } = this._getOverviewData(table, relevantFields);
+    const { data } = this._getOverviewData(table, relevantFields);
     
-    this._barChartData = this._getGraphData(data, relevantFields);
-    this._summaryData = this._getSummaryData(data, relevantFields);
+    this._barChartData = this._getGraphData(data, relevantFields)[this._selectedMetric];
+    this._summaryData = this._getSummaryData(data, relevantFields)[this._selectedMetric];
+    if (this._summaryData.length > 3) {
+      this._summaryDataRight = this._summaryData.slice(4);
+      this._summaryData = this._summaryData.slice(0, 3);
+    }
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
-    console.warn(totals);
+    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
   }
 }

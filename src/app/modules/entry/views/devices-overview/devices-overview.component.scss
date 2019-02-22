@@ -1,11 +1,22 @@
 @import '../../../../../styles/variables';
 
+.kReportContent {
+  min-width: 370px;
+}
+
 .kOverview {
   display: flex;
 
+  .kSummaryWrapper {
+    display: flex;
+    width: calc(50% - 26px);
+    height: 100%;
+    flex: 1;
+  }
+
   .kSummary {
-    width: calc(33% - 46px);
     padding: 20px 23px;
+    min-width: 175px;
 
     .kSummaryRow {
       display: flex;
@@ -32,29 +43,14 @@
           color: $kGrayscale3;
           margin: 0 17px 0 11px;
         }
-
-        label {
-          display: flex;
-          align-items: center;
-        }
-
-        p-checkbox {
-          width: 22px;
-          height: 22px;
-        }
       }
 
       .kSummaryValue {
         display: flex;
         align-items: center;
 
-        .kTrend,
-        .mini-loader {
-          margin-right: 12px;
-        }
-
         .kValue {
-          font-size: 24px;
+          font-size: 15px;
           font-weight: bold;
           color: $kGrayscale1;
         }
@@ -71,10 +67,11 @@
   }
 
   .kSummaryChart {
-    width: 66%;
+    width: 50%;
     height: 100%;
   }
-  .kChart{
+
+  .kChart {
     min-height: 280px;
     height: calc(100% - 40px) !important;
   }

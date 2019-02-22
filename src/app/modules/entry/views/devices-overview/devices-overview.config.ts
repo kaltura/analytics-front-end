@@ -19,15 +19,6 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           },
           'count_plays': {
             format: value => value,
-          },
-          'avg_time_viewed': {
-            format: value => value,
-          },
-          'sum_time_viewed': {
-            format: value => value,
-          },
-          'unique_known_users': {
-            format: value => value,
           }
         }
       },
@@ -40,28 +31,7 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.audience.technology.count_plays_tt`),
             sortOrder: 1,
             colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'unique_known_users': {
-            format: value => value,
-            title: this._translate.instant(`app.audience.technology.unique_known_users`),
-            tooltip: this._translate.instant(`app.audience.technology.unique_known_users_tt`),
-            sortOrder: 2,
-            colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
-          },
-          'sum_time_viewed': {
-            format: value => value,
-            title: this._translate.instant(`app.audience.technology.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.audience.technology.sum_time_viewed_tt`),
-            sortOrder: 3,
-            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-          },
-          'avg_time_viewed': {
-            format: value => value,
-            title: this._translate.instant(`app.audience.technology.avg_time_viewed`),
-            tooltip: this._translate.instant(`app.audience.technology.avg_time_viewed_tt`),
-            sortOrder: 4,
-            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-          },
+          }
         }
       }
     };
