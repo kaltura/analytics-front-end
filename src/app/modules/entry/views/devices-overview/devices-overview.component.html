@@ -8,7 +8,7 @@
     <div class="kReportContent">
       <ng-container *ngIf="_summaryData.length">
         <div class="kOverview">
-          <div class="kSummaryWrapper">
+          <div class="kSummaryWrapper" [ngStyle]="{'width': _summaryDataRight.length ? 'calc(50% - 46px)' : 'calc(33% - 46px)'}">
             <div class="kSummary">
               <div class="kSummaryRow" *ngFor="let summary of _summaryData">
                 <div class="kSummaryCheckbox">
@@ -39,7 +39,7 @@
             </div>
           </div>
 
-          <div class="kSummaryChart">
+          <div class="kSummaryChart" [ngStyle]="{'width': _summaryDataRight.length ? 'calc(50% - 46px)' : 'calc(66% - 46px)'}">
             <div echarts class="kChart" [options]="_barChartData"></div>
           </div>
 
