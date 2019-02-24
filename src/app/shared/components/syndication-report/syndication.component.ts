@@ -98,7 +98,7 @@ export class SyndicationComponent {
     this._isBusy = true;
     this._blockerMessage = null;
     this._tableData = [];
-    const reportConfig: ReportConfig = {
+    let reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
@@ -107,7 +107,7 @@ export class SyndicationComponent {
     };
     
     if (this.entryId) {
-      // TODO utilize entryId once supported by the server
+      reportConfig.filter.entryIdIn = this.entryId;
     }
     
     this._reportService.getReport(reportConfig, sections)
@@ -116,7 +116,7 @@ export class SyndicationComponent {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = {
+        let compareReportConfig = {
           reportType: this._reportType,
           filter: this._compareFilter,
           pager: this._pager,
@@ -125,7 +125,7 @@ export class SyndicationComponent {
         };
         
         if (this.entryId) {
-          // TODO utilize entryId once supported by the server
+          compareReportConfig.filter.entryIdIn = this.entryId;
         }
         
         return this._reportService.getReport(compareReportConfig, sections)
