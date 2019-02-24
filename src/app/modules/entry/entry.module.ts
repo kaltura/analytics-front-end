@@ -16,6 +16,8 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
+import { EntryFilterComponent } from './filter/filter.component';
+
 
 @NgModule({
   imports: [
@@ -38,6 +40,7 @@ import { VideoPerformanceComponent } from './views/video-performance/video-perfo
     EntryTotalsComponent,
     EntryPreviewComponent,
     VideoPerformanceComponent,
+    EntryFilterComponent
   ],
   exports: [],
   providers: []

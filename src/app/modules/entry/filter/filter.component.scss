@@ -1,0 +1,102 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kRefineFilters {
+  width: 100%;
+  height: auto;
+  margin-bottom: 0 !important;
+
+  .kRefineFiltersMain {
+    height: 100%;
+
+    .kFilterContainer {
+      padding: 32px 24px 0 24px;
+      display: flex;
+      flex-direction: column;
+
+      .kFilterContainerRow {
+        display: flex;
+        justify-content: space-between;
+        &:not(:first-child) {
+          margin-top: 24px;
+        }
+      }
+
+      .kFilterContainerCol {
+        display: flex;
+        flex-direction: column;
+        width: 336px;
+        justify-content: space-between;
+      }
+
+      .kListFilters {
+        display: flex;
+
+        .kLastItem {
+          margin-right: 18px !important;
+        }
+      }
+
+      .kMiscFilters {
+        display: flex;
+        flex-direction: column;
+        width: 432px;
+      }
+    }
+
+    .kGroupTitle {
+      display: inline-block;
+      color: $kGrayscale3;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .kRefineFiltersFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 66px;
+      padding: 0 24px;
+      margin-top: 8px;
+      button {
+        width: 100px;
+      }
+    }
+  }
+}
+
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 7px;
+    }
+  }
+}
+
+app-tags-filter, app-category-filter, app-country-filter {
+  display: block;
+  width: 100%;
+  padding-right: 24px;
+}
+
+:host /deep/ {
+  app-autocomplete-filter, app-dropdown-filter {
+    margin: 0;
+  }
+
+  .ui-autocomplete-multiple-container {
+    min-height: 34px;
+    padding: 3px 6px !important;
+  }
+}

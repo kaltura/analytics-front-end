@@ -46,7 +46,10 @@
       "countriesSelected": "{0} Countries Selected",
       "regionsSelected": "{0} Regions Selected",
       "citiesSelected": "{0} Cities Selected",
-      "filterCountries": "Filter Countries"
+      "filterCountries": "Filter Countries",
+      "filterDomains": "Filter Domains",
+      "domainPlaceholder": "Select Domain",
+      "domainsSelected": "{0} Domains Selected"
     },
     "categories": {
       "selectCategories": "Select Categories",

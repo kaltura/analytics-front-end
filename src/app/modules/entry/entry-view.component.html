@@ -34,11 +34,11 @@
           <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
         </div>
         <div class="kReportContainer">
-          <app-refine-filter [opened]="_refineFilterOpened"
-                             [dateFilter]="_dateFilter"
-                             [selectedFilters]="_selectedRefineFilters"
-                             (closeFilters)="_refineFilterOpened = false"
-                             (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+          <app-entry-filter [opened]="_refineFilterOpened"
+                            [dateFilter]="_dateFilter"
+                            [selectedFilters]="_selectedRefineFilters"
+                            (closeFilters)="_refineFilterOpened = false"
+                            (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
         </div>
 
         <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
