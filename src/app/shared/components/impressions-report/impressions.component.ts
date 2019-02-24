@@ -171,7 +171,7 @@ export class ImpressionsComponent implements OnInit {
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     
     if (this.entryId) {
-      reportConfig.objectIds = this.entryId;
+      reportConfig.filter.entryIdIn = this.entryId;
     }
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
@@ -181,7 +181,7 @@ export class ImpressionsComponent implements OnInit {
         
         const compareReportConfig: ReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
         if (this.entryId) {
-          compareReportConfig.objectIds = this.entryId;
+          compareReportConfig.filter.entryIdIn = this.entryId;
         }
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
