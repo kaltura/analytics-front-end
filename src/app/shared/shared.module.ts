@@ -12,6 +12,7 @@ import { DateFilterComponent } from './components/date-filter/date-filter.compon
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
+import { DomainFilterComponent } from './components/domain-filter/domain-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { BulletComponent } from './components/bullet/bullet.component';
 import { ReportService } from './services/report.service';
@@ -77,6 +78,7 @@ import { TableModule } from 'primeng/table';
     DateFilterComponent,
     UsersFilterComponent,
     CountryFilterComponent,
+    DomainFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
@@ -108,6 +110,7 @@ import { TableModule } from 'primeng/table';
     DateFilterComponent,
     UsersFilterComponent,
     CountryFilterComponent,
+    DomainFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,

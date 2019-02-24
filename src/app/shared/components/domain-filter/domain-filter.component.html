@@ -1,0 +1,8 @@
+<app-dropdown-filter [label]="'app.filters.filterDomains' | translate"
+                     [options]="_domainsFilterService.domainsOptions | async"
+                     [isLoading]="_domainsFilterService.isBusy('domain')"
+                     [defaultLabel]="'app.filters.domainPlaceholder' | translate"
+                     [selectedItemsLabel]="'app.filters.domainsSelected' | translate"
+                     [selectedFilters]="_selectedDomains"
+                     [countryTemplate]="true"
+                     (itemSelected)="_onItemSelected($event, 'domain')"></app-dropdown-filter>
