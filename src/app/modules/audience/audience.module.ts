@@ -36,7 +36,6 @@ import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entr
 import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
-import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
 import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
 import { CountryFilterComponent } from './views/geo-location/filter/country-filter/country-filter.component';
 
@@ -81,7 +80,6 @@ import { CountryFilterComponent } from './views/geo-location/filter/country-filt
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
-    SyndicationComponent,
     GeoFilterComponent,
     CountryFilterComponent,
   ],

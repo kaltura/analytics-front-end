@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -14,9 +13,12 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 @Component({
-  selector: 'app-engagement-syndication',
+  selector: 'app-syndication',
   templateUrl: './syndication.component.html',
   styleUrls: ['./syndication.component.scss'],
   providers: [
@@ -25,9 +27,32 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     SyndicationDataConfig,
   ]
 })
-export class SyndicationComponent extends EngagementBaseReportComponent {
+export class SyndicationComponent {
+  @Input() set dateFilter(value: DateChangeEvent) {
+    if (value) {
+      this._dateFilter = value;
+      
+      if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
+        this._updateFilter();
+        this._loadReport();
+      }
+    }
+  }
+  
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._refineFilter = value;
+      this._updateRefineFilter();
+      this._loadReport();
+    }
+  }
+  
+  @Input() entryId: string;
+  
   @Input() dateFilterComponent: DateFilterComponent;
   
+  private _dateFilter: DateChangeEvent;
+  private _refineFilter: RefineFilter = [];
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
@@ -38,7 +63,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
     interval: KalturaReportInterval.days,
   });
   
-  protected _componentId = 'syndication';
+  private _componentId = 'syndication';
   
   public _reportInterval = KalturaReportInterval.days;
   public _drillDown: string = null;
@@ -64,14 +89,12 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
               private _compareService: CompareService,
               private _dataConfigService: SyndicationDataConfig,
               private _logger: KalturaLogger) {
-    super();
-    
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   
-  protected _loadReport(sections = this._dataConfig): void {
+  private _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._tableData = [];
@@ -82,6 +105,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       order: this._order,
       objectIds: this._drillDown
     };
+    
+    if (this.entryId) {
+      // TODO utilize entryId once supported by the server
+    }
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -95,6 +123,11 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
           order: null,
           objectIds: this._drillDown,
         };
+        
+        if (this.entryId) {
+          // TODO utilize entryId once supported by the server
+        }
+        
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -133,15 +166,15 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         });
   }
   
-  protected _updateRefineFilter(): void {
+  private _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-    this._refineFilterToServerValue(this._filter);
+    refineFilterToServerValue(this._refineFilter, this._filter);
     if (this._compareFilter) {
-      this._refineFilterToServerValue(this._compareFilter);
+      refineFilterToServerValue(this._refineFilter, this._compareFilter);
     }
   }
   
-  protected _updateFilter(): void {
+  private _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
@@ -237,7 +270,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-    
+      
       return row;
     });
   }
@@ -256,7 +289,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
       this._loadReport({ table: null });
     }
   }
-
+  
   public _openLink(data): void {
     if (data && data.referrer) {
       const link = data.referrer.indexOf('http') === 0 ? data.referrer : `http://${data.referrer}`;
@@ -266,9 +299,9 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
   
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
-
+    
     this._selectedMetrics = tab.key;
-  
+    
     switch (this._selectedMetrics) {
       case 'sum_time_viewed':
         this._distributionColorScheme = 'time';
@@ -280,7 +313,7 @@ export class SyndicationComponent extends EngagementBaseReportComponent {
         this._distributionColorScheme = 'default';
         break;
     }
-  
+    
     this._logger.trace(
       'Update distribution color schema according to selected metric',
       { selectedMetric: this._selectedMetrics, schema: this._distributionColorScheme },

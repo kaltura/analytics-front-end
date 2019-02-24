@@ -38,7 +38,7 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
+import { DropdownModule, MultiSelectModule, PaginatorModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
@@ -46,6 +46,8 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { OsImagePipe } from 'shared/pipes/os-image.pipe';
+import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -67,6 +69,8 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     TagsModule,
     InputHelperModule,
     NgxEchartsModule,
+    PaginatorModule,
+    TableModule,
   ],
   declarations: [
     DateFilterComponent,
@@ -95,6 +99,7 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     DropdownFilterComponent,
     KalturaPlayerComponent,
     ImpressionsComponent,
+    SyndicationComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -124,6 +129,7 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     ImpressionsComponent,
+    SyndicationComponent,
     ...FilterComponentsList,
   ],
   providers: [
