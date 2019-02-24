@@ -4,7 +4,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaEndUserReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [],
-    tags = [], owners = [], country = [], region = [], city = [];
+    tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [];
   
   refineFilter.forEach(item => {
     switch (item.type) {
@@ -26,8 +26,14 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
       case 'owners':
         owners.push(item.value.id);
         break;
+      case 'users':
+        users.push(item.value.id);
+        break;
       case 'countries':
         country.push(item.value.name);
+        break;
+      case 'domains':
+        domains.push(item.value.name);
         break;
       case 'location':
         if (item.value.country) {
@@ -42,7 +48,7 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
         break;
     }
   });
-  
+
   if (categories.length) {
     serverFilter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
   } else {
@@ -66,7 +72,13 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   } else {
     delete serverFilter.ownerIdsIn;
   }
-  
+
+  if (users.length) {
+    serverFilter.userIds = users.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.userIds;
+  }
+
   if (country.length) {
     serverFilter.countryIn = country.join(analyticsConfig.valueSeparator);
   } else {

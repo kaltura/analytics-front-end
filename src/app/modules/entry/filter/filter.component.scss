@@ -21,17 +21,15 @@
 
       .kFilterContainerRow {
         display: flex;
-        justify-content: space-between;
-        &:not(:first-child) {
-          margin-top: 24px;
-        }
       }
 
       .kFilterContainerCol {
         display: flex;
         flex-direction: column;
         width: 336px;
-        justify-content: space-between;
+        &:not(:first-child) {
+          margin-left: 24px;
+        }
       }
 
       .kListFilters {
@@ -71,20 +69,11 @@
   }
 }
 
-
-.kTagsContainer {
-  ktags {
-    width: 100%;
-    margin-left: 0;
-
-    /deep/ .kTags {
-      width: auto;
-      padding: 7px;
-    }
-  }
+app-domains-filter, app-category-filter{
+  margin-top: 12px;
 }
 
-app-tags-filter, app-category-filter, app-country-filter {
+app-owners-filter, app-category-filter, app-country-filter {
   display: block;
   width: 100%;
   padding-right: 24px;

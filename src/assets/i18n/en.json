@@ -34,6 +34,7 @@
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",
+      "users": "Users",
       "owners": "Owners",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",

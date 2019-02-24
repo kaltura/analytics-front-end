@@ -90,9 +90,6 @@
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
-  /deep/ app-domains-filter{
-    margin-top: 12px;
-  }
 }
 
 
