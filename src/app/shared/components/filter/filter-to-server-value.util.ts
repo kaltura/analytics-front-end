@@ -10,7 +10,7 @@ import {
 import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
-export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaEndUserReportInputFilter | KalturaReportInputFilter): void {
+export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [],
     tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [];
   
