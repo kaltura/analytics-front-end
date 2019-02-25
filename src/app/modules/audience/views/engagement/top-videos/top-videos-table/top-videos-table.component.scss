@@ -98,12 +98,27 @@
 
 .kScore {
   text-align: right;
+  div{
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+    padding-top: 6px;
+    align-items: flex-end;
+  }
 
   span {
     color: $kGrayscale1;
     font-size: 18px;
     font-weight: bold;
     padding-right: 24px;
+    &:first-child{
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: bold;
+      font-style: italic;
+      color: $kGrayscale3;
+      margin-bottom: 8px;
+    }
   }
 }
 

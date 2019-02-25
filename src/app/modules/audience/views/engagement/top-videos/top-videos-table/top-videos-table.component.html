@@ -74,9 +74,9 @@
             </td>
           </ng-container>
           <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
-            <div *ngIf="data['status']?.length" style="display: flex; flex-direction: column; height: 80px; padding-top: 6px; align-items: flex-end;">
-              <span style="white-space: nowrap; font-size: 15px; font-weight: bold; font-style: italic; color: #999999">{{data['status']}}</span>
-              <span style="margin-top: 8px">{{data['engagement_ranking']}}/10</span>
+            <div *ngIf="data['status']?.length">
+              <span>{{data['status']}}</span>
+              <span>{{data['engagement_ranking']}}/10</span>
             </div>
             <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}/10</span>
           </td>
