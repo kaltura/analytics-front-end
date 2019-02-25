@@ -90,6 +90,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+          this._entryDetails = [];
           this._compareTableData = [];
           
           if (report.table && report.table.header && report.table.data) {
@@ -167,6 +168,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+  
+      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
+      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }
   }
   
