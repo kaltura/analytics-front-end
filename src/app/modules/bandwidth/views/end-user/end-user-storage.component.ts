@@ -110,13 +110,10 @@ export class EndUserStorageComponent implements OnInit {
 
   public _onSearchUsersChange(users): void {
     this._logger.trace('Handle search users action by user', { users });
-    let usersIds = [];
+    const usersIds = users.map(({ id }) => id);
     this._tags = users;
-    users.forEach((user: KalturaUser) => {
-      usersIds.push(user.id);
-    });
-    if (usersIds.toString().length) {
-      this.selectedUsers = usersIds.toString();
+    if (usersIds.length) {
+      this.selectedUsers = usersIds.join(analyticsConfig.valueSeparator);
     } else {
       this.selectedUsers = '';
     }
