@@ -17,6 +17,7 @@ import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltur
 import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
 import { EntryFilterComponent } from './filter/filter.component';
+import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-overview.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { EntryFilterComponent } from './filter/filter.component';
     EntryTotalsComponent,
     EntryPreviewComponent,
     VideoPerformanceComponent,
-    EntryFilterComponent
+    EntryDevicesOverviewComponent,
+    EntryFilterComponent,
   ],
   exports: [],
   providers: []
