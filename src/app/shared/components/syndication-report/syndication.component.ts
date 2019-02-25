@@ -3,7 +3,16 @@ import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, 
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaFilterPager,
+  KalturaObjectBaseFactory,
+  KalturaReportGraph,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -54,10 +63,10 @@ export class SyndicationComponent {
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
   private _totalPlaysCount = 0;
-  private _compareFilter: KalturaEndUserReportInputFilter = null;
+  private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
-  private _filter = new KalturaEndUserReportInputFilter({
+  private _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
     interval: KalturaReportInterval.days,

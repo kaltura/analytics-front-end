@@ -1,8 +1,16 @@
-import { KalturaEndUserReportInputFilter, KalturaESearchEntryFieldName, KalturaESearchEntryItem, KalturaESearchEntryOperator, KalturaESearchItemType, KalturaESearchOperatorType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaESearchEntryFieldName,
+  KalturaESearchEntryItem,
+  KalturaESearchEntryOperator,
+  KalturaESearchItemType,
+  KalturaESearchOperatorType,
+  KalturaReportInputFilter
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
-export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaEndUserReportInputFilter): void {
+export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaEndUserReportInputFilter | KalturaReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [],
     tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [];
   
@@ -74,9 +82,9 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   }
 
   if (users.length) {
-    serverFilter.userIds = users.join(analyticsConfig.valueSeparator);
+    (serverFilter as KalturaEndUserReportInputFilter).userIds = users.join(analyticsConfig.valueSeparator);
   } else {
-    delete serverFilter.userIds;
+    delete (serverFilter as KalturaEndUserReportInputFilter).userIds;
   }
 
   if (country.length) {
