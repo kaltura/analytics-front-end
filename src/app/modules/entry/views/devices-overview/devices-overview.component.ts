@@ -17,6 +17,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 export interface SummaryItem {
   key: string;
@@ -217,8 +218,10 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   private _getGraphData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): { [key: string]: any } {
     let legend = null;
     const config = this._dataConfig.totals.fields;
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(this._filter.toDate, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(this._compareFilter.toDate, analyticsConfig.locale)}`;
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = this._compareFilter
+      ? `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`
+      : null;
 
     if (compareData) {
       const uniqueKeys = Array.from(new Set([...data, ...compareData].map(({ device }) => device)));
@@ -282,6 +285,19 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     };
   
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+    const getFormatter = colors => params => {
+      const [current, compare] = params;
+      return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
+            <span class="kValue kSeriesName">${current.seriesName}</span>&nbsp;${current.value}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;
+            <span class="kValue kSeriesName">${compare.seriesName}</span>&nbsp;${compare.value}
+          </div>
+        `;
+    };
+    const defaultColors = [getPrimaryColor(), getSecondaryColor()];
 
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
@@ -289,7 +305,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         textStyle: {
           fontFamily: 'Lato',
         },
-        grid: { top: 24, left: 24, bottom: 0, right: 24, containLabel: true },
+        grid: { top: 24, left: 24, bottom: 60, right: 24, containLabel: true },
         color: config[key].colors,
         yAxis: {
           type: 'value',
@@ -333,6 +349,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           }
         },
         tooltip: {
+          formatter: getFormatter(config[key].colors || defaultColors),
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
@@ -419,8 +436,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         this._summaryDataRight = this._summaryData.slice(3);
         this._summaryData = this._summaryData.slice(0, 3);
       }
-      
-      console.warn(this._barChartData);
     }
   }
 }
