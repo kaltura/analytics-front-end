@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import {BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
@@ -23,7 +23,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     SourcesDataConfig,
   ]
 })
-export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent {
+export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent implements OnDestroy{
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _pager = new KalturaFilterPager();
   private _dataConfig: ReportDataConfig;
@@ -35,7 +35,8 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   });
   
   protected _componentId = 'sources';
-  
+  public topSources$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
+
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _isCompareMode: boolean;
@@ -71,6 +72,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   protected _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this.topSources$.next({table: null, compare: null, busy: true, error: null});
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     this._reportService.getReport(reportConfig, { graph: null })
       .pipe(switchMap(report => {
@@ -92,6 +94,9 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
+            this.topSources$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+          } else {
+            this.topSources$.next({table: null, compare: null, busy: false, error: null});
           }
 
           this._isBusy = false;
@@ -106,6 +111,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
               this._loadReport();
             },
           };
+          this.topSources$.next({table: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions)});
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
@@ -165,5 +171,9 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
         graphOptions
         ).barChartData;
     }
+  }
+
+  ngOnDestroy() {
+    this.topSources$.complete();
   }
 }
