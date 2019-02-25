@@ -1,18 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
-import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniTopSourcesConfig } from './mini-top-sources.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import * as moment from 'moment';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -97,14 +94,16 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
     this._tableData = tableData;
     if (this._tableData.length) {
       let totalEntriesCount = 0;
+      let topEntriesCount = 0;
       this._tableData.forEach(data => {
         const addedEntries = parseInt(data.added_entries);
         totalEntriesCount += addedEntries;
-        if (addedEntries > this._topSourceCount) {
-          this._topSourceCount = addedEntries;
+        if (addedEntries > topEntriesCount) {
+          topEntriesCount = addedEntries;
           this._topSourceLabel = data.source;
         }
       });
+      this._topSourceCount = topEntriesCount;
       this._otherSourcesCount = totalEntriesCount - this._topSourceCount;
     }
   }
