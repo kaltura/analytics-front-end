@@ -13,6 +13,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -45,6 +46,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: any[] = [];
+  public _entryDetails: EntryDetailsOverlayData[] = [];
   public _compareTableData: any[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
@@ -155,6 +157,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
+  
+    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
+    this._entryDetails = entryDetails.map(extendTableRow);
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);

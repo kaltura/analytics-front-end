@@ -8,12 +8,14 @@
   <div class="kReportContent">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-engagement-top-videos-table *ngIf="_isCompareMode"
+                                       [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
                                        [firstTimeLoading]="_compareFirstTimeLoading"
                                        [columns]="_columns"></app-engagement-top-videos-table>
       <app-engagement-top-videos-table [tableData]="_tableData"
+                                       [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
