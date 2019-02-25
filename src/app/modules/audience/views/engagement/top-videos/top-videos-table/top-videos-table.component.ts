@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
+import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -83,7 +83,9 @@ export class TopVideosTableComponent {
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
       this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
-      this._overlay.show(event);
+      if (this._entryData.status === KalturaEntryStatus.ready) {
+        this._overlay.show(event);
+      }
     }
   }
   
@@ -95,11 +97,12 @@ export class TopVideosTableComponent {
   }
 
   public _drillDown(entryId: string): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}`);
-    } else {
-      this._router.navigate(['entry', entryId]);
+    if (this._entryData.status === KalturaEntryStatus.ready) {
+      if (analyticsConfig.isHosted) {
+        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}`);
+      } else {
+        this._router.navigate(['entry', entryId]);
+      }
     }
-    
   }
 }
