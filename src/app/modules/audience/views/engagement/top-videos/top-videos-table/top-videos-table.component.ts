@@ -4,6 +4,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -19,6 +20,7 @@ export class TopVideosTableComponent {
     this._totalCount = value.length;
   }
   
+  @Input() entryDetails: EntryDetailsOverlayData[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
   @Input() isCompareMode: boolean;
@@ -34,7 +36,7 @@ export class TopVideosTableComponent {
   private _currentOrderField = 'count_plays';
   private _currentOrderDirection = -1;
   
-  public _entryId: string;
+  public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
   public _tableData: any[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
@@ -78,16 +80,16 @@ export class TopVideosTableComponent {
     }
   }
   
-  public _showOverlay(event: any, entryId: string): void {
+  public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
-      this._entryId = entryId;
+      this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
       this._overlay.show(event);
     }
   }
   
   public _hideOverlay(): void {
     if (this._overlay) {
-      this._entryId = null;
+      this._entryData = null;
       this._overlay.hide();
     }
   }
