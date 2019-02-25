@@ -162,6 +162,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           this._compareTabsData = [];
           this._barChartData = {};
           this._summaryData = [];
+          this._summaryDataRight = [];
           
           if (compare) {
             this._handleCompare(report, compare);
@@ -210,12 +211,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       }
       return data;
     }, []);
-    
-    // move other devices in the end
-    const otherDevicesIndex = data.findIndex(({ device }) => device === 'OTHER');
-    if (otherDevicesIndex !== -1) {
-      data.push(data.splice(otherDevicesIndex, 1)[0]);
-    }
     
     return { data, columns };
   }
@@ -465,6 +460,14 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           collection.push(relevantFields.reduce((result, field) => (result[field] = '0', result), { device: key }));
         }
       };
+      const arrangeKeys = data => {
+        // move other devices in the end
+        const otherDevicesIndex = data.findIndex(({ device }) => device === 'OTHER');
+        if (otherDevicesIndex !== -1) {
+          data.push(data.splice(otherDevicesIndex, 1)[0]);
+        }
+      };
+
       const updateCurrentData = updateCollection(currentData);
       const updateCompareData = updateCollection(compareData);
       
@@ -472,6 +475,9 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         updateCurrentData(key);
         updateCompareData(key);
       });
+  
+      arrangeKeys(currentData);
+      arrangeKeys(compareData);
       
       this._barChartData = this._getGraphData(relevantFields, currentData, compareData)[this._selectedMetric];
       this._summaryData = this._getSummaryData(relevantFields, currentData, compareData)[this._selectedMetric];
