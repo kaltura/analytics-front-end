@@ -20,10 +20,16 @@
     font-size: 18px;
     color: $kGrayscale1;
     margin-bottom: 12px;
+    position: absolute;
+    hite-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 375px);
   }
 
   .kEntryDetails {
     color: $kGrayscale3;
+    margin-top: 32px;
   }
 }
 

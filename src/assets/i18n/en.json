@@ -322,7 +322,11 @@
         "creationDate": "Creation Date",
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data",
-        "by": "By"
+        "by": "By",
+        "entryStatus": {
+          "deleted": "Deleted Entry",
+          "unavailable": "Unavailable Entry"
+        }
       },
       "topDomainsReport": {
         "index": "#",

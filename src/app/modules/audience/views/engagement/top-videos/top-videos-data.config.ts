@@ -3,11 +3,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 import * as moment from 'moment';
+import {KalturaEntryStatus} from "kaltura-ngx-client";
 
 @Injectable()
 export class TopVideosDataConfig extends ReportDataBaseConfig {
+  private translate: TranslateService;
   constructor(_translate: TranslateService) {
     super(_translate);
+    this.translate = _translate;
   }
 
   public getConfig(): ReportDataConfig {
@@ -21,6 +24,10 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           'entry_name': {
             format: value => value,
             sortOrder: 1,
+          },
+          'status': {
+            format: value => value !== KalturaEntryStatus.ready ? value === KalturaEntryStatus.deleted ? this.translate.instant('app.engagement.topVideosReport.entryStatus.deleted') : this.translate.instant('app.engagement.topVideosReport.entryStatus.unavailable') : '',
+            sortOrder: 8,
           },
           'creator_name': {
             format: value => value,
@@ -55,6 +62,9 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'entry_name': {
+            format: value => value,
+          },
+          'status': {
             format: value => value,
           },
           'creator_name': {
