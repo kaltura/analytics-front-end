@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -13,6 +13,10 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { EntryBase } from '../entry-base/entry-base';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { CompareService } from 'shared/services/compare.service';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface SummaryItem {
   key: string;
@@ -45,6 +49,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
+  private _reportType = KalturaReportType.platforms;
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
   public _barChartData: { [key: string]: any; } = {};
@@ -63,6 +69,10 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       searchInAdminTags: false
     }
   );
+  
+  public get _isCompareMode(): boolean {
+    return this._compareFilter !== null;
+  }
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
@@ -109,26 +119,55 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     this._isBusy = true;
     this._blockerMessage = null;
     
+    if (this.entryId) {
+      this._filter.entryIdIn = this.entryId;
+    }
+    
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.platforms,
+      reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
       order: null
     };
+    
     this._reportService.getReport(reportConfig, this._dataConfig, false)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(report => {
+      .pipe(
+        cancelOnDestroy(this),
+        switchMap(report => {
+          if (!this._isCompareMode) {
+            return ObservableOf({ report, compare: null });
+          }
+          
+          if (this.entryId) {
+            this._compareFilter.entryIdIn = this.entryId;
+          }
+          
+          const compareReportConfig: ReportConfig = {
+            reportType: this._reportType,
+            filter: this._compareFilter,
+            pager: this._pager,
+            order: null
+          };
+
+          return this._reportService.getReport(compareReportConfig, this._dataConfig)
+            .pipe(map(compare => ({ report, compare })));
+        }))
+      .subscribe(({ report, compare }) => {
           this._tabsData = [];
           this._barChartData = {};
           this._summaryData = [];
           
-          // IMPORTANT to handle totals first, summary rely on totals
-          if (report.totals) {
-            this.handleTotals(report.totals); // handle totals
-          }
-          
-          if (report.table && report.table.header && report.table.data) {
-            this.handleOverview(report.table); // handle overview
+          if (compare) {
+            this._handleCompare(report, compare);
+          } else {
+            // IMPORTANT to handle totals first, summary rely on totals
+            if (report.totals) {
+              this.handleTotals(report.totals); // handle totals
+            }
+            
+            if (report.table && report.table.header && report.table.data) {
+              this.handleOverview(report.table); // handle overview
+            }
           }
           
           this._isBusy = false;
@@ -145,16 +184,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-  }
-  
-  private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
-    const currentValue = device.rawValue;
-    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue.toFixed(this._fractions)))}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue.toFixed(this._fractions)))}`;
-    device['trend'] = value !== null ? value : '–';
-    device['trendDirection'] = direction;
-    device['tooltip'] = tooltip;
-    device['compareUnits'] = value !== null ? '%' : '';
   }
   
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
@@ -185,31 +214,83 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     return { data, columns };
   }
   
-  private _getRawGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
-    return relevantFields.reduce((result, key) => {
-      result[key] = data.map(item => {
-        let value = parseFloat(item[key]) || 0;
-        if (value % 1 !== 0) {
-          value = Number(value.toFixed(this._fractions));
-        }
-        return { value, key: item.device };
-      });
-      
-      return result;
-    }, {});
-  }
-  
-  
-  private _getGraphData(data: { [key: string]: string }[], relevantFields: string[]): { [key: string]: any } {
-    const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+  private _getGraphData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): { [key: string]: any } {
+    let legend = null;
     const config = this._dataConfig.totals.fields;
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthString(this._compareFilter.toDate, analyticsConfig.locale)}`;
+
+    if (compareData) {
+      const uniqueKeys = Array.from(new Set([...data, ...compareData].map(({ device }) => device)));
+      const updateCollection = collection => key => {
+        if (!collection.find(({ device }) => key === device)) {
+          collection.push(relevantFields.reduce((result, field) => (result[field] = '0', result), { device: key }));
+        }
+      };
+      const updateCurrentData = updateCollection(data);
+      const updateCompareData = updateCollection(compareData);
+
+      uniqueKeys.forEach(key => {
+        updateCurrentData(key);
+        updateCompareData(key);
+      });
+
+      legend = {
+        data: [currentPeriodTitle, comparePeriodTitle],
+        icon: 'circle',
+        itemWidth: 11,
+        left: 0,
+        bottom: 24,
+        padding: [0, 0, 0, 24],
+        selectedMode: false,
+        textStyle: {
+          fontSize: 12,
+          fontWeight: 'bold'
+        }
+      };
+    }
+
+    const getSeries = key => {
+      const result = [
+        {
+          name: currentPeriodTitle,
+          data: data.map(item => {
+            let value = parseFloat(item[key]) || 0;
+            if (value % 1 !== 0) {
+              value = Number(value.toFixed(this._fractions));
+            }
+            return value;
+          }),
+          type: 'bar'
+        }
+      ];
+    
+      if (compareData) {
+        result.push({
+          name: comparePeriodTitle,
+          data: compareData.map(item => {
+            let value = parseFloat(item[key]) || 0;
+            if (value % 1 !== 0) {
+              value = Number(value.toFixed(this._fractions));
+            }
+            return value;
+          }),
+          type: 'bar'
+        });
+      }
+      return result;
+    };
+  
+    const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
+
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
+        legend,
         textStyle: {
           fontFamily: 'Lato',
         },
         grid: { top: 24, left: 24, bottom: 0, right: 24, containLabel: true },
-        color: [config[key].colors[0]],
+        color: config[key].colors,
         yAxis: {
           type: 'value',
           axisLabel: {
@@ -267,16 +348,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
             }
           }
         },
-        series: [{
-          data: data.map(item => {
-            let value = parseFloat(item[key]) || 0;
-            if (value % 1 !== 0) {
-              value = Number(value.toFixed(this._fractions));
-            }
-            return value;
-          }),
-          type: 'bar'
-        }]
+        series: getSeries(key),
       };
       
       return barChartData;
@@ -316,7 +388,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data } = this._getOverviewData(table, relevantFields);
     
-    this._barChartData = this._getGraphData(data, relevantFields)[this._selectedMetric];
+    this._barChartData = this._getGraphData(relevantFields, data)[this._selectedMetric];
     this._summaryData = this._getSummaryData(data, relevantFields)[this._selectedMetric];
     if (this._summaryData.length > 3) {
       this._summaryDataRight = this._summaryData.slice(3);
@@ -326,5 +398,29 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
+  }
+  
+  private _handleCompare(current: Report, compare: Report): void {
+    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+    
+    if (current.totals) {
+      this.handleTotals(current.totals); // handle totals
+    }
+  
+    if (current.table && current.table.data && compare.table && compare.table.data) {
+      const relevantFields = Object.keys(this._dataConfig.totals.fields);
+      const { data: currentData } = this._getOverviewData(current.table, relevantFields);
+      const { data: compareData } = this._getOverviewData(compare.table, relevantFields);
+  
+      this._barChartData = this._getGraphData(relevantFields, currentData, compareData)[this._selectedMetric];
+      this._summaryData = this._getSummaryData(currentData, relevantFields)[this._selectedMetric];
+      if (this._summaryData.length > 3) {
+        this._summaryDataRight = this._summaryData.slice(3);
+        this._summaryData = this._summaryData.slice(0, 3);
+      }
+      
+      console.warn(this._barChartData);
+    }
   }
 }
