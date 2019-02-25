@@ -25,7 +25,9 @@ export class InsightsBulletComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.topValue && changes.topValue.currentValue) {
+      setTimeout( () => {
         this.drawBullet();
+      }, 200);
     }
   }
 
