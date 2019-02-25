@@ -47,6 +47,29 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             sortOrder: 7,
           }
         }
+      },
+      entryDetails: {
+        fields: {
+          'object_id': {
+            format: value => value,
+            hidden: true,
+          },
+          'entry_name': {
+            format: value => value,
+          },
+          'creator_name': {
+            format: value => value,
+          },
+          'created_at': {
+            format: value => ReportHelper.format('serverDate', value),
+          },
+          'media_type': {
+            format: value => Number(value),
+          },
+          'ms_duration': {
+            format: value => ReportHelper.time(value),
+          }
+        }
       }
     };
   }
