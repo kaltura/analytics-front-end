@@ -24,13 +24,9 @@ export class InsightsBulletComponent implements OnChanges{
   @Input() othersLabel = '';
 
   ngOnChanges(changes: SimpleChanges) {
-
     if (changes.topValue && changes.topValue.currentValue) {
-      setTimeout( () => {
         this.drawBullet();
-      }, 200);
     }
-
   }
 
   private drawBullet(): void {

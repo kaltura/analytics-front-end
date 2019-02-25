@@ -8,6 +8,11 @@
   font-weight: 700;
 }
 
+.kReportContent{
+  overflow: hidden;
+  position: relative;
+}
+
 .kFilters {
   height: 93px !important;
 }
@@ -40,6 +45,9 @@
       height: 100%;
       font-size: 28px;
       color: $kGrayscale3;
+      position: absolute;
+      background-color: white;
+      width: 100%;
     }
 
   }
