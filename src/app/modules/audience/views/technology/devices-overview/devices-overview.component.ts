@@ -389,7 +389,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           let value = 0;
           if (key === 'avg_time_viewed') {
             value = Number((itemValue || 0).toFixed(this._fractions));
-          } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
+          } else if (!isNaN(itemValue) && !isNaN(totalValue) && totalValue !== 0) {
             value = (itemValue / totalValue) * 100;
             if (value % 1 !== 0) {
               value = Number(value.toFixed(this._fractions));

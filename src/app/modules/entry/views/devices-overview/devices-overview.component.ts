@@ -26,6 +26,9 @@ export interface SummaryItem {
   rawValue: number;
   units: string;
   compareUnits: string;
+  compare?: boolean;
+  tooltip?: string;
+  trend?: number;
 }
 
 export interface Summary {
@@ -51,6 +54,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
   private _reportType = KalturaReportType.platforms;
+  private _tabsData: Tab[] = [];
+  private _compareTabsData: Tab[] = [];
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
@@ -59,7 +64,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   public _summaryDataRight: SummaryItem[] = [];
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
-  public _tabsData: Tab[] = [];
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _dataConfig: ReportDataConfig;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -149,12 +153,13 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
             pager: this._pager,
             order: null
           };
-
+          
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         }))
       .subscribe(({ report, compare }) => {
           this._tabsData = [];
+          this._compareTabsData = [];
           this._barChartData = {};
           this._summaryData = [];
           
@@ -222,22 +227,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     const comparePeriodTitle = this._compareFilter
       ? `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`
       : null;
-
+    
     if (compareData) {
-      const uniqueKeys = Array.from(new Set([...data, ...compareData].map(({ device }) => device)));
-      const updateCollection = collection => key => {
-        if (!collection.find(({ device }) => key === device)) {
-          collection.push(relevantFields.reduce((result, field) => (result[field] = '0', result), { device: key }));
-        }
-      };
-      const updateCurrentData = updateCollection(data);
-      const updateCompareData = updateCollection(compareData);
-
-      uniqueKeys.forEach(key => {
-        updateCurrentData(key);
-        updateCompareData(key);
-      });
-
       legend = {
         data: [currentPeriodTitle, comparePeriodTitle],
         icon: 'circle',
@@ -252,7 +243,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         }
       };
     }
-
+    
     const getSeries = key => {
       const result = [
         {
@@ -267,7 +258,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           type: 'bar'
         }
       ];
-    
+      
       if (compareData) {
         result.push({
           name: comparePeriodTitle,
@@ -283,11 +274,13 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       }
       return result;
     };
-  
+    
     const xAxisData = data.map(({ device }) => this._translate.instant(`app.audience.technology.devices.${device}`));
     const getFormatter = colors => params => {
       const [current, compare] = params;
-      return `
+      
+      if (compare) {
+        return `
           <div class="kGraphTooltip">
             ${current.name}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
@@ -296,16 +289,25 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
             <span class="kValue kSeriesName">${compare.seriesName}</span>&nbsp;${compare.value}
           </div>
         `;
+      }
+      
+      return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
+            <span class="kValue kSeriesName">${current.seriesName}</span>&nbsp;${current.value}
+          </div>
+        `;
     };
     const defaultColors = [getPrimaryColor(), getSecondaryColor()];
-
+    
     return relevantFields.reduce((barChartData, key) => {
       barChartData[key] = {
         legend,
         textStyle: {
           fontFamily: 'Lato',
         },
-        grid: { top: 24, left: 24, bottom: 60, right: 24, containLabel: true },
+        grid: { top: 24, left: 24, bottom: compareData ? 60 : 24, right: 24, containLabel: true },
         color: config[key].colors,
         yAxis: {
           type: 'value',
@@ -372,28 +374,54 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     }, {});
   }
   
-  private _getSummaryData(data: { [key: string]: string }[], relevantFields: string[]): Summary {
+  private _getSummaryData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): Summary {
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = this._compareFilter
+      ? `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`
+      : null;
+    const getValue = (itemValue, totalValue) => {
+      let value = 0;
+      if (!isNaN(itemValue) && !isNaN(totalValue) && totalValue !== 0) {
+        value = (itemValue / totalValue) * 100;
+        if (value % 1 !== 0) {
+          value = Number(value.toFixed(this._fractions));
+        }
+      }
+      return value;
+    };
+    
     return relevantFields.reduce((summaryData, key) => {
-      const relevantTotal = this._tabsData.find(total => total.key === key);
-      if (relevantTotal) {
-        const totalValue = parseFloat(relevantTotal.value);
-        summaryData[key] = data.map(item => {
-          const itemValue = parseFloat(item[key]);
-          let value = 0;
-          if (key === 'avg_time_viewed') {
-            value = Number((itemValue || 0).toFixed(this._fractions));
-          } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
-            value = (itemValue / totalValue) * 100;
-            if (value % 1 !== 0) {
-              value = Number(value.toFixed(this._fractions));
-            }
+      const relevantCurrentTotal = this._tabsData.find(total => total.key === key);
+      if (relevantCurrentTotal) {
+        const totalValue = parseFloat(relevantCurrentTotal.value);
+        
+        const relevantCompareTotal = this._compareTabsData.find(total => total.key === key);
+        const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
+        
+        summaryData[key] = data.map((item, index) => {
+          const currentValue = getValue(parseFloat(item[key]), totalValue);
+          
+          if (compareData) {
+            const compareValue = getValue(parseFloat(compareData[index][key]), compareTotalValue);
+            const { value: trend, direction } = this._trendService.calculateTrend(currentValue, compareValue);
+            
+            return {
+              compare: true,
+              tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, currentValue, '%')}${this._trendService.getTooltipRowString(comparePeriodTitle, compareValue, '%')}`,
+              value: trend !== null ? trend : '–',
+              units: trend !== null ? '%' : '',
+              key: item.device,
+              name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+              trend: direction,
+            };
           }
+          
           return {
             key: item.device,
             name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-            value: value,
-            rawValue: itemValue,
-            units: key === 'avg_time_viewed' ? 'min' : '%'
+            value: currentValue,
+            rawValue: currentValue,
+            units: '%'
           };
         });
       }
@@ -406,32 +434,47 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     const { data } = this._getOverviewData(table, relevantFields);
     
     this._barChartData = this._getGraphData(relevantFields, data)[this._selectedMetric];
-    this._summaryData = this._getSummaryData(data, relevantFields)[this._selectedMetric];
+    this._summaryData = this._getSummaryData(relevantFields, data)[this._selectedMetric];
     if (this._summaryData.length > 3) {
       this._summaryDataRight = this._summaryData.slice(3);
       this._summaryData = this._summaryData.slice(0, 3);
     }
   }
   
-  private handleTotals(totals: KalturaReportTotal): void {
+  private handleTotals(totals: KalturaReportTotal, compare?: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
+    
+    if (compare) {
+      this._compareTabsData = this._reportService.parseTotals(compare, this._dataConfig.totals, this._selectedMetric);
+    }
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
     if (current.totals) {
-      this.handleTotals(current.totals); // handle totals
+      this.handleTotals(current.totals, compare.totals); // handle totals
     }
-  
+    
     if (current.table && current.table.data && compare.table && compare.table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data: currentData } = this._getOverviewData(current.table, relevantFields);
       const { data: compareData } = this._getOverviewData(compare.table, relevantFields);
-  
+      
+      const uniqueKeys = Array.from(new Set([...currentData, ...compareData].map(({ device }) => device)));
+      const updateCollection = collection => key => {
+        if (!collection.find(({ device }) => key === device)) {
+          collection.push(relevantFields.reduce((result, field) => (result[field] = '0', result), { device: key }));
+        }
+      };
+      const updateCurrentData = updateCollection(currentData);
+      const updateCompareData = updateCollection(compareData);
+      
+      uniqueKeys.forEach(key => {
+        updateCurrentData(key);
+        updateCompareData(key);
+      });
+      
       this._barChartData = this._getGraphData(relevantFields, currentData, compareData)[this._selectedMetric];
-      this._summaryData = this._getSummaryData(currentData, relevantFields)[this._selectedMetric];
+      this._summaryData = this._getSummaryData(relevantFields, currentData, compareData)[this._selectedMetric];
       if (this._summaryData.length > 3) {
         this._summaryDataRight = this._summaryData.slice(3);
         this._summaryData = this._summaryData.slice(0, 3);
