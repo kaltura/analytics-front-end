@@ -15,6 +15,7 @@ import { CountryFilterComponent } from './components/country-filter/country-filt
 import { DomainFilterComponent } from './components/domain-filter/domain-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { BulletComponent } from './components/bullet/bullet.component';
+import { InsightsBulletComponent } from './components/insights-bullet/insights-bullet.component';
 import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -82,6 +83,7 @@ import { TableModule } from 'primeng/table';
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
+    InsightsBulletComponent,
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
@@ -114,6 +116,7 @@ import { TableModule } from 'primeng/table';
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
+    InsightsBulletComponent,
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,

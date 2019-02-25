@@ -126,6 +126,9 @@
     },
     "contributors": {
       "title": "Contributors",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Way To Add Content",
+      "others": "Others",
       "top-contributors": "Top Contributors",
       "top-contributors_tt": "List of users with the highest contribution score based on Kaltura’s contribution score formula",
       "highlights": "Highlights",
