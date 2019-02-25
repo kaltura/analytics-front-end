@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
@@ -93,17 +93,9 @@ export class EndUserStorageComponent implements OnInit {
     this.pager.pageIndex = 1;
     if (event.compare.active) {
       const compare = event.compare;
-      this.compareFilter = new KalturaEndUserReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: event.timeZoneOffset,
-          interval: event.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-          userIds: this.filter.userIds,
-        }
-      );
+      this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
+      this.compareFilter.fromDate = compare.startDate;
+      this.compareFilter.toDate = compare.endDate;
     } else {
       this.compareFilter = null;
     }
