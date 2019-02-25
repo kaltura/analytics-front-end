@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import {KalturaEntryStatus, KalturaMediaType} from 'kaltura-ngx-client';
 
 export interface EntryDetailsOverlayData {
   object_id: string;
@@ -9,6 +9,7 @@ export interface EntryDetailsOverlayData {
   created_at: string;
   ms_duration: string;
   thumbnailUrl: string;
+  status: KalturaEntryStatus;
 }
 
 @Component({
