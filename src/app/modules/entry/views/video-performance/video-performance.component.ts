@@ -14,6 +14,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { SelectItem } from 'primeng/api';
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-video-performance',
@@ -260,7 +261,9 @@ export class VideoPerformanceComponent extends EntryBase {
         this._selectedMetrics,
         field,
         this._selectedMetricsLabel,
-        this._translate.instant(`app.entry.${field}`)
+        this._translate.instant(`app.entry.${field}`),
+        this._compareFilter ? DateFilterUtils.getMomentDate(this._filter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MMM D, YYYY') : '',
+        this._compareFilter ? DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MMM D, YYYY') : ''
       );
     } else {
       this._metricsLineChartData = null;

@@ -503,7 +503,9 @@ export class CompareService implements OnDestroy {
                          currentMetric: string,
                          compareMetric: string,
                          currentMetricLabel: string,
-                         compareMetricLabel: string): any {
+                         compareMetricLabel: string,
+                         currentDate: string = '',
+                         compareDate: string = ''): any {
     const current = graphsData[currentMetric];
     const compare = graphsData[compareMetric];
   
@@ -525,11 +527,11 @@ export class CompareService implements OnDestroy {
 
         return `
           <div class="kGraphTooltip">
-            ${current.name}<br/>
+            ${currentDate}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
-            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${metricValue}<br/>
-            ${compare.name}<br/>
-            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${compareValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
+            ${compareDate}<br/>
+            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
             <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}
           </div>
       `;
