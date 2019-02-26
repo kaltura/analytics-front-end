@@ -164,9 +164,9 @@ export class FilterComponent {
       'categories': [],
       'tags': [],
       'owners': [],
+      'users': [],
       'location': [],
       'countries': [],
-      'users': [],
     };
   }
   

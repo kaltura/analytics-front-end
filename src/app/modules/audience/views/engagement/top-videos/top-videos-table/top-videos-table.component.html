@@ -73,8 +73,12 @@
               </div>
             </td>
           </ng-container>
-          <td class="kScore" [ngStyle]="{'width': '110px'}">
-            <span>{{data['engagement_ranking']}}/10</span>
+          <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
+            <div *ngIf="data['status']?.length">
+              <span>{{data['status']}}</span>
+              <span>{{data['engagement_ranking']}}/10</span>
+            </div>
+            <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}/10</span>
           </td>
         </tr>
       </ng-template>
@@ -93,5 +97,5 @@
 </div>
 
 <k-overlayPanel #overlay appendTo="body">
-  <app-entry-details-overlay *ngIf="_entryId" [entryId]="_entryId"></app-entry-details-overlay>
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
 </k-overlayPanel>

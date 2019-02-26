@@ -29,7 +29,7 @@ body{
   width: 100%;
   .kReportView{
     width: 100%;
-    min-height: calc(100vh - 50px);
+    min-height: 600px;
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -389,6 +389,10 @@ ui-carousel /deep/ {
   padding: 0 !important;
 }
 
+.kNoMargin {
+  margin: 0 !important;
+}
+
 .kBrowserIcon {
   width: 24px;
   height: 24px;
@@ -437,4 +441,34 @@ ui-carousel /deep/ {
       background-color: $kGrayscale6;
     }
   }
+}
+
+div, span, tr, td, li {
+  outline: none !important;
+}
+
+.ui-datepicker-trigger {
+  position: absolute;
+}
+
+.ui-table p-sorticon {
+  vertical-align: unset;
+}
+
+k-area-blocker {
+  .kErrorMessageContainer{
+    width: 100%;
+    .kErrorMessage{
+      max-width: 586px;
+      width: 80% !important;
+      padding: 12px 12px 18px 12px !important;
+      .kErrorButtons{
+        margin-top: 24px !important;
+      }
+      .kErrorMessageText{
+        overflow-x: hidden;
+      }
+    }
+  }
+
 }

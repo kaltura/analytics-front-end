@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -13,6 +13,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -24,7 +25,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     ReportService
   ]
 })
-export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit {
+export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit, OnDestroy {
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
@@ -39,10 +40,13 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   });
   
   protected _componentId = 'top-videos';
+
+  public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: any[] = [];
+  public _entryDetails: EntryDetailsOverlayData[] = [];
   public _compareTableData: any[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
@@ -70,6 +74,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   }
   
   protected _loadReport(): void {
+    this.topVideos$.next({table: null, compare: null, busy: true, error: null});
     this._isBusy = true;
     this._blockerMessage = null;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -85,10 +90,14 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+          this._entryDetails = [];
           this._compareTableData = [];
           
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
+            this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+          } else {
+            this.topVideos$.next({table: null, compare: null, busy: false, error: null});
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
@@ -104,14 +113,15 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               this._loadReport();
             },
           };
+          this.topVideos$.next({table: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions)});
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
   
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
@@ -121,8 +131,8 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._isCompareMode = true;
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
@@ -148,13 +158,19 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
+  
+    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
+    this._entryDetails = entryDetails.map(extendTableRow);
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._columns = ['entry_name', 'count_plays'];
-      this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-      this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+  
+      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
+      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }
   }
   
@@ -165,5 +181,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._order = order;
       this._loadReport();
     }
+  }
+
+  ngOnDestroy() {
+    this.topVideos$.complete();
   }
 }

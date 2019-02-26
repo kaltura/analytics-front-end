@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-receiver:before {
+  content: "\e912";
+}
 .icon-operating_system:before {
   content: "\e911";
 }

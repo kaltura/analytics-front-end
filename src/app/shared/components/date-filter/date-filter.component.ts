@@ -199,19 +199,19 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];
-      this._dateRangeLabel = moment(this.startDate).format('MMM D, YYYY') + ' - ' + moment(this.endDate).format('MMM D, YYYY');
+      this._dateRangeLabel = DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY');
     }
     this.updateCompareMax();
     if (this.selectedComparePeriod === 'lastYear') {
-      this.compareStartDate = moment(this.startDate).subtract(12, 'months').toDate();
-      this.compareEndDate = moment(this.endDate).subtract(12, 'months').toDate();
+      this.compareStartDate = DateFilterUtils.getMomentDate(this.startDate).subtract(12, 'months').toDate();
+      this.compareEndDate = DateFilterUtils.getMomentDate(this.endDate).subtract(12, 'months').toDate();
     } else {
       this.compareStartDate = this.specificCompareStartDate;
       if (this.compareStartDate > this.compareMaxDate) {
         this.compareStartDate = this.compareMaxDate;
       }
-      const diff = moment(this.endDate).diff(moment(this.startDate));
-      this.compareEndDate = moment(this.compareStartDate).add(diff).toDate();
+      const diff = DateFilterUtils.getMomentDate(this.endDate).diff(DateFilterUtils.getMomentDate(this.startDate));
+      this.compareEndDate = DateFilterUtils.getMomentDate(this.compareStartDate).add(diff).toDate();
     }
     this.comparing = this.compare;
     this.triggerChangeEvent();

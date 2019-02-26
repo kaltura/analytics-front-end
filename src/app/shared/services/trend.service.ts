@@ -18,9 +18,9 @@ export class TrendService {
     return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
   }
 
-  public getCompareDates(from: string | Date, to: string | Date): any {
-    const fromDay = moment(from);
-    const toDay = moment(to);
+  public getCompareDates(from: string | number | Date, to: string | number | Date): any {
+    const fromDay = DateFilterUtils.getMomentDate(from);
+    const toDay = DateFilterUtils.getMomentDate(to);
     const days = moment.duration(toDay.diff(fromDay)).asDays();
     const startDate = fromDay.clone().subtract(days + 1, 'days').toDate();
     const endDate = fromDay.clone().subtract(1, 'days').toDate();

@@ -33,13 +33,12 @@
           <div class="kSeparator"></div>
           <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
         </div>
-        <div class="kReportContainer">
-          <app-refine-filter [opened]="_refineFilterOpened"
-                             [dateFilter]="_dateFilter"
-                             [selectedFilters]="_selectedRefineFilters"
-                             (closeFilters)="_refineFilterOpened = false"
-                             (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
-        </div>
+
+        <app-entry-filter [opened]="_refineFilterOpened"
+                          [dateFilter]="_dateFilter"
+                          [selectedFilters]="_selectedRefineFilters"
+                          (closeFilters)="_refineFilterOpened = false"
+                          (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
         <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
 
@@ -53,12 +52,26 @@
         <div class="kReportContainer">
           <app-video-performance [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
-                                 [entryId]="_entryId"></app-video-performance>
+                                 [entryId]="_entryId"
+                                 [refineFilter]="_refineFilter"></app-video-performance>
         </div>
 
         <div class="kReportContainer">
           <app-impressions [dateFilter]="_dateFilter"
-                           [entryId]="_entryId"></app-impressions>
+                           [entryId]="_entryId"
+                           [refineFilter]="_refineFilter"></app-impressions>
+        </div>
+
+        <div class="kReportContainer">
+          <app-entry-devices-overview [dateFilter]="_dateFilter"
+                                      [entryId]="_entryId"></app-entry-devices-overview>
+        </div>
+
+        <div class="kReportContainer">
+          <app-syndication [entryId]="_entryId"
+                           [dateFilterComponent]="dateFilter"
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-syndication>
         </div>
       </div>
     </div>

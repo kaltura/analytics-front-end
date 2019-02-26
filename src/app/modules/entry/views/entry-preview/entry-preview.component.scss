@@ -1,4 +1,10 @@
 @import '../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  height: 100%;
+}
+
 .kReport{
   border-radius: 0 !important;
   margin-bottom: 0 !important;

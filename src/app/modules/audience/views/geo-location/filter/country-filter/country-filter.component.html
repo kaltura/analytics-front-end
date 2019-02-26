@@ -1,8 +1,0 @@
-<app-dropdown-filter [label]="'app.filters.filterCountries' | translate"
-                     [options]="_locationFilterService.countriesOptions | async"
-                     [isLoading]="_locationFilterService.isBusy('country')"
-                     [defaultLabel]="'app.filters.countryPlaceholder' | translate"
-                     [selectedItemsLabel]="'app.filters.countriesSelected' | translate"
-                     [selectedFilters]="_selectedCountries"
-                     [countryTemplate]="true"
-                     (itemSelected)="_onItemSelected($event, 'country')"></app-dropdown-filter>

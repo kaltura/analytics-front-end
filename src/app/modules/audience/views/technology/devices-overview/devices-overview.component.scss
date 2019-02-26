@@ -72,6 +72,11 @@
 
   .kSummaryChart {
     width: 66%;
+    height: 100%;
+  }
+  .kChart{
+    min-height: 280px;
+    height: calc(100% - 40px) !important;
   }
 }
 

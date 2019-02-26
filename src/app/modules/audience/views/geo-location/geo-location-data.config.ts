@@ -194,44 +194,44 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
     return config;
   }
 
-  public getCountryName(country: string): string {
+  public getCountryName(country: string, toServerName = false): string {
     // map kaltura server country names to gep map county names
-    const serveCountryNames = ["ALAND ISLANDS",
-      "ANTIGUA AND BARBUDA",
-      "BOLIVIA, PLURINATIONAL STATE OF",
-      "BOSNIA AND HERZEGOVINA",
-      "BRITISH INDIAN OCEAN TERRITORY",
-      "BRUNEI DARUSSALAM",
-      "CAYMAN ISLANDS",
-      "CENTRAL AFRICAN REPUBLIC",
-      "CZECH REPUBLIC",
-      "DOMINICAN REPUBLIC",
-      "EQUATORIAL GUINEA",
-      "FALKLAND ISLANDS (MALVINAS)",
-      "FAROE ISLANDS",
-      "FRENCH POLYNESIA",
-      "FRENCH SOUTHERN TERRITORIES",
-      "HEARD ISLAND AND MCDONALD ISLANDS",
-      "IRAN, ISLAMIC REPUBLIC OF",
-      "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF",
-      "KOREA, REPUBLIC OF",
-      "LAO PEOPLE'S DEMOCRATIC REPUBLIC",
-      "LIBYAN ARAB JAMAHIRIYA",
-      "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF",
-      "MICRONESIA, FEDERATED STATES OF",
-      "MOLDOVA, REPUBLIC OF",
-      "RUSSIAN FEDERATION",
-      "SAINT PIERRE AND MIQUELON",
-      "SAINT VINCENT AND THE GRENADINES",
-      "SAO TOME AND PRINCIPE",
-      "SERBIA AND MONTENEGRO",
-      "SOLOMON ISLANDS",
-      "SYRIAN ARAB REPUBLIC",
-      "TANZANIA, UNITED REPUBLIC OF",
-      "TURKS AND CAICOS ISLANDS",
-      "UNITED STATES MINOR OUTLYING ISLANDS",
-      "VENEZUELA, BOLIVARIAN REPUBLIC OF",
-      "VIET NAM"];
+    const serveCountryNames = ["Aland Islands",
+      "Antigua and Barbuda",
+      "Bolivia, Plurinational State of",
+      "Bosnia and Herzegovina",
+      "British Indian Ocean Territory",
+      "Brunei Darussalam",
+      "Cayman Islands",
+      "Central African Republic",
+      "Czech Republic",
+      "Dominican Republic",
+      "Equatorial Guinea",
+      "Falkland Islands (Malvinas)",
+      "Faroe Islands",
+      "French Polynesia",
+      "French Southern Territories",
+      "Heard Islans and Mcdonald Islands",
+      "Iran, Islamic Republic of",
+      "Korea, Democratic People's Republic of",
+      "Korea, Republic of",
+      "Lao People's Democratic Republic",
+      "Libyan Arab Jamahiriya",
+      "Macedonia, The Former Yugoslav Republic of",
+      "Micronesia, Federated States of",
+      "Moldova, Republic of",
+      "Russian Federation",
+      "Saint Pierre and Miquelon",
+      "Saint Vincent and The Grenadines",
+      "Sao Tome and Principe",
+      "Serbia and Montenegro",
+      "Solomon Islands",
+      "Syrian Arab Republic",
+      "Tanzania, United Republic of",
+      "Turks and Caicos Islands",
+      "United States Minor Outlying Islands",
+      "Venezuela, Bolivarian Republic of",
+      "Viet Nam"];
     const mapCountryNames = ["Aland",
       "Antigua and Barb.",
       "Bolivia",
@@ -268,7 +268,13 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       "United States",
       "Venezuela",
       "Vietnam"];
-    const index = serveCountryNames.indexOf(country.toUpperCase());
-    return index === -1 ? country : mapCountryNames[index];
+
+    if (toServerName) {
+      const index = mapCountryNames.indexOf(country);
+      return index === -1 ? country : serveCountryNames[index];
+    } else {
+      const index = serveCountryNames.indexOf(country);
+      return index === -1 ? country : mapCountryNames[index];
+    }
   }
 }
