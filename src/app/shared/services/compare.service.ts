@@ -19,7 +19,7 @@ export class CompareService implements OnDestroy {
               private _logger: KalturaLogger) {
     this._logger = _logger.subLogger('CompareService');
   }
-
+  
   ngOnDestroy() {
   }
   
@@ -28,7 +28,7 @@ export class CompareService implements OnDestroy {
     const relevantLabelString = reportInterval === KalturaReportInterval.days
       ? relevantDate.format('YYYYMMDD')
       : relevantDate.format('YYYYMM');
-  
+    
     const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
@@ -67,7 +67,7 @@ export class CompareService implements OnDestroy {
       let xAxisData = [];
       let yAxisCurrentData = [];
       let yAxisCompareData = [];
-
+      
       const currentData = graph.data.split(';');
       const compareData = compare[i].data
         ? compare[i].data.split(';')
@@ -90,7 +90,7 @@ export class CompareService implements OnDestroy {
           }
           
           let currentName = currentLabel;
-
+          
           if (!config.fields[graph.id].nonDateGraphLabel) {
             currentName = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
@@ -112,22 +112,22 @@ export class CompareService implements OnDestroy {
           if (isNaN(currentVal)) {
             currentVal = 0;
           }
-
+          
           if (isNaN(compareValue)) {
             compareValue = 0;
           }
-
+          
           if (config.fields[graph.id]) {
             currentVal = config.fields[graph.id].format(currentVal);
             compareValue = config.fields[graph.id].format(compareValue);
           }
-
+          
           xAxisData.push(currentName);
           yAxisCurrentData.push(currentVal);
           yAxisCompareData.push(compareValue);
         }
       });
-  
+      
       const defaultColors = [getPrimaryColor(), getSecondaryColor()];
       const getFormatter = colors => params => {
         const [current, compare] = params;
@@ -242,17 +242,17 @@ export class CompareService implements OnDestroy {
           symbolSize: 8,
           showSymbol: false
         },
-        {
-          name: comparePeriodTitle,
-          data: yAxisCompareData,
-          type: 'line',
-          lineStyle: {
-            width: 3
-          },
-          symbol: 'circle',
-          symbolSize: 8,
-          showSymbol: false
-        }]
+          {
+            name: comparePeriodTitle,
+            data: yAxisCompareData,
+            type: 'line',
+            lineStyle: {
+              width: 3
+            },
+            symbol: 'circle',
+            symbolSize: 8,
+            showSymbol: false
+          }]
       };
       barChartData[graph.id] = {
         textStyle: {
@@ -341,21 +341,21 @@ export class CompareService implements OnDestroy {
           barGap: 0,
           type: 'bar'
         },
-        {
-          name: comparePeriodTitle,
-          data: yAxisCompareData,
-          barGap: 0,
-          type: 'bar'
-        }]
+          {
+            name: comparePeriodTitle,
+            data: yAxisCompareData,
+            barGap: 0,
+            type: 'bar'
+          }]
       };
-
+      
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();
         }, 200);
       }
     });
-
+    
     return { barChartData, lineChartData };
   }
 
@@ -375,11 +375,11 @@ export class CompareService implements OnDestroy {
     // parse table columns
     let columns = current.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
-
+    
     // parse table data
     const currentData = current.data.split(';');
     const compareData = compare.data ? compare.data.split(';') : [];
-
+    
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
     const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
@@ -419,7 +419,7 @@ export class CompareService implements OnDestroy {
         } else {
           compareValues = currentValues.map(() => 'N/A');
         }
-
+        
         currentValues.forEach((value, j) => {
           const fieldConfig = config.fields[columns[j]];
           if (fieldConfig) {
@@ -444,16 +444,16 @@ export class CompareService implements OnDestroy {
         tableData.push(data);
       }
     });
-  
+    
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
-
+    
     columns.sort((a, b) => {
       const valA = config.fields[a].sortOrder || 0;
       const valB = config.fields[b].sortOrder || 0;
       return valA - valB;
     });
-
-
+    
+    
     return { columns, tableData };
   }
   
@@ -570,10 +570,104 @@ export class CompareService implements OnDestroy {
         });
       }
     });
-  
+    
     return tabsData.sort((a, b) => {
       return a.sortOrder - b.sortOrder;
     });
+  }
+  
+  public compareToMetric(config: ReportDataItemConfig,
+                         graphsData: { [key: string]: any },
+                         currentMetric: string,
+                         compareMetric: string,
+                         currentMetricLabel: string,
+                         compareMetricLabel: string,
+                         currentDate: string = '',
+                         compareDate: string = ''): any {
+    const current = graphsData[currentMetric];
+    const compare = graphsData[compareMetric];
+  
+    const getFormatter = colors => params => {
+      const [current, metric, compare, metricCompare] = params;
+      const currentFormatFn = val => typeof config.fields[currentMetric].graphTooltip === 'function'
+        ? config.fields[currentMetric].graphTooltip(val)
+        : val;
+      const compareFormatFn = val => typeof config.fields[compareMetric].graphTooltip === 'function'
+        ? config.fields[compareMetric].graphTooltip(val)
+        : val;
+
+      const currentValue = currentFormatFn(current.value);
+      const compareValue = compare ? compareFormatFn(compare.value) : compareFormatFn(metric.value);
+
+      if (params.length === 4) {
+        const metricValue = currentFormatFn(metric.value);
+        const compareMetricValue = compareFormatFn(metricCompare.value);
+
+        return `
+          <div class="kGraphTooltip">
+            ${compareDate}<br/>
+            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
+            <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}<br/>
+            ${currentDate}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
+          </div>
+      `;
+      }
+  
+      return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
+          </div>
+      `;
+    };
+    
+    return {
+      'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
+      'textStyle': { ...current.textStyle },
+      'grid': { ...current.grid, top: 32 },
+      'xAxis': { ...current.xAxis },
+      'tooltip':  {
+        ...current.tooltip,
+        formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
+      },
+      'yAxis': [
+        { ...current.yAxis, name: currentMetricLabel },
+        { ...compare.yAxis, name: compareMetricLabel },
+      ],
+      'series': [
+        ...current.series.map((item, index) => ({
+          ...item,
+          name: currentMetricLabel,
+          lineStyle: { width: 3, color: current.color[index] }
+        })),
+        ...compare.series.map((item, index) => ({
+          ...item,
+          name: compareMetricLabel,
+          yAxisIndex: 1,
+          lineStyle: { width: 3, color: compare.color[index] }
+        })),
+      ],
+      'legend': {
+        show: currentDate === '',
+        data: [
+          { name: currentMetricLabel },
+          { name: compareMetricLabel }
+        ],
+        icon: 'circle',
+        itemWidth: 11,
+        left: 0,
+        bottom: 0,
+        padding: [0, 0, 0, 24],
+        selectedMode: false,
+        textStyle: {
+          fontSize: 12,
+          fontWeight: 'bold'
+        }
+      },
+    };
   }
 }
 

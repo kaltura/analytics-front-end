@@ -13,6 +13,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { SelectItem } from 'primeng/api';
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -30,6 +32,7 @@ export class VideoPerformanceComponent extends EntryBase {
   private readonly _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
+  public _metricsCompareTo: string = null;
   
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
@@ -39,10 +42,14 @@ export class VideoPerformanceComponent extends EntryBase {
   public _tableData: TableRow<string>[] = [];
   public _firstTimeLoading = true;
   public _lineChartData: { [key: string]: any } = {};
+  public _metricsLineChartData: { [key: string]: any } = null;
   public _selectedMetrics: string;
+  public _selectedMetricsLabel: string;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
+  public _metricsOptions: SelectItem[] = [];
+  public _metricsColors: { [key: string]: string; } = {};
   public _showTable = false;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -51,7 +58,10 @@ export class VideoPerformanceComponent extends EntryBase {
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
+  public _currentDatePeriod = '';
+  public _compareDatePeriod = '';
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -67,6 +77,18 @@ export class VideoPerformanceComponent extends EntryBase {
     
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+    
+    const totalsConfig = this._dataConfig[ReportDataSection.totals].fields;
+    const graphConfig = this._dataConfig[ReportDataSection.graph].fields;
+    Object.keys(totalsConfig).forEach(field => {
+      this._metricsOptions.push({
+        label: this._translate.instant(`app.entry.${field}`),
+        value: field
+      });
+      
+      this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
+    });
   }
   
   protected _loadReport(sections = this._dataConfig): void {
@@ -155,7 +177,7 @@ export class VideoPerformanceComponent extends EntryBase {
     if (current.totals) {
       this._handleTotals(current.totals); // handle totals
     }
-
+    
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
@@ -166,6 +188,10 @@ export class VideoPerformanceComponent extends EntryBase {
         this._reportInterval,
       );
       this._lineChartData = lineChartData;
+  
+      if (this._metricsCompareTo) {
+        this._onCompareTo(this._metricsCompareTo);
+      }
     }
   
     const compareTableData = this._compareService.compareTableFromGraph(
@@ -197,6 +223,9 @@ export class VideoPerformanceComponent extends EntryBase {
       this._reportInterval
     );
     this._lineChartData = lineChartData;
+    if (this._metricsCompareTo) {
+      this._onCompareTo(this._metricsCompareTo);
+    }
   }
   
   private _handleTable(graphs: KalturaReportGraph[]): void {
@@ -212,6 +241,8 @@ export class VideoPerformanceComponent extends EntryBase {
 
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+    this._metricsLineChartData = null;
   }
   
   public _toggleTable(): void {
@@ -223,5 +254,26 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _onSortChanged(event: SortEvent) {
     tableLocalSortHandler(event, this._order, this._isCompareMode);
+  }
+  
+  public _onCompareTo(field: string): void {
+    if (field) {
+      this._metricsCompareTo = field;
+      this._currentDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._filter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MMM D, YYYY') : '';
+      this._compareDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MMM D, YYYY') : '';
+      this._metricsLineChartData = this._compareService.compareToMetric(
+        this._dataConfig.graph,
+        this._lineChartData,
+        this._selectedMetrics,
+        field,
+        this._selectedMetricsLabel,
+        this._translate.instant(`app.entry.${field}`),
+        this._currentDatePeriod,
+        this._compareDatePeriod
+      );
+    } else {
+      this._metricsLineChartData = null;
+      this._metricsCompareTo = null;
+    }
   }
 }
