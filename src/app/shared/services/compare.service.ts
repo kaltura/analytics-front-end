@@ -519,9 +519,9 @@ export class CompareService implements OnDestroy {
         : val;
 
       const currentValue = currentFormatFn(current.value);
-      const compareValue = compareFormatFn(compare.value);
+      const compareValue = compare ? compareFormatFn(compare.value) : compareFormatFn(metric.value);
 
-      if (metric !== undefined && metricCompare !== undefined) {
+      if (params.length === 4) {
         const metricValue = currentFormatFn(metric.value);
         const compareMetricValue = compareFormatFn(metricCompare.value);
 
