@@ -510,7 +510,7 @@ export class CompareService implements OnDestroy {
     const compare = graphsData[compareMetric];
   
     const getFormatter = colors => params => {
-      const [current, compare, metric, metricCompare] = params;
+      const [current, metric, compare, metricCompare] = params;
       const currentFormatFn = val => typeof config.fields[currentMetric].graphTooltip === 'function'
         ? config.fields[currentMetric].graphTooltip(val)
         : val;
@@ -527,12 +527,12 @@ export class CompareService implements OnDestroy {
 
         return `
           <div class="kGraphTooltip">
-            ${currentDate}<br/>
-            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
-            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
             ${compareDate}<br/>
             <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
-            <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}
+            <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}<br/>
+            ${currentDate}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
           </div>
       `;
       }

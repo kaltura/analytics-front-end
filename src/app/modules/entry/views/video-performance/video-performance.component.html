@@ -25,17 +25,17 @@
         </div>
         <div *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
           <div class="kLegendItemContainer">
-            <span class="kPeriod">{{_currentDatePeriod}}</span>
-            <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[0]"></div>
-            <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
-            <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[0]"></div>
-            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
-          </div>
-          <div class="kLegendItemContainer">
             <span class="kPeriod">{{_compareDatePeriod}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
             <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[1]"></div>
+            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
+          </div>
+          <div class="kLegendItemContainer">
+            <span class="kPeriod">{{_currentDatePeriod}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[0]"></div>
+            <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[0]"></div>
             <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
           </div>
         </div>
