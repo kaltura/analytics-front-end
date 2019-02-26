@@ -527,9 +527,9 @@ export class CompareService implements OnDestroy {
           <div class="kGraphTooltip">
             ${current.name}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
-            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${metricValue}<br/>
             ${compare.name}<br/>
-            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
+            <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${compareValue}<br/>
             <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}
           </div>
       `;
@@ -576,9 +576,10 @@ export class CompareService implements OnDestroy {
           { name: compareMetricLabel }
         ],
         icon: 'circle',
-        left: 'left',
+        itemWidth: 11,
+        left: 0,
         bottom: 0,
-        padding: [16, 0, 0, 80],
+        padding: [0, 0, 0, 24],
         selectedMode: false,
         textStyle: {
           fontSize: 12,
