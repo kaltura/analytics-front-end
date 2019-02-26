@@ -76,7 +76,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           'media_type': {
             format: value => Number(value),
           },
-          'ms_duration': {
+          'duration_msecs': {
             format: value => ReportHelper.time(value),
           }
         }
