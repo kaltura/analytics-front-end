@@ -29,13 +29,14 @@
 
   .kCompareMetricBullet {
     font-size: 18px;
+    font-style: normal;
     margin-right: 8px
   }
 }
 
 :host /deep/ .kCompareMetric {
-  .ui-dropdown .ui-dropdown-panel {
-    width: 172px;
+  .ui-dropdown {
+    width: 200px !important;
   }
   .ui-dropdown-item {
     position: relative;
