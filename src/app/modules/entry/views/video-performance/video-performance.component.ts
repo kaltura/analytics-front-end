@@ -247,9 +247,12 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-    setTimeout(() => {
-      this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
-    }, 0);
+    
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
+      }, 0);
+    }
   }
   
   public _onSortChanged(event: SortEvent) {
