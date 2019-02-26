@@ -52,9 +52,9 @@ export class DateFilterUtils {
       result = month + '/' + day + '/' + year;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
+      result = this._getMonth(date) + '/' + this._getDate(date) + '/' + date.getFullYear();
     } else if (value instanceof Date) {
-      result = value.getMonth() + '/' + value.getDate() + '/' + value.getFullYear();
+      result = this._getMonth(value) + '/' + this._getDate(value) + '/' + value.getFullYear();
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -72,9 +72,9 @@ export class DateFilterUtils {
       result = `${date.toLocaleString(locale, { month: 'short' })} ${day}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDate()}`;
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${this._getDate(date)}`;
     } else if (value instanceof Date) {
-      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDate()}`;
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${this._getDate(value)}`;
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -110,9 +110,9 @@ export class DateFilterUtils {
       result = month + '/' + day;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = date.getMonth() + '/' + date.getDate();
+      result = this._getMonth(date) + '/' + this._getDate(date);
     } else if (value instanceof Date) {
-      result = value.getMonth() + '/' + value.getDate();
+      result = this._getMonth(value) + '/' + this._getDate(value);
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -130,9 +130,9 @@ export class DateFilterUtils {
       result = `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+      result = `${date.toLocaleString(locale, { month: 'short' })} ${this._getDate(date)}, ${date.getFullYear()}`;
     } else if (value instanceof Date) {
-      result = `${value.toLocaleString(locale, { month: 'short' })} ${value.getDate()}, ${value.getFullYear()}`;
+      result = `${value.toLocaleString(locale, { month: 'short' })} ${this._getDate(value)}, ${value.getFullYear()}`;
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -164,5 +164,13 @@ export class DateFilterUtils {
   
   private static _isUnixDate(number: number): boolean {
     return number.toString().length === 10;
+  }
+  
+  private static _getMonth(date: Date): string {
+    return ('0' + (date.getMonth() + 1)).slice(-2);
+  }
+  
+  private static _getDate(date: Date): string {
+    return ('0' + date.getDate()).slice(-2);
   }
 }

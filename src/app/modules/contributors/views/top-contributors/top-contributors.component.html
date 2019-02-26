@@ -35,6 +35,11 @@
                                         [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
     </div>
 
+    <div class="kMiniReportContainer">
+      <app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"
+                                        [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
+    </div>
+
     <!-- Example -->
     <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <!--<div class="kMiniReportContainer">-->
@@ -63,9 +68,9 @@
                                        [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>
 
-  <div class="kReportContainer">
+  <div id="sources" class="kReportContainer">
     <div class="kSmallReportContainer">
-      <app-contributors-sources [dateFilter]="_dateFilter"
+      <app-contributors-sources [dateFilter]="_dateFilter" #sources
                                 [refineFilter]="_refineFilter"></app-contributors-sources>
     </div>
     <div class="kSmallReportContainer">

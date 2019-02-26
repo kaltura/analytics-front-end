@@ -1,5 +1,6 @@
 import { ContributorsHighlightsComponent } from './highlights/highlights.component';
 import { ContributorsMiniHighlightsComponent } from './mini-highlights/mini-highlights.component';
+import { MiniTopSourcesComponent } from './mini-top-sources/mini-top-sources.component';
 import { MiniTopContributorsComponent } from './mini-top-contributors/mini-top-contributors.component';
 import { TopContributorsTableComponent } from './top-contributors/top-contributors-table/top-contributors-table.component';
 import { ContributorsTopContributorsComponent } from './top-contributors/top-contributors.component';
@@ -13,6 +14,7 @@ export const topContributorsComponentsList = [
   ContributorsHighlightsComponent,
   ContributorsMiniHighlightsComponent,
   MiniTopContributorsComponent,
+  MiniTopSourcesComponent,
   TopContributorsTableComponent,
   ContributorsTopContributorsComponent,
   ContributorsUsersComponent,

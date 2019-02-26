@@ -132,8 +132,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       this.selectedView = 'preset';
       this._dateRange = dateBy;
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
-      const dateFrom = DateFilterUtils.getMomentDate(params[DateFilterQueryParams.dateFrom]);
-      const dateTo = DateFilterUtils.getMomentDate(params[DateFilterQueryParams.dateTo]);
+      const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
+      const dateTo = moment(params[DateFilterQueryParams.dateTo]);
   
       if (dateFrom.isValid() && dateTo.isValid()) {
         this.selectedView = 'specific';
@@ -147,7 +147,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       if (compareTo === 'lastYear') {
         this.selectedComparePeriod = 'lastYear';
       } else {
-        const compareToDateObject = DateFilterUtils.getMomentDate(compareTo);
+        const compareToDateObject = moment(compareTo);
         if (compareToDateObject.isValid()) {
           const compareToDate = compareToDateObject.toDate();
           const maxCompareDate = this.selectedView === 'specific'

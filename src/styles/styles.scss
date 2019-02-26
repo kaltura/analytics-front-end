@@ -29,7 +29,7 @@ body{
   width: 100%;
   .kReportView{
     width: 100%;
-    min-height: calc(100vh - 50px);
+    min-height: 600px;
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -383,6 +383,10 @@ ui-carousel /deep/ {
 
 .kNoPadding {
   padding: 0 !important;
+}
+
+.kNoMargin {
+  margin: 0 !important;
 }
 
 .kBrowserIcon {

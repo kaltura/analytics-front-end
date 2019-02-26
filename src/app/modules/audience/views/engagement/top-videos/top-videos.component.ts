@@ -13,6 +13,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
@@ -47,6 +48,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _isBusy: boolean;
   public _tableData: TableRow<string>[] = [];
   public _compareTableData: TableRow<string>[] = [];
+  public _entryDetails: EntryDetailsOverlayData[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
@@ -89,6 +91,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+          this._entryDetails = [];
           this._compareTableData = [];
           
           if (report.table && report.table.header && report.table.data) {
@@ -156,6 +159,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
+  
+    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
+    this._entryDetails = entryDetails.map(extendTableRow);
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
@@ -163,6 +169,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+  
+      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
+      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }
   }
   
