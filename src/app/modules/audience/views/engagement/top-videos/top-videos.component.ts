@@ -14,6 +14,7 @@ import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -45,9 +46,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
-  public _tableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
+  public _compareTableData: TableRow<string>[] = [];
   public _entryDetails: EntryDetailsOverlayData[] = [];
-  public _compareTableData: any[] = [];
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });

@@ -5,6 +5,7 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -12,7 +13,7 @@ import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-
   styleUrls: ['./top-videos-table.component.scss']
 })
 export class TopVideosTableComponent {
-  @Input() set tableData(value: any[]) {
+  @Input() set tableData(value: TableRow<string>[]) {
     value = Array.isArray(value) ? value : [];
     this._originalTable = [...value];
     this._pager.pageIndex = 1;
@@ -31,14 +32,14 @@ export class TopVideosTableComponent {
   
   @ViewChild('overlay') _overlay: OverlayComponent;
   
-  private _originalTable: any[] = [];
+  private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   private _currentOrderField = 'count_plays';
   private _currentOrderDirection = -1;
   
   public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
-  public _tableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
 
   constructor(private _router: Router,
@@ -46,7 +47,7 @@ export class TopVideosTableComponent {
 
   }
   
-  public _onSortChanged(event: { data: any[], field: string, mode: string, order: number }): void {
+  public _onSortChanged(event: { data: TableRow<string>[], field: string, mode: string, order: number }): void {
     const { field, order } = event;
     if (!event.data.length || !field || !order || (this._currentOrderDirection === order && this._currentOrderField === field)) {
       return;
@@ -64,8 +65,8 @@ export class TopVideosTableComponent {
 
       this._tableData = this._originalTable
         .sort((a, b) => {
-          const valA = a.index;
-          const valB = b.index;
+          const valA = Number(a.index);
+          const valB = Number(b.index);
           
           return this._currentOrderDirection < 0 ? valA - valB : valB - valA;
         }).slice(0, this._pageSize);
