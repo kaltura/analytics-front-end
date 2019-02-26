@@ -19,6 +19,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { significantDigits } from 'shared/utils/significant-digits';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-geo-location',
@@ -34,7 +35,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   public _dateRange = DateRanges.Last30D;
 
-  public _tableData: any[] = [];
+  public _tableData: TableRow<any>[] = [];
   private selectedTab: Tab;
   public _tabsData: Tab[] = [];
   public _mapChartData: any = {'count_plays': {}};

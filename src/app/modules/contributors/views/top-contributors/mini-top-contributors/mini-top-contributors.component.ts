@@ -16,6 +16,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { MiniTopContributorsConfig } from './mini-top-contributors.config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-contributors-mini-top-contributors',
@@ -38,8 +39,8 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableData: any[] = [];
-  public _compareTableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
+  public _compareTableData: TableRow<string>[] = [];
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
