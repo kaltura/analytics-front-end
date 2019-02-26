@@ -51,6 +51,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
 import { TableModule } from 'primeng/table';
+import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
 
 @NgModule({
   imports: [
@@ -106,6 +107,7 @@ import { TableModule } from 'primeng/table';
     KalturaPlayerComponent,
     ImpressionsComponent,
     SyndicationComponent,
+    CompareMetricComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -139,6 +141,7 @@ import { TableModule } from 'primeng/table';
     DropdownFilterComponent,
     ImpressionsComponent,
     SyndicationComponent,
+    CompareMetricComponent,
     ...FilterComponentsList,
   ],
   providers: [

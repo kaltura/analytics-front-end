@@ -1,0 +1,50 @@
+:host {
+  display: inline-block;
+  margin: 0 16px;
+}
+
+.kCompareMetric {
+  display: flex;
+  align-items: center;
+
+  .kCompareMetricLabel {
+    margin-right: 12px;
+  }
+}
+
+.kOptionsLabelWrapper {
+  display: flex;
+  align-items: center;
+
+  &.kItemLabel {
+    width: calc(100% - 15px);
+  }
+
+  .kOptionLabel {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .kCompareMetricBullet {
+    font-size: 18px;
+    font-style: normal;
+    margin-right: 8px
+  }
+}
+
+:host /deep/ .kCompareMetric {
+  .ui-dropdown {
+    width: 200px !important;
+  }
+  .ui-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
+}
