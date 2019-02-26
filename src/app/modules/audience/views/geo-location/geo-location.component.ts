@@ -314,7 +314,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         if (report.table && report.table.header && report.table.data) {
           const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
           this._tableData.forEach(row => {
-            const relevantCompareRow = tableData.find(item => item.object_id === row.object_id);
+            const relevantCompareRow = tableData.find(item => {
+              const sameCountry = item.country === row.country;
+              const sameRegion = item.region === row.region;
+              const sameCity = item.city === row.city;
+  
+              return sameCountry && sameRegion && sameCity;
+            });
             let compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
             this._setPlaysTrend(row, 'count_plays', compareValue, currentPeriodTitle, comparePeriodTitle);
             compareValue = relevantCompareRow ? relevantCompareRow['unique_known_users'] : 0;
