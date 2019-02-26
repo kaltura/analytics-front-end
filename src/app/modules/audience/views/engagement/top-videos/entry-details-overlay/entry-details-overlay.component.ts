@@ -7,7 +7,7 @@ export interface EntryDetailsOverlayData {
   media_type: KalturaMediaType;
   creator_name: string;
   created_at: string;
-  ms_duration: string;
+  duration_msecs: string;
   thumbnailUrl: string;
   status: KalturaEntryStatus;
 }
