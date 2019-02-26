@@ -549,7 +549,7 @@ export class CompareService implements OnDestroy {
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
       'textStyle': { ...current.textStyle },
-      'grid': { ...current.grid, top: 48 },
+      'grid': { ...current.grid, top: 32 },
       'xAxis': { ...current.xAxis },
       'tooltip':  {
         ...current.tooltip,
@@ -573,6 +573,7 @@ export class CompareService implements OnDestroy {
         })),
       ],
       'legend': {
+        show: currentDate === '',
         data: [
           { name: currentMetricLabel },
           { name: compareMetricLabel }

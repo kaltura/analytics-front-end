@@ -29,7 +29,7 @@ export class VideoPerformanceComponent extends EntryBase {
   private _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
-  private _metricsCompareTo: string = null;
+  public _metricsCompareTo: string = null;
   
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
@@ -55,7 +55,10 @@ export class VideoPerformanceComponent extends EntryBase {
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
+  public _currentDatePeriod = '';
+  public _compareDatePeriod = '';
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -255,6 +258,8 @@ export class VideoPerformanceComponent extends EntryBase {
   public _onCompareTo(field: string): void {
     if (field) {
       this._metricsCompareTo = field;
+      this._currentDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._filter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MMM D, YYYY') : '';
+      this._compareDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MMM D, YYYY') : '';
       this._metricsLineChartData = this._compareService.compareToMetric(
         this._dataConfig.graph,
         this._lineChartData,
@@ -262,8 +267,8 @@ export class VideoPerformanceComponent extends EntryBase {
         field,
         this._selectedMetricsLabel,
         this._translate.instant(`app.entry.${field}`),
-        this._compareFilter ? DateFilterUtils.getMomentDate(this._filter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MMM D, YYYY') : '',
-        this._compareFilter ? DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MMM D, YYYY') : ''
+        this._currentDatePeriod,
+        this._compareDatePeriod
       );
     } else {
       this._metricsLineChartData = null;

@@ -12,3 +12,35 @@
     color: $kGrayscale3;
   }
 }
+.kChart{
+  margin-top: 12px;
+}
+.kCustomLegend{
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  top: 360px;
+  padding-left: 24px;
+  .kLegendItemContainer{
+    display: flex;
+    align-items: center;
+    height: 20px;
+    .kPeriod{
+      font-size: 12px;
+      font-weight: normal;
+      color: $kGrayscale1;
+    }
+    .kLegendItem{
+      font-size: 12px;
+      font-weight: bold;
+      color: $kGrayscale1;
+    }
+    .kCircle{
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-left: 12px;
+      margin-right: 4px;
+    }
+  }
+}
