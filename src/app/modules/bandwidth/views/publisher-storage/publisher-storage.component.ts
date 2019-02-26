@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
@@ -82,23 +82,16 @@ export class PublisherStorageComponent implements OnInit {
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
-    this.filter.fromDay = event.startDay;
-    this.filter.toDay = event.endDay;
+    this.filter.fromDate = event.startDate;
+    this.filter.toDate = event.endDate;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
     if (event.compare.active) {
       const compare = event.compare;
-      this.compareFilter = new KalturaReportInputFilter(
-        {
-          searchInTags: true,
-          searchInAdminTags: false,
-          timeZoneOffset: event.timeZoneOffset,
-          interval: event.timeUnits,
-          fromDay: compare.startDay,
-          toDay: compare.endDay,
-        }
-      );
+      this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
+      this.compareFilter.fromDate = compare.startDate;
+      this.compareFilter.toDate = compare.endDate;
     } else {
       this.compareFilter = null;
     }
@@ -192,8 +185,8 @@ export class PublisherStorageComponent implements OnInit {
    }
 
    private handleCompare(current: Report, compare: Report): void {
-     const currentPeriod = { from: this.filter.fromDay, to: this.filter.toDay };
-     const comparePeriod = { from: this.compareFilter.fromDay, to: this.compareFilter.toDay };
+     const currentPeriod = { from: this.filter.fromDate, to: this.filter.toDate };
+     const comparePeriod = { from: this.compareFilter.fromDate, to: this.compareFilter.toDate };
 
       if (current.table && compare.table) {
         const { columns, tableData } = this._compareService.compareTableData(
@@ -259,7 +252,7 @@ export class PublisherStorageComponent implements OnInit {
     const { lineChartData, barChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
-      { from: this.filter.fromDay, to: this.filter.toDay },
+      { from: this.filter.fromDate, to: this.filter.toDate },
       this._reportInterval,
       () => this._chartDataLoaded = true
     );

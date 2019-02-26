@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export enum DateRanges {
   Last7D = 'last7days',
@@ -186,7 +187,7 @@ export class DateFilterService {
         }
         break;
     }
-    const label = moment(startDate).format('MMM D, YYYY') + ' - ' + moment(endDate).format('MMM D, YYYY');
+    const label = DateFilterUtils.getMomentDate(startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(endDate).format('MMM D, YYYY');
     return { startDate, endDate, label};
   }
 
@@ -197,8 +198,8 @@ export class DateFilterService {
     let maxDate: Date;
 
     if (selectedDateRange instanceof Date && endDate instanceof Date) {
-      const fromDay = moment(selectedDateRange);
-      const toDay = moment(endDate);
+      const fromDay = DateFilterUtils.getMomentDate(selectedDateRange);
+      const toDay = DateFilterUtils.getMomentDate(endDate);
       const days = moment.duration(toDay.diff(fromDay)).asDays();
       maxDate = fromDay.clone().subtract(days + 1, 'days').toDate();
     } else {

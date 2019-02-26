@@ -103,8 +103,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', { event });
     this.filter.timeZoneOffset = this.trendFilter.timeZoneOffset = event.timeZoneOffset;
-    this.filter.fromDay = event.startDay;
-    this.filter.toDay = event.endDay;
+    this.filter.fromDate = event.startDate;
+    this.filter.toDate = event.endDate;
     this.filter.interval = this.trendFilter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
@@ -180,7 +180,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {
-      this._drillDown.push(country);
+      this._drillDown.push(this._dataConfigService.getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
       this._drillDown.pop();
     }
@@ -274,7 +274,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
-          ? this._dataConfigService.getCountryName(data.country)
+          ? this._dataConfigService.getCountryName(data.country, false)
           : this._drillDown.length === 1
             ? data.region
             : data.city,
@@ -294,12 +294,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private _loadTrendData(): void {
-    const { startDay, endDay } = this._trendService.getCompareDates(this.filter.fromDay, this.filter.toDay);
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this.filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.filter.toDay, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
+    const { startDate, endDate } = this._trendService.getCompareDates(this.filter.fromDate, this.filter.toDate);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this.filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
 
-    this.trendFilter.fromDay = startDay;
-    this.trendFilter.toDay = endDay;
+    this.trendFilter.fromDate = startDate;
+    this.trendFilter.toDate = endDate;
 
     const reportConfig: ReportConfig = {
       reportType: this.reportType,

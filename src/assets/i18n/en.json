@@ -34,6 +34,7 @@
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",
+      "users": "Users",
       "owners": "Owners",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
@@ -46,7 +47,10 @@
       "countriesSelected": "{0} Countries Selected",
       "regionsSelected": "{0} Regions Selected",
       "citiesSelected": "{0} Cities Selected",
-      "filterCountries": "Filter Countries"
+      "filterCountries": "Filter Countries",
+      "filterDomains": "Filter Domains",
+      "domainPlaceholder": "Select Domain",
+      "domainsSelected": "{0} Domains Selected"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -124,6 +128,9 @@
     },
     "contributors": {
       "title": "Contributors",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Way To Add Content",
+      "others": "Others",
       "top-contributors": "Top Contributors",
       "top-contributors_tt": "List of users with the highest contribution score based on Kaltura’s contribution score formula",
       "highlights": "Highlights",
@@ -267,6 +274,7 @@
           "Mobile": "Mobile",
           "Tablet": "Tablet",
           "Game console": "Game Console",
+          "Digital media receiver": "Media Receiver",
           "OTHER": "Other"
         }
       }
@@ -316,7 +324,11 @@
         "creationDate": "Creation Date",
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data",
-        "by": "By"
+        "by": "By",
+        "entryStatus": {
+          "deleted": "Deleted Entry",
+          "unavailable": "Unavailable Entry"
+        }
       },
       "topDomainsReport": {
         "index": "#",

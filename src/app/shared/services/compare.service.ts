@@ -23,7 +23,7 @@ export class CompareService implements OnDestroy {
   }
   
   private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
-    const relevantDate = moment(date).subtract(datesDiff);
+    const relevantDate = DateFilterUtils.getMomentDate(date).subtract(datesDiff);
     const relevantLabelString = reportInterval === KalturaReportInterval.days
       ? relevantDate.format('YYYYMMDD')
       : relevantDate.format('YYYYMM');
@@ -32,8 +32,8 @@ export class CompareService implements OnDestroy {
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   }
 
-  public compareGraphData(currentPeriod: { from: string, to: string },
-                          comparePeriod: { from: string, to: string },
+  public compareGraphData(currentPeriod: { from: number, to: number },
+                          comparePeriod: { from: number, to: number },
                           current: KalturaReportGraph[],
                           compare: KalturaReportGraph[],
                           config: ReportDataItemConfig,
@@ -42,8 +42,8 @@ export class CompareService implements OnDestroy {
                           graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
-    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
-    
+    const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
+
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
     if (reportInterval === KalturaReportInterval.months) {
@@ -315,7 +315,10 @@ export class CompareService implements OnDestroy {
             color: '#999999'
           },
           axisPointer: {
-            type: 'shadow'
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(150,150,150,0.1)'
+            }
           }
         },
         legend: {
@@ -354,9 +357,9 @@ export class CompareService implements OnDestroy {
     
     return { barChartData, lineChartData };
   }
-  
-  public compareTableData(currentPeriod: { from: string, to: string },
-                          comparePeriod: { from: string, to: string },
+
+  public compareTableData(currentPeriod: { from: number, to: number },
+                          comparePeriod: { from: number, to: number },
                           current: KalturaReportTable,
                           compare: KalturaReportTable,
                           config: ReportDataItemConfig,
@@ -378,7 +381,7 @@ export class CompareService implements OnDestroy {
     
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
-    const datesDiff = moment(currentPeriod.from).diff(comparePeriod.from);
+    const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
 
     currentData.forEach(valuesString => {
       let compareValuesString = null;
@@ -391,7 +394,7 @@ export class CompareService implements OnDestroy {
         const currentLabelDate = currentLabel ? DateFilterUtils.parseDateString(currentLabel) : null;
         
         if (currentLabelDate && currentLabelDate.isValid()) {
-          const relevantDate = moment(currentLabelDate).subtract(datesDiff);
+          const relevantDate = DateFilterUtils.getMomentDate(currentLabelDate).subtract(datesDiff);
           relevantLabelString = reportInterval === KalturaReportInterval.days
             ? relevantDate.format('YYYYMMDD')
             : relevantDate.format('YYYYMM');
@@ -452,9 +455,9 @@ export class CompareService implements OnDestroy {
     
     return { columns, tableData };
   }
-  
-  public compareTotalsData(currentPeriod: { from: string, to: string },
-                           comparePeriod: { from: string, to: string },
+
+  public compareTotalsData(currentPeriod: { from: number, to: number },
+                           comparePeriod: { from: number, to: number },
                            current: KalturaReportTotal,
                            compare: KalturaReportTotal,
                            config: ReportDataItemConfig,
