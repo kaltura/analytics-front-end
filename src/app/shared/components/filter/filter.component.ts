@@ -144,7 +144,7 @@ export class FilterComponent {
   
   public _mediaTypes: OptionItem[] = [
     { value: 'Video', label: 'app.filters.mediaType.Video' },
-    { value: 'Live', label: 'app.filters.mediaType.Live' },
+    // { value: 'Live', label: 'app.filters.mediaType.Live' }, // remove live for now
     { value: 'Audio', label: 'app.filters.mediaType.Audio' },
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
