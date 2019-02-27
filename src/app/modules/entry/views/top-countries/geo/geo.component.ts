@@ -103,7 +103,6 @@ export class GeoComponent {
     map.zoom = this._mapZoom;
     map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData = mapConfig;
-    console.warn(mapConfig);
   }
   
   public drillDown(country: string): void {
