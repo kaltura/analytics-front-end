@@ -20,6 +20,8 @@ import { significantDigits } from 'shared/utils/significant-digits';
 import { EChartOption } from 'echarts';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { GeoComponent } from './geo/geo.component';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
 
 @Component({
   selector: 'app-top-countries',
@@ -124,22 +126,37 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
-      .pipe(cancelOnDestroy(this))
-      .subscribe((report) => {
-          if (report.totals) {
-            this._handleTotals(report.totals); // handle totals
+      .pipe(
+        cancelOnDestroy(this),
+        switchMap(report => {
+          if (!this._isCompareMode) {
+            return ObservableOf({ report, compare: null });
           }
-          if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table); // handle table
-          }
-          this._isBusy = false;
-    
-          setTimeout(() => {
-            this._entryGeo.updateMap(this._mapCenter);
-          }, 0);
           
-          if (this._isCompareMode) {
-            this._loadTrendData();
+          const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+          return this._reportService.getReport(compareReportConfig, this._dataConfig)
+            .pipe(map(compare => ({ report, compare })));
+        }))
+      .subscribe(({ report, compare }) => {
+          this._isBusy = false;
+          
+          if (compare) {
+            // todo
+          } else {
+            if (report.totals) {
+              this._handleTotals(report.totals); // handle totals
+            }
+            if (report.table && report.table.header && report.table.data) {
+              this._handleTable(report.table); // handle table
+            }
+            
+            setTimeout(() => {
+              this._entryGeo.updateMap(this._mapCenter);
+            }, 0);
+            
+            if (this._isCompareMode) {
+              this._loadTrendData();
+            }
           }
         },
         error => {
@@ -312,7 +329,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _onDrillDown(drillDown: string[]): void {
     this._drillDown = drillDown;
     this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-  
+    
     this._loadReport();
   }
 }
