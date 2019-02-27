@@ -74,7 +74,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     this._blockerMessage = null;
     this.topSources$.next({table: null, compare: null, busy: true, error: null});
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    this._reportService.getReport(reportConfig, { graph: null })
+    this._reportService.getReport(reportConfig)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
@@ -86,7 +86,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
           pager: this._pager,
           order: null
         };
-        return this._reportService.getReport(compareReportConfig, { graph: null })
+        return this._reportService.getReport(compareReportConfig)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {

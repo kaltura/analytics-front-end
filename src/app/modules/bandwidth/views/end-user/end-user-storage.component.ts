@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRangeType, DateRanges } from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { EndUserStorageDataConfig } from './end-user-storage-data.config';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -156,7 +156,7 @@ export class EndUserStorageComponent implements OnInit {
     if (event.page !== (this.pager.pageIndex - 1)) {
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this.pager.pageIndex = event.page + 1;
-      this.loadReport({ table: null });
+      this.loadReport({ table: this._dataConfig.table });
     }
   }
 
@@ -226,7 +226,7 @@ export class EndUserStorageComponent implements OnInit {
           this._logger.trace('Handle sort changed action by user', { order });
           this.order = order;
           this.pager.pageIndex = 1;
-          this.loadReport({ table: null });
+          this.loadReport({ table: this._dataConfig.table });
         }
       } else {
         return 1;
