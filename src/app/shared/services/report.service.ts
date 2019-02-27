@@ -76,8 +76,8 @@ export class ReportService implements OnDestroy {
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
   }
   
-  public getReport(config: ReportConfig, sections: ReportDataConfig, preventMultipleRequests = true): Observable<Report> {
-    sections = sections === null ? { table: null } : sections; // table is mandatory section
+  public getReport(config: ReportConfig, sections: ReportDataConfig = null, preventMultipleRequests = true): Observable<Report> {
+    sections = sections === null ? { table: { fields: {}} } : sections; // table is default section
     const logger = this._logger.subLogger(`Report #${config.reportType}`);
     logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
 
