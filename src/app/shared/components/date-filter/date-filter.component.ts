@@ -255,7 +255,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       applyIn: applyIn,
       changeOnly: changeOnly,
       startDate: DateFilterUtils.toServerDate(this.startDate),
-      endDate: DateFilterUtils.toServerDate(this.endDate),
+      endDate: DateFilterUtils.toServerDate(this.endDate, true),
       startDay: DateFilterUtils.getDay(this.startDate),
       endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
@@ -264,7 +264,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         active: this.compare,
         startDate: DateFilterUtils.toServerDate(this.compareStartDate),
         startDay: DateFilterUtils.getDay(this.compareStartDate),
-        endDate: DateFilterUtils.toServerDate(this.compareEndDate),
+        endDate: DateFilterUtils.toServerDate(this.compareEndDate, true),
         endDay: DateFilterUtils.getDay(this.compareEndDate)
       }
     });
