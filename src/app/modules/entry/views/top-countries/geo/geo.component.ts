@@ -14,12 +14,17 @@ import { TopCountriesConfig } from '../top-countries.config';
   templateUrl: './geo.component.html',
   styleUrls: ['./geo.component.scss'],
 })
-export class GeoComponent implements OnInit, OnDestroy {
+export class GeoComponent {
   @Input() tableData: TableRow<any>[] = [];
-  @Input() mapData: any;
   @Input() isBusy = false;
   @Input() isCompareMode = false;
   @Input() selectedMetrics = 'count_plays';
+  @Input() set mapData (value) {
+    if (value) {
+      this._mapDataReady = true;
+      echarts.registerMap('world', value);
+    }
+  }
   
   @Output() onDrillDown = new EventEmitter<string[]>();
   
@@ -34,16 +39,6 @@ export class GeoComponent implements OnInit, OnDestroy {
   constructor(private _translate: TranslateService,
               private _logger: KalturaLogger,
               private _dataConfigService: TopCountriesConfig) {
-  }
-  
-  ngOnDestroy() {
-  }
-  
-  ngOnInit() {
-    if (this.mapData) {
-      this._mapDataReady = true;
-      echarts.registerMap('world', this.mapData);
-    }
   }
   
   public _onSortChanged(event) {

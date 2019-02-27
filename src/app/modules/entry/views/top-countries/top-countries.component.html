@@ -4,7 +4,12 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <app-entry-geo #entryGeo [mapData]=""></app-entry-geo>
+    <app-entry-geo #entryGeo
+                   [mapData]="_mapData"
+                   [tableData]="_tableData"
+                   [isBusy]="_isBusy"
+                   [isCompareMode]="_isCompareMode"
+                   (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
 
   </k-area-blocker>
 </div>

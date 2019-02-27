@@ -302,4 +302,11 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
       }
     }
   }
+  
+  public _onDrillDown(drillDown: string[]): void {
+    this._drillDown = drillDown;
+    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+  
+    this._loadReport();
+  }
 }
