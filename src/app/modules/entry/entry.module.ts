@@ -19,6 +19,7 @@ import { VideoPerformanceComponent } from './views/video-performance/video-perfo
 import { EntryFilterComponent } from './filter/filter.component';
 import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-overview.component';
 import { TopCountriesComponent } from './views/top-countries/top-countries.component';
+import { GeoComponent } from './views/top-countries/geo/geo.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { TopCountriesComponent } from './views/top-countries/top-countries.compo
     EntryDevicesOverviewComponent,
     EntryFilterComponent,
     TopCountriesComponent,
+    GeoComponent,
   ],
   exports: [],
   providers: []

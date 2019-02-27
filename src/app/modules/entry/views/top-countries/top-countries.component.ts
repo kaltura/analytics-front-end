@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { TopCountriesConfig } from './top-countries.config';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
-import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -17,10 +17,9 @@ import { refineFilterToServerValue } from 'shared/components/filter/filter-to-se
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { significantDigits } from 'shared/utils/significant-digits';
-import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { getCountryName } from 'shared/utils/get-country-name';
+import { GeoComponent } from './geo/geo.component';
 
 @Component({
   selector: 'app-top-countries',
@@ -31,10 +30,11 @@ import { getCountryName } from 'shared/utils/get-country-name';
 export class TopCountriesComponent extends EntryBase implements OnInit, OnDestroy {
   @Input() entryId = '';
   
+  @ViewChild('entryGeo') _entryGeo: GeoComponent;
+  
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _order = '-count_plays';
-  private _echartsIntance: any; // echart instance
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _trendFilter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   
@@ -47,7 +47,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _dateRange = DateRanges.Last30D;
   public _tableData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
-  public _mapChartData: any = { 'count_plays': {} };
   public _isBusy: boolean;
   public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
@@ -57,8 +56,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
-  public _mapZoom = 1.2;
-  public _mapDataReady = false;
+  public _mapData: any;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -85,14 +83,11 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     // load works map data
     this._http.get('assets/world.json')
       .subscribe(data => {
-        this._mapDataReady = true;
-        echarts.registerMap('world', data);
+        this._mapData = data;
       });
   }
   
   protected _updateRefineFilter(): void {
-    this._onDrillDown('', false);
-
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -117,7 +112,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    console.warn('aaaa');
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
@@ -138,7 +132,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
           }
-          this._updateMap();
+          this._entryGeo.updateMap(this._mapCenter);
           this._isBusy = false;
           this._loadTrendData();
         },
@@ -160,7 +154,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
-  
+    
     if (this.entryId) {
       this._trendFilter.entryIdIn = this.entryId;
     }
@@ -235,11 +229,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     };
   }
   
-  
-  public _onSortChanged(event) {
-    tableLocalSortHandler(event, this._order, this._isCompareMode);
-  }
-  
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
@@ -269,39 +258,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-  }
-  
-  private _updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
-    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
-    mapConfig.series[0].data = [];
-    let maxValue = 0;
-    
-    console.warn(this._tableData);
-
-    this._tableData.forEach(data => {
-      const coords = data['coordinates'].split('/');
-      let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
-      mapConfig.series[0].data.push({
-        name: this._drillDown.length === 0
-          ? getCountryName(data.country, false)
-          : this._drillDown.length === 1
-            ? data.region
-            : data.city,
-        value
-      });
-      if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
-      }
-    });
-    
-    mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
-    map.center = this._mapCenter;
-    map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
-    this._mapChartData[this._selectedMetrics] = mapConfig;
   }
   
   private _updateReportConfig(reportConfig: ReportConfig): void {
@@ -344,52 +300,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
       if (!found && this._tableData.length) {
         this._mapCenter = [this._tableData[0]['coordinates'].split('/')[1], this._tableData[0]['coordinates'].split('/')[0]];
       }
-    }
-  }
-  
-  public _onChartInit(ec) {
-    this._echartsIntance = ec;
-  }
-  
-  public _zoom(direction: string): void {
-    this._logger.trace('Handle zoom action by user', { direction });
-    if (direction === 'in') {
-      this._mapZoom = this._mapZoom * 2;
-    } else {
-      this._mapZoom = this._mapZoom / 2;
-    }
-    const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this._drillDown.length > 0) {
-      this._echartsIntance.setOption({ geo: [{ zoom: this._mapZoom }] }, false);
-      this._echartsIntance.setOption({ geo: [{ roam: roam }] }, false);
-    } else {
-      this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom }] }, false);
-      this._echartsIntance.setOption({ series: [{ roam: roam }] }, false);
-    }
-  }
-  
-  public _onDrillDown(country: string, loadReport = true): void {
-    this._logger.trace('Handle drill down to country action by user', { country });
-    if (country === '') {
-      this._drillDown = [];
-    } else if (this._drillDown.length < 2) {
-      this._drillDown.push(getCountryName(country, true));
-    } else if (this._drillDown.length === 2) {
-      this._drillDown.pop();
-    }
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
-    this._pager.pageIndex = 1;
-    
-    if (loadReport) {
-      this._loadReport();
-    }
-  }
-  
-  public _onChartClick(event): void {
-    this._logger.trace('Handle click on chart by user', { country: event.data.name });
-    if (event.data && event.data.name && this._drillDown.length < 2) {
-      this._onDrillDown(event.data.name);
     }
   }
 }
