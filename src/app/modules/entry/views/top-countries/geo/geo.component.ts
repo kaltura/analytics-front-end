@@ -15,7 +15,7 @@ import { TopCountriesConfig } from '../top-countries.config';
 })
 export class GeoComponent {
   @Input() tableData: TableRow<any>[] = [];
-  @Input() isBusy = false;
+  @Input() isBusy = true;
   @Input() isCompareMode = false;
   @Input() showTrend = false;
   @Input() selectedMetrics = 'count_plays';

@@ -12,7 +12,7 @@
     }
 
     .ui-table-wrapper {
-      min-height: 240px;
+      min-height: 260px;
     }
   }
 }
@@ -60,4 +60,8 @@
       border-bottom-right-radius: 0;
     }
   }
+}
+
+.emptymessage, .kEmptyMessage {
+  border: none;
 }
