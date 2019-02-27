@@ -20,6 +20,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { getCountryName } from 'shared/utils/get-country-name';
 
 @Component({
   selector: 'app-geo-location',
@@ -181,7 +182,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {
-      this._drillDown.push(this._dataConfigService.getCountryName(country, true));
+      this._drillDown.push(getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
       this._drillDown.pop();
     }
@@ -275,7 +276,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
-          ? this._dataConfigService.getCountryName(data.country, false)
+          ? getCountryName(data.country, false)
           : this._drillDown.length === 1
             ? data.region
             : data.city,
