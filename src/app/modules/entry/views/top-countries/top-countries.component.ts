@@ -132,9 +132,15 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
           }
-          this._entryGeo.updateMap(this._mapCenter);
           this._isBusy = false;
-          this._loadTrendData();
+    
+          setTimeout(() => {
+            this._entryGeo.updateMap(this._mapCenter);
+          }, 0);
+          
+          if (this._isCompareMode) {
+            this._loadTrendData();
+          }
         },
         error => {
           this._isBusy = false;

@@ -1,6 +1,14 @@
 <div class="kReport kNoMargin kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.entry.topCountries' | translate}}</span>
+    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entry.topCountries' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="entryGeo.drillDown('')">{{'app.audience.geo.top' | translate}}</a>
+      <span class="separator">/</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0])">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
+    </div>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -9,6 +17,7 @@
                    [tableData]="_tableData"
                    [isBusy]="_isBusy"
                    [isCompareMode]="_isCompareMode"
+                   [showTrend]="_isCompareMode"
                    (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
 
   </k-area-blocker>

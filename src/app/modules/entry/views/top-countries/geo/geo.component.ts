@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { KalturaReportType } from 'kaltura-ngx-client';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -18,8 +17,10 @@ export class GeoComponent {
   @Input() tableData: TableRow<any>[] = [];
   @Input() isBusy = false;
   @Input() isCompareMode = false;
+  @Input() showTrend = false;
   @Input() selectedMetrics = 'count_plays';
-  @Input() set mapData (value) {
+  
+  @Input() set mapData(value) {
     if (value) {
       this._mapDataReady = true;
       echarts.registerMap('world', value);
@@ -66,27 +67,10 @@ export class GeoComponent {
     }
   }
   
-  public _onDrillDown(country: string, loadReport = true): void {
-    this._logger.trace('Handle drill down to country action by user', { country });
-    if (country === '') {
-      this._drillDown = [];
-    } else if (this._drillDown.length < 2) {
-      this._drillDown.push(getCountryName(country, true));
-    } else if (this._drillDown.length === 2) {
-      this._drillDown.pop();
-    }
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
-    
-    const reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    if (loadReport) {
-      this.onDrillDown.emit(this._drillDown);
-    }
-  }
-  
   public _onChartClick(event): void {
     this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
-      this._onDrillDown(event.data.name);
+      this.drillDown(event.data.name);
     }
   }
   
@@ -119,5 +103,19 @@ export class GeoComponent {
     map.zoom = this._mapZoom;
     map.roam = this._drillDown.length === 0 ? 'false' : 'move';
     this._mapChartData = mapConfig;
+    console.warn(mapConfig);
+  }
+  
+  public drillDown(country: string): void {
+    this._logger.trace('Handle drill down to country action by user', { country });
+    if (country === '') {
+      this._drillDown = [];
+    } else if (this._drillDown.length < 2) {
+      this._drillDown.push(getCountryName(country, true));
+    } else if (this._drillDown.length === 2) {
+      this._drillDown.pop();
+    }
+    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
+    this.onDrillDown.emit(this._drillDown);
   }
 }

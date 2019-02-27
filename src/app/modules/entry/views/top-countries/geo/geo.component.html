@@ -36,7 +36,7 @@
                     </span>
               </div>
             </th>
-            <th>{{'app.audience.geo.trend' | translate}}</th>
+            <th *ngIf="showTrend">{{'app.audience.geo.trend' | translate}}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
@@ -48,8 +48,8 @@
               <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
             </td>
             <td class="kHighlight">
-              <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
-              <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+              <a *ngIf="_drillDown.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
+              <a *ngIf="_drillDown.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
               <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
             </td>
             <td>
@@ -60,17 +60,17 @@
                 <app-bullet [value]="data['plays_distribution']"></app-bullet>
               </div>
             </td>
-            <td>
-                  <span>
-                    <h5 class="mini-loader"
-                        *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
-                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend"
-                          [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
-                      <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
-                                       [units]="data[_selectedMetrics+'_trend']?.units"
-                                       [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
-                    </span>
-                  </span>
+            <td *ngIf="showTrend">
+              <span>
+                <h5 class="mini-loader"
+                    *ngIf="!data[selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
+                <span *ngIf="data[selectedMetrics+'_trend']?.trend" class="kTrend"
+                      [kTooltip]="data[selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
+                  <app-trend-value [value]="data[selectedMetrics+'_trend']?.trend"
+                                   [units]="data[selectedMetrics+'_trend']?.units"
+                                   [trend]="data[selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
+                </span>
+              </span>
             </td>
           </tr>
         </ng-template>
