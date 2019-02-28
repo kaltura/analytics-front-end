@@ -13,9 +13,9 @@ export class DateFilterUtils {
     // we add 1 day only for dates that are received from the calendar component as the start of the day meaning hours, minutes, seconds and milliseconds are all 0
 
     if (getEndOfDay && value.getHours() === 0 && value.getMinutes() === 0 && value.getSeconds() === 0 && value.getMilliseconds() === 0) {
-      const dateClone = new Date(value.getTime()); // clone date to prevent changing the date passed by reference
-      dateClone.setDate(dateClone.getDate() + 1);          // add 1 day
-      timeToServer = dateClone.getTime() - 1000;       // remove 1 second
+      let dateClone = new Date(value.getTime());    // clone date to prevent changing the date passed by reference
+      dateClone.setDate(dateClone.getDate() + 1);   // add 1 day
+      timeToServer = dateClone.getTime() - 1000;    // remove 1 second
     } else {
       timeToServer = value.getTime();         // dor startDate or not begining of the day, use the received time, no manipulation
     }
