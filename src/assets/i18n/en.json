@@ -76,6 +76,7 @@
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
+      "noResultsRegion": "No Data for this Region",
       "exporting": "Preparing Report",
       "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
