@@ -20,6 +20,7 @@ export class GeoComponent {
   @Input() showTrend = false;
   @Input() selectedMetrics = 'count_plays';
   @Input() periodTitle: string;
+  @Input() drillDownItems: string[] = [];
   
   @Input() set mapData(value) {
     if (value) {
@@ -34,7 +35,6 @@ export class GeoComponent {
   private _echartsIntance: any; // echart instance
   
   public _mapChartData: any = {};
-  public _drillDown: string[] = [];
   public _mapZoom = 1.2;
   public _mapDataReady = false;
   
@@ -59,7 +59,7 @@ export class GeoComponent {
       this._mapZoom = this._mapZoom / 2;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this._drillDown.length > 0) {
+    if (this.drillDownItems.length > 0) {
       this._echartsIntance.setOption({ geo: [{ zoom: this._mapZoom }] }, false);
       this._echartsIntance.setOption({ geo: [{ roam: roam }] }, false);
     } else {
@@ -70,13 +70,13 @@ export class GeoComponent {
   
   public _onChartClick(event): void {
     this._logger.trace('Handle click on chart by user', { country: event.data.name });
-    if (event.data && event.data.name && this._drillDown.length < 2) {
+    if (event.data && event.data.name && this.drillDownItems.length < 2) {
       this.drillDown(event.data.name);
     }
   }
   
   public updateMap(mapCenter: number[]): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this.drillDownItems.length > 0);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this.selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
@@ -86,9 +86,9 @@ export class GeoComponent {
       let value = [coords[1], coords[0]];
       value.push(parseFloat(data[this.selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
-        name: this._drillDown.length === 0
+        name: this.drillDownItems.length === 0
           ? getCountryName(data.country, false)
-          : this._drillDown.length === 1
+          : this.drillDownItems.length === 1
             ? data.region
             : data.city,
         value
@@ -99,23 +99,24 @@ export class GeoComponent {
     });
     
     mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    const map = this.drillDownItems.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = mapCenter;
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
+    map.roam = this.drillDownItems.length === 0 ? 'false' : 'move';
     this._mapChartData = mapConfig;
   }
   
   public drillDown(country: string): void {
+    let drillDown = [...this.drillDownItems];
     this._logger.trace('Handle drill down to country action by user', { country });
-    if (country === '') {
-      this._drillDown = [];
-    } else if (this._drillDown.length < 2) {
-      this._drillDown.push(getCountryName(country, true));
-    } else if (this._drillDown.length === 2) {
-      this._drillDown.pop();
+    if (country === null) {
+      drillDown = [];
+    } else if (drillDown.length < 2) {
+      drillDown.push(getCountryName(country, true));
+    } else if (drillDown.length === 2) {
+      drillDown.pop();
     }
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
-    this.onDrillDown.emit(this._drillDown);
+    this._mapZoom = drillDown.length === 0 ? 1.2 : this._mapZoom;
+    this.onDrillDown.emit(drillDown);
   }
 }

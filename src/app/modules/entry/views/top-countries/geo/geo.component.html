@@ -14,7 +14,7 @@
             <th [ngStyle]="{'width': '42px'}">
               <span *ngIf="tableData?.length">{{'app.audience.geo.index' | translate}}</span>
             </th>
-            <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
+            <th *ngIf="!drillDownItems.length" [ngStyle]="{'width': '42px'}"></th>
             <th [ngStyle]="{'width': '20%'}">
               <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
@@ -44,13 +44,13 @@
             <td>
               <span>{{rowIndex + 1}}</span>
             </td>
-            <td class="kFlagColumn" *ngIf="!_drillDown.length">
+            <td class="kFlagColumn" *ngIf="!drillDownItems.length">
               <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
             </td>
             <td class="kHighlight">
-              <a *ngIf="_drillDown.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
-              <a *ngIf="_drillDown.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
-              <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
+              <a *ngIf="drillDownItems.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
+              <a *ngIf="drillDownItems.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
+              <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
             </td>
             <td>
               <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>

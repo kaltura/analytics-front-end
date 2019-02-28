@@ -141,6 +141,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
           }
           
           const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+          this._updateReportConfig(compareReportConfig);
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         })
@@ -297,9 +298,17 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   public _onDrillDown(drillDown: string[]): void {
-    this._drillDown = drillDown;
+    this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
     this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
     
     this._loadReport();
+  }
+  
+  public _drillDownTop(): void {
+    this._entryGeo.drillDown(null);
+    
+    if (this._entryCompareGeo) {
+      this._entryCompareGeo.drillDown(null);
+    }
   }
 }
