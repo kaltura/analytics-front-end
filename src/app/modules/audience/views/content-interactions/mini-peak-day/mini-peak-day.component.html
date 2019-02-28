@@ -1,0 +1,33 @@
+<div class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.insights' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="_peakDayData">
+      <div class="peakDayHolder">
+        <span class="peakDay">{{_peakDayData?.date_id}}</span>
+        <span class="peakDayLable"
+              *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">{{'app.engagement.peak' | translate}}</span>
+      </div>
+      <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
+        <i class="icon-small-play kBlue"></i>
+        <span class="kVal">{{_peakDayData?.count_plays}}</span>
+        <span class="kLabel">{{'app.engagement.plays' | translate}}</span>
+      </div>
+      <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
+        <i class="icon-small-viewer-contributor kGreen"></i>
+        <span class="kVal">{{_peakDayData?.unique_known_users}}</span>
+        <span class="kLabel">{{'app.engagement.highlightsReport.unique_known_users' | translate}}</span>
+      </div>
+      <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
+        <i class="icon-small-time kOrange"></i>
+        <span class="kVal">{{_peakDayData?.sum_time_viewed}}</span>
+        <span class="kLabel">{{'app.engagement.highlightsReport.sum_time_viewed' | translate}}</span>
+      </div>
+    </div>
+    <div class="kReportContent kNoResults" *ngIf="!_isBusy && !_peakDayData">
+      <span>{{'app.common.noResults' | translate}}</span>
+    </div>
+  </k-area-blocker>
+</div>

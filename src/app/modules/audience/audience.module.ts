@@ -20,7 +20,6 @@ import { MiniPeakDayComponent } from './views/engagement/mini-peak-day/mini-peak
 import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
 import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
 import { EngagementUsersComponent } from './views/engagement/users/users.component';
-import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
 
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule, InputHelperModule } from '@kaltura-ng/kaltura-ui';
@@ -37,6 +36,11 @@ import { PageScrollService } from 'ngx-page-scroll';
 import { UICarouselModule } from 'ui-carousel';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
+import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
+import { InteractionsComponent } from './views/content-interactions/interactions/interactions.component';
+import { MiniInteractionsComponent } from './views/content-interactions/mini-interactions/mini-interactions.component';
+import { InteractionsMiniPeakDayComponent } from './views/content-interactions/mini-peak-day/mini-peak-day.component';
+import { MiniTopSharedComponent } from './views/content-interactions/mini-top-shared/mini-top-shared.component';
 
 @NgModule({
   imports: [
@@ -79,7 +83,11 @@ import { GeoFilterComponent } from './views/geo-location/filter/filter.component
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
-    GeoFilterComponent
+    GeoFilterComponent,
+    InteractionsComponent,
+    MiniInteractionsComponent,
+    InteractionsMiniPeakDayComponent,
+    MiniTopSharedComponent,
   ],
   exports: [],
   providers: [PageScrollService]

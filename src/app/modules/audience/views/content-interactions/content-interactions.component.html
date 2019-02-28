@@ -1,7 +1,71 @@
-<div style="display: flex; width: 100%; align-items: center; justify-content: center; margin-top: 100px">
-  <div style="font-family: kmcng-icon-pack; width: 50px; height: 30px; font-size: 24px; position: relative">
-    <i style="position: absolute" class="kIcongear"></i>
-    <i style="position: absolute; top: 11px; left: 18px" class="kIcongear gear2"></i>
+<div class="kReport kContent kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.engagement.title' | translate}}</span>
+    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
+                    [reportType]="_reportType"
+                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
+                    [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
+    <app-date-filter #dateFilter
+                     [dateRange]="_dateRange"
+                     [selectedTimeUnit]="_timeUnit"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
-  <span style="color: #666666; font-size: 24px; font-weight: bold">Coming Soon...</span>
+
+  <!--<div class="kReportContainer kNoPadding">-->
+  <!--<app-refine-filter [opened]="_refineFilterOpened"-->
+  <!--[dateFilter]="_dateFilter"-->
+  <!--[selectedFilters]="_selectedRefineFilters"-->
+  <!--(closeFilters)="_refineFilterOpened = false"-->
+  <!--(filterChange)="_onRefineFilterChange($event)"></app-refine-filter>-->
+  <!--</div>-->
+
+  <div class="kReportContainer">
+    <div class="kMiniReportContainer">
+      <app-mini-interactions [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-mini-interactions>
+    </div>
+
+    <div class="kMiniReportContainer">
+      <app-mini-top-shared [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-mini-top-shared>
+    </div>
+
+    <div class="kMiniReportContainer">
+      <app-interactions-mini-peak-day [dateFilter]="_dateFilter"
+                                      [refineFilter]="_refineFilter"></app-interactions-mini-peak-day>
+    </div>
+
+    <!-- Example -->
+    <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
+    <!--<div class="kMiniReportContainer">-->
+    <!--<ui-carousel [infinite]="false"-->
+    <!--[autoPlay]="false"-->
+    <!--[autoPlaySpeed]="5000"-->
+    <!--[arrows]="false"-->
+    <!--[fade]="false"-->
+    <!--[speed]="200"-->
+    <!--height="280px">-->
+    <!--<ui-carousel-item>-->
+    <!--<div class="kInsights">Some stuff</div>-->
+    <!--</ui-carousel-item>-->
+    <!--</ui-carousel>-->
+    <!--</div>-->
+  </div>
+
+  <div id="highlights-report" class="kReportContainer">
+    <app-interactions #interactions
+                      [dateFilterComponent]="dateFilter"
+                      [dateFilter]="_dateFilter"
+                      [refineFilter]="_refineFilter"></app-interactions>
+  </div>
+
 </div>
+
+

@@ -1,0 +1,57 @@
+<div class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.engagement.highlights_tt' | translate}}</span>
+    </kInputHelper>
+    <a (click)="scrollTo('#highlights-report')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kVal">
+        <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+        <span *ngIf="!_isCompareMode" class="value">{{_tabsData[0]?.value}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[0]?.tooltip" [maxWidth]="500"
+              [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[0]?.value"
+                           [units]="_tabsData[0]?.units"
+                           [trend]="_tabsData[0]?.trend"></app-trend-value>
+        </span>
+        <span class="title">{{_tabsData[0]?.title}}</span>
+      </div>
+      <div class="kVal">
+        <div class="kMiniIcon green"><i class="icon-small-viewer-contributor"></i></div>
+        <span *ngIf="!_isCompareMode" class="value">{{_tabsData[1]?.value}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[1]?.tooltip" [maxWidth]="500"
+              [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[1]?.value"
+                           [units]="_tabsData[1]?.units"
+                           [trend]="_tabsData[1]?.trend"></app-trend-value>
+        </span>
+        <span class="title">{{_tabsData[1]?.title}}</span>
+      </div>
+      <div class="kVal">
+        <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
+        <span *ngIf="!_isCompareMode" class="value">{{_tabsData[2]?.value}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[2]?.tooltip" [maxWidth]="500"
+              [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[2]?.value"
+                           [units]="_tabsData[2]?.units"
+                           [trend]="_tabsData[2]?.trend"></app-trend-value>
+        </span>
+        <span class="title">{{_tabsData[2]?.title}}</span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

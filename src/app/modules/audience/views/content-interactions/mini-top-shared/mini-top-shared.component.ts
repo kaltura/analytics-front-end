@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -8,32 +7,32 @@ import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
-import { MiniTopVideosConfig } from './mini-top-videos.config';
+import { MiniTopSharedConfig } from './mini-top-shared.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 
 @Component({
-  selector: 'app-engagement-mini-top-videos',
-  templateUrl: './mini-top-videos.component.html',
-  styleUrls: ['./mini-top-videos.component.scss'],
+  selector: 'app-mini-top-shared',
+  templateUrl: './mini-top-shared.component.html',
+  styleUrls: ['./mini-top-shared.component.scss'],
   providers: [
     KalturaLogger.createLogger('MiniTopSharedComponent'),
-    MiniTopVideosConfig,
+    MiniTopSharedConfig,
     ReportService
   ]
 })
-export class MiniTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
+export class MiniTopSharedComponent extends InteractionsBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
   @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }>;
   
-  protected _componentId = 'mini-top-videos';
+  protected _componentId = 'mini-top-shared';
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
@@ -63,7 +62,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
-              private _dataConfigService: MiniTopVideosConfig,
+              private _dataConfigService: MiniTopSharedConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger) {
     super();
@@ -85,11 +84,11 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
         });
     }
   }
-
+  
   protected _loadReport(sections = this._dataConfig): void {
-
+  
   }
-
+  
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -114,7 +113,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-
+  
   private _handleTable(table: KalturaReportTable, compare?: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
@@ -149,7 +148,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
       this.pageScrollService.start(pageScrollInstance);
     }
   }
-
+  
   ngOnDestroy() {
   }
   
