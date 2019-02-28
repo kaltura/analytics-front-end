@@ -19,6 +19,7 @@ export class GeoComponent {
   @Input() isCompareMode = false;
   @Input() showTrend = false;
   @Input() selectedMetrics = 'count_plays';
+  @Input() periodTitle: string;
   
   @Input() set mapData(value) {
     if (value) {

@@ -17,6 +17,10 @@
   }
 }
 
+.kPeriod {
+  margin: 24px 24px 17px;
+}
+
 .kFlag {
   width: 24px;
   height: 24px;
@@ -28,7 +32,14 @@
 
 .kTopCountries {
   display: flex;
-  flex-direction: row !important;
+
+  &.kDefaultMode {
+    flex-direction: row !important;
+  }
+
+  &.kCompareMode {
+    flex-direction: column-reverse !important;
+  }
 
   .kTable, .kMap {
     flex: 1;

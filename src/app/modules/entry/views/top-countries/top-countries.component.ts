@@ -33,32 +33,35 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   @Input() entryId = '';
   
   @ViewChild('entryGeo') _entryGeo: GeoComponent;
+  @ViewChild('entryCompareGeo') _entryCompareGeo: GeoComponent;
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _order = '-count_plays';
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  private _trendFilter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  
+
   protected _componentId = 'top-videos';
   
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _selectedMetrics: string;
-  public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
-  public _dateRange = DateRanges.Last30D;
+  public _reportInterval = KalturaReportInterval.days;
   public _tableData: TableRow<any>[] = [];
+  public _compareTableData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
+  public _compareTabsData: Tab[] = [];
   public _isBusy: boolean;
   public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
-  public _reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
+  public _reportType = KalturaReportType.mapOverlayCountry;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
   public _mapData: any;
+  public _currentPeriodTitle: string;
+  public _comparePeriodTitle: string;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -70,8 +73,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
               private _authService: AuthService,
               private _trendService: TrendService,
               private _http: HttpClient,
-              private _dataConfigService: TopCountriesConfig,
-              private _logger: KalturaLogger) {
+              private _dataConfigService: TopCountriesConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
@@ -117,6 +119,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
+    this._compareTableData = [];
     this._blockerMessage = null;
     
     if (this.entryId) {
@@ -133,31 +136,61 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
             return ObservableOf({ report, compare: null });
           }
           
+          if (this.entryId) {
+            this._compareFilter.entryIdIn = this.entryId;
+          }
+          
           const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
-        }))
+        })
+      )
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
+    
+          if (report.totals) {
+            this._tabsData = this._handleTotals(report.totals); // handle totals
+          }
+    
+          if (report.table && report.table.header && report.table.data) {
+            this._tableData = this._handleTable(report.table, this._tabsData); // handle table
+          }
           
           if (compare) {
-            // todo
-          } else {
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
+            this._currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+            this._comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`;
+
+            if (compare.totals) {
+              this._compareTabsData = this._handleTotals(compare.totals); // handle totals
             }
-            if (report.table && report.table.header && report.table.data) {
-              this._handleTable(report.table); // handle table
-            }
-            
-            setTimeout(() => {
-              this._entryGeo.updateMap(this._mapCenter);
-            }, 0);
-            
-            if (this._isCompareMode) {
-              this._loadTrendData();
+            if (compare.table && compare.table.header && compare.table.data) {
+              this._compareTableData = this._handleTable(compare.table, this._compareTabsData); // handle table
+              
+              this._tableData.forEach(row => {
+                const relevantCompareRow = this._compareTableData.find(item => {
+                  const sameCountry = item.country === row.country;
+                  const sameRegion = item.region === row.region;
+                  const sameCity = item.city === row.city;
+                  
+                  return sameCountry && sameRegion && sameCity;
+                });
+                const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
+                this._setPlaysTrend(row, 'count_plays', compareValue, this._currentPeriodTitle, this._comparePeriodTitle);
+              });
+            } else {
+              this._tableData.forEach(row => {
+                this._setPlaysTrend(row, 'count_plays', 0, this._currentPeriodTitle, this._comparePeriodTitle);
+              });
             }
           }
+          
+          setTimeout(() => {
+            this._entryGeo.updateMap(this._mapCenter);
+            
+            if (this._entryCompareGeo) {
+              this._entryCompareGeo.updateMap(this._mapCenter);
+            }
+          }, 0);
         },
         error => {
           this._isBusy = false;
@@ -173,70 +206,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
         });
   }
   
-  private _loadTrendData(): void {
-    const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
-    
-    if (this.entryId) {
-      this._trendFilter.entryIdIn = this.entryId;
-    }
-    this._trendFilter.fromDate = startDate;
-    this._trendFilter.toDate = endDate;
-    
-    const reportConfig: ReportConfig = {
-      reportType: this._reportType,
-      filter: this._trendFilter,
-      pager: this._pager,
-      order: this._order
-    };
-    this._updateReportConfig(reportConfig);
-    this._reportService.getReport(reportConfig, this._dataConfig)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(report => {
-        if (report.table && report.table.header && report.table.data) {
-          const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
-          this._tableData.forEach(row => {
-            const relevantCompareRow = tableData.find(item => {
-              const sameCountry = item.country === row.country;
-              const sameRegion = item.region === row.region;
-              const sameCity = item.city === row.city;
-              
-              return sameCountry && sameRegion && sameCity;
-            });
-            const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
-            this._setPlaysTrend(row, 'count_plays', compareValue, currentPeriodTitle, comparePeriodTitle);
-          });
-        } else {
-          this._tableData.forEach(row => {
-            this._setPlaysTrend(row, 'count_plays', 0, currentPeriodTitle, comparePeriodTitle);
-          });
-        }
-      }, error => {
-        const err: ErrorDetails = this._errorsManager.getError(error);
-        if (err.forceLogout) {
-          this._blockerMessage = new AreaBlockerMessage({
-            title: err.title,
-            message: err.message,
-            buttons: [{
-              label: this._translate.instant('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this._authService.logout();
-              }
-            }]
-          });
-        } else {
-          this._tableData.forEach(row => {
-            row['count_plays_trend'] = { trend: 'N/A' };
-            row['count_unique_known_users'] = { trend: 'N/A' };
-            row['count_avg_view_drop_off'] = { trend: 'N/A' };
-          });
-        }
-      });
-  }
-  
-  private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
+  private _setPlaysTrend(row: TableRow, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
     const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
     compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
@@ -252,7 +222,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     };
   }
   
-  private _handleTable(table: KalturaReportTable): void {
+  private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
@@ -262,9 +232,9 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
     
-    this._tableData = tableData.map((row, index) => {
+    return tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
-        const tab = this._tabsData.find(item => item.key === key);
+        const tab = tabsData.find(item => item.key === key);
         const total = tab ? parseFloat(tab.rawValue as string) : 0;
         const rowValue = parseFloat(row[key]) || 0;
         return significantDigits((rowValue / total) * 100);
@@ -279,8 +249,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     });
   }
   
-  private _handleTotals(totals: KalturaReportTotal): void {
-    this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+  private _handleTotals(totals: KalturaReportTotal): Tab[] {
+    return this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
   private _updateReportConfig(reportConfig: ReportConfig): void {

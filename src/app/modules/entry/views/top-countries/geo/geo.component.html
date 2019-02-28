@@ -1,4 +1,4 @@
-<div class="kReportContent kTopCountries">
+<div class="kReportContent kTopCountries" [ngClass]="isCompareMode ? 'kCompareMode' : 'kDefaultMode'">
   <div class="kTable">
     <div class="kTableContainer">
       <p-table sortField="count_plays"
@@ -83,6 +83,7 @@
       </p-table>
     </div>
   </div>
+  <div *ngIf="isCompareMode" class="kPeriod">{{periodTitle}}</div>
   <div class="kMap">
     <div *ngIf="_mapDataReady" echarts class="kChart"
          [options]="_mapChartData"

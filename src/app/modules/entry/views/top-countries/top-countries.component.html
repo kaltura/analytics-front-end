@@ -12,10 +12,19 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <app-entry-geo #entryCompareGeo *ngIf="_isCompareMode"
+                   [mapData]="_mapData"
+                   [tableData]="_compareTableData"
+                   [isBusy]="_isBusy"
+                   [isCompareMode]="_isCompareMode"
+                   [showTrend]="false"
+                   [periodTitle]="_comparePeriodTitle"
+                   (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
     <app-entry-geo #entryGeo
                    [mapData]="_mapData"
                    [tableData]="_tableData"
                    [isBusy]="_isBusy"
+                   [periodTitle]="_currentPeriodTitle"
                    [isCompareMode]="_isCompareMode"
                    [showTrend]="_isCompareMode"
                    (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
