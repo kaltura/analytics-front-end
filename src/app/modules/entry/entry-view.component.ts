@@ -182,7 +182,9 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   public _navigateToEntry(): void {
-    this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
+    }
   }
 
 }

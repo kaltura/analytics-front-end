@@ -74,7 +74,9 @@ export class AppComponent implements OnInit, OnDestroy {
       }, 0);
     });
   
-    this._frameEventManager.publish(FrameEvents.AnalyticsInit);
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.AnalyticsInit);
+    }
   }
   
   ngOnDestroy() {
