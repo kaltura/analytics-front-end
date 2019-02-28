@@ -92,6 +92,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   protected _updateRefineFilter(): void {
+    this._drillDownTop(false);
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -99,6 +101,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   protected _updateFilter(): void {
+    this._drillDownTop(false);
+
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
@@ -297,18 +301,21 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     }
   }
   
-  public _onDrillDown(drillDown: string[]): void {
+  public _onDrillDown(event: { drillDown: string[], reload: boolean }): void {
+    const { drillDown, reload } = event;
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
     this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
     
-    this._loadReport();
+    if (reload) {
+      this._loadReport();
+    }
   }
   
-  public _drillDownTop(): void {
-    this._entryGeo.drillDown(null);
+  public _drillDownTop(reload = true): void {
+    this._entryGeo.drillDown(null, reload);
     
     if (this._entryCompareGeo) {
-      this._entryCompareGeo.drillDown(null);
+      this._entryCompareGeo.drillDown(null, reload);
     }
   }
 }

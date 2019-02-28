@@ -29,7 +29,7 @@ export class GeoComponent {
     }
   }
   
-  @Output() onDrillDown = new EventEmitter<string[]>();
+  @Output() onDrillDown = new EventEmitter<{ drillDown: string[], reload: boolean }>();
   
   private _order = '-count_plays';
   private _echartsIntance: any; // echart instance
@@ -106,7 +106,7 @@ export class GeoComponent {
     this._mapChartData = mapConfig;
   }
   
-  public drillDown(country: string): void {
+  public drillDown(country: string, reload = true): void {
     let drillDown = [...this.drillDownItems];
     this._logger.trace('Handle drill down to country action by user', { country });
     if (country === null) {
@@ -117,6 +117,6 @@ export class GeoComponent {
       drillDown.pop();
     }
     this._mapZoom = drillDown.length === 0 ? 1.2 : this._mapZoom;
-    this.onDrillDown.emit(drillDown);
+    this.onDrillDown.emit({ drillDown, reload });
   }
 }
