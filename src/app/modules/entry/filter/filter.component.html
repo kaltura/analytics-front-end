@@ -22,10 +22,16 @@
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
 
 
-            <app-domains-filter [dateFilter]="_dateFilter"
-                                [selectedFilters]="_selectedValues['domains']"
-                                (itemSelected)="_onItemSelected($event, 'domains')"
-                                (itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>
+            <app-category-filter [label]="'app.filters.categories' | translate"
+                                 [selectedFilters]="_selectedValues['categories']"
+                                 [linkLabel]="'app.filters.selectCategories' | translate"
+                                 (itemSelected)="_onItemSelected($event, 'categories')"
+                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+
+            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
+                                <!--[selectedFilters]="_selectedValues['domains']"-->
+                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
+                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
 
           </div>
           <div class="kFilterContainerCol">
@@ -33,12 +39,6 @@
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
-
-            <app-category-filter [label]="'app.filters.categories' | translate"
-                                 [selectedFilters]="_selectedValues['categories']"
-                                 [linkLabel]="'app.filters.selectCategories' | translate"
-                                 (itemSelected)="_onItemSelected($event, 'categories')"
-                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
           </div>
         </div>
       </div>
