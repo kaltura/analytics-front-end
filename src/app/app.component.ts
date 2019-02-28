@@ -73,10 +73,8 @@ export class AppComponent implements OnInit, OnDestroy {
         dialog.center();
       }, 0);
     });
-  
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.AnalyticsInit);
-    }
+
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit);
   }
   
   ngOnDestroy() {
