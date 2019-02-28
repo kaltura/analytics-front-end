@@ -69,8 +69,8 @@ export class GeoComponent {
   }
   
   public _onChartClick(event): void {
-    this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this.drillDownItems.length < 2) {
+      this._logger.trace('Handle click on chart by user', { country: event.data.name });
       this.drillDown(event.data.name);
     }
   }

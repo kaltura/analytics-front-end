@@ -154,8 +154,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public onChartClick(event): void {
-    this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
+      this._logger.trace('Handle click on chart by user', { country: event.data.name });
       this._onDrillDown(event.data.name);
     }
   }
