@@ -229,7 +229,6 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       "Syrian Arab Republic",
       "Tanzania, United Republic of",
       "Turks and Caicos Islands",
-      "United States Minor Outlying Islands",
       "Venezuela, Bolivarian Republic of",
       "Viet Nam"];
     const mapCountryNames = ["Aland",
@@ -265,7 +264,6 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       "Syria",
       "Tanzania",
       "Turks and Caicos Is.",
-      "United States",
       "Venezuela",
       "Vietnam"];
 
