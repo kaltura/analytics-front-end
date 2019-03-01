@@ -39,7 +39,6 @@ import { GeoFilterComponent } from './views/geo-location/filter/filter.component
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
 import { InteractionsComponent } from './views/content-interactions/interactions/interactions.component';
 import { MiniInteractionsComponent } from './views/content-interactions/mini-interactions/mini-interactions.component';
-import { InteractionsMiniPeakDayComponent } from './views/content-interactions/mini-peak-day/mini-peak-day.component';
 import { MiniTopSharedComponent } from './views/content-interactions/mini-top-shared/mini-top-shared.component';
 
 @NgModule({
@@ -86,7 +85,6 @@ import { MiniTopSharedComponent } from './views/content-interactions/mini-top-sh
     GeoFilterComponent,
     InteractionsComponent,
     MiniInteractionsComponent,
-    InteractionsMiniPeakDayComponent,
     MiniTopSharedComponent,
   ],
   exports: [],
