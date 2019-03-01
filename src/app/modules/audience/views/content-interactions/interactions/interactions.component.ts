@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -13,17 +13,17 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { SortEvent } from 'primeng/api';
-import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { InteractionsConfig } from './interactions.config';
+import { SortEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-interactions',
   templateUrl: './interactions.component.html',
   styleUrls: ['./interactions.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EngagementHighlightsComponent'),
+    KalturaLogger.createLogger('InteractionsComponent'),
     InteractionsConfig,
     ReportService
   ],
@@ -31,17 +31,17 @@ import { InteractionsConfig } from './interactions.config';
 export class InteractionsComponent extends InteractionsBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private readonly _order = '-month_id';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  private _order = '-count_viral';
+  private _reportType = KalturaReportType.contentInteractions;
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'interactions';
   
-  public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>({ current: null, compare: null, busy: false, error: null });
+  public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>({ current: null, compare: null, busy: false, error: null });
   
   public _columns: string[] = [];
   public _firstTimeLoading = true;
-  public _isBusy = true;
+  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _tableData: TableRow[] = [];
@@ -51,7 +51,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
-  public _pageSize = analyticsConfig.defaultPageSize;
+  public _pager = new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
@@ -76,16 +76,13 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   ngOnDestroy() {
-    this.highlights$.complete();
+    this.interactions$.complete();
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this.highlights$.next({ current: null, compare: null, busy: true, error: null });
+    this.interactions$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
-    
-    sections = { ...sections }; // make local copy
-    delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections)
@@ -102,7 +99,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
       .subscribe(({ report, compare }) => {
           this._tableData = [];
           
-          this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
+          this.interactions$.next({ current: report, compare: compare, busy: false, error: null });
           
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
@@ -111,8 +108,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
           if (compare) {
             this._handleCompare(report, compare);
           } else {
+            if (report.table && report.table.data && report.table.header) {
+              this._handleTable(report.table); // handle table
+            }
             if (report.graphs.length) {
-              this._handleTable(report.graphs); // handle table
               this._handleGraphs(report.graphs); // handle graphs
             }
           }
@@ -130,7 +129,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          this.highlights$.next({ current: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions) });
+          this.interactions$.next({ current: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions) });
         });
   }
   
@@ -171,32 +170,27 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         this._reportInterval,
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
-      
-      const compareTableData = this._compareService.compareTableFromGraph(
+    }
+    
+    if (current.table && compare.table) {
+      const { columns, tableData } = this._compareService.compareTableData(
         currentPeriod,
         comparePeriod,
-        current.graphs,
-        compare.graphs,
+        current.table,
+        compare.table,
         this._dataConfig.table,
         this._reportInterval,
+        dataKey
       );
-      
-      if (compareTableData) {
-        const { columns, tableData, totalCount } = compareTableData;
-        this._totalCount = totalCount;
-        this._columns = columns;
-        this._tableData = tableData;
-      }
+      this._columns = columns;
+      this._totalCount = compare.table.totalCount;
+      this._tableData = tableData;
     }
   }
   
-  private _handleTable(graphs: KalturaReportGraph[]): void {
-    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
-      graphs,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
-    this._totalCount = totalCount;
+  private _handleTable(table: KalturaReportTable): void {
+    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }
@@ -234,8 +228,23 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     }
   }
   
-  public _onSortChanged(event: SortEvent) {
-    this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
-    tableLocalSortHandler(event, this._order, this._isCompareMode);
+  public _onPaginationChanged(event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
+    if (event.page !== (this._pager.pageIndex - 1)) {
+      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
+      this._pager.pageIndex = event.page + 1;
+      this._loadReport({ table: this._dataConfig.table });
+    }
+  }
+  
+  public _onSortChanged(event: SortEvent): void {
+    if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._logger.trace('Handle sort changed action by user', { order });
+        this._order = order;
+        this._pager.pageIndex = 1;
+        this._loadReport({ table: this._dataConfig.table });
+      }
+    }
   }
 }
