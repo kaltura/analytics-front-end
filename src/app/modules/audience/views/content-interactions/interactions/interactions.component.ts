@@ -34,6 +34,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   private _order = '-count_viral';
   private _reportType = KalturaReportType.contentInteractions;
   private _dataConfig: ReportDataConfig;
+  private _partnerId = analyticsConfig.pid;
+  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
+    ? analyticsConfig.kalturaServer.uri
+    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   
   protected _componentId = 'interactions';
   
@@ -183,15 +187,21 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
       );
       this._columns = columns;
       this._totalCount = compare.table.totalCount;
-      this._tableData = tableData;
+      this._tableData = tableData.map((item, index) => this._extendTableRow(item, index));
     }
+  }
+  
+  private _extendTableRow (item: TableRow<string>, index: number): TableRow<string> {
+    item['index'] = this._pager.pageSize * (this._pager.pageIndex - 1) + (index + 1);
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    return item;
   }
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
-    this._tableData = tableData;
+    this._tableData = tableData.map((item, index) => this._extendTableRow(item, index));
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
@@ -236,10 +246,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   public _onSortChanged(event: SortEvent): void {
-    if (event.data.length && event.field && event.order && event.order !== 1 && !this._isCompareMode) {
+    if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
-        this._logger.trace('Handle sort changed action by user', { order });
+        this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport({ table: this._dataConfig.table });

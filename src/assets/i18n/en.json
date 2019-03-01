@@ -391,7 +391,8 @@
       "captionsSelected": "Captions Selected",
       "entry_name": "Name",
       "languagesInCaptions": "Which languages do users select in captions?",
-      "abuseReason": "Reason Why Viewer Report Abuse"
+      "abuseReason": "Reason Why Viewer Report Abuse",
+      "index": "#"
     }
   }
 }
