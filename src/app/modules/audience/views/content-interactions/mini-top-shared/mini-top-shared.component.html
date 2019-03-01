@@ -1,7 +1,7 @@
 <div class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
-    <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <span class="kTitle">{{'app.contentInteractions.topSharedVideos' | translate}}</span>
+    <a (click)="_scrollTo('#interactions')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -19,7 +19,7 @@
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
-          <span class="kScore">{{item.engagement_ranking}}/10</span>
+          <span class="kScore">{{'app.contentInteractions.shares' | translate: {'0': item.count_viral} }}</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
@@ -43,7 +43,7 @@
           <span class="kTitle" [kTooltip]="_tableData[0].entry_name">
             {{_tableData[0].entry_name}}
           </span>
-          <span class="kScore">{{_tableData[0].engagement_ranking}}/10</span>
+          <span class="kScore">{{'app.contentInteractions.shares' | translate: {'0': _tableData[0].count_viral} }}</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
@@ -64,7 +64,7 @@
           <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name">
             {{_compareTableData[0].entry_name}}
           </span>
-          <span class="kScore">{{_compareTableData[0].engagement_ranking}}/10</span>
+          <span class="kScore">{{'app.contentInteractions.shares' | translate: {'0': _compareTableData[0].count_viral} }}/10</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">

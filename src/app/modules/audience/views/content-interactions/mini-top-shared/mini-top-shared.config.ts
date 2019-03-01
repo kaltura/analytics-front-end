@@ -15,20 +15,16 @@ export class MiniTopSharedConfig extends ReportDataBaseConfig {
         fields: {
           'object_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'entry_name': {
             format: value => value,
-            sortOrder: 1,
+            nonComparable: true,
           },
-          'count_plays': {
+          'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 2,
           },
-          'engagement_ranking': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 3,
-          }
         }
       }
     };
