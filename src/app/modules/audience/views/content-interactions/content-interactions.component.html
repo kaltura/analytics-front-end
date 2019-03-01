@@ -28,7 +28,8 @@
 
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
-      <app-mini-interactions [dateFilter]="_dateFilter"
+      <app-mini-interactions [highlights$]="interactions.interactions$"
+                             [dateFilter]="_dateFilter"
                              [refineFilter]="_refineFilter"></app-mini-interactions>
     </div>
 

@@ -12,26 +12,23 @@ export class MiniInteractionsConfig extends ReportDataBaseConfig {
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
+        preSelected: 'count_viral',
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_viral`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'count_download': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_download`),
+            sortOrder: 2,
+          },
+          'count_report': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
-            units: value => 'min',
+            title: this._translate.instant(`app.contentInteractions.count_report`),
             sortOrder: 3,
           },
-          'unique_known_users': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
-            sortOrder: 2,
-          }
         }
       }
     };
