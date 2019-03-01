@@ -180,7 +180,6 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
-        dataKey
       );
       this._columns = columns;
       this._totalCount = compare.table.totalCount;
@@ -237,7 +236,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   public _onSortChanged(event: SortEvent): void {
-    if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
+    if (event.data.length && event.field && event.order && event.order !== 1 && !this._isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._logger.trace('Handle sort changed action by user', { order });
