@@ -19,6 +19,8 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         }
     
         if (typeof value1 === 'string' && typeof value2 === 'string') {
+          value1 = parseInt(value1.replace(new RegExp(',', 'g'), ''));
+          value2 = parseInt(value2.replace(new RegExp(',', 'g'), ''));
           result = value1.localeCompare(value2, undefined, { numeric: true });
         } else {
           result = (value1 > value2) ? -1 : (value1 < value2) ? 1 : 0;
