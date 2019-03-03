@@ -287,6 +287,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       }
     });
 
+    mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
     const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;

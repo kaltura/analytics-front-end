@@ -80,7 +80,6 @@ export class GeoComponent {
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this.selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
-    
     this.tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
@@ -98,6 +97,7 @@ export class GeoComponent {
       }
     });
     
+    mapConfig.visualMap.inRange.color = this.tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
     const map = this.drillDownItems.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = mapCenter;
