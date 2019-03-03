@@ -34,7 +34,6 @@ export function getCountryName(country: string, toServerName = false): string {
     'Syrian Arab Republic',
     'Tanzania, United Republic of',
     'Turks and Caicos Islands',
-    'United States Minor Outlying Islands',
     'Venezuela, Bolivarian Republic of',
     'Viet Nam'
   ];
@@ -72,7 +71,6 @@ export function getCountryName(country: string, toServerName = false): string {
     'Syria',
     'Tanzania',
     'Turks and Caicos Is.',
-    'United States',
     'Venezuela',
     'Vietnam'
   ];
