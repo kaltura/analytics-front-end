@@ -116,7 +116,7 @@ body{
         margin-left: 16px;
         width: auto;
         /deep/ .kTags {
-          border-top: none;
+          border-top: none !important;
         }
       }
       .kChart{
@@ -443,4 +443,9 @@ k-area-blocker {
     font-size: 15px;
     font-weight: bold;
   }
+}
+
+// duplicate for IE
+.kTags {
+  border-top: none !important;
 }

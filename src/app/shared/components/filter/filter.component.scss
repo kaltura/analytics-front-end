@@ -37,7 +37,7 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        width: 432px;
+        flex: 1;
       }
     }
 
@@ -63,6 +63,14 @@
   }
 }
 
+app-checkboxes-list-filter {
+  min-width: 206px;
+}
+
+:host /deep/ .ui-autocomplete-multiple-container {
+  min-height: 34px;
+  padding: 3px 6px !important;
+}
 
 .kTagsContainer {
   ktags {
