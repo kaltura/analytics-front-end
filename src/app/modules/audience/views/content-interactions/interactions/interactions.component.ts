@@ -88,14 +88,14 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     this._isBusy = true;
     this._blockerMessage = null;
     
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
