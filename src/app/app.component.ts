@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
         dialog.center();
       }, 0);
     });
-  
+
     this._frameEventManager.publish(FrameEvents.AnalyticsInit);
   }
   

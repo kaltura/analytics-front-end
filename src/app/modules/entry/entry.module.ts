@@ -18,6 +18,8 @@ import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
 import { EntryFilterComponent } from './filter/filter.component';
 import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-overview.component';
+import { TopCountriesComponent } from './views/top-countries/top-countries.component';
+import { GeoComponent } from './views/top-countries/geo/geo.component';
 import { UserEngagementComponent } from './views/user-engagement/user-engagement.component';
 import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -49,6 +51,8 @@ import { UsersFilterComponent } from './views/user-engagement/filter/users-filte
     VideoPerformanceComponent,
     EntryDevicesOverviewComponent,
     EntryFilterComponent,
+    TopCountriesComponent,
+    GeoComponent,
     UserEngagementComponent,
     HeatMapComponent,
     UsersFilterComponent,

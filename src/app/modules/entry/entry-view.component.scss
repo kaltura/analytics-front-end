@@ -99,4 +99,8 @@
   flex-wrap: wrap;
 }
 
-
+:host /deep/ {
+  ktags{
+    margin: 0 !important;
+  }
+}

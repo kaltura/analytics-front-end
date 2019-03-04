@@ -1,0 +1,98 @@
+<div class="kReportContent kTopCountries" [ngClass]="isCompareMode ? 'kCompareMode' : 'kDefaultMode'">
+  <div class="kTable">
+    <div class="kTableContainer">
+      <p-table sortField="count_plays"
+               [value]="tableData"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               [paginator]="true"
+               [rows]="5"
+               (sortFunction)="_onSortChanged($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th [ngStyle]="{'width': '42px'}">
+              <span *ngIf="tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+            </th>
+            <th *ngIf="!drillDownItems.length" [ngStyle]="{'width': '42px'}"></th>
+            <th [ngStyle]="{'width': '20%'}">
+              <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+              </div>
+            </th>
+            <th [ngStyle]="{'width': '20%'}">
+              <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.count_plays' | translate}}
+                    </span>
+              </div>
+            </th>
+            <th>
+              <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.distribution' | translate}}
+                    </span>
+              </div>
+            </th>
+            <th *ngIf="showTrend">{{'app.audience.geo.trend' | translate}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+          <tr>
+            <td>
+              <span>{{rowIndex + 1}}</span>
+            </td>
+            <td class="kFlagColumn" *ngIf="!drillDownItems.length">
+              <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
+            </td>
+            <td class="kHighlight">
+              <a *ngIf="drillDownItems.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
+              <a *ngIf="drillDownItems.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
+              <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
+            </td>
+            <td>
+              <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+            </td>
+            <td *ngIf="!data['count_plays']?.value">
+              <div>
+                <app-bullet [value]="data['plays_distribution']"></app-bullet>
+              </div>
+            </td>
+            <td *ngIf="showTrend">
+              <span>
+                <h5 class="mini-loader"
+                    *ngIf="!data[selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
+                <span *ngIf="data[selectedMetrics+'_trend']?.trend" class="kTrend"
+                      [kTooltip]="data[selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
+                  <app-trend-value [value]="data[selectedMetrics+'_trend']?.trend"
+                                   [units]="data[selectedMetrics+'_trend']?.units"
+                                   [trend]="data[selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
+                </span>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!isBusy">{{'app.common.noResultsRegion' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="isBusy">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <div *ngIf="isCompareMode" class="kPeriod">{{periodTitle}}</div>
+  <div class="kMap">
+    <div *ngIf="_mapDataReady" echarts class="kChart"
+         [options]="_mapChartData"
+         (chartClick)="_onChartClick($event)"
+         (chartInit)="_onChartInit($event)"></div>
+    <div class="kZoomWidget">
+      <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+      <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+    </div>
+  </div>
+</div>
+

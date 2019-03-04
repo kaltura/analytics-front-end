@@ -6,9 +6,20 @@ export class DateFilterUtils {
     return today.getTimezoneOffset();
   }
 
-  static toServerDate(value: Date): number {
-    const timeZoneOffset = this.getTimeZoneOffset() * 60000 * (-1);
-    return value ? Math.round((value.getTime() + timeZoneOffset) / 1000) : null;
+  static toServerDate(value: Date, getEndOfDay = false): number {
+    let timeToServer; // time to send to the server in milliseconds
+
+    // for endDate, we want to send the server the end of the day in order to get the data from this day, so we add 1 day and deduct 1 second
+    // we add 1 day only for dates that are received from the calendar component as the start of the day meaning hours, minutes, seconds and milliseconds are all 0
+
+    if (getEndOfDay && value.getHours() === 0 && value.getMinutes() === 0 && value.getSeconds() === 0 && value.getMilliseconds() === 0) {
+      let dateClone = new Date(value.getTime());    // clone date to prevent changing the date passed by reference
+      dateClone.setDate(dateClone.getDate() + 1);   // add 1 day
+      timeToServer = dateClone.getTime() - 1000;    // remove 1 second
+    } else {
+      timeToServer = value.getTime();         // dor startDate or not begining of the day, use the received time, no manipulation
+    }
+    return value ? Math.round(timeToServer / 1000) : null; // devide by 1000 to convert to seconds as required by Kaltura API
   }
 
   static fromServerDate(value: number): Date {

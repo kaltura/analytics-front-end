@@ -2,4 +2,9 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
+  flex-direction: column;
+
+  /deep/ .ui-multiselect {
+    width: 230px !important;
+  }
 }

@@ -295,7 +295,7 @@ export class SyndicationComponent {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
-      this._loadReport({ table: null });
+      this._loadReport({ table: this._dataConfig.table });
     }
   }
   
@@ -337,7 +337,7 @@ export class SyndicationComponent {
         this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this._order = order;
         this._pager.pageIndex = 1;
-        this._loadReport({ table: null });
+        this._loadReport({ table: this._dataConfig.table });
       }
     }
   }

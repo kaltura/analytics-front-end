@@ -104,8 +104,6 @@ export class FilterComponent {
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
-  public _advancedFiltersState: string;
-  public _showAdvancedFilters: boolean;
   public _tags: FilterTagItem[] = [];
   
   get showFilters() {
@@ -122,20 +120,6 @@ export class FilterComponent {
     this._updateLayout();
   }
   
-  get showAdvancedFilters() {
-    return this._showAdvancedFilters;
-  }
-  
-  set showAdvancedFilters(val: boolean) {
-    if (val) {
-      this._advancedFiltersState = 'visible';
-      this._showAdvancedFilters = true;
-    } else {
-      this._advancedFiltersState = 'hidden';
-    }
-    this._updateLayout();
-  }
-  
   constructor(private _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _logger: KalturaLogger) {
@@ -144,7 +128,7 @@ export class FilterComponent {
   
   public _mediaTypes: OptionItem[] = [
     { value: 'Video', label: 'app.filters.mediaType.Video' },
-    { value: 'Live', label: 'app.filters.mediaType.Live' },
+    // { value: 'Live', label: 'app.filters.mediaType.Live' }, // remove live for now
     { value: 'Audio', label: 'app.filters.mediaType.Audio' },
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
@@ -310,12 +294,6 @@ export class FilterComponent {
   public _filtersAnimationDone(event: AnimationEvent): void {
     if (event.fromState === 'visible' && event.toState === 'hidden') {
       this._showFilters = false;
-    }
-  }
-  
-  public _advancedFiltersAnimationDone(event: AnimationEvent): void {
-    if (event.fromState === 'visible' && event.toState === 'hidden') {
-      this._showAdvancedFilters = false;
     }
   }
   

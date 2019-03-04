@@ -2,13 +2,11 @@
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table sortField="count_plays"
+    <p-table sortField="engagement_ranking"
              [class.kCompareMode]="isCompareMode"
              [value]="_tableData"
-             [customSort]="true"
              [sortOrder]="-1"
-             [defaultSortOrder]="-1"
-             (sortFunction)="_onSortChanged($event)">
+             [defaultSortOrder]="-1">
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
@@ -75,7 +73,7 @@
           </ng-container>
           <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
             <div *ngIf="data['status']?.length">
-              <span>{{data['status']}}</span>
+              <span class="kEntryStatus">{{data['status']}}</span>
               <span>{{data['engagement_ranking']}}/10</span>
             </div>
             <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}/10</span>

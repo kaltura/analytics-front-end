@@ -45,13 +45,13 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
         break;
       case 'location':
         if (item.value.country) {
-          country.push(item.value.country.map(({ name }) => name));
+          country.push(...item.value.country.map(({ name }) => name));
         }
         if (item.value.region) {
-          region.push(item.value.region.map(({ name }) => name));
+          region.push(...item.value.region.map(({ name }) => name));
         }
         if (item.value.city) {
-          city.push(item.value.city.map(({ name }) => name));
+          city.push(...item.value.city.map(({ name }) => name));
         }
         break;
     }
