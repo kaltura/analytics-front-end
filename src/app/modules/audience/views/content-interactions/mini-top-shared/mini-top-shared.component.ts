@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReportConfig, ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -27,7 +27,7 @@ import { map, switchMap } from 'rxjs/operators';
     ReportService
   ]
 })
-export class MiniTopSharedComponent extends InteractionsBaseReportComponent implements OnDestroy, OnInit {
+export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
   
   protected _componentId = 'mini-top-shared';
@@ -64,7 +64,8 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent impl
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _dataConfigService: MiniTopSharedConfig,
-              private pageScrollService: PageScrollService,
+              private _pageScrollService: PageScrollService,
+              private _errorsManager: ErrorsManagerService,
               private _logger: KalturaLogger) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
@@ -93,8 +94,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent impl
           if (report.table && report.table.data && report.table.header) {
             this._handleTable(report.table, compare ? compare.table : null); // handle table
           }
-
-          this._firstTimeLoading = false;
+          
           this._isBusy = false;
         },
         error => {
@@ -167,11 +167,8 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent impl
     } else {
       PageScrollConfig.defaultDuration = 500;
       const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
-      this.pageScrollService.start(pageScrollInstance);
+      this._pageScrollService.start(pageScrollInstance);
     }
-  }
-  
-  ngOnDestroy() {
   }
   
 }

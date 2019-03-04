@@ -192,7 +192,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   private _extendTableRow (item: TableRow<string>, index: number): TableRow<string> {
-    item['index'] = this._pager.pageSize * (this._pager.pageIndex - 1) + (index + 1);
+    item['index'] = String(this._pager.pageSize * (this._pager.pageIndex - 1) + (index + 1));
     item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
     return item;
   }
