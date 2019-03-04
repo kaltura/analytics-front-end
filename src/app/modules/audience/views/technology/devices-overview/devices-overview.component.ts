@@ -348,6 +348,20 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: (params) => {
+            const { name, value } = Array.isArray(params) ? params[0] : params;
+            const formattedValue = typeof config[key].graphTooltip === 'function'
+              ? config[key].graphTooltip(value)
+              : value;
+            return `
+              <div class="kDevicesGraphTooltip">
+                <div class="kTitle">${name}</div>
+                <div class="kValue">
+                  ${this._translate.instant('app.audience.technology.graphTooltip.' + key, [formattedValue])}
+                </div>
+              </div>
+            `;
+          },
           trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
