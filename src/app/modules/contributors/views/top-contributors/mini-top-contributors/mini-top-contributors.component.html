@@ -17,7 +17,7 @@
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="item.creator_name" [showOnEllipsis]="true">{{item.creator_name}}</span>
-          <!--span class="kScore">n/10</span-->
+          <span class="kScore">{{item['contributor_ranking']}}/10</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
@@ -39,7 +39,7 @@
           <span class="kTitle" [kTooltip]="_tableData[0].creator_name" [showOnEllipsis]="true">
             {{_tableData[0].creator_name}}
           </span>
-          <span class="kScore">n/10</span>
+          <span class="kScore">{{_tableData[0]['contributor_ranking']}}/10</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
@@ -60,7 +60,7 @@
           <span class="kTitle" [kTooltip]="_compareTableData[0].creator_name" [showOnEllipsis]="true">
             {{_compareTableData[0].creator_name}}
           </span>
-          <span class="kScore">n/10</span>
+          <span class="kScore">{{_compareTableData[0]['contributor_ranking']}}/10</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
