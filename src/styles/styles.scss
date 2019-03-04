@@ -116,7 +116,7 @@ body{
         margin-left: 16px;
         width: auto;
         /deep/ .kTags {
-          border-top: none;
+          border-top: none !important;
         }
       }
       .kChart{
@@ -423,4 +423,29 @@ k-area-blocker {
     }
   }
 
+}
+
+.kDevicesGraphTooltip {
+  display: flex;
+  height: 48px;
+  min-width: 158px;
+  padding: 16px;
+  flex-direction: column;
+
+  .kTitle {
+    font-size: 14px;
+    color: $kGrayscale3;
+    margin-bottom: 12px;
+  }
+
+  .kValue {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
+
+// duplicate for IE
+.kTags {
+  border-top: none !important;
 }

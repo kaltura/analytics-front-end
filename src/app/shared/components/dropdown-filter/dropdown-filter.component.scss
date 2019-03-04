@@ -9,10 +9,13 @@
 .kColumn {
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px;
 
   .kColumnLabel {
     font-weight: bold;
     margin-bottom: 12px;
+  }
+
+  .kColumnContent {
+    height: 34px;
   }
 }

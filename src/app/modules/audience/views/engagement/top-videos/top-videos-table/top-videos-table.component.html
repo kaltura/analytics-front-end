@@ -75,7 +75,7 @@
           </ng-container>
           <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
             <div *ngIf="data['status']?.length">
-              <span>{{data['status']}}</span>
+              <span class="kEntryStatus">{{data['status']}}</span>
               <span>{{data['engagement_ranking']}}/10</span>
             </div>
             <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}/10</span>
