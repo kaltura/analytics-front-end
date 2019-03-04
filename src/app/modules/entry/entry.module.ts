@@ -18,6 +18,8 @@ import { TableModule } from 'primeng/table';
 import { VideoPerformanceComponent } from './views/video-performance/video-performance.component';
 import { EntryFilterComponent } from './filter/filter.component';
 import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-overview.component';
+import { TopCountriesComponent } from './views/top-countries/top-countries.component';
+import { GeoComponent } from './views/top-countries/geo/geo.component';
 
 
 @NgModule({
@@ -43,6 +45,8 @@ import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-
     VideoPerformanceComponent,
     EntryDevicesOverviewComponent,
     EntryFilterComponent,
+    TopCountriesComponent,
+    GeoComponent,
   ],
   exports: [],
   providers: []

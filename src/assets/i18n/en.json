@@ -76,6 +76,7 @@
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
+      "noResultsRegion": "No Data for this Region",
       "exporting": "Preparing Report",
       "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
@@ -269,6 +270,12 @@
         "device": "Device",
         "filterDeviceType": "Filter Device Type",
         "index": "#",
+        "graphTooltip": {
+          "count_plays": "Plays {{0}}",
+          "sum_time_viewed": "Minutes Viewed {{0}}",
+          "avg_time_viewed": "Avg. Min Viewed {{0}}",
+          "unique_known_users": "Unique Viewers {{0}}"
+        },
         "devices": {
           "Computer": "Desktop",
           "Mobile": "Mobile",
@@ -374,6 +381,7 @@
       "sum_time_viewed_tt": "Minutes Viewed",
       "count_loads_tt": "Player Impressions",
       "avg_time_viewed_tt": "Avg. View Time",
+      "topCountries": "Top Countries",
       "entryType": {
         "video": "Video",
         "audio": "Audio",

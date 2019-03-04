@@ -1,8 +1,7 @@
 import { Input } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter } from 'kaltura-ngx-client';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 export abstract class EntryBase {
@@ -36,7 +35,7 @@ export abstract class EntryBase {
   
   protected abstract _updateRefineFilter(): void;
   
-  protected _refineFilterToServerValue(filter: KalturaEndUserReportInputFilter): void {
+  protected _refineFilterToServerValue(filter: KalturaReportInputFilter): void {
     refineFilterToServerValue(this._refineFilter, filter);
   }
 }
