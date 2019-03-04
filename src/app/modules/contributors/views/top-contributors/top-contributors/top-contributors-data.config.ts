@@ -40,6 +40,10 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
           'added_msecs': {
             format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value)),
             sortOrder: 1,
+          },
+          'contributor_ranking': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1,
           }
         }
       }
