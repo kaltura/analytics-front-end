@@ -32,7 +32,7 @@
     "echarts": "^4.2.1-rc.1",
     "jquery": "^3.3.1",
     "jsnlog": "^2.28.0",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.2.0-v20190224-120605.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.2.0-v20190304-160654.tgz",
     "moment": "^2.22.2",
     "ngx-echarts": "^4.0.0",
     "ngx-page-scroll": "^5.0.1",
