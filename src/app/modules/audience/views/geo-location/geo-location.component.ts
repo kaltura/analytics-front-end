@@ -137,8 +137,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
       );
       event.data.sort((data1, data2) => {
-        let value1 = parseInt(data1[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
-        let value2 = parseInt(data2[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
@@ -241,8 +241,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFloat(tab.rawValue as string) : 0;
-        const rowValue = parseFloat(row[key]) || 0;
+        const total = tab ? parseFloat((tab.rawValue as string).replace(new RegExp(',', 'g'), '')) : 0;
+        const rowValue = parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) || 0;
         return significantDigits((rowValue / total) * 100);
       };
       const playsDistribution = calculateDistribution('count_plays');
