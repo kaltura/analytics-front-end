@@ -172,8 +172,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this._reportService.getReport(reportConfig, sections)
       .subscribe(report => {
           this._isBusy = false;
+          this._chartOptions = {};
           
-          if (report.table) {
+          if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData = tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))

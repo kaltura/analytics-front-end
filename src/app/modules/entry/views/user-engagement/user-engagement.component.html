@@ -66,7 +66,10 @@
           <ng-template let-data pTemplate="rowexpansion">
             <tr>
               <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-                <app-heat-map [userId]="data['name']" [duration]="duration" [filter]="_filter"></app-heat-map>
+                <app-heat-map [userId]="data['name']"
+                              [entryId]="entryId"
+                              [duration]="duration"
+                              [filter]="_filter"></app-heat-map>
               </td>
             </tr>
           </ng-template>

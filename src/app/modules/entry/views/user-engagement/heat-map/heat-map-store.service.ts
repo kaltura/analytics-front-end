@@ -36,7 +36,7 @@ export class HeatMapStoreService {
     this._cache = {};
   }
   
-  public getHeatMap(userId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
+  public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
     if (!this._cache[userId]) {
       const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
       userFilter.userIds = userId;
@@ -44,7 +44,8 @@ export class HeatMapStoreService {
         filter: userFilter,
         reportType: KalturaReportType.percentiles,
         pager: this._pager,
-        order: null
+        objectIds: entryId,
+        order: null,
       };
       this._cache[userId] = this._reportService.getReport(reportConfig, this._localConfig)
         .pipe(

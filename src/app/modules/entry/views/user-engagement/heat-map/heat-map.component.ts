@@ -20,6 +20,7 @@ export interface HeatMapItem {
 })
 export class HeatMapComponent implements OnInit, OnDestroy {
   @Input() userId: string;
+  @Input() entryId: string;
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
   
@@ -76,7 +77,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    if (this.userId && this.filter) {
+    if (this.userId && this.filter && this.entryId) {
       this._prepare();
     }
   }
@@ -88,7 +89,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
   private _prepare(): void {
     this._isBusy = true;
     
-    this._heatMapStore.getHeatMap(this.userId, this.filter)
+    this._heatMapStore.getHeatMap(this.userId, this.entryId, this.filter)
       .pipe(cancelOnDestroy(this))
       .subscribe(
         points => {

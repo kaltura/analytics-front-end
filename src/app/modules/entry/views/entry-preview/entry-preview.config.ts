@@ -11,31 +11,6 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.totals]: {
-        fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.plays`),
-            sortOrder: 1,
-          },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.minutes`),
-            units: value => 'min',
-            sortOrder: 3,
-          },
-          'unique_known_users': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entry.viewers`),
-            sortOrder: 2,
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value),
-            title: this._translate.instant(`app.entry.watched`),
-            sortOrder: 4,
-          }
-        }
-      },
       [ReportDataSection.table]: {
         fields: {
           'percentile': {
