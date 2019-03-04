@@ -1,15 +1,10 @@
 import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInputFilter,
-  KalturaReportInterval
-} from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryPreviewConfig } from './entry-preview.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -17,6 +12,7 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../entry-base/entry-base';
+import { getPrimaryColor } from 'shared/utils/colors';
 
 @Component({
   selector: 'app-entry-preview',
@@ -28,6 +24,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   @Input() entryId = '';
 
   private _dataConfig: ReportDataConfig;
+  private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
+  private playerInstance: any = null;
+  private playerInitialized = false;
+  private _reportType = KalturaReportType.percentiles;
 
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
@@ -37,15 +37,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaReportInputFilter = null;
-  public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
-
-  private playerInstance: any = null;
-  private playerInitialized = false;
-
   public _playerConfig: any = {};
   public serverUri = getKalturaServerUri();
   public _playerPlayed = false;
@@ -83,8 +78,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       xData.push(i);
       yData.push(Math.floor(Math.random() * i * 5) + 500);
     }
-
-    this._chartOptions = {
+  }
+  
+  private _getGraphData(yData: number[]) {
+    return {
       backgroundColor: '#333333',
       grid: {
         left: 0,
@@ -96,9 +93,18 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         show: false,
         boundaryGap : false,
         type: 'category',
-        data: xData
+        data: Array.from({ length: 100 }, (_, i) => i + 1),
       },
       tooltip : {
+        formatter: params => {
+          const { value } = Array.isArray(params) ? params[0] : params;
+          return `
+            <div class="kEntryGraphTooltip">
+              <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+              ${this._translate.instant('app.entry.views')}&nbsp;${value}
+            </div>
+          `;
+        },
         trigger: 'axis',
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
@@ -155,10 +161,46 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    // empty by design
+    this._isBusy = true;
+    this._blockerMessage = null;
+  
+    if (this.entryId) {
+      this._filter.entryIdIn = this.entryId;
+    }
+  
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
+    this._reportService.getReport(reportConfig, sections)
+      .subscribe(report => {
+          this._isBusy = false;
+          
+          if (report.table) {
+            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const yAxisData = tableData
+              .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+              .map(item => Number(item['count_viewers']));
+  
+            this._chartOptions = this._getGraphData(yAxisData);
+          }
+        },
+        error => {
+          this._isBusy = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
   }
   
   protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _updateFilter(): void {
@@ -167,7 +209,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
-    this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);

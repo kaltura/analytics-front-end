@@ -240,6 +240,18 @@ body{
   }
 }
 
+.kEntryGraphTooltip {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  font-weight: bold;
+
+  .kBullet {
+    font-size: 48px;
+    margin-right: 5px;
+  }
+}
+
 .kGraphTooltip {
   padding: 5px;
 

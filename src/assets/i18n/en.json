@@ -362,6 +362,7 @@
       }
     },
     "entry": {
+      "views": "Views",
       "plays": "Plays",
       "viewers": "Unique Viewers",
       "minutes": "Minutes Viewed",

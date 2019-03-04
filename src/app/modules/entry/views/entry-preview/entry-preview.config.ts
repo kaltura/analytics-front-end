@@ -35,6 +35,16 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           }
         }
+      },
+      [ReportDataSection.table]: {
+        fields: {
+          'percentile': {
+            format: value => value,
+          },
+          'count_viewers': {
+            format: value => value,
+          },
+        }
       }
     };
   }
