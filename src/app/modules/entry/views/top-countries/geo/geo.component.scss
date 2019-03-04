@@ -32,6 +32,7 @@
 
 .kTopCountries {
   display: flex;
+  height: 100%;
 
   &.kDefaultMode {
     flex-direction: row !important;
