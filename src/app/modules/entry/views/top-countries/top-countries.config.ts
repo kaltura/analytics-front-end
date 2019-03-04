@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {ReportDataConfig, ReportDataSection, ReportDataBaseConfig} from 'shared/services/storage-data-base.config';
-import {ReportHelper} from 'shared/services';
-import {EChartOption} from 'echarts';
+import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportHelper } from 'shared/services';
+import { EChartOption } from 'echarts';
 
 @Injectable()
-export class GeoLocationDataConfig extends ReportDataBaseConfig {
+export class TopCountriesConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-
+  
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -33,12 +33,6 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrNA(value)
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value)
-          },
           'coordinates': {
             format: value => value
           }
@@ -52,24 +46,14 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.audience.geo.count_plays`),
             tooltip: this._translate.instant(`app.audience.geo.count_plays_tt`),
-          },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.audience.geo.unique_known_users`),
-            tooltip: this._translate.instant(`app.audience.geo.unique_known_users_tt`),
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value),
-            title: this._translate.instant(`app.audience.geo.avg_view_drop_off`),
-            tooltip: this._translate.instant(`app.audience.geo.avg_view_drop_off_tt`),
           }
         }
       }
     };
   }
-
+  
   public getMapConfig(scatter: boolean): EChartOption {
-    let config =  {
+    let config = {
       textStyle: {
         fontFamily: 'Lato',
       },
@@ -115,19 +99,19 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
     if (scatter) {
       config['geo'] = {
         map: 'world',
-          center: [0, 0],
-          top: 70,
-          zoom: 1.2,
-          roam: false,
-          label: {
+        center: [0, 0],
+        top: 70,
+        zoom: 1.2,
+        roam: false,
+        label: {
           emphasis: {
             show: true
           }
         },
         itemStyle: {
           areaColor: '#ebebeb',
-            borderColor: '#999999',
-            emphasis: {
+          borderColor: '#999999',
+          emphasis: {
             label: {
               show: true
             },
@@ -153,7 +137,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
               show: false
             }
           },
-
+          
           itemStyle: {
             normal: {
               color: '#f4e925',
@@ -182,7 +166,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           itemStyle: {
             areaColor: '#ebebeb',
             borderColor: '#999999',
-            emphasis: {label: {show: true}, areaColor: '#F49616'}
+            emphasis: { label: { show: true }, areaColor: '#F49616' }
           },
           data: []
         }

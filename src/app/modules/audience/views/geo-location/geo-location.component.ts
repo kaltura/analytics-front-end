@@ -20,6 +20,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { getCountryName } from 'shared/utils/get-country-name';
 
 @Component({
   selector: 'app-geo-location',
@@ -136,8 +137,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
       );
       event.data.sort((data1, data2) => {
-        let value1 = parseInt(data1[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
-        let value2 = parseInt(data2[event.field].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
+        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
         let result = null;
 
         if (value1 < value2) {
@@ -153,8 +154,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   public onChartClick(event): void {
-    this._logger.trace('Handle click on chart by user', { country: event.data.name });
     if (event.data && event.data.name && this._drillDown.length < 2) {
+      this._logger.trace('Handle click on chart by user', { country: event.data.name });
       this._onDrillDown(event.data.name);
     }
   }
@@ -181,7 +182,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (country === '') {
       this._drillDown = [];
     } else if (this._drillDown.length < 2) {
-      this._drillDown.push(this._dataConfigService.getCountryName(country, true));
+      this._drillDown.push(getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
       this._drillDown.pop();
     }
@@ -240,8 +241,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFloat(tab.rawValue as string) : 0;
-        const rowValue = parseFloat(row[key]) || 0;
+        const total = tab ? parseFloat((tab.rawValue as string).replace(new RegExp(',', 'g'), '')) : 0;
+        const rowValue = parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) || 0;
         return significantDigits((rowValue / total) * 100);
       };
       const playsDistribution = calculateDistribution('count_plays');
@@ -275,7 +276,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
-          ? this._dataConfigService.getCountryName(data.country, false)
+          ? getCountryName(data.country, false)
           : this._drillDown.length === 1
             ? data.region
             : data.city,
@@ -286,6 +287,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       }
     });
 
+    mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
     const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
@@ -364,10 +366,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
     compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `
-      ${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}
-      ${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}
-    `;
+    const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}`;
     row[field + '_trend'] = {
       trend: value !== null ? value : '–',
       trendDirection: direction,
