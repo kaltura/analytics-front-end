@@ -424,3 +424,23 @@ k-area-blocker {
   }
 
 }
+
+.kDevicesGraphTooltip {
+  display: flex;
+  height: 48px;
+  min-width: 158px;
+  padding: 16px;
+  flex-direction: column;
+
+  .kTitle {
+    font-size: 14px;
+    color: $kGrayscale3;
+    margin-bottom: 12px;
+  }
+
+  .kValue {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
