@@ -156,7 +156,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    console.log("Load report...");
+    // empty by design
   }
   
   protected _updateRefineFilter(): void {
