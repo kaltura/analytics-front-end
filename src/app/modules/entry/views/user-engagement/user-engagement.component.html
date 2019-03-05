@@ -49,10 +49,10 @@
               </span>
             </span>
                 <ng-container *ngIf="!_isCompareMode || col === 'name'">
-                  <span *ngIf="col !== 'avg_view_drop_off'">{{data[col]}}</span>
-                  <app-bullet *ngIf="col === 'avg_view_drop_off'"
+                  <span *ngIf="col !== 'avg_completion_rate'">{{data[col]}}</span>
+                  <app-bullet *ngIf="col === 'avg_completion_rate'"
                               colorScheme="dropoff"
-                              [value]="data['avg_view_drop_off']"></app-bullet>
+                              [value]="data['avg_completion_rate']"></app-bullet>
                 </ng-container>
               </td>
             </tr>

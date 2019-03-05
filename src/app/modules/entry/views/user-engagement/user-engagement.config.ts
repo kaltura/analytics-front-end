@@ -21,7 +21,7 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true),
             units: () => '%',
           }
         }

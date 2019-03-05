@@ -34,10 +34,10 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true),
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.percents(value, false, true),
           },
         }
       },
@@ -65,18 +65,18 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_completion_rate': {
-            format: value => value,
+            format: value => Math.min(value, 100),
             title: this._translate.instant(`app.entry.avg_completion_rate`),
             sortOrder: 4,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
           },
           'avg_view_drop_off': {
-            format: value => value * 100,
+            format: value => Math.min(value * 100, 100),
             title: this._translate.instant(`app.entry.avg_view_drop_off`),
             sortOrder: 5,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(Math.round(value * 100)))}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_view_drop_off`)}:&nbsp;${ReportHelper.percents(value / 100, false)}</span>`
           },
         }
       },
