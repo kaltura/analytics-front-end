@@ -11,7 +11,7 @@
 
     <div class="kReportContent">
       <div class="kVal">
-        <div class="kMiniIcon blue"><i class="kIconShare"></i></div>
+        <div class="kMiniIcon blue"><i class="icon-share"></i></div>
         <span *ngIf="!_isCompareMode" class="value">{{_tabsData[0]?.value}}</span>
         <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[0]?.tooltip" [maxWidth]="500"
               [escape]="false">
@@ -24,7 +24,7 @@
         <span class="title">{{_tabsData[0]?.title}}</span>
       </div>
       <div class="kVal">
-        <div class="kMiniIcon violet"><i class="kIcondropdown_arrow_bottom"></i></div>
+        <div class="kMiniIcon violet"><i class="icon-download"></i></div>
         <span *ngIf="!_isCompareMode" class="value">{{_tabsData[1]?.value}}</span>
         <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[1]?.tooltip" [maxWidth]="500"
               [escape]="false">
@@ -37,7 +37,7 @@
         <span class="title">{{_tabsData[1]?.title}}</span>
       </div>
       <div class="kVal">
-        <div class="kMiniIcon red"><i class="icon-small-time"></i></div>
+        <div class="kMiniIcon red"><i class="icon-flag"></i></div>
         <span *ngIf="!_isCompareMode" class="value">{{_tabsData[2]?.value}}</span>
         <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_tabsData[2]?.tooltip" [maxWidth]="500"
               [escape]="false">
