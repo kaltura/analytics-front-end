@@ -86,7 +86,9 @@ export class CompareService implements OnDestroy {
               reportInterval
             ) || '0';
           } else {
-            compareValue = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel) || '0';
+            const relevantCompare = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel)
+              || `N/A${analyticsConfig.valueSeparator}0`;
+            compareValue = relevantCompare.split(analyticsConfig.valueSeparator)[1];
           }
           
           let currentName = currentLabel;
