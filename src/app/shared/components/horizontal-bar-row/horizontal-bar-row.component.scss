@@ -1,0 +1,59 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+.kBarContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 0;
+
+  .kLabel {
+    color: $kGrayscale1;
+    font-weight: bold;
+    width: 50%;
+  }
+
+  .kBarWrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+
+    .kBarWrapperRow {
+      display: flex;
+      flex-direction: row;
+
+      &.kCompare {
+        margin-top: 10px;
+      }
+
+      app-trend-value {
+        margin-left: 16px;
+      }
+
+      .kValue {
+        font-size: 15px;
+        color: $kGrayscale3;
+        width: 60px;
+      }
+
+      .kBullet {
+        width: 70%;
+        height: 18px;
+        border: 0 solid $kGrayscale7;
+        border-radius: 3px;
+        overflow: hidden;
+        background-color: $kGrayscale7;
+
+        .kBar {
+          height: 100%;
+          transition: width 0.35s ease-out;
+        }
+      }
+    }
+  }
+}

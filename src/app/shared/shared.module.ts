@@ -52,6 +52,7 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
 import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
 import { TableModule } from 'primeng/table';
 import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
+import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 
 @NgModule({
   imports: [
@@ -108,6 +109,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     ImpressionsComponent,
     SyndicationComponent,
     CompareMetricComponent,
+    HorizontalBarRowComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -142,6 +144,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
     ImpressionsComponent,
     SyndicationComponent,
     CompareMetricComponent,
+    HorizontalBarRowComponent,
     ...FilterComponentsList,
   ],
   providers: [

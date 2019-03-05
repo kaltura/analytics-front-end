@@ -1,0 +1,22 @@
+<div class="kBarContainer">
+  <div class="kLabel">{{label}}</div>
+  <div class="kBarWrapper">
+    <div class="kBarWrapperRow">
+      <span class="kValue">{{_value}}{{units}}</span>
+      <div class="kBullet">
+        <div class="kBar" [style.background-color]="_colors[0]" [style.width]="_value+'%'"></div>
+      </div>
+      <div class="kTrend" *ngIf="_trend">
+        <app-trend-value [value]="_trend.value"
+                         [units]="_trend.units"
+                         [trend]="_trend.trend"></app-trend-value>
+      </div>
+    </div>
+    <div class="kBarWrapperRow kCompare" *ngIf="_compareValue">
+      <span class="kValue">{{_compareValue}}{{units}}</span>
+      <div class="kBullet">
+        <div class="kBar" [style.background-color]="_colors[1]" [style.width]="_compareValue+'%'"></div>
+      </div>
+    </div>
+  </div>
+</div>

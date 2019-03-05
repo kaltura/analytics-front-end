@@ -53,8 +53,6 @@ export class AbuseReportComponent extends InteractionsBaseReportComponent {
   }
   
   protected _loadReport(): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
   }
   
   protected _updateFilter(): void {
