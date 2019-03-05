@@ -405,6 +405,21 @@
         "live": "Live",
         "unknown": "Unknown"
       }
+    },
+    "contentInteractions": {
+      "title": "Content Interactions",
+      "highlights_tt": "Snapshot of important metrics for the selected timeframe",
+      "highlights": "Highlights",
+      "topSharedVideos": "Top Shared Videos",
+      "count_viral": "Shares",
+      "count_download": "Downloads",
+      "count_report": "Abuse Report",
+      "captionsSelected": "Captions Selected",
+      "entry_name": "Name",
+      "languagesInCaptions": "Which languages do users select in captions?",
+      "abuseReason": "Reason Why Viewer Report Abuse",
+      "index": "#",
+      "shares": "{{0}} Shares"
     }
   }
 }

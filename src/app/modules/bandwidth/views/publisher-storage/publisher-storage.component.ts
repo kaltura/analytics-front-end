@@ -58,7 +58,7 @@ export class PublisherStorageComponent implements OnInit {
     }
   );
 
-  private readonly order = '-month_id';
+  private _order = '-date_id';
 
   public get isCompareMode(): boolean {
     return this.compareFilter !== null;
@@ -88,6 +88,7 @@ export class PublisherStorageComponent implements OnInit {
     this.filter.toDate = event.endDate;
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
+    this._order = this._reportInterval === KalturaReportInterval.days ? '-date_id' : '-month_id';
     if (event.compare.active) {
       const compare = event.compare;
       this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
@@ -107,7 +108,7 @@ export class PublisherStorageComponent implements OnInit {
   
   public _onSortChanged(event: SortEvent): void {
     this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
-    tableLocalSortHandler(event, this.order, this.isCompareMode);
+    this._order = tableLocalSortHandler(event, this._order, this.isCompareMode);
   }
 
   public toggleTable(): void {
@@ -130,14 +131,14 @@ export class PublisherStorageComponent implements OnInit {
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
 
-    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, order: this.order };
+    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, order: this._order };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
 
-        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, order: this.order };
+        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, order: this._order };
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
