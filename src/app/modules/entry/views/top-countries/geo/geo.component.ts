@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as echarts from 'echarts';
@@ -31,7 +31,6 @@ export class GeoComponent {
   
   @Output() onDrillDown = new EventEmitter<{ drillDown: string[], reload: boolean }>();
   
-  private _order = '-count_plays';
   private _echartsIntance: any; // echart instance
   
   public _mapChartData: any = {};
@@ -41,10 +40,6 @@ export class GeoComponent {
   constructor(private _translate: TranslateService,
               private _logger: KalturaLogger,
               private _dataConfigService: TopCountriesConfig) {
-  }
-  
-  public _onSortChanged(event) {
-    tableLocalSortHandler(event, this._order, this.isCompareMode);
   }
   
   public _onChartInit(ec) {
