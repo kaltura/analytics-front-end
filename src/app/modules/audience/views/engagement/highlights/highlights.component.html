@@ -26,7 +26,7 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table sortField="month_id"
+          <p-table [sortField]="_columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
                    [paginator]="true"
