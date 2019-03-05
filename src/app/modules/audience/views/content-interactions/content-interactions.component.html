@@ -6,11 +6,11 @@
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
     <!--<div class="kFilter kOverrideFAIcons">-->
-      <!--<div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">-->
-        <!--<span>{{'app.filters.filter' | translate}}</span>-->
-        <!--<i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>-->
-        <!--<i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>-->
-      <!--</div>-->
+    <!--<div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">-->
+    <!--<span>{{'app.filters.filter' | translate}}</span>-->
+    <!--<i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>-->
+    <!--<i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>-->
+    <!--</div>-->
     <!--</div>-->
     <app-date-filter #dateFilter
                      [dateRange]="_dateRange"
@@ -60,6 +60,16 @@
                       [dateFilterComponent]="dateFilter"
                       [dateFilter]="_dateFilter"
                       [refineFilter]="_refineFilter"></app-interactions>
+  </div>
+
+  <div class="kReportContainer">
+    <!--div class="kSmallReportContainer"-->
+
+    <!--/div-->
+    <!--div class="kSmallReportContainer">-->
+    <app-abuse-report [dateFilter]="_dateFilter"
+                      [refineFilter]="_refineFilter"></app-abuse-report>
+    <!--</div-->
   </div>
 
 </div>
