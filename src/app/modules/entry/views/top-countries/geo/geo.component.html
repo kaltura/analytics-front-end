@@ -1,14 +1,7 @@
 <div class="kReportContent kTopCountries" [ngClass]="isCompareMode ? 'kCompareMode' : 'kDefaultMode'">
   <div class="kTable">
     <div class="kTableContainer">
-      <p-table sortField="count_plays"
-               [value]="tableData"
-               [customSort]="true"
-               [defaultSortOrder]="-1"
-               [sortOrder]="-1"
-               [paginator]="true"
-               [rows]="5"
-               (sortFunction)="_onSortChanged($event)">
+      <p-table [value]="tableData" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
           <tr>
             <th [ngStyle]="{'width': '42px'}">
@@ -17,23 +10,23 @@
             <th *ngIf="!drillDownItems.length" [ngStyle]="{'width': '42px'}"></th>
             <th [ngStyle]="{'width': '20%'}">
               <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.object_id' | translate}}
-                    </span>
+                <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.object_id' | translate}}
+                </span>
               </div>
             </th>
             <th [ngStyle]="{'width': '20%'}">
               <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.count_plays' | translate}}
-                    </span>
+                <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.count_plays' | translate}}
+                </span>
               </div>
             </th>
             <th>
               <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.distribution' | translate}}
-                    </span>
+                <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.distribution' | translate}}
+                </span>
               </div>
             </th>
             <th *ngIf="showTrend">{{'app.audience.geo.trend' | translate}}</th>

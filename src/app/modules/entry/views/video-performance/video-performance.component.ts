@@ -29,7 +29,7 @@ export class VideoPerformanceComponent extends EntryBase {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private readonly _order = '-month_id';
+  private _order = '-date_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   public _metricsCompareTo: string = null;
@@ -160,6 +160,7 @@ export class VideoPerformanceComponent extends EntryBase {
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
+    this._order = this._reportInterval === KalturaReportInterval.days ? '-date_id' : '-month_id';
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -256,7 +257,7 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   public _onSortChanged(event: SortEvent) {
-    tableLocalSortHandler(event, this._order, this._isCompareMode);
+    this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
   }
   
   public _onCompareTo(field: string): void {

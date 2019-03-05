@@ -31,7 +31,8 @@
           <p-table [value]="_tableData"
                    [paginator]="true"
                    [rows]="_pageSize"
-                   [customSort]="true" sortField="month_id"
+                   [customSort]="true"
+                   [sortField]="_columns[0]"
                    [sortOrder]="-1"
                    [defaultSortOrder]="-1"
                    (sortFunction)="_onSortChanged($event)">
