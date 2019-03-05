@@ -34,8 +34,6 @@ export class TopVideosTableComponent {
   
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
-  private _currentOrderField = 'count_plays';
-  private _currentOrderDirection = -1;
   
   public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
@@ -45,33 +43,6 @@ export class TopVideosTableComponent {
   constructor(private _router: Router,
               private _frameEventManager: FrameEventManagerService) {
 
-  }
-  
-  public _onSortChanged(event: { data: TableRow<string>[], field: string, mode: string, order: number }): void {
-    const { field, order } = event;
-    if (!event.data.length || !field || !order || (this._currentOrderDirection === order && this._currentOrderField === field)) {
-      return;
-    }
-    
-    if (field !== this._currentOrderField) {
-      this._currentOrderField = field;
-      this.sortFieldChanged.emit(this._currentOrderField);
-      return;
-    }
-    
-    if (event.order !== this._currentOrderDirection) {
-      this._currentOrderDirection = order;
-      this._pager.pageIndex = 1;
-
-      this._tableData = this._originalTable
-        .sort((a, b) => {
-          const valA = Number(a.index);
-          const valB = Number(b.index);
-          
-          return this._currentOrderDirection < 0 ? valA - valB : valB - valA;
-        }).slice(0, this._pageSize);
-      return;
-    }
   }
   
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {

@@ -31,7 +31,7 @@ import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-h
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private readonly _order = '-month_id';
+  private _order = '-date_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
   
@@ -140,6 +140,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
+    this._order = this._reportInterval === KalturaReportInterval.days ? '-date_id' : '-month_id';
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -236,6 +237,6 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   
   public _onSortChanged(event: SortEvent) {
     this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
-    tableLocalSortHandler(event, this._order, this._isCompareMode);
+    this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
   }
 }

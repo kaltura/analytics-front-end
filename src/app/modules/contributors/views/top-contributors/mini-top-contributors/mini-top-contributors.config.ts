@@ -19,7 +19,11 @@ export class MiniTopContributorsConfig extends ReportDataBaseConfig {
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 1,
+            sortOrder: 2,
+          },
+          'contributor_ranking': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           }
         }
       }

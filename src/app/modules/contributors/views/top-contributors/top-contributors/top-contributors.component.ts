@@ -97,6 +97,9 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
+          if (compare) {
+            this._compareFirstTimeLoading = false;
+          }
         },
         error => {
           this._isBusy = false;
@@ -150,7 +153,6 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
-      this._compareFirstTimeLoading = false;
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');

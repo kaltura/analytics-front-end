@@ -4,7 +4,7 @@ export type TableRow<T = any> = { [key: string]: T };
 
 const dateKeys = ['month_id', 'date_id'];
 
-export function tableLocalSortHandler(event: SortEvent, initialOrder: string = null, isCompareMode = false): void {
+export function tableLocalSortHandler(event: SortEvent, initialOrder: string = null, isCompareMode = false): string {
   if (event.data.length && event.field && event.order && !isCompareMode) {
     const order = event.order === 1 ? '+' + event.field : '-' + event.field;
     if (initialOrder !== order) {
@@ -19,8 +19,8 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         }
     
         if (typeof value1 === 'string' && typeof value2 === 'string') {
-          value1 = parseInt(value1.replace(new RegExp(',', 'g'), ''));
-          value2 = parseInt(value2.replace(new RegExp(',', 'g'), ''));
+          value1 = value1.replace(new RegExp(',', 'g'), '');
+          value2 = value2.replace(new RegExp(',', 'g'), '');
           result = value1.localeCompare(value2, undefined, { numeric: true });
         } else {
           result = (value1 > value2) ? -1 : (value1 < value2) ? 1 : 0;
@@ -28,5 +28,9 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         return (event.order * result);
       });
     }
+  
+    return order;
   }
+  
+  return initialOrder;
 }
