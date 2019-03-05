@@ -88,21 +88,20 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         
-        delete sections.totals;
-        
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          if (report.totals) {
+            this._handleTotals(report.totals); // handle totals
+          }
+
           if (compare) {
             this._handleCompare(report, compare);
           } else {
             if (report.graphs.length) {
               this._chartDataLoaded = false;
               this._handleGraphs(report.graphs); // handle graphs
-            }
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
             }
           }
           this._firstTimeLoading = false;
