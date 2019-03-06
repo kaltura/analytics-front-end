@@ -70,10 +70,10 @@ export class HorizontalBarRowComponent {
   }
   
   public _trend: any = null;
-  public _value: BarRowValue = null;
-  public _rawValue: BarRowValue = null;
-  public _compareValue: BarRowValue = null;
-  public _rawCompareValue: BarRowValue = null;
+  public _value: BarRowValue = 0;
+  public _rawValue: BarRowValue = 0;
+  public _compareValue: BarRowValue = 0;
+  public _rawCompareValue: BarRowValue = 0;
   public _tooltip: string = null;
   public _compareTooltip: string = null;
   public _colors = [getPrimaryColor(), getSecondaryColor()];
