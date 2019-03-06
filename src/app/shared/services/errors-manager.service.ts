@@ -38,6 +38,10 @@ export class ErrorsManagerService {
             message =  this._translate.instant('app.errors.invalidKS');
             forceLogout = true;
             break;
+          case 'SEARCH_TOO_GENERAL':
+            message =  this._translate.instant('app.errors.searchTooGeneral');
+            forceLogout = true;
+            break;
           default:
             break;
         }
