@@ -54,14 +54,16 @@ export class TopVideosTableComponent {
   }
   
   public _showOverlay(event: MouseEvent, entryId: string): void {
-    if (this._overlay && this.timeoutId === null) {
-      this.timeoutId = setTimeout(() => {
-        this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
-        if (this._entryData.status === KalturaEntryStatus.ready) {
-          this._overlay.show(event);
-          this.timeoutId = null;
-        }
-      }, 1000);
+    if (this._overlay) {
+      this._entryData = this.entryDetails.find(({object_id}) => entryId === object_id);
+      if (this.timeoutId === null) {
+        this.timeoutId = setTimeout(() => {
+          if (this._entryData.status === KalturaEntryStatus.ready) {
+            this._overlay.show(event);
+            this.timeoutId = null;
+          }
+        }, 1000);
+      }
     }
   }
   
