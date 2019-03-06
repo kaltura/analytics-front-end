@@ -34,6 +34,7 @@ export class TopVideosTableComponent {
   
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
+  private timeoutId = null;
   
   public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
@@ -54,9 +55,14 @@ export class TopVideosTableComponent {
   
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
-      this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
-      if (this._entryData.status === KalturaEntryStatus.ready) {
-        this._overlay.show(event);
+      this._entryData = this.entryDetails.find(({object_id}) => entryId === object_id);
+      if (this.timeoutId === null) {
+        this.timeoutId = setTimeout(() => {
+          if (this._entryData.status === KalturaEntryStatus.ready) {
+            this._overlay.show(event);
+            this.timeoutId = null;
+          }
+        }, 1000);
       }
     }
   }
@@ -65,6 +71,10 @@ export class TopVideosTableComponent {
     if (this._overlay) {
       this._entryData = null;
       this._overlay.hide();
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
     }
   }
 
