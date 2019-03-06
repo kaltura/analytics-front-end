@@ -4,18 +4,11 @@
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <app-horizontal-bar-row label="Hateful or abusive content"
-                              colorScheme="abuse"
-                              [value]="[4, 100]"></app-horizontal-bar-row>
-      <app-horizontal-bar-row label="Infringe my rights"
-                              colorScheme="abuse"
-                              [value]="20"></app-horizontal-bar-row>
-      <app-horizontal-bar-row label="Harmful and Dangerous Act"
-                              colorScheme="abuse"
-                              [value]="10"></app-horizontal-bar-row>
-      <app-horizontal-bar-row label="Violent or Repulsive"
-                              colorScheme="abuse"
-                              [value]="50"></app-horizontal-bar-row>
+      <app-horizontal-bar-chart colorScheme="moderation"
+                                [data]="_tableData"
+                                [pager]="_pager"
+                                [totalCount]="_totalCount"
+                                (paginationChanged)="_onPaginationChanged($event)"></app-horizontal-bar-chart>
     </div>
   </k-area-blocker>
 </div>

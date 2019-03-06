@@ -53,6 +53,7 @@ import { SyndicationComponent } from 'shared/components/syndication-report/syndi
 import { TableModule } from 'primeng/table';
 import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
 import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/
     SyndicationComponent,
     CompareMetricComponent,
     HorizontalBarRowComponent,
+    HorizontalBarChartComponent,
     ...FilterComponentsList,
   ],
   exports: [
@@ -145,6 +147,7 @@ import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/
     SyndicationComponent,
     CompareMetricComponent,
     HorizontalBarRowComponent,
+    HorizontalBarChartComponent,
     ...FilterComponentsList,
   ],
   providers: [

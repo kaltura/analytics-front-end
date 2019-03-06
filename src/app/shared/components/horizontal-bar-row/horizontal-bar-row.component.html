@@ -1,5 +1,5 @@
 <div class="kBarContainer">
-  <div class="kLabel">{{label}}</div>
+  <div class="kLabel" [kTooltip]="label" [showOnEllipsis]="true">{{label}}</div>
   <div class="kBarWrapper">
     <div class="kBarWrapperRow">
       <span class="kValue">{{_value}}{{units}}</span>
@@ -13,10 +13,11 @@
       </div>
     </div>
     <div class="kBarWrapperRow kCompare" *ngIf="_compareValue">
-      <span class="kValue">{{_compareValue}}{{units}}</span>
+      <div class="kValue">{{_compareValue}}{{units}}</div>
       <div class="kBullet">
         <div class="kBar" [style.background-color]="_colors[1]" [style.width]="_compareValue+'%'"></div>
       </div>
+      <div class="kTrend" *ngIf="_trend">&nbsp;</div>
     </div>
   </div>
 </div>

@@ -13,14 +13,18 @@
   padding: 16px 0;
 
   .kLabel {
+    flex: 1;
     color: $kGrayscale1;
     font-weight: bold;
-    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 16px;
   }
 
   .kBarWrapper {
-    width: 50%;
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     .kBarWrapperRow {
@@ -31,18 +35,24 @@
         margin-top: 10px;
       }
 
-      app-trend-value {
-        margin-left: 16px;
+      .kTrend {
+        width: 100%;
+
+        app-trend-value {
+          margin-left: 16px;
+        }
       }
 
       .kValue {
+        flex: 1 0 auto;
         font-size: 15px;
         color: $kGrayscale3;
-        width: 60px;
+        width: 38px;
+        margin-right: 24px;
       }
 
       .kBullet {
-        width: 70%;
+        width: 100%;
         height: 18px;
         border: 0 solid $kGrayscale7;
         border-radius: 3px;
