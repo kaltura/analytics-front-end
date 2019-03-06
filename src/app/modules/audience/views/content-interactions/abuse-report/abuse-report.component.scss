@@ -9,4 +9,8 @@
 .kAbuseReport {
   height: auto;
   min-height: 336px;
+
+  .kReportContent {
+    padding: 0 24px;
+  }
 }
