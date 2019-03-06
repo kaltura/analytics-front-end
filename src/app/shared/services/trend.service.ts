@@ -40,13 +40,13 @@ export class TrendService {
     if (current === 0 && compare > 0) {
       return { value: '100', direction: -1 };
     }
+  
+    if (compare === 0) {
+      return { value: null, direction: 0 };
+    }
 
     if (current >= 0 && current === compare ) {
       return { value: '0', direction: 0 };
-    }
-
-    if (compare === 0) {
-      return { value: null, direction: 0 };
     }
 
     const value = Math.ceil(((current - compare) / compare) * 100);
