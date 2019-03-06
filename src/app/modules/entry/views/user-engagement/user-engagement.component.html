@@ -14,8 +14,8 @@
                                     [selectedFilters]="_selectedRefineFilters"
                                     (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
-        <p-table sortField="count_plays"
-                 dataKey="name"
+        <p-table dataKey="name"
+                 [sortField]="'count_plays'"
                  [value]="_tableData"
                  [customSort]="true"
                  [defaultSortOrder]="-1"
@@ -24,9 +24,9 @@
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
-              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : null">
+              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col">
                 {{'app.entry.' + col | translate}}
-                <p-sortIcon [field]="col" *ngIf="false"></p-sortIcon>
+                <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
               </th>
 
             </tr>

@@ -6,7 +6,7 @@ import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'share
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -187,7 +187,7 @@ export class UserEngagementComponent extends EntryBase {
   public _onPaginationChanged(event: any): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
-      this._loadReport({ table: null });
+      this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
     }
   }
   
@@ -196,7 +196,7 @@ export class UserEngagementComponent extends EntryBase {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
-        this._loadReport({ table: null });
+        this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
       }
     }
   }
