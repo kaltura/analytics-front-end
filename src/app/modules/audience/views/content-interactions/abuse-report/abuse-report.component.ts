@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
@@ -41,6 +41,8 @@ export class AbuseReportComponent extends InteractionsBaseReportComponent {
   public _tableData: BarChartRow[] = [];
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 4, pageIndex: 1 });
   public _totalCount: number;
+  public _currentPeriod: { from: number, to: number };
+  public _comparePeriod: { from: number, to: number };
   
   public get isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -61,37 +63,59 @@ export class AbuseReportComponent extends InteractionsBaseReportComponent {
       {
         index: 1,
         label: 'Hateful or abusive content',
-        value: 60,
-        tooltip: { value: 43, label: 'Lorem ipsum 1' }
+        value: [60, 20],
+        tooltip: [
+          { value: '43', label: 'Lorem ipsum 1' },
+          { value: '3', label: 'Lorem ipsum 1' },
+        ]
       },
       {
         index: 2,
         label: 'Infringe my rights',
-        value: 30,
-        tooltip: { value: 21, label: 'Lorem ipsum 2' }
+        value: [30, 3],
+        tooltip: [
+          { value: '21', label: 'Lorem ipsum 2' },
+          { value: '1', label: 'Lorem ipsum 2' },
+        ]
       },
       {
         index: 3,
         label: 'Harmful and Dangerous Act',
-        value: 10,
-        tooltip: { value: 12, label: 'Lorem ipsum 3' }
+        value: [10, 42],
+        tooltip: [
+          { value: '12', label: 'Lorem ipsum 3' },
+          { value: '25', label: 'Lorem ipsum 3' },
+        ]
       },
       {
         index: 4,
         label: 'Violent or Repulsive',
-        value: 10,
-        tooltip: { value: 12, label: 'Lorem ipsum 4' }
+        value: [10, 42],
+        tooltip: [
+          { value: '12', label: 'Lorem ipsum 4' },
+          { value: '52', label: 'Lorem ipsum 4' },
+        ]
       },
       {
         index: 5,
         label: 'Super long string to test ellipsis',
-        value: 15,
-        tooltip: { value: 12, label: 'Lorem ipsum 5' }
+        value: [15, 10],
+        tooltip: [
+          { value: '12', label: 'Lorem ipsum 5' },
+          { value: '62', label: 'Lorem ipsum 5' },
+        ]
       }
     ];
   
     this._tableData = this._mockData.slice(0, this._pager.pageSize);
     this._totalCount = this._mockData.length;
+  
+    this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    if (this._compareFilter) {
+      this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+    } else {
+      this._comparePeriod = null;
+    }
   }
   
   protected _updateFilter(): void {

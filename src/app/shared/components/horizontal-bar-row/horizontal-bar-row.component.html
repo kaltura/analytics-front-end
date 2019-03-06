@@ -3,10 +3,10 @@
   <div class="kBarWrapper">
     <div class="kBarWrapperRow">
       <span class="kValue">{{_value}}{{units}}</span>
-      <div class="kBullet">
+      <div class="kBullet" [kTooltip]="_tooltip" [escape]="false">
         <div class="kBar" [style.background-color]="_colors[0]" [style.width]="_value+'%'"></div>
       </div>
-      <div class="kTrend" *ngIf="_trend">
+      <div class="kTrend" *ngIf="_trend" [kTooltip]="_trend.tooltip" [escape]="false">
         <app-trend-value [value]="_trend.value"
                          [units]="_trend.units"
                          [trend]="_trend.trend"></app-trend-value>
@@ -14,10 +14,12 @@
     </div>
     <div class="kBarWrapperRow kCompare" *ngIf="_compareValue">
       <div class="kValue">{{_compareValue}}{{units}}</div>
-      <div class="kBullet">
+      <div class="kBullet" [kTooltip]="_compareTooltip" [escape]="false">
         <div class="kBar" [style.background-color]="_colors[1]" [style.width]="_compareValue+'%'"></div>
       </div>
-      <div class="kTrend" *ngIf="_trend">&nbsp;</div>
+      <div class="kTrend" *ngIf="_trend">
+        <div class="kTrendStub"></div>
+      </div>
     </div>
   </div>
 </div>

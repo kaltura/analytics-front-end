@@ -38,7 +38,10 @@
       .kTrend {
         width: 100%;
 
-        app-trend-value {
+        app-trend-value, .kTrendStub {
+          display: inline-block;
+          width: 60px;
+          height: 100%;
           margin-left: 16px;
         }
       }

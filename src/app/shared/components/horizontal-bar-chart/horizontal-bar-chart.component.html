@@ -5,7 +5,9 @@
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"
-                              [colorScheme]="colorScheme"></app-horizontal-bar-row>
+                              [colorScheme]="colorScheme"
+                              [currentPeriod]="currentPeriod"
+                              [comparePeriod]="comparePeriod"></app-horizontal-bar-row>
     </div>
   </div>
   <div *ngIf="!data.length && !isBusy" class="emptymessage">

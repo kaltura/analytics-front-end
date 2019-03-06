@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { TrendService } from 'shared/services/trend.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export type BarRowValue = number | string;
 
@@ -20,13 +22,19 @@ export class HorizontalBarRowComponent {
   @Input() label: string;
   @Input() units = '%';
   @Input() formatter: Function = significantDigits;
+  @Input() currentPeriod: { from: number, to: number };
+  @Input() comparePeriod: { from: number, to: number };
   
   @Input() set tooltip(value: BarRowTooltip | BarRowTooltip[]) {
-    if (Array.isArray(value)) {
-    
-    } else {
-    
-    }
+    setTimeout(() => {
+      if (Array.isArray(value)) {
+        this._tooltip = this._getTooltipString(value[0].value, value[0].label, value[0].color || this._colors[0]);
+        this._compareTooltip = this._getTooltipString(value[1].value, value[1].label, value[1].color || this._colors[1]);
+      } else {
+        this._tooltip = this._getTooltipString(value.value, value.label, value.color || this._colors[0]);
+        this._compareTooltip = null;
+      }
+    }, 200);
   }
   
   @Input() set value(value: BarRowValue | BarRowValue[]) {
@@ -41,14 +49,17 @@ export class HorizontalBarRowComponent {
     
     setTimeout(() => {
       this._value = typeof this.formatter === 'function' ? this.formatter(this._rawValue) : this._rawValue;
-      if (this._rawCompareValue !== null) {
+      if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
+        const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this.currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.currentPeriod.to, analyticsConfig.locale)}`;
+        const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(this.comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.comparePeriod.to, analyticsConfig.locale)}`;
         this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
   
         const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
         this._trend = {
           value,
           trend: direction,
-          units: '%'
+          units: '%',
+          tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, this._rawValue)}${this._trendService.getTooltipRowString(comparePeriodTitle, this._rawCompareValue)}`,
         };
       }
     }, 200);
@@ -63,9 +74,20 @@ export class HorizontalBarRowComponent {
   public _rawValue: BarRowValue = null;
   public _compareValue: BarRowValue = null;
   public _rawCompareValue: BarRowValue = null;
+  public _tooltip: string = null;
+  public _compareTooltip: string = null;
   public _colors = [getPrimaryColor(), getSecondaryColor()];
   
   constructor(private _trendService: TrendService) {
 
+  }
+  
+  private _getTooltipString(value: string, label: string, color?: string): string {
+    return `
+      <div class="kHorizontalBarGraphTooltip">
+        <span class="kBullet" style="color: ${color}">&bull;</span>
+        <span>${value}&nbsp;${label}</span>
+      </div>
+    `;
   }
 }

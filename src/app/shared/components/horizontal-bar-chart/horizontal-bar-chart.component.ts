@@ -22,6 +22,8 @@ export class HorizontalBarChartComponent {
   @Input() pager: KalturaPager;
   @Input() totalCount: number;
   @Input() isCompareMode = false;
+  @Input() currentPeriod: { from: number, to: number };
+  @Input() comparePeriod: { from: number, to: number };
   
   @Output() paginationChanged = new EventEmitter();
   
