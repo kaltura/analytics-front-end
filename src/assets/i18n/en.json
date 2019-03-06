@@ -92,7 +92,8 @@
     "errors":{
       "errorHeader": "Error",
       "general": "An error occurred",
-      "invalidKS": "Your session has expired. Please log-in again."
+      "invalidKS": "Your session has expired. Please log-in again.",
+      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
     },
     "entryType": {
       "video": "Video",
