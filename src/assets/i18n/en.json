@@ -362,7 +362,7 @@
       }
     },
     "entry": {
-      "plays": "Plays",
+      "plays": "Plays {{0}}",
       "viewers": "Unique Viewers",
       "minutes": "Minutes Viewed",
       "watched": "Avg. Completion Rate",

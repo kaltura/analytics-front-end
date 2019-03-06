@@ -394,7 +394,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
         
         summaryData[key] = data.map((item, index) => {
-          const currentValue = getValue(parseFloat(item[key]), totalValue);
+          const rawValue = parseFloat(item[key]);
+          const currentValue = getValue(rawValue, totalValue);
           
           if (compareData) {
             const compareValue = getValue(parseFloat(compareData[index][key]), compareTotalValue);
@@ -415,7 +416,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
             key: item.device,
             name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
             value: currentValue,
-            rawValue: currentValue,
+            tooltip: `<div style="font-weight: bold; padding: 5px">${this._translate.instant('app.entry.plays', [rawValue])}</div>`,
             units: '%'
           };
         });

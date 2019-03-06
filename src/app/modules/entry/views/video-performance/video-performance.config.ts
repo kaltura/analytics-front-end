@@ -42,10 +42,10 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
         fields: {
           'count_plays': {
             format: value => value,
-            title: this._translate.instant(`app.entry.plays`),
+            title: this._translate.instant(`app.entry.count_plays`),
             sortOrder: 1,
             colors: [getPrimaryColor(), getSecondaryColor()],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'sum_time_viewed': {
             format: value => value,
