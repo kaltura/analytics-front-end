@@ -113,8 +113,9 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {
-        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop });
-        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+        const menuOffset = 50; // contributors page doesn't have sub menu, subtract menu offset for correct scroll
+        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop - menuOffset });
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop - menuOffset);
       }
     } else {
       PageScrollConfig.defaultDuration = 500;
