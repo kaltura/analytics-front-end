@@ -21,17 +21,18 @@
     .kBar {
       height: 100%;
       transition: width 0.35s ease-out;
+      margin: 0 1px;
 
       &:first-child {
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
-        margin-right: 1px;
+        margin-left: 0;
       }
 
-      &:not(:first-child) {
+      &:last-child {
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
-        margin-left: 1px;
+        margin-right: 0;
       }
     }
   }

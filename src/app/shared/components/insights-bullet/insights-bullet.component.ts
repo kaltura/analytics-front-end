@@ -22,7 +22,7 @@ export class InsightsBulletComponent {
       this._values = value
         .sort((a, b) => b.value - a.value)
         .map((value, index) => {
-          const result = sum ? (value.value / sum * 100) : 0;
+          const result = sum ? Math.round(value.value / sum * 100) : 0;
           let color = getColorPercent(result, this.colorScheme);
           if (this._values.length <= 2) {
             color = index === 0 ? getPrimaryColor(this.colorScheme) : getSecondaryColor(this.colorScheme);
