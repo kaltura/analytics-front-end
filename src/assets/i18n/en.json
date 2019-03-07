@@ -404,7 +404,9 @@
       "languagesInCaptions": "Which languages do users select in captions?",
       "abuseReason": "Reason Why Viewer Report Abuse",
       "index": "#",
-      "shares": "{{0}} Shares"
+      "shares": "{{0}} Shares",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Playback Speed"
     }
   }
 }
