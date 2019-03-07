@@ -15,7 +15,7 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
         fields: {
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.plays`),
+            title: this._translate.instant(`app.entry.count_plays`),
             sortOrder: 1,
           },
           'sum_time_viewed': {
