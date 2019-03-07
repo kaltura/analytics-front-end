@@ -38,7 +38,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _loadingEntry = false;
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
-  public _dateRange = DateRanges.Last30D;
+  public _dateRange = DateRanges.SinceCreation;
   public _timeUnit = KalturaReportInterval.days;
   public _csvExportHeaders = '';
   public _totalCount: number;
