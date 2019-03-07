@@ -13,10 +13,7 @@
         <span class="kLabel">{{'app.contributors.mostPopular' | translate}}</span>
       </div>
       <div class="kReportRow">
-        <app-insights-bullet [topValue]="_topSourceCount"
-                             [othersValue]="_otherSourcesCount"
-                             [topLabel]="_topSourceLabel"
-                             [othersLabel]="'app.contributors.others' | translate"></app-insights-bullet>
+        <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
       </div>
 
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">

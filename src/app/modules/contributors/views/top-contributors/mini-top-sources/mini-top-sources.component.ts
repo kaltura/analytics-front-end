@@ -13,6 +13,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-bullet.component';
 
 @Component({
   selector: 'app-contributors-mini-top-sources',
@@ -36,14 +37,13 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
   public _tableData: any[] = [];
   public _currentDates: string;
   public _topSourceLabel = '';
-  public _topSourceCount = 0;
-  public _otherSourcesCount = 0;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 3, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _bulletValues: InsightsBulletValue[] = [];
 
   
   constructor(private _frameEventManager: FrameEventManagerService,
@@ -103,8 +103,10 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
           this._topSourceLabel = data.source;
         }
       });
-      this._topSourceCount = topEntriesCount;
-      this._otherSourcesCount = totalEntriesCount - this._topSourceCount;
+      this._bulletValues = [
+        { value: topEntriesCount, label: this._topSourceLabel },
+        { value: totalEntriesCount - topEntriesCount, label: this._translate.instant('app.contributors.others') },
+      ];
     }
   }
   
