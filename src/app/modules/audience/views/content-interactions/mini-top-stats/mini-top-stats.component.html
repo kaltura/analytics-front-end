@@ -1,0 +1,23 @@
+<div class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contentInteractions.insights' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div *ngFor="let stat of _stats" class="kReportRow">
+        <div class="kValue">{{stat.value}}</div>
+        <div class="kInfo">
+          <span class="kLabel">{{stat.label}}</span>
+          <span class="kDesc">{{stat.desc}}</span>
+        </div>
+      </div>
+
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_stats.length">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

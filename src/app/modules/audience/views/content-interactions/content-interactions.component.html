@@ -38,11 +38,10 @@
                            [refineFilter]="_refineFilter"></app-mini-top-shared>
     </div>
 
-    <!--Example -->
     <!--IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <div class="kMiniReportContainer">
-      <ui-carousel [infinite]="false"
-                   [autoPlay]="false"
+      <ui-carousel [infinite]="true"
+                   [autoPlay]="true"
                    [autoPlaySpeed]="5000"
                    [arrows]="false"
                    [fade]="false"
@@ -51,6 +50,10 @@
         <ui-carousel-item>
           <app-top-playback-speed [dateFilter]="_dateFilter"
                                   [refineFilter]="_refineFilter"></app-top-playback-speed>
+        </ui-carousel-item>
+        <ui-carousel-item>
+          <app-top-stats [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"></app-top-stats>
         </ui-carousel-item>
       </ui-carousel>
     </div>
