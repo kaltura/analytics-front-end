@@ -32,7 +32,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   private playerInitialized = false;
   private _reportType = KalturaReportType.percentiles;
 
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
 
   public _isBusy: boolean;

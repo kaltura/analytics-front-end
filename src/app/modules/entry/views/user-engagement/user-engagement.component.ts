@@ -34,7 +34,7 @@ export class UserEngagementComponent extends EntryBase {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
   
   public _selectedRefineFilters: RefineFilter = null;

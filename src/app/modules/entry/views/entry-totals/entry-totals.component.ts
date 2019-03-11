@@ -26,7 +26,7 @@ export class EntryTotalsComponent extends EntryBase {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
 
   public _isBusy: boolean;

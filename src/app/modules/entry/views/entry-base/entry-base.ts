@@ -24,7 +24,7 @@ export abstract class EntryBase {
     }
   }
 
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _refineFilter: RefineFilter = [];
   
   protected abstract _componentId: string;
