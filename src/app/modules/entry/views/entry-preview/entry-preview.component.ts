@@ -37,6 +37,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _noDataFound = false;
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaReportInputFilter = null;
@@ -206,6 +207,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
     reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
+    this._noDataFound = false;
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -246,6 +248,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
               this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
             } else {
               this._chartOptions = this._getGraphData(yAxisData);
+            }
+          } else {
+            if (report.table) {
+              this._noDataFound = true;
             }
           }
 
