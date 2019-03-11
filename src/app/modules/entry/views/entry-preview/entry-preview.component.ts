@@ -16,6 +16,7 @@ import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import {map, switchMap} from "rxjs/operators";
 import {of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-entry-preview',
@@ -296,7 +297,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
-          "IframeCustomPluginCss1" : "../assets/player.css",
+          "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           "controlBarContainer": {
             "plugin": true,
             "hover": false
