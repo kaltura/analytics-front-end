@@ -74,14 +74,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
 
   ngOnInit() {
     this.initPlayer();
-
-    /* -------  mockup data ------- */
-    let xData = [];
-    let yData = [];
-    for (let i = 0; i <= 100; i++) {
-      xData.push(i);
-      yData.push(Math.floor(Math.random() * i * 5) + 500);
-    }
   }
   
   private _getGraphData(yData: number[], compareYData: number[] = null) {
@@ -105,7 +97,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           let tooltip =  `
             <div class="kEntryGraphTooltip">
               <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-              ${this._translate.instant('app.entry.views')}&nbsp;${value}
+              ${this._translate.instant('app.entry.views')}:&nbsp;${value}
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
