@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,7 +12,10 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../entry-base/entry-base';
-import { getPrimaryColor } from 'shared/utils/colors';
+import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
+import {map, switchMap} from "rxjs/operators";
+import {of as ObservableOf} from "rxjs";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-entry-preview',
@@ -80,8 +83,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
   }
   
-  private _getGraphData(yData: number[]) {
-    return {
+  private _getGraphData(yData: number[], compareYData: number[] = null) {
+    let graphData = {
       backgroundColor: '#333333',
       grid: {
         left: 0,
@@ -98,12 +101,31 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       tooltip : {
         formatter: params => {
           const { value } = Array.isArray(params) ? params[0] : params;
-          return `
+          let tooltip =  `
             <div class="kEntryGraphTooltip">
               <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
               ${this._translate.instant('app.entry.views')}&nbsp;${value}
             </div>
           `;
+          if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
+            const compareValue = params[1].value;
+            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MM/DD/YY');
+            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MM/DD/YY');
+
+            tooltip = `
+              <div class="kEntryGraphTooltip" style="padding-bottom: 0px">
+                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                <span>${currentDatePeriod}</span>
+                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
+              </div>
+              <div class="kEntryGraphTooltip" style="padding-top: 0px">
+                <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
+                <span>${compareDatePeriod}</span>
+                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
+              </div>
+           `;
+          }
+          return tooltip;
         },
         trigger: 'axis',
         backgroundColor: '#ffffff',
@@ -148,16 +170,26 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       series: [{
         data: yData,
-        symbol: 'circle',
-        symbolSize: 8,
+        symbol: 'none',
         type: 'line',
-        color: '#487adf',
         lineStyle: {
           color: '#487adf',
           width: 2
         }
       }]
     };
+    if (compareYData !== null) {
+      graphData.series.push({
+        data: compareYData,
+        symbol: 'none',
+        type: 'line',
+        lineStyle: {
+          color: '#88acf6',
+          width: 2
+        }
+      });
+    }
+    return graphData;
   }
   
   protected _loadReport(sections = this._dataConfig): void {
@@ -169,19 +201,54 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
   
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
+    if (reportConfig['objectIds__null']) {
+      delete reportConfig['objectIds__null'];
+    }
+    reportConfig.objectIds = this.entryId;
+    sections = { ...sections }; // make local copy
+
     this._reportService.getReport(reportConfig, sections)
-      .subscribe(report => {
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: null };
+        if (compareReportConfig['objectIds__null']) {
+          delete compareReportConfig['objectIds__null'];
+        }
+        compareReportConfig.objectIds = this.entryId;
+        return this._reportService.getReport(compareReportConfig, sections)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-          
+
           if (report.table && report.table.header && report.table.data) {
-            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const {tableData} = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData = tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
               .map(item => Number(item['count_viewers']));
-  
-            this._chartOptions = this._getGraphData(yAxisData);
+
+            if (compare && compare.table) {
+              let compareYAxisData = [];
+              if (compare.table.header && compare.table.data) {
+                const compareTableData = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]).tableData;
+                compareYAxisData = compareTableData
+                  .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+                  .map(item => Number(item['count_viewers']));
+              } else {
+                for (let i = 0; i < 100; i++) {
+                  compareYAxisData.push(0);
+                }
+              }
+              this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
+            } else {
+              this._chartOptions = this._getGraphData(yAxisData);
+            }
           }
+
         },
         error => {
           this._isBusy = false;
