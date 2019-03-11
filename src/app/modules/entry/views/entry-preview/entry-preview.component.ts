@@ -1,15 +1,10 @@
 import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInputFilter,
-  KalturaReportInterval
-} from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, ReportService} from 'shared/services';
+import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryPreviewConfig } from './entry-preview.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -17,6 +12,10 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../entry-base/entry-base';
+import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
+import {map, switchMap} from "rxjs/operators";
+import {of as ObservableOf} from "rxjs";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-entry-preview',
@@ -28,6 +27,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   @Input() entryId = '';
 
   private _dataConfig: ReportDataConfig;
+  private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
+  private playerInstance: any = null;
+  private playerInitialized = false;
+  private _reportType = KalturaReportType.percentiles;
 
   protected _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
@@ -37,15 +40,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaReportInputFilter = null;
-  public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
-
-  private playerInstance: any = null;
-  private playerInitialized = false;
-
   public _playerConfig: any = {};
   public serverUri = getKalturaServerUri();
   public _playerPlayed = false;
@@ -54,7 +52,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _currentTime = 0;
 
   public _chartOptions = {};
-  public _showHeatmap = false;
 
   @ViewChild('player') player: KalturaPlayerComponent;
 
@@ -84,8 +81,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       xData.push(i);
       yData.push(Math.floor(Math.random() * i * 5) + 500);
     }
-
-    this._chartOptions = {
+  }
+  
+  private _getGraphData(yData: number[], compareYData: number[] = null) {
+    let graphData = {
       backgroundColor: '#333333',
       grid: {
         left: 0,
@@ -97,9 +96,37 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         show: false,
         boundaryGap : false,
         type: 'category',
-        data: xData
+        data: Array.from({ length: 100 }, (_, i) => i + 1),
       },
       tooltip : {
+        formatter: params => {
+          const { value } = Array.isArray(params) ? params[0] : params;
+          let tooltip =  `
+            <div class="kEntryGraphTooltip">
+              <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+              ${this._translate.instant('app.entry.views')}&nbsp;${value}
+            </div>
+          `;
+          if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
+            const compareValue = params[1].value;
+            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MM/DD/YY');
+            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MM/DD/YY');
+
+            tooltip = `
+              <div class="kEntryGraphTooltip" style="padding-bottom: 0px">
+                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                <span>${currentDatePeriod}</span>
+                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
+              </div>
+              <div class="kEntryGraphTooltip" style="padding-top: 0px">
+                <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
+                <span>${compareDatePeriod}</span>
+                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
+              </div>
+           `;
+          }
+          return tooltip;
+        },
         trigger: 'axis',
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
@@ -143,23 +170,105 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       series: [{
         data: yData,
-        symbol: 'circle',
-        symbolSize: 8,
+        symbol: 'none',
         type: 'line',
-        color: '#487adf',
         lineStyle: {
           color: '#487adf',
           width: 2
         }
       }]
     };
+    if (compareYData !== null) {
+      graphData.series.push({
+        data: compareYData,
+        symbol: 'none',
+        type: 'line',
+        lineStyle: {
+          color: '#88acf6',
+          width: 2
+        }
+      });
+    }
+    return graphData;
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    // empty by design
+    this._isBusy = true;
+    this._blockerMessage = null;
+  
+    if (this.entryId) {
+      this._filter.entryIdIn = this.entryId;
+    }
+  
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
+    if (reportConfig['objectIds__null']) {
+      delete reportConfig['objectIds__null'];
+    }
+    reportConfig.objectIds = this.entryId;
+    sections = { ...sections }; // make local copy
+
+    this._reportService.getReport(reportConfig, sections)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: null };
+        if (compareReportConfig['objectIds__null']) {
+          delete compareReportConfig['objectIds__null'];
+        }
+        compareReportConfig.objectIds = this.entryId;
+        return this._reportService.getReport(compareReportConfig, sections)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+          this._isBusy = false;
+          this._chartOptions = {};
+
+          if (report.table && report.table.header && report.table.data) {
+            const {tableData} = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const yAxisData = tableData
+              .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+              .map(item => Number(item['count_viewers']));
+
+            if (compare && compare.table) {
+              let compareYAxisData = [];
+              if (compare.table.header && compare.table.data) {
+                const compareTableData = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]).tableData;
+                compareYAxisData = compareTableData
+                  .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+                  .map(item => Number(item['count_viewers']));
+              } else {
+                for (let i = 0; i < 100; i++) {
+                  compareYAxisData.push(0);
+                }
+              }
+              this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
+            } else {
+              this._chartOptions = this._getGraphData(yAxisData);
+            }
+          }
+
+        },
+        error => {
+          this._isBusy = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
   }
   
   protected _updateRefineFilter(): void {
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _updateFilter(): void {
@@ -168,7 +277,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
-    this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -178,11 +286,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       this._compareFilter = null;
     }
   }
-
-  public toggleHeatmap(): void {
-    this._showHeatmap = !this._showHeatmap;
-  }
-
 
   /* ------------------------ start of player logic --------------------------*/
 

@@ -36,10 +36,10 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
           },
           'avg_view_drop_off': {
-            format: value => value,
-            parse: value => Math.round(parseFloat(value) * 100),
+            format: value => Math.min(value, 100),
+            parse: value => Math.min(Math.round(parseFloat(value) * 100), 100),
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`)}:&nbsp;${value}%</span>`
           },
         }
       },
@@ -77,7 +77,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 6,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(Math.round(value * 100)) + '%',
+            format: value => ReportHelper.percents(value, true, true),
             sortOrder: 6,
           },
         }
@@ -108,7 +108,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(Math.round(value * 100)),
+            format: value => ReportHelper.percents(value, true, true),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`),
             units: value => '%',
             sortOrder: 5,

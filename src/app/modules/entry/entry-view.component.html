@@ -42,7 +42,14 @@
 
         <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
 
-        <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
+        <div class="kReportContainer kEntryPreview">
+          <app-entry-preview [dateFilter]="_dateFilter"
+                             [entryId]="_entryId"
+                             [refineFilter]="_refineFilter"></app-entry-preview>
+          <app-user-engagement [dateFilter]="_dateFilter"
+                               [duration]="_duration"
+                               [entryId]="_entryId"></app-user-engagement>
+        </div>
 
         <div class="kReportContainer">
           <app-video-performance [dateFilterComponent]="dateFilter"

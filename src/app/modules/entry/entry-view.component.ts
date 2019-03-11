@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import {
@@ -60,13 +60,13 @@ export class EntryViewComponent implements OnInit, OnDestroy {
 
 
   public _entryId = '';
+  public _duration = 0;
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
   public _owner = '';
 
   constructor(private _router: Router,
               private route: ActivatedRoute,
-              private zone: NgZone,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -123,7 +123,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'name,mediaType,createdAt'
+            fields: 'name,mediaType,createdAt,msDuration'
           })
         }),
       new UserGetAction({ userId: null })
@@ -153,6 +153,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         ([entry, user]) => {
           this._entryName = entry.name;
           this._entryType = entry.mediaType;
+          this._duration = entry.msDuration || 0;
           this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
           this._owner = user.fullName;
           this.requestSubscription = null;

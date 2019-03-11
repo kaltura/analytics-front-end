@@ -170,7 +170,7 @@ export class DateFilterUtils {
       value += '01'; // add the first day of a month to correct parsing
     }
   
-    return moment(value);
+    return moment(value, 'YYYYMMDD');
   }
   
   private static _isUnixDate(number: number): boolean {

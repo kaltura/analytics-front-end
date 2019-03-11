@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EntryPreviewConfig extends ReportDataBaseConfig {
+export class UserEngagementConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
@@ -13,14 +13,19 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'percentile': {
+          'name': {
             format: value => value,
+            nonComparable: true,
           },
-          'count_viewers': {
-            format: value => value,
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
           },
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            units: () => '%',
+          }
         }
-      }
+      },
     };
   }
 }
