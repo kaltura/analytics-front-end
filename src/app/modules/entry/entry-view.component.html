@@ -40,7 +40,7 @@
                           (closeFilters)="_refineFilterOpened = false"
                           (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
-        <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
+        <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId" [refineFilter]="_refineFilter"></app-entry-totals>
 
         <div class="kReportContainer kEntryPreview">
           <app-entry-preview [dateFilter]="_dateFilter"
@@ -48,6 +48,7 @@
                              [refineFilter]="_refineFilter"></app-entry-preview>
           <app-user-engagement [dateFilter]="_dateFilter"
                                [duration]="_duration"
+                               [refineFilter]="_refineFilter"
                                [entryId]="_entryId"></app-user-engagement>
         </div>
 

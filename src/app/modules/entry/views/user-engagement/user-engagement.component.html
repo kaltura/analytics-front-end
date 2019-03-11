@@ -64,7 +64,7 @@
             </div>
           </ng-template>
           <ng-template let-data pTemplate="rowexpansion">
-            <tr>
+            <tr *ngIf="!_isCompareMode">
               <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
                 <app-heat-map [userId]="data['name']"
                               [entryId]="entryId"
