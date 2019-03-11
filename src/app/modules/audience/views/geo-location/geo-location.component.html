@@ -100,7 +100,7 @@
                     </span>
                   </div>
                 </th>
-                <th >{{'app.audience.geo.trend' | translate}}</th>
+                <th [ngStyle]="{'paddingLeft': '0px'}">{{'app.audience.geo.trend' | translate}}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
@@ -135,7 +135,7 @@
                 <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
                   <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
                 </td>
-                <td>
+                <td [ngStyle]="{'paddingLeft': '0px'}">
                   <span>
                     <h5 class="mini-loader" *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
                     <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">

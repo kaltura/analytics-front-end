@@ -101,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
       endpointUrl: getKalturaServerUri(),
-      clientTag: 'kmc-analytics:v0.1'
+      clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
     });
     this._kalturaServerClient.setDefaultRequestOptions({
       ks: analyticsConfig.ks
