@@ -15,7 +15,7 @@ export class ModerationDataConfig extends ReportDataBaseConfig {
       [ReportDataSection.table]: {
         fields: {
           'reason': {
-            format: value => value,
+            format: value => value === '0' ? this._translate.instant('app.contentInteractions.moderationType.0') : value,
           },
           'reportsubmitted': {
             format: value => ReportHelper.numberOrZero(value),
