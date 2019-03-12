@@ -11,6 +11,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { BrowserService } from 'shared/services';
 
 @Component({
   selector: 'app-date-filter',
@@ -82,7 +83,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
               private _router: Router,
-              private _dateFilterService: DateFilterService) {
+              private _dateFilterService: DateFilterService,
+              private _browserService: BrowserService) {
   }
 
   ngOnInit() {
@@ -110,6 +112,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _init(queryParams: Params): void {
+    this._browserService.updateCurrentQueryParams(queryParams);
     this._initCurrentFilterFromEventParams(queryParams);
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.creationDate);
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
@@ -163,15 +166,19 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _updateRouteParams(): void {
+    const updateParams = (params, payload) => {
+      // manually add properties that need to be preserved to avoid preserving duplicating specific and preset date filters
+      const preserveEntryId = params.hasOwnProperty('id') ? { id: params.id } : {};
+      return { ...preserveEntryId, ...payload };
+    };
     let queryParams = this._queryParams || {};
     if (this.selectedView === 'preset') {
-      queryParams = {...this._queryParams, dateBy: this.selectedDateRange };
+      queryParams = updateParams(queryParams, { dateBy: this.selectedDateRange });
     } else if (this.selectedView === 'specific') {
-      queryParams = {
-        ...this._queryParams,
+      queryParams = updateParams(queryParams, {
         dateFrom: DateFilterUtils.getDay(this.startDate),
         dateTo: DateFilterUtils.getDay(this.endDate),
-      };
+      });
     }
     
     if (queryParams && this.compare) {
@@ -181,6 +188,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         queryParams.compareTo = DateFilterUtils.getDay(this.compareStartDate);
       }
     }
+  
+    this._browserService.updateCurrentQueryParams(queryParams);
   
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.Navigate, queryParams);
@@ -254,17 +263,17 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this.filterChange.emit({
       applyIn: applyIn,
       changeOnly: changeOnly,
-      startDate: DateFilterUtils.toServerDate(this.startDate),
-      endDate: DateFilterUtils.toServerDate(this.endDate, true),
+      startDate: DateFilterUtils.toServerDate(this.startDate, true),
+      endDate: DateFilterUtils.toServerDate(this.endDate, false),
       startDay: DateFilterUtils.getDay(this.startDate),
       endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       compare: {
         active: this.compare,
-        startDate: DateFilterUtils.toServerDate(this.compareStartDate),
+        startDate: DateFilterUtils.toServerDate(this.compareStartDate, true),
         startDay: DateFilterUtils.getDay(this.compareStartDate),
-        endDate: DateFilterUtils.toServerDate(this.compareEndDate, true),
+        endDate: DateFilterUtils.toServerDate(this.compareEndDate, false),
         endDay: DateFilterUtils.getDay(this.compareEndDate)
       }
     });

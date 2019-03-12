@@ -48,7 +48,7 @@ export interface Summary {
 export class EntryDevicesOverviewComponent extends EntryBase implements OnDestroy {
   @Input() entryId: string = null;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'devices-overview';
   
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];

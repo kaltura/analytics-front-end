@@ -136,6 +136,10 @@ body{
             color: $kTertiary;
             font-size: 12px;
             margin-left: 24px;
+            margin-right: 8px;
+          }
+          span {
+            cursor: pointer;
           }
         }
         .kTableContainer{
@@ -233,6 +237,18 @@ body{
     width: 1500px !important;
     margin: auto !important;
     display: flex;
+  }
+}
+
+.kEntryGraphTooltip {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  font-weight: bold;
+
+  .kBullet {
+    font-size: 48px;
+    margin-right: 5px;
   }
 }
 
@@ -393,6 +409,50 @@ ui-carousel /deep/ {
   width: 24px;
   height: 24px;
   font-size: 24px;
+}
+
+.kHeatMapTooltipWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+
+  .kDuration {
+    color: $kGrayscale3;
+    margin-bottom: 12px;
+  }
+
+  .kHeatMapTooltip {
+    display: flex;
+    align-items: center;
+
+    .kBullet {
+      display: inline-block;
+      width: 9px;
+      min-width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      margin-right: 8px;
+    }
+
+    .kMessage {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+}
+
+.ui-autocomplete-panel {
+  width: 200px !important;
+
+  .ui-autocomplete-list-item {
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:hover {
+      background-color: $kGrayscale6;
+    }
+  }
 }
 
 div, span, tr, td, li {

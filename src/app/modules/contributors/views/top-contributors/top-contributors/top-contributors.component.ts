@@ -26,7 +26,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
   ]
 })
 export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
-  private _order = '-added_entries';
+  private _order = '-contributor_ranking';
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;

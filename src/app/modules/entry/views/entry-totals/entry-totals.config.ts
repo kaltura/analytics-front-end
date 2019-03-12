@@ -30,7 +30,7 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true),
             title: this._translate.instant(`app.entry.watched`),
             sortOrder: 4,
           }

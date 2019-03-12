@@ -50,7 +50,8 @@
       "filterCountries": "Filter Countries",
       "filterDomains": "Filter Domains",
       "domainPlaceholder": "Select Domain",
-      "domainsSelected": "{0} Domains Selected"
+      "domainsSelected": "{0} Domains Selected",
+      "filterUsers": "Filter Users"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -362,6 +363,7 @@
       }
     },
     "entry": {
+      "views": "Views",
       "plays": "Plays {{0}}",
       "viewers": "Unique Viewers",
       "minutes": "Minutes Viewed",
@@ -382,6 +384,20 @@
       "sum_time_viewed_tt": "Minutes Viewed",
       "count_loads_tt": "Player Impressions",
       "avg_time_viewed_tt": "Avg. View Time",
+      "name": "Name",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
+      "totalViewersCount": "{{0}} Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "unique_known_users": "Unique Viewers",
+      "heatMap": {
+        "duration": "Duration {{0}}",
+        "tooltip": {
+          "0": "Never saw this part",
+          "1": "Saw this part once",
+          "2": "Saw this part twice",
+          "n": "Saw this part more than 2 times"
+        }
+      },
       "topCountries": "Top Countries",
       "entryType": {
         "video": "Video",
@@ -399,7 +415,7 @@
       "count_viral": "Shares",
       "count_download": "Downloads",
       "count_report": "Abuse Report",
-      "captionsSelected": "Captions Selected",
+      "count_captions": "Captions Selected",
       "entry_name": "Name",
       "languagesInCaptions": "Which languages do users select in captions?",
       "abuseReason": "Reason Why Viewer Report Abuse",
