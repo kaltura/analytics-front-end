@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -42,6 +42,7 @@ export class TopVideosTableComponent {
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
 
   constructor(private _router: Router,
+              private _activatedRoute: ActivatedRoute,
               private _frameEventManager: FrameEventManagerService) {
 
   }
@@ -83,7 +84,7 @@ export class TopVideosTableComponent {
       if (analyticsConfig.isHosted) {
         this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}`);
       } else {
-        this._router.navigate(['entry', entryId]);
+        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
     }
   }
