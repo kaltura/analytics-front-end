@@ -24,10 +24,15 @@ export class MiniInteractionsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.contentInteractions.count_download`),
             sortOrder: 2,
           },
+          'count_captions': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_captions`),
+            sortOrder: 3,
+          },
           'count_report': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_report`),
-            sortOrder: 3,
+            sortOrder: 4,
           },
         }
       }
