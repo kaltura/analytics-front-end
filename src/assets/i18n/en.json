@@ -422,7 +422,9 @@
       "index": "#",
       "shares": "{{0}} Shares",
       "insights": "Insights",
-      "mostPopular": "Most Popular Playback Speed"
+      "mostPopular": "Most Popular Playback Speed",
+      "count_info": "Times info panel was opened",
+      "count_related_selected": "Interactions with related content"
     }
   }
 }

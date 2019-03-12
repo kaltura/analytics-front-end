@@ -52,7 +52,8 @@
                                   [refineFilter]="_refineFilter"></app-top-playback-speed>
         </ui-carousel-item>
         <ui-carousel-item>
-          <app-top-stats [dateFilter]="_dateFilter"
+          <app-top-stats [highlights$]="interactions.interactions$"
+                         [dateFilter]="_dateFilter"
                          [refineFilter]="_refineFilter"></app-top-stats>
         </ui-carousel-item>
       </ui-carousel>
