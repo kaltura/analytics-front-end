@@ -40,7 +40,7 @@ import { ContentInteractionsComponent } from './views/content-interactions/conte
 import { InteractionsComponent } from './views/content-interactions/interactions/interactions.component';
 import { MiniInteractionsComponent } from './views/content-interactions/mini-interactions/mini-interactions.component';
 import { MiniTopSharedComponent } from './views/content-interactions/mini-top-shared/mini-top-shared.component';
-import { AbuseReportComponent } from './views/content-interactions/abuse-report/abuse-report.component';
+import { ModerationComponent } from './views/content-interactions/moderation/moderation.component';
 
 @NgModule({
   imports: [
@@ -87,7 +87,7 @@ import { AbuseReportComponent } from './views/content-interactions/abuse-report/
     InteractionsComponent,
     MiniInteractionsComponent,
     MiniTopSharedComponent,
-    AbuseReportComponent,
+    ModerationComponent,
   ],
   exports: [],
   providers: [PageScrollService]

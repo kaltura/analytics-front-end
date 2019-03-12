@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-
 import { EChartOption } from 'echarts';
 
 @Injectable()
-export class AbuseReportDataConfig extends ReportDataBaseConfig {
+export class ModerationDataConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }

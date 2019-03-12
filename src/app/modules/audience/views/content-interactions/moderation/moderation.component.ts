@@ -4,7 +4,7 @@ import { AuthService, ErrorsManagerService, ReportService } from 'shared/service
 import { CompareService } from 'shared/services/compare.service';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { AbuseReportDataConfig } from './abuse-report-data.config';
+import { ModerationDataConfig } from './moderation-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -15,16 +15,16 @@ import { InteractionsBaseReportComponent } from '../interactions-base-report/int
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 @Component({
-  selector: 'app-abuse-report',
-  templateUrl: './abuse-report.component.html',
-  styleUrls: ['./abuse-report.component.scss'],
+  selector: 'app-moderation-report',
+  templateUrl: './moderation.component.html',
+  styleUrls: ['./moderation.component.scss'],
   providers: [
-    KalturaLogger.createLogger('AbuseReportComponent'),
-    AbuseReportDataConfig,
+    KalturaLogger.createLogger('ModerationComponent'),
+    ModerationDataConfig,
     ReportService,
   ],
 })
-export class AbuseReportComponent extends InteractionsBaseReportComponent {
+export class ModerationComponent extends InteractionsBaseReportComponent {
   private _reportType = KalturaReportType.contentDropoff;
   private _filter = new KalturaReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _compareFilter: KalturaReportInputFilter = null;
@@ -53,7 +53,7 @@ export class AbuseReportComponent extends InteractionsBaseReportComponent {
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: AbuseReportDataConfig) {
+              private _dataConfigService: ModerationDataConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
