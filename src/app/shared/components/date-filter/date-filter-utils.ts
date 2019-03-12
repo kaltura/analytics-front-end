@@ -6,20 +6,15 @@ export class DateFilterUtils {
     return today.getTimezoneOffset();
   }
 
-  static toServerDate(value: Date, getEndOfDay = false): number {
-    let timeToServer; // time to send to the server in milliseconds
+  static toServerDate(value: Date, startDate: boolean): number {
 
-    // for endDate, we want to send the server the end of the day in order to get the data from this day, so we add 1 day and deduct 1 second
-    // we add 1 day only for dates that are received from the calendar component as the start of the day meaning hours, minutes, seconds and milliseconds are all 0
-
-    if (getEndOfDay && value.getHours() === 0 && value.getMinutes() === 0 && value.getSeconds() === 0 && value.getMilliseconds() === 0) {
-      let dateClone = new Date(value.getTime());    // clone date to prevent changing the date passed by reference
-      dateClone.setDate(dateClone.getDate() + 1);   // add 1 day
-      timeToServer = dateClone.getTime() - 1000;    // remove 1 second
+    let dateClone = new Date(value.getTime());    // clone date to prevent changing the date passed by reference
+    if (startDate) {
+      dateClone.setHours(0, 0, 0);     // force start of day
     } else {
-      timeToServer = value.getTime();         // dor startDate or not begining of the day, use the received time, no manipulation
+      dateClone.setHours(23, 59, 59);  // force end of day
     }
-    return value ? Math.round(timeToServer / 1000) : null; // devide by 1000 to convert to seconds as required by Kaltura API
+    return value ? Math.round(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
   }
 
   static fromServerDate(value: number): Date {

@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { Params } from '@angular/router';
 
 export enum HeaderTypes {
     error = 1,
@@ -29,6 +30,7 @@ export type OnShowConfirmationFn = (confirmation: Confirmation) => void;
 
 @Injectable()
 export class BrowserService {
+  private _currentQueryParams: Params; // keep current query params since they're not accessible under host app
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
         // this is the default confirmation dialog provided by the browser.
@@ -56,6 +58,20 @@ export class BrowserService {
     constructor(private _translateService: TranslateService,
                 private _frameEventManager: FrameEventManagerService) {
     }
+    
+    public updateCurrentQueryParams(params: Params): void {
+      this._currentQueryParams = params;
+    }
+  
+  public getCurrentQueryParams(format: 'string' = null): Params | string {
+    if (format === 'string') {
+      return Object.keys(this._currentQueryParams)
+        .map(key => `${key}=${this._currentQueryParams[key]}`)
+        .join('&');
+    }
+    
+    return this._currentQueryParams;
+  }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
         if (fn) {
