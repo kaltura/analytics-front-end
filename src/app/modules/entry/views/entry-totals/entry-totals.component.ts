@@ -26,7 +26,7 @@ export class EntryTotalsComponent extends EntryBase {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
 
   public _isBusy: boolean;
@@ -105,10 +105,10 @@ export class EntryTotalsComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
-    // this._refineFilterToServerValue(this._filter);
-    // if (this._compareFilter) {
-    //   this._refineFilterToServerValue(this._compareFilter);
-    // }
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _updateFilter(): void {

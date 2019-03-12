@@ -499,7 +499,7 @@ export class CompareService implements OnDestroy {
           if (fieldConfig.nonComparable) {
             result = fieldConfig.format(currentValue);
           } else {
-            const compareValue = compareRow[column];
+            const compareValue = compareRow[column] ? compareRow[column] : 0;
             const { value: trend, direction } = this._trendService.calculateTrend(Number(currentValue), Number(compareValue));
             const currentVal = fieldConfig.format(currentValue);
             const compareVal = fieldConfig.format(compareValue);

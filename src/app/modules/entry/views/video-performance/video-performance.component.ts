@@ -34,7 +34,7 @@ export class VideoPerformanceComponent extends EntryBase {
   private _dataConfig: ReportDataConfig;
   public _metricsCompareTo: string = null;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
   
   public _columns: string[] = [];

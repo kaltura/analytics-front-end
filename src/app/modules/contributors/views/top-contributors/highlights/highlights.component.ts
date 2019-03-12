@@ -126,8 +126,6 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
-    this._filter.entryCreatedAtGreaterThanOrEqual = DateFilterUtils.fromServerDate(this._dateFilter.startDate);
-    this._filter.entryCreatedAtLessThanOrEqual = DateFilterUtils.fromServerDate(this._dateFilter.endDate);
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     if (this._dateFilter.compare.active) {
@@ -135,8 +133,6 @@ export class ContributorsHighlightsComponent extends TopContributorsBaseReportCo
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
       this._compareFilter.fromDate = compare.startDate;
       this._compareFilter.toDate = compare.endDate;
-      this._compareFilter.entryCreatedAtGreaterThanOrEqual = DateFilterUtils.fromServerDate(compare.startDate);
-      this._compareFilter.entryCreatedAtLessThanOrEqual = DateFilterUtils.fromServerDate(compare.endDate);
     } else {
       this._compareFilter = null;
     }

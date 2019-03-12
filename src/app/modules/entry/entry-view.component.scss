@@ -1,4 +1,10 @@
 @import '../../../styles/variables';
+
+.kEntryPreview {
+  background-color: #FFFFFF;
+  margin-bottom: 24px;
+}
+
 .kReport{
   background-color: $appBkgColor !important;
   .kBackBtn{

@@ -17,7 +17,7 @@
                   <span class="kLabel">{{summary.name}}</span>
                 </div>
                 <div class="kSummaryValue">
-                  <div *ngIf="!summary.compare">
+                  <div *ngIf="!summary.compare" [kTooltip]="summary.tooltip" [escape]="false">
                     <span class="kValue">{{summary.value}}</span>
                     <span class="kUnits">{{summary.units}}</span>
                   </div>
