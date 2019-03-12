@@ -26,8 +26,8 @@ export class TrendService {
     const endDate = fromDay.clone().subtract(1, 'days').toDate();
   
     return {
-      startDate: DateFilterUtils.toServerDate(startDate),
-      endDate: DateFilterUtils.toServerDate(endDate),
+      startDate: DateFilterUtils.toServerDate(startDate, true),
+      endDate: DateFilterUtils.toServerDate(endDate, false),
       startDay: DateFilterUtils.getDay(startDate),
       endDay: DateFilterUtils.getDay(endDate),
     };

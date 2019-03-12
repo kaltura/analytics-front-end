@@ -254,17 +254,17 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this.filterChange.emit({
       applyIn: applyIn,
       changeOnly: changeOnly,
-      startDate: DateFilterUtils.toServerDate(this.startDate),
-      endDate: DateFilterUtils.toServerDate(this.endDate, true),
+      startDate: DateFilterUtils.toServerDate(this.startDate, true),
+      endDate: DateFilterUtils.toServerDate(this.endDate, false),
       startDay: DateFilterUtils.getDay(this.startDate),
       endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       compare: {
         active: this.compare,
-        startDate: DateFilterUtils.toServerDate(this.compareStartDate),
+        startDate: DateFilterUtils.toServerDate(this.compareStartDate, true),
         startDay: DateFilterUtils.getDay(this.compareStartDate),
-        endDate: DateFilterUtils.toServerDate(this.compareEndDate, true),
+        endDate: DateFilterUtils.toServerDate(this.compareEndDate, false),
         endDay: DateFilterUtils.getDay(this.compareEndDate)
       }
     });
