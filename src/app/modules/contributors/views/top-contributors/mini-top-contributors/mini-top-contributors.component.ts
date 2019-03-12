@@ -31,7 +31,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 export class MiniTopContributorsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
 
-  private _order = '-added_entries';
+  private _order = '-contributor_ranking';
   private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   
