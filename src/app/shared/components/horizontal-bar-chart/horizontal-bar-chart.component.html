@@ -9,10 +9,10 @@
                               [currentPeriod]="currentPeriod"
                               [comparePeriod]="comparePeriod"></app-horizontal-bar-row>
     </div>
-  </div>
-  <div *ngIf="!data.length && !isBusy" class="emptymessage">
-    <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-    <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    <div *ngIf="!data.length && !isBusy" class="emptymessage">
+      <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+      <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    </div>
   </div>
 
   <p-paginator *ngIf="pager && data.length"
