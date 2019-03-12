@@ -66,7 +66,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _owner = '';
 
   constructor(private _router: Router,
-              private route: ActivatedRoute,
+              private _route: ActivatedRoute,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -84,7 +84,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      this.subscription = this.route.params.subscribe(params => {
+      this.subscription = this._route.params.subscribe(params => {
         this._entryId = params['id'];
         if (this._entryId) {
           this.loadEntryDetails();
@@ -178,7 +178,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
     } else {
-      this._router.navigateByUrl('/audience/engagement');
+      this._router.navigateByUrl('/audience/engagement', { queryParams: this._route.snapshot.queryParams });
     }
   }
 

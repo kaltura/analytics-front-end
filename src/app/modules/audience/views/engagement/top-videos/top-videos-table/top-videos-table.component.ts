@@ -6,6 +6,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { BrowserService } from 'shared/services';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -43,7 +44,8 @@ export class TopVideosTableComponent {
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
-              private _frameEventManager: FrameEventManagerService) {
+              private _frameEventManager: FrameEventManagerService,
+              private _browserService: BrowserService) {
 
   }
   
@@ -82,7 +84,8 @@ export class TopVideosTableComponent {
   public _drillDown(entryId: string): void {
     if (this._entryData.status === KalturaEntryStatus.ready) {
       if (analyticsConfig.isHosted) {
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}`);
+        const params = this._browserService.getCurrentQueryParams('string');
+        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
       } else {
         this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
