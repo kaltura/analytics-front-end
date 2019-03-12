@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { ModerationDataConfig } from './moderation-data.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +13,10 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { BarRowTooltip, BarRowValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 
 @Component({
   selector: 'app-moderation-report',
@@ -25,12 +29,14 @@ import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-b
   ],
 })
 export class ModerationComponent extends InteractionsBaseReportComponent {
-  private _reportType = KalturaReportType.contentDropoff;
+  private _reportType = KalturaReportType.contentReportReasons;
   private _filter = new KalturaReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _compareFilter: KalturaReportInputFilter = null;
   private _reportInterval = KalturaReportInterval.months;
   private _dataConfig: ReportDataConfig;
-  private _mockData: BarChartRow[] = [];
+  private _loadedData: BarChartRow[] = [];
+  private _totalReports: number = null;
+  private _totalCompareReports: number = null;
   
   protected _dateFilter: DateChangeEvent;
   protected _refineFilter: RefineFilter = [];
@@ -43,8 +49,9 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   public _totalCount: number;
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
+  public _firstTimeLoading = true;
   
-  public get isCompareMode(): boolean {
+  public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
   
@@ -58,64 +65,56 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
     this._dataConfig = _dataConfigService.getConfig();
   }
   
-  protected _loadReport(): void {
-    this._mockData = [
-      {
-        index: 1,
-        label: 'Hateful or abusive content',
-        value: [60, 20],
-        tooltip: [
-          { value: '43', label: 'Lorem ipsum 1' },
-          { value: '3', label: 'Lorem ipsum 1' },
-        ]
-      },
-      {
-        index: 2,
-        label: 'Infringe my rights',
-        value: [30, 3],
-        tooltip: [
-          { value: '21', label: 'Lorem ipsum 2' },
-          { value: '1', label: 'Lorem ipsum 2' },
-        ]
-      },
-      {
-        index: 3,
-        label: 'Harmful and Dangerous Act',
-        value: [10, 42],
-        tooltip: [
-          { value: '12', label: 'Lorem ipsum 3' },
-          { value: '25', label: 'Lorem ipsum 3' },
-        ]
-      },
-      {
-        index: 4,
-        label: 'Violent or Repulsive',
-        value: [10, 42],
-        tooltip: [
-          { value: '12', label: 'Lorem ipsum 4' },
-          { value: '52', label: 'Lorem ipsum 4' },
-        ]
-      },
-      {
-        index: 5,
-        label: 'Super long string to test ellipsis',
-        value: [15, 10],
-        tooltip: [
-          { value: '12', label: 'Lorem ipsum 5' },
-          { value: '62', label: 'Lorem ipsum 5' },
-        ]
-      }
-    ];
-  
-    this._tableData = this._mockData.slice(0, this._pager.pageSize);
-    this._totalCount = this._mockData.length;
-  
+  protected _loadReport(sections = this._dataConfig): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    if (this._compareFilter) {
-      this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    } else {
-      this._comparePeriod = null;
-    }
+    this._isBusy = true;
+    this._blockerMessage = null;
+    
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: null, pager: this._pager };
+    this._reportService.getReport(reportConfig, sections)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+        
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: null, pager: this._pager };
+        
+        return this._reportService.getReport(compareReportConfig, sections)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+          this._tableData = [];
+          this._totalReports = 0;
+          this._totalCompareReports = 0;
+          
+          if (compare) {
+            this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+          } else {
+            this._comparePeriod = null;
+          }
+          
+          if (report.totals) {
+            this._handleTotals(report.totals, compare);
+          }
+          
+          if (report.table && report.table.data && report.table.header) {
+            this._handleTable(report.table, compare); // handle table
+          }
+          this._isBusy = false;
+          this._firstTimeLoading = false;
+        },
+        error => {
+          this._isBusy = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
   }
   
   protected _updateFilter(): void {
@@ -143,10 +142,63 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
     }
   }
   
+  private _handleTotals(totals: KalturaReportTotal, compare?: Report): void {
+    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+    if (tabsData.length) {
+      this._totalReports = Number(tabsData[0]['rawValue']);
+    }
+    
+    if (compare && compare.totals && compare.totals.data && compare.totals.header) {
+      const compareTabsData = this._reportService.parseTotals(compare.totals, this._dataConfig.totals);
+      if (compareTabsData.length) {
+        this._totalCompareReports = Number(compareTabsData[0]['rawValue']);
+      }
+    }
+  }
+  
+  private _handleTable(table: KalturaReportTable, compare?: Report): void {
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._totalCount = table.totalCount;
+    
+    if (compare && compare.table) {
+      const { tableData: compareTableData } = compare.table.data && compare.table.header
+        ? this._reportService.parseTableData(compare.table, this._dataConfig.table)
+        : { tableData: [] };
+      this._loadedData = tableData.map((item, index) => {
+        const relevantCompareItem = compareTableData.find(({ reason }) => reason === item.reason) || { 'reportsubmitted': '0' };
+        return this._getBarChartRow(item, index, relevantCompareItem);
+      });
+    } else {
+      this._loadedData = tableData.map((item, index) => this._getBarChartRow(item, index));
+    }
+  
+    this._tableData = this._loadedData.slice(0, this._pager.pageSize);
+  }
+  
+  private _getBarChartRow(item: TableRow<string>, index: number, compareItem?: TableRow<string>): BarChartRow {
+    let value: BarRowValue | BarRowValue[] = this._totalReports ? ReportHelper.percents(Number(item['reportsubmitted']) / this._totalReports, true, true) : '0%';
+    let tooltip: BarRowTooltip | BarRowTooltip[] = { value: item['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
+    
+    if (compareItem) {
+      const compareValue = this._totalCompareReports ? ReportHelper.percents(Number(compareItem['reportsubmitted']) / this._totalCompareReports, true, true) : '0%';
+      const compareTooltip = { value: compareItem['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
+      
+      value = [value, compareValue];
+      tooltip = [tooltip, compareTooltip];
+    }
+    
+    return {
+      value,
+      tooltip,
+      index: index + 1,
+      label: item['reason'],
+    };
+  }
+  
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
-      this._tableData = this._mockData.slice(event.first, event.first + event.rows);
+      this._tableData = this._loadedData.slice(event.first, event.first + event.rows);
     }
   }
 }

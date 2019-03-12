@@ -422,6 +422,7 @@
       "index": "#",
       "shares": "{{0}} Shares",
       "abuseReportReasons": "Reason Why Viewer Report Abuse",
+      "reports": "Reports",
       "abuseReportType": {
         "1": "Sexual Content",
         "2": "Violent Repulsive",
