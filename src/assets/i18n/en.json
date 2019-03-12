@@ -415,7 +415,7 @@
       "count_viral": "Shares",
       "count_download": "Downloads",
       "count_report": "Abuse Report",
-      "captionsSelected": "Captions Selected",
+      "count_captions": "Captions Selected",
       "entry_name": "Name",
       "languagesInCaptions": "Which languages do users select in captions?",
       "abuseReason": "Reason Why Viewer Report Abuse",
