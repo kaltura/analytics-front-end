@@ -168,7 +168,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   private _updateRouteParams(): void {
     const updateParams = (params, payload) => {
       // manually add properties that need to be preserved to avoid preserving duplicating specific and preset date filters
-      const preserveEntryId = params.hasOwnProperty('entryId') ? { entryId: params.entryId } : {};
+      const preserveEntryId = params.hasOwnProperty('id') ? { id: params.id } : {};
       return { ...preserveEntryId, ...payload };
     };
     let queryParams = this._queryParams || {};
