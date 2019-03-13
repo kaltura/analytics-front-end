@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { Report, ReportService } from 'shared/services';
+import { Report, ReportHelper, ReportService } from 'shared/services';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniTopStatsConfig } from './mini-top-stats.config';
@@ -68,11 +68,21 @@ export class MiniTopStatsComponent extends InteractionsBaseReportComponent imple
   
   private _handleData(report: Report): void {
     const tabsData = this._reportService.parseTotals(report.totals, this._dataConfig[ReportDataSection.totals]);
+    const playsIndex = tabsData.findIndex(({ hidden }) => !!hidden);
+    let playsCount = 0;
+    
+    if (playsIndex !== -1) {
+      const [plays] = tabsData.splice(playsIndex, 1);
+      playsCount = Number(plays.rawValue) || 0;
+    }
 
     this._stats = tabsData.map(item => ({
       value: Number(item.value),
       label: this._translate.instant(`app.contentInteractions.${item.key}`),
-      desc: '' // tbd
+      desc: this._translate.instant(
+        'app.contentInteractions.insightsDescription',
+        [playsCount ? ReportHelper.percents(item.value / playsCount, false, true) : 0]
+      )
     }));
   }
   

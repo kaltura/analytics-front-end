@@ -13,6 +13,10 @@ export class MiniTopStatsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
+          'count_plays': {
+            format: value => value,
+            hidden: true,
+          },
           'count_info': {
             format: value => ReportHelper.numberOrZero(value),
           },
