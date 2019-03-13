@@ -34,7 +34,6 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   private _compareFilter: KalturaReportInputFilter = null;
   private _reportInterval = KalturaReportInterval.months;
   private _dataConfig: ReportDataConfig;
-  private _loadedData: BarChartRow[] = [];
   private _totalReports: number = null;
   private _totalCompareReports: number = null;
   
@@ -45,7 +44,7 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: BarChartRow[] = [];
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 4, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 6, pageIndex: 1 });
   public _totalCount: number;
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
@@ -158,21 +157,20 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
     
     if (compare && compare.table) {
       const { tableData: compareTableData } = compare.table.data && compare.table.header
         ? this._reportService.parseTableData(compare.table, this._dataConfig.table)
         : { tableData: [] };
-      this._loadedData = tableData.map((item, index) => {
+      this._tableData = tableData.map((item, index) => {
         const relevantCompareItem = compareTableData.find(({ reason }) => reason === item.reason) || { 'reportsubmitted': '0' };
         return this._getBarChartRow(item, index, relevantCompareItem);
       });
     } else {
-      this._loadedData = tableData.map((item, index) => this._getBarChartRow(item, index));
+      this._tableData = tableData.map((item, index) => this._getBarChartRow(item, index));
     }
-  
-    this._tableData = this._loadedData.slice(0, this._pager.pageSize);
+    
+    this._totalCount = this._tableData.length;
   }
   
   private _getBarChartRow(item: TableRow<string>, index: number, compareItem?: TableRow<string>): BarChartRow {
@@ -193,12 +191,5 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
       index: index + 1,
       label: item['reason'],
     };
-  }
-  
-  public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
-      this._tableData = this._loadedData.slice(event.first, event.first + event.rows);
-    }
   }
 }

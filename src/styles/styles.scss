@@ -511,10 +511,12 @@ k-area-blocker {
   align-items: center;
   padding: 0 16px;
   height: 50px;
+  vertical-align: middle;
 
   .kBullet {
     font-size: 24px;
     margin-right: 8px;
+    line-height: 20px;
   }
 }
 

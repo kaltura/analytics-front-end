@@ -22,8 +22,8 @@ export class HorizontalBarRowComponent {
   @Input() label: string;
   @Input() units = '%';
   @Input() formatter: Function = significantDigits;
-  @Input() currentPeriod: { from: number, to: number };
-  @Input() comparePeriod: { from: number, to: number };
+  @Input() currentPeriod: string;
+  @Input() comparePeriod: string;
   
   @Input() set tooltip(value: BarRowTooltip | BarRowTooltip[]) {
     setTimeout(() => {
@@ -43,6 +43,7 @@ export class HorizontalBarRowComponent {
       this._rawCompareValue = value[1];
     } else {
       this._rawValue = value;
+      this._rawCompareValue = null;
       this._compareValue = null;
       this._trend = null;
     }
@@ -50,8 +51,6 @@ export class HorizontalBarRowComponent {
     setTimeout(() => {
       this._value = typeof this.formatter === 'function' ? this.formatter(this._rawValue) : this._rawValue;
       if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
-        const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this.currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.currentPeriod.to, analyticsConfig.locale)}`;
-        const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(this.comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this.comparePeriod.to, analyticsConfig.locale)}`;
         this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
   
         const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
@@ -59,7 +58,7 @@ export class HorizontalBarRowComponent {
           value,
           trend: direction,
           units: '%',
-          tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, this._rawValue)}${this._trendService.getTooltipRowString(comparePeriodTitle, this._rawCompareValue)}`,
+          tooltip: `${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue)}${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue)}`,
         };
       }
     }, 200);

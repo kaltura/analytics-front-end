@@ -6,12 +6,11 @@
     <div class="kReportContent">
       <app-horizontal-bar-chart colorScheme="moderation"
                                 [data]="_tableData"
-                                [pager]="_pager"
                                 [totalCount]="_totalCount"
                                 [currentPeriod]="_currentPeriod"
                                 [comparePeriod]="_comparePeriod"
-                                [firstTimeLoading]="_firstTimeLoading"
-                                (paginationChanged)="_onPaginationChanged($event)"></app-horizontal-bar-chart>
+                                [isCompareMode]="_isCompareMode"
+                                [firstTimeLoading]="_firstTimeLoading"></app-horizontal-bar-chart>
     </div>
   </k-area-blocker>
 </div>

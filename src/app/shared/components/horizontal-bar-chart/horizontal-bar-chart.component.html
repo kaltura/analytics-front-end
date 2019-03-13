@@ -5,13 +5,24 @@
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"
-                              [colorScheme]="colorScheme"
-                              [currentPeriod]="currentPeriod"
-                              [comparePeriod]="comparePeriod"></app-horizontal-bar-row>
+                              [colorScheme]="_colorScheme"
+                              [currentPeriod]="_currentPeriodLabel"
+                              [comparePeriod]="_comparePeriodLabel"></app-horizontal-bar-row>
     </div>
     <div *ngIf="!data.length && !isBusy" class="emptymessage">
       <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
       <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    </div>
+
+    <div *ngIf="isCompareMode && data.length" class="kCustomLegend">
+      <div class="kLegendItemContainer">
+        <div class="kCircle" [style.background-color]="_colors[0]"></div>
+        <span class="kLegendItem">{{_currentPeriodLabel}}</span>
+      </div>
+      <div class="kLegendItemContainer">
+        <div class="kCircle" [style.background-color]="_colors[1]"></div>
+        <span class="kLegendItem">{{_comparePeriodLabel}}</span>
+      </div>
     </div>
   </div>
 
