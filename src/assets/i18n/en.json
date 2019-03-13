@@ -423,15 +423,7 @@
       "shares": "{{0}} Shares",
       "abuseReportReasons": "Reason Why Viewer Report Abuse",
       "reports": "Reports",
-      "moderationType": {
-        "0": "Unknown reason",
-        "1": "Sexual Content",
-        "2": "Violent or Repulsive",
-        "3": "Harmful or Dangerous Act",
-        "4": "Spam / Commercials",
-        "5": "Copyright",
-        "6": "Terms Of Use Violation"
-      }
+      "otherReason": "Other reason"
     }
   }
 }
