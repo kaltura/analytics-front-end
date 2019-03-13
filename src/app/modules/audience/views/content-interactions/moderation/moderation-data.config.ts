@@ -17,14 +17,14 @@ export class ModerationDataConfig extends ReportDataBaseConfig {
           'reason': {
             format: value => value === '0' ? this._translate.instant('app.contentInteractions.moderationType.0') : value,
           },
-          'reportsubmitted': {
+          'count_report_submitted': {
             format: value => ReportHelper.numberOrZero(value),
           },
         }
       },
       [ReportDataSection.totals]: {
         fields: {
-          'reportsubmitted': {
+          'count_report_submitted': {
             format: value => ReportHelper.numberOrZero(value),
           },
         }

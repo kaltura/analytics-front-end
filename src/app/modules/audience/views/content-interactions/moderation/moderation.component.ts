@@ -163,7 +163,7 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
         ? this._reportService.parseTableData(compare.table, this._dataConfig.table)
         : { tableData: [] };
       this._tableData = tableData.map((item, index) => {
-        const relevantCompareItem = compareTableData.find(({ reason }) => reason === item.reason) || { 'reportsubmitted': '0' };
+        const relevantCompareItem = compareTableData.find(({ reason }) => reason === item.reason) || { 'count_report_submitted': '0' };
         return this._getBarChartRow(item, index, relevantCompareItem);
       });
     } else {
@@ -174,12 +174,12 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   }
   
   private _getBarChartRow(item: TableRow<string>, index: number, compareItem?: TableRow<string>): BarChartRow {
-    let value: BarRowValue | BarRowValue[] = this._totalReports ? Math.round(Number(item['reportsubmitted']) / this._totalReports * 100) : 0;
-    let tooltip: BarRowTooltip | BarRowTooltip[] = { value: item['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
+    let value: BarRowValue | BarRowValue[] = this._totalReports ? Math.round(Number(item['count_report_submitted']) / this._totalReports * 100) : 0;
+    let tooltip: BarRowTooltip | BarRowTooltip[] = { value: item['count_report_submitted'], label: this._translate.instant('app.contentInteractions.reports') };
     
     if (compareItem) {
-      const compareValue = this._totalCompareReports ? Math.round(Number(compareItem['reportsubmitted']) / this._totalCompareReports * 100) : 0;
-      const compareTooltip = { value: compareItem['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
+      const compareValue = this._totalCompareReports ? Math.round(Number(compareItem['count_report_submitted']) / this._totalCompareReports * 100) : 0;
+      const compareTooltip = { value: compareItem['count_report_submitted'], label: this._translate.instant('app.contentInteractions.reports') };
       
       value = [value, compareValue];
       tooltip = [tooltip, compareTooltip];
