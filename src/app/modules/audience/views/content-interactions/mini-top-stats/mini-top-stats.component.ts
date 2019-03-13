@@ -81,7 +81,7 @@ export class MiniTopStatsComponent extends InteractionsBaseReportComponent imple
       label: this._translate.instant(`app.contentInteractions.${item.key}`),
       desc: this._translate.instant(
         'app.contentInteractions.insightsDescription',
-        [playsCount ? ReportHelper.percents(item.value / playsCount, false, true) : 0]
+        [playsCount ? ReportHelper.percents(Number(item.value) / playsCount, false, true) : 0]
       )
     }));
   }
