@@ -70,7 +70,7 @@ export class MiniTopStatsComponent extends InteractionsBaseReportComponent imple
     const tabsData = this._reportService.parseTotals(report.totals, this._dataConfig[ReportDataSection.totals]);
 
     this._stats = tabsData.map(item => ({
-      value: item.value,
+      value: Number(item.value),
       label: this._translate.instant(`app.contentInteractions.${item.key}`),
       desc: '' // tbd
     }));
