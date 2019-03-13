@@ -75,20 +75,11 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
     }
   }
   
-  public _removeTag(tag: CategoryData): void {
-    if (tag && tag.id) {
-      const tagIndex = this._selectedCategories.findIndex(item => String(item.id) === String(tag.id));
-      if (tagIndex > -1) {
-        this._selectedCategories.splice(tagIndex, 1);
-      }
-      
-      this._treeSelection = this._treeSelection.filter(item => String(item) !== String(tag.id));
-    }
-  }
-  
-  public _removeAllTag(): void {
+  public _clearAll(): void {
     this._selectedCategories = [];
     this._treeSelection = [];
+  
+    this._apply();
   }
   
   public _onTreeCategoriesLoad({ totalCategories }): void {
