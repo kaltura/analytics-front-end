@@ -40,7 +40,7 @@ export class ErrorsManagerService {
             break;
           case 'SEARCH_TOO_GENERAL':
             message =  this._translate.instant('app.errors.searchTooGeneral');
-            forceLogout = true;
+            forceLogout = false;
             break;
           default:
             break;
