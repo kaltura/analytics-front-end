@@ -55,9 +55,9 @@ export class HorizontalBarRowComponent {
   
         const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
         this._trend = {
-          value,
+          value: value !== null ? value : '–',
           trend: direction,
-          units: '%',
+          units: value !== null ? '%' : '',
           tooltip: `${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue)}${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue)}`,
         };
       }
@@ -85,7 +85,7 @@ export class HorizontalBarRowComponent {
     return `
       <div class="kHorizontalBarGraphTooltip">
         <span class="kBullet" style="color: ${color}">&bull;</span>
-        <span>${value}&nbsp;${label}</span>
+        <span>${label}: ${value}</span>
       </div>
     `;
   }

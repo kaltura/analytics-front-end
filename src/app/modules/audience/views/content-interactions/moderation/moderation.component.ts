@@ -174,11 +174,11 @@ export class ModerationComponent extends InteractionsBaseReportComponent {
   }
   
   private _getBarChartRow(item: TableRow<string>, index: number, compareItem?: TableRow<string>): BarChartRow {
-    let value: BarRowValue | BarRowValue[] = this._totalReports ? ReportHelper.percents(Number(item['reportsubmitted']) / this._totalReports, true, true) : '0%';
+    let value: BarRowValue | BarRowValue[] = this._totalReports ? Math.round(Number(item['reportsubmitted']) / this._totalReports * 100) : 0;
     let tooltip: BarRowTooltip | BarRowTooltip[] = { value: item['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
     
     if (compareItem) {
-      const compareValue = this._totalCompareReports ? ReportHelper.percents(Number(compareItem['reportsubmitted']) / this._totalCompareReports, true, true) : '0%';
+      const compareValue = this._totalCompareReports ? Math.round(Number(compareItem['reportsubmitted']) / this._totalCompareReports * 100) : 0;
       const compareTooltip = { value: compareItem['reportsubmitted'], label: this._translate.instant('app.contentInteractions.reports') };
       
       value = [value, compareValue];
