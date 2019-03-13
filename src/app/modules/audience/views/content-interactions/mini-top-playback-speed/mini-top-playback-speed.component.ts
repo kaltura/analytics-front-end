@@ -94,8 +94,9 @@ export class MiniTopPlaybackSpeedComponent extends InteractionsBaseReportCompone
   private _handleTable(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._topSpeedLabel = `X${tableData.reduce((prev, current) => (Number(prev['count_speed']) > Number(current['count_speed']) ? prev : current))['playback_rate']}`;
-    this._bulletValues = tableData
-      .sort((data1, data2) => data1['playback_rate'].localeCompare(data2['playback_rate'], undefined, { numeric: true }))
-      .map(item => ({ value: Number(item['count_speed']), label: `x${item['playback_rate']}` }));
+  
+    tableData.sort((data1, data2) => Number(data1['playback_rate']) - Number(data2['playback_rate']));
+    
+    this._bulletValues = tableData.map(item => ({ value: Number(item['count_speed']), label: `x${item['playback_rate']}` }));
   }
 }

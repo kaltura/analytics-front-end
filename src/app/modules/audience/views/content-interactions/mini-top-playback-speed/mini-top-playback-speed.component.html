@@ -4,7 +4,7 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
+    <div class="kReportContent" *ngIf="!_firstTimeLoading">
       <div class="kReportRow">
         <span class="topSpeed">{{_topSpeedLabel}}</span>
       </div>

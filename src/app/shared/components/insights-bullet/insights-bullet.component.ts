@@ -20,23 +20,21 @@ export class InsightsBulletComponent {
     if (Array.isArray(value)) {
       const sum = value.reduce((acc, val) => acc + val.value, 0);
       this._values = value
-        .sort((a, b) => b.value - a.value)
-        .map((value, index) => {
-          const result = sum ? Math.round(value.value / sum * 100) : 0;
+        .map((item, index) => {
+          const result = sum ? Math.round(item.value / sum * 100) : 0;
           let color = getColorPercent(result, this.colorScheme);
-          if (this._values.length <= 2) {
+          if (value.length <= 2) {
             color = index === 0 ? getPrimaryColor(this.colorScheme) : getSecondaryColor(this.colorScheme);
           }
           const tooltip = `
             <div class="kDefaultTooltip">
               <span class="kBullet" style="color: ${color}">&bull;</span>
-              <span>${value.label}&nbsp;${result}%</span>
+              <span style="margin-right: 8px">${item.label}</span><span>${result}%</span>
             </div>
           `;
-          
           return {
             value: result,
-            label: value.label,
+            label: item.label,
             color,
             tooltip,
           };
