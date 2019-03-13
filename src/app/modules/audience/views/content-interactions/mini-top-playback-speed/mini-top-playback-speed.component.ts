@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -9,8 +9,6 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-bullet.component';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
-import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
 
 @Component({
   selector: 'app-top-playback-speed',
@@ -24,14 +22,13 @@ import { of as ObservableOf } from 'rxjs';
 })
 export class MiniTopPlaybackSpeedComponent extends InteractionsBaseReportComponent {
   protected _componentId = 'mini-top-speed';
-
+  
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = KalturaReportType.playbackRate;
   
   public _firstTimeLoading = true;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableData: any[] = [];
   public _currentDates: string;
   public _topSpeedLabel = '';
   public _reportInterval = KalturaReportInterval.days;
@@ -50,26 +47,19 @@ export class MiniTopPlaybackSpeedComponent extends InteractionsBaseReportCompone
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this._topSpeedLabel = 'X1';
-    this._bulletValues = [
-      { value: 82, label: 'x1' },
-      { value: 16, label: 'x1.25' },
-      { value: 22, label: 'x1.5' },
-    ];
-  
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: null, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
       .subscribe(report => {
-        console.warn(report);
-          this._tableData = [];
-        
-          if (report.totals) {
-            this._handleTotals(report.totals); // handle totals
+          this._bulletValues = [];
+          this._topSpeedLabel = null;
+          
+          if (report.table && report.table.data && report.table.header) {
+            this._handleTable(report.table);
           }
-
+          
           this._firstTimeLoading = false;
           this._isBusy = false;
         },
@@ -101,8 +91,11 @@ export class MiniTopPlaybackSpeedComponent extends InteractionsBaseReportCompone
     this._refineFilterToServerValue(this._filter);
   }
   
-  private _handleTotals(totals: KalturaReportTotal): void {
-    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    console.warn(tabsData);
+  private _handleTable(table: KalturaReportTable): void {
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._topSpeedLabel = `X${tableData.reduce((prev, current) => (Number(prev['count_speed']) > Number(current['count_speed']) ? prev : current))['playback_rate']}`;
+    this._bulletValues = tableData
+      .sort((data1, data2) => data1['playback_rate'].localeCompare(data2['playback_rate'], undefined, { numeric: true }))
+      .map(item => ({ value: Number(item['count_speed']), label: `x${item['playback_rate']}` }));
   }
 }
