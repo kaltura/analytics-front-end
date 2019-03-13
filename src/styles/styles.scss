@@ -503,7 +503,8 @@ k-area-blocker {
   .ui-autocomplete-list {
     padding: 0;
 
-    .ui-autocomplete-list-item {
+    .ui-autocomplete-list-item,
+    .ui-autocomplete-notification-item {
       border: 0 !important;
       border-radius: 0 !important;
       min-height: 32px !important;
