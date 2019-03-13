@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportService } from 'shared/services';
 import { BehaviorSubject, Unsubscribable } from 'rxjs';
@@ -29,7 +29,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>;
+  @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>;
   
   private _dataConfig: ReportDataConfig;
   
@@ -70,7 +70,7 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
         .pipe(cancelOnDestroy(this))
         .subscribe(({ current, compare, busy, error }) => {
           this._isBusy = busy;
-          this._blockerMessage = error;
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, { 'close': () => { this._blockerMessage = null; } });
           if (compare) {
             this._handleCompare(current, compare);
           } else {

@@ -49,6 +49,9 @@ export class ErrorsManagerService {
     }
   
   public getErrorMessage(error: KalturaAPIException, actions: AreaBlockerMessageActions): AreaBlockerMessage {
+    if (!error) {
+      return null;
+    }
     const err: ErrorDetails = this.getError(error);
     let buttons: AreaBlockerMessageButton[] = [];
     if (err.forceLogout) {
@@ -60,16 +63,17 @@ export class ErrorsManagerService {
         }
       }];
     } else {
-      buttons = [
-        {
-          label: this._translate.instant('app.common.close'),
-          action: () => this._executeAction(actions, 'close')
-        },
-        {
+      buttons = [{
+        label: this._translate.instant('app.common.close'),
+        action: () => this._executeAction(actions, 'close')
+      }];
+
+      if (actions.hasOwnProperty('retry')) {
+        buttons.push({
           label: this._translate.instant('app.common.retry'),
           action: () => this._executeAction(actions, 'retry')
-        }
-      ];
+        });
+      }
     }
   
     return new AreaBlockerMessage({

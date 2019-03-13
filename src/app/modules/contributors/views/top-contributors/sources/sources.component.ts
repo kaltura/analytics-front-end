@@ -3,7 +3,7 @@ import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, Re
 import { map, switchMap } from 'rxjs/operators';
 import {BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
@@ -35,7 +35,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   });
   
   protected _componentId = 'sources';
-  public topSources$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
+  public topSources$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
@@ -111,7 +111,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
               this._loadReport();
             },
           };
-          this.topSources$.next({table: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions)});
+          this.topSources$.next({ table: null, compare: null, busy: false, error: error });
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
