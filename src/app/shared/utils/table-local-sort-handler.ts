@@ -44,10 +44,11 @@ function getDate(date: string): Date {
     return null;
   }
   
-  const [month, year] = date.split(' ');
+  let [month, year] = date.split(/\s+/);
+  month = month.replace(/[^ -~]/g, ''); // because IE adds extra LTR and RTL characters ‎(ノ≥∇≤)ノ︵ ┻━┻
   const monthIndex = months.indexOf(month) + 1;
   if (monthIndex) {
-    return new Date(`${monthIndex}/01/${year}`);
+    return new Date(`${('0' + monthIndex).slice(-2)}/01/${year}`);
   }
   
   return new Date(date);
