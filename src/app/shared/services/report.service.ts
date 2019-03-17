@@ -259,6 +259,7 @@ export class ReportService implements OnDestroy {
           units: field.units ? field.units(data[index]) : (config.units || ''),
           key: header,
           sortOrder: field.sortOrder || 0,
+          hidden: !!field.hidden,
         });
       }
     });

@@ -6,11 +6,11 @@
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate"
                     [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
     <!--<div class="kFilter kOverrideFAIcons">-->
-      <!--<div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">-->
-        <!--<span>{{'app.filters.filter' | translate}}</span>-->
-        <!--<i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>-->
-        <!--<i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>-->
-      <!--</div>-->
+    <!--<div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">-->
+    <!--<span>{{'app.filters.filter' | translate}}</span>-->
+    <!--<i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>-->
+    <!--<i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>-->
+    <!--</div>-->
     <!--</div>-->
     <app-date-filter #dateFilter
                      [dateRange]="_dateRange"
@@ -38,21 +38,26 @@
                            [refineFilter]="_refineFilter"></app-mini-top-shared>
     </div>
 
-    <!-- Example -->
-    <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
-    <!--<div class="kMiniReportContainer">-->
-    <!--<ui-carousel [infinite]="false"-->
-    <!--[autoPlay]="false"-->
-    <!--[autoPlaySpeed]="5000"-->
-    <!--[arrows]="false"-->
-    <!--[fade]="false"-->
-    <!--[speed]="200"-->
-    <!--height="280px">-->
-    <!--<ui-carousel-item>-->
-    <!--<div class="kInsights">Some stuff</div>-->
-    <!--</ui-carousel-item>-->
-    <!--</ui-carousel>-->
-    <!--</div>-->
+    <!--IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
+    <div class="kMiniReportContainer">
+      <ui-carousel [infinite]="true"
+                   [autoPlay]="true"
+                   [autoPlaySpeed]="10000"
+                   [arrows]="false"
+                   [fade]="false"
+                   [speed]="800"
+                   height="280px">
+        <ui-carousel-item>
+          <app-top-playback-speed [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-top-playback-speed>
+        </ui-carousel-item>
+        <ui-carousel-item>
+          <app-top-stats [highlights$]="interactions.interactions$"
+                         [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"></app-top-stats>
+        </ui-carousel-item>
+      </ui-carousel>
+    </div>
   </div>
 
   <div id="interactions" class="kReportContainer">

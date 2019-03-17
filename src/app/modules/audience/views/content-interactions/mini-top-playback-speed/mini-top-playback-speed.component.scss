@@ -1,0 +1,62 @@
+@import '../../../../../../styles/variables';
+
+:host /deep/ .kValue {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host /deep/ .kUnits {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kReportContent {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 45px
+}
+
+.kFilters {
+  height: 93px !important;
+}
+
+.kMini {
+  height: 100%;
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 20px;
+
+    .topSpeed {
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .kLabel {
+      font-size: 18px;
+      font-weight: normal;
+      margin-bottom: 12px;
+    }
+
+    &.kNoResults {
+      height: 100%;
+      font-size: 28px;
+      color: $kGrayscale3;
+      position: absolute;
+      background-color: white;
+      width: 100%;
+      top: 0px;
+    }
+
+  }
+}
+
