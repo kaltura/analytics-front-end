@@ -342,7 +342,7 @@
       "topDomainsReport": {
         "index": "#",
         "domains": "{{0}} Domains",
-        "pages": "{{0}} Pages",
+        "pages": "{{0}} Page URLs",
         "topDomains": "Top Domains",
         "topDomains_tt": "The list of domains that generated the most plays",
         "count_plays": "Plays",
