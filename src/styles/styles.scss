@@ -442,19 +442,6 @@ ui-carousel /deep/ {
   }
 }
 
-.ui-autocomplete-panel {
-  width: 200px !important;
-
-  .ui-autocomplete-list-item {
-    text-overflow: ellipsis;
-    overflow: hidden;
-
-    &:hover {
-      background-color: $kGrayscale6;
-    }
-  }
-}
-
 div, span, tr, td, li {
   outline: none !important;
 }
@@ -537,6 +524,26 @@ k-area-blocker {
 // duplicate for IE
 .kTags {
   border-top: none !important;
+}
+
+.ui-autocomplete-panel {
+  max-height: 284px !important;
+
+  .ui-autocomplete-list {
+    padding: 0;
+
+    .ui-autocomplete-list-item,
+    .ui-autocomplete-notification-item {
+      border: 0 !important;
+      border-radius: 0 !important;
+      min-height: 32px !important;
+      padding: .5em 1em;
+
+      &:hover {
+        background-color: $kGrayscale7 !important;
+      }
+    }
+  }
 }
 
 ui-carousel {
