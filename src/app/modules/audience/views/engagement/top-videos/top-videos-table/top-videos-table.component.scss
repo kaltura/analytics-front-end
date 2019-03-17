@@ -124,8 +124,9 @@
 
 .kDividerWrapper {
   display: flex;
+  height: 500px;
+
   .kDivider {
-    height: 500px;
     border-left: 1px solid #d9d9d9;
   }
 }

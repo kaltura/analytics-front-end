@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -41,7 +41,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   protected _componentId = 'interactions';
   
-  public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>({ current: null, compare: null, busy: false, error: null });
+  public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
   
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -133,7 +133,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          this.interactions$.next({ current: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions) });
+          this.interactions$.next({ current: null, compare: null, busy: false, error: error });
         });
   }
   

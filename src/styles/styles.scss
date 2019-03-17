@@ -492,6 +492,35 @@ k-area-blocker {
   }
 }
 
+.kHorizontalBarGraphTooltip {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  padding: 0 16px;
+  height: 50px;
+  vertical-align: middle;
+
+  .kBullet {
+    font-size: 24px;
+    margin-right: 8px;
+    line-height: 20px;
+  }
+}
+
+.kDefaultTooltip {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  font-weight: bold;
+
+  .kBullet {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 15px;
+    margin-right: 6px;
+  }
+}
+
 // duplicate for IE
 .kTags {
   border-top: none !important;
@@ -515,4 +544,8 @@ k-area-blocker {
       }
     }
   }
+}
+
+ui-carousel {
+  z-index: 1;
 }

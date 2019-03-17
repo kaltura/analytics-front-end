@@ -10,6 +10,7 @@ export type Tab = {
   rawValue: number | string;
   trend?: string;
   sortOrder?: number;
+  hidden?: boolean;
 };
 
 @Component({

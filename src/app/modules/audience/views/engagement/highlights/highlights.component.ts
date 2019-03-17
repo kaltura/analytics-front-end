@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -37,7 +37,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   
   protected _componentId = 'highlights';
   
-  public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: AreaBlockerMessage }>({ current: null, compare: null, busy: false, error: null });
+  public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
 
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -130,7 +130,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          this.highlights$.next({ current: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions) });
+          this.highlights$.next({ current: null, compare: null, busy: false, error: error });
         });
   }
   

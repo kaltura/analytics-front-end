@@ -14,7 +14,7 @@ export class DateFilterUtils {
     } else {
       dateClone.setHours(23, 59, 59);  // force end of day
     }
-    return value ? Math.round(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
+    return value ? Math.floor(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
   }
 
   static fromServerDate(value: number): Date {

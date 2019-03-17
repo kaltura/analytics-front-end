@@ -420,7 +420,15 @@
       "languagesInCaptions": "Which languages do users select in captions?",
       "abuseReason": "Reason Why Viewer Report Abuse",
       "index": "#",
-      "shares": "{{0}} Shares"
+      "shares": "{{0}} Shares",
+      "abuseReportReasons": "Reason Why Viewer Report Abuse",
+      "reports": "Reports",
+      "otherReason": "Other reason",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Playback Speed",
+      "count_info": "Times info panel was opened",
+      "count_related_selected": "Interactions with related content",
+      "insightsDescription": "{{0}} of all play sessions"
     }
   }
 }
