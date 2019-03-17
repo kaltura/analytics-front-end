@@ -202,7 +202,7 @@ export class ImpressionsComponent implements OnInit {
         error => {
           this._isBusy = false;
           const actions = {
-            'cancel': () => {
+            'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {

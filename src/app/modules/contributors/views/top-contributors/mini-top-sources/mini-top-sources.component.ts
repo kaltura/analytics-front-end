@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +27,7 @@ import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-
 })
 export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
-  @Input() topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }>;
+  @Input() topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
   
   protected _componentId = 'mini-top-sources';
   private _dataConfig: ReportDataConfig;
@@ -49,6 +49,7 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
+              private _errorsManager: ErrorsManagerService,
               private _dataConfigService: MiniTopSourcesConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger) {
@@ -60,9 +61,9 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
     if (this.topSources$) {
       this.topSources$
         .pipe(cancelOnDestroy(this))
-        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
+        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
           this._isBusy = data.busy;
-          this._blockerMessage = data.error;
+          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
           this._tableData = [];
           if (data.table && data.table.header && data.table.data) {
             this._handleTable(data.table, data.compare); // handle table

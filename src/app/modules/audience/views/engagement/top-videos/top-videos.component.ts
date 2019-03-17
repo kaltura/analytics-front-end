@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import * as moment from 'moment';
 import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   
   protected _componentId = 'top-videos';
 
-  public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
+  public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
@@ -114,7 +114,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               this._loadReport();
             },
           };
-          this.topVideos$.next({table: null, compare: null, busy: false, error: this._errorsManager.getErrorMessage(error, actions)});
+          this.topVideos$.next({table: null, compare: null, busy: false, error: error});
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
