@@ -18,13 +18,13 @@
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
-  <!--<div class="kReportContainer kNoPadding">-->
-  <!--<app-refine-filter [opened]="_refineFilterOpened"-->
-  <!--[dateFilter]="_dateFilter"-->
-  <!--[selectedFilters]="_selectedRefineFilters"-->
-  <!--(closeFilters)="_refineFilterOpened = false"-->
-  <!--(filterChange)="_onRefineFilterChange($event)"></app-refine-filter>-->
-  <!--</div>-->
+  <div class="kReportContainer kNoPadding">
+    <app-refine-filter [opened]="_refineFilterOpened"
+                       [dateFilter]="_dateFilter"
+                       [selectedFilters]="_selectedRefineFilters"
+                       (closeFilters)="_refineFilterOpened = false"
+                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+  </div>
 
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
@@ -65,6 +65,16 @@
                       [dateFilterComponent]="dateFilter"
                       [dateFilter]="_dateFilter"
                       [refineFilter]="_refineFilter"></app-interactions>
+  </div>
+
+  <div class="kReportContainer">
+    <!--<div class="kSmallReportContainer">-->
+    <!---->
+    <!--</div>-->
+    <!--<div class="kSmallReportContainer">-->
+    <app-moderation-report [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-moderation-report>
+    <!--</div>-->
   </div>
 
 </div>

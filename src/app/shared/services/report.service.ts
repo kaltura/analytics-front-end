@@ -247,7 +247,7 @@ export class ReportService implements OnDestroy {
   
     this._logger.trace('Parse totals data', { headers: totals.header });
 
-    totals.header.split(analyticsConfig.valueSeparator).forEach((header, index) => {
+    totals.header.toLowerCase().split(analyticsConfig.valueSeparator).forEach((header, index) => {
       const field = config.fields[header];
       if (field) {
         tabsData.push({

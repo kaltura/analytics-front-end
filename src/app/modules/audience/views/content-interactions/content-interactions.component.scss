@@ -11,11 +11,10 @@
   flex-wrap: wrap;
 
   .kSmallReportContainer {
-    width: 60%;
-    height: 444px;
+    flex: 1;
+    min-height: 444px;
 
     &:nth-child(even) {
-      width: 40%;
       padding-left: 24px;
     }
   }
