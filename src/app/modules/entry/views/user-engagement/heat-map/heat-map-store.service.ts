@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ReportConfig, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportType } from 'kaltura-ngx-client';
 
 export type HeatMapPoints = number[];
 
@@ -47,7 +47,7 @@ export class HeatMapStoreService {
         objectIds: entryId,
         order: null,
       };
-      this._cache[userId] = this._reportService.getReport(reportConfig, this._localConfig)
+      this._cache[userId] = this._reportService.getReport(reportConfig, this._localConfig, false)
         .pipe(
           map(report => {
             if (!report.table) {
