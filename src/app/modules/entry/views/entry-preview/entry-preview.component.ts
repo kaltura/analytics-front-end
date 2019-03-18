@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -93,11 +93,15 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       tooltip : {
         formatter: params => {
-          const { value } = Array.isArray(params) ? params[0] : params;
+          const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
+          const progressValue = ReportHelper.time(String((dataIndex + 1) / 100 * this._duration));
           let tooltip =  `
             <div class="kEntryGraphTooltip">
-              <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-              ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+              <div class="kCurrentTime">${progressValue}</div>
+              <div class="kValue">
+                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+              </div>
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
