@@ -590,6 +590,11 @@ export class CompareService implements OnDestroy {
     const current = graphsData[currentMetric];
     const compare = graphsData[compareMetric];
   
+    const getMaxValue = series => {
+      const max = Math.max(...[].concat.apply([], series.map(({ data }) => data))); // get max value
+      return (parseInt(String(max / 10), 10) + 1) * 10; // round up to nearest 10
+    };
+    const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getFormatter = colors => params => {
       const [current, metric, compare, metricCompare] = params;
       const currentFormatFn = val => typeof config.fields[currentMetric].graphTooltip === 'function'
@@ -626,6 +631,10 @@ export class CompareService implements OnDestroy {
           </div>
       `;
     };
+  
+    const currentMax = getMaxValue(current.series);
+    const compareMax = getMaxValue(compare.series);
+    const interval = getInterval(currentMax, compareMax);
     
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
@@ -637,8 +646,8 @@ export class CompareService implements OnDestroy {
         formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
       },
       'yAxis': [
-        { ...current.yAxis, name: currentMetricLabel },
-        { ...compare.yAxis, name: compareMetricLabel },
+        { ...current.yAxis, name: currentMetricLabel, max: currentMax, interval: interval },
+        { ...compare.yAxis, name: compareMetricLabel, max: compareMax, interval: interval },
       ],
       'series': [
         ...current.series.map((item, index) => ({
