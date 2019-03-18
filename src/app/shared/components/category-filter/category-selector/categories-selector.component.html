@@ -28,9 +28,8 @@
   </div>
 
   <div class="kFooter">
-    <div class="kActions" [style.width.px]="_selectedCategories.length ? 250 : 180">
+    <div class="kActions">
       <a (click)="_cancel()">{{'app.common.cancel' | translate}}</a>
-      <a *ngIf="_selectedCategories.length" (click)="_clearAll()">{{'app.common.clearAll' | translate}}</a>
       <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length <= 1"
               [disabled]="!_selectedCategories.length"
               [label]="'app.categories.select' | translate"

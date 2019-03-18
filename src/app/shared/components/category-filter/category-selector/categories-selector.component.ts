@@ -74,14 +74,7 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
       this.parentPopupWidget.close({ isDirty: true });
     }
   }
-  
-  public _clearAll(): void {
-    this._selectedCategories = [];
-    this._treeSelection = [];
-  
-    this._apply();
-  }
-  
+
   public _onTreeCategoriesLoad({ totalCategories }): void {
     this._categoriesLoaded = totalCategories > 0;
     
