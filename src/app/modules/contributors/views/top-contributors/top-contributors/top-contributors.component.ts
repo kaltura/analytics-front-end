@@ -158,13 +158,4 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
     }
   }
-  
-  public _onSortChanged(field: string): void {
-    const order = `-${field}`;
-    if (order !== this._order) {
-      this._logger.trace('Handle sort changed action by user', { order });
-      this._order = order;
-      this._loadReport();
-    }
-  }
 }
