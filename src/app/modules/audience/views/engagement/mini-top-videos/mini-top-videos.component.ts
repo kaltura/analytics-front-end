@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -31,7 +31,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 export class MiniTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }>;
+  @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
   
   protected _componentId = 'mini-top-videos';
   private _dataConfig: ReportDataConfig;
@@ -63,6 +63,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
+              private _errorsManager: ErrorsManagerService,
               private _dataConfigService: MiniTopVideosConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger) {
@@ -74,9 +75,9 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     if (this.topVideos$) {
       this.topVideos$
         .pipe(cancelOnDestroy(this))
-        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
+        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
           this._isBusy = data.busy;
-          this._blockerMessage = data.error;
+          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
           this._tableData = [];
           this._compareTableData = [];
           if (data.table && data.table.header && data.table.data) {

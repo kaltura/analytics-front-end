@@ -9,7 +9,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TrendService } from 'shared/services/trend.service';
-import { SelectItem } from 'primeng/api';
+import { SelectItem, SortEvent } from 'primeng/api';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -130,24 +130,16 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._onSortChanged({data: this._tableData, field: tab.key, order: -1});
   }
 
-  public _onSortChanged(event) {
+  public _onSortChanged(event: SortEvent): void {
     if (event.data.length && event.field && event.order) {
       this._logger.trace(
         'Handle sort changed action by user',
         () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
       );
       event.data.sort((data1, data2) => {
-        let value1 = parseInt(data1[event.field].replace(new RegExp(',', 'g'), ''));
-        let value2 = parseInt(data2[event.field].replace(new RegExp(',', 'g'), ''));
-        let result = null;
-
-        if (value1 < value2) {
-          result = -1;
-        } else if (value1 > value2) {
-          result = 1;
-        } else if (value1 === value2) {
-          result = 0;
-        }
+        let value1 = data1[event.field].replace(new RegExp(',', 'g'), '');
+        let value2 = data2[event.field].replace(new RegExp(',', 'g'), '');
+        const result = value1.localeCompare(value2, undefined, { numeric: true });
         return (event.order * result);
       });
     }
@@ -252,6 +244,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
       return row;
+    });
+
+    setTimeout(() => {
+      this._onSortChanged({ data: this._tableData, field: this._selectedMetrics, order: -1 });
     });
   }
 

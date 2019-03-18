@@ -1,22 +1,21 @@
 <div class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
-    <a (click)="scrollTo('#sources')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <span class="kTitle">{{'app.contentInteractions.insights' | translate}}</span>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
+    <div class="kReportContent" *ngIf="!_firstTimeLoading">
       <div class="kReportRow">
-        <span class="topSource">{{_topSourceLabel}}</span>
+        <span class="topSpeed">{{_topSpeedLabel}}</span>
       </div>
       <div class="kReportRow">
-        <span class="kLabel">{{'app.contributors.mostPopular' | translate}}</span>
+        <span class="kLabel">{{'app.contentInteractions.mostPopular' | translate}}</span>
       </div>
       <div class="kReportRow">
         <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
       </div>
 
-      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_bulletValues.length">
         {{'app.common.noResults' | translate}}
       </div>
     </div>

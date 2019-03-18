@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-bullet.component';
 
 @Component({
   selector: 'app-contributors-mini-top-sources',
@@ -26,7 +27,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 })
 export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
-  @Input() topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }>;
+  @Input() topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
   
   protected _componentId = 'mini-top-sources';
   private _dataConfig: ReportDataConfig;
@@ -36,19 +37,19 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
   public _tableData: any[] = [];
   public _currentDates: string;
   public _topSourceLabel = '';
-  public _topSourceCount = 0;
-  public _otherSourcesCount = 0;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 3, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _bulletValues: InsightsBulletValue[] = [];
 
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
+              private _errorsManager: ErrorsManagerService,
               private _dataConfigService: MiniTopSourcesConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger) {
@@ -60,9 +61,9 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
     if (this.topSources$) {
       this.topSources$
         .pipe(cancelOnDestroy(this))
-        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: AreaBlockerMessage }) => {
+        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
           this._isBusy = data.busy;
-          this._blockerMessage = data.error;
+          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
           this._tableData = [];
           if (data.table && data.table.header && data.table.data) {
             this._handleTable(data.table, data.compare); // handle table
@@ -103,8 +104,10 @@ export class MiniTopSourcesComponent extends TopContributorsBaseReportComponent 
           this._topSourceLabel = data.source;
         }
       });
-      this._topSourceCount = topEntriesCount;
-      this._otherSourcesCount = totalEntriesCount - this._topSourceCount;
+      this._bulletValues = [
+        { value: topEntriesCount, label: this._topSourceLabel },
+        { value: totalEntriesCount - topEntriesCount, label: this._translate.instant('app.contributors.others') },
+      ];
     }
   }
   
