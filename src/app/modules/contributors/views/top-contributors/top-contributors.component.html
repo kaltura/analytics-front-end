@@ -31,13 +31,14 @@
     </div>
 
     <div class="kMiniReportContainer">
-      <app-contributors-mini-top-contributors [dateFilter]="_dateFilter"
-                                        [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
+      <app-contributors-mini-top-contributors [topContributors$]="topContributors.topContributors$"
+                                              [dateFilter]="_dateFilter"
+                                              [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
     </div>
 
     <div class="kMiniReportContainer">
       <app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"
-                                        [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
+                                         [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
     </div>
 
     <!-- Example -->
@@ -64,7 +65,8 @@
   </div>
 
   <div id="top-contributors" class="kReportContainer">
-    <app-contributors-top-contributors [dateFilter]="_dateFilter"
+    <app-contributors-top-contributors #topContributors
+                                       [dateFilter]="_dateFilter"
                                        [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>
 

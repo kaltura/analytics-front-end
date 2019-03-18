@@ -4,7 +4,7 @@
     <kInputHelper>
       <span>{{'app.contributors.top-contributors_tt' | translate}}</span>
     </kInputHelper>
-    <a (click)="scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <a (click)="_scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
