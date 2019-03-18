@@ -28,7 +28,6 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
             title: this._translate.instant(`app.audience.technology.count_plays`),
-            tooltip: this._translate.instant(`app.audience.technology.count_plays_tt`),
             sortOrder: 1,
             colors: [getPrimaryColor(), getSecondaryColor()],
           }
