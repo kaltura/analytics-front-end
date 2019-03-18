@@ -450,10 +450,11 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       this.handleTotals(current.totals, compare.totals); // handle totals
     }
     
-    if (current.table && current.table.data && compare.table && compare.table.data) {
+    if (current.table && current.table.data) {
+      const compareTable = compare.table && compare.table.data ? compare.table : Object.assign({}, current.table, { data: '' });
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data: currentData } = this._getOverviewData(current.table, relevantFields);
-      const { data: compareData } = this._getOverviewData(compare.table, relevantFields);
+      const { data: compareData } = this._getOverviewData(compareTable, relevantFields);
       
       const uniqueKeys = Array.from(new Set([...currentData, ...compareData].map(({ device }) => device)));
       const updateCollection = collection => key => {
