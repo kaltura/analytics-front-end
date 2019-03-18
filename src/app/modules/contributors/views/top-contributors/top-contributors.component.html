@@ -68,15 +68,13 @@
                                        [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>
 
-  <div id="sources" class="kReportContainer">
-    <div class="kSmallReportContainer">
-      <app-contributors-sources [dateFilter]="_dateFilter" #sources
+  <div id="sources" class="kReportContainer" style="height: 444px">
+    <app-contributors-sources [dateFilter]="_dateFilter" #sources
                                 [refineFilter]="_refineFilter"></app-contributors-sources>
-    </div>
-    <div class="kSmallReportContainer">
+    <!--div class="kSmallReportContainer">
       <app-contributors-users [dateFilter]="_dateFilter"
                               [refineFilter]="_refineFilter"></app-contributors-users>
-    </div>
+    </div-->
   </div>
 </div>
 
