@@ -7,7 +7,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { EndUserStorageDataConfig } from './end-user-storage-data.config';
-import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -228,10 +228,8 @@ export class EndUserStorageComponent implements OnInit {
           this.pager.pageIndex = 1;
           this.loadReport({ table: this._dataConfig.table });
         }
-      } else {
-        return 1;
       }
-    }, 0);
+    });
   }
 
   private handleCompare(current: Report, compare: Report): void {
