@@ -91,6 +91,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
           'unique_known_users': {
             format: value => value,
             title: this._translate.instant(`app.entry.unique_known_users`),
+            tooltip: this._translate.instant('app.entry.unique_known_users_tt'),
             sortOrder: 2,
           },
           'sum_time_viewed': {
@@ -101,11 +102,13 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
           'avg_completion_rate': {
             format: value => value,
             title: this._translate.instant(`app.entry.avg_completion_rate`),
+            tooltip: this._translate.instant('app.entry.avg_completion_rate_tt'),
             sortOrder: 4,
           },
           'avg_view_drop_off': {
             format: value => value,
             title: this._translate.instant(`app.entry.avg_view_drop_off`),
+            tooltip: this._translate.instant('app.entry.avg_view_drop_off_tt'),
             sortOrder: 5,
           }
         }
