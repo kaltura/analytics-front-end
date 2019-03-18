@@ -528,6 +528,7 @@ k-area-blocker {
 
 .ui-autocomplete-panel {
   max-height: 284px !important;
+  max-width: 250px;
 
   .ui-autocomplete-list {
     padding: 0;
@@ -541,6 +542,17 @@ k-area-blocker {
 
       &:hover {
         background-color: $kGrayscale7 !important;
+      }
+
+      .kHighlightedText {
+        text-decoration: underline;
+      }
+
+      span:not(.kHighlightedText) {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
       }
     }
   }
