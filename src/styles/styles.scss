@@ -442,19 +442,6 @@ ui-carousel /deep/ {
   }
 }
 
-.ui-autocomplete-panel {
-  width: 200px !important;
-
-  .ui-autocomplete-list-item {
-    text-overflow: ellipsis;
-    overflow: hidden;
-
-    &:hover {
-      background-color: $kGrayscale6;
-    }
-  }
-}
-
 div, span, tr, td, li {
   outline: none !important;
 }
@@ -505,7 +492,60 @@ k-area-blocker {
   }
 }
 
+.kHorizontalBarGraphTooltip {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  padding: 0 16px;
+  height: 50px;
+  vertical-align: middle;
+
+  .kBullet {
+    font-size: 24px;
+    margin-right: 8px;
+    line-height: 20px;
+  }
+}
+
+.kDefaultTooltip {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  font-weight: bold;
+
+  .kBullet {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 15px;
+    margin-right: 6px;
+  }
+}
+
 // duplicate for IE
 .kTags {
   border-top: none !important;
+}
+
+.ui-autocomplete-panel {
+  max-height: 284px !important;
+
+  .ui-autocomplete-list {
+    padding: 0;
+
+    .ui-autocomplete-list-item,
+    .ui-autocomplete-notification-item {
+      border: 0 !important;
+      border-radius: 0 !important;
+      min-height: 32px !important;
+      padding: .5em 1em;
+
+      &:hover {
+        background-color: $kGrayscale7 !important;
+      }
+    }
+  }
+}
+
+ui-carousel {
+  z-index: 1;
 }

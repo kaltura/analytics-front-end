@@ -1,0 +1,55 @@
+@import '../../../../styles/variables';
+
+.kChartContainer {
+  padding: 0 24px;
+
+  .kTable {
+    min-height: 200px;
+
+    .kTableRow {
+      display: flex;
+      align-items: center;
+
+      .kRowIndex {
+        width: 40px;
+        color: $kGrayscale3;
+      }
+    }
+  }
+
+  .emptymessage {
+    line-height: 200px;
+    font-size: 28px;
+    color: $kGrayscale3;
+
+    .kEmptyMessage {
+      text-align: center;
+      border-bottom: none;
+    }
+  }
+}
+
+.kCustomLegend {
+  display: flex;
+  margin-bottom: 24px;
+
+  .kLegendItemContainer {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    margin-right: 24px;
+
+    .kLegendItem {
+      font-size: 12px;
+      font-weight: bold;
+      color: $kGrayscale1;
+    }
+
+    .kCircle {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-right: 8px;
+    }
+  }
+}

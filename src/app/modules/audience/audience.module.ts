@@ -40,6 +40,9 @@ import { ContentInteractionsComponent } from './views/content-interactions/conte
 import { InteractionsComponent } from './views/content-interactions/interactions/interactions.component';
 import { MiniInteractionsComponent } from './views/content-interactions/mini-interactions/mini-interactions.component';
 import { MiniTopSharedComponent } from './views/content-interactions/mini-top-shared/mini-top-shared.component';
+import { ModerationComponent } from './views/content-interactions/moderation/moderation.component';
+import { MiniTopPlaybackSpeedComponent } from './views/content-interactions/mini-top-playback-speed/mini-top-playback-speed.component';
+import { MiniTopStatsComponent } from './views/content-interactions/mini-top-stats/mini-top-stats.component';
 
 @NgModule({
   imports: [
@@ -86,6 +89,9 @@ import { MiniTopSharedComponent } from './views/content-interactions/mini-top-sh
     InteractionsComponent,
     MiniInteractionsComponent,
     MiniTopSharedComponent,
+    ModerationComponent,
+    MiniTopPlaybackSpeedComponent,
+    MiniTopStatsComponent,
   ],
   exports: [],
   providers: [PageScrollService]
