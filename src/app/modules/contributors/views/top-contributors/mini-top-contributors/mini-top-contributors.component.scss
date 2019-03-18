@@ -8,12 +8,17 @@
   font-weight: 700;
 }
 
-.kFilters {
-  height: 93px !important;
-}
-
 .kMini{
   height: 100%;
+
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0;
+    }
+  }
+
   .kDetails {
     margin-left: auto;
     white-space: nowrap;

@@ -45,7 +45,6 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.audience.geo.count_plays`),
-            tooltip: this._translate.instant(`app.audience.geo.count_plays_tt`),
           }
         }
       }
