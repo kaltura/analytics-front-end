@@ -108,7 +108,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
+            format: value => ReportHelper.numberOrZero(Math.round(value * 100)),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`),
             units: value => '%',
             sortOrder: 5,
