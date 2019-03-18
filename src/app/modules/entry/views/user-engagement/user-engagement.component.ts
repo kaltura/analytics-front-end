@@ -97,6 +97,8 @@ export class UserEngagementComponent extends EntryBase {
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+          this._totalCount = 0;
+
           if (compare) {
             this._handleCompare(report, compare);
           } else {
@@ -157,7 +159,7 @@ export class UserEngagementComponent extends EntryBase {
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
+
     if (current.table && compare.table) {
       const { columns, tableData } = this._compareService.compareTableData(
         currentPeriod,
