@@ -21,7 +21,10 @@
                (error)="holder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
+          <span class="kTitle"
+                [kTooltip]="item.entry_name"
+                [showOnEllipsis]="true"
+                (click)="_drillDown(item)">{{item.entry_name}}</span>
           <span class="kScore">{{item.engagement_ranking}}/10</span>
         </div>
       </div>
@@ -43,7 +46,9 @@
                (error)="holder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_tableData[0].entry_name">
+          <span class="kTitle"
+                [kTooltip]="_tableData[0].entry_name"
+                (click)="_drillDown(_tableData[0])">
             {{_tableData[0].entry_name}}
           </span>
           <span class="kScore">{{_tableData[0].engagement_ranking}}/10</span>
@@ -64,7 +69,9 @@
                (error)="compareHolder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name">
+          <span class="kTitle"
+                [kTooltip]="_compareTableData[0].entry_name"
+                (click)="_drillDown(_compareTableData[0])">
             {{_compareTableData[0].entry_name}}
           </span>
           <span class="kScore">{{_compareTableData[0].engagement_ranking}}/10</span>
