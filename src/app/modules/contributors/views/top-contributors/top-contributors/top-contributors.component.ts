@@ -1,16 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import * as moment from 'moment';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { Component, OnDestroy } from '@angular/core';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TopContributorsDataConfig } from './top-contributors-data.config';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -25,7 +23,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
     ReportService,
   ]
 })
-export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit {
+export class ContributorsTopContributorsComponent extends TopContributorsBaseReportComponent implements OnDestroy {
   private _order = '-contributor_ranking';
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
@@ -49,6 +47,8 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = KalturaReportType.topContentContributors;
+  
+  public topContributors$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -61,9 +61,9 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
-  
-  ngOnInit() {
+
+  ngOnDestroy(): void {
+    this.topContributors$.complete();
   }
   
   protected _updateRefineFilter(): void {
@@ -75,6 +75,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   }
   
   protected _loadReport(): void {
+    this.topContributors$.next({ table: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -93,8 +94,12 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
           this._compareTableData = [];
           
           if (report.table && report.table.header && report.table.data) {
+            this.topContributors$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
             this._handleTable(report.table, compare); // handle table
+          } else {
+            this.topContributors$.next({ table: null, compare: null, busy: false, error: null });
           }
+
           this._isBusy = false;
           this._firstTimeLoading = false;
           if (compare) {
@@ -111,6 +116,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
               this._loadReport();
             },
           };
+          this.topContributors$.next({ table: null, compare: null, busy: false, error: error });
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
