@@ -242,14 +242,26 @@ body{
 
 .kEntryGraphTooltip {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   padding: 5px;
-  font-weight: bold;
 
-  .kBullet {
-    font-size: 48px;
-    margin-right: 5px;
+  .kCurrentTime {
+    color: $kGrayscale3;
+    font-weight: normal;
   }
+
+  .kValue {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+
+    .kBullet {
+      font-size: 48px;
+      margin-right: 5px;
+    }
+  }
+
 }
 
 .kGraphTooltip {
