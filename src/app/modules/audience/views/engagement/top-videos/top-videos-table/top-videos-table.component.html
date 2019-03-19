@@ -19,7 +19,8 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-            <div class="kThumbnailHolder" #holder>
+            <div class="kThumbnailHolder" #holder
+                 (click)="_drillDown(data)">
               <img [src]="data.thumbnailUrl"
                    onError="this.onerror=null;this.style.display='none'"
                    (error)="holder.classList.add('error')">
@@ -27,7 +28,7 @@
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"
-                 (click)="_drillDown(data['object_id'])"
+                 (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>

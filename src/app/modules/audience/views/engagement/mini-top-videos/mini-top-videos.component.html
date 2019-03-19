@@ -15,7 +15,8 @@
           <span>{{item.index}}</span>
         </div>
         <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
-        <div class="kReportRowThumbnail" #holder>
+        <div class="kReportRowThumbnail" #holder
+             (click)="_drillDown(item)">
           <img [src]="item.thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('error')">
@@ -40,7 +41,8 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_tableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #holder>
+        <div class="kReportRowThumbnail" #holder
+             (click)="_drillDown(_tableData[0])">
           <img [src]="_tableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('error')">
@@ -63,7 +65,8 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_compareTableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #compareHolder>
+        <div class="kReportRowThumbnail" #compareHolder
+             (click)="_drillDown(_compareTableData[0])">
           <img [src]="_compareTableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="compareHolder.classList.add('error')">
