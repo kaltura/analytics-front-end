@@ -78,6 +78,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   
   private _getGraphData(yData: number[], compareYData: number[] = null) {
     let graphData = {
+      color: [getPrimaryColor(), getSecondaryColor()],
       backgroundColor: '#333333',
       grid: {
         left: 0,
@@ -163,7 +164,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       series: [{
         data: yData,
-        symbol: 'none',
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#487adf',
@@ -174,7 +177,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     if (compareYData !== null) {
       graphData.series.push({
         data: compareYData,
-        symbol: 'none',
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#88acf6',
