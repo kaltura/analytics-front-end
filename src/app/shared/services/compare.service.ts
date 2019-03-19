@@ -630,7 +630,7 @@ export class CompareService implements OnDestroy {
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
       'textStyle': { ...current.textStyle },
-      'grid': { ...current.grid, top: 32 },
+      'grid': { ...current.grid, top: 32, right: 50, left: 50 },
       'xAxis': { ...current.xAxis },
       'tooltip':  {
         ...current.tooltip,
