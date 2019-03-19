@@ -94,7 +94,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       tooltip : {
         formatter: params => {
           const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
-          const progressValue = ReportHelper.time(String((dataIndex + 1) / 100 * this._duration));
+          const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
           let tooltip =  `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>
