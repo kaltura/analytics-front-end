@@ -174,15 +174,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }
   }
-  
-  public _onSortChanged(field: string): void {
-    const order = `-${field}`;
-    if (order !== this._order) {
-      this._logger.trace('Handle sort changed action by user', { order });
-      this._order = order;
-      this._loadReport();
-    }
-  }
 
   ngOnDestroy() {
     this.topVideos$.complete();
