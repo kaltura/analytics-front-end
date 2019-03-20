@@ -1,4 +1,4 @@
-<div class="kTableHeader" [ngStyle]="{'padding-bottom': _tags.length ? 0 : '8px'}">
+<div data-aid="filter-entry-users" class="kTableHeader" [ngStyle]="{'padding-bottom': _tags.length ? 0 : '8px'}">
   <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': totalCount } }}</span>
   <div class="kSearch">
     <app-engagement-users-filter [selectedUsers]="_selectedValues['users']"

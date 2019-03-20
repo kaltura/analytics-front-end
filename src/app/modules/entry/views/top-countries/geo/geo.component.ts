@@ -21,6 +21,7 @@ export class GeoComponent {
   @Input() selectedMetrics = 'count_plays';
   @Input() periodTitle: string;
   @Input() drillDownItems: string[] = [];
+  @Input() name = 'default';
   
   @Input() set mapData(value) {
     if (value) {

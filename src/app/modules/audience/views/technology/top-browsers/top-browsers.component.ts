@@ -19,6 +19,7 @@ export class TopBrowsersComponent extends BaseDevicesReportComponent {
   protected _defaultReportType = KalturaReportType.browsersFamilies;
   protected _drillDownReportType = KalturaReportType.browsers;
   protected _iconType = 'browser';
+  protected _name = 'top-browsers';
 
   public _title = 'app.audience.technology.topBrowsers';
   

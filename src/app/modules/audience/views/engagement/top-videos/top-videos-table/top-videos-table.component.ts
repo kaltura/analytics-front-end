@@ -28,6 +28,7 @@ export class TopVideosTableComponent {
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
+  @Input() name = 'default';
   
   @Output() sortFieldChanged = new EventEmitter<string>();
   
