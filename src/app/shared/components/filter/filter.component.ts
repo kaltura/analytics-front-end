@@ -9,6 +9,7 @@ import { LocationsFilterValue } from './location-filter/location-filter.componen
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { isEqual } from 'shared/utils/is-equals';
 
 export interface OptionItem {
   value: any;
@@ -279,17 +280,21 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
   }
   
-  public _apply(): void {
-    this._logger.trace('User applied filters, emit update event and close filters');
+  public _apply(forceApply = false): void {
+    if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
+      this._logger.trace('User applied filters, emit update event and close filters');
+
+      // using spread to prevent passing by reference to avoid unwanted mutations
+      this._appliedFilters = [...this._currentFilters];
+      this._updateSelectedValues(this._currentFilters);
+      this.filterChange.emit([...this._appliedFilters]);
+      this._tags = this._prepareFilterTags();
   
-    // using spread to prevent passing by reference to avoid unwanted mutations
-    this._appliedFilters = [...this._currentFilters];
-    this._updateSelectedValues(this._currentFilters);
-    this.filterChange.emit([...this._appliedFilters]);
-    this._tags = this._prepareFilterTags();
+      this._bottomPadding = this._tags.length ? '24px' : '0';
+    } else {
+      this._logger.info(`Filters weren't changed. Do nothing and close filters`);
+    }
   
-    this._bottomPadding = this._tags.length ? '24px' : '0';
-    
     this.closeFilters.emit();
   }
   
@@ -302,13 +307,13 @@ export class FilterComponent {
   public _removeFilter(item: { value: string, label: string, type: string }): void {
     this._logger.trace('Item remove action is selected by user', { item });
     this._onItemUnselected(item.value, item.type);
-    this._apply();
+    this._apply(true);
   }
   
   public _removeAll(): void {
     this._logger.trace('Remove all filters action is selected by user');
     this._clearAll();
     this._currentFilters = [];
-    this._apply();
+    this._apply(true);
   }
 }
