@@ -1,4 +1,4 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.engagement.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
@@ -13,13 +13,15 @@
       </div>
     </div>
     <app-date-filter #dateFilter
+                     name="engagement"
                      [dateRange]="_dateRange"
                      [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
-    <app-refine-filter [opened]="_refineFilterOpened"
+    <app-refine-filter name="engagement"
+                       [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
                        (closeFilters)="_refineFilterOpened = false"

@@ -58,6 +58,8 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
+  
+  @Input() name = 'default';
 
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
