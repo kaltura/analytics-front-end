@@ -18,8 +18,8 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'load_play_ratio': {
-            format: value => ReportHelper.numberOrZero(Math.round(value * 100)) + '%',
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
           'count_plays': {
