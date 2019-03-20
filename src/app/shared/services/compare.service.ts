@@ -637,8 +637,8 @@ export class CompareService implements OnDestroy {
         formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
       },
       'yAxis': [
-        { ...current.yAxis, name: currentMetricLabel },
-        { ...compare.yAxis, name: compareMetricLabel },
+        { ...current.yAxis, name: currentMetricLabel, nameTextStyle: { padding: [0, 0, 0, 10]} },
+        { ...compare.yAxis, name: compareMetricLabel, nameTextStyle: { padding: [0, 20, 0, 0]} },
       ],
       'series': [
         ...current.series.map((item, index) => ({
