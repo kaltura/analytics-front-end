@@ -16,12 +16,19 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
           'name': {
             format: value => value,
             nonComparable: true,
+            sortOrder: 1,
+          },
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 2,
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
+            sortOrder: 4,
           }
         }
       },
