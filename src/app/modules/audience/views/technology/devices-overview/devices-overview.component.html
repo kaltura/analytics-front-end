@@ -19,7 +19,7 @@
                             [value]="summary.key"
                             (onChange)="_onSelectionChange()"
                             [(ngModel)]="_selectedValues"></p-checkbox>
-                <label [for]="summary.key">
+                <label [attr.for]="summary.key">
                   <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
                 </label>
               </div>

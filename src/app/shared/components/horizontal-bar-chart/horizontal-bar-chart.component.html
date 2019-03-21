@@ -2,6 +2,7 @@
   <div class="kTable">
     <div class="kTableRow" *ngFor="let row of data">
       <span class="kRowIndex" *ngIf="showIndex">{{row.index}}</span>
+      <i *ngIf="row.icon" class="kIcon" [ngClass]="row.icon"></i>
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"

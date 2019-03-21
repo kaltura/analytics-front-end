@@ -10,6 +10,7 @@ export interface BarChartRow {
   value: BarRowValue | BarRowValue[];
   tooltip: BarRowTooltip | BarRowTooltip[];
   index?: number;
+  icon?: string;
 }
 
 @Component({

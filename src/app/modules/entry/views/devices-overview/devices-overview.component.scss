@@ -11,8 +11,27 @@
 }
 
 .kDevicesOverview {
-  /deep/ .kTable {
-    min-height: auto !important;
+  margin-bottom: 10px;
+
+  /deep/ {
+    .kTable {
+      min-height: auto !important;
+    }
+
+    .kLabel {
+      flex: 0 1 auto !important;
+      width: 20%;
+    }
+
+    .kTrend {
+      width: 10% !important;
+    }
+
+    .kIcon {
+      font-size: 22px;
+      color: $kGrayscale3;
+      margin-right: 17px;
+    }
   }
 }
 
