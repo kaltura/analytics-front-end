@@ -1,4 +1,4 @@
-<div class="kReport">
+<div data-aid="report-entry-user-engagement" class="kReport">
   <div class="kTable">
     <div class="kToggle">
     <span (click)="_toggleTable()">
@@ -63,10 +63,11 @@
               <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
             </div>
           </ng-template>
-          <ng-template let-data pTemplate="rowexpansion">
+          <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
             <tr *ngIf="!_isCompareMode">
               <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-                <app-heat-map [userId]="data['name']"
+                <app-heat-map [attr.data-aid]="'heat-map-' + index"
+                              [userId]="data['name']"
                               [entryId]="entryId"
                               [duration]="duration"
                               [filter]="_filter"></app-heat-map>

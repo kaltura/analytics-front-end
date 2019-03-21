@@ -1,4 +1,4 @@
-<div class="kRefineFilters kReport">
+<div data-aid="filter-entry" class="kRefineFilters kReport">
   <div class="kTagsContainer" *ngIf="_tags.length">
     <kTags title=""
            labelField="label"
@@ -35,10 +35,10 @@
 
           </div>
           <div class="kFilterContainerCol">
-            <app-owners-filter [selectedFilters]="_selectedValues['owners']"
+            <app-owners-filter [selectedFilters]="_selectedValues['users']"
                                [label]="'app.filters.users' | translate"
-                               (itemSelected)="_onItemSelected($event, 'owners')"
-                               (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
+                               (itemSelected)="_onItemSelected($event, 'users')"
+                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
           </div>
         </div>
       </div>

@@ -20,6 +20,7 @@ import { BrowserService } from 'shared/services';
 })
 export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
+  @Input() name = 'default';
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {

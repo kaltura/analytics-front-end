@@ -1,12 +1,9 @@
-<div class="kTableContainer">
+<div [attr.data-aid]="'table-top-videos' + name" class="kTableContainer">
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table sortField="engagement_ranking"
-             [class.kCompareMode]="isCompareMode"
-             [value]="_tableData"
-             [sortOrder]="-1"
-             [defaultSortOrder]="-1">
+    <p-table [class.kCompareMode]="isCompareMode"
+             [value]="_tableData">
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
@@ -19,7 +16,8 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-            <div class="kThumbnailHolder" #holder>
+            <div class="kThumbnailHolder" #holder
+                 (click)="_drillDown(data)">
               <img [src]="data.thumbnailUrl"
                    onError="this.onerror=null;this.style.display='none'"
                    (error)="holder.classList.add('error')">
@@ -27,7 +25,7 @@
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"
-                 (click)="_drillDown(data['object_id'])"
+                 (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>

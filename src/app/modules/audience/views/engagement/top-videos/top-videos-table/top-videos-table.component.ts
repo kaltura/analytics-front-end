@@ -28,8 +28,7 @@ export class TopVideosTableComponent {
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
-  
-  @Output() sortFieldChanged = new EventEmitter<string>();
+  @Input() name = 'default';
   
   @ViewChild('overlay') _overlay: OverlayComponent;
   
@@ -81,8 +80,8 @@ export class TopVideosTableComponent {
     }
   }
 
-  public _drillDown(entryId: string): void {
-    if (this._entryData.status === KalturaEntryStatus.ready) {
+  public _drillDown({ object_id: entryId, status }: { object_id: string, status: string }): void {
+    if (status === '') { // status is already being transformed by formatter function
       if (analyticsConfig.isHosted) {
         const params = this._browserService.getCurrentQueryParams('string');
         this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);

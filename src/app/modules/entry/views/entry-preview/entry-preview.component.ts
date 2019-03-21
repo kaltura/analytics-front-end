@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,7 +38,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _noDataFound = false;
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaReportInputFilter = null;
@@ -79,6 +78,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   
   private _getGraphData(yData: number[], compareYData: number[] = null) {
     let graphData = {
+      color: [getPrimaryColor(), getSecondaryColor()],
       backgroundColor: '#333333',
       grid: {
         left: 0,
@@ -94,11 +94,15 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       tooltip : {
         formatter: params => {
-          const { value } = Array.isArray(params) ? params[0] : params;
+          const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
+          const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
           let tooltip =  `
             <div class="kEntryGraphTooltip">
-              <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-              ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+              <div class="kCurrentTime">${progressValue}</div>
+              <div class="kValue">
+                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+              </div>
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
@@ -164,7 +168,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       series: [{
         data: yData,
-        symbol: 'none',
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#487adf',
@@ -175,7 +181,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     if (compareYData !== null) {
       graphData.series.push({
         data: compareYData,
-        symbol: 'none',
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#88acf6',
@@ -200,7 +208,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
     reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
-    this._noDataFound = false;
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -234,18 +241,14 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
                   .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
                   .map(item => Number(item['count_viewers']));
               } else {
-                for (let i = 0; i < 100; i++) {
-                  compareYAxisData.push(0);
-                }
+                compareYAxisData = Array.from({ length: 100 }, () => 0);
               }
               this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
             } else {
               this._chartOptions = this._getGraphData(yAxisData);
             }
           } else {
-            if (report.table) {
-              this._noDataFound = true;
-            }
+            this._chartOptions = this._getGraphData(Array.from({ length: 100 }, () => 0));
           }
 
         },

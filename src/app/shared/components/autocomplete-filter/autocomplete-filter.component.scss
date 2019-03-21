@@ -21,7 +21,14 @@
   }
 }
 
-:host /deep/ kautocomplete .ui-autocomplete-multiple-container{
-  height: auto !important;
+:host /deep/ kautocomplete {
+  .ui-autocomplete-multiple-container {
+    height: auto !important;
+  }
+
+  .ui-autocomplete-list-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 

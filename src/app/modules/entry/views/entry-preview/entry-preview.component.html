@@ -1,4 +1,4 @@
-<div class="kReport kTotals kOverrideFAIcons">
+<div data-aid="report-entry-preview" class="kReport kTotals kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div style="display: flex; flex-direction: column; width: 100%">
       <div class="kPlayer">
@@ -11,7 +11,6 @@
 
       <div class="chartContainer">
         <div echarts class="kChart" [options]="_chartOptions"></div>
-        <span class="noDataFound" *ngIf="_noDataFound">{{'app.common.noResults' | translate}}</span>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
           <div class="kLine"></div>
           <span class="kCurrentTime">{{_currentTime | appDuration}}</span>

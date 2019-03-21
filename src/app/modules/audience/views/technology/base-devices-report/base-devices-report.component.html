@@ -1,4 +1,4 @@
-<div class="kReport kOverrideFAIcons">
+<div [attr.data-aid]="'report-' + _name" class="kReport kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle" *ngIf="!_drillDown">{{_title | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown">

@@ -1,4 +1,4 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-mini-top-videos" class="kReport kContent kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
     <kInputHelper>
@@ -8,20 +8,21 @@
   <div class="kReportContent">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-engagement-top-videos-table *ngIf="_isCompareMode"
+                                       name="compare"
                                        [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
                                        [firstTimeLoading]="_compareFirstTimeLoading"
                                        [columns]="_columns"></app-engagement-top-videos-table>
-      <app-engagement-top-videos-table [tableData]="_tableData"
+      <app-engagement-top-videos-table name="current"
+                                       [tableData]="_tableData"
                                        [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
                                        [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"
-                                       (sortFieldChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
+                                       [columns]="_columns"></app-engagement-top-videos-table>
     </k-area-blocker>
   </div>
 </div>

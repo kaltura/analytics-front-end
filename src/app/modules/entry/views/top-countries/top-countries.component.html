@@ -1,4 +1,4 @@
-<div class="kReport kNoMargin kOverrideFAIcons" [class.kCompare]="_isCompareMode">
+<div data-aid="report-entry-top-countries" class="kReport kNoMargin kOverrideFAIcons" [class.kCompare]="_isCompareMode">
   <div class="kFilters">
     <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entry.topCountries' | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
@@ -13,6 +13,7 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <app-entry-geo #entryCompareGeo *ngIf="_isCompareMode"
+                   name="compare"
                    [drillDownItems]="_drillDown"
                    [mapData]="_mapData"
                    [tableData]="_compareTableData"
@@ -22,6 +23,7 @@
                    [periodTitle]="_comparePeriodTitle"
                    (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
     <app-entry-geo #entryGeo
+                   name="current"
                    [drillDownItems]="_drillDown"
                    [mapData]="_mapData"
                    [tableData]="_tableData"
