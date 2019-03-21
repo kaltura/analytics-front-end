@@ -34,10 +34,10 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
+            format: value => ReportHelper.percents(value / 100, false),
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, false, true),
+            format: value => ReportHelper.percents(value, false),
           },
         }
       },
