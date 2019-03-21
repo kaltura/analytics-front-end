@@ -590,6 +590,10 @@ export class CompareService implements OnDestroy {
     const current = graphsData[currentMetric];
     const compare = graphsData[compareMetric];
   
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series.map(({ data }) => data))).toFixed(1));
+    const getMaxValue = createFunc(Math.max);
+    const getMinValue = createFunc(Math.min);
+    const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getFormatter = colors => params => {
       const [current, metric, compare, metricCompare] = params;
       const currentFormatFn = val => typeof config.fields[currentMetric].graphTooltip === 'function'
@@ -626,6 +630,13 @@ export class CompareService implements OnDestroy {
           </div>
       `;
     };
+  
+    const currentMax = getMaxValue(current.series) || 1;
+    const currentMin = getMinValue(current.series);
+    const compareMax = getMaxValue(compare.series) || 1;
+    const compareMin = getMinValue(compare.series);
+    const currentInterval = (currentMax - currentMin) / 5;
+    const compareInterval = (compareMax - compareMin) / 5;
     
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
@@ -637,8 +648,22 @@ export class CompareService implements OnDestroy {
         formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
       },
       'yAxis': [
-        { ...current.yAxis, name: currentMetricLabel, nameTextStyle: { padding: [0, 0, 0, 10]} },
-        { ...compare.yAxis, name: compareMetricLabel, nameTextStyle: { padding: [0, 20, 0, 0]} },
+        {
+          ...current.yAxis,
+          name: currentMetricLabel,
+          nameTextStyle: { padding: [0, 0, 0, 10] },
+          max: currentMax,
+          min: currentMin,
+          interval: currentInterval
+        },
+        {
+          ...compare.yAxis,
+          name: compareMetricLabel,
+          nameTextStyle: { padding: [0, 20, 0, 0] },
+          max: compareMax,
+          min: currentMin,
+          interval: compareInterval
+        },
       ],
       'series': [
         ...current.series.map((item, index) => ({
