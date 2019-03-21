@@ -18,6 +18,7 @@ import { of as ObservableOf } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 export interface SummaryItem {
   key: string;
@@ -60,20 +61,17 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
   public _barChartData: { [key: string]: any; } = {};
-  public _summaryData: SummaryItem[] = [];
-  public _summaryDataRight: SummaryItem[] = [];
+  public _summaryData: BarChartRow[] = [];
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _dataConfig: ReportDataConfig;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _selectedMetric: string;
-  public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
-    {
-      searchInTags: true,
-      searchInAdminTags: false
-    }
-  );
+  public _totalCount = 0;
+  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
+  public _currentPeriod: { from: number, to: number };
+  public _comparePeriod: { from: number, to: number };
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -123,6 +121,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   protected _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
@@ -160,13 +159,14 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       .subscribe(({ report, compare }) => {
           this._tabsData = [];
           this._compareTabsData = [];
-          this._barChartData = {};
           this._summaryData = [];
-          this._summaryDataRight = [];
           
           if (compare) {
             this._handleCompare(report, compare);
+            this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
           } else {
+            this._comparePeriod = null;
+
             // IMPORTANT to handle totals first, summary rely on totals
             if (report.totals) {
               this.handleTotals(report.totals); // handle totals
@@ -369,7 +369,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     }, {});
   }
   
-  private _getSummaryData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): Summary {
+  private _getSummaryData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): BarChartRow[] {
+    const key = this._selectedMetric;
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = this._compareFilter
       ? `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`
@@ -384,57 +385,51 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       }
       return value;
     };
+  
+    const relevantCurrentTotal = this._tabsData.find(total => total.key === key);
+    if (relevantCurrentTotal) {
+      const totalValue = parseFloat(relevantCurrentTotal.value);
     
-    return relevantFields.reduce((summaryData, key) => {
-      const relevantCurrentTotal = this._tabsData.find(total => total.key === key);
-      if (relevantCurrentTotal) {
-        const totalValue = parseFloat(relevantCurrentTotal.value);
+      const relevantCompareTotal = this._compareTabsData.find(total => total.key === key);
+      const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
+    
+      return data.map((item, index) => {
+        const rawValue = parseFloat(item[key]);
+        const currentValue = getValue(rawValue, totalValue);
+      
+        if (compareData) {
+          const compareValue = getValue(parseFloat(compareData[index][key]), compareTotalValue);
+          const { value: trend, direction } = this._trendService.calculateTrend(currentValue, compareValue);
         
-        const relevantCompareTotal = this._compareTabsData.find(total => total.key === key);
-        const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
-        
-        summaryData[key] = data.map((item, index) => {
-          const rawValue = parseFloat(item[key]);
-          const currentValue = getValue(rawValue, totalValue);
-          
-          if (compareData) {
-            const compareValue = getValue(parseFloat(compareData[index][key]), compareTotalValue);
-            const { value: trend, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-            
-            return {
-              compare: true,
-              tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, currentValue, '%')}${this._trendService.getTooltipRowString(comparePeriodTitle, compareValue, '%')}`,
-              value: trend !== null ? trend : '–',
-              units: trend !== null ? '%' : '',
-              key: item.device,
-              name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-              trend: direction,
-            };
-          }
-          
           return {
-            key: item.device,
-            name: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-            value: currentValue,
-            tooltip: `<div style="font-weight: bold; padding: 5px">${this._translate.instant('app.entry.plays', [rawValue])}</div>`,
-            units: '%'
+            index: index + 1,
+            tooltip: [
+              { value: String(currentValue), label: this._translate.instant(`app.entry.count_plays`)},
+              { value: String(compareValue), label: this._translate.instant(`app.entry.count_plays`)},
+            ],
+            value: [currentValue, compareValue],
+            label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           };
-        });
-      }
-      return summaryData;
-    }, {});
+        }
+
+        return {
+          value: currentValue,
+          tooltip: { value: String(currentValue), label: this._translate.instant(`app.entry.count_plays`) },
+          index: index + 1,
+          label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+        };
+      });
+    }
+
+    return [];
   }
   
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data } = this._getOverviewData(table, relevantFields);
-    
-    this._barChartData = this._getGraphData(relevantFields, data)[this._selectedMetric];
-    this._summaryData = this._getSummaryData(relevantFields, data)[this._selectedMetric];
-    if (this._summaryData.length > 3) {
-      this._summaryDataRight = this._summaryData.slice(3);
-      this._summaryData = this._summaryData.slice(0, 3);
-    }
+  
+    this._totalCount = table.totalCount;
+    this._summaryData = this._getSummaryData(relevantFields, data);
   }
   
   private handleTotals(totals: KalturaReportTotal, compare?: KalturaReportTotal): void {
@@ -481,12 +476,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       arrangeKeys(currentData);
       arrangeKeys(compareData);
       
-      this._barChartData = this._getGraphData(relevantFields, currentData, compareData)[this._selectedMetric];
-      this._summaryData = this._getSummaryData(relevantFields, currentData, compareData)[this._selectedMetric];
-      if (this._summaryData.length > 3) {
-        this._summaryDataRight = this._summaryData.slice(3);
-        this._summaryData = this._summaryData.slice(0, 3);
-      }
+      this._summaryData = this._getSummaryData(relevantFields, currentData, compareData);
     }
   }
 }

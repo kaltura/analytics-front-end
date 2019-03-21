@@ -24,6 +24,7 @@ export class HorizontalBarChartComponent {
   @Input() pager: KalturaPager;
   @Input() totalCount: number;
   @Input() isCompareMode = false;
+  @Input() showIndex = true;
   @Input() set currentPeriod(value: { from: number, to: number }) {
     if (value && value.hasOwnProperty('from') && value.hasOwnProperty('to')) {
       this._currentPeriod = value;

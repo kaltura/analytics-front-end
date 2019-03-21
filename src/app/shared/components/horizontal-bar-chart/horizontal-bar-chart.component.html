@@ -1,7 +1,7 @@
 <div class="kChartContainer">
   <div class="kTable">
     <div class="kTableRow" *ngFor="let row of data">
-      <span class="kRowIndex">{{row.index}}</span>
+      <span class="kRowIndex" *ngIf="showIndex">{{row.index}}</span>
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"

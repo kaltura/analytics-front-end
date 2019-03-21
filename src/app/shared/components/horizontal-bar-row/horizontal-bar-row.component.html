@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="kBarWrapperRow kCompare" *ngIf="_compareValue !== null">
-      <div class="kValue">{{_compareValue}}{{units}}</div>
+      <span class="kValue">{{_compareValue}}<span class="kUnits">{{units}}</span></span>
       <div class="kBullet" [kTooltip]="_compareTooltip" [escape]="false">
         <div class="kBar" [style.background-color]="_colors[1]" [style.width]="_compareValue+'%'"></div>
       </div>
