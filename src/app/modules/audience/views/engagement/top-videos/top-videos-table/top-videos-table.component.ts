@@ -30,8 +30,6 @@ export class TopVideosTableComponent {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
-  @Output() sortFieldChanged = new EventEmitter<string>();
-  
   @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _originalTable: TableRow<string>[] = [];
