@@ -49,9 +49,17 @@
       .kValue {
         flex: 1 0 auto;
         font-size: 15px;
-        color: $kGrayscale3;
+        font-weight: bold;
+        color: $kGrayscale1;
         width: 38px;
         margin-right: 24px;
+      }
+
+      .kUnits {
+        font-size: 15px;
+        font-weight: bold;
+        color: $kGrayscale3;
+        margin-left: 4px;
       }
 
       .kBullet {
