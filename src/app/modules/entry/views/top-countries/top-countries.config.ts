@@ -158,7 +158,7 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
           mapType: 'world',
           roam: false,
           zoom: 1.2,
-          top: 40,
+          top: 30,
           selectedMode: 'single',
           animationDurationUpdate: 200,
           animationEasingUpdate: 'cubicInOut',
