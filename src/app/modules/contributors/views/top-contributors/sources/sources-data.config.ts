@@ -57,19 +57,19 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
         fields: {
           'added_entries': {
             format: value => value,
-            colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
+            colors: ['entries'],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>`,
             nonDateGraphLabel: true,
           },
           'added_msecs': {
             format: value => value,
-            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            colors: ['time'],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
             nonDateGraphLabel: true,
           },
           'unique_contributors': {
             format: value => value,
-            colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
+            colors: ['viewers'],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>`,
             nonDateGraphLabel: true,
           },

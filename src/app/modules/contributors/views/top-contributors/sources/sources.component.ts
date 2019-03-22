@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import {BehaviorSubject, of as ObservableOf} from 'rxjs';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { SourcesDataConfig } from './sources-data.config';
@@ -13,6 +13,8 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-contributors-sources',
@@ -24,7 +26,7 @@ import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-b
     SourcesDataConfig,
   ]
 })
-export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent implements OnDestroy{
+export class ContributorsSourcesComponent extends TopContributorsBaseReportComponent implements OnDestroy {
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _pager = new KalturaFilterPager();
   private _dataConfig: ReportDataConfig;
@@ -34,10 +36,12 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     searchInAdminTags: false,
     interval: this._reportInterval,
   });
+  private _currentPeriodLabel: string;
+  private _comparePeriodLabel: string;
   
   protected _componentId = 'sources';
-  public topSources$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
-
+  public topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
+  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
   public _isCompareMode: boolean;
@@ -49,6 +53,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _tabsData: Tab[] = [];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
+  public _colorScheme: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -61,7 +66,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._onTabChange({ key: this._dataConfig.totals.preSelected } as Tab);
   }
   
   protected _updateRefineFilter(): void {
@@ -74,9 +79,10 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   
   protected _loadReport(): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
     this._isBusy = true;
     this._blockerMessage = null;
-    this.topSources$.next({table: null, compare: null, busy: true, error: null});
+    this.topSources$.next({ table: null, compare: null, busy: true, error: null });
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     this._reportService.getReport(reportConfig)
       .pipe(switchMap(report => {
@@ -98,17 +104,19 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
           
           if (compare) {
             this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+            this._comparePeriodLabel = this._getPeriodLabel(this._comparePeriod);
           } else {
             this._comparePeriod = null;
+            this._comparePeriodLabel = '';
           }
-
+          
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
-            this.topSources$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+            this.topSources$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
           } else {
-            this.topSources$.next({table: null, compare: null, busy: false, error: null});
+            this.topSources$.next({ table: null, compare: null, busy: false, error: null });
           }
-
+          
           this._isBusy = false;
         },
         error => {
@@ -146,21 +154,81 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
+    this._colorScheme = this._dataConfig[ReportDataSection.graph].fields[tab.key].colors[0];
   }
-
+  
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
-  
-    if (compare && compare.table && compare.table.header && compare.table.data) {
-      const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      
-      this._compareFirstTimeLoading = false;
-    } else {
     
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const columns = Object.keys(this._dataConfig[ReportDataSection.graph].fields);
+  
+    const getTotals = tData => {
+      return columns.reduce((data: { [key: string]: number; }, key: string) => {
+        data[key] = tData.map(item => parseFloat(item[key])).reduce((acc, val) => acc + val, 0);
+        return data;
+      }, {});
+    };
+
+    const totals = getTotals(tableData);
+
+    
+    
+    if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      const compareTotals = getTotals(compareTableData);
+      this._compareFirstTimeLoading = false;
+  
+      this._barChartData = columns.reduce((data: { [key: string]: BarChartRow[] }, key: string) => {
+        data[key] = tableData.map((item, index) => {
+          const compareItem = compareTableData.find(cItem => cItem.source === item.source) || { [key]: '0' };
+          const current = parseFloat(item[key]);
+          const compare = parseFloat(compareItem[key]);
+  
+          const { value, direction } = this._trendService.calculateTrend(current, compare);
+          const trend = {
+            value: value !== null ? value : '–',
+            trend: direction,
+            units: value !== null ? '%' : '',
+            tooltip: `${this._trendService.getTooltipRowString(this._currentPeriodLabel, ReportHelper.numberOrZero(current))}${this._trendService.getTooltipRowString(this._comparePeriodLabel, ReportHelper.numberOrZero(compare))}`,
+          };
+
+          return {
+            trend,
+            index: index + 1,
+            label: item.source,
+            value: [
+              ReportHelper.percents(parseFloat(item[key]) / totals[key], true, false, false),
+              ReportHelper.percents(parseFloat(compareItem[key]) / compareTotals[key], true, false, false),
+            ],
+            tooltip: [
+              { value: ReportHelper.numberOrZero(item[key]), label: this._translate.instant(`app.contributors.${key}`) },
+              { value: ReportHelper.numberOrZero(compareItem[key]), label: this._translate.instant(`app.contributors.${key}`) }
+            ],
+          };
+        });
+        return data;
+      }, {});
+
+    } else {
+      this._barChartData = columns.reduce((data: { [key: string]: BarChartRow[] }, key: string) => {
+        data[key] = tableData.map((item, index) => {
+          return {
+            index: index + 1,
+            label: item.source,
+            value: ReportHelper.percents(parseFloat(item[key]) / totals[key], true, false, false),
+            tooltip: { value: ReportHelper.numberOrZero(item[key]), label: this._translate.instant(`app.contributors.${key}`) }
+          };
+        });
+        return data;
+      }, {});
     }
   }
-
+  
+  private _getPeriodLabel(period: { from: number, to: number }): string {
+    return `${DateFilterUtils.formatMonthDayString(period.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(period.to, analyticsConfig.locale)}`;
+  }
+  
   ngOnDestroy() {
     this.topSources$.complete();
   }

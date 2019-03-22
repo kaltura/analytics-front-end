@@ -6,6 +6,8 @@
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"
+                              [currentPeriod]="_currentPeriodLabel"
+                              [comparePeriod]="_comparePeriodLabel"
                               [colorScheme]="_colorScheme"
                               [trend]="row.trend"></app-horizontal-bar-row>
     </div>

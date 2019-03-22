@@ -34,6 +34,9 @@ export class HorizontalBarRowComponent {
   @Input() set trend(value: TrendValue) {
     if (value) {
       this._trend = value;
+      this._calculateTrend = false;
+    } else {
+      this._calculateTrend = true;
     }
   }
   
@@ -65,13 +68,15 @@ export class HorizontalBarRowComponent {
       if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
         this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
         
-        const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
-        this._trend = {
-          value: value !== null ? value : '–',
-          trend: direction,
-          units: value !== null ? '%' : '',
-          tooltip: `${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}`,
-        };
+        if (this._calculateTrend) {
+          const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
+          this._trend = {
+            value: value !== null ? value : '–',
+            trend: direction,
+            units: value !== null ? '%' : '',
+            tooltip: `${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}`,
+          };
+        }
       }
     }, 200);
   }
@@ -80,6 +85,7 @@ export class HorizontalBarRowComponent {
     this._colors = [getPrimaryColor(type), getSecondaryColor(type)];
   }
   
+  private _calculateTrend = true;
   public _trend: TrendValue = null;
   public _value: BarRowValue = 0;
   public _rawValue: BarRowValue = 0;

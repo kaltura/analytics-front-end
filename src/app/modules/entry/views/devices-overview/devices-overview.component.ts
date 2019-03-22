@@ -223,10 +223,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   
   private _getSummaryData(data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
-    const comparePeriodTitle = this._compareFilter
-      ? `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`
-      : null;
     const getValue = (itemValue, totalValue) => {
       let value = 0;
       if (!isNaN(itemValue) && !isNaN(totalValue) && totalValue !== 0) {
