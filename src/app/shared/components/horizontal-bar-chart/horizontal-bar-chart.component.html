@@ -7,8 +7,7 @@
                               [value]="row.value"
                               [tooltip]="row.tooltip"
                               [colorScheme]="_colorScheme"
-                              [currentPeriod]="_currentPeriodLabel"
-                              [comparePeriod]="_comparePeriodLabel"></app-horizontal-bar-row>
+                              [trend]="row.trend"></app-horizontal-bar-row>
     </div>
     <div *ngIf="!data.length && !isBusy" class="emptymessage">
       <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>

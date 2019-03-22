@@ -72,6 +72,8 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
+  public _currentPeriodLabel: string;
+  public _comparePeriodLabel: string;
   public _deviceIconPipe = new DeviceIconPipe();
   
   public get _isCompareMode(): boolean {
@@ -123,7 +125,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     this._isBusy = true;
     this._blockerMessage = null;
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    
+    this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
@@ -163,10 +165,13 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           this._summaryData = [];
           
           if (compare) {
-            this._handleCompare(report, compare);
             this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+            this._comparePeriodLabel = this._getPeriodLabel(this._comparePeriod);
+
+            this._handleCompare(report, compare);
           } else {
             this._comparePeriod = null;
+            this._comparePeriodLabel = null;
             
             // IMPORTANT to handle totals first, summary rely on totals
             if (report.totals) {
@@ -216,7 +221,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     return { data, columns };
   }
   
-  private _getSummaryData(relevantFields: string[], data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): BarChartRow[] {
+  private _getSummaryData(data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = this._compareFilter
@@ -247,9 +252,17 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         if (compareData) {
           const compareRawValue = parseFloat(compareData[index][key]);
           const compareValue = getValue(compareRawValue, compareTotalValue);
-          
+  
+          const { value, direction } = this._trendService.calculateTrend(Number(rawValue), Number(compareRawValue));
+          const trend = {
+            value: value !== null ? value : '–',
+            trend: direction,
+            units: value !== null ? '%' : '',
+            tooltip: `${this._trendService.getTooltipRowString(this._currentPeriodLabel, rawValue)}${this._trendService.getTooltipRowString(this._comparePeriodLabel, compareRawValue)}`,
+          };
+
           return {
-            index: index + 1,
+            trend,
             tooltip: [
               { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
               { value: ReportHelper.numberOrZero(compareRawValue), label: this._translate.instant(`app.entry.count_plays`) },
@@ -263,7 +276,6 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
         return {
           value: currentValue,
           tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
-          index: index + 1,
           label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           icon: this._deviceIconPipe.transform(item.device),
         };
@@ -278,7 +290,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     const { data } = this._getOverviewData(table, relevantFields);
     
     this._totalCount = table.totalCount;
-    this._summaryData = this._getSummaryData(relevantFields, data);
+    this._summaryData = this._getSummaryData(data);
   }
   
   private _handleTotals(totals: KalturaReportTotal, compare?: KalturaReportTotal): void {
@@ -287,6 +299,10 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     if (compare) {
       this._compareTabsData = this._reportService.parseTotals(compare, this._dataConfig.totals, this._selectedMetric);
     }
+  }
+  
+  private _getPeriodLabel(period: { from: number, to: number }): string {
+    return `${DateFilterUtils.formatMonthDayString(period.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(period.to, analyticsConfig.locale)}`;
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -325,7 +341,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
       arrangeKeys(currentData);
       arrangeKeys(compareData);
       
-      this._summaryData = this._getSummaryData(relevantFields, currentData, compareData);
+      this._summaryData = this._getSummaryData(currentData, compareData);
     }
   }
 }

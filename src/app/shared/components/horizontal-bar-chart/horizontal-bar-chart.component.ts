@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BarRowTooltip, BarRowValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import { BarRowTooltip, BarRowValue, TrendValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import { KalturaPager } from 'kaltura-ngx-client';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
@@ -11,6 +11,7 @@ export interface BarChartRow {
   tooltip: BarRowTooltip | BarRowTooltip[];
   index?: number;
   icon?: string;
+  trend?: TrendValue;
 }
 
 @Component({
