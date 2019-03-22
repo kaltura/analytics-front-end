@@ -4,6 +4,30 @@
     <div class="kDivider" *ngIf="showDivider"></div>
     <p-table [class.kCompareMode]="isCompareMode"
              [value]="_tableData">
+      <ng-template pTemplate="header">
+        <tr class="kTopVideoHeader">
+          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
+          <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
+          <th [ngStyle]="{'width': '100%', 'padding-left': 0}">
+            {{'app.engagement.topVideosReport.viewDetails' | translate}}
+          </th>
+          <ng-container *ngIf="!isCompareMode">
+            <th [ngStyle]="{'width': '170px'}">
+              {{'app.engagement.topVideosReport.count_plays' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '220px'}">
+              {{'app.engagement.topVideosReport.unique_known_users' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '220px'}">{{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}</th>
+          </ng-container>
+          <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}">
+            {{'app.engagement.topVideosReport.score' | translate}}
+            <kInputHelper>
+              <span>Scoring formula</span>
+            </kInputHelper>
+          </th>
+        </tr>
+      </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
@@ -30,7 +54,9 @@
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
               <div class="kEntryDetails">
-                <span class="kTableColumn">{{'app.engagement.topVideosReport.by' | translate}} {{data['creator_name']}} • {{data['created_at']}}</span>
+                <span class="kTableColumn">
+                  {{'app.engagement.topVideosReport.by' | translate}} {{data['creator_name']}}
+                </span>
               </div>
             </div>
           </td>
@@ -39,33 +65,18 @@
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.engagement.topVideosReport.count_plays' | translate"
-                      [showOnEllipsis]="true">
-              {{'app.engagement.topVideosReport.count_plays' | translate}}
-            </span>
               </div>
             </td>
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
                 <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.engagement.topVideosReport.unique_known_users' | translate"
-                      [showOnEllipsis]="true">
-            {{'app.engagement.topVideosReport.unique_known_users' | translate}}
-            </span>
               </div>
             </td>
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
                 <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.engagement.topVideosReport.avg_view_drop_off' | translate"
-                      [showOnEllipsis]="true">
-              {{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}
-            </span>
               </div>
             </td>
           </ng-container>

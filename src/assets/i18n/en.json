@@ -327,6 +327,8 @@
         "creationDate": "Creation Date",
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data",
+        "score": "Score",
+        "viewDetails": "View Details",
         "by": "By",
         "entryStatus": {
           "deleted": "Deleted Entry",
