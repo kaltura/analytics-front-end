@@ -12,6 +12,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 @Component({
   selector: 'app-contributors-sources',
@@ -43,9 +44,11 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
   public _reportType = KalturaReportType.topSources;
-  public _barChartData: any = {};
+  public _barChartData: { [key: string]: BarChartRow[] } = {};
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];
+  public _currentPeriod: { from: number, to: number };
+  public _comparePeriod: { from: number, to: number };
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -70,6 +73,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   }
   
   protected _loadReport(): void {
+    this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._isBusy = true;
     this._blockerMessage = null;
     this.topSources$.next({table: null, compare: null, busy: true, error: null});
@@ -91,6 +95,12 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
       }))
       .subscribe(({ report, compare }) => {
           this._barChartData = {};
+          
+          if (compare) {
+            this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+          } else {
+            this._comparePeriod = null;
+          }
 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
@@ -141,35 +151,13 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     this._tabsData = this._reportService.parseTotals(table, this._dataConfig.totals, this._selectedMetrics);
   
-    const columnsCount = table.data ? table.data.split(';').length : 0;
-    const graphOptions = { xAxisLabelRotation: columnsCount > 3 ? 45 : 0 };
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      const currentData = this._reportService.convertTableDataToGraphData(tableData, this._dataConfig);
-      const compareData = this._reportService.convertTableDataToGraphData(compareTableData, this._dataConfig);
-      const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-      const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-      const { barChartData } = this._compareService.compareGraphData(
-        currentPeriod,
-        comparePeriod,
-        currentData,
-        compareData,
-        this._dataConfig.graph,
-        this._reportInterval,
-        null,
-        graphOptions
-      );
-      this._barChartData = barChartData;
+      
       this._compareFirstTimeLoading = false;
     } else {
-      this._barChartData = this._reportService.getGraphDataFromTable(
-        table,
-        this._dataConfig,
-        { from: this._filter.fromDate, to: this._filter.toDate },
-        this._reportInterval,
-        graphOptions
-        ).barChartData;
+    
     }
   }
 

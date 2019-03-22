@@ -28,51 +28,51 @@
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
   </div>
 
-  <div class="kReportContainer">
-    <div class="kMiniReportContainer">
-      <app-contributors-mini-highlights [dateFilter]="_dateFilter"
-                                        [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
-    </div>
-
-    <div class="kMiniReportContainer">
-      <app-contributors-mini-top-contributors [topContributors$]="topContributors.topContributors$"
-                                              [dateFilter]="_dateFilter"
-                                              [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
-    </div>
-
-    <div class="kMiniReportContainer">
-      <app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"
-                                         [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
-    </div>
-
-    <!-- Example -->
-    <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
+  <!--<div class="kReportContainer">-->
     <!--<div class="kMiniReportContainer">-->
-    <!--<ui-carousel [infinite]="false"-->
-    <!--[autoPlay]="false"-->
-    <!--[autoPlaySpeed]="5000"-->
-    <!--[arrows]="false"-->
-    <!--[fade]="false"-->
-    <!--[speed]="200"-->
-    <!--height="280px">-->
-    <!--<ui-carousel-item>-->
-    <!--<div class="kInsights">Some stuff</div>-->
-    <!--</ui-carousel-item>-->
-    <!--</ui-carousel>-->
+      <!--<app-contributors-mini-highlights [dateFilter]="_dateFilter"-->
+                                        <!--[refineFilter]="_refineFilter"></app-contributors-mini-highlights>-->
     <!--</div>-->
-  </div>
 
-  <div id="highlights-report" class="kReportContainer">
-    <app-contributors-highlights [dateFilterComponent]="dateFilter"
-                                 [dateFilter]="_dateFilter"
-                                 [refineFilter]="_refineFilter"></app-contributors-highlights>
-  </div>
+    <!--<div class="kMiniReportContainer">-->
+      <!--<app-contributors-mini-top-contributors [topContributors$]="topContributors.topContributors$"-->
+                                              <!--[dateFilter]="_dateFilter"-->
+                                              <!--[refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>-->
+    <!--</div>-->
 
-  <div id="top-contributors" class="kReportContainer">
-    <app-contributors-top-contributors #topContributors
-                                       [dateFilter]="_dateFilter"
-                                       [refineFilter]="_refineFilter"></app-contributors-top-contributors>
-  </div>
+    <!--<div class="kMiniReportContainer">-->
+      <!--<app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"-->
+                                         <!--[refineFilter]="_refineFilter"></app-contributors-mini-top-sources>-->
+    <!--</div>-->
+
+    <!--&lt;!&ndash; Example &ndash;&gt;-->
+    <!--&lt;!&ndash; IMPORTANT: set infinite and autoPlay to false in case there's only ONE item &ndash;&gt;-->
+    <!--&lt;!&ndash;<div class="kMiniReportContainer">&ndash;&gt;-->
+    <!--&lt;!&ndash;<ui-carousel [infinite]="false"&ndash;&gt;-->
+    <!--&lt;!&ndash;[autoPlay]="false"&ndash;&gt;-->
+    <!--&lt;!&ndash;[autoPlaySpeed]="5000"&ndash;&gt;-->
+    <!--&lt;!&ndash;[arrows]="false"&ndash;&gt;-->
+    <!--&lt;!&ndash;[fade]="false"&ndash;&gt;-->
+    <!--&lt;!&ndash;[speed]="200"&ndash;&gt;-->
+    <!--&lt;!&ndash;height="280px">&ndash;&gt;-->
+    <!--&lt;!&ndash;<ui-carousel-item>&ndash;&gt;-->
+    <!--&lt;!&ndash;<div class="kInsights">Some stuff</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;</ui-carousel-item>&ndash;&gt;-->
+    <!--&lt;!&ndash;</ui-carousel>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  <!--</div>-->
+
+  <!--<div id="highlights-report" class="kReportContainer">-->
+    <!--<app-contributors-highlights [dateFilterComponent]="dateFilter"-->
+                                 <!--[dateFilter]="_dateFilter"-->
+                                 <!--[refineFilter]="_refineFilter"></app-contributors-highlights>-->
+  <!--</div>-->
+
+  <!--<div id="top-contributors" class="kReportContainer">-->
+    <!--<app-contributors-top-contributors #topContributors-->
+                                       <!--[dateFilter]="_dateFilter"-->
+                                       <!--[refineFilter]="_refineFilter"></app-contributors-top-contributors>-->
+  <!--</div>-->
 
   <div id="sources" class="kReportContainer" style="height: 444px">
     <app-contributors-sources [dateFilter]="_dateFilter" #sources
