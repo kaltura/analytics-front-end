@@ -100,11 +100,16 @@
     font-weight: bold;
     padding-right: 24px;
   }
+
+  .kTop {
+    font-size: 15px;
+    color: $kGrayscale3;
+  }
 }
 
 .kDividerWrapper {
   display: flex;
-  height: 500px;
+  height: 532px;
 
   .kDivider {
     border-left: 1px solid #d9d9d9;
@@ -128,7 +133,7 @@
 }
 
 .emptymessage {
-  height: 500px;
+  height: 532px;
 
   .kEmptyMessage {
     top: 115px;

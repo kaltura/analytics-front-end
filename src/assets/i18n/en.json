@@ -150,6 +150,8 @@
       "contributorsSources_tt": "Which method do users use to add content into the platform",
       "contributorsAmount": "How many users contributed more than once?",
       "returningContributors": "Returning Contributors",
+      "score": "Score",
+      "viewDetails": "View Details",
       "topContributorsReport": {
         "role": "User Role",
         "email": "Email",
