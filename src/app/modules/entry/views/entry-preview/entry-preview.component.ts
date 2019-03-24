@@ -111,12 +111,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MM/DD/YY');
 
             tooltip = `
-              <div class="kEntryGraphTooltip" style="padding-bottom: 0px">
+              <div style="font-weight: normal; color: #999999">${progressValue}</div>
+              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0px">
                 <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
                 <span>${currentDatePeriod}</span>
                 <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
               </div>
-              <div class="kEntryGraphTooltip" style="padding-top: 0px">
+              <div class="kEntryCompareGraphTooltip" style="padding-top: 0px">
                 <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
                 <span>${compareDatePeriod}</span>
                 <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
