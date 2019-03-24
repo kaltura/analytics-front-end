@@ -216,7 +216,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           return ObservableOf({ report, compare: null });
         }
 
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: null };
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
         }
