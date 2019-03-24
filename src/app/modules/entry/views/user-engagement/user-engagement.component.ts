@@ -168,6 +168,7 @@ export class UserEngagementComponent extends EntryBase {
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
+        'name'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
