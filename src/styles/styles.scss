@@ -167,6 +167,7 @@ body{
   margin: 0px !important;
 }
 .ng-tooltip {
+  white-space: normal;
   background-color: white;
   color: $kGrayscale1;
   border: 1px solid $kGrayscale4;
