@@ -90,7 +90,7 @@ export class UserEngagementComponent extends EntryBase {
         
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         if (this.entryId) {
-          reportConfig.objectIds = this.entryId;
+          compareReportConfig.objectIds = this.entryId;
         }
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
