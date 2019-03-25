@@ -644,8 +644,8 @@ export class CompareService implements OnDestroy {
     const currentMin = getMinValue(current.series);
     const compareMax = getMaxValue(compare.series) || 1;
     const compareMin = getMinValue(compare.series);
-    const currentInterval = (currentMax - currentMin) / 5;
-    const compareInterval = (compareMax - compareMin) / 5;
+    const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(2));
+    const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(2));
     
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
