@@ -33,7 +33,7 @@ import { TopVideosTableComponent } from './views/engagement/top-videos/top-video
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
-import { UICarouselModule } from 'ui-carousel';
+import { UICarouselModule } from 'ng-carousel-iuno';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
