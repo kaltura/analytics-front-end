@@ -678,7 +678,7 @@ export class CompareService implements OnDestroy {
           name: compareMetricLabel,
           nameTextStyle: { padding: [0, 20, 0, 0] },
           max: compareMax,
-          min: currentMin,
+          min: compareMin,
           interval: compareInterval
         },
       ],
