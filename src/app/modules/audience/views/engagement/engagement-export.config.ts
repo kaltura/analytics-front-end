@@ -22,14 +22,19 @@ export class EngagementExportConfig implements ExportConfigService {
         sections: [ReportDataSection.table]
       },
       {
-        label: this._translate.instant('app.engagement.exportLabels.users'),
-        reportType: KalturaReportType.uniqueUsersPlay,
-        sections: [ReportDataSection.table]
-      },
-      {
         label: this._translate.instant('app.engagement.exportLabels.insights'),
         reportType: KalturaReportType.userEngagementTimeline,
         sections: [ReportDataSection.table]
+      },
+      {
+        label: this._translate.instant('app.engagement.exportLabels.impressions'),
+        reportType: KalturaReportType.contentDropoff,
+        sections: [ReportDataSection.totals]
+      },
+      {
+        label: this._translate.instant('app.engagement.exportLabels.syndication'),
+        reportType: KalturaReportType.topSyndication,
+        sections: [ReportDataSection.totals, ReportDataSection.graph, ReportDataSection.table]
       },
     ];
   }

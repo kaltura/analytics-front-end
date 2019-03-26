@@ -310,8 +310,9 @@
       "exportLabels": {
         "highlights": "Highlights",
         "topVideos": "Top Videos",
-        "users": "Users",
-        "insights": "Insights"
+        "impressions": "Impressions",
+        "insights": "Insights",
+
       },
       "highlightsReport": {
         "month_id": "Month",
