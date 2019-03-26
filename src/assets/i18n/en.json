@@ -152,6 +152,7 @@
       "contributorsSources_tt": "Which method do users use to add content into the platform",
       "contributorsAmount": "How many users contributed more than once?",
       "returningContributors": "Returning Contributors",
+      "noRanking": "Before April 2018 contributors ranking is not available",
       "topContributorsReport": {
         "role": "User Role",
         "email": "Email",

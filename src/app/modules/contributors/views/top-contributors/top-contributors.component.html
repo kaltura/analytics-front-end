@@ -26,18 +26,18 @@
   </div>
 
   <div class="kReportContainer">
-    <div class="kMiniReportContainer">
+    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
       <app-contributors-mini-highlights [dateFilter]="_dateFilter"
                                         [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
     </div>
 
-    <div class="kMiniReportContainer">
+    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
       <app-contributors-mini-top-contributors [topContributors$]="topContributors.topContributors$"
                                               [dateFilter]="_dateFilter"
                                               [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
     </div>
 
-    <div class="kMiniReportContainer">
+    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
       <app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"
                                          [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
     </div>
