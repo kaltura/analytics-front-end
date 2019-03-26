@@ -1,8 +1,7 @@
 <div data-aid="report-storage" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
-    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
-                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.title' | translate"></app-export-csv>
+    <app-export-csv name="storage"></app-export-csv>
     <app-date-filter #dateFilter
                      name="storage"
                      [dateRange]="_dateRange"
