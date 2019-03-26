@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { AuthService, ErrorDetails, ErrorsManagerService, GraphsData, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import {BehaviorSubject, of as ObservableOf} from 'rxjs';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig, ReportDataItemConfig } from 'shared/services/storage-data-base.config';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { SourcesDataConfig } from './sources-data.config';
@@ -146,6 +146,23 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      const getSource = item => item.source;
+      const uniqueSourcesKeys = Array.from(new Set([...tableData.map(getSource), ...compareTableData.map(getSource)]));
+      const getEmptySource = source =>
+        Object
+          .keys(this._dataConfig[ReportDataSection.graph].fields)
+          .reduce((result, key) => (result[key] = 0, result), { source });
+
+      uniqueSourcesKeys.forEach(source => {
+        if (!tableData.find(item => item.source === source)) {
+          tableData.push(getEmptySource(source));
+        }
+  
+        if (!compareTableData.find(item => item.source === source)) {
+          compareTableData.push(getEmptySource(source));
+        }
+      });
+  
       const currentData = this._reportService.convertTableDataToGraphData(tableData, this._dataConfig);
       const compareData = this._reportService.convertTableDataToGraphData(compareTableData, this._dataConfig);
       const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
