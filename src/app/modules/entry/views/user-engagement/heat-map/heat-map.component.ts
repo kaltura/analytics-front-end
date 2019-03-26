@@ -120,16 +120,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
         item.width = `${item.count / array.length * 100}%`;
         
         const message = this._translate.instant(`app.entry.heatMap.tooltip.${item.plays > 2 ? 'n' : item.plays}`);
-        item.tooltip = `
-          <div class="kHeatMapTooltipWrapper">
-            <div class="kDuration"></div>
-            <div class="kHeatMapTooltip">
-              <i class="kBullet" style="background-color: ${item.color}"></i>
-              <span class="kMessage">${message}</span>
-            </div>
-          </div>
-        `;
-        
+        item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}"></i><span class="kMessage">${message}</span></div></div>`;
         return item;
       });
   }
