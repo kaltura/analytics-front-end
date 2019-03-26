@@ -29,14 +29,12 @@ export class ExportCsvComponent implements OnDestroy {
   
   @Input() set reports(value: ExportItem[]) {
     if (Array.isArray(value)) {
-      this._value = this._getNodes(value);
+      this._options = this._getNodes(value);
     }
   }
   
   public _opened = false;
-  
-  public _value: TreeNode[] = [];
-  
+  public _options: TreeNode[] = [];
   public _selected: TreeNode[] = [];
   
   constructor(private _reportService: ReportService,
@@ -51,11 +49,18 @@ export class ExportCsvComponent implements OnDestroy {
     return [{
       label: this._translate.instant('app.common.all'),
       expanded: true,
+      partialSelected: false,
       children: reports.map(report => ({
         label: report.label,
         data: report,
       })),
     }];
+  }
+  
+  public _onPopupClose(): void {
+    this._opened = false;
+    this._selected = [];
+    this._options[0].partialSelected = false;
   }
   
   public _export(): void {
