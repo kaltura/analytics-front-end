@@ -127,6 +127,7 @@
       justify-content: center;
       background-color: rgba(49,190,166,0.2);
       margin-right: 10px;
+      flex: 0 1 auto;
 
       i {
         display: inline-block;
@@ -140,6 +141,8 @@
       flex-direction: column;
       white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
 
       .kTitle {
         color: $kGrayscale1;

@@ -66,8 +66,12 @@
               </div>
             </td>
           </ng-container>
-          <td class="kScore" [ngStyle]="{'width': '110px'}">
-            <span>{{data['contributor_ranking']}}/10</span>
+          <td class="kScore" [ngStyle]="{'width': '110px', 'text-align': 'center'}">
+            <span *ngIf="data['contributor_ranking'] !== undefined">{{data['contributor_ranking']}}/10</span>
+            <div *ngIf="data['contributor_ranking'] === undefined" [ngStyle]="{display: 'inline-block'}">
+              {{'app.common.na' | translate}}
+              <i class="kIconhelp_full" [kTooltip]="'app.contributors.noRanking' | translate"></i>
+            </div>
           </td>
         </tr>
       </ng-template>
