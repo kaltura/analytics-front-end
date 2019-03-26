@@ -100,6 +100,13 @@
     font-weight: bold;
     padding-right: 24px;
   }
+  .kIconhelp_full{
+    font-size: 15px;
+    &:hover{
+      color: $kSecondary;
+      cursor: pointer;
+    }
+  }
 }
 
 .kDividerWrapper {
