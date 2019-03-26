@@ -10,13 +10,19 @@
               [popupWidth]="240"
               [closeBtn]="false"
               [targetRef]="toggle"
-              [targetOffset]="{'x':-140, 'y': 20}"
+              [targetOffset]="{'x':-140, 'y': 42}"
               (onOpen)="_opened = true"
               (onClose)="_opened = false">
   <ng-template>
     <div class="kExportPanel">
-      <button pButton class="kButtonBranded kExportBtn"
-      [label]="'app.common.exportReports' | translate"></button>
+      <p-tree selectionMode="checkbox"
+              [value]="_value"
+              [(selection)]="_selected"></p-tree>
+
+      <button pButton
+              class="kButtonBranded kExportBtn"
+              [label]="'app.common.exportReports' | translate"
+              (click)="_export()"></button>
     </div>
   </ng-template>
 </kPopupWidget>

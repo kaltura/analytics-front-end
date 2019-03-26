@@ -89,7 +89,8 @@
       "clearAll": "Clear All",
       "details": "See Details",
       "compareMetricTo": "{{metricName}} compare to",
-      "none": "None"
+      "none": "None",
+      "all": "All"
     },
     "errors":{
       "errorHeader": "Error",
@@ -306,6 +307,12 @@
       "perc75": "75% Play-through",
       "perc100": "100% Play - through",
       "totalUsers": "Total Users",
+      "exportLabels": {
+        "highlights": "Highlights",
+        "topVideos": "Top Videos",
+        "users": "Users",
+        "insights": "Insights"
+      },
       "highlightsReport": {
         "month_id": "Month",
         "date_id": "Day",
