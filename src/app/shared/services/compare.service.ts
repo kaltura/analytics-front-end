@@ -501,7 +501,7 @@ export class CompareService implements OnDestroy {
     currentData.forEach((currentRow, index) => {
       let data = {};
       const rowColumns = Object.keys(currentRow);
-      const compareRow = compareData[index];
+      const compareRow = compareData[index] || {};
       
       rowColumns.forEach(column => {
         const fieldConfig = config.fields[column];
