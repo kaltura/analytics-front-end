@@ -146,8 +146,8 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      const getSource = item => item.source;
-      const uniqueSourcesKeys = Array.from(new Set([...tableData.map(getSource), ...compareTableData.map(getSource)]));
+      const getSource = arr => arr.map(({ source }) => source);
+      const uniqueSourcesKeys = Array.from(new Set([...getSource(tableData), ...getSource(compareTableData)]));
 
       // produce { source: 'sourceName', key_from_config1: 0, key_from_config2: 0...} object
       const getEmptySource = source =>
