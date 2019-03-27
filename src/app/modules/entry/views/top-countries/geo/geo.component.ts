@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -7,6 +7,7 @@ import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { TopCountriesConfig } from '../top-countries.config';
+import { DataTable } from 'primeng/primeng';
 
 @Component({
   selector: 'app-entry-geo',
@@ -31,6 +32,8 @@ export class GeoComponent {
   }
   
   @Output() onDrillDown = new EventEmitter<{ drillDown: string[], reload: boolean }>();
+  
+  @ViewChild('table') _table: DataTable;
   
   private _echartsIntance: any; // echart instance
   
@@ -112,6 +115,11 @@ export class GeoComponent {
     } else if (drillDown.length === 2) {
       drillDown.pop();
     }
+    
+    if (this._table) {
+      this._table.reset();
+    }
+
     this._mapZoom = drillDown.length === 0 ? 1.2 : this._mapZoom;
     this.onDrillDown.emit({ drillDown, reload });
   }

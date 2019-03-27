@@ -1,7 +1,7 @@
 <div [attr.data-aid]="'table-graph-geo-' + name" class="kReportContent kTopCountries" [ngClass]="isCompareMode ? 'kCompareMode' : 'kDefaultMode'">
   <div class="kTable">
     <div class="kTableContainer">
-      <p-table [value]="tableData" [paginator]="true" [rows]="5">
+      <p-table #table [value]="tableData" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
           <tr>
             <th [ngStyle]="{'width': '42px'}">
