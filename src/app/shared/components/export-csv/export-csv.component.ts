@@ -28,10 +28,23 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() pager: KalturaPager;
   @Input() entryId: string;
   @Input() width = 240;
-
+  
   @Input() set reports(value: ExportItem[]) {
-    if (Array.isArray(value) && value.length) {
-      this._options = this._getNodes(value);
+    if (Array.isArray(value)) {
+      this._showComponent = true;
+
+      if (value.length > 1) { // show dropdown
+        this._singleMode = false;
+        this._options = this._getNodes(value);
+      } else if (value.length === 1) { // show button
+        this._singleMode = true;
+        this._selected = [{
+          parent: {},
+          data: value[0],
+        }];
+      }
+    } else {
+      this._showComponent = false;
     }
   }
   
@@ -40,6 +53,9 @@ export class ExportCsvComponent implements OnDestroy {
   public _opened = false;
   public _options: TreeNode[] = [];
   public _selected: TreeNode[] = [];
+  public _singleMode = false;
+  public _showComponent = false;
+  public _exportingCsv = false;
   
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
@@ -64,7 +80,7 @@ export class ExportCsvComponent implements OnDestroy {
   public _onPopupClose(): void {
     this._opened = false;
     this._selected = [];
-
+    
     if (this._options[0]) {
       this._options[0].partialSelected = false;
     }

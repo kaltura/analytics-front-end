@@ -1,6 +1,10 @@
 @import '../../../../styles/variables';
 
 .kExport {
+  .kExportBtn {
+    margin-right: 16px;
+  }
+
   .kDropDown {
     background-color: white;
     width: 100px;
@@ -62,5 +66,55 @@
     .ui-treenode-children {
       padding-left: 1.5em;
     }
+  }
+}
+
+
+:host /deep/ button {
+  .ui-button-text {
+    padding-left: 3.1em;
+  }
+}
+
+@keyframes processing-button {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(46px);
+  }
+}
+
+.ui-button.kButtonProcess {
+  position: relative;
+  overflow: hidden;
+
+  &:disabled {
+    opacity: 1;
+  }
+
+  /deep/ .ui-button-text {
+    position: relative;
+  }
+
+  &:before {
+    position: absolute;
+    content: ' ';
+    top: 0;
+    left: -46px;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        -55deg,
+        transparent 1px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 11px,
+        transparent 12px,
+        transparent 20px
+    );
+    animation-name: processing-button;
+    animation-duration: .6s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 }
