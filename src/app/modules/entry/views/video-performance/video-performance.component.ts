@@ -248,12 +248,7 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-    
-    if (analyticsConfig.isHosted) {
-      setTimeout(() => {
-        this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
-      }, 0);
-    }
+    this.updateLayout();
   }
   
   public _onSortChanged(event: SortEvent) {
@@ -278,6 +273,18 @@ export class VideoPerformanceComponent extends EntryBase {
     } else {
       this._metricsLineChartData = null;
       this._metricsCompareTo = null;
+    }
+  }
+
+  public onPaginationChange(event): void {
+    this.updateLayout();
+  }
+
+  private updateLayout(): void {
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
+      }, 0);
     }
   }
 }

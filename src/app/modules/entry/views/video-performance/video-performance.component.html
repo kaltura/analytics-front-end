@@ -56,7 +56,7 @@
                    [sortOrder]="-1"
                    [paginator]="true"
                    [rows]="_pageSize"
-                   (sortFunction)="_onSortChanged($event)">
+                   (sortFunction)="_onSortChanged($event)" (onPage)="onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
