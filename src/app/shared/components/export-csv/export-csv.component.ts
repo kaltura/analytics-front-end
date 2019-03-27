@@ -29,7 +29,7 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() entryId: string;
   
   @Input() set reports(value: ExportItem[]) {
-    if (Array.isArray(value)) {
+    if (Array.isArray(value) && value.length) {
       this._options = this._getNodes(value);
     }
   }

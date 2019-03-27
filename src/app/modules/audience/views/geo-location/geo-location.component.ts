@@ -21,12 +21,18 @@ import { refineFilterToServerValue } from 'shared/components/filter/filter-to-se
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
+import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { GeoExportConfig } from './geo-export.config';
 
 @Component({
   selector: 'app-geo-location',
   templateUrl: './geo-location.component.html',
   styleUrls: ['./geo-location.component.scss'],
-  providers: [GeoLocationDataConfig, KalturaLogger.createLogger('GeoLocationComponent')]
+  providers: [
+    GeoExportConfig,
+    GeoLocationDataConfig,
+    KalturaLogger.createLogger('GeoLocationComponent')
+  ]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
   private _dataConfig: ReportDataConfig;
@@ -49,6 +55,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _dateFilter: DateChangeEvent = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _refineFilter: RefineFilter = [];
+  public _exportConfig: ExportItem[] = [];
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
@@ -81,7 +88,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
               private _trendService: TrendService,
               private http: HttpClient,
               private _dataConfigService: GeoLocationDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _exportConfigService: GeoExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
