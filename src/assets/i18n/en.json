@@ -7,6 +7,7 @@
       "live": "Live"
     },
     "filters": {
+      "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
       "filter": "Filter",
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",

@@ -10,6 +10,7 @@ import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isEqual } from 'shared/utils/is-equals';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export interface OptionItem {
   value: any;
@@ -94,6 +95,8 @@ export class FilterComponent {
           }
         });
       }
+
+      this._toggleDisclaimer();
     }
   }
   
@@ -103,7 +106,8 @@ export class FilterComponent {
   protected _currentFilters: FilterItem[] = []; // local state
   protected _appliedFilters: FilterItem[] = [];
   protected _showFilters: boolean;
-
+  
+  public _showDisclaimer = false;
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
@@ -225,6 +229,16 @@ export class FilterComponent {
       });
     }
   }
+  
+  protected _toggleDisclaimer(): void {
+    if (this._dateFilter) {
+      const disclaimerDate = DateFilterUtils.getMomentDate('04/01/2018');
+      const startDate = DateFilterUtils.getMomentDate(this._dateFilter.startDate);
+      this._showDisclaimer = this._tags.length && startDate.isSameOrBefore(disclaimerDate);
+    } else {
+      this._showDisclaimer = false;
+    }
+  }
 
   protected _updateLayout(): void {
     if (analyticsConfig.isHosted) {
@@ -289,6 +303,7 @@ export class FilterComponent {
       this._updateSelectedValues(this._currentFilters);
       this.filterChange.emit([...this._appliedFilters]);
       this._tags = this._prepareFilterTags();
+      this._toggleDisclaimer();
   
       this._bottomPadding = this._tags.length ? '24px' : '0';
     } else {

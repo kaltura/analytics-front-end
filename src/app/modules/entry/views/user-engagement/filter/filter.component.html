@@ -7,6 +7,10 @@
 </div>
 
 <div class="kTagsContainer" *ngIf="_tags.length">
+  <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconhelp_full"></i>
+    {{'app.filters.disclaimer' | translate}}
+  </span>
   <kTags title=""
          labelField="label"
          tooltipField="tooltip"
