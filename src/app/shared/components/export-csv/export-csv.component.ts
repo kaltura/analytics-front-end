@@ -1,10 +1,11 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPager, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
 export interface ExportConfigService {
   getConfig(): ExportItem[];
@@ -32,6 +33,8 @@ export class ExportCsvComponent implements OnDestroy {
       this._options = this._getNodes(value);
     }
   }
+  
+  @ViewChild('popupWidgetComponent') _popup: PopupWidgetComponent;
   
   public _opened = false;
   public _options: TreeNode[] = [];
@@ -71,5 +74,9 @@ export class ExportCsvComponent implements OnDestroy {
       .filter(({ parent }) => !!parent)
       .map(({ data }) => data);
     console.warn(selection);
+    
+    if (this._popup) {
+      this._popup.close();
+    }
   }
 }

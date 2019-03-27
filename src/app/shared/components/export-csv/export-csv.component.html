@@ -7,7 +7,8 @@
     </div>
   </div>
 
-  <kPopupWidget [attr.data-aid]="'export-csv-' + name"
+  <kPopupWidget #popupWidgetComponent
+                [attr.data-aid]="'export-csv-' + name"
                 [popupWidth]="240"
                 [closeBtn]="false"
                 [targetRef]="toggle"
