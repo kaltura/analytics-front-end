@@ -153,6 +153,10 @@
       "contributorsAmount": "How many users contributed more than once?",
       "returningContributors": "Returning Contributors",
       "noRanking": "Before April 2018 contributors ranking is not available",
+      "exportLabels": {
+        "topContributors": "Top Contributors",
+        "topSources": "Top Sources"
+      },
       "topContributorsReport": {
         "role": "User Role",
         "email": "Email",
