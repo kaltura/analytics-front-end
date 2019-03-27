@@ -230,7 +230,7 @@ export class SyndicationComponent {
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
-        'object_id'
+        this._drillDown ? 'referrer' : 'object_id'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;
