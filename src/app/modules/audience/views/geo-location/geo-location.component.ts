@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
@@ -21,6 +21,7 @@ import { refineFilterToServerValue } from 'shared/components/filter/filter-to-se
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
+import { DataTable } from 'primeng/primeng';
 
 @Component({
   selector: 'app-geo-location',
@@ -29,6 +30,8 @@ import { getCountryName } from 'shared/utils/get-country-name';
   providers: [GeoLocationDataConfig, KalturaLogger.createLogger('GeoLocationComponent')]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
+  @ViewChild('table') _table: DataTable;
+
   private _dataConfig: ReportDataConfig;
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
@@ -181,6 +184,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
     this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
+    
+    if (this._table) {
+      this._table.reset();
+    }
+    
     this.loadReport();
   }
 
