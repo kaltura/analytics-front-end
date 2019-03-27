@@ -79,7 +79,7 @@ export class GeoComponent {
     this.tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this.selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
+      value.push(parseFloat(data[this.selectedMetrics].replace(new RegExp(',', 'g'), '')));
       mapConfig.series[0].data.push({
         name: this.drillDownItems.length === 0
           ? getCountryName(data.country, false)
@@ -89,7 +89,7 @@ export class GeoComponent {
         value
       });
       if (parseInt(data[this.selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this.selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        maxValue = parseInt(data[this.selectedMetrics].replace(new RegExp(',', 'g'), ''));
       }
     });
     

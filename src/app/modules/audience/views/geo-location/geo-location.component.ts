@@ -269,7 +269,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), '')));
+      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -279,7 +279,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(analyticsConfig.valueSeparator, 'g'), ''));
+        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
       }
     });
 
