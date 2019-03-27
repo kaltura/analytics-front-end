@@ -426,6 +426,14 @@
         "image": "Image",
         "live": "Live",
         "unknown": "Unknown"
+      },
+      "exportLabels": {
+        "userEngagement": "User Engagement",
+        "videoPerformance": "Video Performance",
+        "impressions": "Impressions",
+        "topCountries": "Top Countries",
+        "devicesOverview": "Devices Overview",
+        "syndication": "Syndication"
       }
     },
     "contentInteractions": {

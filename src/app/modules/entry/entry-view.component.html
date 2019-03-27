@@ -6,7 +6,9 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
           <span class="kTitle">{{_entryName}}</span>
-          <app-export-csv name="entry"></app-export-csv>
+          <app-export-csv name="entry"
+                          [reports]="_exportConfig"
+                          [dateFilter]="_dateFilter"></app-export-csv>
           <div class="kFilter kOverrideFAIcons">
             <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
               <span>{{'app.filters.filter' | translate}}</span>
