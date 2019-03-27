@@ -22,7 +22,6 @@ export class TechnologyComponent implements OnInit {
   public _filterEvent: DateChangeEvent = null;
   public _devicesFilter: string[] = [];
   public _devicesList: { value: string, label: string; }[] = [];
-  public _exportData: { headers: string, totalCount: number, filter: KalturaEndUserReportInputFilter, selectedMetrics: string; } = null;
   public _reportType = KalturaReportType.platforms;
   
   constructor() {
@@ -47,9 +46,5 @@ export class TechnologyComponent implements OnInit {
     if (this._overview) {
       this._overview.resetDeviceFilters();
     }
-  }
-  
-  public _onExportDataChange(event: { headers: string, totalCount: number, filter: KalturaEndUserReportInputFilter, selectedMetrics: string }): void {
-    this._exportData = event;
   }
 }

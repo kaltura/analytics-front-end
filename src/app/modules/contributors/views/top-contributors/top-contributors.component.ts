@@ -18,7 +18,6 @@ export class TopContributorsComponent {
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
-  public _csvExportHeaders = '';
   public _totalCount: number;
   public _reportType: KalturaReportType = KalturaReportType.userUsage;
   public _selectedMetrics: string;

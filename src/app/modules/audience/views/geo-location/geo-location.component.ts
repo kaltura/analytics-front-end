@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
@@ -42,7 +42,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _mapChartData: any = {'count_plays': {}};
 
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
@@ -202,7 +201,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
             this.handleTable(report.table); // handle table
           }
           this.updateMap();
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
           this._loadTrendData();
         },
@@ -254,10 +252,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     this.selectedTab = this._tabsData[0];
-  }
-
-  private prepareCsvExportHeaders(): void {
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.geo');
   }
 
   private updateMap(): void {

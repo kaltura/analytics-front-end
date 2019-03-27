@@ -43,7 +43,6 @@ export class EndUserStorageComponent implements OnInit {
   public _dateRange = DateRanges.CurrentQuarter;
 
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
@@ -201,7 +200,6 @@ export class EndUserStorageComponent implements OnInit {
               this.handleTotals(report.totals); // handle totals
             }
           }
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
         },
         error => {
@@ -303,9 +301,5 @@ export class EndUserStorageComponent implements OnInit {
 
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
-  }
-
-  private prepareCsvExportHeaders(): void {
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.bandwidth');
   }
 }

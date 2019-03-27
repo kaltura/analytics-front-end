@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PublisherStorageDataConfig } from './publisher-storage-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -41,7 +41,6 @@ export class PublisherStorageComponent implements OnInit {
   public _dateRange = DateRanges.CurrentQuarter;
 
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
@@ -156,7 +155,6 @@ export class PublisherStorageComponent implements OnInit {
             }
           }
           this.updateChartType();
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
         },
         error => {
@@ -258,13 +256,4 @@ export class PublisherStorageComponent implements OnInit {
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage' || this._selectedMetrics === 'deleted_storage') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
   }
-
-  private prepareCsvExportHeaders(): void {
-    let tabsData = JSON.parse(JSON.stringify(this._tabsData));
-    this._accumulativeStorage.forEach((item: Tab) => {
-      tabsData.push({title: item.title});
-    });
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(tabsData, this._columns, 'app.bandwidth');
-  }
-
 }

@@ -51,7 +51,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _tabsData: Tab[] = [];
   public _compareTabsData: Tab[] = [];
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
