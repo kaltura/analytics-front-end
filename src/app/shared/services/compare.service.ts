@@ -649,9 +649,14 @@ export class CompareService implements OnDestroy {
     };
   
     const currentMax = getMaxValue(current.series) || 1;
-    const currentMin = getMinValue(current.series);
     const compareMax = getMaxValue(compare.series) || 1;
-    const compareMin = getMinValue(compare.series);
+    let currentMin = getMinValue(current.series);
+    let compareMin = getMinValue(compare.series);
+  
+    // prevent having min equals max
+    currentMin = currentMin === currentMax ? 0 : currentMin;
+    compareMin = compareMin === compareMax ? 0 : compareMin;
+
     const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(2));
     const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(2));
     
@@ -678,7 +683,7 @@ export class CompareService implements OnDestroy {
           name: compareMetricLabel,
           nameTextStyle: { padding: [0, 20, 0, 0] },
           max: compareMax,
-          min: currentMin,
+          min: compareMin,
           interval: compareInterval
         },
       ],
