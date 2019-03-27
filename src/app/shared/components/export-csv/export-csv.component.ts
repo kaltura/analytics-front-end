@@ -60,7 +60,10 @@ export class ExportCsvComponent implements OnDestroy {
   public _onPopupClose(): void {
     this._opened = false;
     this._selected = [];
-    this._options[0].partialSelected = false;
+
+    if (this._options[0]) {
+      this._options[0].partialSelected = false;
+    }
   }
   
   public _export(): void {
