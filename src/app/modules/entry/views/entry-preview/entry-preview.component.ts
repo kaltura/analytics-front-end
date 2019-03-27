@@ -301,7 +301,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
-          "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
+          // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           "controlBarContainer": {
             "plugin": true,
             "hover": false
@@ -371,6 +371,41 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         this._currentTime = parseFloat(event) * 1000;
       });
     });
+
+    // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
+    try {
+      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName("head")[0];
+      if (head) {
+        let css = document.createElement('style');
+        css['type'] = 'text/css';
+
+        let styles = `
+        .scrubber .playHead {
+          border-bottom-left-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+          border-top-left-radius: 5px !important;
+          border-top-right-radius: 5px !important;
+          width: 10px !important;
+          height: 14px !important;
+        }
+        .scrubber .handle-wrapper{
+          bottom: 3px !important;
+          margin: 0px !important;
+        }
+        .controlsContainer{
+          border-top: none !important;
+        }`;
+
+        if (css['styleSheet']) {
+          css['styleSheet'].cssText = styles;
+        } else {
+          css.appendChild(document.createTextNode(styles));
+        }
+        head.appendChild(css);
+      }
+    } catch (e) {
+      console.log("Failed to inject custom CSS to player");
+    }
 
   }
 
