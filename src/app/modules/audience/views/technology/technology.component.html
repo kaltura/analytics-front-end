@@ -7,7 +7,10 @@
                         (deviceFilterChange)="_onDeviceFilterChange($event)">
     <div class="kReportHeader">
       <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
-      <app-export-csv name="technology"></app-export-csv>
+      <app-export-csv name="technology"
+                      [width]="260"
+                      [reports]="_exportConfig"
+                      [dateFilter]="_filterEvent"></app-export-csv>
       <app-date-filter #dateFilter
                        name="technology"
                        [dateRange]="_dateRange"

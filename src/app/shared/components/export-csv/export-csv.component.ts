@@ -27,7 +27,8 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() dateFilter: DateChangeEvent;
   @Input() pager: KalturaPager;
   @Input() entryId: string;
-  
+  @Input() width = 240;
+
   @Input() set reports(value: ExportItem[]) {
     if (Array.isArray(value) && value.length) {
       this._options = this._getNodes(value);

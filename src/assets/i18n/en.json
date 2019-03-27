@@ -274,6 +274,11 @@
         "device": "Device",
         "filterDeviceType": "Filter Device Type",
         "index": "#",
+        "exportLabels": {
+          "overview": "Devices Overview",
+          "topOs": "Top Operating Systems",
+          "topBrowsers": "Top Browsers"
+        },
         "graphTooltip": {
           "count_plays": "Plays {{0}}",
           "sum_time_viewed": "Minutes Viewed {{0}}",
