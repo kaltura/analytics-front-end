@@ -15,12 +15,15 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
+import { PublisherExportConfig } from './publisher-export.config';
+import { ExportItem } from 'shared/components/export-csv/export-csv.component';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './publisher-storage.component.html',
   styleUrls: ['./publisher-storage.component.scss'],
   providers: [
+    PublisherExportConfig,
     KalturaLogger.createLogger('PublisherStorageComponent'),
     PublisherStorageDataConfig,
   ]
@@ -49,6 +52,8 @@ export class PublisherStorageComponent implements OnInit {
   
   public _pageSize = analyticsConfig.defaultPageSize;
   public reportType: KalturaReportType = KalturaReportType.partnerUsage;
+  public _exportConfig: ExportItem[] = [];
+  public _dateFilter: DateChangeEvent;
   public compareFilter: KalturaReportInputFilter = null;
   public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
@@ -70,9 +75,11 @@ export class PublisherStorageComponent implements OnInit {
               private _compareService: CompareService,
               private _authService: AuthService,
               private _dataConfigService: PublisherStorageDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _exportConfigService: PublisherExportConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._exportConfig = _exportConfigService.getConfig();
   }
 
   ngOnInit() {
@@ -80,6 +87,7 @@ export class PublisherStorageComponent implements OnInit {
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;

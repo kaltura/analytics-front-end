@@ -235,7 +235,11 @@
       "total_msecs_tt": "The total minutes at the end of the selected timeframe",
       "name": "User ID",
       "NAME": "User ID",
-      "objectId": "Object Id"
+      "objectId": "Object Id",
+      "exportLabels": {
+        "endUser": "End user",
+        "publisher": "Publisher Bandwidth"
+      }
     },
     "audience":{
       "geo": {
