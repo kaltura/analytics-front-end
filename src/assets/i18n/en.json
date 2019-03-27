@@ -434,7 +434,13 @@
       "mostPopular": "Most Popular Playback Speed",
       "count_info": "Times info panel was opened",
       "count_related_selected": "Interactions with related content",
-      "insightsDescription": "{{0}} of all play sessions"
+      "insightsDescription": "{{0}} of all play sessions",
+      "exportLabels": {
+        "interactions": "Interactions",
+        "moderation": "Moderation",
+        "playback": "Playback Rate",
+        "highlights": "Highlights"
+      }
     }
   }
 }
