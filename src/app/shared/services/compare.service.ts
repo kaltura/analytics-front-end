@@ -23,7 +23,7 @@ export class CompareService implements OnDestroy {
   ngOnDestroy() {
   }
   
-  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): [string, moment.Moment] {
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): [string, string] {
     let relevantLabelString = '';
     let relevantDate = null;
     
