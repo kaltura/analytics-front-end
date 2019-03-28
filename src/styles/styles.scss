@@ -180,6 +180,11 @@ body{
     strong {
       color: $kGrayscale1;
     }
+
+    .kTimePeriod {
+      flex: 1;
+      text-align: left;
+    }
     .kTotalsCompareTooltipValue {
       display: flex;
       margin-left: 24px;

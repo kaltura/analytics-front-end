@@ -635,7 +635,7 @@ export class CompareService implements OnDestroy {
         const compareVal = field.format(compareData[index] || '0');
         tabsData.push({
           title: field.title,
-          tooltip: `${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}`,
+          tooltip: `${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, field.units ? field.units(compareData[index]) : config.units || '')}${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, field.units ? field.units(data[index]) : config.units || '')}`,
           value: trend !== null ? trend : '–',
           selected: header === (selected || config.preSelected),
           units: trend !== null ? '%' : '',
