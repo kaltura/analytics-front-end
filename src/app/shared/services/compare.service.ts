@@ -107,9 +107,6 @@ export class CompareService implements OnDestroy {
           let currentName;
           
           if (!config.fields[graph.id].nonDateGraphLabel) {
-            // currentName = reportInterval === KalturaReportInterval.months
-            //   ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
-            //   : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
             currentName = `${currentLabel}${analyticsConfig.valueSeparator}${compareLabel}`;
           } else {
             currentName = currentLabel;
