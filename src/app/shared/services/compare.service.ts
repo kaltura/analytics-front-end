@@ -165,7 +165,14 @@ export class CompareService implements OnDestroy {
         const compareValue = typeof config.fields[graph.id].graphTooltip === 'function'
           ? config.fields[graph.id].graphTooltip(compare.value)
           : compare.value;
-        return `<div class="kGraphTooltip">${comparePeriod}<br/><span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>${currentPeriod}<br/><span class="kBullet" style="color: ${colors[0]}">&bull;</span>${currentValue}</div>`;
+        return `
+          <div class="kGraphTooltip">
+            ${comparePeriod}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
+            ${currentPeriod}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>${currentValue}
+          </div>
+        `;
       };
       const xAxisLabelRotation = graphOptions ? graphOptions.xAxisLabelRotation : null;
       const yAxisLabelRotation = graphOptions ? graphOptions.yAxisLabelRotation : null;
@@ -635,6 +642,13 @@ export class CompareService implements OnDestroy {
       const compareFormatFn = val => typeof config.fields[compareMetric].graphTooltip === 'function'
         ? config.fields[compareMetric].graphTooltip(val)
         : val;
+  
+      const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
+      let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
+      let comparePeriod: string | Date = DateFilterUtils.getMomentDate(Number(comparePeriodDate)).toDate();
+  
+      currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
+      comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
 
       const currentValue = currentFormatFn(current.value);
       const compareValue = compare ? compareFormatFn(compare.value) : compareFormatFn(metric.value);
@@ -645,17 +659,23 @@ export class CompareService implements OnDestroy {
 
         return `
           <div class="kGraphTooltip">
-            ${compareDate}<br/>
+            ${comparePeriod}<br/>
             <span class="kBullet" style="color: ${colors[2]}">&bull;</span>&nbsp;${metricValue}<br/>
             <span class="kBullet" style="color: ${colors[3]}">&bull;</span>&nbsp;${compareMetricValue}<br/>
-            ${currentDate}<br/>
+            ${currentPeriod}<br/>
             <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
             <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
           </div>
       `;
       }
   
-      return `<div class="kGraphTooltip">${current.name}<br/><span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/><span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}</div>`;
+      return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
+          </div>
+      `;
     };
   
     const currentMax = getMaxValue(current.series) || 1;
