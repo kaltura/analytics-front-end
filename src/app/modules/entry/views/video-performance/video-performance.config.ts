@@ -22,7 +22,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             sortOrder: 1,
           },
           'date_id': {
-            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
+            format: value => DateFilterUtils.formatFullDateString(value),
             nonComparable: true,
             sortOrder: 1,
           },

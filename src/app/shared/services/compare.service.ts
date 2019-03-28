@@ -61,8 +61,8 @@ export class CompareService implements OnDestroy {
       currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
       comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
     } else {
-      currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to, analyticsConfig.locale)}`;
-      comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to, analyticsConfig.locale)}`;
+      currentPeriodTitle = `${DateFilterUtils.formatFullDateString(currentPeriod.from)} – ${DateFilterUtils.formatFullDateString(currentPeriod.to)}`;
+      comparePeriodTitle = `${DateFilterUtils.formatFullDateString(comparePeriod.from)} – ${DateFilterUtils.formatFullDateString(comparePeriod.to)}`;
     }
   
     this._logger.trace(
