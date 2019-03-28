@@ -23,7 +23,7 @@ export class CompareService implements OnDestroy {
   ngOnDestroy() {
   }
   
-  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
+  private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): [string, moment.Moment] {
     let relevantLabelString = '';
     let relevantDate = null;
     
@@ -35,8 +35,10 @@ export class CompareService implements OnDestroy {
       relevantLabelString = relevantDate.format('YYYYMM');
     }
     
-    const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
-    return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
+    let compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
+    compareString = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
+  
+    return [compareString, relevantDate];
   }
 
   public compareGraphData(currentPeriod: { from: number, to: number },
@@ -85,28 +87,32 @@ export class CompareService implements OnDestroy {
         if (currentValue && currentValue.length) {
           const currentLabel = currentValue.split(analyticsConfig.valueSeparator)[0];
           let compareValue;
+          let compareLabel;
           
           if (!config.fields[graph.id].nonDateGraphLabel) {
-            compareValue = this._getCompareValue(
+            const relevantCompareData = this._getCompareValue(
               compareData,
               DateFilterUtils.parseDateString(currentLabel),
               datesDiff,
               reportInterval
             ) || '0';
+            compareValue = relevantCompareData[0];
+            compareLabel = relevantCompareData[1];
           } else {
             const relevantCompare = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === currentLabel)
               || `N/A${analyticsConfig.valueSeparator}0`;
             compareValue = relevantCompare.split(analyticsConfig.valueSeparator)[1];
           }
           
-          let currentName = currentLabel;
+          let currentName;
           
           if (!config.fields[graph.id].nonDateGraphLabel) {
-            currentName = reportInterval === KalturaReportInterval.months
-              ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
-              : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+            // currentName = reportInterval === KalturaReportInterval.months
+            //   ? DateFilterUtils.formatMonthOnlyString(currentLabel, analyticsConfig.locale)
+            //   : DateFilterUtils.formatShortDateString(currentLabel, analyticsConfig.locale);
+            currentName = `${currentLabel}${analyticsConfig.valueSeparator}${compareLabel}`;
           } else {
-            this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
+            currentName = currentLabel;
           }
           
           let currentVal: string | number = currentValue.split(analyticsConfig.valueSeparator)[1];
@@ -141,21 +147,25 @@ export class CompareService implements OnDestroy {
       const defaultColors = [getPrimaryColor(), getSecondaryColor()];
       const getFormatter = colors => params => {
         const [current, compare] = params;
+        const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
+        let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
+        let comparePeriod: string | Date = DateFilterUtils.getMomentDate(Number(comparePeriodDate)).toDate();
+        
+        if (reportInterval === KalturaReportInterval.months) {
+          currentPeriod = DateFilterUtils.formatMonthString(currentPeriod);
+          comparePeriod = DateFilterUtils.formatMonthString(comparePeriod);
+        } else {
+          currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
+          comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
+        }
+
         const currentValue = typeof config.fields[graph.id].graphTooltip === 'function'
           ? config.fields[graph.id].graphTooltip(current.value)
           : current.value;
         const compareValue = typeof config.fields[graph.id].graphTooltip === 'function'
           ? config.fields[graph.id].graphTooltip(compare.value)
           : compare.value;
-        return `
-          <div class="kGraphTooltip">
-            ${current.name}<br/>
-            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
-            <span class="kValue kSeriesName">${current.seriesName}</span>&nbsp;${currentValue}<br/>
-            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;
-            <span class="kValue kSeriesName">${compare.seriesName}</span>&nbsp;${compareValue}
-          </div>
-        `;
+        return `<div class="kGraphTooltip">${comparePeriod}<br/><span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>${currentPeriod}<br/><span class="kBullet" style="color: ${colors[0]}">&bull;</span>${currentValue}</div>`;
       };
       const xAxisLabelRotation = graphOptions ? graphOptions.xAxisLabelRotation : null;
       const yAxisLabelRotation = graphOptions ? graphOptions.yAxisLabelRotation : null;
@@ -176,7 +186,13 @@ export class CompareService implements OnDestroy {
             fontSize: 12,
             fontWeight: 'bold',
             fontFamily: 'Lato',
-            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0
+            rotate: xAxisLabelRotation ? xAxisLabelRotation : 0,
+            formatter: value => {
+              const [label] = value.split(analyticsConfig.valueSeparator);
+              return reportInterval === KalturaReportInterval.months
+                ? DateFilterUtils.formatMonthOnlyString(label)
+                : DateFilterUtils.formatShortDateString(label);
+            }
           },
           axisTick: {
             length: 8,
@@ -639,13 +655,7 @@ export class CompareService implements OnDestroy {
       `;
       }
   
-      return `
-          <div class="kGraphTooltip">
-            ${current.name}<br/>
-            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/>
-            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}
-          </div>
-      `;
+      return `<div class="kGraphTooltip">${current.name}<br/><span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}<br/><span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}</div>`;
     };
   
     const currentMax = getMaxValue(current.series) || 1;
