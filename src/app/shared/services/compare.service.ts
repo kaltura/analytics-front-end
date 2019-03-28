@@ -38,7 +38,7 @@ export class CompareService implements OnDestroy {
     let compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
     compareString = compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
   
-    return [compareString, relevantDate];
+    return [compareString, relevantLabelString];
   }
 
   public compareGraphData(currentPeriod: { from: number, to: number },
@@ -146,7 +146,7 @@ export class CompareService implements OnDestroy {
         const [current, compare] = params;
         const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
         let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
-        let comparePeriod: string | Date = DateFilterUtils.getMomentDate(Number(comparePeriodDate)).toDate();
+        let comparePeriod: string | Date = DateFilterUtils.parseDateString(comparePeriodDate).toDate();
         
         if (reportInterval === KalturaReportInterval.months) {
           currentPeriod = DateFilterUtils.formatMonthString(currentPeriod);
@@ -494,6 +494,10 @@ export class CompareService implements OnDestroy {
                                config: ReportDataItemConfig,
                                reportInterval: KalturaReportInterval,
                                dataKey: string = ''): { columns: string[], tableData: TableRow<string>[], totalCount: number } {
+    const datesDiff = reportInterval === KalturaReportInterval.months
+      ? DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from), 'months')
+      : DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
+
     let columns = current.map(item => item.id);
     
     const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
@@ -512,16 +516,40 @@ export class CompareService implements OnDestroy {
     };
     const currentData = getTableData(current.map(item => item.data.split(';')));
     const compareData = getTableData(compare.map(item => item.data.split(';')));
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
     const tableData = [];
+    const getCompareRow = date => {
+      let relevantLabelString = '';
+      let relevantDate = null;
     
-    // depends on array index since server returns 0 values,
-    // if this behavior changes consider refactoring of this part to get relevant compare row
-    currentData.forEach((currentRow, index) => {
+      if (reportInterval === KalturaReportInterval.days) {
+        relevantDate = DateFilterUtils.parseDateString(date).subtract(datesDiff);
+        relevantLabelString = relevantDate.format('YYYYMMDD');
+      } else {
+        relevantDate = DateFilterUtils.parseDateString(date).subtract(datesDiff, 'months');
+        relevantLabelString = relevantDate.format('YYYYMM');
+      }
+    
+      const compareRow = compareData.find(item => item[firstColumn] === relevantLabelString) || {};
+    
+      return [compareRow, relevantLabelString];
+    };
+
+    currentData.forEach(currentRow => {
       let data = {};
       const rowColumns = Object.keys(currentRow);
-      const compareRow = compareData[index] || {};
+      const currentDate = currentRow[firstColumn];
+      const [compareRow, compareDate] = getCompareRow(currentDate);
+  
+      let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentDate).toDate();
+      let comparePeriod: string | Date = DateFilterUtils.parseDateString(compareDate).toDate();
+  
+      if (reportInterval === KalturaReportInterval.months) {
+        currentPeriod = DateFilterUtils.formatMonthString(currentPeriod);
+        comparePeriod = DateFilterUtils.formatMonthString(comparePeriod);
+      } else {
+        currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
+        comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
+      }
       
       rowColumns.forEach(column => {
         const fieldConfig = config.fields[column];
@@ -537,14 +565,14 @@ export class CompareService implements OnDestroy {
             const compareVal = fieldConfig.format(compareValue);
             const tooltip = `${
               this._trendService.getTooltipRowString(
-                currentPeriodTitle,
-                currentVal,
-                fieldConfig.units ? fieldConfig.units(currentValue) : (config.units || ''))
-            }${
-              this._trendService.getTooltipRowString(
-                comparePeriodTitle,
+                comparePeriod,
                 compareVal,
                 (fieldConfig.units ? fieldConfig.units(compareValue) : (config.units || '')))
+            }${
+              this._trendService.getTooltipRowString(
+                currentPeriod,
+                currentVal,
+                fieldConfig.units ? fieldConfig.units(currentValue) : (config.units || ''))
             }`;
             result = {
               value: trend !== null ? trend : '–',
@@ -642,7 +670,7 @@ export class CompareService implements OnDestroy {
   
       const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
       let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
-      let comparePeriod: string | Date = DateFilterUtils.getMomentDate(Number(comparePeriodDate)).toDate();
+      let comparePeriod: string | Date = DateFilterUtils.parseDateString(comparePeriodDate).toDate();
   
       currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
       comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
