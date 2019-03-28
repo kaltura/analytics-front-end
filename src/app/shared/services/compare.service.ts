@@ -410,12 +410,12 @@ export class CompareService implements OnDestroy {
     const currentData = current.data.split(';');
     const compareData = compare.data ? compare.data.split(';') : [];
     
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
+    let currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
+    let comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
     const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
 
     currentData.forEach(valuesString => {
-      let compareValuesString = null;
+      let compareValuesString;
       let relevantLabelString;
       if (dataKey.length) {
         const dataIndex = columns.indexOf(dataKey.toLowerCase());
@@ -423,12 +423,20 @@ export class CompareService implements OnDestroy {
       } else {
         const currentLabel = (valuesString || '').split(analyticsConfig.valueSeparator)[0];
         const currentLabelDate = currentLabel ? DateFilterUtils.parseDateString(currentLabel) : null;
-        
+
         if (currentLabelDate && currentLabelDate.isValid()) {
           const relevantDate = DateFilterUtils.getMomentDate(currentLabelDate).subtract(datesDiff);
           relevantLabelString = reportInterval === KalturaReportInterval.days
             ? relevantDate.format('YYYYMMDD')
             : relevantDate.format('YYYYMM');
+  
+          if (reportInterval === KalturaReportInterval.months) {
+            currentPeriodTitle = DateFilterUtils.formatMonthString(currentLabelDate.toDate());
+            comparePeriodTitle = DateFilterUtils.formatMonthString(relevantDate.toDate());
+          } else {
+            currentPeriodTitle = DateFilterUtils.formatMonthDayString(currentLabelDate.toDate(), analyticsConfig.locale, 'long');
+            comparePeriodTitle = DateFilterUtils.formatMonthDayString(relevantDate.toDate(), analyticsConfig.locale, 'long');
+          }
         } else {
           relevantLabelString = currentLabel;
         }
@@ -460,7 +468,7 @@ export class CompareService implements OnDestroy {
               const { value: trend, direction } = hasConsistentData ? this._trendService.calculateTrend(Number(value), Number(compareValues[j])) : { value: 0, direction: 0 };
               const currentVal = fieldConfig.format(value);
               const compareVal = hasConsistentData ? fieldConfig.format(compareValues[j]) : 'N/A';
-              const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}`;
+              const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, compareVal, hasConsistentData ? (fieldConfig.units ? fieldConfig.units(compareValues[j]) : (config.units || '')) : '')}${this._trendService.getTooltipRowString(currentPeriodTitle, currentVal, fieldConfig.units ? fieldConfig.units(value) : (config.units || ''))}`;
               result = {
                 value: hasConsistentData && trend !== null ? trend : '–',
                 tooltip: tooltip,
