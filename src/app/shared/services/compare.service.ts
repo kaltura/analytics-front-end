@@ -295,6 +295,12 @@ export class CompareService implements OnDestroy {
         xAxis: {
           type: 'category',
           data: xAxisData,
+          formatter: value => {
+            const [label] = value.split(analyticsConfig.valueSeparator);
+            return reportInterval === KalturaReportInterval.months
+              ? DateFilterUtils.formatMonthOnlyString(label)
+              : DateFilterUtils.formatShortDateString(label);
+          },
           axisLabel: {
             color: '#999999',
             fontSize: 12,
