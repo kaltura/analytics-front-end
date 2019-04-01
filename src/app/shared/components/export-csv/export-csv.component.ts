@@ -1,11 +1,16 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaPager, KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataSection } from 'shared/services/storage-data-base.config';
+import { KalturaClient, KalturaPager, KalturaReportExportItem, KalturaReportExportItemType, KalturaReportExportParams, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { finalize } from 'rxjs/operators';
 
 export interface ExportConfigService {
   getConfig(): ExportItem[];
@@ -24,15 +29,16 @@ export interface ExportItem {
 })
 export class ExportCsvComponent implements OnDestroy {
   @Input() name = 'default';
-  @Input() dateFilter: DateChangeEvent;
-  @Input() pager: KalturaPager;
-  @Input() entryId: string;
+  @Input() dateFilter: DateChangeEvent = null;
+  @Input() refineFilter: RefineFilter = [];
+  @Input() pager: KalturaPager = null;
+  @Input() entryId: string = null;
   @Input() width = 240;
   
   @Input() set reports(value: ExportItem[]) {
     if (Array.isArray(value)) {
       this._showComponent = true;
-
+      
       if (value.length > 1) { // show dropdown
         this._singleMode = false;
         this._options = this._getNodes(value);
@@ -59,10 +65,28 @@ export class ExportCsvComponent implements OnDestroy {
   
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _kalturaClient: KalturaClient) {
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _getFilter(): KalturaReportInputFilter {
+    let filter = new KalturaReportInputFilter();
+    
+    if (this.dateFilter) {
+      filter.timeZoneOffset = this.dateFilter.timeZoneOffset;
+      filter.fromDate = this.dateFilter.startDate;
+      filter.toDate = this.dateFilter.endDate;
+      filter.interval = this.dateFilter.timeUnits;
+    }
+    
+    if (this.refineFilter) {
+      refineFilterToServerValue(this.refineFilter, filter);
+    }
+    
+    return filter;
   }
   
   private _getNodes(reports: ExportItem[]): TreeNode[] {
@@ -87,13 +111,57 @@ export class ExportCsvComponent implements OnDestroy {
   }
   
   public _export(): void {
-    const selection = this._selected
+    const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+    const reportItems = [];
+    const filter = this._getFilter();
+    const responseOptions = new KalturaReportResponseOptions({
+      delimiter: analyticsConfig.valueSeparator,
+      skipEmptyDates: analyticsConfig.skipEmptyBuckets
+    });
+    const selection: ExportItem[] = this._selected
       .filter(({ parent }) => !!parent)
       .map(({ data }) => data);
-    console.warn(selection);
     
-    if (this._popup) {
-      this._popup.close();
-    }
+    selection.forEach(item => {
+      item.sections.forEach(section => {
+        reportItems.push(new KalturaReportExportItem({
+          reportTitle: '', // item.label
+          action: section,
+          reportType: item.reportType,
+          objectIds: this.entryId,
+          filter,
+          responseOptions,
+        }));
+      });
+    });
+    
+    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportItems }) });
+    
+    this._exportingCsv = true;
+    
+    this._kalturaClient.request(exportAction)
+      .pipe(
+        cancelOnDestroy(this),
+        finalize(() => {
+          this._exportingCsv = false;
+          
+          if (this._popup) {
+            this._popup.close();
+          }
+        })
+      )
+      .subscribe(
+        () => {
+          this._browserService.alert({
+            header: this._translate.instant('app.exportReports.exportReports'),
+            message: this._translate.instant('app.exportReports.successMessage'),
+          });
+        },
+        () => {
+          this._browserService.alert({
+            header: this._translate.instant('app.exportReports.exportReports'),
+            message: this._translate.instant('app.exportReports.errorMessage'),
+          });
+        });
   }
 }

@@ -25,7 +25,9 @@
 
           <button pButton
                   class="kButtonBranded kExportBtn"
-                  [label]="'app.common.exportReports' | translate"
+                  [class.kButtonProcess]="_exportingCsv"
+                  [disabled]="_exportingCsv"
+                  [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
                   (click)="_export()"></button>
         </div>
       </ng-template>

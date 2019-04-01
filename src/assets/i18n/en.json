@@ -98,6 +98,11 @@
       "invalidKS": "Your session has expired. Please log-in again.",
       "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
     },
+    "exportReports": {
+      "exportReports": "Export Reports",
+      "successMessage": "We are preparing your report. We will send it to your email adress shortly.",
+      "errorMessage": "Something went wrong. Please try again"
+    },
     "entryType": {
       "video": "Video",
       "playlist": "Playlist",
@@ -327,9 +332,9 @@
       "exportLabels": {
         "highlights": "Highlights",
         "topVideos": "Top Videos",
-        "impressions": "Impressions",
-        "insights": "Insights",
-        "syndication": "Syndication"
+        "impressions": "Engagement funnel",
+        "general": "General",
+        "syndication": "Top domains"
       },
       "highlightsReport": {
         "month_id": "Month",
