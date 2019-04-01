@@ -261,8 +261,8 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     }
   }
   
-  public _drillDown({ object_id: entryId, status }: { object_id: string, status: string }): void {
-    console.warn(entryId, status);
+  public _drillDown(row: TableRow<string>): void {
+    const { object_id: entryId, status } = row;
     if (status === '') { // status is already being transformed by formatter function
       if (analyticsConfig.isHosted) {
         const params = this._browserService.getCurrentQueryParams('string');
