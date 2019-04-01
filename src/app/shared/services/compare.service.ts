@@ -209,7 +209,7 @@ export class CompareService implements OnDestroy {
             formatter: value => {
               const [label] = value.split(analyticsConfig.valueSeparator);
               return reportInterval === KalturaReportInterval.months
-                ? DateFilterUtils.formatMonthOnlyString(label)
+                ? DateFilterUtils.formatMonthString(label)
                 : DateFilterUtils.formatShortDateString(label);
             }
           },
