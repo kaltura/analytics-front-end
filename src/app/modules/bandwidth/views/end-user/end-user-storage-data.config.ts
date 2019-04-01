@@ -39,7 +39,7 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'date_id': {
-            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
+            format: value => DateFilterUtils.formatFullDateString(value),
             nonComparable: true,
           },
           'month_id': {

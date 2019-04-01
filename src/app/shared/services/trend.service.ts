@@ -15,7 +15,7 @@ export class TrendService {
   }
   
   public getTooltipRowString(time, value, units = '') {
-    return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
+    return `<div class="kTotalsCompareTooltip"><span class="kTimePeriod">${time}</span><span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></div>`;
   }
 
   public getCompareDates(from: string | number | Date, to: string | number | Date): any {

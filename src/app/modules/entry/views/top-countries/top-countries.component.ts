@@ -212,7 +212,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
     compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}`;
+    const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}`;
     row[field + '_trend'] = {
       trend: value !== null ? value : '–',
       trendDirection: direction,
