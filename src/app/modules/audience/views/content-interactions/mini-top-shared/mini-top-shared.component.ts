@@ -178,13 +178,13 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   public _drillDown(row: TableRow<string>): void {
     const { object_id, status } = row;
 
-    // if (status === KalturaEntryStatus.ready) {
+    if (status === KalturaEntryStatus.ready) {
       if (analyticsConfig.isHosted) {
         const params = this._browserService.getCurrentQueryParams('string');
         this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
       } else {
         this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
-    // }
+    }
   }
 }

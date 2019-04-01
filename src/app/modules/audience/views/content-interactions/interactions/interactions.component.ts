@@ -264,13 +264,13 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   public _drillDown(row: TableRow<string>): void {
     const { object_id: entryId, status } = row;
 
-    // if (status === KalturaEntryStatus.ready) {
+    if (status === KalturaEntryStatus.ready) {
       if (analyticsConfig.isHosted) {
         const params = this._browserService.getCurrentQueryParams('string');
         this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
       } else {
         this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
-    // }
+    }
   }
 }
