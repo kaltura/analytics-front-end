@@ -95,9 +95,10 @@
       "errorHeader": "Error",
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again.",
+      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria.",
+      "timeout": "Operation timed out",
       "warningRequestTimeout": "Still on it...",
       "failedRequestTimeout": "Looks like the server is taking to long to respond, please try again in sometime",
-      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
     },
     "entryType": {
       "video": "Video",
