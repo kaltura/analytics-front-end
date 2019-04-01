@@ -143,7 +143,7 @@ export class EndUserStorageComponent implements OnInit {
       this.compareFilter.userIds = this.filter.userIds;
     }
 
-    this.order = user.length ? '-month_id' : '-total_storage_mb';
+    this.order = user.length ? '+month_id' : '-total_storage_mb';
     this.loadReport();
   }
 
@@ -227,7 +227,7 @@ export class EndUserStorageComponent implements OnInit {
   _onSortChanged(event) {
     setTimeout(() => {
       if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
-        const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+        const order = (event.order === 1 || event.field === 'month_id') ? '+' + event.field : '-' + event.field;
         if (order !== this.order) {
           this._logger.trace('Handle sort changed action by user', { order });
           this.order = order;

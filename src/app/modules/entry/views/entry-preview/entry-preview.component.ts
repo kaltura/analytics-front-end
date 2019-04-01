@@ -301,6 +301,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
+          "EmbedPlayer.LiveCuepoints": true,
           // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           "controlBarContainer": {
             "plugin": true,
@@ -333,6 +334,20 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             "plugin": true,
             'insertMode': 'lastChild',
             'sliderPreview': false
+          },
+          "dualScreen": {
+            "plugin": true,
+            "defaultDualScreenViewId": "pip-parent-in-small",
+            "showFirstSlideOnLoad": true
+          },
+          "chapters": {
+            "plugin": true
+          },
+          "sideBarContainer": {
+            "plugin": true
+          },
+          "quiz": {
+            "plugin": true
           }
         }
       };

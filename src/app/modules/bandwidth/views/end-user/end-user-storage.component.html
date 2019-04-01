@@ -80,7 +80,7 @@
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
                   <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
-                    <span *ngIf="col !== 'name'">{{data[col]}}</span>
+                    <span *ngIf="col !== 'name'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
                     <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])" class="nameLink" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</a>
                   </ng-container>
                 </td>
