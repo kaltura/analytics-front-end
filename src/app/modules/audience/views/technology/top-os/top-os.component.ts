@@ -18,7 +18,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 export class TopOsComponent extends BaseDevicesReportComponent {
   protected _defaultReportType = KalturaReportType.operatingSystemFamilies;
   protected _drillDownReportType = KalturaReportType.operatingSystem;
-  protected _name = 'top-os';
+  public _name = 'top-os';
   
   public _title = 'app.audience.technology.topOS';
   

@@ -7,6 +7,7 @@
       "live": "Live"
     },
     "filters": {
+      "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
       "filter": "Filter",
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",
@@ -150,6 +151,7 @@
       "contributorsSources_tt": "Which method do users use to add content into the platform",
       "contributorsAmount": "How many users contributed more than once?",
       "returningContributors": "Returning Contributors",
+      "noRanking": "Before April 2018 contributors ranking is not available",
       "score": "Score",
       "viewDetails": "View Details",
       "topContributorsReport": {
@@ -350,13 +352,15 @@
         "sum_time_viewed": "Minutes Viewed",
         "count_loads": "Player Impressions",
         "load_play_ratio": "Play Impression Ratio",
-        "avg_view_drop_off": "Drop Off Rate",
+        "avg_completion_rate": "Avg. Completion Rate",
+        "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
+        "avg_view_drop_off": "Avg. Drop Off Rate",
         "count_plays_tt": "Plays",
         "plays_distribution": "Plays Distribution",
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
-        "avg_view_drop_off_tt": "Drop Off Rate",
+        "avg_view_drop_off_tt": "Avg. Drop Off Rate",
         "openLink": "Open page URL in a new browser tab"
       }
     },

@@ -46,7 +46,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             nonComparable: true,
           },
           'date_id': {
-            format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
+            format: value => DateFilterUtils.formatFullDateString(value),
             nonComparable: true,
           },
           'count_plays': {
@@ -75,13 +75,13 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             units: value => 'min',
-            sortOrder: 2,
+            sortOrder: 3,
           },
           'unique_known_users': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
-            sortOrder: 3,
+            sortOrder: 2,
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),

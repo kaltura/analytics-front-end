@@ -180,6 +180,11 @@ body{
     strong {
       color: $kGrayscale1;
     }
+
+    .kTimePeriod {
+      min-width: 120px;
+      text-align: left;
+    }
     .kTotalsCompareTooltipValue {
       display: flex;
       margin-left: 24px;
@@ -263,6 +268,17 @@ body{
   }
 
 }
+.kEntryCompareGraphTooltip {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  font-weight: bold;
+  .kBullet {
+    font-size: 48px;
+    margin-right: 5px;
+  }
+}
+
 
 .kGraphTooltip {
   padding: 5px;
@@ -572,4 +588,14 @@ k-area-blocker {
 
 ui-carousel {
   z-index: 1;
+}
+
+.kDisclaimer {
+  margin: 16px 0 0 16px;
+  display: inline-block;
+
+  .kIconInfo_Full {
+    color: $kGrayscale3;
+    margin-right: 6px;
+  }
 }

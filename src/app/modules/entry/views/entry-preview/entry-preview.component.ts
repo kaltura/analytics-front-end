@@ -1,6 +1,6 @@
 import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
@@ -40,8 +40,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
-  public _compareFilter: KalturaReportInputFilter = null;
-  public _filter = new KalturaReportInputFilter({
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -111,12 +111,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MM/DD/YY');
 
             tooltip = `
-              <div class="kEntryGraphTooltip" style="padding-bottom: 0px">
+              <div style="font-weight: normal; color: #999999">${progressValue}</div>
+              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0px">
                 <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
                 <span>${currentDatePeriod}</span>
                 <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
               </div>
-              <div class="kEntryGraphTooltip" style="padding-top: 0px">
+              <div class="kEntryCompareGraphTooltip" style="padding-top: 0px">
                 <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
                 <span>${compareDatePeriod}</span>
                 <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
@@ -215,7 +216,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           return ObservableOf({ report, compare: null });
         }
 
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: null };
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
         }
@@ -300,7 +301,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
-          "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
+          "EmbedPlayer.LiveCuepoints": true,
+          // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           "controlBarContainer": {
             "plugin": true,
             "hover": false
@@ -332,6 +334,20 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             "plugin": true,
             'insertMode': 'lastChild',
             'sliderPreview': false
+          },
+          "dualScreen": {
+            "plugin": true,
+            "defaultDualScreenViewId": "pip-parent-in-small",
+            "showFirstSlideOnLoad": true
+          },
+          "chapters": {
+            "plugin": true
+          },
+          "sideBarContainer": {
+            "plugin": true
+          },
+          "quiz": {
+            "plugin": true
           }
         }
       };
@@ -370,6 +386,41 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         this._currentTime = parseFloat(event) * 1000;
       });
     });
+
+    // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
+    try {
+      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName("head")[0];
+      if (head) {
+        let css = document.createElement('style');
+        css['type'] = 'text/css';
+
+        let styles = `
+        .scrubber .playHead {
+          border-bottom-left-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+          border-top-left-radius: 5px !important;
+          border-top-right-radius: 5px !important;
+          width: 10px !important;
+          height: 14px !important;
+        }
+        .scrubber .handle-wrapper{
+          bottom: 3px !important;
+          margin: 0px !important;
+        }
+        .controlsContainer{
+          border-top: none !important;
+        }`;
+
+        if (css['styleSheet']) {
+          css['styleSheet'].cssText = styles;
+        } else {
+          css.appendChild(document.createTextNode(styles));
+        }
+        head.appendChild(css);
+      }
+    } catch (e) {
+      console.log("Failed to inject custom CSS to player");
+    }
 
   }
 

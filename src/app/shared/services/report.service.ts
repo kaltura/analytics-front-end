@@ -298,7 +298,7 @@ export class ReportService implements OnDestroy {
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-              : DateFilterUtils.formatFullDateString(label, analyticsConfig.locale);
+              : DateFilterUtils.formatFullDateString(label);
           } else {
             this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }

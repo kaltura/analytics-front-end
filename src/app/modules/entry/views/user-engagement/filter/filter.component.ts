@@ -16,8 +16,8 @@ export class UserEngagementFilterComponent extends FilterComponent {
     this._apply();
   }
   
-  public _apply(): void {
-    super._apply();
+  public _apply(forceApply = false): void {
+    super._apply(forceApply);
     this._bottomPadding = '0';
   }
 }
