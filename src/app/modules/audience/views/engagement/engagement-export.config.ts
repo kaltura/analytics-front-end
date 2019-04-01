@@ -13,7 +13,7 @@ export class EngagementExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.engagement.exportLabels.highlights'),
         reportType: KalturaReportType.userEngagementTimeline,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.total]
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.topVideos'),
@@ -21,9 +21,9 @@ export class EngagementExportConfig implements ExportConfigService {
         sections: [KalturaReportExportItemType.table]
       },
       {
-        label: this._translate.instant('app.engagement.exportLabels.insights'),
+        label: this._translate.instant('app.engagement.exportLabels.general'),
         reportType: KalturaReportType.userEngagementTimeline,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),
