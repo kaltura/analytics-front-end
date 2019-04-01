@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -17,6 +17,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { InteractionsConfig } from './interactions.config';
 import { SortEvent } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-interactions',
@@ -72,7 +73,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _dataConfigService: InteractionsConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _router: Router,
+              private _activatedRoute: ActivatedRoute,
+              private _browserService: BrowserService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -253,6 +257,18 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport({ table: this._dataConfig.table });
+      }
+    }
+  }
+  
+  public _drillDown({ object_id: entryId, status }: { object_id: string, status: string }): void {
+    console.warn(entryId, status);
+    if (status === '') { // status is already being transformed by formatter function
+      if (analyticsConfig.isHosted) {
+        const params = this._browserService.getCurrentQueryParams('string');
+        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
+      } else {
+        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
     }
   }
