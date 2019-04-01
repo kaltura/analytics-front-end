@@ -1,0 +1,15 @@
+<div class="kBulletContainer">
+  <div class="kBullet">
+    <div class="kBar"
+         *ngFor="let item of _values"
+         [kTooltip]="item.tooltip" [escape]="false"
+         [style.background-color]="item.color"
+         [style.width]="item.value+'%'"></div>
+  </div>
+  <div class="kLegend">
+    <div class="kLegendItem" *ngFor="let item of _values">
+      <div class="kCircle" [style.background-color]="item.color"></div>
+      <span>{{item.label}}</span>
+    </div>
+  </div>
+</div>

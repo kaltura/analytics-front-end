@@ -62,7 +62,7 @@ export class SourcesDataConfig extends ReportDataBaseConfig {
             nonDateGraphLabel: true,
           },
           'added_msecs': {
-            format: value => Math.round(ReportHelper.minutes(value)),
+            format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
             nonDateGraphLabel: true,

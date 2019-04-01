@@ -1,20 +1,43 @@
-<div class="kReport kOverrideFAIcons">
+<div data-aid="report-entry-video-performance" class="kReport kNoMargin kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.entry.videoPerformance' | translate}}</span>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kDimensions" *ngIf="dateFilterComponent">
-        <app-time-units [selectedTimeUnit]="_reportInterval"
+      <div class="kDimensions">
+        <app-compare-metric [metric]="_selectedMetricsLabel"
+                            [colors]="_metricsColors"
+                            [options]="_metricsOptions"
+                            (compareTo)="_onCompareTo($event)"></app-compare-metric>
+        <app-time-units *ngIf="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"
                         [dateFilter]="dateFilterComponent"
                         [applyIn]="'video-performance'"></app-time-units>
       </div>
       <div class="kChart">
-        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
-
-        <div *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)" class="kNoResults">
+        <div *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>
+        <div *ngIf="!_metricsLineChartData" echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+        <div *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
+          <div class="kLegendItemContainer">
+            <span class="kPeriod">{{_compareDatePeriod}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
+            <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[1]"></div>
+            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
+          </div>
+          <div class="kLegendItemContainer">
+            <span class="kPeriod">{{_currentDatePeriod}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[0]"></div>
+            <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
+            <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[0]"></div>
+            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
+          </div>
         </div>
       </div>
 
@@ -26,17 +49,19 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table sortField="month_id"
+          <p-table [sortField]="_columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
-                   (sortFunction)="_onSortChanged($event)">
+                   [paginator]="true"
+                   [rows]="_pageSize"
+                   (sortFunction)="_onSortChanged($event)" (onPage)="onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : null">
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
                   {{'app.entry.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="false"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                 </th>
 
               </tr>
@@ -44,7 +69,8 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
+                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'"
+                        class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
                                        [units]="data[col].units"
@@ -64,11 +90,6 @@
               </div>
             </ng-template>
           </p-table>
-
-          <!--<p-paginator [rows]="_pager.pageSize"-->
-                       <!--[first]="(_pager.pageIndex -1) * _pager.pageSize"-->
-                       <!--[totalRecords]="_totalCount"-->
-                       <!--(onPageChange)="_onPaginationChanged($event)"></p-paginator>-->
         </div>
       </div>
     </div>

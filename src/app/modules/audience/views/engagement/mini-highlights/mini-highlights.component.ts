@@ -1,12 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportService } from 'shared/services';
+import { BehaviorSubject, Unsubscribable } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,6 +14,7 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-engagement-mini-highlights',
@@ -26,11 +26,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
     ReportService,
   ]
 })
-export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent {
+export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private _order = '-month_id';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>;
+  
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-highlights';
@@ -64,43 +64,29 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
     this._dataConfig = _dataConfigService.getConfig();
   }
   
-  protected _loadReport(sections = this._dataConfig): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-        
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
+  ngOnInit(): void {
+    if (this.highlights$) {
+      this.highlights$
+        .pipe(cancelOnDestroy(this))
+        .subscribe(({ current, compare, busy, error }) => {
+          this._isBusy = busy;
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, { 'close': () => { this._blockerMessage = null; } });
           if (compare) {
-            this._handleCompare(report, compare);
+            this._handleCompare(current, compare);
           } else {
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
+            if (current && current.totals) {
+              this._handleTotals(current.totals); // handle totals
             }
           }
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
+    }
+  }
+  
+  ngOnDestroy(): void {
+  }
+  
+  protected _loadReport(sections = this._dataConfig): void {
+    // empty by design
   }
   
   protected _updateRefineFilter(): void {
@@ -113,24 +99,24 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
     }
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
-    const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
     
     if (current.totals && compare.totals) {
       this._tabsData = this._compareService.compareTotalsData(

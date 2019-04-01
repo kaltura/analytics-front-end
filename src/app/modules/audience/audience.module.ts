@@ -20,7 +20,6 @@ import { MiniPeakDayComponent } from './views/engagement/mini-peak-day/mini-peak
 import { EngagementTopVideosComponent } from './views/engagement/top-videos/top-videos.component';
 import { EngagementDurationComponent } from './views/engagement/duration/duration.component';
 import { EngagementUsersComponent } from './views/engagement/users/users.component';
-import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
 
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule, InputHelperModule } from '@kaltura-ng/kaltura-ui';
@@ -34,11 +33,16 @@ import { TopVideosTableComponent } from './views/engagement/top-videos/top-video
 import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
 import { PageScrollService } from 'ngx-page-scroll';
-import { UICarouselModule } from 'ui-carousel';
+import { UICarouselModule } from 'ng-carousel-iuno';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
-import { SyndicationComponent } from './views/engagement/syndication/syndication.component';
 import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
-import { CountryFilterComponent } from './views/geo-location/filter/country-filter/country-filter.component';
+import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
+import { InteractionsComponent } from './views/content-interactions/interactions/interactions.component';
+import { MiniInteractionsComponent } from './views/content-interactions/mini-interactions/mini-interactions.component';
+import { MiniTopSharedComponent } from './views/content-interactions/mini-top-shared/mini-top-shared.component';
+import { ModerationComponent } from './views/content-interactions/moderation/moderation.component';
+import { MiniTopPlaybackSpeedComponent } from './views/content-interactions/mini-top-playback-speed/mini-top-playback-speed.component';
+import { MiniTopStatsComponent } from './views/content-interactions/mini-top-stats/mini-top-stats.component';
 
 @NgModule({
   imports: [
@@ -81,9 +85,13 @@ import { CountryFilterComponent } from './views/geo-location/filter/country-filt
     EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
-    SyndicationComponent,
     GeoFilterComponent,
-    CountryFilterComponent,
+    InteractionsComponent,
+    MiniInteractionsComponent,
+    MiniTopSharedComponent,
+    ModerationComponent,
+    MiniTopPlaybackSpeedComponent,
+    MiniTopStatsComponent,
   ],
   exports: [],
   providers: [PageScrollService]

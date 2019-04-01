@@ -1,13 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import { BehaviorSubject } from 'rxjs';
+import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniTopVideosConfig } from './mini-top-videos.config';
@@ -17,34 +15,37 @@ import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
   templateUrl: './mini-top-videos.component.html',
   styleUrls: ['./mini-top-videos.component.scss'],
   providers: [
-    KalturaLogger.createLogger('MiniTopVideosComponent'),
+    KalturaLogger.createLogger('MiniTopSharedComponent'),
     MiniTopVideosConfig,
-    ReportService,
+    ReportService
   ]
 })
-export class MiniTopVideosComponent extends EngagementBaseReportComponent {
+export class MiniTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
   
+  @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
+  
+  protected _componentId = 'mini-top-videos';
+  private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-engagement_ranking';
-  private _reportType = KalturaReportType.topContentCreator;
-  private _dataConfig: ReportDataConfig;
-  
-  protected _componentId = 'mini-top-videos';
+  private subscription: ISubscription = null;
   
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableData: any[] = [];
-  public _compareTableData: any[] = [];
+  public _tableData: TableRow<string>[] = [];
+  public _compareTableData: TableRow<string>[] = [];
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
@@ -63,68 +64,49 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
-              private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
-              private pageScrollService: PageScrollService,
               private _dataConfigService: MiniTopVideosConfig,
-              private _logger: KalturaLogger) {
+              private pageScrollService: PageScrollService,
+              private _logger: KalturaLogger,
+              private _browserService: BrowserService,
+              private _router: Router,
+              private _activatedRoute: ActivatedRoute) {
     super();
-    
     this._dataConfig = _dataConfigService.getConfig();
   }
   
-  protected _loadReport(sections = this._dataConfig): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-        
-        const pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: pager, order: this._order };
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
+  ngOnInit() {
+    if (this.topVideos$) {
+      this.topVideos$
+        .pipe(cancelOnDestroy(this))
+        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
+          this._isBusy = data.busy;
+          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
           this._tableData = [];
           this._compareTableData = [];
-          
-          if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table, compare); // handle table
+          if (data.table && data.table.header && data.table.data) {
+            this._handleTable(data.table, data.compare); // handle table
           }
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
+    }
   }
-  
+
+  protected _loadReport(sections = this._dataConfig): void {
+
+  }
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
     }
@@ -137,24 +119,24 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
-  private _handleTable(table: KalturaReportTable, compare?: Report): void {
+
+  private _handleTable(table: KalturaReportTable, compare?: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
       item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96?rnd=${Math.random()}`;
       return item;
     };
-    this._tableData = tableData.map(extendTableRow);
+    this._tableData = tableData.map(extendTableRow).splice(0, 3);
     this._currentDates = null;
     this._compareDates = null;
     
-    if (compare && compare.table && compare.table.header && compare.table.data) {
-      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+    if (compare && compare.header && compare.data) {
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this._currentDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-      this._compareDates = moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.startDate)).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
+      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
     }
   }
   
@@ -172,5 +154,18 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent {
       this.pageScrollService.start(pageScrollInstance);
     }
   }
+
+  ngOnDestroy() {
+  }
   
+  public _drillDown({ object_id, status }: { object_id: string, status: KalturaEntryStatus }): void {
+    if (status === KalturaEntryStatus.ready) {
+      if (analyticsConfig.isHosted) {
+        const params = this._browserService.getCurrentQueryParams('string');
+        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
+      } else {
+        this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
+      }
+    }
+  }
 }

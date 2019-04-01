@@ -1,0 +1,86 @@
+@import '../../../../../../styles/variables';
+
+:host /deep/ .kValue {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host /deep/ .kUnits {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.kMini {
+  height: 100%;
+
+  .kFilters {
+    height: 93px !important;
+
+    .kTitle {
+      width: auto;
+      padding-right: 0px;
+    }
+  }
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+
+  .kVal {
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    height: 100%;
+
+    .kMiniIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+
+      &.blue {
+        background-color: rgba(72, 122, 223, 0.2);
+        color: #487ADF;
+      }
+
+      &.green {
+        background-color: rgba(49, 190, 166, 0.2);
+        color: #31BEA6;
+
+      }
+
+      &.violet {
+        background-color: rgba(155, 100, 230, 0.2);
+        color: #9B64E6;
+      }
+
+      &.red {
+        background-color: rgba(224, 49, 58, 0.2);
+        color: #E0313A;
+      }
+    }
+
+    .value {
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 700;
+      color: $kGrayscale1;
+    }
+
+    .title {
+      font-size: 18px;
+      line-height: 18px;
+      color: $kGrayscale1;
+      margin-left: 14px;
+    }
+  }
+
+}
+

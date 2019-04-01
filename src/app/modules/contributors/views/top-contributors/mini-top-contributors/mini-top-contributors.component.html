@@ -1,7 +1,10 @@
-<div class="kReport kMini kOverrideFAIcons">
+<div data-aid="report-mini-top-contributors" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.contributors.top-contributors' | translate}}</span>
-    <a (click)="scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <kInputHelper>
+      <span>{{'app.contributors.top-contributors_tt' | translate}}</span>
+    </kInputHelper>
+    <a (click)="_scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
@@ -17,8 +20,15 @@
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="item.creator_name" [showOnEllipsis]="true">{{item.creator_name}}</span>
-          <!--span class="kScore">n/10</span-->
+          <span class="kScore" *ngIf="item['contributor_ranking'] !== undefined">{{item['contributor_ranking']}}/10</span>
+          <div class="kScore" *ngIf="item['contributor_ranking'] === undefined" [ngStyle]="{display: 'inline-block'}">
+            {{'app.common.na' | translate}}
+            <i class="kIconhelp_full" [kTooltip]="'app.contributors.noRanking' | translate"></i>
+          </div>
         </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
       </div>
     </div>
 
@@ -30,13 +40,19 @@
           <span>{{_tableData[0].index}}</span>
         </div>
         <div class="kUser">
-          <i class="kIconuser"></i>
+          <i class="icon-small-viewer-contributor"></i>
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="_tableData[0].creator_name" [showOnEllipsis]="true">
             {{_tableData[0].creator_name}}
           </span>
-          <span class="kScore">n/10</span>
+          <span class="kScore" *ngIf="_tableData[0]['contributor_ranking'] !== undefined">
+            {{_tableData[0]['contributor_ranking']}}/10
+          </span>
+          <div class="kScore" *ngIf="_tableData[0]['contributor_ranking'] === undefined" [ngStyle]="{display: 'inline-block'}">
+            {{'app.common.na' | translate}}
+            <i class="kIconhelp_full" [kTooltip]="'app.contributors.noRanking' | translate"></i>
+          </div>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
@@ -48,16 +64,20 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_compareTableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #compareHolder>
-          <img [src]="_compareTableData[0].thumbnailUrl"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="compareHolder.classList.add('error')">
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="_compareTableData[0].creator_name" [showOnEllipsis]="true">
             {{_compareTableData[0].creator_name}}
           </span>
-          <span class="kScore">n/10</span>
+          <span class="kScore" *ngIf="_compareTableData[0]['contributor_ranking'] !== undefined">
+            {{_compareTableData[0]['contributor_ranking']}}/10
+          </span>
+          <div class="kScore" *ngIf="_compareTableData[0]['contributor_ranking'] === undefined" [ngStyle]="{display: 'inline-block'}">
+            {{'app.common.na' | translate}}
+            <i class="kIconhelp_full" [kTooltip]="'app.contributors.noRanking' | translate"></i>
+          </div>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">

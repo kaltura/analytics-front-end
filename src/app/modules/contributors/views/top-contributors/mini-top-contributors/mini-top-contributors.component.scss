@@ -8,12 +8,17 @@
   font-weight: 700;
 }
 
-.kFilters {
-  height: 93px !important;
-}
-
 .kMini{
   height: 100%;
+
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0;
+    }
+  }
+
   .kDetails {
     margin-left: auto;
     white-space: nowrap;
@@ -77,6 +82,7 @@
 
     &.kNoResults {
       font-size: 28px;
+      height: 100%;
       color: $kGrayscale3;
     }
 
@@ -121,6 +127,7 @@
       justify-content: center;
       background-color: rgba(49,190,166,0.2);
       margin-right: 10px;
+      flex: 0 1 auto;
 
       i {
         display: inline-block;
@@ -134,6 +141,8 @@
       flex-direction: column;
       white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
 
       .kTitle {
         color: $kGrayscale1;
@@ -145,6 +154,13 @@
 
       .kScore {
         color: $kGrayscale3;
+        .kIconhelp_full{
+          font-size: 15px;
+          &:hover{
+            color: $kSecondary;
+            cursor: pointer;
+          }
+        }
       }
 
     }

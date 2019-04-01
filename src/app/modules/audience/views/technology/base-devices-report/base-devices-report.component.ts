@@ -15,6 +15,7 @@ import { isArrayEquals } from 'shared/utils/is-array-equals';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -68,8 +69,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     if (value) {
       this._chartDataLoaded = false;
       this._filter.timeZoneOffset = value.timeZoneOffset;
-      this._filter.fromDay = value.startDay;
-      this._filter.toDay = value.endDay;
+      this._filter.fromDate = value.startDate;
+      this._filter.toDate = value.endDate;
       this._filter.interval = value.timeUnits;
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
@@ -81,6 +82,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   
+  public abstract _name: string;
   protected abstract _defaultReportType: KalturaReportType;
   protected abstract _drillDownReportType: KalturaReportType;
 
@@ -102,7 +104,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _totalCount: number;
   public _columns: string[] = [];
-  public _tableData: any[] = [];
+  public _tableData: TableRow<any>[] = [];
   public _isBusy = false;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
@@ -235,13 +237,13 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _loadTrendData(): void {
-    const { startDay, endDay } = this._trendService.getCompareDates(this._filter.fromDay, this._filter.toDay);
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
+    const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
     
     const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    compareFilter.fromDay = startDay;
-    compareFilter.toDay = endDay;
+    compareFilter.fromDate = startDate;
+    compareFilter.toDate = endDate;
     
     const reportConfig: ReportConfig = {
       reportType: this._reportType,

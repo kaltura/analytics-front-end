@@ -1,25 +1,26 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-top-contributors" class="kReport kContent kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.contributors.top-contributors' | translate}}</span>
     <kInputHelper>
       <span>{{'app.contributors.top-contributors_tt' | translate}}</span>
     </kInputHelper>
   </div>
-  <div class="kReportContent">
+  <div class="kReportContent kContent">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
       <app-contributors-top-contributors-table *ngIf="_isCompareMode"
-                                       [isCompareMode]="_isCompareMode"
-                                       [tableData]="_compareTableData"
-                                       [dates]="_compareDates"
-                                       [firstTimeLoading]="_compareFirstTimeLoading"
-                                       [columns]="_columns"></app-contributors-top-contributors-table>
-      <app-contributors-top-contributors-table [tableData]="_tableData"
-                                       [showDivider]="_isCompareMode"
-                                       [isCompareMode]="_isCompareMode"
-                                       [dates]="_currentDates"
-                                       [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"
-                                       (sortFieldChanged)="_onSortChanged($event)"></app-contributors-top-contributors-table>
+                                               name="compare"
+                                               [isCompareMode]="_isCompareMode"
+                                               [tableData]="_compareTableData"
+                                               [dates]="_compareDates"
+                                               [firstTimeLoading]="_compareFirstTimeLoading"
+                                               [columns]="_columns"></app-contributors-top-contributors-table>
+      <app-contributors-top-contributors-table name="current"
+                                               [tableData]="_tableData"
+                                               [showDivider]="_isCompareMode"
+                                               [isCompareMode]="_isCompareMode"
+                                               [dates]="_currentDates"
+                                               [firstTimeLoading]="_firstTimeLoading"
+                                               [columns]="_columns"></app-contributors-top-contributors-table>
     </k-area-blocker>
   </div>
 </div>

@@ -15,19 +15,19 @@ export class TrendService {
   }
   
   public getTooltipRowString(time, value, units = '') {
-    return `<span class="kTotalsCompareTooltip">${time}<span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></span>`;
+    return `<div class="kTotalsCompareTooltip"><span class="kTimePeriod">${time}</span><span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;${units}</span></div>`;
   }
 
-  public getCompareDates(from: string | Date, to: string | Date): any {
-    const fromDay = moment(from);
-    const toDay = moment(to);
+  public getCompareDates(from: string | number | Date, to: string | number | Date): any {
+    const fromDay = DateFilterUtils.getMomentDate(from);
+    const toDay = DateFilterUtils.getMomentDate(to);
     const days = moment.duration(toDay.diff(fromDay)).asDays();
     const startDate = fromDay.clone().subtract(days + 1, 'days').toDate();
     const endDate = fromDay.clone().subtract(1, 'days').toDate();
   
     return {
-      startDate: DateFilterUtils.toServerDate(startDate),
-      endDate: DateFilterUtils.toServerDate(endDate),
+      startDate: DateFilterUtils.toServerDate(startDate, true),
+      endDate: DateFilterUtils.toServerDate(endDate, false),
       startDay: DateFilterUtils.getDay(startDate),
       endDay: DateFilterUtils.getDay(endDate),
     };
@@ -40,13 +40,13 @@ export class TrendService {
     if (current === 0 && compare > 0) {
       return { value: '100', direction: -1 };
     }
+  
+    if (compare === 0) {
+      return { value: null, direction: 0 };
+    }
 
     if (current >= 0 && current === compare ) {
       return { value: '0', direction: 0 };
-    }
-
-    if (compare === 0) {
-      return { value: null, direction: 0 };
     }
 
     const value = Math.ceil(((current - compare) / compare) * 100);

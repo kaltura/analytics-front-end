@@ -1,14 +1,9 @@
-<div class="kTableContainer">
+<div [attr.data-aid]="'table-top-videos' + name" class="kTableContainer">
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table sortField="count_plays"
-             [class.kCompareMode]="isCompareMode"
-             [value]="_tableData"
-             [customSort]="true"
-             [sortOrder]="-1"
-             [defaultSortOrder]="-1"
-             (sortFunction)="_onSortChanged($event)">
+    <p-table [class.kCompareMode]="isCompareMode"
+             [value]="_tableData">
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
@@ -21,7 +16,8 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-            <div class="kThumbnailHolder" #holder>
+            <div class="kThumbnailHolder" #holder
+                 (click)="_drillDown(data)">
               <img [src]="data.thumbnailUrl"
                    onError="this.onerror=null;this.style.display='none'"
                    (error)="holder.classList.add('error')">
@@ -29,7 +25,7 @@
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"
-                 (click)="_drillDown(data['object_id'])"
+                 (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
@@ -73,8 +69,12 @@
               </div>
             </td>
           </ng-container>
-          <td class="kScore" [ngStyle]="{'width': '110px'}">
-            <span>{{data['engagement_ranking']}}/10</span>
+          <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
+            <div *ngIf="data['status']?.length">
+              <span class="kEntryStatus">{{data['status']}}</span>
+              <span>{{data['engagement_ranking']}}/10</span>
+            </div>
+            <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}/10</span>
           </td>
         </tr>
       </ng-template>
@@ -93,5 +93,5 @@
 </div>
 
 <k-overlayPanel #overlay appendTo="body">
-  <app-entry-details-overlay *ngIf="_entryId" [entryId]="_entryId"></app-entry-details-overlay>
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
 </k-overlayPanel>

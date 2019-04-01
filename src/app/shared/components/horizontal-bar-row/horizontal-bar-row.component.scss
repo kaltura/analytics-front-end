@@ -1,0 +1,72 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+.kBarContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 0;
+
+  .kLabel {
+    flex: 1;
+    color: $kGrayscale1;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 16px;
+  }
+
+  .kBarWrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .kBarWrapperRow {
+      display: flex;
+      flex-direction: row;
+
+      &.kCompare {
+        margin-top: 10px;
+      }
+
+      .kTrend {
+        width: 100%;
+
+        app-trend-value, .kTrendStub {
+          display: inline-block;
+          width: 60px;
+          height: 100%;
+          margin-left: 16px;
+        }
+      }
+
+      .kValue {
+        flex: 1 0 auto;
+        font-size: 15px;
+        color: $kGrayscale3;
+        width: 38px;
+        margin-right: 24px;
+      }
+
+      .kBullet {
+        width: 100%;
+        height: 18px;
+        border: 0 solid $kGrayscale7;
+        border-radius: 3px;
+        overflow: hidden;
+        background-color: $kGrayscale7;
+
+        .kBar {
+          height: 100%;
+          transition: width 0.35s ease-out;
+        }
+      }
+    }
+  }
+}

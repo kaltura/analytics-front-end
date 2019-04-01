@@ -1,13 +1,11 @@
-<div class="kSearch kOverrideFAIcons" [class.hideLabels]="hideLabels">
-  <!--i class="kIconfilter"></i-->
+<div data-aid="filter-users" class="kSearch kOverrideFAIcons" [class.hideLabels]="hideLabels">
   <kAutoComplete
-    #autocompete
+    #autocomplete
     [disabled]="disabled"
     suggestionItemField="item"
     suggestionLabelField="name"
     field="screenName"
     [placeholder]="'app.usersFilter.prompt' | translate"
-    [(ngModel)]="_selectedUsers"
     [multiple]="true"
     [onItemAdding]="_convertUserInputToValidValue"
     [limitToSuggestions]="true"
@@ -16,7 +14,6 @@
     [suggestionsProvider]="_usersProvider"
     (completeMethod)="_searchUsers($event)"
     [tooltipResolver]="'__tooltip'"
-    (onSelect)="_updateUsers($event)" (onUnselect)="_updateUsers($event)"
-  >
+    (onSelect)="_updateUsers($event)">
   </kAutoComplete>
 </div>

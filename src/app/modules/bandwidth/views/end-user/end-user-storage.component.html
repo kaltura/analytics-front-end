@@ -1,9 +1,13 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-end-user" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.usersStorage' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRange]="_dateRange" [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter
+                     name="end-user"
+                     [dateRange]="_dateRange"
+                     [dateRangeType]="_dateRangeType"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
@@ -45,7 +49,12 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" [defaultSortOrder]="-1" [sortField]="_drillDown.length ? 'month_id' : 'total_storage_mb'" [sortOrder]="-1">
+          <p-table [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortField]="_drillDown.length ? 'month_id' : 'total_storage_mb'"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="(isCompareMode || col === 'name') ? null : col">
@@ -70,7 +79,7 @@
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
                   <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
-                    <span *ngIf="col !== 'name'">{{data[col]}}</span>
+                    <span *ngIf="col !== 'name'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
                     <a *ngIf="col === 'name'" (click)="_onDrillDown(data[col])" class="nameLink" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</a>
                   </ng-container>
                 </td>

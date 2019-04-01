@@ -1,4 +1,4 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.engagement.title' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="_filter"
@@ -13,13 +13,15 @@
       </div>
     </div>
     <app-date-filter #dateFilter
+                     name="engagement"
                      [dateRange]="_dateRange"
                      [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
-    <app-refine-filter [opened]="_refineFilterOpened"
+    <app-refine-filter name="engagement"
+                       [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
                        (closeFilters)="_refineFilterOpened = false"
@@ -28,12 +30,13 @@
 
   <div class="kReportContainer">
     <div class="kMiniReportContainer">
-      <app-engagement-mini-highlights [dateFilter]="_dateFilter"
+      <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
+                                      [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
     <div class="kMiniReportContainer">
-      <app-engagement-mini-top-videos [dateFilter]="_dateFilter"
+      <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
     </div>
 
@@ -60,13 +63,15 @@
   </div>
 
   <div id="highlights-report" class="kReportContainer">
-    <app-engagement-highlights [dateFilterComponent]="dateFilter"
+    <app-engagement-highlights #highlights
+                               [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
 
   <div id="top-videos" class="kReportContainer">
-    <app-engagement-top-videos [dateFilter]="_dateFilter"
+    <app-engagement-top-videos #topVideos
+                               [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-top-videos>
   </div>
 
@@ -87,9 +92,9 @@
   </div>
 
   <div class="kReportContainer">
-    <app-engagement-syndication [dateFilterComponent]="dateFilter"
-                                [dateFilter]="_dateFilter"
-                                [refineFilter]="_refineFilter"></app-engagement-syndication>
+    <app-syndication [dateFilterComponent]="dateFilter"
+                     [dateFilter]="_dateFilter"
+                     [refineFilter]="_refineFilter"></app-syndication>
   </div>
 </div>
 

@@ -1,0 +1,98 @@
+@import '../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.kReportContent {
+  width: 100%;
+  min-width: 370px;
+}
+
+.kOverview {
+  display: flex;
+
+  .kSummaryWrapper {
+    display: flex;
+    height: 100%;
+    flex: 1;
+  }
+
+  .kSummary {
+    padding: 20px 23px;
+    min-width: 175px;
+    width: 100%;
+
+    .kSummaryRow {
+      display: flex;
+      justify-content: space-between;
+      height: 60px;
+      max-width: 275px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .kSummaryCheckbox {
+        display: flex;
+        align-items: center;
+
+        .kLabel {
+          font-size: 15px;
+          line-height: 22px;
+          color: $kGrayscale1;
+          font-weight: bold;
+        }
+
+        .kIcon {
+          font-size: 22px;
+          color: $kGrayscale3;
+          margin: 0 17px 0 11px;
+        }
+      }
+
+      .kSummaryValue {
+        display: flex;
+        align-items: center;
+
+        .kValue {
+          font-size: 15px;
+          font-weight: bold;
+          color: $kGrayscale1;
+        }
+
+        .kUnits {
+          font-size: 13px;
+          font-weight: bold;
+          color: $kGrayscale3;
+          line-height: 20px;
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .kSummaryChart {
+    height: 100%;
+  }
+
+  .kChart {
+    min-height: 280px;
+    height: calc(100% - 60px) !important;
+    margin-bottom: 0;
+  }
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}

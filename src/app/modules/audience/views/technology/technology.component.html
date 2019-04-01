@@ -1,35 +1,38 @@
-<app-devices-overview #overview
-                      [filter]="_filterEvent"
-                      [allowedDevices]="_allowedDevices"
-                      (metricChanged)="_selectedMetric = $event"
-                      (exportDataChange)="_onExportDataChange($event)"
-                      (devicesListChange)="_onDevicesListChange($event)"
-                      (deviceFilterChange)="_onDeviceFilterChange($event)">
-  <div class="kReportHeader">
-    <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
-    <app-export-csv [disabled]="!_exportData"
-                    [headers]="_exportData?.headers"
-                    [totalCount]="_exportData?.totalCount"
-                    [reportInputFilter]="_exportData?.filter"
-                    [dimension]="_exportData?.selectedMetrics"
-                    [reportType]="_reportType"
-                    [reportText]="'app.common.noMsg' | translate"
-                    [reportTitle]="'app.audience.technology.devicesOverview' | translate"></app-export-csv>
-    <app-date-filter #dateFilter
-                     [dateRange]="_dateRange"
-                     [showCompare]="false"
-                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
-  </div>
-</app-devices-overview>
+<div data-aid="report-group-technology">
+  <app-devices-overview #overview
+                        [filter]="_filterEvent"
+                        [allowedDevices]="_allowedDevices"
+                        (metricChanged)="_selectedMetric = $event"
+                        (exportDataChange)="_onExportDataChange($event)"
+                        (devicesListChange)="_onDevicesListChange($event)"
+                        (deviceFilterChange)="_onDeviceFilterChange($event)">
+    <div class="kReportHeader">
+      <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
+      <app-export-csv [disabled]="!_exportData"
+                      [headers]="_exportData?.headers"
+                      [totalCount]="_exportData?.totalCount"
+                      [reportInputFilter]="_exportData?.filter"
+                      [dimension]="_exportData?.selectedMetrics"
+                      [reportType]="_reportType"
+                      [reportText]="'app.common.noMsg' | translate"
+                      [reportTitle]="'app.audience.technology.devicesOverview' | translate"></app-export-csv>
+      <app-date-filter #dateFilter
+                       name="technology"
+                       [dateRange]="_dateRange"
+                       [showCompare]="false"
+                       (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    </div>
+  </app-devices-overview>
 
-<app-top-browsers [filter]="_filterEvent"
-                  [selectedMetric]="_selectedMetric"
-                  [devicesList]="_devicesList"
-                  [deviceFilter]="_devicesFilter"
-                  (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-browsers>
+  <app-top-browsers [filter]="_filterEvent"
+                    [selectedMetric]="_selectedMetric"
+                    [devicesList]="_devicesList"
+                    [deviceFilter]="_devicesFilter"
+                    (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-browsers>
 
-<app-top-os [filter]="_filterEvent"
-            [selectedMetric]="_selectedMetric"
-            [devicesList]="_devicesList"
-            [deviceFilter]="_devicesFilter"
-            (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-os>
+  <app-top-os [filter]="_filterEvent"
+              [selectedMetric]="_selectedMetric"
+              [devicesList]="_devicesList"
+              [deviceFilter]="_devicesFilter"
+              (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-os>
+</div>

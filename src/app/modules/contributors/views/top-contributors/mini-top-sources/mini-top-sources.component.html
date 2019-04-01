@@ -1,0 +1,26 @@
+<div data-aid="mini-top-sources" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
+    <a (click)="scrollTo('#sources')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kReportRow">
+        <span class="topSource">{{_topSourceLabel}}</span>
+      </div>
+      <div class="kReportRow">
+        <span class="kLabel">{{'app.contributors.mostPopular' | translate}}</span>
+      </div>
+      <div class="kReportRow">
+        <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
+      </div>
+
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

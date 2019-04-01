@@ -1,11 +1,11 @@
-<div class="kReport kTotals kOverrideFAIcons">
+<div data-aid="report-entry-preview" class="kReport kTotals kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div style="display: flex; flex-direction: column; width: 100%">
       <div class="kPlayer">
         <app-k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
-                  [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
-                  [flashvars]="_playerConfig.flashvars" [lazy]="true"
-                  (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
+                      [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
+                      [flashvars]="_playerConfig.flashvars" [lazy]="true"
+                      (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
 
       </div>
 
@@ -16,18 +16,11 @@
           <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
         </div>
         <div class="kFooter">
-          <span>00:00</span>
+          <span>0:00</span>
           <span class="kDuration">{{_duration | appDuration}}</span>
         </div>
-    </div>
-
-    <div class="kTable">
-      <div class="kToggle">
-        <i [class.kIcondropdown_arrow_bottom]="!_showHeatmap" [class.kIcondropdown_arrow_top]="_showHeatmap"></i>
-        <a (click)="toggleHeatmap()">{{(_showHeatmap ? 'app.entry.hideDetails' : 'app.entry.viewDetails') | translate}}</a>
       </div>
     </div>
-  </div>
   </k-area-blocker>
 </div>
 

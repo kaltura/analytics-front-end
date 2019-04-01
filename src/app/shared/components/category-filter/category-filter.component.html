@@ -5,11 +5,13 @@
     <span class="kSelected" *ngIf="_selectedValue.length">
       {{'app.categories.selected' | translate:{'0': _selectedValue.length} }}
       <a (click)="_openCategoriesBrowser()">{{'app.categories.change' | translate}}</a>
+      <a (click)="_updateCategories([])">{{'app.common.clearAll' | translate}}</a>
     </span>
   </div>
 </div>
 
 <kPopupWidget #categoriesPopup
+              data-aid="categories-filter"
               class="kCategoriesFilterPopup"
               [popupWidth]="560"
               [popupHeight]="586"

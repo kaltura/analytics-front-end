@@ -1,4 +1,4 @@
-<div class="kEntryDetailsOverlay">
+<div data-aid="overlay-entry-details" class="kEntryDetailsOverlay">
   <k-area-blocker [showLoader]="_loading" [appAreaBlockerTimeout]="_loading">
     <ng-container *ngIf="_data && !_errorMessage">
       <div class="kEntryThumbnail" #holder>
@@ -10,30 +10,27 @@
           <span>{{_data.name}}</span>
         </div>
       </div>
-      <div class="kEntryDetails">
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.engagement.topVideosReport.type' | translate}}</div>
-          <div class="kValue">{{_data.type | mediaType: true}}</div>
-        </div>
-
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.engagement.topVideosReport.creator' | translate}}</div>
-          <div class="kValue">{{_data.creator}}</div>
-        </div>
-
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.engagement.topVideosReport.creationDate' | translate}}</div>
-          <div class="kValue">{{_data.creationDate | date}}</div>
-        </div>
-
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.engagement.topVideosReport.duration' | translate}}</div>
-          <div class="kValue">{{_data.duration | appDuration}}</div>
-        </div>
-      </div>
-    </ng-container>
-    <div *ngIf="_errorMessage" class="kErrorMessage">
-      {{_errorMessage}}
     </div>
-  </k-area-blocker>
+    <div class="kEntryDetails">
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.type' | translate}}</div>
+        <div class="kValue">{{entryData.media_type | mediaType: true}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.creator' | translate}}</div>
+        <div class="kValue">{{entryData.creator_name}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.creationDate' | translate}}</div>
+        <div class="kValue">{{entryData.created_at}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.duration' | translate}}</div>
+        <div class="kValue">{{entryData.duration_msecs}}</div>
+      </div>
+    </div>
+  </ng-container>
 </div>

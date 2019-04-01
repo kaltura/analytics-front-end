@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -26,19 +26,16 @@ export class EntryTotalsComponent extends EntryBase {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
-  protected _dateFilter: DateChangeEvent;
+  public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
-  public _compareFilter: KalturaReportInputFilter = null;
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _filter = new KalturaReportInputFilter({
-    searchInTags: true,
-    searchInAdminTags: false
-  });
+  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -105,32 +102,32 @@ export class EntryTotalsComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
-    // this._refineFilterToServerValue(this._filter);
-    // if (this._compareFilter) {
-    //   this._refineFilterToServerValue(this._compareFilter);
-    // }
+    this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDay = this._dateFilter.startDay;
-    this._filter.toDay = this._dateFilter.endDay;
+    this._filter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDay = compare.startDay;
-      this._compareFilter.toDay = compare.endDay;
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
     }
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDay, to: this._filter.toDay };
-    const comparePeriod = { from: this._compareFilter.fromDay, to: this._compareFilter.toDay };
+    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
     
     if (current.totals && compare.totals) {
       this._tabsData = this._compareService.compareTotalsData(

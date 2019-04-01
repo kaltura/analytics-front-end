@@ -22,6 +22,7 @@
       margin-bottom: 8px;
       font-size: 14px;
       font-weight: bold;
+      overflow: hidden;
 
       &:last-child {
         margin-bottom: 0;
@@ -34,6 +35,9 @@
 
       .kValue {
         color: $kGrayscale1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }

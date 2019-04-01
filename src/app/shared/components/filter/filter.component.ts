@@ -9,6 +9,8 @@ import { LocationsFilterValue } from './location-filter/location-filter.componen
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { isEqual } from 'shared/utils/is-equals';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export interface OptionItem {
   value: any;
@@ -58,6 +60,8 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
+  
+  @Input() name = 'default';
 
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
@@ -91,6 +95,8 @@ export class FilterComponent {
           }
         });
       }
+
+      this._toggleDisclaimer();
     }
   }
   
@@ -100,12 +106,11 @@ export class FilterComponent {
   protected _currentFilters: FilterItem[] = []; // local state
   protected _appliedFilters: FilterItem[] = [];
   protected _showFilters: boolean;
-
+  
+  public _showDisclaimer = false;
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
-  public _advancedFiltersState: string;
-  public _showAdvancedFilters: boolean;
   public _tags: FilterTagItem[] = [];
   
   get showFilters() {
@@ -122,20 +127,6 @@ export class FilterComponent {
     this._updateLayout();
   }
   
-  get showAdvancedFilters() {
-    return this._showAdvancedFilters;
-  }
-  
-  set showAdvancedFilters(val: boolean) {
-    if (val) {
-      this._advancedFiltersState = 'visible';
-      this._showAdvancedFilters = true;
-    } else {
-      this._advancedFiltersState = 'hidden';
-    }
-    this._updateLayout();
-  }
-  
   constructor(private _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _logger: KalturaLogger) {
@@ -144,7 +135,7 @@ export class FilterComponent {
   
   public _mediaTypes: OptionItem[] = [
     { value: 'Video', label: 'app.filters.mediaType.Video' },
-    { value: 'Live', label: 'app.filters.mediaType.Live' },
+    // { value: 'Live', label: 'app.filters.mediaType.Live' }, // remove live for now
     { value: 'Audio', label: 'app.filters.mediaType.Audio' },
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
@@ -164,6 +155,7 @@ export class FilterComponent {
       'categories': [],
       'tags': [],
       'owners': [],
+      'users': [],
       'location': [],
       'countries': [],
     };
@@ -187,6 +179,7 @@ export class FilterComponent {
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;
           return { value, type, label: value, tooltip };
         case 'owners':
+        case 'users':
           const user = value as KalturaUser;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
@@ -234,6 +227,16 @@ export class FilterComponent {
           }
         }
       });
+    }
+  }
+  
+  protected _toggleDisclaimer(): void {
+    if (this._dateFilter) {
+      const disclaimerDate = DateFilterUtils.getMomentDate('04/01/2018');
+      const startDate = DateFilterUtils.getMomentDate(this._dateFilter.startDate);
+      this._showDisclaimer = this._tags.length && startDate.isBefore(disclaimerDate);
+    } else {
+      this._showDisclaimer = false;
     }
   }
 
@@ -291,17 +294,22 @@ export class FilterComponent {
     this._updateSelectedValues(this._currentFilters);
   }
   
-  public _apply(): void {
-    this._logger.trace('User applied filters, emit update event and close filters');
+  public _apply(forceApply = false): void {
+    if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
+      this._logger.trace('User applied filters, emit update event and close filters');
+
+      // using spread to prevent passing by reference to avoid unwanted mutations
+      this._appliedFilters = [...this._currentFilters];
+      this._updateSelectedValues(this._currentFilters);
+      this.filterChange.emit([...this._appliedFilters]);
+      this._tags = this._prepareFilterTags();
+      this._toggleDisclaimer();
   
-    // using spread to prevent passing by reference to avoid unwanted mutations
-    this._appliedFilters = [...this._currentFilters];
-    this._updateSelectedValues(this._currentFilters);
-    this.filterChange.emit([...this._appliedFilters]);
-    this._tags = this._prepareFilterTags();
+      this._bottomPadding = this._tags.length ? '24px' : '0';
+    } else {
+      this._logger.info(`Filters weren't changed. Do nothing and close filters`);
+    }
   
-    this._bottomPadding = this._tags.length ? '24px' : '0';
-    
     this.closeFilters.emit();
   }
   
@@ -311,22 +319,16 @@ export class FilterComponent {
     }
   }
   
-  public _advancedFiltersAnimationDone(event: AnimationEvent): void {
-    if (event.fromState === 'visible' && event.toState === 'hidden') {
-      this._showAdvancedFilters = false;
-    }
-  }
-  
   public _removeFilter(item: { value: string, label: string, type: string }): void {
     this._logger.trace('Item remove action is selected by user', { item });
     this._onItemUnselected(item.value, item.type);
-    this._apply();
+    this._apply(true);
   }
   
   public _removeAll(): void {
     this._logger.trace('Remove all filters action is selected by user');
     this._clearAll();
     this._currentFilters = [];
-    this._apply();
+    this._apply(true);
   }
 }

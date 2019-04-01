@@ -1,4 +1,8 @@
 @import '../../../styles/variables';
+.kEntryPreview {
+  background-color: #FFFFFF;
+}
+
 .kReport{
   background-color: $appBkgColor !important;
   .kBackBtn{
@@ -20,7 +24,7 @@
     }
   }
   .kReportHeader{
-    height: 60px;
+    height: 80px;
   }
   .kEntryDetails{
     display: flex;
@@ -86,3 +90,19 @@
   }
 }
 
+.kReportContainer {
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:host /deep/ {
+  ktags{
+    margin: 0 !important;
+  }
+}
+
+:host /deep/ .kReport{
+  margin-bottom: 0px !important;
+}

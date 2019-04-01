@@ -45,8 +45,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     if (value) {
       this._chartDataLoaded = false;
       this._filter.timeZoneOffset = value.timeZoneOffset;
-      this._filter.fromDay = value.startDay;
-      this._filter.toDay = value.endDay;
+      this._filter.fromDate = value.startDate;
+      this._filter.toDate = value.endDate;
       this._filter.interval = value.timeUnits;
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
@@ -171,13 +171,13 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   private _loadTrendData(): void {
-    const { startDay, endDay } = this._trendService.getCompareDates(this._filter.fromDay, this._filter.toDay);
-    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDay, analyticsConfig.locale)}`;
-    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDay, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDay, analyticsConfig.locale)}`;
+    const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
+    const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
+    const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
   
     const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    compareFilter.fromDay = startDay;
-    compareFilter.toDay = endDay;
+    compareFilter.fromDate = startDate;
+    compareFilter.toDate = endDate;
 
     const reportConfig: ReportConfig = {
       reportType: KalturaReportType.platforms,
@@ -304,7 +304,7 @@ export class DevicesOverviewComponent implements OnDestroy {
         textStyle: {
           fontFamily: 'Lato',
         },
-        grid: { top: 24, left: 24, bottom: 24, right: 24, containLabel: true },
+        grid: { top: 24, left: 24, bottom: 0, right: 24, containLabel: true },
         color: [config[key].colors[0]],
         yAxis: {
           type: 'value',
@@ -348,12 +348,33 @@ export class DevicesOverviewComponent implements OnDestroy {
           }
         },
         tooltip: {
+          formatter: (params) => {
+            const { name, value } = Array.isArray(params) ? params[0] : params;
+            const formattedValue = typeof config[key].graphTooltip === 'function'
+              ? config[key].graphTooltip(value)
+              : value;
+            return `
+              <div class="kDevicesGraphTooltip">
+                <div class="kTitle">${name}</div>
+                <div class="kValue">
+                  ${this._translate.instant('app.audience.technology.graphTooltip.' + key, [formattedValue])}
+                </div>
+              </div>
+            `;
+          },
+          trigger: 'axis',
           backgroundColor: '#ffffff',
           borderColor: '#dadada',
           borderWidth: 1,
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
           textStyle: {
             color: '#999999'
+          },
+          axisPointer: {
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(150,150,150,0.1)'
+            }
           }
         },
         series: [{
@@ -382,7 +403,7 @@ export class DevicesOverviewComponent implements OnDestroy {
           let value = 0;
           if (key === 'avg_time_viewed') {
             value = Number((itemValue || 0).toFixed(this._fractions));
-          } else if (!isNaN(itemValue) && !isNaN(totalValue) && itemValue !== 0) {
+          } else if (!isNaN(itemValue) && !isNaN(totalValue) && totalValue !== 0) {
             value = (itemValue / totalValue) * 100;
             if (value % 1 !== 0) {
               value = Number(value.toFixed(this._fractions));

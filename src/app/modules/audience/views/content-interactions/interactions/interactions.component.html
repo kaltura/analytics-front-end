@@ -1,0 +1,92 @@
+<div data-aid="report-interactions" class="kReport kContent kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units applyIn="interactions"
+                        [dateFilter]="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table sortField="count_viral"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr [ngStyle]="{'width': '100%'}">
+                <th [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
+                <th [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
+                    [ngStyle]="{'width': '100%'}">
+                  {{'app.contentInteractions.' + col | translate}}
+                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
+                <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
+                <td [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
+                  <div class="kThumbnailHolder" #holder>
+                    <img [src]="data.thumbnailUrl"
+                         onError="this.onerror=null;this.style.display='none'"
+                         (error)="holder.classList.add('error')">
+                  </div>
+                </td>
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0"
+                    [ngStyle]="{'width': '100%'}">
+                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'entry_name'"
+                        class="kTrend">
+                    <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+                      <app-trend-value [value]="data[col].value"
+                                       [units]="data[col].units"
+                                       [trend]="data[col].trend"></app-trend-value>
+                    </span>
+                  </span>
+                  <ng-container *ngIf="!_isCompareMode || col === 'entry_name'">
+                    <span>{{data[col]}}</span>
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

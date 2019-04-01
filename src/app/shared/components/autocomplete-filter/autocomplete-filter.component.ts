@@ -43,7 +43,7 @@ export class AutocompleteFilterComponent {
   
   public _onSelectionChange(): void {
     setTimeout(() => { // run in the next tick to get up-to-date selected value
-      const changes = this._listDiffer.diff(this._selectedValue);
+      const changes = this._listDiffer.diff(this._selectedValue || []);
   
       if (changes) {
         changes.forEachAddedItem((record: IterableChangeRecord<any>) => {

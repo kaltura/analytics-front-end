@@ -1,55 +1,72 @@
-:host {
-  width: 100%;
-}
-i{
-  color: #666666;
-  -webkit-animation-name: spin;
-  -webkit-animation-duration: 4000ms;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: spin;
-  -moz-animation-duration: 4000ms;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  -ms-animation-name: spin;
-  -ms-animation-duration: 4000ms;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-timing-function: linear;
+@import '../../../../../styles/variables';
 
-  animation-name: spin;
-  animation-duration: 4000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-
-}
-.gear2{
-  -webkit-animation-name: spin2;
-  -moz-animation-name: spin2;
-  -ms-animation-name: spin2;
-  animation-name: spin2;
-}
-@-moz-keyframes spin {
-  from { -moz-transform: rotate(0deg); }
-  to { -moz-transform: rotate(360deg); }
-}
-@-webkit-keyframes spin {
-  from { -webkit-transform: rotate(0deg); }
-  to { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-  from {transform:rotate(0deg);}
-  to {transform:rotate(360deg);}
+.kReport {
+  height: 100%;
 }
 
-@-moz-keyframes spin2 {
-  from { -moz-transform: rotate(360deg); }
-  to { -moz-transform: rotate(0deg); }
+.kReportContainer {
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+
+  .kSmallReportContainer {
+    flex: 1;
+    min-height: 444px;
+
+    &:nth-child(even) {
+      padding-left: 24px;
+    }
+  }
+
+  .kMiniReportContainer {
+    height: 280px;
+    width: 30%;
+    flex: 1 1 auto;
+    margin-right: 24px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
-@-webkit-keyframes spin2 {
-  from { -webkit-transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); }
-}
-@keyframes spin2 {
-  from {transform:rotate(360deg);}
-  to {transform:rotate(0deg);}
+
+.kFilter {
+  display: flex;
+  align-items: center;
+
+  .kDropDown {
+    background-color: white;
+    width: 100px;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
 }

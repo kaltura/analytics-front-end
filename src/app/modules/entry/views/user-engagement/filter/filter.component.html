@@ -1,0 +1,22 @@
+<div data-aid="filter-entry-users" class="kTableHeader" [ngStyle]="{'padding-bottom': _tags.length ? 0 : '8px'}">
+  <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': totalCount } }}</span>
+  <div class="kSearch">
+    <app-engagement-users-filter [selectedUsers]="_selectedValues['users']"
+                                 (itemSelected)="_onItemSelected($event, 'users')"></app-engagement-users-filter>
+  </div>
+</div>
+
+<div class="kTagsContainer" *ngIf="_tags.length">
+  <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconhelp_full"></i>
+    {{'app.filters.disclaimer' | translate}}
+  </span>
+  <kTags title=""
+         labelField="label"
+         tooltipField="tooltip"
+         [data]="_tags"
+         [clearAllLabel]="'app.common.clearAll' | translate"
+         (onTagRemove)="_removeFilter($event)"
+         (onRemoveAll)="_removeAll()">
+  </kTags>
+</div>

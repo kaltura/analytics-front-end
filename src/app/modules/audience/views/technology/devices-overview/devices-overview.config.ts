@@ -37,7 +37,6 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
             title: this._translate.instant(`app.audience.technology.count_plays`),
-            tooltip: this._translate.instant(`app.audience.technology.count_plays_tt`),
             sortOrder: 1,
             colors: [getPrimaryColor(), getSecondaryColor()],
           },
@@ -51,14 +50,12 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'sum_time_viewed': {
             format: value => value,
             title: this._translate.instant(`app.audience.technology.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.audience.technology.sum_time_viewed_tt`),
             sortOrder: 3,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },
           'avg_time_viewed': {
             format: value => value,
             title: this._translate.instant(`app.audience.technology.avg_time_viewed`),
-            tooltip: this._translate.instant(`app.audience.technology.avg_time_viewed_tt`),
             sortOrder: 4,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
           },

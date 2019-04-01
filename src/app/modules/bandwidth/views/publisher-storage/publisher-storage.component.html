@@ -1,9 +1,13 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-storage" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
     <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
                     [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.bandwidth.title' | translate"></app-export-csv>
-    <app-date-filter #dateFilter [dateRange]="_dateRange" [dateRangeType]="_dateRangeType" (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+    <app-date-filter #dateFilter
+                     name="storage"
+                     [dateRange]="_dateRange"
+                     [dateRangeType]="_dateRangeType"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kFilters">
@@ -28,7 +32,14 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true" sortField="month_id" [sortOrder]="-1" [defaultSortOrder]="-1">
+          <p-table [value]="_tableData"
+                   [paginator]="true"
+                   [rows]="_pageSize"
+                   [customSort]="true"
+                   [sortField]="_columns[0]"
+                   [sortOrder]="-1"
+                   [defaultSortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col">
@@ -62,7 +73,6 @@
               </div>
             </ng-template>
           </p-table>
-          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
         </div>
       </div>
 

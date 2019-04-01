@@ -1,6 +1,9 @@
-<div class="kReport kMini kOverrideFAIcons">
+<div data-aid="report-mini-top-videos" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.engagement.topVideos_tt' | translate}}</span>
+    </kInputHelper>
     <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
@@ -12,13 +15,17 @@
           <span>{{item.index}}</span>
         </div>
         <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
-        <div class="kReportRowThumbnail" #holder>
+        <div class="kReportRowThumbnail" #holder
+             (click)="_drillDown(item)">
           <img [src]="item.thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true">{{item.entry_name}}</span>
+          <span class="kTitle"
+                [kTooltip]="item.entry_name"
+                [showOnEllipsis]="true"
+                (click)="_drillDown(item)">{{item.entry_name}}</span>
           <span class="kScore">{{item.engagement_ranking}}/10</span>
         </div>
       </div>
@@ -34,13 +41,16 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_tableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #holder>
+        <div class="kReportRowThumbnail" #holder
+             (click)="_drillDown(_tableData[0])">
           <img [src]="_tableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_tableData[0].entry_name">
+          <span class="kTitle"
+                [kTooltip]="_tableData[0].entry_name"
+                (click)="_drillDown(_tableData[0])">
             {{_tableData[0].entry_name}}
           </span>
           <span class="kScore">{{_tableData[0].engagement_ranking}}/10</span>
@@ -55,13 +65,16 @@
           <img src="assets/images/ribbon_small.svg">
           <span>{{_compareTableData[0].index}}</span>
         </div>
-        <div class="kReportRowThumbnail" #compareHolder>
+        <div class="kReportRowThumbnail" #compareHolder
+             (click)="_drillDown(_compareTableData[0])">
           <img [src]="_compareTableData[0].thumbnailUrl"
                onError="this.onerror=null;this.style.display='none'"
                (error)="compareHolder.classList.add('error')">
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name">
+          <span class="kTitle"
+                [kTooltip]="_compareTableData[0].entry_name"
+                (click)="_drillDown(_compareTableData[0])">
             {{_compareTableData[0].entry_name}}
           </span>
           <span class="kScore">{{_compareTableData[0].engagement_ranking}}/10</span>

@@ -29,7 +29,7 @@ body{
   width: 100%;
   .kReportView{
     width: 100%;
-    min-height: calc(100vh - 50px);
+    min-height: 600px;
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -116,7 +116,7 @@ body{
         margin-left: 16px;
         width: auto;
         /deep/ .kTags {
-          border-top: none;
+          border-top: none !important;
         }
       }
       .kChart{
@@ -136,6 +136,10 @@ body{
             color: $kTertiary;
             font-size: 12px;
             margin-left: 24px;
+            margin-right: 8px;
+          }
+          span {
+            cursor: pointer;
           }
         }
         .kTableContainer{
@@ -175,6 +179,11 @@ body{
     display: flex;
     strong {
       color: $kGrayscale1;
+    }
+
+    .kTimePeriod {
+      min-width: 120px;
+      text-align: left;
     }
     .kTotalsCompareTooltipValue {
       display: flex;
@@ -235,6 +244,41 @@ body{
     display: flex;
   }
 }
+
+.kEntryGraphTooltip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+
+  .kCurrentTime {
+    color: $kGrayscale3;
+    font-weight: normal;
+  }
+
+  .kValue {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+
+    .kBullet {
+      font-size: 48px;
+      margin-right: 5px;
+    }
+  }
+
+}
+.kEntryCompareGraphTooltip {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  font-weight: bold;
+  .kBullet {
+    font-size: 48px;
+    margin-right: 5px;
+  }
+}
+
 
 .kGraphTooltip {
   padding: 5px;
@@ -385,6 +429,10 @@ ui-carousel /deep/ {
   padding: 0 !important;
 }
 
+.kNoMargin {
+  margin: 0 !important;
+}
+
 .area-blocker-warning {
   display: inline-block;
   width: 100%;
@@ -396,4 +444,165 @@ ui-carousel /deep/ {
   width: 24px;
   height: 24px;
   font-size: 24px;
+}
+
+.kHeatMapTooltipWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+
+  .kDuration {
+    color: $kGrayscale3;
+    margin-bottom: 12px;
+  }
+
+  .kHeatMapTooltip {
+    display: flex;
+    align-items: center;
+
+    .kBullet {
+      display: inline-block;
+      width: 9px;
+      min-width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      margin-right: 8px;
+    }
+
+    .kMessage {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+}
+
+div, span, tr, td, li {
+  outline: none !important;
+}
+
+.ui-datepicker-trigger {
+  position: absolute;
+}
+
+.ui-table p-sorticon {
+  vertical-align: unset;
+}
+
+k-area-blocker {
+  .kErrorMessageContainer{
+    width: 100%;
+    .kErrorMessage{
+      max-width: 586px;
+      width: 80% !important;
+      padding: 12px 12px 18px 12px !important;
+      .kErrorButtons{
+        margin-top: 24px !important;
+      }
+      .kErrorMessageText{
+        overflow-x: hidden;
+      }
+    }
+  }
+
+}
+
+.kDevicesGraphTooltip {
+  display: flex;
+  height: 48px;
+  min-width: 158px;
+  padding: 16px;
+  flex-direction: column;
+
+  .kTitle {
+    font-size: 14px;
+    color: $kGrayscale3;
+    margin-bottom: 12px;
+  }
+
+  .kValue {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
+
+.kHorizontalBarGraphTooltip {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  padding: 0 16px;
+  height: 50px;
+  vertical-align: middle;
+
+  .kBullet {
+    font-size: 24px;
+    margin-right: 8px;
+    line-height: 20px;
+  }
+}
+
+.kDefaultTooltip {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  font-weight: bold;
+
+  .kBullet {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 15px;
+    margin-right: 6px;
+  }
+}
+
+// duplicate for IE
+.kTags {
+  border-top: none !important;
+}
+
+.ui-autocomplete-panel {
+  max-height: 284px !important;
+  max-width: 250px;
+
+  .ui-autocomplete-list {
+    padding: 0;
+
+    .ui-autocomplete-list-item,
+    .ui-autocomplete-notification-item {
+      border: 0 !important;
+      border-radius: 0 !important;
+      min-height: 32px !important;
+      padding: .5em 1em;
+
+      &:hover {
+        background-color: $kGrayscale7 !important;
+      }
+
+      .kHighlightedText {
+        text-decoration: underline;
+      }
+
+      span:not(.kHighlightedText) {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+    }
+  }
+}
+
+ui-carousel {
+  z-index: 1;
+}
+
+.kDisclaimer {
+  margin: 16px 0 0 16px;
+  display: inline-block;
+
+  .kIconInfo_Full {
+    color: $kGrayscale3;
+    margin-right: 6px;
+  }
 }

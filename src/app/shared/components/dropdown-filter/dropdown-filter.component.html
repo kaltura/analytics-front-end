@@ -18,11 +18,39 @@
                    [defaultLabel]="defaultLabel">
 
       <ng-template let-item pTemplate="item">
-        <i class="kFlag" *ngIf="countryTemplate && item.value"
-           [ngClass]="'kFlag-' + item?.value?.id.toUpperCase()"
-           style="margin-right: 8px;margin-left: 4px;display:inline-block; vertical-align:middle"></i>
-        <span *ngIf="countryTemplate" style="margin-top:2px; position: absolute">{{item.label}}</span>
-        <span *ngIf="!countryTemplate" style="margin-top:2px; position: absolute">{{item.label}}</span>
+        <ng-container [ngSwitch]="templateType">
+
+          <ng-container *ngSwitchCase="'country'">
+            <i class="kFlag" *ngIf="item.value"
+               [ngClass]="'kFlag-' + item?.value?.id.toUpperCase()"
+               style="margin-right: 8px; margin-left: 4px; display:inline-block; vertical-align:middle"></i>
+            <span style="margin-top:2px; position: absolute; overflow: hidden; width: 140px; text-overflow: ellipsis"
+                  [kTooltip]="item.label" [showOnEllipsis]="true">
+              {{item.label}}
+            </span>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'domain'">
+            <div #holder
+                 style="margin-right: 8px; margin-left: 4px; display:inline-block; vertical-align:middle; height: 16px; width: 16px">
+              <img [src]="'http://' + item?.value?.id + '/favicon.ico'"
+                   onError="this.onerror=null;this.style.display='none'"
+                   (error)="holder.classList.add('kIconfile-small')">
+            </div>
+            <span style="margin-top:2px; position: absolute; overflow: hidden; width: 140px; text-overflow: ellipsis"
+                  [kTooltip]="item.label" [showOnEllipsis]="true">
+              {{item.label}}
+            </span>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            <span style="margin-top:2px; position: absolute; overflow: hidden; width: 160px; text-overflow: ellipsis"
+                  [kTooltip]="item.label" [showOnEllipsis]="true">
+              {{item.label}}
+            </span>
+          </ng-container>
+
+        </ng-container>
       </ng-template>
 
     </p-multiSelect>

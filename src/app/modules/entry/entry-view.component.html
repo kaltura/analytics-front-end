@@ -1,4 +1,4 @@
-<div class="kMain">
+<div data-aid="report-group-entry" class="kMain">
   <k-area-blocker [showLoader]="_loadingEntry">
     <div class="kReportView">
       <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
@@ -18,6 +18,7 @@
             </div>
           </div>
           <app-date-filter #dateFilter
+                           name="entry"
                            [dateRange]="_dateRange"
                            [selectedTimeUnit]="_timeUnit"
                            [creationDate]="_creationDate"
@@ -33,27 +34,55 @@
           <div class="kSeparator"></div>
           <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
         </div>
-        <div class="kReportContainer">
-          <app-refine-filter [opened]="_refineFilterOpened"
-                             [dateFilter]="_dateFilter"
-                             [selectedFilters]="_selectedRefineFilters"
-                             (closeFilters)="_refineFilterOpened = false"
-                             (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+
+        <app-entry-filter [opened]="_refineFilterOpened"
+                          [dateFilter]="_dateFilter"
+                          [selectedFilters]="_selectedRefineFilters"
+                          (closeFilters)="_refineFilterOpened = false"
+                          (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
+
+        <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId" [refineFilter]="_refineFilter"></app-entry-totals>
+
+        <div class="kReportContainer kEntryPreview">
+          <app-entry-preview [dateFilter]="_dateFilter"
+                             [entryId]="_entryId"
+                             [refineFilter]="_refineFilter"></app-entry-preview>
+          <app-user-engagement [dateFilter]="_dateFilter"
+                               [duration]="_duration"
+                               [refineFilter]="_refineFilter"
+                               [entryId]="_entryId"></app-user-engagement>
         </div>
-
-        <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-totals>
-
-        <app-entry-preview [dateFilter]="_dateFilter" [entryId]="_entryId"></app-entry-preview>
 
         <div class="kReportContainer">
           <app-video-performance [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
-                                 [entryId]="_entryId"></app-video-performance>
+                                 [entryId]="_entryId"
+                                 [refineFilter]="_refineFilter"></app-video-performance>
         </div>
 
         <div class="kReportContainer">
           <app-impressions [dateFilter]="_dateFilter"
-                           [entryId]="_entryId"></app-impressions>
+                           [entryId]="_entryId"
+                           [refineFilter]="_refineFilter"></app-impressions>
+        </div>
+
+        <div class="kReportContainer">
+          <app-top-countries [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"
+                             [entryId]="_entryId"></app-top-countries>
+        </div>
+
+        <div class="kReportContainer">
+          <app-entry-devices-overview [dateFilter]="_dateFilter"
+                                      [refineFilter]="_refineFilter"
+                                      [entryId]="_entryId"></app-entry-devices-overview>
+        </div>
+
+        <div class="kReportContainer">
+          <app-syndication [entryId]="_entryId"
+                           [dateFilterComponent]="dateFilter"
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-syndication>
         </div>
       </div>
     </div>

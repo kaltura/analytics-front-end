@@ -1,10 +1,18 @@
-import { KalturaEndUserReportInputFilter, KalturaESearchEntryFieldName, KalturaESearchEntryItem, KalturaESearchEntryOperator, KalturaESearchItemType, KalturaESearchOperatorType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaESearchEntryFieldName,
+  KalturaESearchEntryItem,
+  KalturaESearchEntryOperator,
+  KalturaESearchItemType,
+  KalturaESearchOperatorType,
+  KalturaReportInputFilter
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
-export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaEndUserReportInputFilter): void {
+export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [],
-    tags = [], owners = [], country = [], region = [], city = [];
+    tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [];
   
   refineFilter.forEach(item => {
     switch (item.type) {
@@ -26,23 +34,29 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
       case 'owners':
         owners.push(item.value.id);
         break;
+      case 'users':
+        users.push(item.value.id);
+        break;
       case 'countries':
         country.push(item.value.name);
         break;
+      case 'domains':
+        domains.push(item.value.name);
+        break;
       case 'location':
         if (item.value.country) {
-          country.push(item.value.country.map(({ name }) => name));
+          country.push(...item.value.country.map(({ name }) => name));
         }
         if (item.value.region) {
-          region.push(item.value.region.map(({ name }) => name));
+          region.push(...item.value.region.map(({ name }) => name));
         }
         if (item.value.city) {
-          city.push(item.value.city.map(({ name }) => name));
+          city.push(...item.value.city.map(({ name }) => name));
         }
         break;
     }
   });
-  
+
   if (categories.length) {
     serverFilter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
   } else {
@@ -66,7 +80,13 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   } else {
     delete serverFilter.ownerIdsIn;
   }
-  
+
+  if (users.length) {
+    (serverFilter as KalturaEndUserReportInputFilter).userIds = users.join(analyticsConfig.valueSeparator);
+  } else {
+    delete (serverFilter as KalturaEndUserReportInputFilter).userIds;
+  }
+
   if (country.length) {
     serverFilter.countryIn = country.join(analyticsConfig.valueSeparator);
   } else {

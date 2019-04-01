@@ -1,4 +1,4 @@
-<div class="kReport kOverrideFAIcons">
+<div data-aid="report-devices-overview" class="kReport kOverrideFAIcons">
   <ng-content></ng-content>
 
   <div class="kFilters">
@@ -41,12 +41,12 @@
             </div>
           </div>
           <div class="kSummaryChart">
-            <div class="kChart">
+
               <div echarts class="kChart"
                    [options]="_barChartData[_selectedMetrics]"
                    [merge]="_mergeChartData"></div>
             </div>
-          </div>
+
         </div>
       </ng-container>
 

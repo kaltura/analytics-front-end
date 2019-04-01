@@ -1,4 +1,4 @@
-<div class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-engagement-highlights" class="kReport kContent kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
 
     <div class="kReportContent">
@@ -26,9 +26,11 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table sortField="month_id"
+          <p-table [sortField]="_columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
+                   [paginator]="true"
+                   [rows]="_pageSize"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
                    (sortFunction)="_onSortChanged($event)">
@@ -64,11 +66,6 @@
               </div>
             </ng-template>
           </p-table>
-
-          <p-paginator [rows]="_pager.pageSize"
-                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                       [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         </div>
       </div>
     </div>

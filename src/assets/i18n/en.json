@@ -7,13 +7,14 @@
       "live": "Live"
     },
     "filters": {
+      "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
       "filter": "Filter",
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",
       "categories": "Categories",
       "mediaType": {
         "title": "Media Type",
-        "Video": "VOD",
+        "Video": "Video",
         "Live": "Live",
         "Audio": "Audio",
         "Image": "Images"
@@ -34,6 +35,7 @@
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",
+      "users": "Users",
       "owners": "Owners",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
@@ -46,7 +48,11 @@
       "countriesSelected": "{0} Countries Selected",
       "regionsSelected": "{0} Regions Selected",
       "citiesSelected": "{0} Cities Selected",
-      "filterCountries": "Filter Countries"
+      "filterCountries": "Filter Countries",
+      "filterDomains": "Filter Domains",
+      "domainPlaceholder": "Select Domain",
+      "domainsSelected": "{0} Domains Selected",
+      "filterUsers": "Filter Users"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -72,6 +78,7 @@
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
+      "noResultsRegion": "No Data for this Region",
       "exporting": "Preparing Report",
       "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
@@ -80,14 +87,17 @@
       "viewDetails": "View Details",
       "hideDetails": "Hide Details",
       "clearAll": "Clear All",
-      "details": "See Details"
+      "details": "See Details",
+      "compareMetricTo": "{{metricName}} compare to",
+      "none": "None"
     },
     "errors":{
       "errorHeader": "Error",
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again.",
       "warningRequestTimeout": "Still on it...",
-      "failedRequestTimeout": "Looks like the server is taking to long to respond, please try again in sometime"
+      "failedRequestTimeout": "Looks like the server is taking to long to respond, please try again in sometime",
+      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
     },
     "entryType": {
       "video": "Video",
@@ -124,8 +134,11 @@
     },
     "contributors": {
       "title": "Contributors",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Way To Add Content",
+      "others": "Others",
       "top-contributors": "Top Contributors",
-      "top-contributors_tt": "List of users with the highest contribution score based on Kaltura’s contribution score formula",
+      "top-contributors_tt": "List of users with the highest contribution score based on Kaltura’s contribution formula",
       "highlights": "Highlights",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "added_entries": "Added Entries",
@@ -140,6 +153,7 @@
       "contributorsSources_tt": "Which method do users use to add content into the platform",
       "contributorsAmount": "How many users contributed more than once?",
       "returningContributors": "Returning Contributors",
+      "noRanking": "Before April 2018 contributors ranking is not available",
       "topContributorsReport": {
         "role": "User Role",
         "email": "Email",
@@ -225,11 +239,10 @@
         "title": "Geo Location",
         "top": "Top Countries",
         "count_plays": "Plays",
-        "count_plays_tt": "The number of plays in the selected timeframe",
         "unique_known_users": "Unique Viewers",
-        "unique_known_users_tt": "The number of unique viewers in the selected timeframe",
-        "avg_view_drop_off": "Avg. Drop Off",
-        "avg_view_drop_off_tt": "The average drop off rate in the selected timeframe",
+        "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
+        "avg_view_drop_off": "Avg. Drop Off Rate",
+        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
         "object_id": "Name",
         "country": "",
         "index": "#",
@@ -249,10 +262,7 @@
         "sum_time_viewed": "Minutes Viewed",
         "avg_time_viewed": "Avg. Min Viewed",
         "unique_known_users": "Unique Viewers",
-        "count_plays_tt": "Total number of plays in the selected timeframe",
-        "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
-        "unique_known_users_tt": "Total number of unique viewers in the selected timeframe",
-        "avg_time_viewed_tt": "Average minutes viewed in the selected timeframe",
+        "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
         "plays_distribution": "Plays Distribution",
         "plays_trend": "Play Trend",
         "browser_family": "Name",
@@ -262,11 +272,18 @@
         "device": "Device",
         "filterDeviceType": "Filter Device Type",
         "index": "#",
+        "graphTooltip": {
+          "count_plays": "Plays {{0}}",
+          "sum_time_viewed": "Minutes Viewed {{0}}",
+          "avg_time_viewed": "Avg. Min Viewed {{0}}",
+          "unique_known_users": "Unique Viewers {{0}}"
+        },
         "devices": {
           "Computer": "Desktop",
           "Mobile": "Mobile",
           "Tablet": "Tablet",
           "Game console": "Game Console",
+          "Digital media receiver": "Media Receiver",
           "OTHER": "Other"
         }
       }
@@ -279,7 +296,7 @@
       "peak": "Peak day",
       "userHighlights": "User Highlights",
       "topVideos": "Top Videos",
-      "topVideos_tt": "List of top engaging videos based on Kaltura’s engagement score formula",
+      "topVideos_tt": "Top videos based on the Kaltura engagement formula",
       "duration": "Which video duration leads to better engagement?",
       "impressions": "How player impressions are leading to engagement?",
       "users": "How many users watched at least once?",
@@ -298,11 +315,9 @@
         "count_plays": "Plays",
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
-        "avg_view_drop_off": "Drop Off Rate",
-        "count_plays_tt": "Total plays in the selected timeframe",
-        "sum_time_viewed_tt": "Total minutes viewed in the selected timeframe",
-        "unique_known_users_tt": "Total unique viewers in the selected timeframe",
-        "avg_view_drop_off_tt": "Average drop off rate in the selected timeframe"
+        "avg_view_drop_off": "Avg. Drop Off Rate",
+        "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
+        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles"
       },
       "topVideosReport": {
         "entry_name": "Name",
@@ -316,14 +331,18 @@
         "creationDate": "Creation Date",
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data",
-        "by": "By"
+        "by": "By",
+        "entryStatus": {
+          "deleted": "Deleted Entry",
+          "unavailable": "Unavailable Entry"
+        }
       },
       "topDomainsReport": {
         "index": "#",
         "domains": "{{0}} Domains",
-        "pages": "{{0}} Pages",
+        "pages": "{{0}} Page URLs",
         "topDomains": "Top Domains",
-        "topDomains_tt": "The list of domains that generated the most plays",
+        "topDomains_tt": "List of domains that had player impressions in the selected timeframe",
         "count_plays": "Plays",
         "domain_name": "Domain Name",
         "object_id": "Domain Name",
@@ -331,21 +350,26 @@
         "sum_time_viewed": "Minutes Viewed",
         "count_loads": "Player Impressions",
         "load_play_ratio": "Play Impression Ratio",
-        "avg_view_drop_off": "Drop Off Rate",
+        "avg_completion_rate": "Avg. Completion Rate",
+        "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
+        "avg_view_drop_off": "Avg. Drop Off Rate",
         "count_plays_tt": "Plays",
         "plays_distribution": "Plays Distribution",
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
-        "avg_view_drop_off_tt": "Drop Off Rate",
+        "avg_view_drop_off_tt": "Avg. Drop Off Rate",
         "openLink": "Open page URL in a new browser tab"
       }
     },
     "entry": {
-      "plays": "Plays",
+      "views": "Views",
+      "plays": "Plays {{0}}",
       "viewers": "Unique Viewers",
+      "viewers_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "minutes": "Minutes Viewed",
       "watched": "Avg. Completion Rate",
+      "watched_tt": "Sum of percent watched divided by number of plays",
       "back": "Back",
       "viewDetails": "View Engagement Per User",
       "hideDetails": "Hide Engagement Per User",
@@ -358,10 +382,24 @@
       "sum_time_viewed": "Minutes Viewed",
       "count_loads": "Player Impressions",
       "avg_time_viewed": "Avg. View Time",
-      "count_plays_tt": "Plays",
-      "sum_time_viewed_tt": "Minutes Viewed",
-      "count_loads_tt": "Player Impressions",
-      "avg_time_viewed_tt": "Avg. View Time",
+      "name": "Name",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
+      "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
+      "totalViewersCount": "{{0}} Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
+      "unique_known_users": "Unique Viewers",
+      "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
+      "heatMap": {
+        "duration": "Duration {{0}}",
+        "tooltip": {
+          "0": "Not viewed",
+          "1": "Viewed once",
+          "2": "Viewed twice",
+          "n": "Viewed more than 2 times"
+        }
+      },
+      "topCountries": "Top Countries",
       "entryType": {
         "video": "Video",
         "audio": "Audio",
@@ -369,6 +407,30 @@
         "live": "Live",
         "unknown": "Unknown"
       }
+    },
+    "contentInteractions": {
+      "title": "Content Interactions",
+      "highlights_tt": "Snapshot of important metrics for the selected timeframe",
+      "highlights": "Highlights",
+      "topSharedVideos": "Top Shared Videos",
+      "topSharedVideos_tt": "Top entries listed by total number of shares across all channels",
+      "count_viral": "Shares",
+      "count_download": "Downloads",
+      "count_report": "Abuse Report",
+      "count_captions": "Captions Selected",
+      "entry_name": "Name",
+      "languagesInCaptions": "Which languages do users select in captions?",
+      "abuseReason": "Reason Why Viewer Report Abuse",
+      "index": "#",
+      "shares": "{{0}} Shares",
+      "abuseReportReasons": "Reason Why Viewer Report Abuse",
+      "reports": "Reports",
+      "otherReason": "Other reason",
+      "insights": "Insights",
+      "mostPopular": "Most Popular Playback Speed",
+      "count_info": "Times info panel was opened",
+      "count_related_selected": "Interactions with related content",
+      "insightsDescription": "{{0}} of all play sessions"
     }
   }
 }

@@ -11,8 +11,11 @@ import { ToastModule } from 'primeng/toast';
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
+import { CountryFilterComponent } from './components/country-filter/country-filter.component';
+import { DomainFilterComponent } from './components/domain-filter/domain-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { BulletComponent } from './components/bullet/bullet.component';
+import { InsightsBulletComponent } from './components/insights-bullet/insights-bullet.component';
 import { ReportService } from './services/report.service';
 import { ReportTabsComponent } from './components/report-tabs/report-tabs.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,7 +41,7 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule, MultiSelectModule } from 'primeng/primeng';
+import { DropdownModule, MultiSelectModule, PaginatorModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
@@ -47,6 +50,11 @@ import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { OsImagePipe } from 'shared/pipes/os-image.pipe';
+import { SyndicationComponent } from 'shared/components/syndication-report/syndication.component';
+import { TableModule } from 'primeng/table';
+import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
+import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 
 @NgModule({
   imports: [
@@ -68,13 +76,18 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     TagsModule,
     InputHelperModule,
     NgxEchartsModule,
+    PaginatorModule,
+    TableModule,
   ],
   declarations: [
     DateFilterComponent,
     UsersFilterComponent,
+    CountryFilterComponent,
+    DomainFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
+    InsightsBulletComponent,
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
@@ -97,14 +110,21 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     DropdownFilterComponent,
     KalturaPlayerComponent,
     ImpressionsComponent,
+    SyndicationComponent,
+    CompareMetricComponent,
+    HorizontalBarRowComponent,
+    HorizontalBarChartComponent,
     ...FilterComponentsList,
   ],
   exports: [
     DateFilterComponent,
     UsersFilterComponent,
+    CountryFilterComponent,
+    DomainFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
+    InsightsBulletComponent,
     TimeUnitsComponent,
     TrendPipe,
     BrowserImagePipe,
@@ -127,6 +147,10 @@ import { OsImagePipe } from 'shared/pipes/os-image.pipe';
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     ImpressionsComponent,
+    SyndicationComponent,
+    CompareMetricComponent,
+    HorizontalBarRowComponent,
+    HorizontalBarChartComponent,
     ...FilterComponentsList,
   ],
   providers: [
