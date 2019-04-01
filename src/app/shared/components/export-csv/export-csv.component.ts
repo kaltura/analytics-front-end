@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaPager, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaPager, KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,7 +14,7 @@ export interface ExportConfigService {
 export interface ExportItem {
   label: string;
   reportType: KalturaReportType;
-  sections: ReportDataSection[];
+  sections: KalturaReportExportItemType[];
 }
 
 @Component({

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-csv.component';
-import { KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataSection } from 'shared/services/storage-data-base.config';
+import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 
 @Injectable()
 export class TechnologyExportConfig implements ExportConfigService {
@@ -14,17 +13,17 @@ export class TechnologyExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.audience.technology.exportLabels.overview'),
         reportType: KalturaReportType.platforms,
-        sections: [ReportDataSection.totals, ReportDataSection.table]
+        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.audience.technology.exportLabels.topOs'),
         reportType: KalturaReportType.operatingSystemFamilies,
-        sections: [ReportDataSection.table, ReportDataSection.totals]
+        sections: [KalturaReportExportItemType.table, KalturaReportExportItemType.total]
       },
       {
         label: this._translate.instant('app.audience.technology.exportLabels.topBrowsers'),
         reportType: KalturaReportType.browsersFamilies,
-        sections: [ReportDataSection.table, ReportDataSection.totals]
+        sections: [KalturaReportExportItemType.table, KalturaReportExportItemType.total]
       },
     ];
   }
