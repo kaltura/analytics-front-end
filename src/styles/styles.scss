@@ -584,3 +584,13 @@ k-area-blocker {
 ui-carousel {
   z-index: 1;
 }
+
+.kDisclaimer {
+  margin: 16px 0 0 16px;
+  display: inline-block;
+
+  .kIconhelp_full {
+    color: $kGrayscale3;
+    margin-right: 8px;
+  }
+}
