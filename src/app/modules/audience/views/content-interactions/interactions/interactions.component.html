@@ -68,7 +68,7 @@
                   </span>
                   <ng-container *ngIf="!_isCompareMode || col === 'entry_name'">
                     <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
-                    <a *ngIf="col === 'entry_name'" (click)="_drillDown(data)">{{data[col]}}</a>
+                    <span class="kEntryLink" *ngIf="col === 'entry_name'" (click)="_drillDown(data)">{{data[col]}}</span>
                   </ng-container>
                 </td>
               </tr>

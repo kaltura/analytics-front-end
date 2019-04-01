@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -263,13 +263,14 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   public _drillDown(row: TableRow<string>): void {
     const { object_id: entryId, status } = row;
-    if (status === '') { // status is already being transformed by formatter function
+
+    // if (status === KalturaEntryStatus.ready) {
       if (analyticsConfig.isHosted) {
         const params = this._browserService.getCurrentQueryParams('string');
         this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
       } else {
         this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
       }
-    }
+    // }
   }
 }

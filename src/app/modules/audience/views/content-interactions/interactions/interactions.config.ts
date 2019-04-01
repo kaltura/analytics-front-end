@@ -51,6 +51,10 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           'count_report': {
             format: value => ReportHelper.numberOrZero(value),
           },
+          'status': {
+            format: value => value,
+            hidden: true,
+          },
         }
       },
       [ReportDataSection.totals]: {
