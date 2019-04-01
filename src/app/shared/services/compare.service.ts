@@ -144,30 +144,45 @@ export class CompareService implements OnDestroy {
       const defaultColors = [getPrimaryColor(), getSecondaryColor()];
       const getFormatter = colors => params => {
         const [current, compare] = params;
-        const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
-        let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
-        let comparePeriod: string | Date = DateFilterUtils.parseDateString(comparePeriodDate).toDate();
-        
-        if (reportInterval === KalturaReportInterval.months) {
-          currentPeriod = DateFilterUtils.formatMonthString(currentPeriod);
-          comparePeriod = DateFilterUtils.formatMonthString(comparePeriod);
-        } else {
-          currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
-          comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
-        }
-
+  
         const currentValue = typeof config.fields[graph.id].graphTooltip === 'function'
           ? config.fields[graph.id].graphTooltip(current.value)
           : current.value;
         const compareValue = typeof config.fields[graph.id].graphTooltip === 'function'
           ? config.fields[graph.id].graphTooltip(compare.value)
           : compare.value;
-        return `
+
+        const [currentPeriodDate, comparePeriodDate] = current.axisValue.split(analyticsConfig.valueSeparator);
+        
+        if (currentPeriodDate && comparePeriodDate) {
+          let currentPeriod: string | Date = DateFilterUtils.parseDateString(currentPeriodDate).toDate();
+          let comparePeriod: string | Date = DateFilterUtils.parseDateString(comparePeriodDate).toDate();
+  
+          if (reportInterval === KalturaReportInterval.months) {
+            currentPeriod = DateFilterUtils.formatMonthString(currentPeriod);
+            comparePeriod = DateFilterUtils.formatMonthString(comparePeriod);
+          } else {
+            currentPeriod = DateFilterUtils.formatMonthDayString(currentPeriod, analyticsConfig.locale, 'long');
+            comparePeriod = DateFilterUtils.formatMonthDayString(comparePeriod, analyticsConfig.locale, 'long');
+          }
+  
+          return `
           <div class="kGraphTooltip">
             ${comparePeriod}<br/>
             <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;${compareValue}<br/>
             ${currentPeriod}<br/>
-            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>${currentValue}
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;${currentValue}
+          </div>
+        `;
+        }
+
+        return `
+          <div class="kGraphTooltip">
+            ${current.name}<br/>
+            <span class="kBullet" style="color: ${colors[1]}">&bull;</span>&nbsp;
+            <span class="kValue kSeriesName">${compare.seriesName}</span>&nbsp;${compareValue}<br/>
+            <span class="kBullet" style="color: ${colors[0]}">&bull;</span>&nbsp;
+            <span class="kValue kSeriesName">${current.seriesName}</span>&nbsp;${currentValue}
           </div>
         `;
       };
