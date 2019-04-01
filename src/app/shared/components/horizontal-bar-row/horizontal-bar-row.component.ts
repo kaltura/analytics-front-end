@@ -58,7 +58,7 @@ export class HorizontalBarRowComponent {
           value: value !== null ? value : '–',
           trend: direction,
           units: value !== null ? '%' : '',
-          tooltip: `${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}`,
+          tooltip: `${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}`,
         };
       }
     }, 200);

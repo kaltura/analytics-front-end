@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export class DateFilterUtils {
   static getTimeZoneOffset(): number {
@@ -30,7 +31,8 @@ export class DateFilterUtils {
     return num > 9 ? num.toString() : ( '0' + num.toString());
   }
 
-  static formatMonthString(value: string | number | Date, locale: string): string {
+  // March 2019
+  static formatMonthString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
@@ -49,7 +51,8 @@ export class DateFilterUtils {
     return result;
   }
   
-  static formatFullDateString(value: string | number | Date, locale: string): string {
+  // 03/18/2019
+  static formatFullDateString(value: string | number | Date): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
@@ -68,7 +71,8 @@ export class DateFilterUtils {
     return result;
   }
   
-  static formatDayString(value: string | number | Date, locale: string): string {
+  // Mar 18
+  static formatDayString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
@@ -88,7 +92,8 @@ export class DateFilterUtils {
     return result;
   }
 
-  static formatMonthOnlyString(value: string | number | Date, locale: string): string {
+  // March
+  static formatMonthOnlyString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
@@ -107,7 +112,8 @@ export class DateFilterUtils {
     return result;
   }
 
-  static formatShortDateString(value: string | number | Date, locale: string): string {
+  // 03/18
+  static formatShortDateString(value: string | number | Date): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
@@ -126,19 +132,20 @@ export class DateFilterUtils {
     return result;
   }
 
-  static formatMonthDayString(value: string | number | Date, locale: string): string {
+  // Mar 18, 2019 or March 18, 2019
+  static formatMonthDayString(value: string | number | Date, locale = analyticsConfig.locale, monthFormat = 'short'): string {
     let result = '';
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
       const day: string = value.substring(6, 8);
       const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${day}, ${date.getFullYear()}`;
+      result = `${date.toLocaleString(locale, { month: monthFormat })} ${day}, ${date.getFullYear()}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = `${date.toLocaleString(locale, { month: 'short' })} ${this._getDate(date)}, ${date.getFullYear()}`;
+      result = `${date.toLocaleString(locale, { month: monthFormat })} ${this._getDate(date)}, ${date.getFullYear()}`;
     } else if (value instanceof Date) {
-      result = `${value.toLocaleString(locale, { month: 'short' })} ${this._getDate(value)}, ${value.getFullYear()}`;
+      result = `${value.toLocaleString(locale, { month: monthFormat })} ${this._getDate(value)}, ${value.getFullYear()}`;
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
