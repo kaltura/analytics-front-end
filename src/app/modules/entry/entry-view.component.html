@@ -8,6 +8,7 @@
           <span class="kTitle">{{_entryName}}</span>
           <app-export-csv name="entry"
                           [reports]="_exportConfig"
+                          [refineFilter]="_refineFilter"
                           [dateFilter]="_dateFilter"></app-export-csv>
           <div class="kFilter kOverrideFAIcons">
             <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
