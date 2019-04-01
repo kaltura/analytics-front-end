@@ -234,7 +234,7 @@ export class FilterComponent {
     if (this._dateFilter) {
       const disclaimerDate = DateFilterUtils.getMomentDate('04/01/2018');
       const startDate = DateFilterUtils.getMomentDate(this._dateFilter.startDate);
-      this._showDisclaimer = this._tags.length && startDate.isSameOrBefore(disclaimerDate);
+      this._showDisclaimer = this._tags.length && startDate.isBefore(disclaimerDate);
     } else {
       this._showDisclaimer = false;
     }
