@@ -34,7 +34,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   protected _componentId = 'mini-top-shared';
   
   private readonly _order = '-count_viral';
-  private _reportType = KalturaReportType.contentInteractions;
+  private _reportType = KalturaReportType.playerRelatedInteractions;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
