@@ -172,10 +172,28 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
 
     const totals = getTotals(tableData);
 
-    
-    
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      const getSource = arr => arr.map(({ source }) => source);
+      const uniqueSourcesKeys = Array.from(new Set([...getSource(tableData), ...getSource(compareTableData)]));
+
+      // produce { source: 'sourceName', key_from_config1: 0, key_from_config2: 0...} object
+      const getEmptySource = source =>
+        Object
+          .keys(this._dataConfig[ReportDataSection.graph].fields)
+          .reduce((result, key) => (result[key] = 0, result), { source });
+
+      // append missing sources to both current and compare tables
+      uniqueSourcesKeys.forEach(source => {
+        if (!tableData.find(item => item.source === source)) {
+          tableData.push(getEmptySource(source));
+        }
+  
+        if (!compareTableData.find(item => item.source === source)) {
+          compareTableData.push(getEmptySource(source));
+        }
+      });
+
       const compareTotals = getTotals(compareTableData);
       this._compareFirstTimeLoading = false;
   

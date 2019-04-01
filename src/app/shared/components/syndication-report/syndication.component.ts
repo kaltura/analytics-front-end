@@ -4,10 +4,10 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
+  KalturaReportInputFilter,
   KalturaFilterPager,
   KalturaObjectBaseFactory,
   KalturaReportGraph,
-  KalturaReportInputFilter,
   KalturaReportInterval,
   KalturaReportTable,
   KalturaReportTotal,
@@ -230,7 +230,7 @@ export class SyndicationComponent {
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
-        'object_id'
+        this._drillDown ? 'referrer' : 'object_id'
       );
       this._totalCount = current.table.totalCount;
       this._columns = columns;

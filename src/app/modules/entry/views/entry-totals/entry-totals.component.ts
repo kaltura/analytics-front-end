@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -33,12 +33,9 @@ export class EntryTotalsComponent extends EntryBase {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _reportInterval = KalturaReportInterval.days;
-  public _compareFilter: KalturaReportInputFilter = null;
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
-  public _filter = new KalturaReportInputFilter({
-    searchInTags: true,
-    searchInAdminTags: false
-  });
+  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;

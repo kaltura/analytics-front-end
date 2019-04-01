@@ -82,7 +82,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   
-  protected abstract _name: string;
+  public abstract _name: string;
   protected abstract _defaultReportType: KalturaReportType;
   protected abstract _drillDownReportType: KalturaReportType;
 

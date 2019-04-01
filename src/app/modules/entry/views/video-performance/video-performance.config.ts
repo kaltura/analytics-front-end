@@ -19,25 +19,32 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
           'month_id': {
             format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
             nonComparable: true,
+            sortOrder: 1,
           },
           'date_id': {
             format: value => DateFilterUtils.formatFullDateString(value, analyticsConfig.locale),
             nonComparable: true,
+            sortOrder: 1,
           },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 2,
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4,
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
+            format: value => ReportHelper.percents(value / 100, false),
+            sortOrder: 5,
           },
           'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, false, true),
+            format: value => ReportHelper.percents(value, false),
+            sortOrder: 6,
           },
         }
       },

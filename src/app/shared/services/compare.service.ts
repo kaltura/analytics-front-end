@@ -24,10 +24,16 @@ export class CompareService implements OnDestroy {
   }
   
   private _getCompareValue(compareData: string[], date: moment.Moment, datesDiff: number, reportInterval: KalturaReportInterval): string {
-    const relevantDate = DateFilterUtils.getMomentDate(date).subtract(datesDiff);
-    const relevantLabelString = reportInterval === KalturaReportInterval.days
-      ? relevantDate.format('YYYYMMDD')
-      : relevantDate.format('YYYYMM');
+    let relevantLabelString = '';
+    let relevantDate = null;
+    
+    if (reportInterval === KalturaReportInterval.days) {
+      relevantDate = DateFilterUtils.getMomentDate(date).subtract(datesDiff);
+      relevantLabelString = relevantDate.format('YYYYMMDD');
+    } else {
+      relevantDate = DateFilterUtils.getMomentDate(date).subtract(datesDiff, 'months');
+      relevantLabelString = relevantDate.format('YYYYMM');
+    }
     
     const compareString = compareData.find(item => (item.split(analyticsConfig.valueSeparator)[0] || '') === relevantLabelString);
     return compareString ? compareString.split(analyticsConfig.valueSeparator)[1] : '0';
@@ -43,7 +49,9 @@ export class CompareService implements OnDestroy {
                           graphOptions?: { xAxisLabelRotation?: number, yAxisLabelRotation?: number }): GraphsData {
     const lineChartData = {};
     const barChartData = {};
-    const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
+    const datesDiff = reportInterval === KalturaReportInterval.months
+      ? DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from), 'months')
+      : DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
 
     let currentPeriodTitle = '';
     let comparePeriodTitle = '';
@@ -466,31 +474,35 @@ export class CompareService implements OnDestroy {
                                config: ReportDataItemConfig,
                                reportInterval: KalturaReportInterval,
                                dataKey: string = ''): { columns: string[], tableData: TableRow<string>[], totalCount: number } {
-    let columns = current
-      .map(item => item.id)
-      .filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
-
+    let columns = current.map(item => item.id);
+    
     const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
-    const getTableData = data => data[0].filter(Boolean).map((item, i) => {
-      return columns.reduce(
-        (acc, val, j) => (acc[val] = data[j][i].split(analyticsConfig.valueSeparator)[1], acc),
-        { [firstColumn]: item.split(analyticsConfig.valueSeparator)[0] }
-      );
-    });
+    const getTableData = data => {
+      return data[0].filter(Boolean).map((item, i) => {
+        return columns.reduce(
+          (acc, val, j) => {
+            if (config.fields.hasOwnProperty(val) && !config.fields[val].hidden) {
+              acc[val] = data[j][i].split(analyticsConfig.valueSeparator)[1];
+            }
+            return acc;
+          },
+          { [firstColumn]: item.split(analyticsConfig.valueSeparator)[0] }
+        );
+      });
+    };
     const currentData = getTableData(current.map(item => item.data.split(';')));
     const compareData = getTableData(compare.map(item => item.data.split(';')));
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(currentPeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(currentPeriod.to, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(comparePeriod.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(comparePeriod.to, analyticsConfig.locale)}`;
-    const datesDiff = DateFilterUtils.getMomentDate(currentPeriod.from).diff(DateFilterUtils.getMomentDate(comparePeriod.from));
     const tableData = [];
-  
+    
     // depends on array index since server returns 0 values,
     // if this behavior changes consider refactoring of this part to get relevant compare row
     currentData.forEach((currentRow, index) => {
       let data = {};
       const rowColumns = Object.keys(currentRow);
-      const compareRow = compareData[index];
-  
+      const compareRow = compareData[index] || {};
+      
       rowColumns.forEach(column => {
         const fieldConfig = config.fields[column];
         if (fieldConfig) {
@@ -526,16 +538,21 @@ export class CompareService implements OnDestroy {
       });
       tableData.push(data);
     });
-    columns.sort((a, b) => {
-      const valA = config.fields[a].sortOrder || 0;
-      const valB = config.fields[b].sortOrder || 0;
-      return valA - valB;
-    });
-    columns = [firstColumn, ...columns];
-  
+
+    columns = [
+      firstColumn,
+      ...columns
+        .filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden)
+        .sort((a, b) => {
+          const valA = config.fields[a].sortOrder || 0;
+          const valB = config.fields[b].sortOrder || 0;
+          return valA - valB;
+        })
+    ];
+
     return { columns, tableData, totalCount: tableData.length };
   }
-
+  
   public compareTotalsData(currentPeriod: { from: number, to: number },
                            comparePeriod: { from: number, to: number },
                            current: KalturaReportTotal,
@@ -632,18 +649,23 @@ export class CompareService implements OnDestroy {
     };
   
     const currentMax = getMaxValue(current.series) || 1;
-    const currentMin = getMinValue(current.series);
     const compareMax = getMaxValue(compare.series) || 1;
-    const compareMin = getMinValue(compare.series);
-    const currentInterval = (currentMax - currentMin) / 5;
-    const compareInterval = (compareMax - compareMin) / 5;
+    let currentMin = getMinValue(current.series);
+    let compareMin = getMinValue(compare.series);
+  
+    // prevent having min equals max
+    currentMin = currentMin === currentMax ? 0 : currentMin;
+    compareMin = compareMin === compareMax ? 0 : compareMin;
+
+    const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(2));
+    const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(2));
     
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
       'textStyle': { ...current.textStyle },
       'grid': { ...current.grid, top: 32 },
       'xAxis': { ...current.xAxis },
-      'tooltip':  {
+      'tooltip': {
         ...current.tooltip,
         formatter: getFormatter([current.color[0], compare.color[0], current.color[1], compare.color[1]])
       },
@@ -661,7 +683,7 @@ export class CompareService implements OnDestroy {
           name: compareMetricLabel,
           nameTextStyle: { padding: [0, 20, 0, 0] },
           max: compareMax,
-          min: currentMin,
+          min: compareMin,
           interval: compareInterval
         },
       ],
