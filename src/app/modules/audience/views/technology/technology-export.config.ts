@@ -13,17 +13,17 @@ export class TechnologyExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.audience.technology.exportLabels.overview'),
         reportType: KalturaReportType.platforms,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.audience.technology.exportLabels.topOs'),
         reportType: KalturaReportType.operatingSystemFamilies,
-        sections: [KalturaReportExportItemType.table, KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.audience.technology.exportLabels.topBrowsers'),
         reportType: KalturaReportType.browsersFamilies,
-        sections: [KalturaReportExportItemType.table, KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.table]
       },
     ];
   }

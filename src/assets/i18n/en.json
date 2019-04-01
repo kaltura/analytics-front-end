@@ -160,8 +160,10 @@
       "returningContributors": "Returning Contributors",
       "noRanking": "Before April 2018 contributors ranking is not available",
       "exportLabels": {
+        "highlights": "Highlights",
+        "general": "General graph",
         "topContributors": "Top Contributors",
-        "topSources": "Top Sources"
+        "topSources": "Source"
       },
       "topContributorsReport": {
         "role": "User Role",
@@ -289,8 +291,8 @@
         "filterDeviceType": "Filter Device Type",
         "index": "#",
         "exportLabels": {
-          "overview": "Devices Overview",
-          "topOs": "Top Operating Systems",
+          "overview": "Devices",
+          "topOs": "Top OS",
           "topBrowsers": "Top Browsers"
         },
         "graphTooltip": {
