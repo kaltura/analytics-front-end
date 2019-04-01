@@ -35,11 +35,11 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
           },
-          'avg_view_drop_off': {
+          'avg_completion_rate': {
             format: value => Math.min(value, 100),
-            parse: value => Math.min(Math.round(parseFloat(value) * 100), 100),
+            title: this._translate.instant(`app.entry.avg_completion_rate`),
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`)}:&nbsp;${value}%</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
           },
         }
       },
@@ -76,9 +76,9 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 6,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 6,
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
+            sortOrder: 7,
           },
         }
       },
@@ -107,12 +107,12 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             units: value => 'Min',
             sortOrder: 4,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.numberOrZero(Math.round(value * 100)),
-            title: this._translate.instant(`app.engagement.topDomainsReport.avg_view_drop_off`),
-            units: value => '%',
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entry.watched`),
+            tooltip: this._translate.instant('app.entry.watched_tt'),
             sortOrder: 5,
-          },
+          }
         }
       },
     };
