@@ -188,6 +188,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
+        'object_id'
       );
       this._columns = columns;
       this._totalCount = compare.table.totalCount;
