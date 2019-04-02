@@ -1,13 +1,19 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
+import { merge as ObservableMerge, Observable } from 'rxjs';
 
-@Directive({ selector: '[appScrollTopOnPaging]' })
-export class ScrollTopOnPagingDirective implements AfterViewInit, OnDestroy {
+@Directive({
+  selector: '[appScrollTopOnPaging]',
+  providers: [PageScrollService]
+})
+export class ScrollTopOnPagingDirective implements OnInit, AfterViewInit, OnDestroy {
   @Input() scrollOffset = 0;
+  
+  @Input() customPaginationEvent: Observable<void>;
   
   private _tableElement: HTMLElement;
   
@@ -15,6 +21,9 @@ export class ScrollTopOnPagingDirective implements AfterViewInit, OnDestroy {
               private _table: Table,
               private _pageScrollService: PageScrollService,
               private _frameEventManager: FrameEventManagerService) {
+  }
+  
+  ngOnInit() {
     this._hookToPaging();
   }
   
@@ -28,7 +37,8 @@ export class ScrollTopOnPagingDirective implements AfterViewInit, OnDestroy {
   
   private _hookToPaging(): void {
     if (this._table instanceof Table) {
-      this._table.onPage
+      const sources = this.customPaginationEvent ? [this._table.onPage, this.customPaginationEvent] : [this._table.onPage];
+      ObservableMerge(...sources)
         .pipe(cancelOnDestroy(this))
         .subscribe(() => this._scrollTop());
     }
