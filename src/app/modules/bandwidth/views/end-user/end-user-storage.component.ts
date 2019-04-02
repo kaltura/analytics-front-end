@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -9,7 +9,7 @@ import { UsersFilterComponent } from 'shared/components/users-filter/users-filte
 import { EndUserStorageDataConfig } from './end-user-storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -25,9 +25,11 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
     EndUserStorageDataConfig,
   ]
 })
-export class EndUserStorageComponent implements OnInit {
+export class EndUserStorageComponent implements OnInit, OnDestroy {
 
   @ViewChild('userFilter') private userFilter: UsersFilterComponent;
+  
+  private _paginationChanged = new Subject<void>();
 
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
@@ -48,6 +50,7 @@ export class EndUserStorageComponent implements OnInit {
   public _columns: string[] = [];
   public _drillDown = '';
   public _tags: any[] = [];
+  public _paginationChanged$ = this._paginationChanged.asObservable();
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
@@ -82,7 +85,11 @@ export class EndUserStorageComponent implements OnInit {
   ngOnInit() {
     this._isBusy = false;
   }
-
+  
+  ngOnDestroy(): void {
+    this._paginationChanged.complete();
+  }
+  
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
@@ -154,6 +161,7 @@ export class EndUserStorageComponent implements OnInit {
 
   public _onPaginationChanged(event): void {
     if (event.page !== (this.pager.pageIndex - 1)) {
+      this._paginationChanged.next();
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this.pager.pageIndex = event.page + 1;
       this.loadReport({ table: this._dataConfig.table });

@@ -32,7 +32,8 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table [value]="_tableData"
+          <p-table appScrollTopOnPaging
+                   [value]="_tableData"
                    [paginator]="true"
                    [rows]="_pageSize"
                    [customSort]="true"

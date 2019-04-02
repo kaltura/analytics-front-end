@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-contributors-top-contributors-table',
   templateUrl: './top-contributors-table.component.html',
   styleUrls: ['./top-contributors-table.component.scss']
 })
-export class TopContributorsTableComponent {
+export class TopContributorsTableComponent implements OnDestroy {
   @Input() set tableData(value: TableRow<string>[]) {
     value = Array.isArray(value) ? value : [];
     this._originalTable = [...value];
@@ -28,6 +29,7 @@ export class TopContributorsTableComponent {
   
   @ViewChild('overlay') _overlay: OverlayComponent;
   
+  private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   
@@ -35,11 +37,18 @@ export class TopContributorsTableComponent {
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
+  public _paginationChanged$ = this._paginationChanged.asObservable();
   
   constructor(private _logger: KalturaLogger) {
   }
+  
+  ngOnDestroy(): void {
+    this._paginationChanged.complete();
+  }
+  
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._paginationChanged.next();
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);

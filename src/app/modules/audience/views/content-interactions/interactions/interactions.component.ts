@@ -4,7 +4,7 @@ import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatu
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,6 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class InteractionsComponent extends InteractionsBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
+  private _paginationChanged = new Subject<void>();
   private _order = '-count_viral';
   private _reportType = KalturaReportType.playerRelatedInteractions;
   private _dataConfig: ReportDataConfig;
@@ -43,6 +44,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   protected _componentId = 'interactions';
   
   public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
+  public _paginationChanged$ = this._paginationChanged.asObservable();
   
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -84,6 +86,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   ngOnDestroy() {
+    this._paginationChanged.complete();
     this.interactions$.complete();
   }
   
@@ -247,6 +250,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   public _onPaginationChanged(event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._paginationChanged.next();
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport({ table: this._dataConfig.table });

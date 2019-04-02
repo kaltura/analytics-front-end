@@ -49,7 +49,9 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table [value]="_tableData"
+          <p-table appScrollTopOnPaging
+                   [customPaginationEvent]="_paginationChanged$"
+                   [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortField]="_drillDown.length ? 'month_id' : 'total_storage_mb'"
@@ -92,7 +94,10 @@
               </div>
             </ng-template>
           </p-table>
-          <p-paginator [rows]="pager.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="(pager.pageIndex -1) * pager.pageSize" [totalRecords]="_totalCount"></p-paginator>
+          <p-paginator [rows]="pager.pageSize"
+                       [first]="(pager.pageIndex -1) * pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChanged($event)" ></p-paginator>
         </div>
       </div>
     </div>
