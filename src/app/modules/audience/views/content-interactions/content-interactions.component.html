@@ -19,48 +19,48 @@
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
-<!--  <div class="kReportContainer kNoPadding">-->
-<!--    <app-refine-filter name="refine-filter"-->
-<!--                       [opened]="_refineFilterOpened"-->
-<!--                       [dateFilter]="_dateFilter"-->
-<!--                       [selectedFilters]="_selectedRefineFilters"-->
-<!--                       (closeFilters)="_refineFilterOpened = false"-->
-<!--                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>-->
-<!--  </div>-->
+  <div class="kReportContainer kNoPadding">
+    <app-refine-filter name="refine-filter"
+                       [opened]="_refineFilterOpened"
+                       [dateFilter]="_dateFilter"
+                       [selectedFilters]="_selectedRefineFilters"
+                       (closeFilters)="_refineFilterOpened = false"
+                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+  </div>
 
-<!--  <div class="kReportContainer">-->
-<!--    <div class="kMiniReportContainer">-->
-<!--      <app-mini-interactions [highlights$]="interactions.interactions$"-->
-<!--                             [dateFilter]="_dateFilter"-->
-<!--                             [refineFilter]="_refineFilter"></app-mini-interactions>-->
-<!--    </div>-->
+  <div class="kReportContainer">
+    <div class="kMiniReportContainer">
+      <app-mini-interactions [highlights$]="interactions.interactions$"
+                             [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-mini-interactions>
+    </div>
 
-<!--    <div class="kMiniReportContainer">-->
-<!--      <app-mini-top-shared [dateFilter]="_dateFilter"-->
-<!--                           [refineFilter]="_refineFilter"></app-mini-top-shared>-->
-<!--    </div>-->
+    <div class="kMiniReportContainer">
+      <app-mini-top-shared [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-mini-top-shared>
+    </div>
 
-<!--    &lt;!&ndash;IMPORTANT: set infinite and autoPlay to false in case there's only ONE item &ndash;&gt;-->
-<!--    <div class="kMiniReportContainer">-->
-<!--      <ui-carousel [infinite]="true"-->
-<!--                   [autoPlay]="true"-->
-<!--                   [autoPlaySpeed]="10000"-->
-<!--                   [arrows]="false"-->
-<!--                   [fade]="false"-->
-<!--                   [speed]="800"-->
-<!--                   height="280px">-->
-<!--        <ui-carousel-item>-->
-<!--          <app-top-playback-speed [dateFilter]="_dateFilter"-->
-<!--                                  [refineFilter]="_refineFilter"></app-top-playback-speed>-->
-<!--        </ui-carousel-item>-->
-<!--        <ui-carousel-item>-->
-<!--          <app-top-stats [highlights$]="interactions.interactions$"-->
-<!--                         [dateFilter]="_dateFilter"-->
-<!--                         [refineFilter]="_refineFilter"></app-top-stats>-->
-<!--        </ui-carousel-item>-->
-<!--      </ui-carousel>-->
-<!--    </div>-->
-<!--  </div>-->
+    <!--IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
+    <div class="kMiniReportContainer">
+      <ui-carousel [infinite]="true"
+                   [autoPlay]="true"
+                   [autoPlaySpeed]="10000"
+                   [arrows]="false"
+                   [fade]="false"
+                   [speed]="800"
+                   height="280px">
+        <ui-carousel-item>
+          <app-top-playback-speed [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-top-playback-speed>
+        </ui-carousel-item>
+        <ui-carousel-item>
+          <app-top-stats [highlights$]="interactions.interactions$"
+                         [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"></app-top-stats>
+        </ui-carousel-item>
+      </ui-carousel>
+    </div>
+  </div>
 
   <div id="interactions" class="kReportContainer">
     <app-interactions #interactions
@@ -69,15 +69,15 @@
                       [refineFilter]="_refineFilter"></app-interactions>
   </div>
 
-<!--  <div class="kReportContainer">-->
-<!--    &lt;!&ndash;<div class="kSmallReportContainer">&ndash;&gt;-->
-<!--    &lt;!&ndash;&ndash;&gt;-->
-<!--    &lt;!&ndash;</div>&ndash;&gt;-->
-<!--    &lt;!&ndash;<div class="kSmallReportContainer">&ndash;&gt;-->
-<!--    <app-moderation-report [dateFilter]="_dateFilter"-->
-<!--                           [refineFilter]="_refineFilter"></app-moderation-report>-->
-<!--    &lt;!&ndash;</div>&ndash;&gt;-->
-<!--  </div>-->
+  <div class="kReportContainer">
+    <!--<div class="kSmallReportContainer">-->
+    <!---->
+    <!--</div>-->
+    <!--<div class="kSmallReportContainer">-->
+    <app-moderation-report [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-moderation-report>
+    <!--</div>-->
+  </div>
 
 </div>
 
