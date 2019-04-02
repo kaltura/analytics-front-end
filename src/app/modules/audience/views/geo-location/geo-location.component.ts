@@ -22,6 +22,7 @@ import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { DataTable } from 'primeng/primeng';
+import { canDrillDown } from 'shared/utils/can-drill-down-country';
 
 @Component({
   selector: 'app-geo-location',
@@ -72,6 +73,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _selectedCountries: SelectItem[] = [];
   public _drillDown: string[] = [];
   private mapCenter = [0, 10];
+  private _canMapDrillDown = true;
 
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
@@ -163,7 +165,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._mapZoom = this._mapZoom / 2;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this._drillDown.length > 0) {
+    if (this._drillDown.length > 0 && this._canMapDrillDown) {
       this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
       this.echartsIntance.setOption({geo: [{roam: roam}]}, false);
     } else {
@@ -182,9 +184,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
+    this._mapZoom = this._drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
     
+    this._canMapDrillDown = canDrillDown(this._drillDown[0]);
+
     if (this._table) {
       this._table.reset();
     }
@@ -269,7 +273,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
@@ -293,10 +297,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
+    map.roam = this._drillDown.length === 0 || this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
 
@@ -406,7 +410,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   private setMapCenter(): void {
     this.mapCenter = [0, 10];
-    if (this._drillDown.length > 0 ) {
+    if (this._drillDown.length > 0 && this._canMapDrillDown) {
       const location = this._drillDown.length === 1 ? this._drillDown[0] : this._drillDown[1];
       let found = false;
       this._tableData.forEach(data => {
