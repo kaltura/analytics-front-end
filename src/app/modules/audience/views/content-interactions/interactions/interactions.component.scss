@@ -20,8 +20,13 @@
 .kThumbnailHolder {
   width: 85px;
   height: 48px;
+  cursor: pointer;
 
   img {
     width: 85px;
   }
+}
+
+.kEntryLink {
+  cursor: pointer;
 }

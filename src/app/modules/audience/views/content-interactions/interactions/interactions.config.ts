@@ -14,6 +14,11 @@ export class InteractionsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
+          'count_plays': {
+            format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contentInteractions.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+          },
           'count_viral': {
             format: value => value,
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
@@ -42,6 +47,9 @@ export class InteractionsConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
           },
@@ -50,26 +58,35 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           },
           'count_report': {
             format: value => ReportHelper.numberOrZero(value),
+          },
+          'status': {
+            format: value => value,
+            hidden: true,
           },
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_viral',
+        preSelected: 'count_plays',
         fields: {
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_plays`),
+            sortOrder: 1,
+          },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_viral`),
-            sortOrder: 1,
+            sortOrder: 2,
           },
           'count_download': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_download`),
-            sortOrder: 2,
+            sortOrder: 3,
           },
           'count_report': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_report`),
-            sortOrder: 3,
+            sortOrder: 4,
           },
         }
       }

@@ -50,7 +50,7 @@
               <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
                 <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
                 <td [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
-                  <div class="kThumbnailHolder" #holder>
+                  <div class="kThumbnailHolder" #holder (click)="_drillDown(data)">
                     <img [src]="data.thumbnailUrl"
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('error')">
@@ -67,7 +67,8 @@
                     </span>
                   </span>
                   <ng-container *ngIf="!_isCompareMode || col === 'entry_name'">
-                    <span>{{data[col]}}</span>
+                    <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
+                    <span class="kEntryLink" *ngIf="col === 'entry_name'" (click)="_drillDown(data)">{{data[col]}}</span>
                   </ng-container>
                 </td>
               </tr>

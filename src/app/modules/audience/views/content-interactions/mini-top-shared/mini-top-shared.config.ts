@@ -25,6 +25,10 @@ export class MiniTopSharedConfig extends ReportDataBaseConfig {
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
           },
+          'status': {
+            format: value => value,
+            hidden: true,
+          },
         }
       }
     };

@@ -97,7 +97,8 @@
       "errorHeader": "Error",
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again.",
-      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
+      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria.",
+      "timeout": "Operation timed out"
     },
     "exportReports": {
       "exportReports": "Export Reports",
@@ -452,6 +453,7 @@
       "highlights": "Highlights",
       "topSharedVideos": "Top Shared Videos",
       "topSharedVideos_tt": "Top entries listed by total number of shares across all channels",
+      "count_plays": "Plays",
       "count_viral": "Shares",
       "count_download": "Downloads",
       "count_report": "Abuse Report",
