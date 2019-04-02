@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Table } from 'primeng/table';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -7,8 +7,10 @@ import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-pag
 
 @Directive({ selector: '[appScrollTopOnPaging]' })
 export class ScrollTopOnPagingDirective implements AfterViewInit, OnDestroy {
+  @Input() scrollOffset = 0;
+  
   private _tableElement: HTMLElement;
-
+  
   constructor(private _el: ElementRef<HTMLElement>,
               private _table: Table,
               private _pageScrollService: PageScrollService,
@@ -37,8 +39,10 @@ export class ScrollTopOnPagingDirective implements AfterViewInit, OnDestroy {
       const targetEl = this._tableElement.getElementsByClassName('ui-table')[0] as HTMLElement;
       
       if (targetEl) {
-        const menuOffset = 50; // contributors page doesn't have sub menu, subtract menu offset for correct scroll
-        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop - menuOffset);
+        const rect = targetEl.getBoundingClientRect();
+        const top = rect.top + window.pageYOffset;
+        
+        this._frameEventManager.publish(FrameEvents.ScrollTo, top - this.scrollOffset);
       }
     } else {
       PageScrollConfig.defaultDuration = 0;
