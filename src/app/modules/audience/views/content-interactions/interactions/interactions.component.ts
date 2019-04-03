@@ -105,6 +105,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._totalCount = 0;
           this._tableData = [];
           
           this.interactions$.next({ current: report, compare: compare, busy: false, error: null });
@@ -147,6 +148,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
+    this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -158,6 +160,8 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -191,7 +195,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         'object_id'
       );
       this._columns = columns;
-      this._totalCount = compare.table.totalCount;
+      this._totalCount = current.table.totalCount;
       this._tableData = tableData.map((item, index) => this._extendTableRow(item, index));
     }
   }

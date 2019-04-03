@@ -36,7 +36,7 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr [ngStyle]="{'width': '100%'}">
-                <th [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
+                <th [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
                 <th [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
                     [ngStyle]="{'width': '100%'}">

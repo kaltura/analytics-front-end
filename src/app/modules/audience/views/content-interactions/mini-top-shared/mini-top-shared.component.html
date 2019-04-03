@@ -69,7 +69,7 @@
           <span class="kTitle" [kTooltip]="_compareTableData[0].entry_name" (click)="_drillDown(_compareTableData[0])">
             {{_compareTableData[0].entry_name}}
           </span>
-          <span class="kScore">{{'app.contentInteractions.shares' | translate: {'0': _compareTableData[0].count_viral} }}/10</span>
+          <span class="kScore">{{'app.contentInteractions.shares' | translate: {'0': _compareTableData[0].count_viral} }}</span>
         </div>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">

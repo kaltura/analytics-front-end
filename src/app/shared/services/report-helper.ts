@@ -79,6 +79,7 @@ export class ReportHelper {
       case 'count_audio':
       case 'count_download':
       case 'count_report':
+      case 'count_report_submitted':
       case 'count_viral':
       case 'count_edit':
       case 'count_image':
