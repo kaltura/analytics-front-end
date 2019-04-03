@@ -125,7 +125,7 @@ export class ExportCsvComponent implements OnDestroy {
     selection.forEach(item => {
       item.sections.forEach(section => {
         reportItems.push(new KalturaReportExportItem({
-          reportTitle: '', // item.label
+          reportTitle: item.label,
           action: section,
           reportType: item.reportType,
           objectIds: this.entryId,
