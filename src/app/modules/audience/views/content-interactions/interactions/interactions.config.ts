@@ -29,7 +29,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contentInteractions.count_download`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'count_report': {
+          'count_report_submitted': {
             format: value => value,
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contentInteractions.count_report`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
@@ -56,7 +56,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           'count_download': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'count_report': {
+          'count_report_submitted': {
             format: value => ReportHelper.numberOrZero(value),
           },
           'status': {
@@ -83,7 +83,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.contentInteractions.count_download`),
             sortOrder: 3,
           },
-          'count_report': {
+          'count_report_submitted': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_report`),
             sortOrder: 4,
