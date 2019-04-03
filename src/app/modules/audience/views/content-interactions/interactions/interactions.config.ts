@@ -32,7 +32,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           'count_report_submitted': {
             format: value => value,
             colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contentInteractions.count_report`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.contentInteractions.count_report_submitted`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
         }
       },
@@ -85,7 +85,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           },
           'count_report_submitted': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.contentInteractions.count_report`),
+            title: this._translate.instant(`app.contentInteractions.count_report_submitted`),
             sortOrder: 4,
           },
         }
