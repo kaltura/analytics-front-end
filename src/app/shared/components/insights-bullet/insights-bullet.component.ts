@@ -16,12 +16,12 @@ export interface InsightsBulletValue {
 export class InsightsBulletComponent {
   @Input() set values(value: InsightsBulletValue[]) {
     this._values = [];
-    
+
     if (Array.isArray(value)) {
       const sum = value.reduce((acc, val) => acc + val.value, 0);
       this._values = value
         .map((item, index) => {
-          const result = sum ? Math.round(item.value / sum * 100) : 0;
+          const result = sum ? parseFloat((item.value / sum * 100).toFixed(2)) : 0;
           let color = getColorPercent(result, this.colorScheme);
           if (value.length <= 2) {
             color = index === 0 ? getPrimaryColor(this.colorScheme) : getSecondaryColor(this.colorScheme);

@@ -108,6 +108,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._totalCount = 0;
           this._tableData = [];
           
           this.interactions$.next({ current: report, compare: compare, busy: false, error: null });
