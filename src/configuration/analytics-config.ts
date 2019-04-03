@@ -4,7 +4,7 @@ export interface AnalyticsConfig {
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
   permissions: {
-    lazyLoadCategories: boolean;
+    lazyLoadCategories?: boolean;
   };
   kalturaServer?: {
       uri?: string,
@@ -64,4 +64,5 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
+  permissions: {},
 };
