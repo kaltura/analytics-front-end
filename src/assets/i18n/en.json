@@ -162,9 +162,9 @@
       "noRanking": "Before April 2018 contributors ranking is not available",
       "exportLabels": {
         "highlights": "Highlights",
-        "general": "General graph",
+        "general": "Metrics over time",
         "topContributors": "Top Contributors",
-        "topSources": "Source"
+        "topSources": "Contribution Sources"
       },
       "topContributorsReport": {
         "role": "User Role",
@@ -292,8 +292,8 @@
         "filterDeviceType": "Filter Device Type",
         "index": "#",
         "exportLabels": {
-          "overview": "Devices",
-          "topOs": "Top OS",
+          "overview": "Devices Overview",
+          "topOs": "Top Operating Systems",
           "topBrowsers": "Top Browsers"
         },
         "graphTooltip": {
@@ -336,9 +336,9 @@
       "exportLabels": {
         "highlights": "Highlights",
         "topVideos": "Top Videos",
-        "impressions": "Engagement funnel",
-        "general": "General",
-        "syndication": "Top domains"
+        "impressions": "Engagement Funnel",
+        "general": "Metrics over time",
+        "syndication": "Top Domains"
       },
       "highlightsReport": {
         "month_id": "Month",
