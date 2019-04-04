@@ -102,8 +102,8 @@
     },
     "exportReports": {
       "exportReports": "Export Reports",
-      "successMessage": "We are preparing your report. We will send it to your email adress shortly.",
-      "errorMessage": "Something went wrong. Please try again"
+      "successMessage": "We are preparing your report. We will send it to your email address shortly.",
+      "errorMessage": "There was an error processing your export request, please try again or contact Kaltura support."
     },
     "entryType": {
       "video": "Video",
