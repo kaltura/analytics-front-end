@@ -100,11 +100,6 @@ export class HorizontalBarRowComponent {
   }
   
   private _getTooltipString(value: string, label: string, color?: string): string {
-    return `
-      <div class="kHorizontalBarGraphTooltip">
-        <span class="kBullet" style="color: ${color}">&bull;</span>
-        <span>${label}: ${value}</span>
-      </div>
-    `;
+    return `<div class="kHorizontalBarGraphTooltip"><span class="kBullet" style="color: ${color}">&bull;</span><span>${label}: ${value}</span></div>`;
   }
 }

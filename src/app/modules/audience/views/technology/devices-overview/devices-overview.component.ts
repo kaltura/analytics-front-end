@@ -58,15 +58,8 @@ export class DevicesOverviewComponent implements OnDestroy {
   @Output() metricChanged = new EventEmitter<string>();
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
-  @Output() exportDataChange = new EventEmitter<{
-    headers: string,
-    totalCount: number,
-    filter: KalturaEndUserReportInputFilter,
-    selectedMetrics: string
-  }>();
   
   private _fractions = 1;
-  private _columns: string[] = [];
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   
   public _colorScheme = 'default';
@@ -117,6 +110,8 @@ export class DevicesOverviewComponent implements OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           this._tabsData = [];
+          this._barChartData = {};
+          this._rawChartData = {};
           this._columns = [];
           this._summaryData = {};
           
@@ -132,13 +127,6 @@ export class DevicesOverviewComponent implements OnDestroy {
           this._isBusy = false;
           
           this._devicesDataLoaded.next(true);
-          
-          this.exportDataChange.emit({
-            headers: this._platformsConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.technology'),
-            totalCount: report.table.totalCount,
-            selectedMetrics: this._selectedMetrics,
-            filter: this._filter,
-          });
         },
         error => {
           this._isBusy = false;
@@ -320,6 +308,8 @@ export class DevicesOverviewComponent implements OnDestroy {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data, columns } = this._getOverviewData(table, relevantFields);
     
+    this._barChartData = this._getGraphData(data, relevantFields);
+    this._rawChartData = this._getRawGraphData(data, relevantFields);
     this._columns = columns;
     this._summaryData = this._getSummaryData(data, relevantFields);
     

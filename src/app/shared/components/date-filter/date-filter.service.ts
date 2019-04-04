@@ -143,24 +143,25 @@ export class DateFilterService {
   public getDateRangeDetails(selectedDateRange: DateRanges, creationDate?: moment.Moment): { startDate: Date,  endDate: Date, label: string} {
     const today: Date = new Date();
     const m = moment();
+    const yesterday = m.subtract(1, 'days').toDate();
     let startDate, endDate: Date;
 
     switch (selectedDateRange) {
       case DateRanges.Last7D:
-        startDate = m.subtract(7, 'days').toDate();
-        endDate = today;
+        startDate = m.subtract(6, 'days').toDate();
+        endDate = yesterday;
         break;
       case DateRanges.Last30D:
-        startDate = m.subtract(30, 'days').toDate();
-        endDate = today;
+        startDate = m.subtract(29, 'days').toDate();
+        endDate = yesterday;
         break;
       case DateRanges.Last3M:
         startDate = m.subtract(3, 'months').toDate();
-        endDate = today;
+        endDate = yesterday;
         break;
       case DateRanges.Last12M:
         startDate = m.subtract(12, 'months').toDate();
-        endDate = today;
+        endDate = yesterday;
         break;
       case DateRanges.CurrentWeek:
         startDate = m.startOf('week').toDate();
@@ -205,10 +206,14 @@ export class DateFilterService {
     } else {
       switch (selectedDateRange) {
         case DateRanges.Last7D:
+          maxDate = m.subtract(6, 'days').toDate();
+          break;
         case DateRanges.CurrentWeek:
           maxDate = m.subtract(7, 'days').toDate();
           break;
         case DateRanges.Last30D:
+          maxDate = m.subtract(29, 'days').toDate();
+          break;
         case DateRanges.CurrentMonth:
           maxDate = m.subtract(30, 'days').toDate();
           break;

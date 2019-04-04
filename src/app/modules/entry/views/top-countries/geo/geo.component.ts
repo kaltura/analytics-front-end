@@ -8,6 +8,7 @@ import { EChartOption } from 'echarts';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { TopCountriesConfig } from '../top-countries.config';
 import { DataTable } from 'primeng/primeng';
+import { canDrillDown } from 'shared/utils/can-drill-down-country';
 
 @Component({
   selector: 'app-entry-geo',
@@ -36,6 +37,7 @@ export class GeoComponent {
   @ViewChild('table') _table: DataTable;
   
   private _echartsIntance: any; // echart instance
+  private _canMapDrillDown = true;
   
   public _mapChartData: any = {};
   public _mapZoom = 1.2;
@@ -58,7 +60,7 @@ export class GeoComponent {
       this._mapZoom = this._mapZoom / 2;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this.drillDownItems.length > 0) {
+    if (this.drillDownItems.length > 0 && this._canMapDrillDown) {
       this._echartsIntance.setOption({ geo: [{ zoom: this._mapZoom }] }, false);
       this._echartsIntance.setOption({ geo: [{ roam: roam }] }, false);
     } else {
@@ -75,7 +77,7 @@ export class GeoComponent {
   }
   
   public updateMap(mapCenter: number[]): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this.drillDownItems.length > 0);
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this.drillDownItems.length > 0 && this._canMapDrillDown);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this.selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
@@ -98,10 +100,10 @@ export class GeoComponent {
     
     mapConfig.visualMap.inRange.color = this.tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
-    const map = this.drillDownItems.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    const map = this.drillDownItems.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
     map.center = mapCenter;
     map.zoom = this._mapZoom;
-    map.roam = this.drillDownItems.length === 0 ? 'false' : 'move';
+    map.roam = this.drillDownItems.length === 0 && this._canMapDrillDown? 'false' : 'move';
     this._mapChartData = mapConfig;
   }
   
@@ -115,12 +117,14 @@ export class GeoComponent {
     } else if (drillDown.length === 2) {
       drillDown.pop();
     }
+  
+    this._canMapDrillDown = canDrillDown(drillDown[0]);
     
     if (this._table) {
       this._table.reset();
     }
 
-    this._mapZoom = drillDown.length === 0 ? 1.2 : this._mapZoom;
+    this._mapZoom = drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this.onDrillDown.emit({ drillDown, reload });
   }
 }
