@@ -40,8 +40,19 @@ export class ScrollTopOnPagingDirective implements OnInit, AfterViewInit, OnDest
       const sources = this.customPaginationEvent ? [this._table.onPage, this.customPaginationEvent] : [this._table.onPage];
       ObservableMerge(...sources)
         .pipe(cancelOnDestroy(this))
-        .subscribe(() => this._scrollTop());
+        .subscribe(() => this._scrollTop2());
     }
+  }
+  
+  private _scrollTop2(): void {
+    const currentScrollTop = window.scrollY;
+    const currentTableHeight = this._tableElement.getBoundingClientRect().height;
+    setTimeout(() => {
+      const deltaHeight = currentTableHeight - this._tableElement.getBoundingClientRect().height;
+      if (deltaHeight > 0) {
+        window.scrollTo(0, currentScrollTop - deltaHeight);
+      }
+    }, 0);
   }
   
   private _scrollTop(): void {
