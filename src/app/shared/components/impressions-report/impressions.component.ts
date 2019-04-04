@@ -196,7 +196,6 @@ export class ImpressionsComponent implements OnInit {
               this._chartLoaded = true;
             }
           }
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
         },
         error => {
@@ -274,10 +273,6 @@ export class ImpressionsComponent implements OnInit {
       }
     };
     this.updateFunnel();
-  }
-  
-  private prepareCsvExportHeaders(): void {
-    // TODO: TBD according to export refactor
   }
   
   private getChartTooltip(params): string {
