@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
@@ -22,12 +22,19 @@ import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { DataTable } from 'primeng/primeng';
+import { canDrillDown } from 'shared/utils/can-drill-down-country';
+import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { GeoExportConfig } from './geo-export.config';
 
 @Component({
   selector: 'app-geo-location',
   templateUrl: './geo-location.component.html',
   styleUrls: ['./geo-location.component.scss'],
-  providers: [GeoLocationDataConfig, KalturaLogger.createLogger('GeoLocationComponent')]
+  providers: [
+    GeoExportConfig,
+    GeoLocationDataConfig,
+    KalturaLogger.createLogger('GeoLocationComponent')
+  ]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: DataTable;
@@ -45,7 +52,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _mapChartData: any = {'count_plays': {}};
 
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
@@ -53,6 +59,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _dateFilter: DateChangeEvent = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _refineFilter: RefineFilter = [];
+  public _exportConfig: ExportItem[] = [];
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
@@ -72,6 +79,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _selectedCountries: SelectItem[] = [];
   public _drillDown: string[] = [];
   private mapCenter = [0, 10];
+  private _canMapDrillDown = true;
 
   private order = '-count_plays';
   private echartsIntance: any; // echart instance
@@ -85,7 +93,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
               private _trendService: TrendService,
               private http: HttpClient,
               private _dataConfigService: GeoLocationDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _exportConfigService: GeoExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -163,7 +173,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._mapZoom = this._mapZoom / 2;
     }
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this._drillDown.length > 0) {
+    if (this._drillDown.length > 0 && this._canMapDrillDown) {
       this.echartsIntance.setOption({geo: [{zoom: this._mapZoom}]}, false);
       this.echartsIntance.setOption({geo: [{roam: roam}]}, false);
     } else {
@@ -182,9 +192,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._drillDown.pop();
     }
     this.reportType = this._drillDown.length === 2 ?  KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 ? 1.2 : this._mapZoom;
+    this._mapZoom = this._drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this.pager.pageIndex = 1;
     
+    this._canMapDrillDown = canDrillDown(this._drillDown[0]);
+
     if (this._table) {
       this._table.reset();
     }
@@ -210,7 +222,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
             this.handleTable(report.table); // handle table
           }
           this.updateMap();
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
           this._loadTrendData();
         },
@@ -264,12 +275,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this.selectedTab = this._tabsData[0];
   }
 
-  private prepareCsvExportHeaders(): void {
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.audience.geo');
-  }
-
   private updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0);
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
@@ -293,10 +300,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 ? mapConfig.geo : mapConfig.visualMap;
+    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
     map.center = this.mapCenter;
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 ? 'false' : 'move';
+    map.roam = this._drillDown.length === 0 || this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
 
@@ -406,7 +413,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
   private setMapCenter(): void {
     this.mapCenter = [0, 10];
-    if (this._drillDown.length > 0 ) {
+    if (this._drillDown.length > 0 && this._canMapDrillDown) {
       const location = this._drillDown.length === 1 ? this._drillDown[0] : this._drillDown[1];
       let found = false;
       this._tableData.forEach(data => {

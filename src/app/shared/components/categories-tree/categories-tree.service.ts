@@ -4,11 +4,12 @@ import { Observable } from 'rxjs';
 import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoriesSearchService, CategoryData } from 'shared/services/categories-search.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 
 @Injectable()
 export class CategoriesTreeService {
-  private _inLazyMode = false; // TODO ask Amir
+  private _inLazyMode = analyticsConfig.permissions.lazyLoadCategories;
   
   constructor(private _categoriesSearchService: CategoriesSearchService,
               private _translate: TranslateService) {

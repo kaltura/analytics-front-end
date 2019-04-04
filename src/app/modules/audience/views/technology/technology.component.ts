@@ -2,14 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { DevicesOverviewComponent } from './devices-overview/devices-overview.component';
-import { KalturaEndUserReportInputFilter, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaReportType } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { TechnologyExportConfig } from './technology-export.config';
+import { ExportItem } from 'shared/components/export-csv/export-csv.component';
 
 @Component({
   selector: 'app-technology',
   templateUrl: './technology.component.html',
   styleUrls: ['./technology.component.scss'],
-  providers: [KalturaLogger.createLogger('TechnologyComponent')]
+  providers: [
+    TechnologyExportConfig,
+    KalturaLogger.createLogger('TechnologyComponent')
+  ]
 })
 export class TechnologyComponent implements OnInit {
   @ViewChild('overview') _overview: DevicesOverviewComponent;
@@ -22,10 +27,11 @@ export class TechnologyComponent implements OnInit {
   public _filterEvent: DateChangeEvent = null;
   public _devicesFilter: string[] = [];
   public _devicesList: { value: string, label: string; }[] = [];
-  public _exportData: { headers: string, totalCount: number, filter: KalturaEndUserReportInputFilter, selectedMetrics: string; } = null;
   public _reportType = KalturaReportType.platforms;
+  public _exportConfig: ExportItem[] = [];
   
-  constructor() {
+  constructor(private _exportConfigService: TechnologyExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
   }
   
   ngOnInit() {
@@ -47,9 +53,5 @@ export class TechnologyComponent implements OnInit {
     if (this._overview) {
       this._overview.resetDeviceFilters();
     }
-  }
-  
-  public _onExportDataChange(event: { headers: string, totalCount: number, filter: KalturaEndUserReportInputFilter, selectedMetrics: string }): void {
-    this._exportData = event;
   }
 }

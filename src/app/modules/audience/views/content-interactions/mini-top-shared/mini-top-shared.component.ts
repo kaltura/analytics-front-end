@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -16,6 +16,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-mini-top-shared',
@@ -33,7 +34,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   protected _componentId = 'mini-top-shared';
   
   private readonly _order = '-count_viral';
-  private _reportType = KalturaReportType.contentInteractions;
+  private _reportType = KalturaReportType.playerRelatedInteractions;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
@@ -66,7 +67,10 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
               private _dataConfigService: MiniTopSharedConfig,
               private _pageScrollService: PageScrollService,
               private _errorsManager: ErrorsManagerService,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _browserService: BrowserService,
+              private _router: Router,
+              private _activatedRoute: ActivatedRoute) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -171,4 +175,16 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
     }
   }
   
+  public _drillDown(row: TableRow<string>): void {
+    const { object_id, status } = row;
+
+    if (status === KalturaEntryStatus.ready) {
+      if (analyticsConfig.isHosted) {
+        const params = this._browserService.getCurrentQueryParams('string');
+        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
+      } else {
+        this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
+      }
+    }
+  }
 }

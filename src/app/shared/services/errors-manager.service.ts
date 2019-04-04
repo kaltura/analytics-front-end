@@ -41,6 +41,9 @@ export class ErrorsManagerService {
           case 'SEARCH_TOO_GENERAL':
             message =  this._translate.instant('app.errors.searchTooGeneral');
             break;
+          case 'DRUID_QUERY_TIMED_OUT':
+            message = this._translate.instant('app.errors.timeout');
+            break;
           default:
             break;
         }

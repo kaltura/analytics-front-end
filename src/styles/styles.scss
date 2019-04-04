@@ -50,10 +50,7 @@ body{
         }
         app-export-csv{
           margin-left: auto;
-          margin-right: 16px;
           white-space: nowrap;
-          opacity: 0;
-          pointer-events: none;
         }
       }
       .kBreadcrumbs{
@@ -370,17 +367,15 @@ p-multiselect /deep/ {
   padding: 0;
 }
 
-ui-carousel /deep/ {
-  .ui-carousel-item {
-    background-color: #FFFFFF !important;
-  }
+.ui-carousel-item {
+  background-color: #FFFFFF !important;
+}
 
-  .dot {
-    background: $kGrayscale3 !important;
+.dot {
+  background-color: $kGrayscale3 !important;
 
-    &.active {
-      background-color: $menuBkgColor !important;
-    }
+  &.active {
+    background-color: $menuBkgColor !important;
   }
 }
 

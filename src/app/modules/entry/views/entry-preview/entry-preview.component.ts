@@ -233,6 +233,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             const yAxisData = tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
               .map(item => Number(item['count_viewers']));
+  
+            yAxisData[0] = yAxisData[1]; // fake first item because of limitation when first item always is 0
 
             if (compare && compare.table) {
               let compareYAxisData = [];
@@ -244,6 +246,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
               } else {
                 compareYAxisData = Array.from({ length: 100 }, () => 0);
               }
+  
+              compareYAxisData[0] = compareYAxisData[1]; // fake first item because of limitation when first item always is 0
+
               this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
             } else {
               this._chartOptions = this._getGraphData(yAxisData);

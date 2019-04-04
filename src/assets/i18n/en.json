@@ -75,6 +75,7 @@
       "attention": "Attention",
       "error": "Error",
       "exportCsv": "Export",
+      "exportReports": "Export Reports",
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
@@ -89,13 +90,20 @@
       "clearAll": "Clear All",
       "details": "See Details",
       "compareMetricTo": "{{metricName}} compare to",
-      "none": "None"
+      "none": "None",
+      "all": "All"
     },
     "errors":{
       "errorHeader": "Error",
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again.",
-      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria."
+      "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria.",
+      "timeout": "Operation timed out"
+    },
+    "exportReports": {
+      "exportReports": "Export Reports",
+      "successMessage": "We are preparing your report. We will send it to your email address shortly.",
+      "errorMessage": "There was an error processing your export request, please try again or contact Kaltura support."
     },
     "entryType": {
       "video": "Video",
@@ -154,6 +162,12 @@
       "noRanking": "Before April 2018 contributors ranking is not available",
       "score": "Score",
       "viewDetails": "View Details",
+      "exportLabels": {
+        "highlights": "Highlights",
+        "general": "Metrics over time",
+        "topContributors": "Top Contributors",
+        "topSources": "Contribution Sources"
+      },
       "topContributorsReport": {
         "role": "User Role",
         "email": "Email",
@@ -232,7 +246,11 @@
       "total_msecs_tt": "The total minutes at the end of the selected timeframe",
       "name": "User ID",
       "NAME": "User ID",
-      "objectId": "Object Id"
+      "objectId": "Object Id",
+      "exportLabels": {
+        "endUser": "End user",
+        "publisher": "Publisher Bandwidth"
+      }
     },
     "audience":{
       "geo": {
@@ -251,7 +269,10 @@
         "distribution2": "Unique Viewers Distribution",
         "countriesSelected": "{0} Countries Selected",
         "findCountry": "Find Country",
-        "selectCountry": "Filter Country"
+        "selectCountry": "Filter Country",
+        "exportLabels": {
+          "geo": "Geo Location"
+        }
       },
       "technology": {
         "title": "Technology",
@@ -272,6 +293,11 @@
         "device": "Device",
         "filterDeviceType": "Filter Device Type",
         "index": "#",
+        "exportLabels": {
+          "overview": "Devices Overview",
+          "topOs": "Top Operating Systems",
+          "topBrowsers": "Top Browsers"
+        },
         "graphTooltip": {
           "count_plays": "Plays {{0}}",
           "sum_time_viewed": "Minutes Viewed {{0}}",
@@ -309,6 +335,13 @@
       "perc75": "75% Play-through",
       "perc100": "100% Play - through",
       "totalUsers": "Total Users",
+      "exportLabels": {
+        "highlights": "Highlights",
+        "topVideos": "Top Videos",
+        "impressions": "Engagement Funnel",
+        "general": "Metrics over time",
+        "syndication": "Top Domains"
+      },
       "highlightsReport": {
         "month_id": "Month",
         "date_id": "Day",
@@ -408,6 +441,14 @@
         "image": "Image",
         "live": "Live",
         "unknown": "Unknown"
+      },
+      "exportLabels": {
+        "userEngagement": "User Engagement",
+        "videoPerformance": "Video Performance",
+        "impressions": "Impressions",
+        "topCountries": "Top Countries",
+        "devicesOverview": "Devices Overview",
+        "syndication": "Syndication"
       }
     },
     "contentInteractions": {
@@ -416,9 +457,10 @@
       "highlights": "Highlights",
       "topSharedVideos": "Top Shared Videos",
       "topSharedVideos_tt": "Top entries listed by total number of shares across all channels",
+      "count_plays": "Plays",
       "count_viral": "Shares",
       "count_download": "Downloads",
-      "count_report": "Abuse Report",
+      "count_report_submitted": "Abuse Report",
       "count_captions": "Captions Selected",
       "entry_name": "Name",
       "languagesInCaptions": "Which languages do users select in captions?",
@@ -432,7 +474,13 @@
       "mostPopular": "Most Popular Playback Speed",
       "count_info": "Times info panel was opened",
       "count_related_selected": "Interactions with related content",
-      "insightsDescription": "{{0}} of all play sessions"
+      "insightsDescription": "{{0}} of all play sessions",
+      "exportLabels": {
+        "interactions": "Interactions",
+        "moderation": "Moderation",
+        "playback": "Playback Rate",
+        "highlights": "Highlights"
+      }
     }
   }
 }
