@@ -111,6 +111,10 @@ export class ExportCsvComponent implements OnDestroy {
   }
   
   public _export(): void {
+    if (!this._selected.length) {
+      return;
+    }
+
     const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     const reportItems = [];
     const filter = this._getFilter();

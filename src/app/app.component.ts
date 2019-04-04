@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -58,7 +58,27 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._browserService.registerOnShowConfirmation((confirmationMessage) => {
       const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
-      const formattedMessage = Object.assign({}, confirmationMessage, {message: htmlMessageContent});
+      const formattedMessage = Object.assign(
+        {},
+        confirmationMessage,
+        { message: htmlMessageContent },
+        {
+          accept: () => {
+            this._frameEventManager.publish(FrameEvents.ModalClosed);
+            if (typeof confirmationMessage.accept === 'function') {
+              confirmationMessage.accept();
+            }
+          },
+        },
+        {
+          reject: () => {
+            this._frameEventManager.publish(FrameEvents.ModalClosed);
+            if (typeof confirmationMessage.reject === 'function') {
+              confirmationMessage.reject();
+            }
+          },
+        }
+      );
 
       if (confirmationMessage.alignMessage === 'byContent') {
         this._confirmDialogAlignLeft = confirmationMessage.message && /\r|\n/.test(confirmationMessage.message);
@@ -66,12 +86,9 @@ export class AppComponent implements OnInit, OnDestroy {
         this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
       }
 
+      this._frameEventManager.publish(FrameEvents.ModalOpened);
+
       this._confirmationService.confirm(formattedMessage);
-      // fix for PrimeNG no being able to calculate the correct content height
-      setTimeout(() => {
-        const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
-        dialog.center();
-      }, 0);
     });
 
     this._frameEventManager.publish(FrameEvents.AnalyticsInit);
