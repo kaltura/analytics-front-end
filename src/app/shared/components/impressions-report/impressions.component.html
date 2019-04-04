@@ -2,7 +2,7 @@
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.impressions' | translate}}</span>
   </div>
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div class="kReportContent">
       <div class="kCompareDates" *ngIf="isCompareMode && _chartLoaded">
         <div style="width: 30%"></div>

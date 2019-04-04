@@ -7,8 +7,10 @@ export interface AnalyticsConfig {
     lazyLoadCategories?: boolean;
   };
   kalturaServer?: {
-      uri?: string,
-    previewUIConf?: number
+      uri?: string;
+      previewUIConf?: number;
+      warnRequestTimeout?: number;
+      failRequestTimeout?: number;
   };
   cdnServers?: {
     serverUri?: string,
@@ -62,7 +64,11 @@ export function buildCDNUrl(suffix: string): string {
 export const analyticsConfig: AnalyticsConfig = {
   appVersion: '1.1.0',
   valueSeparator: '|',
-  skipEmptyBuckets: false,
   defaultPageSize: 25,
+  skipEmptyBuckets: false,
+  kalturaServer: {
+    warnRequestTimeout: 5e3, // 5 sec
+    failRequestTimeout: 25e3, // 25 sec
+  }
   permissions: {},
 };

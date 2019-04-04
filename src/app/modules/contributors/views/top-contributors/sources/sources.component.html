@@ -5,7 +5,7 @@
       <span>{{'app.contributors.contributorsSources_tt' | translate}}</span>
     </kInputHelper>
   </div>
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
 
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>

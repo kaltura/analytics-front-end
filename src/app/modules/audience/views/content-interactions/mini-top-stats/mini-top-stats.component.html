@@ -3,7 +3,7 @@
     <span class="kTitle">{{'app.contentInteractions.insights' | translate}}</span>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div class="kReportContent">
       <div *ngFor="let stat of _stats" class="kReportRow">
         <div class="kValue">{{stat.value}}</div>

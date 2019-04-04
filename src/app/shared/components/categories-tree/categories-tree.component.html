@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage" [appAreaBlockerTimeout]="_loading">
   <div class="kTreeContainer kOverrideFAIcons">
     <p-tree #tree
             *ngIf="selectionMode === 'multiple'"

@@ -45,6 +45,7 @@ import { DropdownModule, MultiSelectModule, PaginatorModule } from 'primeng/prim
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { AreaBlockerTimeoutDirective } from 'shared/directives/area-blocker-timeout.directive';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
@@ -99,6 +100,7 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
     OverlayComponent,
     TrendValueComponent,
     MiddleEllipsisDirective,
+    AreaBlockerTimeoutDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,
@@ -136,6 +138,7 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
     TrendValueComponent,
     KalturaPlayerComponent,
     MiddleEllipsisDirective,
+    AreaBlockerTimeoutDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,
     CheckboxesListFilterComponent,

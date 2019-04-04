@@ -6,7 +6,7 @@
     </kInputHelper>
   </div>
   <div class="kReportContent">
-    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
       <app-engagement-top-videos-table *ngIf="_isCompareMode"
                                        name="compare"
                                        [entryDetails]="_entryDetails"

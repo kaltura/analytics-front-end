@@ -6,7 +6,7 @@
     </kInputHelper>
   </div>
   <div class="kReportContent kContent">
-    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
       <app-contributors-top-contributors-table *ngIf="_isCompareMode"
                                                name="compare"
                                                [isCompareMode]="_isCompareMode"

@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.ks = config.ks;
     analyticsConfig.pid = config.pid;
     analyticsConfig.locale = config.locale;
-    analyticsConfig.kalturaServer = config.kalturaServer;
+    analyticsConfig.kalturaServer = Object.assign({}, analyticsConfig.kalturaServer, config.kalturaServer || {});
     analyticsConfig.cdnServers = config.cdnServers;
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;

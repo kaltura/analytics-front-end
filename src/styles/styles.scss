@@ -428,6 +428,13 @@ p-multiselect /deep/ {
   margin: 0 !important;
 }
 
+.area-blocker-warning {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  color: $kGrayscale2;
+}
+
 .kBrowserIcon {
   width: 24px;
   height: 24px;

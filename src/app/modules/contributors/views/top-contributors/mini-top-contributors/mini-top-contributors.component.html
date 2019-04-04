@@ -7,7 +7,7 @@
     <a (click)="_scrollTo('#top-contributors')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy" [appAreaBlockerTimeout]="_isBusy">
     <div class="kReportContent" *ngIf="!_isCompareMode">
       <div class="kReportRow" *ngFor="let item of _tableData">
         <div class="kReportRowIndex kFirst" *ngIf="item.index === 1">

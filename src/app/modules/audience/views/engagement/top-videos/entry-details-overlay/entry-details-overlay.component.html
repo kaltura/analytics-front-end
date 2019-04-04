@@ -1,12 +1,14 @@
 <div data-aid="overlay-entry-details" class="kEntryDetailsOverlay">
-  <ng-container *ngIf="entryData">
-    <div class="kEntryThumbnail" #holder>
-      <img [src]="entryData.thumbnailUrl"
-           onError="this.onerror=null;this.style.display='none'"
-           (error)="holder.classList.add('error')">
-      <div class="kProtector"></div>
-      <div class="kEntryName">
-        <span>{{entryData.entry_name}}</span>
+  <k-area-blocker [showLoader]="_loading" [appAreaBlockerTimeout]="_loading">
+    <ng-container *ngIf="_data && !_errorMessage">
+      <div class="kEntryThumbnail" #holder>
+        <img [src]="_data.thumbnailUrl"
+             onError="this.onerror=null;this.style.display='none'"
+             (error)="holder.classList.add('error')">
+        <div class="kProtector"></div>
+        <div class="kEntryName">
+          <span>{{_data.name}}</span>
+        </div>
       </div>
     </div>
     <div class="kEntryDetails">
