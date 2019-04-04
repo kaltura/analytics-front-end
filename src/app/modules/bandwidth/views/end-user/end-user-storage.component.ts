@@ -15,12 +15,15 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { EndUserExportConfig } from './end-user-export.config';
+import { ExportItem } from 'shared/components/export-csv/export-csv.component';
 
 @Component({
   selector: 'app-publisher-storage',
   templateUrl: './end-user-storage.component.html',
   styleUrls: ['./end-user-storage.component.scss'],
   providers: [
+    EndUserExportConfig,
     KalturaLogger.createLogger('EndUserStorageComponent'),
     EndUserStorageDataConfig,
   ]
@@ -45,7 +48,6 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _dateRange = DateRanges.CurrentQuarter;
 
   public _isBusy: boolean;
-  public _csvExportHeaders = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
@@ -55,6 +57,8 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.userUsage;
   public compareFilter: KalturaEndUserReportInputFilter = null;
+  public _exportConfig: ExportItem[] = [];
+  public _dateFilter: DateChangeEvent;
   public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
@@ -77,9 +81,11 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
               private _authService: AuthService,
               private _compareService: CompareService,
               private _dataConfigService: EndUserStorageDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _exportConfigService: EndUserExportConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._exportConfig = _exportConfigService.getConfig();
   }
 
   ngOnInit() {
@@ -91,6 +97,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   }
   
   public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = event.timeZoneOffset;
@@ -209,7 +216,6 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
               this.handleTotals(report.totals); // handle totals
             }
           }
-          this.prepareCsvExportHeaders();
           this._isBusy = false;
         },
         error => {
@@ -311,9 +317,5 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
-  }
-
-  private prepareCsvExportHeaders(): void {
-    this._csvExportHeaders = this._dataConfigService.prepareCsvExportHeaders(this._tabsData, this._columns, 'app.bandwidth');
   }
 }
