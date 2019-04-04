@@ -89,11 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this._frameEventManager.publish(FrameEvents.ModalOpened);
 
       this._confirmationService.confirm(formattedMessage);
-      // fix for PrimeNG no being able to calculate the correct content height
-      setTimeout(() => {
-        const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
-        dialog.center();
-      }, 0);
     });
 
     this._frameEventManager.publish(FrameEvents.AnalyticsInit);
