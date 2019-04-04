@@ -3,6 +3,9 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
+  permissions: {
+    lazyLoadCategories?: boolean;
+  };
   kalturaServer?: {
       uri?: string;
       previewUIConf?: number;
@@ -59,7 +62,7 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.0.0',
+  appVersion: '1.1.0',
   valueSeparator: '|',
   defaultPageSize: 25,
   skipEmptyBuckets: false,
@@ -67,4 +70,5 @@ export const analyticsConfig: AnalyticsConfig = {
     warnRequestTimeout: 5e3, // 5 sec
     failRequestTimeout: 25e3, // 25 sec
   }
+  permissions: {},
 };

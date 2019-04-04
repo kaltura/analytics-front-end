@@ -1,8 +1,10 @@
 <div data-aid="report-geo" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
-    <app-export-csv [headers]="_csvExportHeaders" [totalCount]="_totalCount" [reportInputFilter]="filter" [reportType]="reportType"
-                    [dimension]="_selectedMetrics" [reportText]="'app.common.noMsg' | translate" [reportTitle]="'app.audience.geo.title' | translate"></app-export-csv>
+    <app-export-csv name="geo"
+                    [reports]="_exportConfig"
+                    [refineFilter]="_refineFilter"
+                    [dateFilter]="_dateFilter"></app-export-csv>
 
     <div class="kFilter kOverrideFAIcons">
       <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
