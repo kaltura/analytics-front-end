@@ -85,6 +85,10 @@ export class ExportCsvComponent implements OnDestroy {
     if (this.refineFilter) {
       refineFilterToServerValue(this.refineFilter, filter);
     }
+
+    if (this.entryId) {
+      filter.entryIdIn = this.entryId;
+    }
     
     return filter;
   }
@@ -132,7 +136,6 @@ export class ExportCsvComponent implements OnDestroy {
           reportTitle: item.label,
           action: section,
           reportType: item.reportType,
-          objectIds: this.entryId,
           filter,
           responseOptions,
         }));
