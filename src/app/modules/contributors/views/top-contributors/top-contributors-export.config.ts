@@ -28,7 +28,7 @@ export class TopContributorsExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.contributors.exportLabels.topSources'),
         reportType: KalturaReportType.topSources,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table]
       },
     ];
   }
