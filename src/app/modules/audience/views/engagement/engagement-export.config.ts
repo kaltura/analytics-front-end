@@ -23,7 +23,7 @@ export class EngagementExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.engagement.exportLabels.general'),
         reportType: KalturaReportType.userEngagementTimeline,
-        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),

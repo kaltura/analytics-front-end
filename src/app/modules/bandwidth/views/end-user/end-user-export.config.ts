@@ -13,7 +13,7 @@ export class EndUserExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.bandwidth.exportLabels.endUser'),
         reportType: KalturaReportType.userUsage,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
       },
     ];
   }

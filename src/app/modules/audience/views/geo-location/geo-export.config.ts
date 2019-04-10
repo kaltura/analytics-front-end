@@ -13,7 +13,7 @@ export class GeoExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.audience.geo.exportLabels.geo'),
         reportType: KalturaReportType.mapOverlayCountry,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table]
       },
     ];
   }

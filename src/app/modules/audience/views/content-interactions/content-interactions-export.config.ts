@@ -13,12 +13,12 @@ export class ContentInteractionsExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.interactions'),
         reportType: KalturaReportType.playerRelatedInteractions,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.moderation'),
         reportType: KalturaReportType.contentReportReasons,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table]
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.playback'),
