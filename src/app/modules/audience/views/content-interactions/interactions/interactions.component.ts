@@ -88,7 +88,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this.interactions$.next({ current: null, compare: null, busy: true, error: null });
+    if (sections[ReportDataSection.totals]) {
+      this.interactions$.next({current: null, compare: null, busy: true, error: null});
+    }
     this._isBusy = true;
     this._blockerMessage = null;
     
@@ -107,8 +109,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
       .subscribe(({ report, compare }) => {
           this._totalCount = 0;
           this._tableData = [];
-          
-          this.interactions$.next({ current: report, compare: compare, busy: false, error: null });
+          if (sections[ReportDataSection.totals]) {
+            this.interactions$.next({current: report, compare: compare, busy: false, error: null});
+          }
           
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
@@ -138,7 +141,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          this.interactions$.next({ current: null, compare: null, busy: false, error: error });
+          if (sections[ReportDataSection.totals]) {
+            this.interactions$.next({current: null, compare: null, busy: false, error: error});
+          }
         });
   }
   
