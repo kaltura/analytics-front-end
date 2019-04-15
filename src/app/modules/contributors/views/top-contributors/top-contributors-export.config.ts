@@ -13,22 +13,24 @@ export class TopContributorsExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.contributors.exportLabels.highlights'),
         reportType: KalturaReportType.topContentContributors,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
+        order: '-month_id',
       },
       {
         label: this._translate.instant('app.contributors.exportLabels.topContributors'),
         reportType: KalturaReportType.topContentContributors,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-contributor_ranking',
       },
       {
         label: this._translate.instant('app.contributors.exportLabels.general'),
         reportType: KalturaReportType.topContentContributors,
-        sections: [KalturaReportExportItemType.graph]
+        sections: [KalturaReportExportItemType.graph],
       },
       {
         label: this._translate.instant('app.contributors.exportLabels.topSources'),
         reportType: KalturaReportType.topSources,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
       },
     ];
   }

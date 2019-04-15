@@ -13,27 +13,32 @@ export class EngagementExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.engagement.exportLabels.highlights'),
         reportType: KalturaReportType.userEngagementTimeline,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.topVideos'),
         reportType: KalturaReportType.topContentCreator,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-engagement_ranking',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.general'),
         reportType: KalturaReportType.userEngagementTimeline,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-date_id',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),
         reportType: KalturaReportType.contentDropoff,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.syndication'),
         reportType: KalturaReportType.topSyndication,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
     ];
   }

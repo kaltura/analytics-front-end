@@ -13,32 +13,37 @@ export class EntryExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
         reportType: KalturaReportType.userTopContent,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.videoPerformance'),
         reportType: KalturaReportType.userTopContent,
-        sections: [KalturaReportExportItemType.graph]
+        sections: [KalturaReportExportItemType.graph],
+        order: '-date_id',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.impressions'),
         reportType: KalturaReportType.contentDropoff,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: KalturaReportType.mapOverlayCountry,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
         reportType: KalturaReportType.platforms,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
       },
       {
         label: this._translate.instant('app.entry.exportLabels.syndication'),
         reportType: KalturaReportType.topSyndication,
-        sections: [KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
     ];
   }
