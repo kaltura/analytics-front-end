@@ -62,6 +62,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           'status': {
             format: value => value,
             hidden: true,
+            nonComparable: true,
           },
         }
       },
