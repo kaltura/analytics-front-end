@@ -20,6 +20,7 @@ export interface ExportItem {
   label: string;
   reportType: KalturaReportType;
   sections: KalturaReportExportItemType[];
+  order: string;
 }
 
 @Component({
@@ -136,6 +137,7 @@ export class ExportCsvComponent implements OnDestroy {
           reportTitle: item.label,
           action: section,
           reportType: item.reportType,
+          order: item.order,
           filter,
           responseOptions,
         }));
