@@ -38,7 +38,6 @@ export class EntryExportConfig implements ExportConfigService {
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
         reportType: KalturaReportType.platforms,
         sections: [KalturaReportExportItemType.table],
-        order: null,
       },
       {
         label: this._translate.instant('app.entry.exportLabels.syndication'),

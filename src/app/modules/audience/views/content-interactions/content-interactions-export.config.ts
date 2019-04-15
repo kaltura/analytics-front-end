@@ -20,13 +20,11 @@ export class ContentInteractionsExportConfig implements ExportConfigService {
         label: this._translate.instant('app.contentInteractions.exportLabels.moderation'),
         reportType: KalturaReportType.contentReportReasons,
         sections: [KalturaReportExportItemType.table],
-        order: null,
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.playback'),
         reportType: KalturaReportType.playbackRate,
         sections: [KalturaReportExportItemType.total],
-        order: null,
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.highlights'),

@@ -20,7 +20,7 @@ export interface ExportItem {
   label: string;
   reportType: KalturaReportType;
   sections: KalturaReportExportItemType[];
-  order: string;
+  order?: string;
 }
 
 @Component({
@@ -133,14 +133,18 @@ export class ExportCsvComponent implements OnDestroy {
     
     selection.forEach(item => {
       item.sections.forEach(section => {
-        reportItems.push(new KalturaReportExportItem({
+        const reportItem = new KalturaReportExportItem({
           reportTitle: item.label,
           action: section,
           reportType: item.reportType,
-          order: item.order,
           filter,
           responseOptions,
-        }));
+        });
+        
+        if (item.order) {
+          reportItem.order = item.order;
+        }
+        reportItems.push(reportItem);
       });
     });
     

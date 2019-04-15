@@ -14,7 +14,6 @@ export class TechnologyExportConfig implements ExportConfigService {
         label: this._translate.instant('app.audience.technology.exportLabels.overview'),
         reportType: KalturaReportType.platforms,
         sections: [KalturaReportExportItemType.table],
-        order: null,
       },
       {
         label: this._translate.instant('app.audience.technology.exportLabels.topOs'),
