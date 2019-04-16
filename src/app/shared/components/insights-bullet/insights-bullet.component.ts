@@ -26,12 +26,7 @@ export class InsightsBulletComponent {
           if (value.length <= 2) {
             color = index === 0 ? getPrimaryColor(this.colorScheme) : getSecondaryColor(this.colorScheme);
           }
-          const tooltip = `
-            <div class="kDefaultTooltip">
-              <span class="kBullet" style="color: ${color}">&bull;</span>
-              <span style="margin-right: 8px">${item.label}</span><span>${result}%</span>
-            </div>
-          `;
+          const tooltip = `<div class="kDefaultTooltip"><span class="kBullet" style="color: ${color}">&bull;</span><span style="margin-right: 8px">${item.label}</span><span>${result}%</span></div>`;
           return {
             value: result,
             label: item.label,
