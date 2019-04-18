@@ -6,5 +6,9 @@
   <div class="kSeparator"></div>
   <span>{{'app.entryLive.createdOn' | translate: {'0': +entry?.createdAt | kDate:'dateOnly'} }}</span>
   <div class="kSeparator"></div>
+  <span>{{'app.entryLive.dvrStatus' | translate: {'0': ((entry?.dvrStatus === _dvrStatus.enabled ? 'app.entryLive.on' : 'app.entryLive.off') | translate)} }}</span>
+  <div class="kSeparator"></div>
+  <span>{{'app.entryLive.recordingStatus' | translate: {'0': ((entry?.recordingStatus === _recordingStatus.active ? 'app.entryLive.on' : 'app.entryLive.off') | translate)} }}</span>
+  <div class="kSeparator"></div>
   <span class="link" (click)="navigateToEntry.emit()">{{'app.entryLive.seeAll' | translate}}</span>
 </div>

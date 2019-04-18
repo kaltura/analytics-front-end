@@ -397,7 +397,12 @@
       "createdOn": "Created On: {{0}}",
       "owner": "Owner: {{0}}",
       "seeAll": "See All Details",
-      "back": "Back"
+      "back": "Back",
+      "dvrStatus": "DVR {{0}}",
+      "recordingStatus": "Recording {{0}}",
+      "transcodingStatus": "Transcoding {{0}}",
+      "on": "ON",
+      "off": "OFF"
     },
     "entry": {
       "views": "Views",
