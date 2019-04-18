@@ -393,6 +393,12 @@
         "openLink": "Open page URL in a new browser tab"
       }
     },
+    "entryLive": {
+      "createdOn": "Created On: {{0}}",
+      "owner": "Owner: {{0}}",
+      "seeAll": "See All Details",
+      "back": "Back"
+    },
     "entry": {
       "views": "Views",
       "plays": "Plays {{0}}",

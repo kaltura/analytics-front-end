@@ -1,1 +1,37 @@
 @import '../../../styles/variables';
+
+.kReport {
+  background-color: $appBkgColor !important;
+
+  .kBackBtn {
+    margin-top: 4px;
+    margin-left: -40px;
+    margin-right: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $kGrayscale3;
+    height: 20px;
+    width: 18px;
+    font-size: 24px;
+
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+  }
+
+  .kReportHeader {
+    height: 80px;
+  }
+}
+
+.kReportContainer {
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+}

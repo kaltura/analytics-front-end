@@ -1,1 +1,18 @@
-<h1>LIVE ENTRY</h1>
+<div data-aid="report-group-entry" class="kMain">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div *ngIf="_entry" class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader">
+          <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entryLive.back' | translate"></button>
+          <span class="kTitle">{{_entry?.name}}</span>
+<!--          <app-export-csv name="entry"-->
+<!--                          [reports]="_exportConfig"-->
+<!--                          [entryId]="_entryId"></app-export-csv>-->
+        </div>
+
+        <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
