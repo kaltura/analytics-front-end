@@ -105,7 +105,6 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             recording: entry.recordStatus !== KalturaRecordStatus.disabled,
             transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
           });
-          console.warn(this._entry);
         },
         error => {
           this._isBusy = false;
