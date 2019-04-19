@@ -1,12 +1,30 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaLiveEntry, LiveStreamGetAction } from 'kaltura-ngx-client';
+import {
+  ConversionProfileAssetParamsListAction,
+  KalturaAssetParamsOrigin,
+  KalturaClient,
+  KalturaConversionProfileAssetParamsFilter,
+  KalturaDetachedResponseProfile,
+  KalturaDVRStatus,
+  KalturaLiveEntry,
+  KalturaRecordStatus,
+  KalturaRequestOptions,
+  KalturaResponseProfileType,
+  LiveStreamGetAction
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
+
+export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
+  dvr: boolean;
+  recording: boolean;
+  transcoding: boolean;
+}
 
 @Component({
   selector: 'app-entry-live',
@@ -17,7 +35,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
-  public _entry: KalturaLiveEntry;
+  public _entry: KalturaExtendedLiveEntry;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -61,16 +79,32 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     if (!this._entryId) {
       return;
     }
-  
+    
     this._isBusy = true;
     
     this._kalturaClient.request(new LiveStreamGetAction({ entryId: this._entryId }))
-      .pipe(cancelOnDestroy(this))
+      .pipe(
+        cancelOnDestroy(this),
+        switchMap(
+          entry => this._kalturaClient.request(
+            new ConversionProfileAssetParamsListAction({
+              filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })
+            }).setRequestOptions(
+              new KalturaRequestOptions({
+                responseProfile: new KalturaDetachedResponseProfile({ type: KalturaResponseProfileType.includeFields, fields: 'id,origin' })
+              })
+            )).pipe(map(profilesRes => ({ profiles: profilesRes.objects, entry })))
+        )
+      )
       .subscribe(
-        entry => {
+        ({ profiles, entry }) => {
           this._blockerMessage = null;
           this._isBusy = false;
-          this._entry = entry;
+          this._entry = Object.assign(entry, {
+            dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
+            recording: entry.recordStatus !== KalturaRecordStatus.disabled,
+            transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
+          });
           console.warn(this._entry);
         },
         error => {

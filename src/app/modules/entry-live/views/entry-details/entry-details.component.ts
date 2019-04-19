@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { KalturaDVRStatus, KalturaLiveEntry, KalturaRecordingStatus } from 'kaltura-ngx-client';
+import { KalturaDVRStatus, KalturaRecordingStatus } from 'kaltura-ngx-client';
+import { KalturaExtendedLiveEntry } from '../../entry-live-view.component';
 
 @Component({
   selector: 'app-entry-details',
@@ -7,10 +8,7 @@ import { KalturaDVRStatus, KalturaLiveEntry, KalturaRecordingStatus } from 'kalt
   styleUrls: ['./entry-details.component.scss']
 })
 export class EntryDetailsComponent {
-  @Input() entry: KalturaLiveEntry;
-
-  @Output() navigateToEntry = new EventEmitter<void>();
+  @Input() entry: KalturaExtendedLiveEntry;
   
-  public _dvrStatus = KalturaDVRStatus;
-  public _recordingStatus = KalturaRecordingStatus;
+  @Output() navigateToEntry = new EventEmitter<void>();
 }
