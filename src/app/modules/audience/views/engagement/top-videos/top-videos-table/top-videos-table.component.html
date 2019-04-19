@@ -2,7 +2,9 @@
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table [class.kCompareMode]="isCompareMode"
+    <p-table appScrollTopOnPaging
+             [customPaginationEvent]="_paginationChanged$"
+             [class.kCompareMode]="isCompareMode"
              [value]="_tableData">
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">

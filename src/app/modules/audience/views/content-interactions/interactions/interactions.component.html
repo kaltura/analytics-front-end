@@ -28,7 +28,9 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <p-table sortField="count_viral"
+          <p-table appScrollTopOnPaging
+                   sortField="count_viral"
+                   [customPaginationEvent]="_paginationChanged$"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"

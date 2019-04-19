@@ -12,7 +12,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isArrayEquals } from 'shared/utils/is-array-equals';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -81,6 +81,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
+  private _paginationChanged = new Subject<void>();
   
   public abstract _name: string;
   protected abstract _defaultReportType: KalturaReportType;
@@ -94,6 +95,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public abstract _title: string;
   
+  public _paginationChanged$ = this._paginationChanged.asObservable();
   public _distributionColorScheme: string;
   public _drillDown: string = null;
   public _firstTimeLoading = true;
@@ -138,6 +140,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   ngOnDestroy() {
+    this._paginationChanged.complete();
     this._devicesDataLoaded.complete();
   }
   
@@ -322,6 +325,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   public _onPaginationChanged(event): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._paginationChanged.next();
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport();
