@@ -12,6 +12,14 @@
         </div>
 
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+        <div class="kEntryWidgets">
+          <div class="kWideColumn">
+            cool widgets enter here
+          </div>
+          <div class="kNarrowColumn">
+            <app-live-player [entryId]="_entry?.id"></app-live-player>
+          </div>
+        </div>
       </div>
     </div>
   </k-area-blocker>

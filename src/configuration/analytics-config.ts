@@ -8,7 +8,8 @@ export interface AnalyticsConfig {
   };
   kalturaServer?: {
       uri?: string,
-    previewUIConf?: number
+      previewUIConf?: number,
+      previewLiveUIConf?: number
   };
   cdnServers?: {
     serverUri?: string,

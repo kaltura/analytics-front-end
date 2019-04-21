@@ -14,6 +14,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, KalturaUIModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
+import { LivePlayerComponent } from './views/live-player/live-player.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { EntryDetailsComponent } from './views/entry-details/entry-details.compo
   declarations: [
     EntryLiveViewComponent,
     EntryDetailsComponent,
+    LivePlayerComponent
   ],
   exports: [],
   providers: []
