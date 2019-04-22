@@ -10,7 +10,7 @@
       </div>
 
       <div class="chartContainer">
-        <div echarts class="kChart" [options]="_chartOptions"></div>
+        <div echarts class="kChart" [options]="_chartOptions" (click)="onChartClick($event)"></div>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
           <div class="kLine"></div>
           <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
