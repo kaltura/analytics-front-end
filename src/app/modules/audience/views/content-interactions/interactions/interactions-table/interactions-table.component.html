@@ -17,7 +17,7 @@
               [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
             <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
-                [ngStyle]="{'width': col === 'entry_name' ? (isCompareMode ? '250px' : '500px') : '100%'}"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
                 [kTooltip]="'app.contentInteractions.' + col | translate"
                 [showOnEllipsis]="true">
               {{'app.contentInteractions.' + col | translate}}
@@ -38,7 +38,7 @@
             </td>
             <td *ngFor="let col of columns; let i = index"
                 [class.kHighlight]="i===0"
-                [ngStyle]="{'width': col === 'entry_name' ? (isCompareMode ? '250px' : '500px') : '100%'}">
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}">
               <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
               <span class="kEntryLink kTableColumn"
                     *ngIf="col === 'entry_name'"
