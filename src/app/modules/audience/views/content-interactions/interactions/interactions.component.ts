@@ -34,7 +34,7 @@ import * as moment from 'moment';
 export class InteractionsComponent extends InteractionsBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private _paginationChanged = new Subject<void>();
+  private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
   private _reportType = KalturaReportType.playerRelatedInteractions;
   private _dataConfig: ReportDataConfig;
@@ -46,7 +46,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   protected _componentId = 'interactions';
   
   public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
-  public _paginationChanged$ = this._paginationChanged.asObservable();
+  public _updateTableHeight$ = this._updateTableHeight.asObservable();
   
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -93,7 +93,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   ngOnDestroy() {
-    this._paginationChanged.complete();
+    this._updateTableHeight.complete();
     this.interactions$.complete();
   }
   
@@ -143,6 +143,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
           this._compareFirstTimeLoading = false;
           this._firstTimeLoading = false;
           this._isBusy = false;
+          this._updateTableHeight.next();
         },
         error => {
           this._isBusy = false;
@@ -257,6 +258,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   public _toggleTable(): void {
     this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
+    this._updateTableHeight.next();
     
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
@@ -269,7 +271,6 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   public _onPaginationChanged(event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
-      this._paginationChanged.next();
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       this._pager.pageIndex = event.page + 1;
       this._loadReport({ table: this._dataConfig.table });

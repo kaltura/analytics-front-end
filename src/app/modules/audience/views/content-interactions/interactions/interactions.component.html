@@ -27,7 +27,10 @@
             {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
           </a>
         </div>
-        <div class="kTablesHolder" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+        <div class="kTablesHolder" appEvenTableHeight
+             [updateListener]="_updateTableHeight$"
+             [class.kOpen]="_showTable"
+             [class.kClose]="!_showTable">
           <app-interactions-table *ngIf="_isCompareMode"
                                   name="compare"
                                   [pager]="_pager"
