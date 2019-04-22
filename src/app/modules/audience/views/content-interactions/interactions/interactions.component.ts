@@ -18,6 +18,8 @@ import { InteractionsBaseReportComponent } from '../interactions-base-report/int
 import { InteractionsConfig } from './interactions.config';
 import { SortEvent } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-interactions',
@@ -48,17 +50,22 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   public _columns: string[] = [];
   public _firstTimeLoading = true;
+  public _compareFirstTimeLoading = true;
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   public _tableData: TableRow[] = [];
+  public _compareTableData: TableRow[] = [];
   public _selectedMetrics: string;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
-  public _pager = new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize, pageIndex: 1 });
+  public _compareTotalCount = 0;
+  public _currentDates: string;
+  public _compareDates: string;
+  public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
@@ -123,6 +130,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
           if (compare) {
             this._handleCompare(report, compare);
           } else {
+            this._currentDates = null;
+            this._compareDates = null;
+
             if (report.table && report.table.data && report.table.header) {
               this._handleTable(report.table); // handle table
             }
@@ -130,6 +140,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               this._handleGraphs(report.graphs); // handle graphs
             }
           }
+          this._compareFirstTimeLoading = false;
           this._firstTimeLoading = false;
           this._isBusy = false;
         },
@@ -162,8 +173,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
       this._compareFilter.fromDate = compare.startDate;
       this._compareFilter.toDate = compare.endDate;
+      this._compareFirstTimeLoading = true;
     } else {
       this._compareFilter = null;
+      this._compareFirstTimeLoading = true;
     }
   }
   
@@ -179,6 +192,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+  
+    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
     
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
@@ -193,18 +209,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     }
     
     if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(
-        currentPeriod,
-        comparePeriod,
-        current.table,
-        compare.table,
-        this._dataConfig.table,
-        this._reportInterval,
-        'object_id'
-      );
-      this._columns = columns;
-      this._totalCount = current.table.totalCount;
-      this._tableData = tableData.map((item, index) => this._extendTableRow(item, index));
+      this._handleTable(current.table, compare);
     }
   }
   
@@ -214,11 +219,19 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     return item;
   }
   
-  private _handleTable(table: KalturaReportTable): void {
+  private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((item, index) => this._extendTableRow(item, index));
+  
+    if (compare && compare.table && compare.table.header && compare.table.data) {
+      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+      this._compareTotalCount = compare.table.totalCount;
+      this._compareTableData = compareTableData.map((item, index) => this._extendTableRow(item, index));
+      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+    }
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
