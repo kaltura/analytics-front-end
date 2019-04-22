@@ -72,7 +72,7 @@ export class InteractionsConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_viral',
         fields: {
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
