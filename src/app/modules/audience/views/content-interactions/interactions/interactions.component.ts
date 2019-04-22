@@ -366,7 +366,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
         this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this._order = order;
         this._pager.pageIndex = 1;
-        this._loadTableData(this._isCompareMode);
+        this._loadTableData();
       }
     }
   }
