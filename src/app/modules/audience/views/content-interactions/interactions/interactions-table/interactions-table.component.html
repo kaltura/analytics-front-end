@@ -1,0 +1,64 @@
+<div [attr.data-aid]="'table-content-interactions' + name" class="kTableContainer">
+  <span class="kDates" *ngIf="dates">{{dates}}</span>
+  <div class="kDividerWrapper">
+    <div class="kDivider" *ngIf="showDivider"></div>
+    <k-area-blocker [showLoader]="isBusy" [message]="areaBlockerMessage">
+      <p-table appScrollTopOnPaging
+               sortField="count_viral"
+               [customPaginationEvent]="_paginationChanged$"
+               [value]="tableData"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               (sortFunction)="sortChanged.emit($event)">
+        <ng-template pTemplate="header">
+          <tr [ngStyle]="{'width': '100%'}">
+            <th
+              [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
+            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
+            <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
+                [kTooltip]="'app.contentInteractions.' + col | translate"
+                [showOnEllipsis]="true">
+              {{'app.contentInteractions.' + col | translate}}
+              <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+            </th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
+            <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
+            <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
+              <div class="kThumbnailHolder" #holder (click)="drillDown.emit(data)">
+                <img [src]="data.thumbnailUrl"
+                     onError="this.onerror=null;this.style.display='none'"
+                     (error)="holder.classList.add('error')">
+              </div>
+            </td>
+            <td *ngFor="let col of columns; let i = index"
+                [class.kHighlight]="i===0"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}">
+              <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
+              <span class="kEntryLink kTableColumn"
+                    *ngIf="col === 'entry_name'"
+                    [kTooltip]="data[col]"
+                    [showOnEllipsis]="true"
+                    (click)="drillDown.emit(data)">{{data[col]}}</span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+    </k-area-blocker>
+  </div>
+  <p-paginator [rows]="pager?.pageSize"
+               [first]="(pager?.pageIndex - 1) * pager?.pageSize"
+               [totalRecords]="totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</div>
