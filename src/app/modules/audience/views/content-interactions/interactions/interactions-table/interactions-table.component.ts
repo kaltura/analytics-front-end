@@ -3,6 +3,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { KalturaPager } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'app-interactions-table',
@@ -19,6 +20,8 @@ export class InteractionsTableComponent {
   @Input() totalCount = 0;
   @Input() name = 'default';
   @Input() pager: KalturaPager;
+  @Input() areaBlockerMessage: AreaBlockerMessage;
+  @Input() isBusy: boolean;
   
   @Output() drillDown = new EventEmitter<TableRow<string>>();
   @Output() sortChanged = new EventEmitter<SortEvent>();

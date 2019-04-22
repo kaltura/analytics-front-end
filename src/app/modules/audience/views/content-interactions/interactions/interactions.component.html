@@ -33,7 +33,9 @@
              [class.kClose]="!_showTable">
           <app-interactions-table *ngIf="_isCompareMode"
                                   name="compare"
-                                  [pager]="_pager"
+                                  [isBusy]="_compareTableBusy"
+                                  [areaBlockerMessage]="_compareTableBlockerMessage"
+                                  [pager]="_comparePager"
                                   [tableData]="_compareTableData"
                                   [showDivider]="_isCompareMode"
                                   [isCompareMode]="_isCompareMode"
@@ -43,8 +45,10 @@
                                   [columns]="_columns"
                                   (drillDown)="_drillDown($event)"
                                   (sortChanged)="_onSortChanged($event)"
-                                  (paginationChanged)="_onPaginationChanged($event)"></app-interactions-table>
+                                  (paginationChanged)="_onPaginationChanged(true, _comparePager, $event)"></app-interactions-table>
           <app-interactions-table name="current"
+                                  [isBusy]="_currentTableBusy"
+                                  [areaBlockerMessage]="_currentTableBlockerMessage"
                                   [pager]="_pager"
                                   [tableData]="_tableData"
                                   [showDivider]="_isCompareMode"
@@ -55,7 +59,7 @@
                                   [columns]="_columns"
                                   (drillDown)="_drillDown($event)"
                                   (sortChanged)="_onSortChanged($event)"
-                                  (paginationChanged)="_onPaginationChanged($event)"></app-interactions-table>
+                                  (paginationChanged)="_onPaginationChanged(false, _pager, $event)"></app-interactions-table>
         </div>
       </div>
     </div>

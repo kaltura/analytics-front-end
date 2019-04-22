@@ -36,7 +36,7 @@ export class EvenTableHeightDirective implements OnInit, AfterViewInit, OnDestro
       if (this._element instanceof HTMLElement) {
         const tableWrappers = Array.from(this._element.getElementsByClassName('kDividerWrapper'));
         const table = Array.from(this._element.getElementsByClassName('ui-table'));
-        if (table.length > 1 && tableWrappers.length > 1) {
+        if (table.length > 1 && tableWrappers.length > 1) { // if there're several tables on the page update their height by max of all tables
           const maxHeight = Math.max(...table.map(element => element.getBoundingClientRect().height));
       
           if (maxHeight) {
@@ -44,6 +44,10 @@ export class EvenTableHeightDirective implements OnInit, AfterViewInit, OnDestro
               this._renderer.setStyle(element, 'height', `${maxHeight}px`);
             });
           }
+        } else { // else set wrapper's height to auto
+          tableWrappers.forEach(element => {
+            this._renderer.setStyle(element, 'height', 'auto');
+          });
         }
       }
     }, 0);
