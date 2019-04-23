@@ -18,6 +18,7 @@ import { LivePlayerComponent } from './views/live-player/live-player.component';
 import { LiveStatusComponent } from './views/live-status/live-status.component';
 import { LiveStatusWidget } from './views/live-status/live-status.widget';
 import { EntryLiveService } from './entry-live.service';
+import { StreamStatePipe } from './pipes/stream-state.pipe';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { EntryLiveService } from './entry-live.service';
     EntryLiveViewComponent,
     EntryDetailsComponent,
     LivePlayerComponent,
-    LiveStatusComponent
+    LiveStatusComponent,
+    StreamStatePipe
   ],
   exports: [],
   providers: [

@@ -1,20 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaAssetParamsOrigin, KalturaClient, KalturaDVRStatus, KalturaEntryServerNode, KalturaEntryServerNodeStatus, KalturaLiveEntry, KalturaRecordStatus } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaLiveEntry } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
-import { EntryLiveService } from './entry-live.service';
-
-export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
-  dvr: boolean;
-  recording: boolean;
-  transcoding: boolean;
-  redundancy: boolean;
-}
+import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 
 @Component({
   selector: 'app-entry-live',
@@ -66,13 +59,6 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   }
   
-  private _getRedundancyStatus(serverNodeList: KalturaEntryServerNode[]): boolean {
-    if (serverNodeList.length > 1) {
-      return serverNodeList.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
-    }
-    return false;
-  }
-  
   public _loadEntryData(): void {
     if (!this._entryId) {
       return;
@@ -83,15 +69,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._entryLiveService.getEntryData(this._entryId)
       .pipe(cancelOnDestroy(this))
       .subscribe(
-        ({ profiles, entry, nodes }) => {
+        entry => {
           this._blockerMessage = null;
           this._isBusy = false;
-          this._entry = Object.assign(entry, {
-            dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
-            recording: entry.recordStatus !== KalturaRecordStatus.disabled,
-            transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
-            redundancy: this._getRedundancyStatus(nodes),
-          });
+          this._entry = entry;
         },
         error => {
           this._isBusy = false;

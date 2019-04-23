@@ -20,14 +20,22 @@
       margin-right: 9px;
     }
 
+    .kStreamStatus {
+      text-transform: uppercase;
+    }
+
     .kStatusIcon {
       display: inline-block;
       width: 10px;
       height: 10px;
-      background-color: #FFFFFF;
-      border: 6px solid #6C94E5;
+      background-color: $kGrayscale4;
       border-radius: 50%;
       margin-right: 12px;
+
+      &.active {
+        border: 6px solid #6C94E5;
+        background-color: #FFFFFF;
+      }
     }
   }
 

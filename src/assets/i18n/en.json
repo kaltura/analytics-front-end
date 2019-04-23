@@ -403,9 +403,13 @@
       "transcodingStatus": "Transcoding {{0}}",
       "on": "ON",
       "off": "OFF",
-      "live": "LIVE",
-      "offline": "OFFLINE",
-      "redundancy": "Redundancy"
+      "redundancy": "Redundancy",
+      "streamStatus": {
+        "live": "Live",
+        "initializing": "Initializing",
+        "offline": "Offline",
+        "preview": "Preview"
+      }
     },
     "entry": {
       "views": "Views",
