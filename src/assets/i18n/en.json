@@ -402,7 +402,10 @@
       "recordingStatus": "Recording {{0}}",
       "transcodingStatus": "Transcoding {{0}}",
       "on": "ON",
-      "off": "OFF"
+      "off": "OFF",
+      "live": "LIVE",
+      "offline": "OFFLINE",
+      "redundancy": "Redundancy"
     },
     "entry": {
       "views": "Views",

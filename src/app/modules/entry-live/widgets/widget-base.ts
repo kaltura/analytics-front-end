@@ -3,6 +3,7 @@ import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaRequest } from 'kaltura-ngx-client';
 import { catchError, map } from 'rxjs/operators';
+import { WidgetsActivationArgs } from './widgets-manager';
 
 export abstract class WidgetBase<T> {
   protected _isActive: boolean;
@@ -14,7 +15,7 @@ export abstract class WidgetBase<T> {
   
   protected abstract _pollsFactory: RequestFactory<KalturaRequest<any>, T>;
   
-  protected abstract _onActivate(): Observable<void>;
+  protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
   protected constructor(protected _serverPolls: AnalyticsServerPolls) {
   }
@@ -39,8 +40,8 @@ export abstract class WidgetBase<T> {
     }
   }
   
-  public activate(): Observable<{ id: string, result: boolean, error?: Error }> {
-    return this._onActivate()
+  public activate(widgetsArgs: WidgetsActivationArgs): Observable<{ id: string, result: boolean, error?: Error }> {
+    return this._onActivate(widgetsArgs)
       .pipe(
         map(() => {
           this._isActive = true;

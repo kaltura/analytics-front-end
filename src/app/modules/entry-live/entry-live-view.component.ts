@@ -1,29 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {
-  ConversionProfileAssetParamsListAction,
-  KalturaAssetParamsOrigin,
-  KalturaClient,
-  KalturaConversionProfileAssetParamsFilter,
-  KalturaDetachedResponseProfile,
-  KalturaDVRStatus,
-  KalturaLiveEntry,
-  KalturaRecordStatus,
-  KalturaRequestOptions,
-  KalturaResponseProfileType,
-  LiveStreamGetAction
-} from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin, KalturaClient, KalturaDVRStatus, KalturaEntryServerNode, KalturaEntryServerNodeStatus, KalturaLiveEntry, KalturaRecordStatus } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
+import { EntryLiveService } from './entry-live.service';
 
 export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   dvr: boolean;
   recording: boolean;
   transcoding: boolean;
+  redundancy: boolean;
 }
 
 @Component({
@@ -41,7 +31,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _router: Router,
               private _kalturaClient: KalturaClient,
-              private _route: ActivatedRoute) {
+              private _route: ActivatedRoute,
+              private _entryLiveService: EntryLiveService) {
   }
   
   
@@ -75,6 +66,13 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   }
   
+  private _getRedundancyStatus(serverNodeList: KalturaEntryServerNode[]): boolean {
+    if (serverNodeList.length > 1) {
+      return serverNodeList.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
+    }
+    return false;
+  }
+  
   public _loadEntryData(): void {
     if (!this._entryId) {
       return;
@@ -82,28 +80,17 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     
     this._isBusy = true;
     
-    this._kalturaClient.request(new LiveStreamGetAction({ entryId: this._entryId }))
-      .pipe(
-        cancelOnDestroy(this),
-        switchMap(
-          entry => this._kalturaClient.request(
-            new ConversionProfileAssetParamsListAction({
-              filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })
-            }).setRequestOptions(
-              new KalturaRequestOptions({
-                responseProfile: new KalturaDetachedResponseProfile({ type: KalturaResponseProfileType.includeFields, fields: 'id,origin' })
-              })
-            )).pipe(map(profilesRes => ({ profiles: profilesRes.objects, entry })))
-        )
-      )
+    this._entryLiveService.getEntryData(this._entryId)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
-        ({ profiles, entry }) => {
+        ({ profiles, entry, nodes }) => {
           this._blockerMessage = null;
           this._isBusy = false;
           this._entry = Object.assign(entry, {
             dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
             recording: entry.recordStatus !== KalturaRecordStatus.disabled,
             transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
+            redundancy: this._getRedundancyStatus(nodes),
           });
         },
         error => {

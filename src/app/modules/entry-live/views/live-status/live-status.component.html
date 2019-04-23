@@ -1,0 +1,11 @@
+<div class="kLiveStatus">
+  <div class="kStatus">
+    <i class="kStatusIcon" [class.active]="_isLive" [class.inactive]="!_isLive"></i>
+    <span *ngIf="_isLive">{{'app.entryLive.live' | translate}}</span>
+    <span *ngIf="!_isLive">{{'app.entryLive.offline' | translate}}</span>
+    <span>{{entry?.currentBroadcastStartTime}}</span>
+  </div>
+  <div class="kRedundancy">
+    <i *ngIf="entry?.redundancy" class="kIcon kIconcheck_small"></i>{{'app.entryLive.redundancy' | translate}}
+  </div>
+</div>

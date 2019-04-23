@@ -15,6 +15,9 @@ import { AreaBlockerModule, KalturaUIModule, TagsModule, TooltipModule } from '@
 import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
 import { LivePlayerComponent } from './views/live-player/live-player.component';
+import { LiveStatusComponent } from './views/live-status/live-status.component';
+import { LiveStatusWidget } from './views/live-status/live-status.widget';
+import { EntryLiveService } from './entry-live.service';
 
 
 @NgModule({
@@ -37,10 +40,14 @@ import { LivePlayerComponent } from './views/live-player/live-player.component';
   declarations: [
     EntryLiveViewComponent,
     EntryDetailsComponent,
-    LivePlayerComponent
+    LivePlayerComponent,
+    LiveStatusComponent
   ],
   exports: [],
-  providers: []
+  providers: [
+    EntryLiveService,
+    LiveStatusWidget,
+  ]
 })
 export class EntryLiveModule {
 }
