@@ -1,8 +1,8 @@
 <div class="kLiveStatus">
   <div class="kStatus">
     <i class="kStatusIcon" [class.active]="_isLive"></i>
-    <span class="kStreamStatus">{{_entry?.streamState | appStreamState}}</span>
-    <span *ngIf="_isLive">{{_entry?.currentBroadcastStartTime}}</span>
+    <span class="kStreamStatus">{{_entry?.streamStatus | appStreamState}}</span>
+    <span *ngIf="_isLive">{{_streamDuration | appStreamDuration}}</span>
   </div>
   <div class="kRedundancy">
     <i *ngIf="_entry?.redundancy" class="kIcon kIconcheck_small"></i>{{'app.entryLive.redundancy' | translate}}

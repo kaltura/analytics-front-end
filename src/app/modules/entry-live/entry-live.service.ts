@@ -27,7 +27,7 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   transcoding: boolean;
   redundancy: boolean;
   serverType: KalturaEntryServerNodeType;
-  streamState: KalturaStreamStatus;
+  streamStatus: KalturaStreamStatus;
 }
 
 @Injectable()
@@ -76,19 +76,19 @@ export class EntryLiveService {
   public setStreamStatus(liveEntry: KalturaExtendedLiveEntry, serverNodeList: KalturaEntryServerNode[]): void {
     const viewMode = liveEntry.explicitLive ? liveEntry.viewMode : null;
     let result = {
-      state: getStreamStatus(KalturaEntryServerNodeStatus.stopped),
+      status: getStreamStatus(KalturaEntryServerNodeStatus.stopped),
       serverType: null,
     };
     
     if (liveEntry.redundancy) {
       if (!liveEntry.serverType || (KalturaEntryServerNodeType.livePrimary === liveEntry.serverType)) {
         result = {
-          state: getStreamStatus(serverNodeList[0].status, viewMode),
+          status: getStreamStatus(serverNodeList[0].status, viewMode),
           serverType: KalturaEntryServerNodeType.livePrimary,
         };
       } else if (KalturaEntryServerNodeType.liveBackup === liveEntry.serverType) {
         result = {
-          state: getStreamStatus(serverNodeList[1].status, viewMode),
+          status: getStreamStatus(serverNodeList[1].status, viewMode),
           serverType: KalturaEntryServerNodeType.liveBackup,
         };
       }
@@ -97,14 +97,14 @@ export class EntryLiveService {
         const sn = serverNodeList.find(esn => esn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
         if (sn) {
           result = {
-            state: getStreamStatus(sn.status, viewMode),
+            status: getStreamStatus(sn.status, viewMode),
             serverType: sn.serverType,
           };
         }
       }
     }
   
-    liveEntry.streamState = result.state;
+    liveEntry.streamStatus = result.status;
     liveEntry.serverType = result.serverType;
   }
   
@@ -125,7 +125,7 @@ export class EntryLiveService {
             recording: entry.recordStatus !== KalturaRecordStatus.disabled,
             transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
             redundancy: this.getRedundancyStatus(nodes),
-            streamState: KalturaStreamStatus.offline,
+            streamStatus: KalturaStreamStatus.offline,
             serverType: null,
           });
   
