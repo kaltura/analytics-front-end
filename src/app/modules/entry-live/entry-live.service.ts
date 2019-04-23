@@ -109,12 +109,16 @@ export class EntryLiveService {
     liveEntry.serverType = result.serverType;
   }
   
-  public getEntryData(entryId: string): Observable<KalturaExtendedLiveEntry> {
-    return this._kalturaClient.multiRequest(new KalturaMultiRequest(
+  public getEntryDateRequest(entryId): KalturaMultiRequest {
+    return new KalturaMultiRequest(
       this._getLiveStreamAction(entryId),
       this._getConversionProfileAssetParamsListAction(),
       this._getEntryServerNodeListAction(entryId),
-    ))
+    );
+  }
+  
+  public getEntryData(entryId: string): Observable<KalturaExtendedLiveEntry> {
+    return this._kalturaClient.multiRequest(this.getEntryDateRequest(entryId))
       .pipe(
         map((responses) => {
           if (responses.hasErrors()) {

@@ -8,6 +8,8 @@ import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
+import { WidgetsManager } from './widgets/widgets-manager';
+import { EntryLiveWidget } from './entry-live.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -15,7 +17,7 @@ import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service
   styleUrls: ['./entry-live-view.component.scss'],
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
-  public _isBusy = false;
+  public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
@@ -25,7 +27,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _kalturaClient: KalturaClient,
               private _route: ActivatedRoute,
-              private _entryLiveService: EntryLiveService) {
+              private _entryLiveService: EntryLiveService,
+              private _widgetsManager: WidgetsManager,
+              private _entryLiveWidget: EntryLiveWidget) {
   }
   
   
@@ -40,7 +44,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._loadEntryData();
+          this._entryLiveWidget.activate({ entryId: this._entryId });
         });
     } else {
       this._route.params
@@ -50,42 +54,37 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._loadEntryData();
+          this._entryLiveWidget.activate({ entryId: this._entryId });
         });
     }
-  }
   
-  ngOnDestroy() {
-  
-  }
-  
-  public _loadEntryData(): void {
-    if (!this._entryId) {
-      return;
-    }
-    
-    this._isBusy = true;
-    
-    this._entryLiveService.getEntryData(this._entryId)
+    this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))
-      .subscribe(
-        entry => {
-          this._blockerMessage = null;
-          this._isBusy = false;
-          this._entry = entry;
-        },
-        error => {
-          this._isBusy = false;
+      .subscribe(state => {
+        if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._loadEntryData();
+              this._isBusy = true;
+              this._entryLiveWidget.activate({ entryId: this._entryId });
             },
           };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
+          this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
+        }
+      });
+  
+    this._entryLiveWidget.data$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(data => {
+        this._isBusy = false;
+        this._entry = data;
+      });
+  }
+  
+  ngOnDestroy() {
+    this._entryLiveWidget.deactivate();
   }
   
   public _navigateToEntry(): void {

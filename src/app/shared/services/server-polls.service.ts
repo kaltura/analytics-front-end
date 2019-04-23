@@ -7,12 +7,11 @@ import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class AnalyticsServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
-  private _onDestory = new Subject<void>();
-  private _isLogged = false;
+  private _onDestroy = new Subject<void>();
   private _isKSValid = true;
   
   protected _getOnDestroy$(): Observable<void> {
-    return this._onDestory.asObservable();
+    return this._onDestroy.asObservable();
   }
   
   constructor(private _kalturaClient: KalturaClient) {
@@ -24,7 +23,7 @@ export class AnalyticsServerPolls extends ServerPolls<KalturaRequestBase, Kaltur
   }
   
   protected _canExecute(): boolean {
-    return this._isLogged && this._isKSValid;
+    return this._isKSValid;
   }
   
   /*
@@ -73,7 +72,7 @@ export class AnalyticsServerPolls extends ServerPolls<KalturaRequestBase, Kaltur
   }
   
   ngOnDestroy(): void {
-    this._onDestory.next();
-    this._onDestory.complete();
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 }
