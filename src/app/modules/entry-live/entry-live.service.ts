@@ -11,7 +11,7 @@ import {
   KalturaEntryServerNodeStatus,
   KalturaEntryServerNodeType,
   KalturaLiveEntry,
-  KalturaLiveEntryServerNodeFilter,
+  KalturaLiveEntryServerNodeFilter, KalturaMultiRequest,
   KalturaRecordStatus,
   KalturaRequestOptions,
   KalturaResponseProfileType,
@@ -48,9 +48,10 @@ export class EntryLiveService {
       );
   }
   
-  private _getConversionProfileAssetParamsListAction(conversionProfileIdEqual: number): ConversionProfileAssetParamsListAction {
+  private _getConversionProfileAssetParamsListAction(): ConversionProfileAssetParamsListAction {
     return new ConversionProfileAssetParamsListAction({
-      filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual })
+      filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: 0 })
+        .setDependency(['conversionProfileIdEqual', 0, 'conversionProfileId'])
     }).setRequestOptions(
       new KalturaRequestOptions({
         responseProfile: new KalturaDetachedResponseProfile({ type: KalturaResponseProfileType.includeFields, fields: 'id,origin,currentBroadcastStartTime' })
@@ -103,23 +104,25 @@ export class EntryLiveService {
         }
       }
     }
-  
+    
     liveEntry.streamStatus = result.status;
     liveEntry.serverType = result.serverType;
   }
   
   public getEntryData(entryId: string): Observable<KalturaExtendedLiveEntry> {
-    return this._kalturaClient.request(this._getLiveStreamAction(entryId))
+    return this._kalturaClient.multiRequest(new KalturaMultiRequest(
+      this._getLiveStreamAction(entryId),
+      this._getConversionProfileAssetParamsListAction(),
+      this._getEntryServerNodeListAction(entryId),
+    ))
       .pipe(
-        switchMap(entry =>
-          this._kalturaClient.request(this._getConversionProfileAssetParamsListAction(entry.conversionProfileId))
-            .pipe(map(profilesRes => ({ profiles: profilesRes.objects, entry })))
-        ),
-        switchMap(response =>
-          this._kalturaClient.request(this._getEntryServerNodeListAction(entryId))
-            .pipe(map(nodesRes => ({ ...response, nodes: nodesRes.objects })))
-        ),
-        map(({ profiles, entry, nodes }) => {
+        map((responses) => {
+          if (responses.hasErrors()) {
+            throw responses.getFirstError();
+          }
+          const entry = responses[0].result;
+          const profiles = responses[1].result.objects;
+          const nodes = responses[2].result.objects;
           const liveEntry = Object.assign(entry, {
             dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
             recording: entry.recordStatus !== KalturaRecordStatus.disabled,
@@ -128,9 +131,9 @@ export class EntryLiveService {
             streamStatus: KalturaStreamStatus.offline,
             serverType: null,
           });
-  
+
           this.setStreamStatus(liveEntry, nodes);
-          
+
           return liveEntry;
         })
       );

@@ -16,7 +16,7 @@ import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
 import { LivePlayerComponent } from './views/live-player/live-player.component';
 import { LiveStatusComponent } from './views/live-status/live-status.component';
-import { LiveStatusWidget } from './views/live-status/live-status.widget';
+import { EntryLiveWidget } from './entry-live.widget';
 import { EntryLiveService } from './entry-live.service';
 import { StreamStatePipe } from './pipes/stream-state.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
@@ -50,7 +50,7 @@ import { DurationPipe } from './pipes/duration.pipe';
   exports: [],
   providers: [
     EntryLiveService,
-    LiveStatusWidget,
+    EntryLiveWidget,
   ]
 })
 export class EntryLiveModule {

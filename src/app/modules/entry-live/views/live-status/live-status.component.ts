@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
-import { timer as ObservableTimer } from 'rxjs';
+import { timer as ObservableTimer, Unsubscribable } from 'rxjs';
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
@@ -18,10 +18,11 @@ export class LiveStatusComponent implements OnDestroy {
       this._entry = value;
       this._isLive = value.streamStatus !== KalturaStreamStatus.offline;
       
-      this._startTicking();
+      this._startTimer();
     }
   }
   
+  private _timer: Unsubscribable;
   
   public _entry: KalturaExtendedLiveEntry;
   public _isLive = false;
@@ -30,16 +31,20 @@ export class LiveStatusComponent implements OnDestroy {
   ngOnDestroy(): void {
   }
   
-  private _startTicking(): void {
-    ObservableTimer(0, 1000)
+  private _startTimer(): void {
+    if (this._timer) {
+      this._timer.unsubscribe();
+      this._timer = null;
+      this._streamDuration = moment.duration(0);
+    }
+
+    this._timer = ObservableTimer(0, 1000)
       .pipe(
         cancelOnDestroy(this),
-        filter(() => this._entry.streamStatus !== KalturaStreamStatus.offline)
+        filter(() => this._entry.streamStatus !== KalturaStreamStatus.offline && !!this._entry.currentBroadcastStartTime)
       )
       .subscribe(() => {
-        this._streamDuration = this._entry.currentBroadcastStartTime
-          ? moment.duration(Math.abs(moment().diff(DateFilterUtils.getMomentDate(this._entry.currentBroadcastStartTime))))
-          : moment.duration(0);
+        this._streamDuration = moment.duration(Math.abs(moment().diff(DateFilterUtils.getMomentDate(this._entry.currentBroadcastStartTime))));
       });
   }
 }
