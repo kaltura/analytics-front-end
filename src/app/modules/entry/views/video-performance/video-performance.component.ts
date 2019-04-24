@@ -19,6 +19,11 @@ import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-h
 import { SortEvent } from 'primeng/api';
 import { analyticsConfig } from 'configuration/analytics-config';
 
+export enum TableModes {
+  dates = 'dates',
+  users = 'users'
+}
+
 @Component({
   selector: 'app-video-performance',
   templateUrl: './video-performance.component.html',
@@ -37,6 +42,7 @@ export class VideoPerformanceComponent extends EntryBase {
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
   
+  public _tableMode = TableModes.users;
   public _columns: string[] = [];
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
@@ -58,6 +64,10 @@ export class VideoPerformanceComponent extends EntryBase {
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _tableModes = [
+    { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
+    { label: this._translate.instant('app.entry.users'), value: TableModes.users },
+  ];
 
   public _currentDatePeriod = '';
   public _compareDatePeriod = '';
@@ -102,7 +112,10 @@ export class VideoPerformanceComponent extends EntryBase {
     reportConfig.objectIds = this.entryId;
   
     sections = { ...sections }; // make local copy
-    delete sections[ReportDataSection.table]; // remove table config to prevent table request
+    
+    if (this._tableMode === TableModes.dates) {
+      delete sections[ReportDataSection.table]; // remove table config to prevent table request
+    }
     
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -286,5 +299,9 @@ export class VideoPerformanceComponent extends EntryBase {
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
       }, 0);
     }
+  }
+  
+  public _onTableModeChange(mode): void {
+  
   }
 }
