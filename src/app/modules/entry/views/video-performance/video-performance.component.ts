@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -13,10 +13,9 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
-import { SelectItem } from 'primeng/api';
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import { SelectItem, SortEvent } from 'primeng/api';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
-import { SortEvent } from 'primeng/api';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 export enum TableModes {
@@ -37,15 +36,21 @@ export class VideoPerformanceComponent extends EntryBase {
   private _order = '-date_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
+  private _rawGraphData: KalturaReportGraph[] = [];
+
   public _metricsCompareTo: string = null;
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'video-performance';
   
-  public _tableMode = TableModes.users;
+  public _tableMode = TableModes.dates;
   public _columns: string[] = [];
+  public _usersColumns: string[] = [];
+  public _datesColumns: string[] = [];
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
+  public _usersTableData: TableRow<string>[] = null;
+  public _datesTableData: TableRow<string>[] = null;
   public _firstTimeLoading = true;
   public _lineChartData: { [key: string]: any } = {};
   public _metricsLineChartData: { [key: string]: any } = null;
@@ -101,6 +106,21 @@ export class VideoPerformanceComponent extends EntryBase {
     });
   }
   
+  private _updateTableData(): void {
+    const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
+    const columns = this._tableMode === TableModes.dates ? this._datesColumns: this._usersColumns;
+    if (tableData === null) {
+      if (this._tableMode === TableModes.dates) {
+        this._handleDatesTable(this._rawGraphData);
+      } else {
+        this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
+      }
+    } else {
+      this._tableData = tableData;
+      this._columns = columns;
+    }
+  }
+  
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
@@ -132,12 +152,24 @@ export class VideoPerformanceComponent extends EntryBase {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._tableData = [];
           if (compare) {
             this._handleCompare(report, compare);
           } else {
             if (report.graphs) {
-              this._handleGraphs(report.graphs); // handle totals
-              this._handleTable(report.graphs); // handle table
+              this._rawGraphData = report.graphs;
+            }
+
+            this._handleGraphs(this._rawGraphData);
+
+            if (this._tableMode === TableModes.dates) {
+              this._handleDatesTable(this._rawGraphData); // handle table
+            }
+
+            if (report.table && report.table.data && report.table.header) {
+              if (this._tableMode === TableModes.users) {
+                this._handleUsersTable(report.table); // handle table
+              }
             }
             if (report.totals) {
               this._handleTotals(report.totals); // handle totals
@@ -161,6 +193,10 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
+    this._datesTableData = null;
+    this._usersTableData = null;
+    this._rawGraphData = [];
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -168,6 +204,10 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   protected _updateFilter(): void {
+    this._datesTableData = null;
+    this._usersTableData = null;
+    this._rawGraphData = [];
+
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
@@ -208,20 +248,25 @@ export class VideoPerformanceComponent extends EntryBase {
       }
     }
   
-    const compareTableData = this._compareService.compareTableFromGraph(
-      currentPeriod,
-      comparePeriod,
-      current.graphs,
-      compare.graphs,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
+    if (this._tableMode === TableModes.dates) {
+      const compareTableData = this._compareService.compareTableFromGraph(
+        currentPeriod,
+        comparePeriod,
+        current.graphs,
+        compare.graphs,
+        this._dataConfig.table,
+        this._reportInterval,
+      );
   
-    if (compareTableData) {
-      const { columns, tableData, totalCount } = compareTableData;
-      this._totalCount = totalCount;
-      this._columns = columns;
-      this._tableData = tableData;
+      if (compareTableData) {
+        const { columns, tableData, totalCount } = compareTableData;
+        this._totalCount = totalCount;
+        this._columns = columns;
+        this._datesTableData = tableData;
+        this._tableData = [...this._datesTableData];
+      }
+    } else {
+    
     }
   }
   
@@ -242,15 +287,26 @@ export class VideoPerformanceComponent extends EntryBase {
     }
   }
   
-  private _handleTable(graphs: KalturaReportGraph[]): void {
+  private _handleDatesTable(graphs: KalturaReportGraph[]): void {
     const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
       graphs,
       this._dataConfig.table,
       this._reportInterval,
     );
     this._totalCount = totalCount;
-    this._columns = columns;
-    this._tableData = tableData;
+    this._datesColumns = columns;
+    this._datesTableData = tableData;
+    this._columns = [...this._datesColumns];
+    this._tableData = [...this._datesTableData];
+  }
+  
+  private _handleUsersTable(table: KalturaReportTable): void {
+    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._totalCount = table.totalCount;
+    this._usersColumns = columns;
+    this._usersTableData = tableData;
+    this._columns = [...this._usersColumns];
+    this._tableData = [...this._usersTableData];
   }
 
   public _onTabChange(tab: Tab): void {
@@ -301,7 +357,9 @@ export class VideoPerformanceComponent extends EntryBase {
     }
   }
   
-  public _onTableModeChange(mode): void {
+  public _onTableModeChange(mode: TableModes): void {
+    this._tableMode = mode;
   
+    this._updateTableData();
   }
 }

@@ -52,7 +52,7 @@
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
                         [options]="_tableModes"
-                        (change)="_onTableModeChange($event)"
+                        (onChange)="_onTableModeChange($event.value)"
                         [(ngModel)]="_tableMode">
               <ng-template let-option pTemplate="selectedItem">
                 <div class="kOptionsLabelWrapper">
