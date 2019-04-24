@@ -12,33 +12,38 @@ export class EntryExportConfig implements ExportConfigService {
     return [
       {
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
-        reportType: KalturaReportType.topContentCreator,
-        sections: [KalturaReportExportItemType.table, KalturaReportExportItemType.total]
+        reportType: KalturaReportType.userTopContent,
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.videoPerformance'),
         reportType: KalturaReportType.userTopContent,
-        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.graph],
+        order: '-date_id',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.impressions'),
         reportType: KalturaReportType.contentDropoff,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: KalturaReportType.mapOverlayCountry,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
         reportType: KalturaReportType.platforms,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
       },
       {
         label: this._translate.instant('app.entry.exportLabels.syndication'),
         reportType: KalturaReportType.topSyndication,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
     ];
   }

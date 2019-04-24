@@ -40,7 +40,9 @@
 
       <div class="kTable">
         <div class="kTableContainer">
-          <p-table sortField="count_plays"
+          <p-table appScrollTopOnPaging
+                   sortField="count_plays"
+                   [customPaginationEvent]="_paginationChanged$"
                    [value]="_tableData"
                    [customSort]="true"
                    [sortOrder]="-1"

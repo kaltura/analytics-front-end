@@ -13,7 +13,8 @@ export class PublisherExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.bandwidth.exportLabels.publisher'),
         reportType: KalturaReportType.partnerUsage,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.graph],
+        order: '-date_id',
       },
     ];
   }

@@ -9,7 +9,9 @@
 }
 
 .kReport{
-  border-radius: 0 !important;
+  border-top-left-radius: 3px !important;
+  border-top-right-radius: 3px !important;
+  overflow: hidden;
   margin-bottom: 0 !important;
 
   .chartContainer {

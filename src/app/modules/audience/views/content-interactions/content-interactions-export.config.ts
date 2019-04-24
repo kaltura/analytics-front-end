@@ -13,22 +13,24 @@ export class ContentInteractionsExportConfig implements ExportConfigService {
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.interactions'),
         reportType: KalturaReportType.playerRelatedInteractions,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table],
+        order: '-count_viral',
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.moderation'),
         reportType: KalturaReportType.contentReportReasons,
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table]
+        sections: [KalturaReportExportItemType.table],
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.playback'),
         reportType: KalturaReportType.playbackRate,
-        sections: [KalturaReportExportItemType.total]
+        sections: [KalturaReportExportItemType.total],
       },
       {
         label: this._translate.instant('app.contentInteractions.exportLabels.highlights'),
-        reportType: KalturaReportType.contentInteractions,
-        sections: [KalturaReportExportItemType.total]
+        reportType: KalturaReportType.playerRelatedInteractions,
+        sections: [KalturaReportExportItemType.total],
+        order: '-count_viral',
       },
     ];
   }

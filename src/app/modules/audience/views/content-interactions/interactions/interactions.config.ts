@@ -46,47 +46,48 @@ export class InteractionsConfig extends ReportDataBaseConfig {
           'entry_name': {
             format: value => value,
             nonComparable: true,
-          },
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'count_viral': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'count_download': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'count_report_submitted': {
-            format: value => ReportHelper.numberOrZero(value),
-          },
-          'status': {
-            format: value => value,
-            hidden: true,
-          },
-        }
-      },
-      [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
-        fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.contentInteractions.count_plays`),
             sortOrder: 1,
           },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.contentInteractions.count_viral`),
             sortOrder: 2,
           },
           'count_download': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.contentInteractions.count_download`),
             sortOrder: 3,
+          },
+          'count_report_submitted': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4,
+          },
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5,
+          },
+          'status': {
+            format: value => value,
+            hidden: true,
+            nonComparable: true,
+          },
+        }
+      },
+      [ReportDataSection.totals]: {
+        preSelected: 'count_viral',
+        fields: {
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_viral`),
+            sortOrder: 1,
+          },
+          'count_download': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.contentInteractions.count_download`),
+            sortOrder: 2,
           },
           'count_report_submitted': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.contentInteractions.count_report_submitted`),
-            sortOrder: 4,
+            sortOrder: 3,
           },
         }
       }

@@ -166,7 +166,7 @@ export class DateFilterUtils {
   }
   
   static parseDateString(value: string): moment.Moment {
-    const day = Number(value.substring(6, 8));
+    const day = value && value.length ? Number(value.substring(6, 8)) : null;
     
     if (!day) {
       value += '01'; // add the first day of a month to correct parsing

@@ -43,6 +43,8 @@ import { MiniTopSharedComponent } from './views/content-interactions/mini-top-sh
 import { ModerationComponent } from './views/content-interactions/moderation/moderation.component';
 import { MiniTopPlaybackSpeedComponent } from './views/content-interactions/mini-top-playback-speed/mini-top-playback-speed.component';
 import { MiniTopStatsComponent } from './views/content-interactions/mini-top-stats/mini-top-stats.component';
+import { InteractionsTableComponent } from './views/content-interactions/interactions/interactions-table/interactions-table.component';
+import { EvenTableHeightDirective } from './views/content-interactions/interactions/even-table-height.directive';
 
 @NgModule({
   imports: [
@@ -92,6 +94,8 @@ import { MiniTopStatsComponent } from './views/content-interactions/mini-top-sta
     ModerationComponent,
     MiniTopPlaybackSpeedComponent,
     MiniTopStatsComponent,
+    InteractionsTableComponent,
+    EvenTableHeightDirective,
   ],
   exports: [],
   providers: [PageScrollService]

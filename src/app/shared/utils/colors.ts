@@ -28,3 +28,45 @@ export function getColorPercent(percent: number, type: string = 'default'): stri
   index = index < 1 ? 1 : index;
   return palettes[palette][index];
 }
+
+export function getColorsBetween(startColor: string, endColor: string, numColors: number = 0): string[] {
+  const rgbToHex = function(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  };
+
+  const hexToRgb = function(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      }
+      : null;
+  };
+
+  if (numColors === 0) {
+    return [];
+  } else if (numColors === 1) {
+    return [getPrimaryColor()];
+  } else if (numColors === 2) {
+    return [getSecondaryColor(), getPrimaryColor()];
+  } else {
+    let ramp = [];
+    ramp.push(startColor);
+    const startColorRgb = hexToRgb(startColor);
+    const endColorRgb = hexToRgb(endColor);
+    const rInc = Math.round((endColorRgb.r - startColorRgb.r) / (numColors - 1));
+    const gInc = Math.round((endColorRgb.g - startColorRgb.g) / (numColors - 1));
+    const bInc = Math.round((endColorRgb.b - startColorRgb.b) / (numColors - 1));
+    for (let i = 0; i < (numColors - 2); i++) {
+      startColorRgb.r += rInc;
+      startColorRgb.g += gInc;
+      startColorRgb.b += bInc;
+      ramp.push(rgbToHex(startColorRgb.r, startColorRgb.g, startColorRgb.b));
+    }
+    ramp.push(endColor);
+    return ramp;
+  }
+
+}

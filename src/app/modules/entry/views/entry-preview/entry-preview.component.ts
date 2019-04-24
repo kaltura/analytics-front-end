@@ -295,6 +295,11 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
   }
 
+  public onChartClick(event): void {
+    const percent = event.offsetX / event.currentTarget.clientWidth;
+    this.seekTo(percent);
+  }
+
   /* ------------------------ start of player logic --------------------------*/
 
   private initPlayer(): void {
@@ -427,6 +432,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       console.log("Failed to inject custom CSS to player");
     }
 
+  }
+
+  private seekTo(percent: number, forcePlay = false): void {
+    this.playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+    if (forcePlay) {
+      this.playerInstance.sendNotification("doPlay");
+    }
   }
 
   /* -------------------------- end of player logic --------------------------*/

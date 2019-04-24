@@ -110,9 +110,6 @@ export class DevicesOverviewComponent implements OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
           this._tabsData = [];
-          this._barChartData = {};
-          this._rawChartData = {};
-          this._columns = [];
           this._summaryData = {};
           
           // IMPORTANT to handle totals first, summary rely on totals
@@ -308,9 +305,6 @@ export class DevicesOverviewComponent implements OnDestroy {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data, columns } = this._getOverviewData(table, relevantFields);
     
-    this._barChartData = this._getGraphData(data, relevantFields);
-    this._rawChartData = this._getRawGraphData(data, relevantFields);
-    this._columns = columns;
     this._summaryData = this._getSummaryData(data, relevantFields);
     
     this._handleDevicesListChange(data);

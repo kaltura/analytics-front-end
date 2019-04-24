@@ -101,6 +101,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     this._tableData = tableData.map(extendTableRow).splice(0, 3);
     this._currentDates = null;
     this._compareDates = null;
+    this.setAnonymousContributors(this._tableData); // fix for anonymous users
     
     if (compareTable && compareTable.header && compareTable.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compareTable, this._dataConfig.table);
@@ -108,6 +109,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       this._compareFirstTimeLoading = false;
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
+      this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
   
@@ -125,5 +127,13 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       this._pageScrollService.start(pageScrollInstance);
     }
   }
-  
+
+  private setAnonymousContributors(contributors: TableRow<string>[]): void {
+    contributors.forEach( contributor => {
+      if ( !contributor['creator_name'].length ) {
+        contributor['creator_name'] = 'anonymous';
+        contributor['created_at'] = '';
+      }
+    });
+  }
 }
