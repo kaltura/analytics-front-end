@@ -131,17 +131,18 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'name,mediaType,createdAt,msDuration'
+            fields: 'name,mediaType,createdAt,msDuration,userId'
           })
         }),
       new UserGetAction({ userId: null })
+        .setDependency(['userId', 0, 'userId'])
         .setRequestOptions(
           new KalturaRequestOptions({
             responseProfile: new KalturaDetachedResponseProfile({
               type: KalturaResponseProfileType.includeFields,
               fields: 'id,fullName'
             })
-          }).setDependency(['userId', 0, 'userId'])
+          })
         )
     );
 
@@ -151,7 +152,19 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            throw Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
+            const err =  Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
+            this.requestSubscription = null;
+
+            this._blockerMessage = new AreaBlockerMessage({
+              title: this._translate.instant('app.common.error'),
+              message: err.message,
+              buttons: [{
+                label: this._translate.instant('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._loadingEntry = false;
+                }}]
+            });
           }
   
           return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];

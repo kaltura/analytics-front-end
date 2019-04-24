@@ -56,7 +56,7 @@ export class MiniTopStatsComponent extends InteractionsBaseReportComponent imple
           this._isBusy = busy;
           this._blockerMessage = error;
           this._stats = [];
-          if (current && current.totals && current.table) {
+          if (current && current.totals) {
             this._handleData(current); // handle totals
           }
         });

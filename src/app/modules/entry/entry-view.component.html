@@ -1,5 +1,5 @@
 <div data-aid="report-group-entry" class="kMain">
-  <k-area-blocker [showLoader]="_loadingEntry">
+  <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
     <div class="kReportView">
       <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader">
@@ -9,7 +9,8 @@
           <app-export-csv name="entry"
                           [reports]="_exportConfig"
                           [refineFilter]="_refineFilter"
-                          [dateFilter]="_dateFilter"></app-export-csv>
+                          [dateFilter]="_dateFilter"
+                          [entryId]="_entryId"></app-export-csv>
           <div class="kFilter kOverrideFAIcons">
             <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
               <span>{{'app.filters.filter' | translate}}</span>

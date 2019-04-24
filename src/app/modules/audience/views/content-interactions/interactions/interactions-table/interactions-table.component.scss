@@ -1,0 +1,42 @@
+@import '../../../../../../../styles/variables';
+
+:host{
+  width: 100%;
+}
+.kDates {
+  font-size: 15px;
+  margin-left: 24px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.kDividerWrapper {
+  display: flex;
+
+  .kDivider {
+    border-left: 1px solid #d9d9d9;
+  }
+}
+
+.emptymessage {
+  height: 500px;
+
+  .kEmptyMessage {
+    top: 115px;
+    border-bottom: none;
+  }
+}
+
+.kEntryLink {
+  cursor: pointer;
+}
+
+.kThumbnailHolder {
+  width: 85px;
+  height: 48px;
+  cursor: pointer;
+
+  img {
+    width: 85px;
+  }
+}

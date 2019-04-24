@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
@@ -7,13 +7,14 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { BrowserService } from 'shared/services';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
   templateUrl: './top-videos-table.component.html',
   styleUrls: ['./top-videos-table.component.scss']
 })
-export class TopVideosTableComponent {
+export class TopVideosTableComponent implements OnDestroy {
   @Input() set tableData(value: TableRow<string>[]) {
     value = Array.isArray(value) ? value : [];
     this._originalTable = [...value];
@@ -32,6 +33,7 @@ export class TopVideosTableComponent {
   
   @ViewChild('overlay') _overlay: OverlayComponent;
   
+  private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   private timeoutId = null;
@@ -40,6 +42,7 @@ export class TopVideosTableComponent {
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
+  public _paginationChanged$ = this._paginationChanged.asObservable();
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
@@ -48,8 +51,13 @@ export class TopVideosTableComponent {
 
   }
   
+  ngOnDestroy(): void {
+    this._paginationChanged.complete();
+  }
+  
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
+      this._paginationChanged.next();
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
     }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { getColorPercent, getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { getColorsBetween, getColorPalette } from 'shared/utils/colors';
 
 export interface InsightsBulletValue {
   value: number;
@@ -19,19 +19,12 @@ export class InsightsBulletComponent {
 
     if (Array.isArray(value)) {
       const sum = value.reduce((acc, val) => acc + val.value, 0);
+      const colors = getColorsBetween(getColorPalette()[0], getColorPalette()[7], value.length);
       this._values = value
         .map((item, index) => {
           const result = sum ? parseFloat((item.value / sum * 100).toFixed(2)) : 0;
-          let color = getColorPercent(result, this.colorScheme);
-          if (value.length <= 2) {
-            color = index === 0 ? getPrimaryColor(this.colorScheme) : getSecondaryColor(this.colorScheme);
-          }
-          const tooltip = `
-            <div class="kDefaultTooltip">
-              <span class="kBullet" style="color: ${color}">&bull;</span>
-              <span style="margin-right: 8px">${item.label}</span><span>${result}%</span>
-            </div>
-          `;
+          const color = colors[index];
+          const tooltip = `<div class="kDefaultTooltip"><span class="kBullet" style="color: ${color}">&bull;</span><span style="margin-right: 8px">${item.label}</span><span>${result}%</span></div>`;
           return {
             value: result,
             label: item.label,

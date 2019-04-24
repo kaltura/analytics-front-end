@@ -17,16 +17,15 @@
   margin-bottom: 0;
 }
 
-.kThumbnailHolder {
-  width: 85px;
-  height: 48px;
-  cursor: pointer;
+.kTablesHolder {
+  display: flex;
+  flex-direction: row;
 
-  img {
-    width: 85px;
+  &.kOpen{
+    height: auto;
   }
-}
-
-.kEntryLink {
-  cursor: pointer;
+  &.kClose{
+    height: 0;
+    display: none;
+  }
 }

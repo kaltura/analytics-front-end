@@ -54,6 +54,7 @@ import { TableModule } from 'primeng/table';
 import { CompareMetricComponent } from 'shared/components/compare-metric/compare-metric.component';
 import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
+import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
     CompareMetricComponent,
     HorizontalBarRowComponent,
     HorizontalBarChartComponent,
+    ScrollTopOnPagingDirective,
     ...FilterComponentsList,
   ],
   exports: [
@@ -148,6 +150,7 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
     CompareMetricComponent,
     HorizontalBarRowComponent,
     HorizontalBarChartComponent,
+    ScrollTopOnPagingDirective,
     ...FilterComponentsList,
   ],
   providers: [

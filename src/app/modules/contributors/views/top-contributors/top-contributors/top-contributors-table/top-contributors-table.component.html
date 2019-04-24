@@ -2,7 +2,9 @@
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table [class.kCompareMode]="isCompareMode"
+    <p-table appScrollTopOnPaging
+             [customPaginationEvent]="_paginationChanged$"
+             [class.kCompareMode]="isCompareMode"
              [value]="_tableData">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
@@ -50,7 +52,7 @@
                  (mouseenter)="_showOverlay($event, data['user_id'])">
               <span class="kTableColumn kEntryName">{{data['creator_name']}}</span>
               <div class="kEntryDetails">
-              <span class="kTableColumn">{{'app.contributors.created' | translate}}</span>
+              <span class="kTableColumn" *ngIf="data['created_at'].length">{{'app.contributors.created' | translate}}</span>
               <span class="kTableColumn kCreated">{{data['created_at']}}</span>
               </div>
             </div>

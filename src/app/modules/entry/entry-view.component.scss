@@ -97,6 +97,11 @@
   flex-wrap: wrap;
 }
 
+:host /deep/ .kErrorMessageContainer{
+  top: 200px !important;
+  position: absolute;
+}
+
 :host /deep/ {
   ktags{
     margin: 0 !important;

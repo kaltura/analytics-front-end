@@ -155,13 +155,24 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
-    
+    this.setAnonymousContributors(this._tableData); // fix for anonymous users
+
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
+      this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
+  }
+
+  private setAnonymousContributors(contributors: TableRow<string>[]): void {
+    contributors.forEach( contributor => {
+      if ( !contributor['creator_name'].length ) {
+        contributor['creator_name'] = 'anonymous';
+        contributor['created_at'] = '';
+      }
+    });
   }
 }
