@@ -110,12 +110,16 @@ export class VideoPerformanceComponent extends EntryBase {
   
   private _updateTableData(): void {
     const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
-    const columns = this._tableMode === TableModes.dates ? this._datesColumns: this._usersColumns;
+    const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
     if (tableData === null) {
-      if (this._tableMode === TableModes.dates) {
+      if (this._tableMode === TableModes.dates && !this._isCompareMode) {
         this._handleDatesTable(this._rawGraphData);
       } else {
-        this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
+        let sections: ReportDataConfig = { table: this._dataConfig[ReportDataSection.table] };
+        if (this._isCompareMode) {
+          sections = { ...sections, graph: this._dataConfig[ReportDataSection.graph] };
+        }
+        this._loadReport(sections);
       }
     } else {
       this._tableData = tableData;
@@ -273,12 +277,28 @@ export class VideoPerformanceComponent extends EntryBase {
       if (compareTableData) {
         const { columns, tableData, totalCount } = compareTableData;
         this._totalCount = totalCount;
-        this._columns = columns;
+        this._datesColumns = columns;
         this._datesTableData = tableData;
+        this._columns = [...this._datesColumns];
         this._tableData = [...this._datesTableData];
       }
     } else {
-    
+      if (current.table && compare.table) {
+        const { columns, tableData } = this._compareService.compareTableData(
+          currentPeriod,
+          comparePeriod,
+          current.table,
+          compare.table,
+          this._dataConfig.table,
+          this._reportInterval,
+          'name'
+        );
+        this._usersColumns = columns;
+        this._totalCount = compare.table.totalCount;
+        this._usersTableData = tableData;
+        this._columns = [...this._usersColumns];
+        this._tableData = [...this._usersTableData];
+      }
     }
   }
   
