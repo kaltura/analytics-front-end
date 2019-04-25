@@ -33,7 +33,7 @@
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"
                                         (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
           </div>
-          <div class="kMiscFilters">
+          <div *ngIf="showAutocompleteGroup" class="kMiscFilters">
             <app-tags-filter [selectedFilters]="_selectedValues['tags']"
                              (itemSelected)="_onItemSelected($event, 'tags')"
                              (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
