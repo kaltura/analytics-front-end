@@ -17,6 +17,8 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { EndUserExportConfig } from './end-user-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -33,7 +35,10 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   @ViewChild('userFilter') private userFilter: UsersFilterComponent;
   
   private _paginationChanged = new Subject<void>();
-
+  
+  public _refineFilterOpened = false;
+  public _refineFilter: RefineFilter = null;
+  public _selectedRefineFilters: RefineFilter = null;
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -317,5 +322,16 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+    
+    refineFilterToServerValue(this._refineFilter, this.filter);
+    if (this.compareFilter) {
+      refineFilterToServerValue(this._refineFilter, this.compareFilter);
+    }
+    
+    this.loadReport();
   }
 }

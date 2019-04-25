@@ -4,11 +4,28 @@
     <app-export-csv name="end-user"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
     <app-date-filter #dateFilter
                      name="end-user"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer kNoPadding">
+    <app-refine-filter name="engagement"
+                       [showAutocompleteGroup]="false"
+                       [opened]="_refineFilterOpened"
+                       [dateFilter]="_dateFilter"
+                       [selectedFilters]="_selectedRefineFilters"
+                       (closeFilters)="_refineFilterOpened = false"
+                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
   </div>
 
   <div class="kFilters">
