@@ -75,9 +75,9 @@
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
-                   [paginator]="true"
+                   [paginator]="!_customPaginator"
                    [rows]="_pageSize"
-                   (sortFunction)="_onSortChanged($event)" (onPage)="onPaginationChange($event)">
+                   (sortFunction)="_onSortChanged($event)" (onPage)="_onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
@@ -111,6 +111,11 @@
               </div>
             </ng-template>
           </p-table>
+          <p-paginator *ngIf="_customPaginator"
+                       [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
         </div>
       </div>
     </div>

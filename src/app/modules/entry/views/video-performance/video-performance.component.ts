@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -62,9 +62,11 @@ export class VideoPerformanceComponent extends EntryBase {
   public _metricsOptions: SelectItem[] = [];
   public _metricsColors: { [key: string]: string; } = {};
   public _showTable = false;
+  public _customPaginator = false;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pageSize = analyticsConfig.defaultPageSize;
+  public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
@@ -134,6 +136,7 @@ export class VideoPerformanceComponent extends EntryBase {
     sections = { ...sections }; // make local copy
     
     if (this._tableMode === TableModes.dates) {
+      reportConfig.pager = this._pager;
       delete sections[ReportDataSection.table]; // remove table config to prevent table request
     }
     
@@ -148,6 +151,11 @@ export class VideoPerformanceComponent extends EntryBase {
           delete compareReportConfig['objectIds__null'];
         }
         compareReportConfig.objectIds = this.entryId;
+  
+        if (this._tableMode === TableModes.dates) {
+          compareReportConfig.pager = this._pager;
+        }
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -196,6 +204,7 @@ export class VideoPerformanceComponent extends EntryBase {
     this._datesTableData = null;
     this._usersTableData = null;
     this._rawGraphData = [];
+    this._pager.pageIndex = 1;
 
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
@@ -207,6 +216,7 @@ export class VideoPerformanceComponent extends EntryBase {
     this._datesTableData = null;
     this._usersTableData = null;
     this._rawGraphData = [];
+    this._pager.pageIndex = 1;
 
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -321,6 +331,7 @@ export class VideoPerformanceComponent extends EntryBase {
   }
   
   public _onSortChanged(event: SortEvent) {
+    this._pager.pageIndex = 1;
     this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
   }
   
@@ -345,7 +356,12 @@ export class VideoPerformanceComponent extends EntryBase {
     }
   }
 
-  public onPaginationChange(event): void {
+  public _onPaginationChange(event: { page: number, first: number, rows: number, pageCount: number }): void {
+    if (this._customPaginator && event.page !== (this._pager.pageIndex - 1)) {
+      this._pager.pageIndex = event.page + 1;
+      this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
+    }
+
     this.updateLayout();
   }
 
@@ -359,6 +375,7 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _onTableModeChange(mode: TableModes): void {
     this._tableMode = mode;
+    this._customPaginator = this._tableMode === TableModes.users;
   
     this._updateTableData();
   }
