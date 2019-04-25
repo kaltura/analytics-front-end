@@ -1,0 +1,56 @@
+<div [attr.data-aid]="'filter-end-user'" class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconInfo_Full"></i>
+      {{'app.filters.disclaimer' | translate}}
+    </span>
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
+  </div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <div class="kFilterContainerRow">
+          <div class="kListFilters">
+            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
+                                        [options]="_mediaTypes"
+                                        [selectedFilters]="_selectedValues['mediaType']"
+                                        (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                        (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
+
+            <app-checkboxes-list-filter class="kLastItem"
+                                        [label]="'app.filters.entrySources.title' | translate"
+                                        [options]="_entrySources"
+                                        [selectedFilters]="_selectedValues['entrySources']"
+                                        (itemSelected)="_onItemSelected($event, 'entrySources')"
+                                        (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+          </div>
+          <div class="kMiscFilters">
+            <app-owners-filter [selectedFilters]="_selectedValues['users']"
+                               [label]="'app.filters.users' | translate"
+                               (itemSelected)="_onItemSelected($event, 'users')"
+                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+          </div>
+          <div class="kListFilters">
+            <app-location-filters [dateFilter]="_dateFilter"
+                                  [selectedFilters]="_selectedValues['location']"
+                                  (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
+          </div>
+        </div>
+      </div>
+      <div class="kRefineFiltersFooter">
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -56,7 +56,6 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
-  public _tags: any[] = [];
   public _paginationChanged$ = this._paginationChanged.asObservable();
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
@@ -72,7 +71,6 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   );
 
   private order = '-total_storage_mb';
-  private selectedUsers = '';
   private _dataConfig: ReportDataConfig = null;
 
   public get isCompareMode(): boolean {
@@ -128,32 +126,11 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
     this.updateChartType();
   }
 
-  public _onSearchUsersChange(users): void {
-    this._logger.trace('Handle search users action by user', { users });
-    const usersIds = users.map(({ id }) => id);
-    this._tags = users;
-    if (usersIds.length) {
-      this.selectedUsers = usersIds.join(analyticsConfig.valueSeparator);
-    } else {
-      this.selectedUsers = '';
-    }
-    this.filter.userIds = this.selectedUsers;
-
-    if (this.compareFilter) {
-      this.compareFilter.userIds = this.filter.userIds;
-    }
-    this.loadReport();
-  }
-
   public _onDrillDown(user: string): void {
     this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', { user });
     this._drillDown = user.length ? user : '';
     this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
-    this.filter.userIds = user.length ? user : this.selectedUsers;
     this.pager.pageIndex = 1;
-    if (this.compareFilter) {
-      this.compareFilter.userIds = this.filter.userIds;
-    }
 
     this.order = user.length ? '+month_id' : '-total_storage_mb';
     this.loadReport();
@@ -178,16 +155,6 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
       this.pager.pageIndex = event.page + 1;
       this.loadReport({ table: this._dataConfig.table });
     }
-  }
-
-  public _onRemoveTag(user: KalturaUser): void {
-    this._logger.trace('Handle clear user filter action by user', { userId: user.id });
-    this.userFilter.removeUser(user.id);
-  }
-
-  public _onRemoveAllTags(): void {
-    this._logger.trace('Handle clear all users filter action by user');
-    this.userFilter.removeAll();
   }
 
   private loadReport(sections = this._dataConfig): void {
