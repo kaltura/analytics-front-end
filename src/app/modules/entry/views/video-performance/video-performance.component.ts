@@ -111,12 +111,13 @@ export class VideoPerformanceComponent extends EntryBase {
   private _updateTableData(): void {
     const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
     const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
+
     if (tableData === null) {
-      if (this._tableMode === TableModes.dates && !this._isCompareMode) {
+      if (this._tableMode === TableModes.dates && !this._isCompareMode && this._rawGraphData.length) {
         this._handleDatesTable(this._rawGraphData);
       } else {
         let sections: ReportDataConfig = { table: this._dataConfig[ReportDataSection.table] };
-        if (this._isCompareMode) {
+        if (this._isCompareMode || !this._rawGraphData.length) {
           sections = { ...sections, graph: this._dataConfig[ReportDataSection.graph] };
         }
         this._loadReport(sections);
@@ -140,8 +141,9 @@ export class VideoPerformanceComponent extends EntryBase {
     sections = { ...sections }; // make local copy
     
     if (this._tableMode === TableModes.dates) {
-      reportConfig.pager = this._pager;
       delete sections[ReportDataSection.table]; // remove table config to prevent table request
+    } else if (this._tableMode === TableModes.users) {
+      reportConfig.pager = this._pager;
     }
     
     this._reportService.getReport(reportConfig, sections)
@@ -156,7 +158,7 @@ export class VideoPerformanceComponent extends EntryBase {
         }
         compareReportConfig.objectIds = this.entryId;
   
-        if (this._tableMode === TableModes.dates) {
+        if (this._tableMode === TableModes.users) {
           compareReportConfig.pager = this._pager;
         }
 
