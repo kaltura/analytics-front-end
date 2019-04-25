@@ -183,8 +183,10 @@ export class VideoPerformanceComponent extends EntryBase {
               this._handleTotals(report.totals); // handle totals
             }
           }
-          this._isBusy = false;
-          this._firstTimeLoading = false;
+          setTimeout(() => {
+            this._isBusy = false;
+            this._firstTimeLoading = false;
+          });
         },
         error => {
           this._isBusy = false;
@@ -330,9 +332,18 @@ export class VideoPerformanceComponent extends EntryBase {
     this.updateLayout();
   }
   
-  public _onSortChanged(event: SortEvent) {
+  public _onSortChanged(event: SortEvent): void {
     this._pager.pageIndex = 1;
-    this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
+
+    if (this._tableMode === TableModes.dates) {
+      this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
+    } else if (event.data.length && event.field && event.order && !this._isCompareMode) {
+      const order = (event.order === 1 || event.field === 'month_id') ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        this._loadReport({ table: this._dataConfig.table });
+      }
+    }
   }
   
   public _onCompareTo(field: string): void {
