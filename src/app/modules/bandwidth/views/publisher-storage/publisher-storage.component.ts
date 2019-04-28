@@ -17,6 +17,8 @@ import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-h
 import { SortEvent } from 'primeng/api';
 import { PublisherExportConfig } from './publisher-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -30,7 +32,10 @@ import { ExportItem } from 'shared/components/export-csv/export-csv.component';
 })
 export class PublisherStorageComponent implements OnInit {
   private _dataConfig: ReportDataConfig;
-
+  
+  public _refineFilter: RefineFilter = null;
+  public _selectedRefineFilters: RefineFilter = null;
+  public _refineFilterOpened = false;
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -263,5 +268,16 @@ export class PublisherStorageComponent implements OnInit {
 
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage' || this._selectedMetrics === 'deleted_storage') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+
+    refineFilterToServerValue(this._refineFilter, this.filter);
+    if (this.compareFilter) {
+      refineFilterToServerValue(this._refineFilter, this.compareFilter);
+    }
+  
+    this.loadReport();
   }
 }

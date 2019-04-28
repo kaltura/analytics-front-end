@@ -16,6 +16,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
+import { EndUserFilterComponent } from './views/end-user/filter/filter.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { TableModule } from 'primeng/table';
   declarations: [
     BandwidthComponent,
     PublisherStorageComponent,
-    EndUserStorageComponent
+    EndUserStorageComponent,
+    EndUserFilterComponent,
   ],
   exports: [],
   providers: []
