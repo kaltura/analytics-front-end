@@ -4,6 +4,13 @@
     <app-export-csv name="end-user"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
+    <div class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
     <app-date-filter #dateFilter
                      name="end-user"
                      [dateRange]="_dateRange"
@@ -11,30 +18,26 @@
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
-  <div class="kFilters">
-    <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.allUsers' | translate}}</span>
-    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_onDrillDown('')">{{'app.bandwidth.allUsers' | translate}}</a>
-      <span class="separator">/</span>
-      <span>{{_drillDown}}</span>
-    </div>
-    <app-users-filter #userFilter [class.kHidden]="_drillDown.length>0" (filterChange)="_onSearchUsersChange($event)"></app-users-filter>
+  <div class="kReportContainer kNoPadding">
+    <app-end-user-filter [opened]="_refineFilterOpened"
+                         [dateFilter]="_dateFilter"
+                         [selectedFilters]="_selectedRefineFilters"
+                         (closeFilters)="_refineFilterOpened = false"
+                         (filterChange)="_onRefineFilterChange($event)"></app-end-user-filter>
   </div>
-
-  <kTags *ngIf="_tags.length"
-         [title]="''"
-         [data]="_tags"
-         [labelField]="'fullName'"
-         [tooltipField]="'fullName'"
-         [clearAllLabel]="'app.common.clearAll' | translate"
-         [class.kHidden]="_drillDown.length>0"
-         (onTagRemove)="_onRemoveTag($event)"
-         (onRemoveAll)="_onRemoveAllTags()">
-  </kTags>
-
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
+
+      <div class="kFilters">
+        <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.allUsers' | translate}}</span>
+        <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+          <a (click)="_onDrillDown('')">{{'app.bandwidth.allUsers' | translate}}</a>
+          <span class="separator">/</span>
+          <span>{{_drillDown}}</span>
+        </div>
+      </div>
+
       <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units [dateFilter]="dateFilter"></app-time-units>

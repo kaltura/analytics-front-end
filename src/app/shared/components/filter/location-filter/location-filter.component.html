@@ -1,4 +1,5 @@
 <app-dropdown-filter templateType="country"
+                     [class.expandWidth]="expandWidth"
                      [label]="'app.filters.country' | translate"
                      [options]="_locationFilterService.countriesOptions | async"
                      [isLoading]="_locationFilterService.isBusy('country')"
@@ -7,7 +8,8 @@
                      [selectedFilters]="_selectedCountries"
                      (itemSelected)="_onItemSelected($event, 'country')"></app-dropdown-filter>
 
-<app-dropdown-filter [label]="'app.filters.region' | translate"
+<app-dropdown-filter [class.expandWidth]="expandWidth"
+                     [label]="'app.filters.region' | translate"
                      [options]="_locationFilterService.regionOptions | async"
                      [disabled]="!_selectedCountries.length"
                      [isLoading]="_locationFilterService.isBusy('region')"
@@ -16,7 +18,8 @@
                      [selectedFilters]="_selectedRegions"
                      (itemSelected)="_onItemSelected($event, 'region')"></app-dropdown-filter>
 
-<app-dropdown-filter [label]="'app.filters.city' | translate"
+<app-dropdown-filter [class.expandWidth]="expandWidth"
+                     [label]="'app.filters.city' | translate"
                      [options]="_locationFilterService.citiesOptions | async"
                      [disabled]="!_selectedRegions.length"
                      [isLoading]="_locationFilterService.isBusy('city')"

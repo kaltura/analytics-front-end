@@ -20,6 +20,8 @@ export interface LocationsFilterValue {
   styleUrls: ['./location-filter.component.scss']
 })
 export class LocationFilterComponent implements OnDestroy {
+  @Input() expandWidth = false;
+
   @Input() set selectedFilters(value: LocationsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
       const result = value[0];

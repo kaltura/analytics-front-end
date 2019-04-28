@@ -62,6 +62,8 @@ export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
   
   @Input() name = 'default';
+  
+  @Input() showAutocompleteGroup = true;
 
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
