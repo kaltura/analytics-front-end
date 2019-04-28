@@ -49,15 +49,36 @@
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <div class="kTableModeSelector">
+            <p-dropdown [style]="{'width': '172px'}"
+                        [options]="_tableModes"
+                        (onChange)="_onTableModeChange($event.value)"
+                        [(ngModel)]="_tableMode">
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
           <p-table appScrollTopOnPaging
-                   [sortField]="_columns[0]"
+                   [sortField]="_customPaginator ? 'name' : _columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
-                   [paginator]="true"
+                   [paginator]="!_customPaginator"
                    [rows]="_pageSize"
-                   (sortFunction)="_onSortChanged($event)" (onPage)="onPaginationChange($event)">
+                   (sortFunction)="_onSortChanged($event)"
+                   (onPage)="_onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col">
@@ -69,8 +90,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-data>
               <tr>
-                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'"
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
+                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'name'"
                         class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
@@ -78,7 +99,7 @@
                                        [trend]="data[col].trend"></app-trend-value>
                     </span>
                   </span>
-                  <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id'">
+                  <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id' || col === 'name'">
                     <span>{{data[col]}}</span>
                   </ng-container>
                 </td>
@@ -91,6 +112,11 @@
               </div>
             </ng-template>
           </p-table>
+          <p-paginator *ngIf="_customPaginator"
+                       [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
         </div>
       </div>
     </div>

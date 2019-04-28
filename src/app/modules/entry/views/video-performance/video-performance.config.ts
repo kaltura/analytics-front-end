@@ -26,6 +26,11 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
+          'name': {
+            format: value => value,
+            nonComparable: true,
+            sortOrder: 1,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,

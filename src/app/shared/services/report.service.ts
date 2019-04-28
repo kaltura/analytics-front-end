@@ -527,14 +527,19 @@ export class ReportService implements OnDestroy {
                         reportInterval: KalturaReportInterval): { columns: string[], tableData: TableRow[], totalCount: number } {
     const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
     let columns = [];
+    let tableData = [];
     const data = [];
+    
+    if (!graphs.length) {
+      return { tableData, columns, totalCount: 0 };
+    }
     
     graphs.forEach(item => {
       columns.push(item.id);
       data.push(item.data.split(';'));
     });
     
-    const tableData = data[0].filter(Boolean).map((item, i) => {
+    tableData = data[0].filter(Boolean).map((item, i) => {
       const initialValue = {
         [firstColumn]: config.fields[firstColumn]
           ? config.fields[firstColumn].format(item.split(analyticsConfig.valueSeparator)[0])

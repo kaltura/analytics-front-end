@@ -25,6 +25,7 @@ import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.comp
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { UserEngagementFilterComponent } from './views/user-engagement/filter/filter.component';
 import { UsersFilterComponent } from './views/user-engagement/filter/users-filter/users-filter.component';
+import { TableModeIconPipe } from './views/video-performance/pipes/table-mode-icon.pipe';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { UsersFilterComponent } from './views/user-engagement/filter/users-filte
     HeatMapComponent,
     UsersFilterComponent,
     UserEngagementFilterComponent,
+    TableModeIconPipe,
   ],
   exports: [],
   providers: []
