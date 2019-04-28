@@ -161,7 +161,7 @@
       "returningContributors": "Returning Contributors",
       "noRanking": "Before April 2018 contributors ranking is not available",
       "score": "Score",
-      "viewDetails": "View Details",
+      "viewDetails": "Contributor Details",
       "exportLabels": {
         "highlights": "Highlights",
         "general": "Metrics over time",
@@ -365,7 +365,7 @@
         "duration": "Duration",
         "errorLoadingEntry": "Failed to load entry data",
         "score": "Score",
-        "viewDetails": "View Details",
+        "viewDetails": "Video Details",
         "by": "By",
         "entryStatus": {
           "deleted": "Deleted Entry",
