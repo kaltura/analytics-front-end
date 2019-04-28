@@ -37,6 +37,7 @@ export class VideoPerformanceComponent extends EntryBase {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   private _rawGraphData: KalturaReportGraph[] = [];
+  private _ignoreFirstSortEvent = false;
 
   public _metricsCompareTo: string = null;
   
@@ -360,11 +361,20 @@ export class VideoPerformanceComponent extends EntryBase {
     if (this._tableMode === TableModes.dates) {
       this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
     } else if (event.data.length && event.field && event.order && !this._isCompareMode) {
-      const order = (event.order === 1 || event.field === 'month_id') ? '+' + event.field : '-' + event.field;
-      if (order !== this._order) {
-        this._order = order;
-        this._loadReport({ table: this._dataConfig.table });
+      // prevent handling first sort event after mode switching to users to prevent redundant loadReport call
+      // because event.field will be outdated at the time
+      if (this._ignoreFirstSortEvent) {
+        this._ignoreFirstSortEvent = false;
+        return;
       }
+      
+      setTimeout(() => {
+        const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+        if (order !== this._order) {
+          this._order = order;
+          this._loadReport({ table: this._dataConfig.table });
+        }
+      });
     }
   }
   
@@ -408,8 +418,8 @@ export class VideoPerformanceComponent extends EntryBase {
   
   public _onTableModeChange(mode: TableModes): void {
     this._tableMode = mode;
-    this._customPaginator = this._tableMode === TableModes.users;
-  
+    this._customPaginator = this._ignoreFirstSortEvent = this._tableMode === TableModes.users;
+    this._order = this._tableMode === TableModes.users ? '-name' : '-date_id';
     this._updateTableData();
   }
 }
