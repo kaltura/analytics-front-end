@@ -6,6 +6,30 @@
              [customPaginationEvent]="_paginationChanged$"
              [class.kCompareMode]="isCompareMode"
              [value]="_tableData">
+      <ng-template pTemplate="header">
+        <tr class="kTopVideoHeader">
+          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
+          <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
+          <th [ngStyle]="{'width': '100%', 'padding-left': 0}">
+            {{'app.contributors.viewDetails' | translate}}
+          </th>
+          <ng-container *ngIf="!isCompareMode">
+            <th [ngStyle]="{'width': '170px'}">
+              {{'app.contributors.count_plays' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '220px'}">
+              {{'app.contributors.added_entries' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '220px'}">{{'app.contributors.added_msecs' | translate}}</th>
+          </ng-container>
+          <th [ngStyle]="{'width': '130px', 'overflow': 'visible'}">
+            {{'app.contributors.score' | translate}}
+            <!--<kInputHelper>-->
+              <!--<span>Scoring formula</span>-->
+            <!--</kInputHelper>-->
+          </th>
+        </tr>
+      </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
@@ -38,38 +62,23 @@
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.contributors.count_plays' | translate"
-                      [showOnEllipsis]="true">
-              {{'app.contributors.count_plays' | translate}}
-            </span>
               </div>
             </td>
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-contribution"></i>
-                <span class="kCellValue">{{data['added_entries']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.contributors.added_entries' | translate"
-                      [showOnEllipsis]="true">
-            {{'app.contributors.added_entries' | translate}}
-            </span>
+                <span class="kCellValue">{{data['added_entries']}}</span>
               </div>
             </td>
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
-                <span class="kCellValue">{{data['added_msecs']}}</span>&nbsp;
-                <span class="kTableColumn"
-                      [kTooltip]="'app.contributors.added_msecs' | translate"
-                      [showOnEllipsis]="true">
-              {{'app.contributors.added_msecs' | translate}}
-            </span>
+                <span class="kCellValue">{{data['added_msecs']}}</span>
               </div>
             </td>
           </ng-container>
-          <td class="kScore" [ngStyle]="{'width': '110px', 'text-align': 'center'}">
-            <span *ngIf="data['contributor_ranking'] !== undefined">{{data['contributor_ranking']}}/10</span>
+          <td class="kScore" [ngStyle]="{'width': '130px', 'text-align': 'center'}">
+            <span *ngIf="data['contributor_ranking'] !== undefined">{{data['contributor_ranking']}}<span class="kTop">/10</span></span>
             <div *ngIf="data['contributor_ranking'] === undefined" [ngStyle]="{display: 'inline-block'}">
               {{'app.common.na' | translate}}
               <i class="kIconhelp_full" [kTooltip]="'app.contributors.noRanking' | translate"></i>
