@@ -116,30 +116,4 @@ export class EntryLiveService {
       this._getEntryServerNodeListAction(entryId),
     );
   }
-  
-  public getEntryData(entryId: string): Observable<KalturaExtendedLiveEntry> {
-    return this._kalturaClient.multiRequest(this.getEntryDateRequest(entryId))
-      .pipe(
-        map((responses) => {
-          if (responses.hasErrors()) {
-            throw responses.getFirstError();
-          }
-          const entry = responses[0].result;
-          const profiles = responses[1].result.objects;
-          const nodes = responses[2].result.objects;
-          const liveEntry = Object.assign(entry, {
-            dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
-            recording: entry.recordStatus !== KalturaRecordStatus.disabled,
-            transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
-            redundancy: this.getRedundancyStatus(nodes),
-            streamStatus: KalturaStreamStatus.offline,
-            serverType: null,
-          });
-
-          this.setStreamStatus(liveEntry, nodes);
-
-          return liveEntry;
-        })
-      );
-  }
 }
