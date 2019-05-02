@@ -9,19 +9,41 @@ export class StreamStatePipe implements PipeTransform {
   constructor(private _appLocalization: TranslateService) {
   }
   
-  transform(status: KalturaStreamStatus): string {
+  transform(status: KalturaStreamStatus, icon = false): string {
+    let result = {
+      icon: '',
+      status: ''
+    };
     switch (status) {
       case KalturaStreamStatus.live:
-        return this._appLocalization.instant('app.entryLive.streamStatus.live');
+        result = {
+          status: this._appLocalization.instant('app.entryLive.streamStatus.live'),
+          icon: 'kStatusActive',
+        };
+        break;
       case KalturaStreamStatus.offline:
-        return this._appLocalization.instant('app.entryLive.streamStatus.offline');
+        result = {
+          status: this._appLocalization.instant('app.entryLive.streamStatus.offline'),
+          icon: 'kIconclose', // TODO replace with relevant icon once available
+        };
+        break;
       case KalturaStreamStatus.initializing:
-        return this._appLocalization.instant('app.entryLive.streamStatus.initializing');
+        result = {
+          status: this._appLocalization.instant('app.entryLive.streamStatus.initializing'),
+          icon: 'kIconrefresh', // TODO replace with relevant icon once available
+        };
+        break;
       case KalturaStreamStatus.preview:
-        return this._appLocalization.instant('app.entryLive.streamStatus.preview');
+        result = {
+          status: this._appLocalization.instant('app.entryLive.streamStatus.preview'),
+          icon: 'kStatusActive',
+        };
+        break;
       default:
-        return '';
+        break;
     }
+  
+    return icon ? result.icon : result.status;
   }
   
 }

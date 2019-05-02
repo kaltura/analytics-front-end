@@ -408,7 +408,7 @@
       "stream_duration_in_months": "{{months}} Months, {{days}} Days",
       "streamStatus": {
         "live": "Live",
-        "initializing": "Initializing",
+        "initializing": "Going Live",
         "offline": "Offline",
         "preview": "Preview"
       }

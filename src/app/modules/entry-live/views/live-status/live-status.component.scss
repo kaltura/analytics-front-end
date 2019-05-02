@@ -1,7 +1,6 @@
 @import '../../../../../styles/variables';
 
 .kLiveStatus {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,8 +8,23 @@
   font-size: 14px;
   font-weight: bold;
   background-color: #487adf;
-  border-radius: 3px;
-  padding: 20px 24px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  padding: 16px 24px;
+
+  &.kOffline {
+    background-color: $kGrayscale2;
+  }
+
+  &.kInitializing {
+    background: repeating-linear-gradient(
+        105deg,
+        $kGrayscale2,
+        $kGrayscale2 18px,
+        #5B5B5B 18px,
+        #5B5B5B 36px
+    );
+  }
 
   .kStatus {
     display: flex;
@@ -25,17 +39,18 @@
     }
 
     .kStatusIcon {
+      font-size: 24px;
+      color: #FFFFFF;
+      margin-right: 12px;
+    }
+
+    .kStatusActive {
       display: inline-block;
       width: 10px;
       height: 10px;
-      background-color: $kGrayscale4;
+      border: 6px solid #6C94E5;
+      background-color: #FFFFFF;
       border-radius: 50%;
-      margin-right: 12px;
-
-      &.active {
-        border: 6px solid #6C94E5;
-        background-color: #FFFFFF;
-      }
     }
   }
 
