@@ -1,3 +1,5 @@
+import { PollInterval } from '@kaltura-ng/kaltura-common';
+
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
@@ -8,7 +10,7 @@ export interface AnalyticsConfig {
   };
   kalturaServer?: {
       uri?: string,
-    previewUIConf?: number
+      previewUIConf?: number,
   };
   cdnServers?: {
     serverUri?: string,
@@ -19,6 +21,10 @@ export interface AnalyticsConfig {
   locale?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  live?: {
+    pollInterval?: PollInterval;
+    previewLiveUIConf?: number
+  };
   liveAnalytics?: {
     uri?: string;
     uiConfId?: string;

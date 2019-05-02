@@ -114,6 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
     analyticsConfig.permissions = config.permissions || {};
+    analyticsConfig.live = config.live || { pollInterval: 10 };
 
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
@@ -174,6 +175,9 @@ export class AppComponent implements OnInit, OnDestroy {
         break;
       case '/analytics/entry':
         analyticsRoute = '/entry';
+        break;
+      case '/analytics/entry-live':
+        analyticsRoute = '/entry-live';
         break;
       default:
         break;

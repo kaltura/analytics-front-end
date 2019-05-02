@@ -1,0 +1,21 @@
+/* player height according to screen resolution */
+@media screen and (max-width: 991px) {
+  iframe {
+    height: 160px;
+  }
+}
+@media screen and (min-width: 992px) {
+  iframe {
+    height: 200px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  iframe {
+    height: 240px;
+  }
+}
+@media screen and (min-width: 1610px) {
+  iframe {
+    height: 280px;
+  }
+}
