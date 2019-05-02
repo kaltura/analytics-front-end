@@ -76,7 +76,7 @@ export class EntryLiveService {
   // (3) If both -> StreamStatus equals the same as recent active
   public setStreamStatus(liveEntry: KalturaExtendedLiveEntry, serverNodeList: KalturaEntryServerNode[]): void {
     const viewMode = liveEntry.explicitLive ? liveEntry.viewMode : null;
-    let result = {
+    let result: { status: KalturaStreamStatus, serverType: KalturaEntryServerNodeType } = {
       status: getStreamStatus(KalturaEntryServerNodeStatus.stopped),
       serverType: null,
     };
