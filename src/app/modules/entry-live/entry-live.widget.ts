@@ -6,7 +6,7 @@ import { WidgetsActivationArgs } from './widgets/widgets-manager';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveRequestFactory } from './entry-live-request-factory';
 import { KalturaStreamStatus } from './utils/get-stream-status';
-import { KalturaAssetParamsOrigin, KalturaClient, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
@@ -14,7 +14,6 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: AnalyticsServerPolls,
-              private _kalturaClient: KalturaClient,
               private _entryLiveService: EntryLiveService) {
     super(_serverPolls);
   }

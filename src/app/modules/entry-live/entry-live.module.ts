@@ -21,6 +21,8 @@ import { EntryLiveService } from './entry-live.service';
 import { StreamStatePipe } from './pipes/stream-state.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 import { WidgetsManager } from './widgets/widgets-manager';
+import { LiveUsersComponent } from './views/live-users/live-users.component';
+import { LiveUsersWidget } from './views/live-users/live-users.widget';
 
 
 @NgModule({
@@ -47,12 +49,14 @@ import { WidgetsManager } from './widgets/widgets-manager';
     LiveStatusComponent,
     StreamStatePipe,
     DurationPipe,
+    LiveUsersComponent,
   ],
   exports: [],
   providers: [
     WidgetsManager,
     EntryLiveService,
     EntryLiveWidget,
+    LiveUsersWidget,
   ]
 })
 export class EntryLiveModule {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaLiveEntry } from 'kaltura-ngx-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -8,8 +8,9 @@ import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
-import { WidgetsManager } from './widgets/widgets-manager';
 import { EntryLiveWidget } from './entry-live.widget';
+import { WidgetsManager } from './widgets/widgets-manager';
+import { LiveUsersWidget } from './views/live-users/live-users.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -29,7 +30,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _route: ActivatedRoute,
               private _entryLiveService: EntryLiveService,
               private _widgetsManager: WidgetsManager,
-              private _entryLiveWidget: EntryLiveWidget) {
+              private _entryLiveWidget: EntryLiveWidget,
+              private _liveUsersWidget: LiveUsersWidget) {
   }
   
   
@@ -44,7 +46,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId: this._entryId });
+          this._registerWidgets();
         });
     } else {
       this._route.params
@@ -54,10 +56,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId: this._entryId });
+          this._registerWidgets();
         });
     }
-  
+    
     this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
@@ -68,13 +70,13 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             },
             'retry': () => {
               this._isBusy = true;
-              this._entryLiveWidget.activate({ entryId: this._entryId });
+              this._entryLiveWidget.retry();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-  
+    
     this._entryLiveWidget.data$
       .pipe(cancelOnDestroy(this))
       .subscribe(data => {
@@ -85,6 +87,14 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   ngOnDestroy() {
     this._entryLiveWidget.deactivate();
+  }
+  
+  private _registerWidgets(): void {
+    this._widgetsManager.register([
+      this._entryLiveWidget,
+      this._liveUsersWidget,
+      // <-- append new widgets here
+    ], { entryId: this._entryId });
   }
   
   public _navigateToEntry(): void {
