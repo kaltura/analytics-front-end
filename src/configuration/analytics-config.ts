@@ -1,3 +1,5 @@
+import { PollInterval } from '@kaltura-ng/kaltura-common';
+
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
@@ -25,6 +27,7 @@ export interface AnalyticsConfig {
     uiConfId?: string;
     mapUrls?: string[];
     mapZoomLevels?: string;
+    pollInterval?: PollInterval;
   };
 }
 
@@ -66,4 +69,7 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   permissions: {},
+  liveAnalytics: {
+    pollInterval: 10
+  }
 };

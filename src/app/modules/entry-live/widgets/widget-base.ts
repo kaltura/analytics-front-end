@@ -3,6 +3,7 @@ import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export interface WidgetState {
   polling?: boolean;
@@ -56,7 +57,7 @@ export abstract class WidgetBase<T> {
     if (!this._currentState.polling && this._pollsFactory) {
       this._updateState({ polling: true });
       
-      this._pollingSubscription = this._serverPolls.register<T>(10, this._pollsFactory)
+      this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.liveAnalytics.pollInterval, this._pollsFactory)
         .subscribe((response) => {
           if (response.error) {
             this._stopPolling(response.error);
