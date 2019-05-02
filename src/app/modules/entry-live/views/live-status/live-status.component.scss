@@ -17,13 +17,15 @@
   }
 
   &.kInitializing {
-    background: repeating-linear-gradient(
+    background-image: repeating-linear-gradient(
         105deg,
         $kGrayscale2,
         $kGrayscale2 18px,
         #5B5B5B 18px,
         #5B5B5B 36px
     );
+    background-size: 200% 200%;
+    animation: barberpole 10s linear infinite;
   }
 
   .kStatus {
@@ -63,5 +65,11 @@
       font-style: normal;
       margin-right: 6px;
     }
+  }
+}
+
+@keyframes barberpole {
+  100% {
+    background-position: 100% 100%;
   }
 }
