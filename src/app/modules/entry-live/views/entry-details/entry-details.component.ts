@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { KalturaDVRStatus, KalturaRecordingStatus } from 'kaltura-ngx-client';
-import { KalturaExtendedLiveEntry } from '../../entry-live-view.component';
+import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 
 @Component({
   selector: 'app-entry-details',

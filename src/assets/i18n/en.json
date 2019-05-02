@@ -402,7 +402,16 @@
       "recordingStatus": "Recording {{0}}",
       "transcodingStatus": "Transcoding {{0}}",
       "on": "ON",
-      "off": "OFF"
+      "off": "OFF",
+      "redundancy": "Redundancy",
+      "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
+      "stream_duration_in_months": "{{months}} Months, {{days}} Days",
+      "streamStatus": {
+        "live": "Live",
+        "initializing": "Going Live",
+        "offline": "Offline",
+        "preview": "Preview"
+      }
     },
     "entry": {
       "views": "Views",

@@ -1,30 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {
-  ConversionProfileAssetParamsListAction,
-  KalturaAssetParamsOrigin,
-  KalturaClient,
-  KalturaConversionProfileAssetParamsFilter,
-  KalturaDetachedResponseProfile,
-  KalturaDVRStatus,
-  KalturaLiveEntry,
-  KalturaRecordStatus,
-  KalturaRequestOptions,
-  KalturaResponseProfileType,
-  LiveStreamGetAction
-} from 'kaltura-ngx-client';
+import { KalturaClient, KalturaLiveEntry } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorsManagerService } from 'shared/services';
-
-export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
-  dvr: boolean;
-  recording: boolean;
-  transcoding: boolean;
-}
+import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
+import { WidgetsManager } from './widgets/widgets-manager';
+import { EntryLiveWidget } from './entry-live.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -32,7 +17,7 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   styleUrls: ['./entry-live-view.component.scss'],
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
-  public _isBusy = false;
+  public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
@@ -41,7 +26,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _router: Router,
               private _kalturaClient: KalturaClient,
-              private _route: ActivatedRoute) {
+              private _route: ActivatedRoute,
+              private _entryLiveService: EntryLiveService,
+              private _widgetsManager: WidgetsManager,
+              private _entryLiveWidget: EntryLiveWidget) {
   }
   
   
@@ -56,7 +44,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._loadEntryData();
+          this._entryLiveWidget.activate({ entryId: this._entryId });
         });
     } else {
       this._route.params
@@ -66,58 +54,37 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._loadEntryData();
+          this._entryLiveWidget.activate({ entryId: this._entryId });
         });
     }
-  }
   
-  ngOnDestroy() {
-  
-  }
-  
-  public _loadEntryData(): void {
-    if (!this._entryId) {
-      return;
-    }
-    
-    this._isBusy = true;
-    
-    this._kalturaClient.request(new LiveStreamGetAction({ entryId: this._entryId }))
-      .pipe(
-        cancelOnDestroy(this),
-        switchMap(
-          entry => this._kalturaClient.request(
-            new ConversionProfileAssetParamsListAction({
-              filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })
-            }).setRequestOptions(
-              new KalturaRequestOptions({
-                responseProfile: new KalturaDetachedResponseProfile({ type: KalturaResponseProfileType.includeFields, fields: 'id,origin' })
-              })
-            )).pipe(map(profilesRes => ({ profiles: profilesRes.objects, entry })))
-        )
-      )
-      .subscribe(
-        ({ profiles, entry }) => {
-          this._blockerMessage = null;
-          this._isBusy = false;
-          this._entry = Object.assign(entry, {
-            dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
-            recording: entry.recordStatus !== KalturaRecordStatus.disabled,
-            transcoding: !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert),
-          });
-        },
-        error => {
-          this._isBusy = false;
+    this._entryLiveWidget.state$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(state => {
+        if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._loadEntryData();
+              this._isBusy = true;
+              this._entryLiveWidget.activate({ entryId: this._entryId });
             },
           };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
+          this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
+        }
+      });
+  
+    this._entryLiveWidget.data$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(data => {
+        this._isBusy = false;
+        this._entry = data;
+      });
+  }
+  
+  ngOnDestroy() {
+    this._entryLiveWidget.deactivate();
   }
   
   public _navigateToEntry(): void {

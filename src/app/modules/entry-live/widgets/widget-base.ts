@@ -1,65 +1,94 @@
-import { BehaviorSubject, Observable, of, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, Observable, Unsubscribable } from 'rxjs';
 import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaRequest } from 'kaltura-ngx-client';
-import { catchError, map } from 'rxjs/operators';
+import { KalturaAPIException, KalturaRequest } from 'kaltura-ngx-client';
+import { WidgetsActivationArgs } from './widgets-manager';
+import { analyticsConfig } from 'configuration/analytics-config';
+
+export interface WidgetState {
+  polling?: boolean;
+  activated?: boolean;
+  error?: KalturaAPIException;
+}
 
 export abstract class WidgetBase<T> {
-  protected _isActive: boolean;
-  protected _isRunning: boolean;
   protected _pollingSubscription: Unsubscribable;
-  protected _state = new BehaviorSubject<T>(null);
+  protected _data = new BehaviorSubject<T>(null);
+  protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });
+  
+  protected get _currentState(): WidgetState {
+    return this._state.getValue();
+  }
+  
+  public data$ = this._data.asObservable();
+  public state$ = this._state.asObservable();
   
   protected abstract _widgetId: string;
   
   protected abstract _pollsFactory: RequestFactory<KalturaRequest<any>, T>;
   
-  protected abstract _onActivate(): Observable<void>;
+  protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
   protected constructor(protected _serverPolls: AnalyticsServerPolls) {
+  }
+  
+  protected _updateState(newState: WidgetState): void {
+    this._state.next({ ...this._currentState, ...newState });
+  }
+  
+  protected _stopPolling(error = null): void {
+    this._updateState({ polling: false, error });
+    
+    if (this._pollingSubscription) {
+      this._pollingSubscription.unsubscribe();
+      this._pollingSubscription = null;
+    }
+  }
+  
+  protected _responseMapping(responses: any): T {
+    return responses;
   }
   
   protected _onDeactivate(): void {
     // empty by design
   }
   
-  public startPolling(): any {
-    if (!this._isRunning) {
-      this._isRunning = true;
+  public startPolling(): void {
+    if (!this._currentState.polling && this._pollsFactory) {
+      this._updateState({ polling: true });
       
-      this._pollingSubscription = this._serverPolls.register<T>(10, this._pollsFactory)
+      this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
         .subscribe((response) => {
           if (response.error) {
-            // TODO handle error
+            this._stopPolling(response.error);
             return;
           }
           
-          this._state.next(response.result);
+          const data = this._responseMapping(response.result);
+          this._data.next(data);
         });
     }
   }
   
-  public activate(): Observable<{ id: string, result: boolean, error?: Error }> {
-    return this._onActivate()
-      .pipe(
-        map(() => {
-          this._isActive = true;
+  public activate(widgetsArgs: WidgetsActivationArgs): void {
+    if (this._currentState.activated) {
+      return;
+    }
+    
+    this._onActivate(widgetsArgs)
+      .subscribe(
+        () => {
+          this._updateState({ activated: true, error: null });
           this.startPolling();
-          return { id: this._widgetId, result: true };
-        }),
-        catchError((error) => {
-          return of({ id: this._widgetId, result: false, error });
-        })
-      );
+        }, error => {
+          this._updateState({ activated: false, error });
+        });
   }
   
   public deactivate(): void {
-    this._isRunning = false;
+    this._updateState({ activated: false, error: null });
     
-    if (this._pollingSubscription) {
-      this._pollingSubscription.unsubscribe();
-      this._pollingSubscription = null;
-    }
+    this._stopPolling();
     
     this._onDeactivate();
   }

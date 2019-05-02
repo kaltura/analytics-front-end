@@ -1,0 +1,60 @@
+import { Component, Input, OnDestroy } from '@angular/core';
+import { KalturaExtendedLiveEntry } from '../../entry-live.service';
+import { KalturaStreamStatus } from '../../utils/get-stream-status';
+import { timer as ObservableTimer, Unsubscribable } from 'rxjs';
+import * as moment from 'moment';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { filter } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-live-status',
+  templateUrl: './live-status.component.html',
+  styleUrls: ['./live-status.component.scss']
+})
+export class LiveStatusComponent implements OnDestroy {
+  @Input() set entry(value: KalturaExtendedLiveEntry) {
+    if (value) {
+      this._entry = value;
+      this._initializing = KalturaStreamStatus.initializing === value.streamStatus;
+      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
+      
+      if (this._isLive) {
+        this._startTimer();
+      } else {
+        this._stopTimer();
+      }
+    }
+  }
+  
+  private _timer: Unsubscribable;
+  
+  public _entry: KalturaExtendedLiveEntry;
+  public _isLive = false;
+  public _initializing = false;
+  public _streamDuration: moment.Duration;
+  
+  ngOnDestroy(): void {
+  }
+  
+  private _startTimer(): void {
+    if (!this._timer) { // prevent unnecessary restart
+      this._timer = ObservableTimer(0, 1000)
+        .pipe(
+          cancelOnDestroy(this),
+          filter(() => this._isLive && !!this._entry.currentBroadcastStartTime)
+        )
+        .subscribe(() => {
+          this._streamDuration = moment.duration(Math.abs(moment().diff(DateFilterUtils.getMomentDate(this._entry.currentBroadcastStartTime))));
+        });
+    }
+  }
+  
+  private _stopTimer(): void {
+    if (this._timer) {
+      this._timer.unsubscribe();
+      this._timer = null;
+      this._streamDuration = moment.duration(0);
+    }
+  }
+}
