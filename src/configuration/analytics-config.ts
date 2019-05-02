@@ -11,7 +11,6 @@ export interface AnalyticsConfig {
   kalturaServer?: {
       uri?: string,
       previewUIConf?: number,
-      previewLiveUIConf?: number
   };
   cdnServers?: {
     serverUri?: string,
@@ -22,12 +21,15 @@ export interface AnalyticsConfig {
   locale?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  live?: {
+    pollInterval?: PollInterval;
+    previewLiveUIConf?: number
+  };
   liveAnalytics?: {
     uri?: string;
     uiConfId?: string;
     mapUrls?: string[];
     mapZoomLevels?: string;
-    pollInterval?: PollInterval;
   };
 }
 
@@ -69,7 +71,4 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   permissions: {},
-  liveAnalytics: {
-    pollInterval: 10
-  }
 };

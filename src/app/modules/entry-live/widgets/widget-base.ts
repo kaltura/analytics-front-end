@@ -57,7 +57,7 @@ export abstract class WidgetBase<T> {
     if (!this._currentState.polling && this._pollsFactory) {
       this._updateState({ polling: true });
       
-      this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.liveAnalytics.pollInterval, this._pollsFactory)
+      this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
         .subscribe((response) => {
           if (response.error) {
             this._stopPolling(response.error);
