@@ -13,7 +13,7 @@ export class LivePlayerComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this._frameSrc = `${getKalturaServerUri()}/p/${analyticsConfig.pid}/embedPlaykitJs/uiconf_id/${analyticsConfig.live.previewLiveUIConf}?iframeembed=true&entry_id=${this.entryId}`;
+      this._frameSrc = `${getKalturaServerUri()}/p/${analyticsConfig.pid}/embedPlaykitJs/partner_id/${analyticsConfig.pid}/uiconf_id/${analyticsConfig.live.previewLiveUIConf}?iframeembed=true&entry_id=${this.entryId}`;
     }, 0);
 
   }
