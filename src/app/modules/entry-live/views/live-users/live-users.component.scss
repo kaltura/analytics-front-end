@@ -1,1 +1,65 @@
 @import '../../../../../styles/variables';
+
+.kLiveUsers {
+  padding: 24px;
+  height: 230px;
+  width: auto !important;
+
+  .kHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .kUsers {
+      margin-right: 52px;
+    }
+
+    .kValue {
+      font-size: 42px;
+    }
+
+    .kTitle {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+
+      .kBullet {
+        display: inline-block;
+        width: 10px;
+        min-width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+
+        &.kActiveUsers {
+          background-color: #31bea6;
+        }
+
+        &.kEngagedUsers {
+          background-color: #367064;
+        }
+      }
+    }
+  }
+
+  .kChartHolder {
+    .kChart {
+      width: 100%;
+      height: 162px;
+      margin-bottom: 0;
+    }
+
+    .kNoResults {
+      display: flex;
+      width: 100%;
+      height: 280px;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        font-size: 28px;
+        color: $kGrayscale3;
+      }
+    }
+  }
+}

@@ -1,3 +1,32 @@
-<p>
-  live-users works!
-</p>
+<div data-aid="report-users-count" class="kReport kOverrideFAIcons kLiveUsers">
+  <div class="kHeader">
+    <div class="kUsers">
+      <span class="kValue">{{_data?.watchers}}</span>
+      <div class="kTitle">
+        <span class="kBullet kActiveUsers"></span>
+        {{'app.entryLive.activeUsers' | translate}}
+        <kInputHelper>
+          <span>{{'app.entryLive.activeUsersHelpTip' | translate}}</span>
+        </kInputHelper>
+      </div>
+    </div>
+
+    <div class="kUsers">
+      <span class="kValue">{{_engagedUsers}}</span>
+      <div class="kTitle">
+        <span class="kBullet kEngagedUsers"></span>
+        {{'app.entryLive.engagedUsers' | translate}}
+        <kInputHelper>
+          <span>{{'app.entryLive.engagedUsersHelpTip' | translate}}</span>
+        </kInputHelper>
+      </div>
+    </div>
+  </div>
+  <div class="kChartHolder">
+    <div echarts class="kChart" [options]="_graphData" (chartInit)="_onChartInit($event)"></div>
+
+    <div *ngIf="false" class="kNoResults">
+      <span>{{'app.common.noResults' | translate}}</span>
+    </div>
+  </div>
+</div>

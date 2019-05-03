@@ -4,13 +4,20 @@ import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveUsersRequestFactory } from './live-users-request-factory';
+import { KalturaReportGraph } from 'kaltura-ngx-client';
+import { TranslateService } from '@ngx-translate/core';
+
+export interface LiveUsersData {
+  watchers: number;
+}
 
 @Injectable()
-export class LiveUsersWidget extends WidgetBase<any> { // instead of any use target type of the data
+export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
   protected _pollsFactory = null;
   
-  constructor(protected _serverPolls: AnalyticsServerPolls) {
+  constructor(protected _serverPolls: AnalyticsServerPolls,
+              private _translate: TranslateService) {
     super(_serverPolls);
   }
   
@@ -20,7 +27,105 @@ export class LiveUsersWidget extends WidgetBase<any> { // instead of any use tar
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: any): any { // map response here if needed, result type should correspond to `WidgetBase<TYPE>`
-    return responses;
+  protected _responseMapping(responses: KalturaReportGraph[]): LiveUsersData {
+    let result = { watchers: 0 };
+    
+    if (responses[0].data && responses[0].data.length) {
+      // response[0].data is an array string, where each element is separated by ';'
+      // Each element contains three numbers: time, num of live watchers, num of dvr watchers
+      const currentWatchers = responses[0].data.split(';').filter(Boolean).pop();
+      const watcherParam = currentWatchers.split(',');
+      result.watchers = (parseInt(watcherParam[1]) || 0) + (parseInt(watcherParam[2]) || 0);  // live + dvr
+    }
+    
+    return result;
+  }
+  
+  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): { [key: string]: any } {
+    return {
+      color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
+      textStyle: {
+        fontFamily: 'Lato',
+      },
+      grid: {
+        top: 24, left: 0, bottom: 24, right: 0, containLabel: true
+      },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999'
+        },
+        axisPointer: {
+          animation: false
+        },
+        formatter: (params) => {
+          const [active, engaged] = params;
+          const title = active.dataIndex === 17
+            ? this._translate.instant('app.entryLive.now')
+            : this._translate.instant('app.entryLive.ms', [190 - ((active.dataIndex + 1) * 10)]);
+          
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${active.data}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engaged.data}%</div></div>`;
+        }
+      },
+      xAxis: {
+        boundaryGap: false,
+        type: 'category',
+        data: [
+          this._translate.instant('app.entryLive.m180s'),
+          '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+          this._translate.instant('app.entryLive.now')
+        ],
+        splitLine: {
+          show: false
+        },
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          lineStyle: {
+            color: 'rgba(0, 0, 0, 0)',
+          },
+        },
+        axisLabel: {
+          color: '#999999',
+          padding: [8, 10, 0, 0],
+        }
+      },
+      yAxis: {
+        show: false,
+      },
+      series: [
+        {
+          type: 'line',
+          name: 'activeUsers',
+          symbol: 'none',
+          hoverAnimation: false,
+          data: activeUsers,
+          lineStyle: {
+            color: '#60BBA7'
+          },
+          areaStyle: {
+            color: '#EDF8F6',
+          },
+        },
+        {
+          type: 'line',
+          name: 'engagedUsers',
+          symbol: 'none',
+          hoverAnimation: false,
+          data: engagedUsers,
+          lineStyle: {
+            color: '#367064'
+          },
+          areaStyle: {
+            color: '#D9EBE8',
+          },
+        }
+      ]
+    };
   }
 }

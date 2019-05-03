@@ -598,3 +598,37 @@ ui-carousel {
 .ui-dialog.ui-confirmdialog {
   top: 150px !important;
 }
+
+.kLiveGraphTooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  .kHeader {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: $kGrayscale3;
+  }
+
+  .kUsers {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: $kGrayscale1;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .kBullet {
+      display: inline-block;
+      width: 10px;
+      min-width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+  }
+}
