@@ -1,7 +1,7 @@
 <div data-aid="report-users-count" class="kReport kOverrideFAIcons kLiveUsers">
   <div class="kHeader">
     <div class="kUsers">
-      <span class="kValue">{{_data?.watchers}}</span>
+      <span class="kValue">{{_activeUsersCount}}</span>
       <div class="kTitle">
         <span class="kBullet kActiveUsers"></span>
         {{'app.entryLive.activeUsers' | translate}}
@@ -12,7 +12,7 @@
     </div>
 
     <div class="kUsers">
-      <span class="kValue">{{_engagedUsers}}</span>
+      <span class="kValue">{{_engagedUsersCount}}%</span>
       <div class="kTitle">
         <span class="kBullet kEngagedUsers"></span>
         {{'app.entryLive.engagedUsers' | translate}}

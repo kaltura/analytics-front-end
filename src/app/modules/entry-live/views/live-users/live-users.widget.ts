@@ -27,20 +27,6 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: KalturaReportGraph[]): LiveUsersData {
-    let result = { watchers: 0 };
-    
-    if (responses[0].data && responses[0].data.length) {
-      // response[0].data is an array string, where each element is separated by ';'
-      // Each element contains three numbers: time, num of live watchers, num of dvr watchers
-      const currentWatchers = responses[0].data.split(';').filter(Boolean).pop();
-      const watcherParam = currentWatchers.split(',');
-      result.watchers = (parseInt(watcherParam[1]) || 0) + (parseInt(watcherParam[2]) || 0);  // live + dvr
-    }
-    
-    return result;
-  }
-  
   public getGraphConfig(activeUsers: number[], engagedUsers: number[]): { [key: string]: any } {
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
