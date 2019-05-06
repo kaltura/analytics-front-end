@@ -4,12 +4,26 @@
   height: 100%;
   width: 100%;
   display: block;
+  overflow-y: auto;
 }
 
 .kStreamHealth {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   width: auto !important;
-  height: 100%;
+  margin-bottom: 0 !important;
   padding: 24px 16px 0 24px;
+  height: calc(100% - 24px);
+
+  .kNoResults {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 24px);
+
+    span {
+      font-weight: bold;
+      color: $kGrayscale3;
+    }
+  }
 }
