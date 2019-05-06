@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-stream_processing:before {
+  content: "\e900";
+}
+.icon-stream_offline:before {
+  content: "\e901";
+}
 .icon-receiver:before {
   content: "\e912";
 }
@@ -62,7 +68,7 @@
   content: "\e906";
 }
 .icon-bolt:before {
-  content: "\e900";
+  content: "\e902";
 }
 .icon-captions:before {
   content: "\e913";
@@ -89,8 +95,9 @@
   content: "\e90d";
 }
 .icon-progress:before {
-  content: "\e901";
+  content: "\e917";
 }
 .icon-regression:before {
-  content: "\e902";
+  content: "\e918";
 }
+
