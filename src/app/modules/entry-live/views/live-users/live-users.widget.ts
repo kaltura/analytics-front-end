@@ -34,7 +34,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: 0, bottom: 24, right: 0, containLabel: true
+        top: 24, left: 0, bottom: 4, right: 0, containLabel: false
       },
       tooltip: {
         trigger: 'axis',
