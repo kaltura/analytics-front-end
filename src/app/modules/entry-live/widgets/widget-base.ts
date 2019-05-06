@@ -15,6 +15,7 @@ export abstract class WidgetBase<T> {
   protected _pollingSubscription: Unsubscribable;
   protected _data = new BehaviorSubject<T>(null);
   protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });
+  protected _activationArgs: WidgetsActivationArgs;
   
   protected get _currentState(): WidgetState {
     return this._state.getValue();
@@ -74,6 +75,8 @@ export abstract class WidgetBase<T> {
     if (this._currentState.activated) {
       return;
     }
+  
+    this._activationArgs = widgetsArgs;
     
     this._onActivate(widgetsArgs)
       .subscribe(
@@ -91,5 +94,9 @@ export abstract class WidgetBase<T> {
     this._stopPolling();
     
     this._onDeactivate();
+  }
+  
+  public retry(): void {
+    this.activate(this._activationArgs);
   }
 }

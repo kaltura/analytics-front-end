@@ -11,7 +11,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './entry-live.routes';
 import { EntryLiveViewComponent } from './entry-live-view.component';
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, KalturaUIModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, InputHelperModule, KalturaUIModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
 import { LivePlayerComponent } from './views/live-player/live-player.component';
@@ -21,6 +21,10 @@ import { EntryLiveService } from './entry-live.service';
 import { StreamStatePipe } from './pipes/stream-state.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 import { WidgetsManager } from './widgets/widgets-manager';
+import { LiveUsersComponent } from './views/live-users/live-users.component';
+import { LiveUsersWidget } from './views/live-users/live-users.widget';
+import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.component';
+import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 
 
 @NgModule({
@@ -39,6 +43,7 @@ import { WidgetsManager } from './widgets/widgets-manager';
     NgxEchartsModule,
     RouterModule.forChild(routing),
     KalturaUIModule,
+    InputHelperModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -47,12 +52,16 @@ import { WidgetsManager } from './widgets/widgets-manager';
     LiveStatusComponent,
     StreamStatePipe,
     DurationPipe,
+    LiveUsersComponent,
+    LiveBandwidthComponent,
   ],
   exports: [],
   providers: [
     WidgetsManager,
     EntryLiveService,
     EntryLiveWidget,
+    LiveUsersWidget,
+    LiveBandwidthWidget,
   ]
 })
 export class EntryLiveModule {

@@ -1,0 +1,76 @@
+@import '../../../../../styles/variables';
+
+.kUsersBandwidth {
+  padding: 24px;
+  height: 223px;
+  width: auto !important;
+
+  .kHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .kMetrics {
+      margin-right: 52px;
+    }
+
+    .kValue {
+      font-size: 42px;
+    }
+
+    .kTitle {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+
+      .kBullet {
+        display: inline-block;
+        width: 10px;
+        min-width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+
+        &.kBuffering {
+          background-color: #d48d2b;
+        }
+
+        &.kBandwidth {
+          background-color: #e0313a;
+        }
+      }
+    }
+  }
+
+  .kChartHolder {
+    .kChart {
+      width: 100%;
+      height: 116px;
+      margin-bottom: 0;
+    }
+
+    .kNoResults {
+      display: flex;
+      width: 100%;
+      height: 120px;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        font-size: 28px;
+        color: $kGrayscale3;
+      }
+    }
+  }
+
+  .kChartLabels {
+    font-size: 12px;
+    font-weight: bold;
+    color: $kGrayscale3;
+    display: flex;
+
+    span:last-child {
+      margin-left: auto;
+    }
+  }
+}

@@ -14,6 +14,8 @@
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
         <div class="kEntryWidgets">
           <div class="kWideColumn">
+            <app-live-users [entry]="_entry"></app-live-users>
+            <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
           </div>
           <div class="kNarrowColumn">
             <app-live-status [entry]="_entry"></app-live-status>
