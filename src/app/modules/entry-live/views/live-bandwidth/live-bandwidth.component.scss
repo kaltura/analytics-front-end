@@ -1,6 +1,6 @@
 @import '../../../../../styles/variables';
 
-.kLiveUsers {
+.kUsersBandwidth {
   padding: 24px;
   height: 230px;
   width: auto !important;
@@ -31,12 +31,12 @@
         border-radius: 50%;
         margin-right: 8px;
 
-        &.kActiveUsers {
-          background-color: #31bea6;
+        &.kBuffering {
+          background-color: #d48d2b;
         }
 
-        &.kEngagedUsers {
-          background-color: #367064;
+        &.kBandwidth {
+          background-color: #e0313a;
         }
       }
     }

@@ -11,6 +11,7 @@ import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service
 import { EntryLiveWidget } from './entry-live.widget';
 import { WidgetsManager } from './widgets/widgets-manager';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
+import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -31,7 +32,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _entryLiveService: EntryLiveService,
               private _widgetsManager: WidgetsManager,
               private _entryLiveWidget: EntryLiveWidget,
-              private _liveUsersWidget: LiveUsersWidget) {
+              private _liveUsersWidget: LiveUsersWidget,
+              private _liveBandwidth: LiveBandwidthWidget) {
   }
   
   
@@ -93,6 +95,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._widgetsManager.register([
       this._entryLiveWidget,
       this._liveUsersWidget,
+      this._liveBandwidth,
       // <-- append new widgets here
     ], { entryId: this._entryId });
   }

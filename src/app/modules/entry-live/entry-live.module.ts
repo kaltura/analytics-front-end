@@ -23,6 +23,8 @@ import { DurationPipe } from './pipes/duration.pipe';
 import { WidgetsManager } from './widgets/widgets-manager';
 import { LiveUsersComponent } from './views/live-users/live-users.component';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
+import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.component';
+import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 
 
 @NgModule({
@@ -51,6 +53,7 @@ import { LiveUsersWidget } from './views/live-users/live-users.widget';
     StreamStatePipe,
     DurationPipe,
     LiveUsersComponent,
+    LiveBandwidthComponent,
   ],
   exports: [],
   providers: [
@@ -58,6 +61,7 @@ import { LiveUsersWidget } from './views/live-users/live-users.widget';
     EntryLiveService,
     EntryLiveWidget,
     LiveUsersWidget,
+    LiveBandwidthWidget,
   ]
 })
 export class EntryLiveModule {

@@ -1,23 +1,23 @@
-<div data-aid="report-users-count" class="kReport kOverrideFAIcons kLiveUsers">
+<div data-aid="report-users-count" class="kReport kOverrideFAIcons kUsersBandwidth">
   <div class="kHeader">
     <div class="kMetrics">
-      <span class="kValue">{{_activeUsersCount}}</span>
+      <span class="kValue">{{_bufferCount}}%</span>
       <div class="kTitle">
-        <span class="kBullet kActiveUsers"></span>
-        {{'app.entryLive.activeUsers' | translate}}
+        <span class="kBullet kBuffering"></span>
+        {{'app.entryLive.usersBuffering' | translate}}
         <kInputHelper>
-          <span>{{'app.entryLive.activeUsersHelpTip' | translate}}</span>
+          <span>{{'app.entryLive.usersBufferingHelpTip' | translate}}</span>
         </kInputHelper>
       </div>
     </div>
 
     <div class="kUsers">
-      <span class="kValue">{{_engagedUsersCount}}%</span>
+      <span class="kValue">{{_bandwidthCount}} Kbps</span>
       <div class="kTitle">
-        <span class="kBullet kEngagedUsers"></span>
-        {{'app.entryLive.engagedUsers' | translate}}
+        <span class="kBullet kBandwidth"></span>
+        {{'app.entryLive.downstreamBandwidth' | translate}}
         <kInputHelper>
-          <span>{{'app.entryLive.engagedUsersHelpTip' | translate}}</span>
+          <span>{{'app.entryLive.downstreamBandwidthHelpTip' | translate}}</span>
         </kInputHelper>
       </div>
     </div>
