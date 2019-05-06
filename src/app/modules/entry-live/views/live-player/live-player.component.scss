@@ -1,3 +1,9 @@
+@import '../../../../../styles/variables';
+
+:host {
+  margin-bottom: -2px;
+}
+
 /* player height according to screen resolution */
 @media screen and (max-width: 991px) {
   iframe {
@@ -18,4 +24,8 @@
   iframe {
     height: 280px;
   }
+}
+
+iframe {
+  background: $kGrayscale1;
 }

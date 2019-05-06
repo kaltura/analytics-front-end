@@ -1,8 +1,15 @@
 @import '../../../../../styles/variables';
 
+:host {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
 .kStreamHealth {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   width: auto !important;
+  height: 100%;
   padding: 24px 16px 0 24px;
 }
