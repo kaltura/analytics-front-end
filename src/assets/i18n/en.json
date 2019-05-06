@@ -417,6 +417,7 @@
       "usersBuffering": "Users Buffering",
       "usersBufferingHelpTip": "Users Buffering",
       "downstreamBandwidth": "Downstream Bandwidth",
+      "downstreamBW": "Downstream BW",
       "downstreamBandwidthHelpTip": "Downstream Bandwidth",
       "now": "Now",
       "m180s": "-180s",

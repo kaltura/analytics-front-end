@@ -49,7 +49,7 @@ export class LiveBandwidthWidget extends WidgetBase<any> {
             ? this._translate.instant('app.entryLive.now')
             : this._translate.instant('app.entryLive.ms', [190 - ((active.dataIndex + 1) * 10)]);
           
-          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}&nbsp;${active.data}%</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBandwidth')}&nbsp;${engaged.data} Kbps</div></div>`;
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}&nbsp;${active.data}%</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBW')}&nbsp;${engaged.data} Kbps</div></div>`;
         }
       },
       xAxis: {
