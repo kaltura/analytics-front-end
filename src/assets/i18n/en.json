@@ -428,6 +428,86 @@
         "initializing": "Going Live",
         "offline": "Offline",
         "preview": "Preview"
+      },
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "stream": "Stream",
+      "alerts": {
+        "no-alerts": "No reported issues",
+        "100": {
+          "message-log": "Encoder re-connection occurred",
+          "message-text-box": "Encoder re-connection occurred. Please check your encoder logs"
+        },
+        "101": {
+          "message-log": "Declared and actual bitrate unmatched",
+          "message-text-box": "Detected incoming actual bitrate ({{incomingBitrate}}) is different from declared one ({{configuredBitrate}}). Make sure your encoder is configured to use CBR (constant bitrate)"
+        },
+        "102": {
+          "message-log": "Audio track dropped",
+          "message-text-box": "Audio track has been dropped from your broadcast. Check your encoder logs"
+        },
+        "103": {
+          "message-log": "Video track dropped",
+          "message-text-box": "Video track has been dropped from your broadcast. Check your encoder logs"
+        },
+        "104": {
+          "message-log": "Incoming video rate is too slow",
+          "message-text-box": "Incoming video rate is too slow - we are not receiving enough video to maintain smooth streaming. Viewers may experience buffering. Please check your encoder CPU, available bandwidth and consider to reduce the bitrate in your encoder configuration"
+        },
+        "105": {
+          "message-log": "Encoder stop detected"
+        },
+        "106": {
+          "message-log": "Encoder start detected"
+        },
+        "107": {
+          "message-log": "Detected key frame interval/GOP length is {{actualKeyFrameInterval}} seconds",
+          "message-text-box": "Detected key frame interval/GOP length is {{actualKeyFrameInterval}} seconds. Recommended value is 2 seconds."
+        },
+        "108": {
+          "message-log": "High FPS detected {{frameRate}}",
+          "message-text-box": "High FPS detected {{frameRate}}. Recommended value is up to 30 frames per second."
+        },
+        "109": {
+          "message-log": "No Data is received on the primary endpoint"
+        },
+        "110": {
+          "message-log": "No Data is received on the primary endpoint",
+          "message-text-box": "No data is received on the primary endpoint. Broadcasting to the primary endpoint is mandatory for recording to operate."
+        },
+        "111": {
+          "message-log": "Authentication failed: wrong token {{parameter}}",
+          "message-text-box": "Authentication failed: wrong token {{parameter}}. Please check your encoder settings and try again"
+        },
+        "112": {
+          "message-log": "Authentication failed: Incorrect stream name/key {{parameter}}",
+          "message-text-box": "Authentication failed: Incorrect stream name/key {{parameter}}. Please check your encoder settings and try again."
+        },
+        "113": {
+          "message-log": "Authentication failed: entry {{entryId}} does not exist",
+          "message-text-box": "Authentication failed: entry {{entryId}} does not exist. Please check your settings and try again"
+        },
+        "114": {
+          "message-log": "Live streaming is disabled on your account",
+          "message-text-box": "Live streaming is disabled on your account. please contact Kaltura for more details"
+        },
+        "115": {
+          "message-log": "Live stream quota has been exceeded",
+          "message-text-box": "Live stream quota has been exceeded. please contact Kaltura for more details."
+        },
+        "116": {
+          "message-log": "Frame rate is fluctuating on flavor ({{Flavor}}). Last: {{lastFrameRate}}, Average: {{meanFrameRate}}",
+          "message-text-box": "Frame rate is fluctuating on flavor ({{Flavor}}). Please check your encoder CPU and reduce FPS (frame per second) and resolution accordingly."
+        },
+        "117": {
+          "message-log": "Frame rate of {{actualFrameRate}} is different than configured {{configuredFrameRate}} on flavor ({{Flavor}})",
+          "message-text-box": "Frame rate of {{actualFrameRate}} is different than configured on flavor ({{Flavor}}). Please check your encoder CPU and resolution accordingly."
+        },
+        "118": {
+          "message-log": "Exceeded max encoded entries allowed",
+          "message-text-box": "Exceeded max encoded entries allowed, please contact support"
+        }
+
       }
     },
     "entry": {

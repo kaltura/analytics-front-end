@@ -27,6 +27,10 @@ import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.co
 import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 import { LiveStreamHealthComponent } from './views/live-stream-health/live-stream-health.component';
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
+import { CodeToSeverityPipe } from './views/live-stream-health/pipes/code-to-severity.pipe';
+import { SeverityToHealthPipe } from './views/live-stream-health/pipes/severity-to-health.pipe';
+import { NotificationTitlePipe } from './views/live-stream-health/pipes/notification-title.pipe';
+import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-health-icon.pipe';
 
 
 @NgModule({
@@ -57,6 +61,10 @@ import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-h
     LiveUsersComponent,
     LiveBandwidthComponent,
     LiveStreamHealthComponent,
+    CodeToSeverityPipe,
+    SeverityToHealthPipe,
+    NotificationTitlePipe,
+    CodeToHealthIconPipe,
   ],
   exports: [],
   providers: [
@@ -66,6 +74,8 @@ import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-h
     LiveUsersWidget,
     LiveBandwidthWidget,
     LiveStreamHealthWidget,
+    CodeToSeverityPipe,
+    SeverityToHealthPipe,
   ]
 })
 export class EntryLiveModule {

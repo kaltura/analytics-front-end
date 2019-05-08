@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LiveStreamHealthWidget } from './live-stream-health.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
+import { LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
+import { LiveStreamHealthWidget } from './live-stream-health.widget';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -13,7 +14,7 @@ import { filter } from 'rxjs/operators';
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
-  public _data: any;
+  public _data: StreamHealth[] = [];
   
   constructor(private _liveStreamHealth: LiveStreamHealthWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -41,10 +42,24 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
-        this._data = data;
+        this._data = this._parseData(data);
       });
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _parseData(response: LiveEntryDiagnosticsInfo): StreamHealth[] {
+    const sortHealthNotifications = (a: StreamHealth, b: StreamHealth) => {
+      if (a.updatedTime > b.updatedTime) {
+        return -1;
+      }
+      if (a.updatedTime < b.updatedTime) {
+        return 1;
+      }
+      return 0;
+    };
+    
+    return [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary].sort(sortHealthNotifications);
   }
 }
