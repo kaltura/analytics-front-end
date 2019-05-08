@@ -67,7 +67,13 @@ $kOrange: #f8a61a;
       margin-left: 4px;
 
       .kMetaItem {
+        display: flex;
+        align-items: center;
         padding: 3px 0;
+
+        .kText {
+          display: inline-block;
+        }
       }
     }
   }
