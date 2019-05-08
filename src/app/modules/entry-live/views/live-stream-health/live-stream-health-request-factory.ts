@@ -1,5 +1,6 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
+import * as moment from 'moment';
 
 export enum BeaconObjectTypes {
   SCHEDULE_RESOURCE_BEACON = '1',
@@ -9,24 +10,25 @@ export enum BeaconObjectTypes {
 }
 
 export class LiveStreamHealthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
-  public lastUpdateTime: number;
+  private _filter = new KalturaBeaconFilter({
+    orderBy: '-updatedAt',
+    relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON,
+    eventTypeIn: '0_healthData,1_healthData',
+    objectIdIn: this._entryId,
+    indexTypeEqual: KalturaBeaconIndexType.log
+  });
+  
+  public set lastUpdateTime(value: number) {
+    if (typeof value === 'number' && moment(value).isValid()) {
+      this._filter.updatedAtGreaterThanOrEqual = new Date(value);
+    }
+  }
+
   constructor(private _entryId: string) {
     
   }
   
   create(): KalturaMultiRequest {
-    const filter = new KalturaBeaconFilter({
-      orderBy: '-updatedAt',
-      relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON,
-      eventTypeIn: '0_healthData,1_healthData',
-      objectIdIn: this._entryId,
-      indexTypeEqual: KalturaBeaconIndexType.log
-    });
-    
-    if (this.lastUpdateTime) {
-      filter.updatedAtGreaterThanOrEqual = new Date(this.lastUpdateTime);
-    }
-
-    return new KalturaMultiRequest(new BeaconListAction({ filter }));
+    return new KalturaMultiRequest(new BeaconListAction({ filter: this._filter }));
   }
 }
