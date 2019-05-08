@@ -1,24 +1,26 @@
-<div data-aid="report-stream-health" class="kReport kOverrideFAIcons kStreamHealth">
-  <div *ngIf="!_data?.length" class="kNoResults">
-    <span>{{'app.entryLive.noHistory' | translate}}</span>
-  </div>
-  <div *ngIf="_data?.length" class="kHistory">
-    <div class="kItem" *ngFor="let notification of _data">
-      <div class="kItemHeader">
-        <div class="kTitle">
-          <span class="kBullet" [ngClass]="notification.alerts | appCodeToHealthIcon"></span>
-          <span class="kText">{{notification | appNotificationTitle}}</span>
+<kScrollToTopContainer>
+  <div data-aid="report-stream-health" class="kReport kOverrideFAIcons kStreamHealth">
+    <div *ngIf="!_data?.length" class="kNoResults">
+      <span>{{'app.entryLive.noHistory' | translate}}</span>
+    </div>
+    <div *ngIf="_data?.length" class="kHistory" kScrollToTopContainer>
+      <div class="kItem" *ngFor="let notification of _data">
+        <div class="kItemHeader">
+          <div class="kTitle">
+            <span class="kBullet" [ngClass]="notification.alerts | appCodeToHealthIcon"></span>
+            <span class="kText">{{notification | appNotificationTitle}}</span>
+          </div>
+          <span class="kDate">{{notification.updatedFormattedTime}}</span>
         </div>
-        <span class="kDate">{{notification.updatedFormattedTime}}</span>
-      </div>
-      <div class="kItemMetasList">
-        <div *ngFor="let alert of notification.alerts" class="kMetaItem">
-          <span class="kBullet mini" [ngClass]="alert.Code | appCodeToHealthIcon"></span>
-          <span class="kText">
+        <div class="kItemMetasList">
+          <div *ngFor="let alert of notification.alerts" class="kMetaItem">
+            <span class="kBullet mini" [ngClass]="alert.Code | appCodeToHealthIcon"></span>
+            <span class="kText">
             {{ "app.entryLive.alerts." + alert.Code + ".message-log" | translate: alert.Arguments }}
           </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</kScrollToTopContainer>

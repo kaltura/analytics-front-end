@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
 import { LiveStreamHealthWidget } from './live-stream-health.widget';
@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-stream-health.component.scss']
 })
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
+  @ViewChild(ScrollToTopContainerComponent) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];
@@ -43,9 +44,10 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._data = this._parseData(data);
+        this._listContainer.scrollToTop();
       });
   }
-  
+
   ngOnDestroy(): void {
   }
   
