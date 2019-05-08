@@ -1,12 +1,16 @@
 @import '../../../../../styles/variables';
 
 $cleanHeight: calc(100% - 24px);
+$kOrange: #f8a61a;
 
 :host {
   height: 100%;
   width: 100%;
   display: block;
   overflow-y: auto;
+  background-color: #FFFFFF;
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
 }
 
 .kStreamHealth {
@@ -27,5 +31,94 @@ $cleanHeight: calc(100% - 24px);
       font-weight: bold;
       color: $kGrayscale3;
     }
+  }
+}
+
+.kHistory {
+  .kItem {
+    margin-bottom: 4px;
+
+    .kItemHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: bold;
+
+      .kTitle {
+        display: flex;
+
+        .kText {
+          display: inline-block;
+        }
+      }
+
+      .kDate {
+        font-size: 12px;
+        color: $kGrayscale3;
+        text-align: right;
+      }
+    }
+
+    .kItemMetasList {
+      font-size: 14px;
+      color: $kGrayscale3;
+      border-left: 1px solid $kGrayscale6;
+      padding: 7px 0 13px 12px;
+      margin-left: 4px;
+
+      .kMetaItem {
+        padding: 3px 0;
+      }
+    }
+  }
+
+  .kBullet {
+    display: inline-block;
+    width: 9px;
+    min-width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 8px;
+
+    &.mini {
+      width: 6px;
+      min-width: 6px;
+      height: 6px;
+      margin-right: 11px;
+    }
+
+    &.good {
+      background-color: $kSuccess;
+    }
+
+    &.fair {
+      background-color: $kOrange;
+    }
+
+    &.poor {
+      background-color: $kDandger;
+    }
+  }
+}
+
+/* player height according to screen resolution */
+@media screen and (max-width: 991px) {
+  :host {
+    height: 349px;
+  }
+}
+@media screen and (min-width: 992px) {
+  :host {
+    height: 309px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  :host {
+    height: 269px;
+  }
+}
+@media screen and (min-width: 1610px) {
+  :host {
+    height: 229px;
   }
 }
