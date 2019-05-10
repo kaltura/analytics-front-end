@@ -25,6 +25,7 @@ import { LiveUsersComponent } from './views/live-users/live-users.component';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
 import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.component';
 import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
+import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widge
   ],
   exports: [],
   providers: [
+    EntryLiveGeneralPollsService,
     WidgetsManager,
     EntryLiveService,
     EntryLiveWidget,

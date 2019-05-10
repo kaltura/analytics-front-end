@@ -1,9 +1,9 @@
 import { BehaviorSubject, Observable, Unsubscribable } from 'rxjs';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { EntryLiveGeneralPollsService } from '../providers/entry-live-general-polls.service';
 
 export interface WidgetState {
   polling?: boolean;
@@ -30,7 +30,7 @@ export abstract class WidgetBase<T> {
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
-  protected constructor(protected _serverPolls: AnalyticsServerPolls) {
+  protected constructor(protected _serverPolls: EntryLiveGeneralPollsService) {
   }
   
   protected _updateState(newState: WidgetState): void {

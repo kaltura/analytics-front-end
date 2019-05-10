@@ -5,8 +5,7 @@ import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import { catchError, map } from 'rxjs/operators';
 
-@Injectable()
-export class AnalyticsServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
+export class AnalyticsServerPollsBase extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestroy = new Subject<void>();
   private _isKSValid = true;
   
@@ -14,7 +13,7 @@ export class AnalyticsServerPolls extends ServerPolls<KalturaRequestBase, Kaltur
     return this._onDestroy.asObservable();
   }
   
-  constructor(private _kalturaClient: KalturaClient) {
+  constructor(protected _kalturaClient: KalturaClient) {
     super(null);
   }
   
