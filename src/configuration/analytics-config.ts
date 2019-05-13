@@ -24,7 +24,7 @@ export interface AnalyticsConfig {
   live?: {
     pollInterval?: PollInterval;
     previewLiveUIConf?: number;
-    "healthNotificationsCount"?: number;
+    healthNotificationsCount?: number;
   };
   liveAnalytics?: {
     uri?: string;

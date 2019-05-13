@@ -1,6 +1,7 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
+import { BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
 import * as moment from 'moment';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export enum BeaconObjectTypes {
   SCHEDULE_RESOURCE_BEACON = '1',
@@ -10,25 +11,34 @@ export enum BeaconObjectTypes {
 }
 
 export class LiveStreamHealthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
-  private _filter = new KalturaBeaconFilter({
-    orderBy: '-updatedAt',
-    relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON,
-    eventTypeIn: '0_healthData,1_healthData',
-    objectIdIn: this._entryId,
-    indexTypeEqual: KalturaBeaconIndexType.log
-  });
+  private _beaconListArgs = {
+    filter: new KalturaBeaconFilter({
+      orderBy: '-updatedAt',
+      relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON,
+      eventTypeIn: '0_healthData,1_healthData',
+      objectIdIn: this._entryId,
+      indexTypeEqual: KalturaBeaconIndexType.log
+    }),
+    pager: new KalturaFilterPager({ pageSize: analyticsConfig.live.healthNotificationsCount }),
+  };
   
   public set lastUpdateTime(value: number) {
     if (typeof value === 'number' && moment(value).isValid()) {
-      this._filter.updatedAtGreaterThanOrEqual = new Date(value);
+      this._beaconListArgs.filter.updatedAtGreaterThanOrEqual = new Date(value);
     }
   }
-
+  
   constructor(private _entryId: string) {
     
   }
   
-  create(): KalturaMultiRequest {
-    return new KalturaMultiRequest(new BeaconListAction({ filter: this._filter }));
+  public create(): KalturaMultiRequest {
+    return new KalturaMultiRequest(new BeaconListAction(this._beaconListArgs));
+  }
+  
+  public removePager(): void {
+    if (this._beaconListArgs.pager) {
+      delete this._beaconListArgs.pager;
+    }
   }
 }

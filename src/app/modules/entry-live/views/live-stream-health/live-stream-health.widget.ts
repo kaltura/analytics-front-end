@@ -7,7 +7,6 @@ import { LiveStreamHealthRequestFactory } from './live-stream-health-request-fac
 import { KalturaBeacon, KalturaBeaconListResponse } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
@@ -15,7 +14,7 @@ import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from '.
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
   protected _widgetId = 'users';
-  protected _pollsFactory = null;
+  protected _pollsFactory: LiveStreamHealthRequestFactory = null;
   
   constructor(protected _serverPolls: AnalyticsServerPolls,
               protected _logger: KalturaLogger,
@@ -39,9 +38,13 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
   }
   
   protected _responseMapping(responses: KalturaBeaconListResponse): LiveEntryDiagnosticsInfo {
+    this._pollsFactory.removePager();
+
     const beaconsArray: KalturaBeacon[] = responses.objects;
     let entryDiagnosticsObject = this._currentData;
-    
+  
+    this._pollsFactory.lastUpdateTime = entryDiagnosticsObject.streamHealth.updatedTime;
+
     if (beaconsArray.length) {
       // Make sure last beacon's updatedTime in the array matches the last one received by service and remove it.
       if (entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
@@ -49,7 +52,7 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
       }
     }
     // Iterate through beacons list from oldest report to most recent
-    _.eachRight(beaconsArray, b => {
+    beaconsArray.forEach(b => {
       try {
         let privateData = JSON.parse(b.privateData);
         let eventType = b.eventType.substring(2);
@@ -96,12 +99,14 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
       updatedFormattedTime: moment(beaconTime).format('hh:mm A MM/DD/YYYY'),
       severity: metaData.maxSeverity,
       isPrimary: isPrimary,
-      alerts: _.isArray(metaData.alerts) ? _.uniqBy(metaData.alerts, 'Code') : []
+      alerts: Array.isArray(metaData.alerts)
+        ? metaData.alerts.filter((s1, pos, arr) => arr.findIndex(s2 => s2.Code === s1.Code) === pos) // filter uniq by `Code`
+        : []
     };
-    // sort alerts by their severity (-desc)
-    report.alerts = (_.sortBy(report.alerts, [(alert) => {
-      return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
-    }]));
+
+    report.alerts.sort((a, b) =>
+      this._codeToSeverityPipe.transform(b.Code).valueOf() - this._codeToSeverityPipe.transform(a.Code).valueOf()
+    );
     // For each report add it to the beginning of the array.
     // If array contains the maximum number of elements allowed, erase the last one and add the most recent one.
     if (isPrimary) {
