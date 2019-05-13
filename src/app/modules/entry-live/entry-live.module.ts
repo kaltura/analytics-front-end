@@ -32,6 +32,8 @@ import { SeverityToHealthPipe } from './views/live-stream-health/pipes/severity-
 import { NotificationTitlePipe } from './views/live-stream-health/pipes/notification-title.pipe';
 import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-health-icon.pipe';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
+import { EntryLiveGeoDevicesPollsService } from './providers/entry-live-geo-devices-polls.service';
+import { LiveGeoComponent } from './views/live-geo/live-geo.component';
 
 
 @NgModule({
@@ -70,6 +72,7 @@ import { EntryLiveGeneralPollsService } from './providers/entry-live-general-pol
   exports: [],
   providers: [
     EntryLiveGeneralPollsService,
+    EntryLiveGeoDevicesPollsService,
     WidgetsManager,
     EntryLiveService,
     EntryLiveWidget,
@@ -78,6 +81,7 @@ import { EntryLiveGeneralPollsService } from './providers/entry-live-general-pol
     LiveStreamHealthWidget,
     CodeToSeverityPipe,
     SeverityToHealthPipe,
+    LiveGeoComponent,
   ]
 })
 export class EntryLiveModule {

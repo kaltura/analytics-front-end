@@ -1,5 +1,4 @@
 import { Observable, of as ObservableOf } from 'rxjs';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
@@ -10,13 +9,14 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
+import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
   protected _widgetId = 'users';
   protected _pollsFactory = null;
   
-  constructor(protected _serverPolls: AnalyticsServerPolls,
+  constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _logger: KalturaLogger,
               private _codeToSeverityPipe: CodeToSeverityPipe) {
     super(_serverPolls);
