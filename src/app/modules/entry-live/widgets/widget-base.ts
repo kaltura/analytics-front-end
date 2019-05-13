@@ -3,7 +3,7 @@ import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { EntryLiveGeneralPollsService } from '../providers/entry-live-general-polls.service';
+import { AnalyticsServerPollsBase } from 'shared/services/server-polls-base.service';
 
 export interface WidgetState {
   polling?: boolean;
@@ -34,7 +34,7 @@ export abstract class WidgetBase<T> {
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
-  protected constructor(protected _serverPolls: EntryLiveGeneralPollsService) {
+  protected constructor(protected _serverPolls: AnalyticsServerPollsBase) {
   }
   
   protected _updateState(newState: WidgetState): void {
@@ -79,7 +79,7 @@ export abstract class WidgetBase<T> {
     if (this._currentState.activated) {
       return;
     }
-  
+    
     this._activationArgs = widgetsArgs;
     
     this._onActivate(widgetsArgs)

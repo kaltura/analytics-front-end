@@ -13,7 +13,7 @@ import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general
 
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
-  protected _widgetId = 'users';
+  protected _widgetId = 'stream-health';
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,

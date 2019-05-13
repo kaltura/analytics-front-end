@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,12 +18,13 @@ import { getCountryName } from 'shared/utils/get-country-name';
 import { EChartOption } from 'echarts';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { DataTable } from 'primeng/primeng';
+import { filter } from 'rxjs/operators';
+import { LiveGeoWidget } from './live-geo.widget';
 
 @Component({
   selector: 'app-live-geo',
   templateUrl: './live-geo.component.html',
   styleUrls: ['./live-geo.component.scss'],
-  providers: [LiveGeoConfig, ReportService]
 })
 export class LiveGeoComponent implements OnInit, OnDestroy {
   @Input() entryId = '';
@@ -36,8 +37,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;
-  
-  protected _componentId = 'top-videos';
   
   public _mapChartData: any = {};
   public _mapZoom = 1.2;
@@ -62,6 +61,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
               private _authService: AuthService,
               private _trendService: TrendService,
               private _http: HttpClient,
+              private _liveGeoWidget: LiveGeoWidget,
               private _dataConfigService: LiveGeoConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
@@ -71,11 +71,36 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    this._isBusy = false;
+    this._isBusy = true;
     // load works map data
     this._http.get('assets/world.json')
       .subscribe(data => {
         this._mapData = data;
+      });
+  
+    this._liveGeoWidget.state$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(state => {
+        if (state.error) {
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._isBusy = true;
+              this._liveGeoWidget.retry();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
+        }
+      });
+  
+    this._liveGeoWidget.data$
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(data => {
+        this._isBusy = false;
+        this._setMapCenter();
+        console.warn(data);
       });
   }
   
@@ -151,19 +176,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     map.zoom = this._mapZoom;
     map.roam = this._drillDown.length === 0 && this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData = mapConfig;
-  }
-  
-  private _setPlaysTrend(row: TableRow, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
-    const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
-    compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
-    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}`;
-    row[field + '_trend'] = {
-      trend: value !== null ? value : '–',
-      trendDirection: direction,
-      tooltip: tooltip,
-      units: value !== null ? '%' : '',
-    };
   }
   
   private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
