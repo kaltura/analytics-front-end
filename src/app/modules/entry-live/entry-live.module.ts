@@ -25,6 +25,12 @@ import { LiveUsersComponent } from './views/live-users/live-users.component';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
 import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.component';
 import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
+import { LiveStreamHealthComponent } from './views/live-stream-health/live-stream-health.component';
+import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
+import { CodeToSeverityPipe } from './views/live-stream-health/pipes/code-to-severity.pipe';
+import { SeverityToHealthPipe } from './views/live-stream-health/pipes/severity-to-health.pipe';
+import { NotificationTitlePipe } from './views/live-stream-health/pipes/notification-title.pipe';
+import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-health-icon.pipe';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 
 
@@ -55,6 +61,11 @@ import { EntryLiveGeneralPollsService } from './providers/entry-live-general-pol
     DurationPipe,
     LiveUsersComponent,
     LiveBandwidthComponent,
+    LiveStreamHealthComponent,
+    CodeToSeverityPipe,
+    SeverityToHealthPipe,
+    NotificationTitlePipe,
+    CodeToHealthIconPipe,
   ],
   exports: [],
   providers: [
@@ -64,6 +75,9 @@ import { EntryLiveGeneralPollsService } from './providers/entry-live-general-pol
     EntryLiveWidget,
     LiveUsersWidget,
     LiveBandwidthWidget,
+    LiveStreamHealthWidget,
+    CodeToSeverityPipe,
+    SeverityToHealthPipe,
   ]
 })
 export class EntryLiveModule {
