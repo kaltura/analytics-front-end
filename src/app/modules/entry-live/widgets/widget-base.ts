@@ -17,6 +17,10 @@ export abstract class WidgetBase<T> {
   protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });
   protected _activationArgs: WidgetsActivationArgs;
   
+  protected get _currentData(): T {
+    return this._data.getValue();
+  }
+  
   protected get _currentState(): WidgetState {
     return this._state.getValue();
   }

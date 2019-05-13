@@ -24,13 +24,13 @@ export class StreamStatePipe implements PipeTransform {
       case KalturaStreamStatus.offline:
         result = {
           status: this._appLocalization.instant('app.entryLive.streamStatus.offline'),
-          icon: 'kIconclose', // TODO replace with relevant icon once available
+          icon: 'icon-stream_offline',
         };
         break;
       case KalturaStreamStatus.initializing:
         result = {
           status: this._appLocalization.instant('app.entryLive.streamStatus.initializing'),
-          icon: 'kIconrefresh', // TODO replace with relevant icon once available
+          icon: 'icon-stream_processing',
         };
         break;
       case KalturaStreamStatus.preview:
