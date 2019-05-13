@@ -14,7 +14,7 @@ import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from '.
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
   protected _widgetId = 'users';
-  protected _pollsFactory: LiveStreamHealthRequestFactory = null;
+  protected _pollsFactory = null;
   
   constructor(protected _serverPolls: AnalyticsServerPolls,
               protected _logger: KalturaLogger,
