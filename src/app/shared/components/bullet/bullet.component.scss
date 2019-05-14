@@ -22,7 +22,10 @@
     background-color: $kGrayscale5;
     .kBar{
       height: 100%;
-      transition: width 0.35s ease-out;
+
+      &.animate {
+        transition: width 0.35s ease-out;
+      }
     }
   }
 }

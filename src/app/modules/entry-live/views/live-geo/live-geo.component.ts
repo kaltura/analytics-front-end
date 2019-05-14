@@ -45,7 +45,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _mapZoom = 1.2;
   public _mapDataReady = false;
   public _dateFilter: DateChangeEvent = null;
-  public _refineFilter: RefineFilter = [];
   public _selectedMetrics: string;
   public _reportInterval = KalturaReportInterval.days;
   public _tableData: TableRow<any>[] = [];
@@ -138,32 +137,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     map.roam = this._drillDown.length === 0 && this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData = mapConfig;
   }
-  
-  private _updateReportConfig(reportConfig: ReportConfig): void {
-    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
-    
-    if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
-      delete reportConfig.filter['countryIn'];
-    }
-    if (reportConfig.filter['regionIn']) {
-      delete reportConfig.filter['regionIn'];
-    }
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = '';
-    
-    if (this._drillDown.length > 0) {
-      reportConfig.filter.countryIn = this._drillDown[0];
-    } else if (countriesFilterApplied) {
-      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
-    }
-    
-    if (this._drillDown.length > 1) {
-      reportConfig.filter.regionIn = this._drillDown[1];
-    }
-  }
-  
+
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
     if (this._drillDown.length > 0) {
@@ -180,10 +154,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
         this._mapCenter = [this._tableData[0]['coordinates'].split('/')[1], this._tableData[0]['coordinates'].split('/')[0]];
       }
     }
-  }
-  
-  public _drillDownTop(reload = true): void {
-    this._onDrillDown(null, reload);
   }
   
   public _onChartClick(event): void {
@@ -211,10 +181,11 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     this._mapZoom = drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    
+    this._liveGeoWidget.updatePollsFilter(this._drillDown, reload);
     
     if (reload) {
-      // this._loadReport();
+      this._isBusy = true;
     }
   }
   

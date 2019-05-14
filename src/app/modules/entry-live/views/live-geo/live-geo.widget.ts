@@ -4,7 +4,7 @@ import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveGeoRequestFactory } from './live-geo-request-factory';
 import { EntryLiveGeoDevicesPollsService } from '../../providers/entry-live-geo-devices-polls.service';
-import { KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
+import { KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaResponse } from 'kaltura-ngx-client';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { ReportHelper, ReportService } from 'shared/services';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -20,7 +20,7 @@ export interface LiveGeoWidgetData {
 @Injectable()
 export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   protected _widgetId = 'geo';
-  protected _pollsFactory = null;
+  protected _pollsFactory: LiveGeoRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _selectedMetrics: string;
   
@@ -89,7 +89,14 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
   
   public setTimeRange(range: { to?: number, from?: number }): void {
-    console.warn(range);
     this._pollsFactory.timeRange = range;
+  }
+  
+  public updatePollsFilter(drillDown: string[], restart = false): void {
+    this._pollsFactory.drillDown = drillDown;
+    
+    if (restart) {
+      this.restartPolling();
+    }
   }
 }

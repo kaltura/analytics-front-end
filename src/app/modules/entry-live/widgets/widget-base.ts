@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, Unsubscribable } from 'rxjs';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaAPIException, KalturaRequest } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AnalyticsServerPollsBase } from 'shared/services/server-polls-base.service';
@@ -30,7 +30,7 @@ export abstract class WidgetBase<T> {
   
   protected abstract _widgetId: string;
   
-  protected abstract _pollsFactory: RequestFactory<KalturaRequest<any>, T>;
+  protected abstract _pollsFactory: RequestFactory<KalturaRequest<any> | KalturaMultiRequest, T>;
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
@@ -73,6 +73,11 @@ export abstract class WidgetBase<T> {
           this._data.next(data);
         });
     }
+  }
+  
+  public restartPolling(): void {
+    this._stopPolling();
+    this.startPolling();
   }
   
   public activate(widgetsArgs: WidgetsActivationArgs): void {
