@@ -19,33 +19,29 @@
                             [value]="summary.key"
                             (onChange)="_onSelectionChange()"
                             [(ngModel)]="_selectedValues"></p-checkbox>
-                <label [for]="summary.key">
+                <label [attr.for]="summary.key">
                   <i class="kIcon" [ngClass]="summary.key | appDeviceIcon"></i>
-                  <span class="kLabel">{{summary.name}}</span>
                 </label>
               </div>
-              <div class="kSummaryValue">
-                <h5 class="mini-loader" *ngIf="summary.trend === undefined"><span></span><span></span></h5>
-                <span *ngIf="summary.trend !== undefined" class="kTrend" [kTooltip]="summary.tooltip" [escape]="false"
-                      [maxWidth]="500">
+              <app-horizontal-bar-row [label]="summary.name"
+                                      [value]="summary.value"
+                                      [units]="summary.units"
+                                      [tooltip]="summary.valueTooltip"
+                                      [colorScheme]="_colorScheme"
+                                      [tooltipFormatter]="_tooltipFormatter"></app-horizontal-bar-row>
+
+              <h5 class="mini-loader" *ngIf="summary.trend === undefined"><span></span><span></span></h5>
+              <div *ngIf="summary.trend !== undefined" class="kTrend"
+                   [kTooltip]="summary.tooltip"
+                   [escape]="false"
+                   [maxWidth]="500">
                 <app-trend-value [value]="summary.trend"
                                  [units]="summary.compareUnits"
                                  [trend]="summary.trendDirection"></app-trend-value>
-              </span>
-                <div>
-                  <span class="kValue">{{summary.value}}</span>
-                  <span class="kUnits">{{summary.units}}</span>
-                </div>
               </div>
 
             </div>
           </div>
-          <div class="kSummaryChart">
-
-              <div echarts class="kChart"
-                   [options]="_barChartData[_selectedMetrics]"
-                   [merge]="_mergeChartData"></div>
-            </div>
 
         </div>
       </ng-container>

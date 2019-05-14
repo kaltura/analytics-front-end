@@ -2,7 +2,7 @@
   <div class="kLabel" [kTooltip]="label" [showOnEllipsis]="true">{{label}}</div>
   <div class="kBarWrapper">
     <div class="kBarWrapperRow">
-      <span class="kValue">{{_value}}{{units}}</span>
+      <span class="kValue">{{_value}}<span class="kUnits">{{units}}</span></span>
       <div class="kBullet" [kTooltip]="_tooltip" [escape]="false">
         <div class="kBar" [style.background-color]="_colors[0]" [style.width]="_value+'%'"></div>
       </div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="kBarWrapperRow kCompare" *ngIf="_compareValue !== null">
-      <div class="kValue">{{_compareValue}}{{units}}</div>
+      <span class="kValue">{{_compareValue}}<span class="kUnits">{{units}}</span></span>
       <div class="kBullet" [kTooltip]="_compareTooltip" [escape]="false">
         <div class="kBar" [style.background-color]="_colors[1]" [style.width]="_compareValue+'%'"></div>
       </div>

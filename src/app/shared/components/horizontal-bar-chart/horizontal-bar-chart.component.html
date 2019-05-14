@@ -1,20 +1,22 @@
 <div class="kChartContainer">
   <div class="kTable">
-    <div class="kTableRow" *ngFor="let row of data">
-      <span class="kRowIndex">{{row.index}}</span>
+    <div class="kTableRow" *ngFor="let row of (data || [])">
+      <span class="kRowIndex" *ngIf="showIndex">{{row.index}}</span>
+      <i *ngIf="row.icon" class="kIcon" [ngClass]="row.icon"></i>
       <app-horizontal-bar-row [label]="row.label"
                               [value]="row.value"
                               [tooltip]="row.tooltip"
-                              [colorScheme]="_colorScheme"
                               [currentPeriod]="_currentPeriodLabel"
-                              [comparePeriod]="_comparePeriodLabel"></app-horizontal-bar-row>
+                              [comparePeriod]="_comparePeriodLabel"
+                              [colorScheme]="_colorScheme"
+                              [trend]="row.trend"></app-horizontal-bar-row>
     </div>
-    <div *ngIf="!data.length && !isBusy" class="emptymessage">
+    <div *ngIf="!data?.length && !isBusy" class="emptymessage">
       <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
       <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
     </div>
 
-    <div *ngIf="isCompareMode && data.length" class="kCustomLegend">
+    <div *ngIf="isCompareMode && data?.length" class="kCustomLegend">
       <div class="kLegendItemContainer">
         <div class="kCircle" [style.background-color]="_colors[0]"></div>
         <span class="kLegendItem">{{_currentPeriodLabel}}</span>
@@ -26,7 +28,7 @@
     </div>
   </div>
 
-  <p-paginator *ngIf="pager && data.length"
+  <p-paginator *ngIf="pager && data?.length"
                [rows]="pager.pageSize"
                [first]="(pager.pageIndex - 1) * pager.pageSize"
                [totalRecords]="totalCount"

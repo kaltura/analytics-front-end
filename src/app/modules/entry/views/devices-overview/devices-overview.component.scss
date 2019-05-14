@@ -10,77 +10,28 @@
   min-width: 370px;
 }
 
-.kOverview {
-  display: flex;
+.kDevicesOverview {
+  margin-bottom: 10px;
 
-  .kSummaryWrapper {
-    display: flex;
-    height: 100%;
-    flex: 1;
-  }
-
-  .kSummary {
-    padding: 20px 23px;
-    min-width: 175px;
-    width: 100%;
-
-    .kSummaryRow {
-      display: flex;
-      justify-content: space-between;
-      height: 60px;
-      max-width: 275px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      .kSummaryCheckbox {
-        display: flex;
-        align-items: center;
-
-        .kLabel {
-          font-size: 15px;
-          line-height: 22px;
-          color: $kGrayscale1;
-          font-weight: bold;
-        }
-
-        .kIcon {
-          font-size: 22px;
-          color: $kGrayscale3;
-          margin: 0 17px 0 11px;
-        }
-      }
-
-      .kSummaryValue {
-        display: flex;
-        align-items: center;
-
-        .kValue {
-          font-size: 15px;
-          font-weight: bold;
-          color: $kGrayscale1;
-        }
-
-        .kUnits {
-          font-size: 13px;
-          font-weight: bold;
-          color: $kGrayscale3;
-          line-height: 20px;
-          margin-left: 4px;
-        }
-      }
+  /deep/ {
+    .kTable {
+      min-height: auto !important;
     }
-  }
 
-  .kSummaryChart {
-    height: 100%;
-  }
+    .kLabel {
+      flex: 0 1 auto !important;
+      width: 20%;
+    }
 
-  .kChart {
-    min-height: 280px;
-    height: calc(100% - 60px) !important;
-    margin-bottom: 0;
+    .kTrend {
+      width: 10% !important;
+    }
+
+    .kIcon {
+      font-size: 22px;
+      color: $kGrayscale3;
+      margin-right: 17px;
+    }
   }
 }
 
