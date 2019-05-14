@@ -433,6 +433,9 @@
       "primary": "Primary",
       "secondary": "Secondary",
       "stream": "Stream",
+      "geo": {
+        "title": "Geo Location"
+      },
       "alerts": {
         "no-alerts": "No reported issues",
         "100": {

@@ -1,4 +1,15 @@
 <div [attr.data-aid]="'table-live-geo'" class="kReportContent kTopCountries">
+  <div class="kFilters">
+    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entryLive.geo.title' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown(null)">{{'app.entryLive.geo.title' | translate}}</a>
+      <span class="separator">/</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0])">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
+    </div>
+  </div>
   <div class="kMap">
     <div *ngIf="_mapDataReady" echarts class="kChart"
          [options]="_mapChartData"

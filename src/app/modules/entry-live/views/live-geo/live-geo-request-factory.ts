@@ -1,5 +1,5 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportGetGraphsAction, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
@@ -10,7 +10,10 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: KalturaReportType.mapOverlayCountry,
-    reportInputFilter: new KalturaReportInputFilter(),
+    reportInputFilter: new KalturaReportInputFilter({
+      toDate: this._getServerTime(+new Date()),
+      fromDate: this._getServerTime(this._startTime),
+    }),
     pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
     order: '-count_plays',
     responseOptions: this._responseOptions
@@ -18,17 +21,41 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
 
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
     reportType: KalturaReportType.mapOverlayCountry,
-    reportInputFilter: new KalturaReportInputFilter(),
+    reportInputFilter: new KalturaReportInputFilter({
+      toDate: this._getServerTime(+new Date()),
+      fromDate: this._getServerTime(this._startTime),
+    }),
     responseOptions: this._responseOptions,
   };
+  
+  public set timeRange(value: { from?: number, to?: number }) {
+    if (value) {
+      const { from, to } = value;
+      
+      if (from) {
+        this._getTableActionArgs.reportInputFilter.fromDate = this._getServerTime(from);
+        this._getTotalsActionArgs.reportInputFilter.fromDate = this._getServerTime(from);
+      }
+  
+      if (to) {
+        this._getTableActionArgs.reportInputFilter.toDate = this._getServerTime(to);
+        this._getTotalsActionArgs.reportInputFilter.toDate = this._getServerTime(to);
+      }
+    }
+  }
   
   public set reportType(value: KalturaReportType) {
     this._getTableActionArgs.reportType = this._getTotalsActionArgs.reportType = value;
   }
 
-  constructor(private _entryId: string) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  constructor(private _entryId: string,
+              private _startTime: number) {
+    // this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    // this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  }
+  
+  private _getServerTime(value: number): number {
+    return Math.floor(value / 1000);
   }
   
   public create(): KalturaMultiRequest {

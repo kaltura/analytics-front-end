@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ErrorsManagerService, ReportConfig } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -18,7 +18,8 @@ import { EChartOption } from 'echarts';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { DataTable } from 'primeng/primeng';
 import { filter } from 'rxjs/operators';
-import { LiveGeoWidget } from './live-geo.widget';
+import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
+import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 
 @Component({
   selector: 'app-live-geo',
@@ -26,6 +27,12 @@ import { LiveGeoWidget } from './live-geo.widget';
   styleUrls: ['./live-geo.component.scss'],
 })
 export class LiveGeoComponent implements OnInit, OnDestroy {
+  @Input() set entry(value: KalturaExtendedLiveEntry) {
+    if (value) {
+      this._entry = value;
+      this._liveGeoWidget.setTimeRange({ from: +value.createdAt });
+    }
+  }
   @ViewChild('table') _table: DataTable;
   
   private _dataConfig: ReportDataConfig;
@@ -33,6 +40,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;
   
+  public _entry: KalturaExtendedLiveEntry = null;
   public _mapChartData: any = {};
   public _mapZoom = 1.2;
   public _mapDataReady = false;
@@ -48,7 +56,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _reportType = KalturaReportType.mapOverlayCountry;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
-  
+
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
@@ -89,13 +97,14 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     
     this._liveGeoWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(data => {
+      .subscribe((data: LiveGeoWidgetData) => {
         this._isBusy = false;
+        this._tableData = data.table;
+        this._columns = data.columns;
         this._setMapCenter();
         setTimeout(() => {
           this._updateMap(this._mapCenter);
         }, 0);
-        console.warn(data);
       });
   }
   

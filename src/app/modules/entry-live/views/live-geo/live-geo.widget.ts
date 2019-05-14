@@ -11,8 +11,14 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveGeoConfig } from './live-geo.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 
+export interface LiveGeoWidgetData {
+  table: TableRow[];
+  columns: string[];
+  totalCount: number;
+}
+
 @Injectable()
-export class LiveGeoWidget extends WidgetBase<any> {
+export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   protected _widgetId = 'geo';
   protected _pollsFactory = null;
   protected _dataConfig: ReportDataConfig;
@@ -27,12 +33,12 @@ export class LiveGeoWidget extends WidgetBase<any> {
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId, widgetsArgs.streamStartTime);
     
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): { table: TableRow[], columns: string[], totalCount: number } {
+  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];
@@ -53,7 +59,7 @@ export class LiveGeoWidget extends WidgetBase<any> {
       let tmp = columns.pop();
       columns.push('distribution'); // add distribution column at the end
       columns.push(tmp);
-  
+      
       result.totalCount = table.totalCount;
       result.columns = columns;
       result.table = tableData.map((row, index) => {
@@ -78,6 +84,12 @@ export class LiveGeoWidget extends WidgetBase<any> {
   
   protected _getResponseByType(responses: KalturaResponse<any>[], type: any): any {
     const isType = t => r => r.result instanceof t || Array.isArray(r.result) && r.result.length && r.result[0] instanceof t;
-    return Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
+    const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
+    return result ? result.result : null;
+  }
+  
+  public setTimeRange(range: { to?: number, from?: number }): void {
+    console.warn(range);
+    this._pollsFactory.timeRange = range;
   }
 }
