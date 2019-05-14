@@ -6,11 +6,11 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString(navigator.language, { maximumSignificantDigits: 20 });
   }
   
-  static percents(x: any, round = true, maxHundred = false): string {
+  static percents(x: any, round = true, maxHundred = false, addUnits = true): string {
     x = parseFloat(x) * 100;
     x = maxHundred && x > 100 ? 100 : x;
     x = round ? Math.round(x) : x;
-    return !isNaN(x) ? this.numberWithCommas(x.toFixed(1)) + '%' : 'N/A';
+    return !isNaN(x) ? `${this.numberWithCommas(x.toFixed(1))}${addUnits ? '%' : ''}` : 'N/A';
   }
   
   static numberOrNA(x: any): string {

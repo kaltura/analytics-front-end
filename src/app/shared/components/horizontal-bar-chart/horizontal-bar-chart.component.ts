@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BarRowTooltip, BarRowValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import { BarRowTooltip, BarRowValue, TrendValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import { KalturaPager } from 'kaltura-ngx-client';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
@@ -10,6 +10,8 @@ export interface BarChartRow {
   value: BarRowValue | BarRowValue[];
   tooltip: BarRowTooltip | BarRowTooltip[];
   index?: number;
+  icon?: string;
+  trend?: TrendValue;
 }
 
 @Component({
@@ -24,6 +26,7 @@ export class HorizontalBarChartComponent {
   @Input() pager: KalturaPager;
   @Input() totalCount: number;
   @Input() isCompareMode = false;
+  @Input() showIndex = true;
   @Input() set currentPeriod(value: { from: number, to: number }) {
     if (value && value.hasOwnProperty('from') && value.hasOwnProperty('to')) {
       this._currentPeriod = value;

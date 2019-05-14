@@ -8,15 +8,13 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kChart">
-        <div echarts class="kChart"
-             *ngIf="_barChartData && _barChartData[_selectedMetrics] && _barChartData[_selectedMetrics]?.series[0]?.data?.length"
-             [options]="_barChartData[_selectedMetrics]"></div>
-
-        <div *ngIf="!_isBusy && (!_barChartData || !_barChartData[_selectedMetrics] || !_barChartData[_selectedMetrics]?.series[0]?.data?.length)" class="kNoResults">
-          <span>{{'app.common.noResults' | translate}}</span>
-        </div>
+      <div class="kReport">
+        <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+        <app-horizontal-bar-chart [data]="_barChartData[_selectedMetrics]"
+                                  [colorScheme]="_colorScheme"
+                                  [currentPeriod]="_currentPeriod"
+                                  [comparePeriod]="_comparePeriod"
+                                  [isCompareMode]="_isCompareMode"></app-horizontal-bar-chart>
       </div>
     </div>
 

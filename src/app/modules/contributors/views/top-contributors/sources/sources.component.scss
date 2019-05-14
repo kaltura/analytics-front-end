@@ -4,9 +4,24 @@
   display: block;
   width: 100%;
   height: 100%;
+
+  /deep/ {
+    .kChartContainer {
+      padding: 10px 24px !important;
+    }
+
+    .kLabel {
+      flex: 0 1 auto !important;
+      width: 25%;
+    }
+
+    .kTrend {
+      width: 10%;
+    }
+  }
 }
 
-.kSources{
+.kSources {
   height: 100%;
 }
 
@@ -27,7 +42,7 @@
   }
 }
 
-.kTitle{
+.kTitle {
   width: auto !important;
   padding-right: 0px !important;
 }
