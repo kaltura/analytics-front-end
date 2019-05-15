@@ -57,6 +57,8 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
       this._getTableActionArgs.reportInputFilter.regionIn = value[1];
       this._getTotalsActionArgs.reportInputFilter.regionIn = value[1];
     } else {
+      delete this._getTableActionArgs.reportInputFilter.countryIn;
+      delete this._getTotalsActionArgs.reportInputFilter.countryIn;
       delete this._getTableActionArgs.reportInputFilter.regionIn;
       delete this._getTotalsActionArgs.reportInputFilter.regionIn;
     }
