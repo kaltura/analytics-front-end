@@ -12,14 +12,24 @@ export class BulletComponent {
   public _color = getPrimaryColor();
   
   @Input() formatter: Function = significantDigits;
+  @Input() animate = true;
   
   @Input() set value(value: any) {
-    setTimeout(() => {
-      this._value = typeof this.formatter === 'function' ? this.formatter(value) : value;
-    }, 200);
+    if (this.animate) {
+      setTimeout(() => {
+        this._setValue(value);
+      }, 200);
+    } else {
+      this._setValue(value);
+    }
+    
   }
   
   @Input() set colorScheme(type: string) {
     this._color = getPrimaryColor(type);
+  }
+  
+  private _setValue(value: any): void {
+    this._value = typeof this.formatter === 'function' ? this.formatter(value) : value;
   }
 }

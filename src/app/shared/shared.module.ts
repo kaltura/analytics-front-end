@@ -55,7 +55,6 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
 import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 
 @NgModule({
   imports: [
@@ -168,7 +167,6 @@ export class SharedModule {
         CompareService,
         TrendService,
         CategoriesSearchService,
-        AnalyticsServerPolls,
       ]
     };
   }

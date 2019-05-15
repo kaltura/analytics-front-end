@@ -1,17 +1,17 @@
 import { Observable, of as ObservableOf } from 'rxjs';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveBandwidthRequestFactory } from './live-bandwidth-request-factory';
 import { TranslateService } from '@ngx-translate/core';
+import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 
 @Injectable()
 export class LiveBandwidthWidget extends WidgetBase<any> {
   protected _widgetId = 'users';
   protected _pollsFactory = null;
   
-  constructor(protected _serverPolls: AnalyticsServerPolls,
+  constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               private _translate: TranslateService) {
     super(_serverPolls);
   }

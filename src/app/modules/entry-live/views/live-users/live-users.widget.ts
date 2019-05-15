@@ -1,11 +1,10 @@
 import { Observable, of as ObservableOf } from 'rxjs';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveUsersRequestFactory } from './live-users-request-factory';
-import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
+import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 
 export interface LiveUsersData {
   watchers: number;
@@ -16,7 +15,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
   protected _pollsFactory = null;
   
-  constructor(protected _serverPolls: AnalyticsServerPolls,
+  constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               private _translate: TranslateService) {
     super(_serverPolls);
   }

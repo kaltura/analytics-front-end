@@ -31,6 +31,11 @@ import { CodeToSeverityPipe } from './views/live-stream-health/pipes/code-to-sev
 import { SeverityToHealthPipe } from './views/live-stream-health/pipes/severity-to-health.pipe';
 import { NotificationTitlePipe } from './views/live-stream-health/pipes/notification-title.pipe';
 import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-health-icon.pipe';
+import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
+import { EntryLiveGeoDevicesPollsService } from './providers/entry-live-geo-devices-polls.service';
+import { LiveGeoComponent } from './views/live-geo/live-geo.component';
+import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
+import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 
 
 @NgModule({
@@ -65,17 +70,26 @@ import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-h
     SeverityToHealthPipe,
     NotificationTitlePipe,
     CodeToHealthIconPipe,
+    LiveGeoComponent,
   ],
   exports: [],
   providers: [
+    CodeToSeverityPipe,
+    SeverityToHealthPipe,
     WidgetsManager,
     EntryLiveService,
+    LiveGeoConfig,
+    
+    // polls services
+    EntryLiveGeneralPollsService,
+    EntryLiveGeoDevicesPollsService,
+
+    // widgets
     EntryLiveWidget,
     LiveUsersWidget,
     LiveBandwidthWidget,
     LiveStreamHealthWidget,
-    CodeToSeverityPipe,
-    SeverityToHealthPipe,
+    LiveGeoWidget,
   ]
 })
 export class EntryLiveModule {

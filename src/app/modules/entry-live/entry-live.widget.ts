@@ -1,19 +1,19 @@
 import { WidgetBase } from './widgets/widget-base';
 import { Observable, of as ObservableOf } from 'rxjs';
-import { AnalyticsServerPolls } from 'shared/services/server-polls.service';
 import { Injectable } from '@angular/core';
 import { WidgetsActivationArgs } from './widgets/widgets-manager';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveRequestFactory } from './entry-live-request-factory';
 import { KalturaStreamStatus } from './utils/get-stream-status';
 import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
+import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   protected _widgetId = 'main';
   protected _pollsFactory = null;
   
-  constructor(protected _serverPolls: AnalyticsServerPolls,
+  constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               private _entryLiveService: EntryLiveService) {
     super(_serverPolls);
   }

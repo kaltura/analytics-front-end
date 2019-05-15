@@ -1,0 +1,90 @@
+<div [attr.data-aid]="'table-live-geo'" class="kReportContent kTopCountries">
+  <div class="kFilters">
+    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entryLive.geo.title' | translate}}</span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown(null)">{{'app.entryLive.geo.title' | translate}}</a>
+      <span class="separator">/</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0])">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
+    </div>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kMap">
+      <div *ngIf="_mapDataReady" echarts class="kChart"
+           [options]="_mapChartData"
+           (chartClick)="_onChartClick($event)"
+           (chartInit)="_onChartInit($event)"></div>
+      <div class="kZoomWidget">
+        <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+        <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+      </div>
+    </div>
+    <div class="kTable">
+      <div class="kTableContainer">
+        <p-table #table [value]="_tableData" [paginator]="true" [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [ngStyle]="{'width': '42px'}">
+                <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+              </th>
+              <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
+              <th [ngStyle]="{'width': '20%'}">
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.object_id' | translate}}
+                </span>
+                </div>
+              </th>
+              <th [ngStyle]="{'width': '20%'}">
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.count_plays' | translate}}
+                </span>
+                </div>
+              </th>
+              <th>
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
+                  {{'app.audience.geo.distribution' | translate}}
+                </span>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr>
+              <td>
+                <span>{{rowIndex + 1}}</span>
+              </td>
+              <td class="kFlagColumn" *ngIf="!_drillDown.length">
+                <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
+              </td>
+              <td class="kHighlight">
+                <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
+                <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+                <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
+              </td>
+              <td>
+                <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+              </td>
+              <td *ngIf="!data['count_plays']?.value">
+                <div>
+                  <app-bullet [value]="data['plays_distribution']" [animate]="false"></app-bullet>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResultsRegion' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

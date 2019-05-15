@@ -13,6 +13,7 @@ import { WidgetsManager } from './widgets/widgets-manager';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
 import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
+import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -20,6 +21,8 @@ import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-h
   styleUrls: ['./entry-live-view.component.scss'],
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
+  private _widgetsRegistered = false;
+
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
@@ -33,9 +36,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _entryLiveService: EntryLiveService,
               private _widgetsManager: WidgetsManager,
               private _entryLiveWidget: EntryLiveWidget,
-              private _liveUsersWidget: LiveUsersWidget,
+              private _liveUsers: LiveUsersWidget,
               private _liveBandwidth: LiveBandwidthWidget,
-              private _liveStreamHealth: LiveStreamHealthWidget) {
+              private _liveStreamHealth: LiveStreamHealthWidget,
+              private _liveGeo: LiveGeoWidget) {
   }
   
   
@@ -50,7 +54,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._registerWidgets();
+          this._entryLiveWidget.activate({ entryId });
         });
     } else {
       this._route.params
@@ -60,7 +64,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         )
         .subscribe(entryId => {
           this._entryId = entryId;
-          this._registerWidgets();
+          this._entryLiveWidget.activate({ entryId });
         });
     }
     
@@ -82,10 +86,12 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       });
     
     this._entryLiveWidget.data$
-      .pipe(cancelOnDestroy(this))
+      .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
+  
+        this._registerWidgets();
       });
   }
   
@@ -93,14 +99,20 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._entryLiveWidget.deactivate();
   }
   
+  // DO NOT register to entry data widget here!
+  // register to all other widgets only once after entry data is received
   private _registerWidgets(): void {
-    this._widgetsManager.register([
-      this._entryLiveWidget,
-      this._liveUsersWidget,
-      this._liveBandwidth,
-      this._liveStreamHealth,
-      // <-- append new widgets here
-    ], { entryId: this._entryId });
+    if (!this._widgetsRegistered) {
+      this._widgetsRegistered = true;
+
+      this._widgetsManager.register([
+        this._liveUsers,
+        this._liveBandwidth,
+        this._liveStreamHealth,
+        this._liveGeo,
+        // <-- append new widgets here
+      ], { entryId: this._entryId, streamStartTime: +this._entry.createdAt });
+    }
   }
   
   public _navigateToEntry(): void {
