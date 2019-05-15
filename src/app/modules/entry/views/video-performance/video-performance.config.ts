@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { getColorPalette, getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 
@@ -87,7 +87,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => Math.min(value * 100, 100),
             title: this._translate.instant(`app.entry.avg_view_drop_off`),
             sortOrder: 5,
-            colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
+            colors: [getColorPalette('dropoff')[7], getPrimaryColor('dropoff')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_view_drop_off`)}:&nbsp;${ReportHelper.percents(value / 100, false)}</span>`
           },
         }
