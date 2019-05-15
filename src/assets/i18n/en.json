@@ -436,6 +436,9 @@
       "geo": {
         "title": "Geo Location"
       },
+      "devices": {
+        "title": "Active Users Per Devices"
+      },
       "alerts": {
         "no-alerts": "No reported issues",
         "100": {
