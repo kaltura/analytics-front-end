@@ -38,6 +38,7 @@ import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
+import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 
 
 @NgModule({
@@ -94,6 +95,7 @@ import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
     LiveBandwidthWidget,
     LiveStreamHealthWidget,
     LiveGeoWidget,
+    LiveDevicesWidget,
   ]
 })
 export class EntryLiveModule {

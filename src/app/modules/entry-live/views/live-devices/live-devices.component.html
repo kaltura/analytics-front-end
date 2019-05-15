@@ -7,7 +7,9 @@
 
     <div class="kReportContent kDevicesOverview">
       <ng-container *ngIf="_summaryData.length">
-        <app-horizontal-bar-chart [data]="_summaryData"
+        <app-horizontal-bar-chart colorScheme="viewers"
+                                  [animate]="false"
+                                  [data]="_summaryData"
                                   [totalCount]="_totalCount"
                                   [showIndex]="false"></app-horizontal-bar-chart>
       </ng-container>

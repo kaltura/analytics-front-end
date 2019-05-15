@@ -30,6 +30,7 @@ export class HorizontalBarRowComponent {
   @Input() currentPeriod: string;
   @Input() comparePeriod: string;
   @Input() tooltipFormatter = this._getTooltipString;
+  @Input() animate = true;
   
   @Input() set trend(value: TrendValue) {
     if (value) {
@@ -41,15 +42,14 @@ export class HorizontalBarRowComponent {
   }
   
   @Input() set tooltip(value: BarRowTooltip | BarRowTooltip[]) {
-    setTimeout(() => {
-      if (Array.isArray(value)) {
-        this._tooltip = this.tooltipFormatter(value[0].value, value[0].label, value[0].color || this._colors[0]);
-        this._compareTooltip = this.tooltipFormatter(value[1].value, value[1].label, value[1].color || this._colors[1]);
-      } else {
-        this._tooltip = this.tooltipFormatter(value.value, value.label, value.color || this._colors[0]);
-        this._compareTooltip = null;
-      }
-    }, 200);
+    if (this.animate) {
+      setTimeout(() => {
+        this._setTooltip(value);
+      }, 200);
+    } else {
+      this._setTooltip(value)
+    }
+    
   }
   
   @Input() set value(value: BarRowValue | BarRowValue[]) {
@@ -63,22 +63,14 @@ export class HorizontalBarRowComponent {
       this._trend = null;
     }
     
-    setTimeout(() => {
-      this._value = typeof this.formatter === 'function' ? this.formatter(this._rawValue) : this._rawValue;
-      if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
-        this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
-        
-        if (this._calculateTrend) {
-          const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
-          this._trend = {
-            value: value !== null ? value : '–',
-            trend: direction,
-            units: value !== null ? '%' : '',
-            tooltip: `${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}`,
-          };
-        }
-      }
-    }, 200);
+    if (this.animate) {
+      setTimeout(() => {
+        this._setValue();
+      }, 200);
+    } else {
+      this._setValue();
+    }
+    
   }
   
   @Input() set colorScheme(type: string) {
@@ -101,5 +93,32 @@ export class HorizontalBarRowComponent {
   
   private _getTooltipString(value: string, label: string, color?: string): string {
     return `<div class="kHorizontalBarGraphTooltip"><span class="kBullet" style="color: ${color}">&bull;</span><span>${label}: ${value}</span></div>`;
+  }
+  
+  private _setTooltip(value: BarRowTooltip | BarRowTooltip[]): void {
+    if (Array.isArray(value)) {
+      this._tooltip = this.tooltipFormatter(value[0].value, value[0].label, value[0].color || this._colors[0]);
+      this._compareTooltip = this.tooltipFormatter(value[1].value, value[1].label, value[1].color || this._colors[1]);
+    } else {
+      this._tooltip = this.tooltipFormatter(value.value, value.label, value.color || this._colors[0]);
+      this._compareTooltip = null;
+    }
+  }
+  
+  private _setValue(): void {
+    this._value = typeof this.formatter === 'function' ? this.formatter(this._rawValue) : this._rawValue;
+    if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
+      this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
+    
+      if (this._calculateTrend) {
+        const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
+        this._trend = {
+          value: value !== null ? value : '–',
+          trend: direction,
+          units: value !== null ? '%' : '',
+          tooltip: `${this._trendService.getTooltipRowString(this.comparePeriod, this._rawCompareValue, '%')}${this._trendService.getTooltipRowString(this.currentPeriod, this._rawValue, '%')}`,
+        };
+      }
+    }
   }
 }

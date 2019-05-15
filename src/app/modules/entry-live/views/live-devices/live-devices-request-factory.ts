@@ -30,8 +30,8 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   
   constructor(private _entryId: string,
               private _startTime: number) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    // this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    // this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
   private _getServerTime(value: number): number {
