@@ -2,13 +2,12 @@ import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, OnInit } from '
 import { Table } from 'primeng/table';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { PageScrollService } from 'ngx-page-scroll';
 import { merge as ObservableMerge, Observable } from 'rxjs';
 
 @Directive({
   selector: '[appScrollTopOnPaging]',
-  providers: [PageScrollService]
 })
 export class ScrollTopOnPagingDirective implements OnInit, AfterViewInit, OnDestroy {
   @Input() scrollOffset = 0;
@@ -55,7 +54,8 @@ export class ScrollTopOnPagingDirective implements OnInit, AfterViewInit, OnDest
           win.scrollTo(0, currentScrollTop - deltaHeight);
         }
       }, 0);
-    } catch (e) {}
+    } catch (e) {
+    }
   }
-
+  
 }
