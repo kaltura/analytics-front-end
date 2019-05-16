@@ -29,7 +29,7 @@ export class LiveBandwidthWidget extends WidgetBase<any> {
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: 0, bottom: 4, right: 0, containLabel: false
+        top: 24, left: 0, bottom: 30, right: 0, containLabel: false
       },
       tooltip: {
         trigger: 'axis',
@@ -64,8 +64,9 @@ export class LiveBandwidthWidget extends WidgetBase<any> {
           },
         },
         axisLabel: {
+          align: 'right',
           color: '#999999',
-          padding: [8, 10, 0, 0],
+          padding: [8, 0, 0, 0],
         }
       },
       yAxis: {
