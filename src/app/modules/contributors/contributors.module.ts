@@ -16,7 +16,6 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { topContributorsComponentsList } from './views/top-contributors/components-list';
 import { CheckboxModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
-import { PageScrollService } from 'ngx-page-scroll';
 
 @NgModule({
   imports: [
@@ -44,9 +43,7 @@ import { PageScrollService } from 'ngx-page-scroll';
     ...topContributorsComponentsList,
   ],
   exports: [],
-  providers: [
-    PageScrollService,
-  ]
+  providers: []
 })
 export class ContributorsModule {
 }
