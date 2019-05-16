@@ -16,7 +16,7 @@ import * as moment from 'moment';
 export class LiveUsersComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
-      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) !== -1;
+      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
       
       if (!this._isLive) {
         this._resetGraph();

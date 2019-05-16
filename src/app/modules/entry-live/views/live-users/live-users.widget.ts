@@ -56,19 +56,14 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        splitLine: {
-          show: false
-        },
-        axisTick: {
-          show: false,
-        },
         axisLine: {
           lineStyle: {
-            color: 'rgba(0, 0, 0, 0)',
+            color: '#ebebeb',
           },
         },
         axisLabel: {
           align: 'right',
+          fontWeight: 'bold',
           color: '#999999',
           padding: [8, 0, 0, 0],
         }
