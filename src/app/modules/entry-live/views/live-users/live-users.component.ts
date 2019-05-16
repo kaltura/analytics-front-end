@@ -6,6 +6,7 @@ import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-live-users',
@@ -15,8 +16,7 @@ import { KalturaStreamStatus } from '../../utils/get-stream-status';
 export class LiveUsersComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
-      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
-      this._fakeData();
+      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) !== -1;
       
       if (!this._isLive) {
         this._resetGraph();
@@ -69,10 +69,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       });
     
     this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
-    
-    
-    // TODO remove mocked data once API is ready
-    this._fakeData();
   }
   
   ngOnDestroy(): void {
@@ -96,33 +92,43 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   }
   
   private _fakeData(): void {
+    const update = () => {
+      this._updateGraphPoints(
+        Array.from({ length: 18 }, () => this._getRand()),
+        Array.from({ length: 18 }, () => this._getRand()),
+        Array.from({ length: 18 }, (v, i) => i === 17 ? 'Now' : moment().subtract(180 - (i * 10), 'second').format('hh:mm:ss'))
+      );
+      this._activeUsersCount = this._graphPoints[0][17];
+      this._engagedUsersCount = this._graphPoints[1][17];
+    };
+    
     clearInterval(this._interval);
-
+    
     if (this._isLive) {
+      update();
       this._interval = setInterval(() => {
-        this._updateGraphPoints(this._getRand(), this._getRand());
-        this._activeUsersCount = this._graphPoints[0][17];
-        this._engagedUsersCount = this._graphPoints[1][17];
+        update();
       }, 10000);
     }
   }
-  
-  private _updateGraphPoints(activeUsers: number, engagedUsers: number): void {
-    const active = [...this._graphPoints[0]];
-    const engaged = [...this._graphPoints[1]];
-    active.shift();
-    active.push(activeUsers);
-    engaged.shift();
-    engaged.push(engagedUsers);
-    
+
+  private _updateGraphPoints(active: number[], engaged: number[], times: string[]): void {
     this._graphPoints = [active, engaged];
     
     if (this._echartsIntance) {
-      this._echartsIntance.setOption({ series: [{ data: active }, { data: engaged }] });
+      this._echartsIntance.setOption({
+        series: [{ data: active }, { data: engaged }],
+        xAxis: [{ data: times }],
+      });
     }
   }
   
   public _onChartInit(ec: any): void {
     this._echartsIntance = ec;
+
+    setTimeout(() => {
+      // TODO remove mocked data once API is ready
+      this._fakeData();
+    });
   }
 }

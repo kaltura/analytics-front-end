@@ -45,21 +45,13 @@ export class LiveBandwidthWidget extends WidgetBase<any> {
         },
         formatter: (params) => {
           const [active, engaged] = params;
-          const title = active.dataIndex === 17
-            ? this._translate.instant('app.entryLive.now')
-            : this._translate.instant('app.entryLive.ms', [190 - ((active.dataIndex + 1) * 10)]);
-          
+          const title = active.axisValue;
           return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}&nbsp;${active.data}%</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBW')}&nbsp;${engaged.data} Kbps</div></div>`;
         }
       },
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        data: [
-          this._translate.instant('app.entryLive.m180s'),
-          '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
-          this._translate.instant('app.entryLive.now')
-        ],
         splitLine: {
           show: false
         },
