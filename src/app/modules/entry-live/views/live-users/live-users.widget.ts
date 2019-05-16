@@ -33,7 +33,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: 0, bottom: 4, right: 0, containLabel: false
+        top: 24, left: 0, bottom: 30, right: 0, containLabel: false
       },
       tooltip: {
         trigger: 'axis',
@@ -49,35 +49,23 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         },
         formatter: (params) => {
           const [active, engaged] = params;
-          const title = active.dataIndex === 17
-            ? this._translate.instant('app.entryLive.now')
-            : this._translate.instant('app.entryLive.ms', [190 - ((active.dataIndex + 1) * 10)]);
-          
+          const title = active.axisValue;
           return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${active.data}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engaged.data}%</div></div>`;
         }
       },
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        data: [
-          this._translate.instant('app.entryLive.m180s'),
-          '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
-          this._translate.instant('app.entryLive.now')
-        ],
-        splitLine: {
-          show: false
-        },
-        axisTick: {
-          show: false,
-        },
         axisLine: {
           lineStyle: {
-            color: 'rgba(0, 0, 0, 0)',
+            color: '#ebebeb',
           },
         },
         axisLabel: {
+          align: 'right',
+          fontWeight: 'bold',
           color: '#999999',
-          padding: [8, 10, 0, 0],
+          padding: [8, 0, 0, 0],
         }
       },
       yAxis: {

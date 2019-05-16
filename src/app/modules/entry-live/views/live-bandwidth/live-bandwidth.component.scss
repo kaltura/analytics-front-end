@@ -2,7 +2,8 @@
 
 .kUsersBandwidth {
   padding: 24px;
-  height: 223px;
+  padding-bottom: 0px;
+  height: 247px;
   width: auto !important;
   margin-bottom: 0 !important;
 
@@ -46,7 +47,7 @@
   .kChartHolder {
     .kChart {
       width: 100%;
-      height: 116px;
+      height: 146px;
       margin-bottom: 0;
     }
 
@@ -61,17 +62,6 @@
         font-size: 28px;
         color: $kGrayscale3;
       }
-    }
-  }
-
-  .kChartLabels {
-    font-size: 12px;
-    font-weight: bold;
-    color: $kGrayscale3;
-    display: flex;
-
-    span:last-child {
-      margin-left: auto;
     }
   }
 }
