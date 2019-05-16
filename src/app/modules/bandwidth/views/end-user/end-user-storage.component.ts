@@ -16,9 +16,10 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { EndUserExportConfig } from './end-user-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export.config';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -133,7 +134,26 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
     this.pager.pageIndex = 1;
 
     this.order = user.length ? '+month_id' : '-total_storage_mb';
+  
+    if (this._drillDown) {
+      this.filter.userIds = this._drillDown;
+    } else {
+      delete this.filter.userIds;
+    }
+  
+    this._updateExportConfig();
+
     this.loadReport();
+  }
+  
+  private _updateExportConfig(): void {
+    let update: Partial<ExportItem> = { reportType: this.reportType, order: this.order, additionalFilters: {} };
+  
+    if (this._drillDown) {
+      update.additionalFilters.userIds = this._drillDown;
+    }
+  
+    this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'end-user', update);
   }
 
   public toggleTable(): void {

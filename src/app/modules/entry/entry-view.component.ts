@@ -28,8 +28,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { EntryExportConfig } from './entry-export.config';
+import { EngagementExportConfig } from '../audience/views/engagement/engagement-export.config';
 
 @Component({
   selector: 'app-entry',
@@ -208,5 +209,13 @@ export class EntryViewComponent implements OnInit, OnDestroy {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
   }
-
+  
+  public _onDrillDown(event: string): void {
+    let update: Partial<ExportItem> = {};
+    if (event) {
+      update.objectIds = event;
+    }
+    
+    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
+  }
 }

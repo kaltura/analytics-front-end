@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
@@ -59,6 +59,8 @@ export class SyndicationComponent {
   @Input() entryId: string;
   
   @Input() dateFilterComponent: DateFilterComponent;
+  
+  @Output() onDrillDown = new EventEmitter<string>();
   
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -346,6 +348,7 @@ export class SyndicationComponent {
     this._logger.trace('Handle drill down to domain action by user, reset page index to 1', { domain });
     this._drillDown = domain;
     this._pager.pageIndex = 1;
+    this.onDrillDown.emit(this._drillDown);
     this._loadReport();
   }
 }

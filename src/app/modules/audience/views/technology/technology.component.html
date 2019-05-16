@@ -23,11 +23,13 @@
                     [selectedMetric]="_selectedMetric"
                     [devicesList]="_devicesList"
                     [deviceFilter]="_devicesFilter"
-                    (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-browsers>
+                    (deviceFilterChange)="_onReportDeviceFilterChange()"
+                    (onDrillDown)="_onDrillDown($event)"></app-top-browsers>
 
   <app-top-os [filter]="_filterEvent"
               [selectedMetric]="_selectedMetric"
               [devicesList]="_devicesList"
               [deviceFilter]="_devicesFilter"
-              (deviceFilterChange)="_onReportDeviceFilterChange()"></app-top-os>
+              (deviceFilterChange)="_onReportDeviceFilterChange()"
+              (onDrillDown)="_onDrillDown($event)"></app-top-os>
 </div>

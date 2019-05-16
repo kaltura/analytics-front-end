@@ -16,7 +16,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
 import { PublisherExportConfig } from './publisher-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
