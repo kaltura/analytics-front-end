@@ -20,6 +20,7 @@ export interface BarChartRow {
   styleUrls: ['./horizontal-bar-chart.component.scss'],
 })
 export class HorizontalBarChartComponent {
+  @Input() animate = true;
   @Input() data: BarChartRow[] = [];
   @Input() firstTimeLoading = false;
   @Input() isBusy = false;

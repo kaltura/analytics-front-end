@@ -1,0 +1,23 @@
+<div data-aid="report-entry-live-devices" class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryLive.devices.title' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent kDevicesOverview">
+      <ng-container *ngIf="_summaryData.length">
+        <app-horizontal-bar-chart colorScheme="viewers"
+                                  [animate]="false"
+                                  [data]="_summaryData"
+                                  [totalCount]="_totalCount"
+                                  [showIndex]="false"></app-horizontal-bar-chart>
+      </ng-container>
+
+      <div *ngIf="!_summaryData.length" class="kNoResults">
+        <span *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</span>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
