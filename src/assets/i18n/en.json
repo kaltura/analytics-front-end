@@ -316,6 +316,11 @@
       }
     },
     "engagement": {
+      "dimensions": {
+        "dates": "Dates",
+        "users": "Users",
+        "entries": "Entries"
+      },
       "title": "Engagement",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",

@@ -17,6 +17,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -38,7 +39,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   protected _componentId = 'highlights';
   
   public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
-
+  
+  public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = true;
@@ -56,6 +58,11 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _tableModes = [
+    { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates },
+    { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
+    { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
+  ];
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -85,7 +92,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._blockerMessage = null;
   
     sections = { ...sections }; // make local copy
-    delete sections[ReportDataSection.table]; // remove table config to prevent table request
+    // delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections)
@@ -238,5 +245,10 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _onSortChanged(event: SortEvent) {
     this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
     this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
+  }
+  
+  public _onTableModeChange(mode: TableModes): void {
+    this._tableMode = mode;
+    
   }
 }

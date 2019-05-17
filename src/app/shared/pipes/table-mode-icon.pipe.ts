@@ -1,5 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TableModes } from '../video-performance.component';
+
+export enum TableModes {
+  dates = 'dates',
+  users = 'users',
+  entries = 'entries',
+}
 
 @Pipe({
   name: 'tableModeIcon'
@@ -11,6 +16,8 @@ export class TableModeIconPipe implements PipeTransform {
         return 'kIconuser';
       case TableModes.dates:
         return 'kIconcalendar';
+      case TableModes.entries:
+        return 'kIconUnknown';
       default:
         return '';
     }
