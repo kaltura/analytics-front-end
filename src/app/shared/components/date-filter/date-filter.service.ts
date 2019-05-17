@@ -50,8 +50,17 @@ export type DateChangeEvent = {
 
 @Injectable()
 export class DateFilterService {
+  private _currentFilters: { [key: string]: string } = null;
+  
+  public get currentFilters(): { [key: string]: string } {
+    return this._currentFilters;
+  }
 
   constructor(private _translate: TranslateService) {
+  }
+  
+  public updateCurrentFilters(value: { [key: string]: string }): void {
+    this._currentFilters = value;
   }
   
   public getDateRangeByString(value: string): DateRanges {

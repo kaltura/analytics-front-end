@@ -113,13 +113,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _init(queryParams: Params): void {
-    this._browserService.updateCurrentQueryParams(queryParams);
-    this._initCurrentFilterFromEventParams(queryParams);
+    const params = this._dateFilterService.currentFilters || queryParams;
+    this._browserService.updateCurrentQueryParams(params);
+    this._initCurrentFilterFromEventParams(params);
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.creationDate);
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
-      this.updateDataRanges(); // use a timeout to allow data binding to complete
+      this.updateDataRanges(false); // use a timeout to allow data binding to complete
     }, 0);
   }
   
@@ -166,7 +167,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     }
   }
   
-  private _updateRouteParams(): void {
+  private _getUpdatedRouteParams(): { [key: string]: string } {
     const updateParams = (params, payload) => {
       // manually add properties that need to be preserved to avoid preserving duplicating specific and preset date filters
       const preserveEntryId = params.hasOwnProperty('id') ? { id: params.id } : {};
@@ -181,7 +182,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         dateTo: DateFilterUtils.getDay(this.endDate),
       });
     }
-    
+  
     if (queryParams && this.compare) {
       if (this.selectedComparePeriod === 'lastYear') {
         queryParams.compareTo = 'lastYear';
@@ -189,6 +190,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         queryParams.compareTo = DateFilterUtils.getDay(this.compareStartDate);
       }
     }
+  
+    return queryParams;
+  }
+  
+  private _updateRouteParams(): void {
+    const queryParams = this._getUpdatedRouteParams();
   
     this._browserService.updateCurrentQueryParams(queryParams);
   
@@ -199,7 +206,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  public updateDataRanges(): void {
+  public updateDataRanges(isUserAction = true): void {
     this.lastSelectedDateRange = this.selectedDateRange;
     if (this.selectedView === 'preset') {
       const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, this.creationDate);
@@ -225,6 +232,10 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     }
     this.comparing = this.compare;
     this.triggerChangeEvent();
+
+    if (isUserAction) {
+      this._dateFilterService.updateCurrentFilters(this._getUpdatedRouteParams());
+    }
   }
 
   public timeUnitsChange(timeUnit: KalturaReportInterval, applyIn?: string): void {
