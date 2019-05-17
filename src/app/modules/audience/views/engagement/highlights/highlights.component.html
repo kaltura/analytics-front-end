@@ -47,10 +47,10 @@
           </div>
 
           <p-table appScrollTopOnPaging
-                   [sortField]="_columns[0]"
+                   [sortField]="_sortField"
                    [value]="_tableData"
                    [customSort]="true"
-                   [paginator]="true"
+                   [paginator]="!_customPaginator"
                    [rows]="_pageSize"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
@@ -87,6 +87,11 @@
               </div>
             </ng-template>
           </p-table>
+          <p-paginator *ngIf="_customPaginator"
+                       [rows]="_pager.pageSize"
+                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
         </div>
       </div>
     </div>
