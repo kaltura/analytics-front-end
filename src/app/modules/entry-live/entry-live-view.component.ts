@@ -109,12 +109,12 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
       this._widgetsManager.register([
         this._liveUsers,
-        this._liveBandwidth,
-        this._liveStreamHealth,
-        this._liveGeo,
-        this._liveDevices,
+        // this._liveBandwidth,
+        // this._liveStreamHealth,
+        // this._liveGeo,
+        // this._liveDevices,
         // <-- append new widgets here
-      ], { entryId: this._entryId, streamStartTime: +this._entry.createdAt });
+      ], { entryId: this._entryId, streamStartTime: this._entry.currentBroadcastStartTime * 1000 });
     }
   }
   

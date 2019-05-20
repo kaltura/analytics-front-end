@@ -7,6 +7,7 @@ import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
 import * as moment from 'moment';
+import { LiveUsersConfig } from './live-users.config';
 
 @Component({
   selector: 'app-live-users',
@@ -39,6 +40,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   public _engagedUsersCount = 0;
   
   constructor(private _liveUsersWidget: LiveUsersWidget,
+              private _configService: LiveUsersConfig,
               private _errorsManager: ErrorsManagerService) {
     this._resetGraph();
   }
@@ -63,12 +65,20 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
     
     this._liveUsersWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(data => {
+      .subscribe((data: LiveUsersData) => {
         this._isBusy = false;
         this._data = data;
+  
+        this._updateGraphPoints(
+          data.activeUsers,
+          data.engagedUsers,
+          data.dates,
+        );
+        this._activeUsersCount = [...this._graphPoints[0]].pop(); // get last item
+        this._engagedUsersCount = [...this._graphPoints[1]].pop(); // get last item
       });
     
-    this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
+    this._graphData = this._configService.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
   }
   
   ngOnDestroy(): void {
@@ -90,27 +100,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   private _getRand(): number {
     return Math.abs(Math.round(Math.random() * 21 - 10));
   }
-  
-  private _fakeData(): void {
-    const update = () => {
-      this._updateGraphPoints(
-        Array.from({ length: 18 }, () => this._getRand()),
-        Array.from({ length: 18 }, () => this._getRand()),
-        Array.from({ length: 18 }, (v, i) => i === 17 ? 'Now' : moment().subtract(180 - (i * 10), 'second').format('hh:mm:ss'))
-      );
-      this._activeUsersCount = this._graphPoints[0][17];
-      this._engagedUsersCount = this._graphPoints[1][17];
-    };
-    
-    clearInterval(this._interval);
-    
-    if (this._isLive) {
-      update();
-      this._interval = setInterval(() => {
-        update();
-      }, 10000);
-    }
-  }
 
   private _updateGraphPoints(active: number[], engaged: number[], times: string[]): void {
     this._graphPoints = [active, engaged];
@@ -125,10 +114,5 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   
   public _onChartInit(ec: any): void {
     this._echartsIntance = ec;
-
-    setTimeout(() => {
-      // TODO remove mocked data once API is ready
-      this._fakeData();
-    });
   }
 }
