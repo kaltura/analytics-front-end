@@ -19,6 +19,12 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       
       if (!this._isLive) {
         this._resetGraph();
+      } else if (this._data) {
+        this._updateGraphPoints(
+          this._data.activeUsers,
+          this._data.engagedUsers,
+          this._data.dates,
+        );
       }
     } else {
       this._resetGraph();
@@ -64,16 +70,15 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       .subscribe((data: LiveUsersData) => {
         this._isBusy = false;
         this._data = data;
-  
-        this._updateGraphPoints(
-          data.activeUsers,
-          data.engagedUsers,
-          data.dates,
-        );
-        this._activeUsersCount = [...this._graphPoints[0]].pop(); // get last item
-        this._engagedUsersCount = [...this._graphPoints[1]].pop(); // get last item
+        
+        if (this._isLive) {
+          this._updateGraphPoints(
+            this._data.activeUsers,
+            this._data.engagedUsers,
+            this._data.dates,
+          );
+        }
       });
-    
     this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
   }
   
@@ -81,16 +86,11 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   }
   
   private _resetGraph(): void {
-    this._activeUsersCount = 0;
-    this._engagedUsersCount = 0;
-    this._graphPoints = [
+    this._updateGraphPoints(
       Array.from({ length: 18 }, () => 0),
       Array.from({ length: 18 }, () => 0),
-    ];
-  
-    if (this._echartsIntance) {
-      this._echartsIntance.setOption({ series: [{ data: this._graphPoints[0] }, { data: this._graphPoints[1] }] });
-    }
+      []
+    );
   }
   
   private _getRand(): number {
@@ -106,6 +106,9 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
         xAxis: [{ data: times }],
       });
     }
+  
+    this._activeUsersCount = [...this._graphPoints[0]].pop(); // get last item
+    this._engagedUsersCount = [...this._graphPoints[1]].pop(); // get last item
   }
   
   public _onChartInit(ec: any): void {

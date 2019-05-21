@@ -14,8 +14,8 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     reportType: KalturaReportType.usersOverviewRealtime,
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-      toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(+moment().subtract('170', 'seconds').toDate()),
+      toDate: this._getTime(30),
+      fromDate: this._getTime(200),
       interval: KalturaReportInterval.tenSeconds,
     }),
     responseOptions: this._responseOptions
@@ -25,13 +25,14 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
-  private _getServerTime(value: number): number {
-    return Math.floor(value / 1000);
+  private _getTime(seconds: number): number {
+    return moment().subtract(seconds, 'seconds').unix();
   }
   
+  
   public updateDateInterval(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getServerTime(+moment());
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getServerTime(+moment().subtract('180', 'seconds').toDate());
+    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(30);
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(200);
   }
   
   public create(): KalturaMultiRequest {
