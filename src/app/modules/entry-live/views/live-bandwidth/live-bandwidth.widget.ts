@@ -5,10 +5,18 @@ import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveBandwidthRequestFactory } from './live-bandwidth-request-factory';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
+import { KalturaReportGraph } from 'kaltura-ngx-client';
+import { analyticsConfig } from 'configuration/analytics-config';
+
+export interface LiveQoSData {
+  bandwidth: number[];
+  buffering: number[];
+  dates: string[];
+}
 
 @Injectable()
-export class LiveBandwidthWidget extends WidgetBase<any> {
-  protected _widgetId = 'users';
+export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
+  protected _widgetId = 'qos';
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
@@ -20,6 +28,58 @@ export class LiveBandwidthWidget extends WidgetBase<any> {
     this._pollsFactory = new LiveBandwidthRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
+  }
+  
+  protected _responseMapping(reports: KalturaReportGraph[]): LiveQoSData {
+    this._pollsFactory.updateDateInterval();
+    
+    if (!reports.length) {
+      return null;
+    }
+    
+    let result = {
+      buffering: [],
+      bandwidth: [],
+      dates: [],
+    };
+    
+    const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
+    const bufferingUsersData = reports.find(({ id }) => id === 'view_unique_buffering_users');
+    const bandwidthData = reports.find(({ id }) => id === 'avg_view_downstream_bandwidth');
+  
+    const getTime = dateString => {
+      const rawTime = dateString.substring(8);
+      const hours = rawTime.substring(0, 2);
+      const minutes = rawTime.substring(2, 4);
+      const seconds = rawTime.substring(4);
+      return `${hours}:${minutes}:${seconds}`;
+    };
+    
+    if (activeUsersData && bufferingUsersData) {
+      const bufferingUsers = bufferingUsersData.data.split(';');
+      activeUsersData.data.split(';')
+        .filter(Boolean)
+        .forEach((valueString, index) => {
+          const [date, activeUsersRawValue] = valueString.split(analyticsConfig.valueSeparator);
+          const [_, bufferingUsersRawValue] = bufferingUsers[index].split(analyticsConfig.valueSeparator);
+          const activeUsersVal = Number(activeUsersRawValue);
+          const bufferingUsersVal = Number(bufferingUsersRawValue);
+          const bufferingValue = bufferingUsersVal ? (activeUsersVal / bufferingUsersVal).toFixed(1) : 0;
+          result.buffering.push(bufferingValue);
+          result.dates.push(getTime(date));
+        });
+    }
+    
+    if (bandwidthData) {
+      bandwidthData.data.split(';')
+        .filter(Boolean)
+        .forEach(valueString => {
+          const [_, value] = valueString.split(analyticsConfig.valueSeparator);
+          result.bandwidth.push(value);
+        });
+    }
+    
+    return result;
   }
   
   public getGraphConfig(buffering: number[], bandwidth: number[]): { [key: string]: any } {
