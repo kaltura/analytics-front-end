@@ -92,10 +92,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       []
     );
   }
-  
-  private _getRand(): number {
-    return Math.abs(Math.round(Math.random() * 21 - 10));
-  }
 
   private _updateGraphPoints(active: number[], engaged: number[], times: string[]): void {
     this._graphPoints = [active, engaged];

@@ -93,11 +93,7 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
       []
     );
   }
-  
-  private _getRand(): number {
-    return Math.abs(Math.round(Math.random() * 21 - 10));
-  }
-  
+
   private _updateGraphPoints(buffer: number[], bandwidth: number[], times: string[]): void {
     this._graphPoints = [buffer, bandwidth];
     
