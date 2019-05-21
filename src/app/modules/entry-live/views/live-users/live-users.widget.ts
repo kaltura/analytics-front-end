@@ -7,6 +7,7 @@ import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general
 import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EChartOption } from 'echarts';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface LiveUsersData {
   activeUsers: number[];
@@ -19,7 +20,8 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
   protected _pollsFactory: LiveUsersRequestFactory = null;
   
-  constructor(protected _serverPolls: EntryLiveGeneralPollsService) {
+  constructor(protected _serverPolls: EntryLiveGeneralPollsService,
+              protected _translate: TranslateService) {
     super(_serverPolls);
   }
   
