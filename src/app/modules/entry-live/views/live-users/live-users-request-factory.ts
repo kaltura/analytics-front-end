@@ -15,7 +15,7 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(+moment().subtract('180', 'seconds').toDate()),
+      fromDate: this._getServerTime(+moment().subtract('170', 'seconds').toDate()),
       interval: KalturaReportInterval.tenSeconds,
     }),
     responseOptions: this._responseOptions

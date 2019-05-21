@@ -39,8 +39,6 @@ import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
-import { LiveUsersConfig } from './views/live-users/live-users.config';
-
 
 @NgModule({
   imports: [
@@ -85,7 +83,6 @@ import { LiveUsersConfig } from './views/live-users/live-users.config';
     EntryLiveService,
     LiveGeoConfig,
     LiveDevicesConfig,
-    LiveUsersConfig,
     
     // polls services
     EntryLiveGeneralPollsService,

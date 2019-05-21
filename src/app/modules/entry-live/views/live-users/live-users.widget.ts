@@ -6,7 +6,7 @@ import { LiveUsersRequestFactory } from './live-users-request-factory';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
-import * as moment from 'moment';
+import { EChartOption } from 'echarts';
 
 export interface LiveUsersData {
   activeUsers: number[];
@@ -44,8 +44,12 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     
     const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
     const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
-    const getDate = dateString => {
-    
+    const getTime = dateString => {
+      const rawTime = dateString.substring(8);
+      const hours = rawTime.substring(0, 2);
+      const minutes = rawTime.substring(2, 4);
+      const seconds = rawTime.substring(4);
+      return `${hours}:${minutes}:${seconds}`;
     };
     
     if (activeUsersData) {
@@ -54,7 +58,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach(valueString => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
           result.activeUsers.push(Number(value));
-          result.dates.push(date);
+          result.dates.push(getTime(date));
         });
     }
     
@@ -70,5 +74,81 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     }
     
     return result;
+  }
+  
+  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
+    return {
+      color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
+      textStyle: {
+        fontFamily: 'Lato',
+      },
+      grid: {
+        top: 24, left: 0, bottom: 30, right: 0, containLabel: false
+      },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999'
+        },
+        axisPointer: {
+          animation: false
+        },
+        formatter: (params) => {
+          const [active, engaged] = params;
+          const title = active.axisValue;
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${active.data}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engaged.data}%</div></div>`;
+        }
+      },
+      xAxis: {
+        boundaryGap: false,
+        type: 'category',
+        axisLine: {
+          lineStyle: {
+            color: '#ebebeb',
+          },
+        },
+        axisLabel: {
+          align: 'right',
+          fontWeight: 'bold',
+          color: '#999999',
+          padding: [8, 0, 0, 0],
+        }
+      },
+      yAxis: {
+        show: false,
+      },
+      series: [
+        {
+          type: 'line',
+          name: 'activeUsers',
+          symbol: 'none',
+          hoverAnimation: false,
+          data: activeUsers,
+          lineStyle: {
+            color: '#60BBA7'
+          },
+          areaStyle: {
+            color: '#EDF8F6',
+          },
+        },
+        {
+          type: 'line',
+          name: 'engagedUsers',
+          symbol: 'none',
+          hoverAnimation: false,
+          data: engagedUsers,
+          lineStyle: {
+            color: '#367064'
+          },
+          areaStyle: {
+            color: '#D9EBE8',
+          },
+        }
+      ]
+    };
   }
 }

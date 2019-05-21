@@ -6,8 +6,6 @@ import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
-import * as moment from 'moment';
-import { LiveUsersConfig } from './live-users.config';
 
 @Component({
   selector: 'app-live-users',
@@ -30,7 +28,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   private _graphPoints: number[][];
   private _echartsIntance: any;
   private _isLive = false;
-  private _interval: number;
   
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
@@ -40,7 +37,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   public _engagedUsersCount = 0;
   
   constructor(private _liveUsersWidget: LiveUsersWidget,
-              private _configService: LiveUsersConfig,
               private _errorsManager: ErrorsManagerService) {
     this._resetGraph();
   }
@@ -78,7 +74,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
         this._engagedUsersCount = [...this._graphPoints[1]].pop(); // get last item
       });
     
-    this._graphData = this._configService.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
+    this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
   }
   
   ngOnDestroy(): void {
