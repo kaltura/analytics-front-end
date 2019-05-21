@@ -40,7 +40,6 @@ import { LiveDevicesComponent } from './views/live-devices/live-devices.componen
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 
-
 @NgModule({
   imports: [
     AreaBlockerModule,

@@ -3,20 +3,25 @@ import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveUsersRequestFactory } from './live-users-request-factory';
-import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
+import { KalturaReportGraph } from 'kaltura-ngx-client';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { EChartOption } from 'echarts';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface LiveUsersData {
-  watchers: number;
+  activeUsers: number[];
+  engagedUsers: number[];
+  dates: string[];
 }
 
 @Injectable()
 export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
-  protected _pollsFactory = null;
+  protected _pollsFactory: LiveUsersRequestFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
-              private _translate: TranslateService) {
+              protected _translate: TranslateService) {
     super(_serverPolls);
   }
   
@@ -26,7 +31,54 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     return ObservableOf(null);
   }
   
-  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): { [key: string]: any } {
+  protected _responseMapping(reports: KalturaReportGraph[]): LiveUsersData {
+    this._pollsFactory.updateDateInterval();
+    
+    if (!reports.length) {
+      return null;
+    }
+    
+    let result = {
+      activeUsers: [],
+      engagedUsers: [],
+      dates: [],
+    };
+    
+    const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
+    const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
+    const getTime = dateString => {
+      const rawTime = dateString.substring(8);
+      const hours = rawTime.substring(0, 2);
+      const minutes = rawTime.substring(2, 4);
+      const seconds = rawTime.substring(4);
+      return `${hours}:${minutes}:${seconds}`;
+    };
+    
+    if (activeUsersData) {
+      activeUsersData.data.split(';')
+        .filter(Boolean)
+        .forEach(valueString => {
+          const [date, value] = valueString.split(analyticsConfig.valueSeparator);
+          result.activeUsers.push(Number(value));
+          result.dates.push(getTime(date));
+        });
+    }
+    
+    if (engagedUsersData) {
+      engagedUsersData.data.split(';')
+        .filter(Boolean)
+        .forEach((valueString, index) => {
+          const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
+          const relevantActiveUser = activeUsersData[index] || 0;
+          const value = relevantActiveUser ? Math.round(Number(rawValue) / relevantActiveUser * 100) : 0;
+          result.engagedUsers.push(value);
+        });
+    }
+    
+    return result;
+  }
+  
+  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
       textStyle: {
