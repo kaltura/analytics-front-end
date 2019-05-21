@@ -33,12 +33,14 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId, widgetsArgs.streamStartTime);
+    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
+    this._pollsFactory.updateDateInterval();
+
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];
@@ -69,10 +71,8 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
           const rowValue = row[key] ? parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) : 0;
           return significantDigits((rowValue / total) * 100);
         };
-        const playsDistribution = calculateDistribution('count_plays');
-        const usersDistribution = calculateDistribution('unique_known_users');
+        const usersDistribution = calculateDistribution('view_unique_audience');
         
-        row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
         row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
         
         return row;

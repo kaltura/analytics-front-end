@@ -33,8 +33,7 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
     return moment().subtract(hours, 'hours').unix();
   }
   
-  constructor(private _entryId: string,
-              private _startTime: number) {
+  constructor(private _entryId: string) {
     this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
     this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }

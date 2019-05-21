@@ -1,6 +1,7 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
+import * as moment from 'moment';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -9,10 +10,10 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   });
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.mapOverlayCountry,
+    reportType: KalturaReportType.mapOverlayCountryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(this._startTime),
+      toDate: this._getTime(0),
+      fromDate: this._getTime(1),
     }),
     pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
     order: '-count_plays',
@@ -20,10 +21,10 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   };
 
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
-    reportType: KalturaReportType.mapOverlayCountry,
+    reportType: KalturaReportType.mapOverlayCountryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(this._startTime),
+      toDate: this._getTime(0),
+      fromDate: this._getTime(1),
     }),
     responseOptions: this._responseOptions,
   };
@@ -33,13 +34,13 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
       const { from, to } = value;
       
       if (from) {
-        this._getTableActionArgs.reportInputFilter.fromDate = this._getServerTime(from);
-        this._getTotalsActionArgs.reportInputFilter.fromDate = this._getServerTime(from);
+        this._getTableActionArgs.reportInputFilter.fromDate = moment(from).unix();
+        this._getTotalsActionArgs.reportInputFilter.fromDate = moment(from).unix();
       }
   
       if (to) {
-        this._getTableActionArgs.reportInputFilter.toDate = this._getServerTime(to);
-        this._getTotalsActionArgs.reportInputFilter.toDate = this._getServerTime(to);
+        this._getTableActionArgs.reportInputFilter.toDate = moment(to).unix();
+        this._getTotalsActionArgs.reportInputFilter.toDate = moment(to).unix();
       }
     }
   }
@@ -49,7 +50,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   }
   
   public set drillDown(value: string[]) {
-    this.reportType = value.length === 2 ? KalturaReportType.mapOverlayCity : value.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this.reportType = value.length === 2 ? KalturaReportType.mapOverlayCityRealtime : value.length === 1 ? KalturaReportType.mapOverlayRegionRealtime : KalturaReportType.mapOverlayCountryRealtime;
     if (value.length > 0) {
       this._getTableActionArgs.reportInputFilter.countryIn = value[0];
       this._getTotalsActionArgs.reportInputFilter.countryIn = value[0];
@@ -64,14 +65,20 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     }
   }
 
-  constructor(private _entryId: string,
-              private _startTime: number) {
-    // this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    // this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  constructor(private _entryId: string) {
+    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
-  private _getServerTime(value: number): number {
-    return Math.floor(value / 1000);
+  private _getTime(hours: number): number {
+    return moment().subtract(hours, 'hours').unix();
+  }
+  
+  public updateDateInterval(): void {
+    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(0);
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(1);
+    this._getTotalsActionArgs.reportInputFilter.toDate = this._getTime(0);
+    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getTime(1);
   }
   
   public create(): KalturaMultiRequest {

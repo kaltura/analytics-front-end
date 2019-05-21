@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 
 export interface WidgetsActivationArgs {
   entryId: string;
-  streamStartTime?: number;
 }
 
 @Injectable()

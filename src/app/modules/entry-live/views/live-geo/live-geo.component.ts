@@ -30,7 +30,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
       this._entry = value;
-      this._liveGeoWidget.setTimeRange({ from: +value.createdAt });
     }
   }
   @ViewChild('table') _table: DataTable;
@@ -109,7 +108,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   
   private _updateMap(mapCenter: number[]): void {
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
-    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
+    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.view_unique_audience');
     mapConfig.series[0].data = [];
     let maxValue = 0;
     this._tableData.forEach(data => {
