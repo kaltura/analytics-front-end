@@ -424,6 +424,7 @@
       "m180s": "-180s",
       "ms": "-{{0}}s",
       "noHistory": "No Broadcast History",
+      "views": "Views",
       "streamStatus": {
         "live": "Live",
         "initializing": "Going Live",

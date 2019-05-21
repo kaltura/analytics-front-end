@@ -16,18 +16,16 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
           'device': {
             format: value => value,
           },
-          'count_plays': {
+          'views': {
             format: value => value,
           }
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'views',
         fields: {
-          'count_plays': {
+          'views': {
             format: value => value,
-            title: this._translate.instant(`app.audience.technology.count_plays`),
-            sortOrder: 1,
           }
         }
       }
