@@ -12,8 +12,8 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: KalturaReportType.platformsRealtime,
     reportInputFilter: new KalturaEndUserReportInputFilter({
-      toDate: this._getTime(0),
-      fromDate: this._getTime(1),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     pager: new KalturaFilterPager({ pageSize: 25 }),
     order: null,
@@ -23,14 +23,14 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
     reportType: KalturaReportType.platformsRealtime,
     reportInputFilter: new KalturaEndUserReportInputFilter({
-      toDate: this._getTime(0),
-      fromDate: this._getTime(1),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     responseOptions: this._responseOptions,
   };
   
-  private _getTime(hours: number): number {
-    return moment().subtract(hours, 'hours').unix();
+  private _getFromDate(): number {
+    return moment().subtract(30, 'seconds').unix();
   }
   
   constructor(private _entryId: string) {
@@ -39,10 +39,10 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   }
   
   public updateDateInterval(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(0);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(1);
-    this._getTotalsActionArgs.reportInputFilter.toDate = this._getTime(0);
-    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getTime(1);
+    this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
+    this._getTotalsActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getFromDate();
   }
   
   public create(): KalturaMultiRequest {

@@ -12,8 +12,8 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: KalturaReportType.mapOverlayCountryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: this._getTime(0),
-      fromDate: this._getTime(1),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
     order: '-count_plays',
@@ -23,8 +23,8 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
     reportType: KalturaReportType.mapOverlayCountryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: this._getTime(0),
-      fromDate: this._getTime(1),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     responseOptions: this._responseOptions,
   };
@@ -70,15 +70,15 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
-  private _getTime(hours: number): number {
-    return moment().subtract(hours, 'hours').unix();
+  private _getFromDate(): number {
+    return moment().subtract(30, 'seconds').unix();
   }
   
   public updateDateInterval(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(0);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(1);
-    this._getTotalsActionArgs.reportInputFilter.toDate = this._getTime(0);
-    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getTime(1);
+    this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
+    this._getTotalsActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getFromDate();
   }
   
   public create(): KalturaMultiRequest {
