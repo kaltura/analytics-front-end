@@ -23,7 +23,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { DataTable } from 'primeng/primeng';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
 
 @Component({
@@ -200,8 +200,24 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (this._table) {
       this._table.reset();
     }
+  
+    this._updateExportConfig();
     
     this.loadReport();
+  }
+  
+  private _updateExportConfig(): void {
+    let update: Partial<ExportItem> = { reportType: this.reportType, additionalFilters: {} };
+  
+    if (this._drillDown.length > 0) {
+      update.additionalFilters.countryIn = this._drillDown[0];
+    }
+    
+    if (this._drillDown.length > 1) {
+      update.additionalFilters.regionIn = this._drillDown[1];
+    }
+    
+    this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 
   private loadReport(sections = this._dataConfig): void {
