@@ -4,6 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
+import { DateFiltersChangedEvent } from './filters/filters.component';
 
 @Component({
   selector: 'app-live-discovery',
@@ -46,5 +47,9 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
+  }
+  
+  public _onFiltersChanged(event: DateFiltersChangedEvent): void {
+    console.warn(event);
   }
 }

@@ -1,0 +1,14 @@
+<div class="kFilters">
+  <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
+  <p-dropdown [options]="_dateRangeOptions"
+              [(ngModel)]="_selectedDateRange"
+              (onChange)="_onFilterChange()"></p-dropdown>
+
+</div>
+<div class="kFilters kSubFilters">
+  <div style="width: 100%">
+    <ng-content></ng-content>
+  </div>
+  <p-selectButton [options]="_timeIntervalOptions"
+                  [(ngModel)]="_selectedTimeInterval"></p-selectButton>
+</div>

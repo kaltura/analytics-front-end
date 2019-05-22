@@ -112,7 +112,7 @@
       "document": "Document",
       "other": "Other"
     },
-    "dateFilter":{
+    "dateFilter": {
       "preset": "Preset",
       "specific": "Specific Date Range",
       "last": "Last",
@@ -445,6 +445,23 @@
       },
       "devices": {
         "title": "Active Users Per Devices"
+      },
+      "discovery": {
+        "title": "Explore",
+        "filter": {
+          "hours": "Hours",
+          "days": "Days",
+          "minutes": "Minutes",
+          "10sec": "10 Seconds",
+          "lastMinute": "Last minute",
+          "last5Minutes": "Last 5 minutes",
+          "last30Minutes": "Last 30 minutes",
+          "lastHour": "Last hour",
+          "last3Hours": "Last 3 hours",
+          "last6Hours": "Last 6 hours",
+          "last3Days": "Last 3 days",
+          "last7Days": "Last 7 days"
+        }
       },
       "alerts": {
         "no-alerts": "No reported issues",

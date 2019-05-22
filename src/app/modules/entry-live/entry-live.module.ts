@@ -42,6 +42,9 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
 import { LiveDiscoveryComponent } from './views/live-discovery/live-discovery.component';
 import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
+import { SelectButtonModule } from 'primeng/primeng';
+import { FiltersComponent } from './views/live-discovery/filters/filters.component';
+import { FiltersService } from './views/live-discovery/filters/filters.service';
 
 @NgModule({
   imports: [
@@ -60,6 +63,7 @@ import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery
     RouterModule.forChild(routing),
     KalturaUIModule,
     InputHelperModule,
+    SelectButtonModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -78,6 +82,7 @@ import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery
     LiveGeoComponent,
     LiveDevicesComponent,
     LiveDiscoveryComponent,
+    FiltersComponent,
   ],
   exports: [],
   providers: [
@@ -87,6 +92,7 @@ import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery
     EntryLiveService,
     LiveGeoConfig,
     LiveDevicesConfig,
+    FiltersService,
     
     // polls services
     EntryLiveGeneralPollsService,
