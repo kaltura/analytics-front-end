@@ -48,3 +48,7 @@
     overflow: hidden;
   }
 }
+
+:host /deep/ .kExport .kDropDown {
+  margin-right: 0px !important;
+}

@@ -15,11 +15,14 @@ import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widge
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
+import { EntryLiveExportConfig } from "./entry-live-export.config";
+import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 
 @Component({
   selector: 'app-entry-live',
   templateUrl: './entry-live-view.component.html',
   styleUrls: ['./entry-live-view.component.scss'],
+  providers: [ EntryLiveExportConfig ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _widgetsRegistered = false;
@@ -28,6 +31,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
+  public _exportConfig: ExportItem[] = [];
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -41,7 +45,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
               private _liveGeo: LiveGeoWidget,
-              private _liveDevices: LiveDevicesWidget) {
+              private _liveDevices: LiveDevicesWidget,
+              private _exportConfigService: EntryLiveExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
   }
   
   

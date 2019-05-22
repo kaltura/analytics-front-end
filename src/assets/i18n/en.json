@@ -521,7 +521,12 @@
           "message-log": "Exceeded max encoded entries allowed",
           "message-text-box": "Exceeded max encoded entries allowed, please contact support"
         }
-
+      },
+      "exportLabels": {
+        "users": "Active & Engaged Users",
+        "bandwidth": "Users Buffering & Downstream Bandwidth",
+        "geo": "Geo Location",
+        "devices": "Active Users Per Devices"
       }
     },
     "entry": {
