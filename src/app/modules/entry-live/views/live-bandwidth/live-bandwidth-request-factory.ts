@@ -10,7 +10,7 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
   
-  private _getTableActionArgs: ReportGetGraphsActionArgs = {
+  private _getGraphActionArgs: ReportGetGraphsActionArgs = {
     reportType: KalturaReportType.qosOverviewRealtime,
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
@@ -22,7 +22,7 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   };
   
   constructor(private _entryId: string) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    this._getGraphActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
   private _getTime(seconds: number): number {
@@ -31,13 +31,13 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   
   
   public updateDateInterval(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(30);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(200);
+    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(30);
+    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(200);
   }
   
   public create(): KalturaMultiRequest {
     return new KalturaMultiRequest(
-      new ReportGetGraphsAction(this._getTableActionArgs),
+      new ReportGetGraphsAction(this._getGraphActionArgs),
     );
   }
 }

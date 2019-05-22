@@ -45,6 +45,7 @@ import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery
 import { SelectButtonModule } from 'primeng/primeng';
 import { FiltersComponent } from './views/live-discovery/filters/filters.component';
 import { FiltersService } from './views/live-discovery/filters/filters.service';
+import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.config';
 
 @NgModule({
   imports: [
@@ -93,6 +94,7 @@ import { FiltersService } from './views/live-discovery/filters/filters.service';
     LiveGeoConfig,
     LiveDevicesConfig,
     FiltersService,
+    LiveDiscoveryConfig,
     
     // polls services
     EntryLiveGeneralPollsService,
