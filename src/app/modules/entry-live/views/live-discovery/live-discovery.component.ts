@@ -1,11 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveDiscoveryWidget, LiveUsersData } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
-import { KalturaExtendedLiveEntry } from '../../entry-live.service';
-import { KalturaStreamStatus } from '../../utils/get-stream-status';
 
 @Component({
   selector: 'app-live-discovery',
@@ -13,16 +11,6 @@ import { KalturaStreamStatus } from '../../utils/get-stream-status';
   styleUrls: ['./live-discovery.component.scss']
 })
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
-  @Input() set entry(value: KalturaExtendedLiveEntry) {
-    if (value) {
-      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
-      this._entry = value;
-    }
-  }
-  
-  private _isLive = false;
-  private _entry: KalturaExtendedLiveEntry;
-  
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
