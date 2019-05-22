@@ -39,6 +39,9 @@ import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
+import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
+import { LiveDiscoveryComponent } from './views/live-discovery/live-discovery.component';
+import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
 
 @NgModule({
   imports: [
@@ -74,6 +77,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     CodeToHealthIconPipe,
     LiveGeoComponent,
     LiveDevicesComponent,
+    LiveDiscoveryComponent,
   ],
   exports: [],
   providers: [
@@ -87,6 +91,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     // polls services
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,
+    EntryLiveDiscoveryPollsService,
 
     // widgets
     EntryLiveWidget,
@@ -95,6 +100,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     LiveStreamHealthWidget,
     LiveGeoWidget,
     LiveDevicesWidget,
+    LiveDiscoveryWidget,
   ]
 })
 export class EntryLiveModule {
