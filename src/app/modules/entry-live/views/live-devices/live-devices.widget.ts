@@ -38,12 +38,14 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId, widgetsArgs.streamStartTime);
+    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveDevicesData {
+    this._pollsFactory.updateDateInterval();
+
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];
@@ -55,7 +57,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     if (totals && totals.data && totals.header) {
       tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
     }
-    
+
     if (table && table.header && table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data } = this._getOverviewData(table, relevantFields);
@@ -63,7 +65,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       result.totalCount = table.totalCount;
       result.data = this._getSummaryData(data, tabsData);
     }
-  
+    
     return result;
   }
   
@@ -118,7 +120,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
         
         return {
           value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
+          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.views`) },
           label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           icon: this._deviceIconPipe.transform(item.device),
         };

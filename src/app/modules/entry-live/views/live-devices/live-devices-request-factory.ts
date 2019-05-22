@@ -1,6 +1,7 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
+import * as moment from 'moment';
 
 export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -9,10 +10,10 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   });
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.platforms,
+    reportType: KalturaReportType.platformsRealtime,
     reportInputFilter: new KalturaEndUserReportInputFilter({
-      toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(this._startTime),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     pager: new KalturaFilterPager({ pageSize: 25 }),
     order: null,
@@ -20,22 +21,28 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   };
   
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
-    reportType: KalturaReportType.platforms,
+    reportType: KalturaReportType.platformsRealtime,
     reportInputFilter: new KalturaEndUserReportInputFilter({
-      toDate: this._getServerTime(+new Date()),
-      fromDate: this._getServerTime(this._startTime),
+      toDate: moment().unix(),
+      fromDate: this._getFromDate(),
     }),
     responseOptions: this._responseOptions,
   };
   
-  constructor(private _entryId: string,
-              private _startTime: number) {
-    // this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    // this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  private _getFromDate(): number {
+    return moment().subtract(30, 'seconds').unix();
   }
   
-  private _getServerTime(value: number): number {
-    return Math.floor(value / 1000);
+  constructor(private _entryId: string) {
+    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  }
+  
+  public updateDateInterval(): void {
+    this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
+    this._getTotalsActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getFromDate();
   }
   
   public create(): KalturaMultiRequest {

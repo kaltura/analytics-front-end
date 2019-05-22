@@ -424,6 +424,7 @@
       "m180s": "-180s",
       "ms": "-{{0}}s",
       "noHistory": "No Broadcast History",
+      "views": "Views",
       "streamStatus": {
         "live": "Live",
         "initializing": "Going Live",
@@ -434,7 +435,13 @@
       "secondary": "Secondary",
       "stream": "Stream",
       "geo": {
-        "title": "Geo Location"
+        "title": "Geo Location",
+        "object_id": "Name",
+        "index": "#",
+        "view_unique_audience": "Active Users",
+        "distribution": "Active Users Distribution",
+        "view_unique_buffering_users": "Avg. Buffer Rate",
+        "view_unique_engaged_users": "Engaged Users"
       },
       "devices": {
         "title": "Active Users Per Devices"
