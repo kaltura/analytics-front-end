@@ -145,7 +145,7 @@ export class FilterComponent {
   
   public _entrySources: OptionItem[] = [ // TODO determine valid values
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
-    { value: 'Webcasting', label: 'app.filters.entrySources.Webcasting' },
+    { value: 'Kaltura Webcast', label: 'app.filters.entrySources.Webcasting' },
     { value: 'Kaltura Capture', label: 'app.filters.entrySources.Kaltura Capture' },
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
   ];
