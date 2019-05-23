@@ -4,7 +4,7 @@ import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportTy
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { EngagementExportConfig } from './engagement-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 
 @Component({
   selector: 'app-engagement',
@@ -44,5 +44,14 @@ export class EngagementComponent {
   
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
+  }
+  
+  public _onDrillDown(event: string): void {
+    let update: Partial<ExportItem> = {};
+    if (event) {
+      update.objectIds = event;
+    }
+
+    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
   }
 }

@@ -5,7 +5,8 @@ import { DevicesOverviewComponent } from './devices-overview/devices-overview.co
 import { KalturaReportType } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TechnologyExportConfig } from './technology-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { EngagementExportConfig } from '../engagement/engagement-export.config';
 
 @Component({
   selector: 'app-technology',
@@ -53,5 +54,17 @@ export class TechnologyComponent implements OnInit {
     if (this._overview) {
       this._overview.resetDeviceFilters();
     }
+  }
+  
+  public _onDrillDown(event: { drillDown: string, reportType: KalturaReportType, name: string }): void {
+    const { drillDown, reportType, name } = event;
+    let update: Partial<ExportItem> = { reportType: reportType };
+
+    if (reportType === KalturaReportType.browsers) {
+      update.additionalFilters = { browserFamilyIn: drillDown };
+    } else if (reportType === KalturaReportType.operatingSystem) {
+      update.additionalFilters = { operatingSystemFamilyIn: drillDown };
+    }
+    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), name, update);
   }
 }

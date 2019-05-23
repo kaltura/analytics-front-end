@@ -4,7 +4,7 @@ import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportTy
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TopContributorsExportConfig } from './top-contributors-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 
 @Component({
   selector: 'app-top-contributors',

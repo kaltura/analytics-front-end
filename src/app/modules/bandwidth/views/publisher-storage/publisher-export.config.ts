@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-csv.component';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
+import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 
 @Injectable()
-export class PublisherExportConfig implements ExportConfigService {
+export class PublisherExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
+    super();
   }
   
   public getConfig(): ExportItem[] {
