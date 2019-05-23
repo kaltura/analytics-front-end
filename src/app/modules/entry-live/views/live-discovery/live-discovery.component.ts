@@ -5,6 +5,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { DateFiltersChangedEvent } from './filters/filters.component';
+import { LiveDiscoveryConfig } from './live-discovery.config';
+import { ReportDataFields, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { MetricsSelectorChangeEvent } from './metrics-selector/metrics-selector.component';
 
 @Component({
   selector: 'app-live-discovery',
@@ -15,9 +18,12 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
+  public _fields: ReportDataFields;
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
-              private _errorsManager: ErrorsManagerService) {
+              private _errorsManager: ErrorsManagerService,
+              protected _dataConfigService: LiveDiscoveryConfig) {
+    this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
   }
   
   ngOnInit() {
@@ -50,6 +56,10 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   }
   
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
+    console.warn(event);
+  }
+  
+  public _onMetricsSelectorChange(event: MetricsSelectorChangeEvent): void {
     console.warn(event);
   }
 }

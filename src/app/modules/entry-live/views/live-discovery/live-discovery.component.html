@@ -1,3 +1,6 @@
 <div data-aid="report-discovery" class="kReport kOverrideFAIcons kDiscovery">
-  <app-live-discovery-filters (filtersChanged)="_onFiltersChanged($event)"></app-live-discovery-filters>
+  <app-live-discovery-filters (filtersChanged)="_onFiltersChanged($event)">
+    <app-live-discovery-metrics-selector [fields]="_fields"
+                                         (selectorChange)="_onMetricsSelectorChange($event)"></app-live-discovery-metrics-selector>
+  </app-live-discovery-filters>
 </div>

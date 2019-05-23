@@ -448,6 +448,7 @@
       },
       "discovery": {
         "title": "Explore",
+        "vs": "vs",
         "filter": {
           "hours": "Hours",
           "days": "Days",
@@ -461,7 +462,16 @@
           "last6Hours": "Last 6 hours",
           "last3Days": "Last 3 days",
           "last7Days": "Last 7 days"
-        }
+        },
+        "view_unique_audience": "Active Users",
+        "view_unique_engaged_users": "Engaged Users",
+        "view_unique_buffering_users": "Buffering Users",
+        "avg_view_downstream_bandwidth": "Downstream Bandwidth",
+        "view_unique_audience_dvr": "DVR Users",
+        "avg_view_bitrate": "Bitrate",
+        "sum_view_time": "Minutes Viewed",
+        "avg_view_latency": "Avg. Latency Rate",
+        "avg_view_dropped_frames_ratio": "Dropped Frame Rate"
       },
       "alerts": {
         "no-alerts": "No reported issues",

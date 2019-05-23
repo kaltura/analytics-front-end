@@ -46,6 +46,8 @@ import { SelectButtonModule } from 'primeng/primeng';
 import { FiltersComponent } from './views/live-discovery/filters/filters.component';
 import { FiltersService } from './views/live-discovery/filters/filters.service';
 import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.config';
+import { MetricsSelectorComponent } from './views/live-discovery/metrics-selector/metrics-selector.component';
+import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
 
 @NgModule({
   imports: [
@@ -84,6 +86,8 @@ import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.confi
     LiveDevicesComponent,
     LiveDiscoveryComponent,
     FiltersComponent,
+    MetricsSelectorComponent,
+    MetricsSelectorDropdownComponent,
   ],
   exports: [],
   providers: [
