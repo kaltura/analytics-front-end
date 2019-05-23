@@ -48,6 +48,7 @@ import { FiltersService } from './views/live-discovery/filters/filters.service';
 import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.config';
 import { MetricsSelectorComponent } from './views/live-discovery/metrics-selector/metrics-selector.component';
 import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
+import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics
     FiltersComponent,
     MetricsSelectorComponent,
     MetricsSelectorDropdownComponent,
+    DiscoveryChartComponent,
   ],
   exports: [],
   providers: [

@@ -4,8 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 
 export interface MetricsSelectorChangeEvent {
-  main: string;
-  secondary: string;
+  selected: string[];
   initialRun: boolean;
 }
 
@@ -58,8 +57,7 @@ export class MetricsSelectorComponent implements OnInit {
     this._updateOptions(initial);
 
     this.selectorChange.emit({
-      main: this._selectedMain,
-      secondary: this._selectedSecondary,
+      selected: [this._selectedMain, this._selectedSecondary],
       initialRun: initial,
     });
   }

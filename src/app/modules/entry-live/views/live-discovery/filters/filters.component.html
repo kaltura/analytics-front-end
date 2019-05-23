@@ -10,5 +10,6 @@
     <ng-content></ng-content>
   </div>
   <p-selectButton [options]="_timeIntervalOptions"
-                  [(ngModel)]="_selectedTimeInterval"></p-selectButton>
+                  [(ngModel)]="_selectedTimeInterval"
+                  (onChange)="_onFilterChange()"></p-selectButton>
 </div>

@@ -9,6 +9,7 @@ import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-disco
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportService } from 'shared/services';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { DateRangeServerValue } from './filters/filters.service';
 
 export interface LiveUsersData {
   activeUsers: number[];
@@ -40,7 +41,13 @@ export class LiveDiscoveryWidget extends WidgetBase<any> {
   protected _responseMapping(reports: KalturaReportGraph[]): any {
     this._pollsFactory.updateDateInterval();
   
-    const r = this._reportService.parseGraphs(reports, this._dataConfig[ReportDataSection.graph], null, KalturaReportInterval.hours);
-    console.warn(r);
+    console.warn(reports);
+  }
+  
+  public updateFilters(interval: KalturaReportInterval, range: DateRangeServerValue): void {
+    this._pollsFactory.interval = interval;
+    this._pollsFactory.timeRange = range;
+  
+    this.restartPolling();
   }
 }
