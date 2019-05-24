@@ -16,7 +16,7 @@ export enum ReportDataSection {
 export interface ReportDataItemField {
   format: (value: any) => any;
   parse?: (value: any) => number;
-  units?: (value: any) => string;
+  units?: (value?: any) => string;
   title?: string;
   tooltip?: string;
   graphTooltip?: (value: any) => string;

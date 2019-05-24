@@ -18,6 +18,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#9b64e6'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_dropped_frames_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
             sortOrder: 1,
           },
           'view_unique_buffering_users': {
@@ -25,6 +26,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#e1962e'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
             sortOrder: 2,
           },
           'avg_view_bitrate': {
@@ -32,6 +34,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#f7c25c'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value)} Kbps`,
+            units: () => 'Kbps',
             sortOrder: 3,
           },
           'avg_view_latency': {
@@ -39,6 +42,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#f3737b'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_latency')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
             sortOrder: 4,
           },
           'avg_view_downstream_bandwidth': {
@@ -46,6 +50,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#e0313a'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_downstream_bandwidth')}: ${ReportHelper.numberOrZero(value)} Sec`,
+            units: () => 'Sec',
             sortOrder: 5,
           },
           'sum_view_time': {
@@ -53,6 +58,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             colors: ['#487adf'], // replace with relevant color
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.sum_view_time')}: ${ReportHelper.numberOrZero(value)} Sec`,
+            units: () => 'Sec',
             sortOrder: 6,
           },
           'view_unique_audience': {
