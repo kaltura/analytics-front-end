@@ -4,4 +4,27 @@
   <div *ngIf="!isBusy && !_chartData" class="kNoResults">
     <span>{{'app.common.noResults' | translate}}</span>
   </div>
-</div>
+
+  <div class="kSummaryRow">
+    <div class="kCustomLegend">
+      <div class="kLegendItemContainer" *ngFor="let metric of selectedMetrics">
+        <div class="kCircle" [style.background-color]="colorsMap[metric]"></div>
+        <span class="kLegendItem">{{('app.entryLive.discovery.' + metric) | translate}}</span>
+      </div>
+    </div>
+
+    <div style="margin-left: auto">
+      <div class="kSummary">
+
+      </div>
+
+      <div class="kControls">
+        <button pButton class="kTogglePolling"
+                [ngClass]="isPolling ? 'kButtonDefault' : 'kButtonBranded'"
+                [icon]="isPolling ? 'icon-pause' : 'icon-resume'"
+                [label]="(isPolling ? 'app.entryLive.discovery.pauseUpdates' : 'app.entryLive.discovery.resumeUpdates') | translate"
+                (click)="togglePolling.emit()"></button>
+      </div>
+
+    </div>
+  </div>

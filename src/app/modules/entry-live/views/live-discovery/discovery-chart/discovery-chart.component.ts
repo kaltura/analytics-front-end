@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
@@ -11,12 +11,14 @@ import { LiveDiscoveryData } from '../live-discovery.widget';
 })
 export class DiscoveryChartComponent {
   @Input() fields: ReportDataFields;
-
+  
   @Input() isBusy: boolean;
-
+  
   @Input() colorsMap: { [metric: string]: string } = {};
-
+  
   @Input() selectedMetrics: string[];
+  
+  @Input() isPolling = true;
   
   @Input() set data(value: LiveDiscoveryData) {
     if (value) {
@@ -27,6 +29,8 @@ export class DiscoveryChartComponent {
       this._data = null;
     }
   }
+  
+  @Output() togglePolling = new EventEmitter<void>();
   
   private _data: LiveDiscoveryData;
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
@@ -42,7 +46,7 @@ export class DiscoveryChartComponent {
   
   private _getGraphConfig(metrics: string[], main: string[], secondary: string[], times: string[]): EChartOption {
     const [mainMetric, secondaryMetric] = metrics;
-  
+    
     const seriesCommon = {
       type: 'line',
       lineStyle: {
@@ -52,7 +56,7 @@ export class DiscoveryChartComponent {
       symbolSize: 8,
       showSymbol: false
     };
-
+    
     const yAxisCommon = {
       type: 'value',
       axisTick: { show: false },
@@ -63,7 +67,7 @@ export class DiscoveryChartComponent {
         }
       },
     };
-  
+    
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series.map(({ data }) => data))).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
@@ -73,11 +77,11 @@ export class DiscoveryChartComponent {
     const secondaryMax = getMaxValue(secondary) || 1;
     let mainMin = getMinValue(main);
     let secondaryMin = getMinValue(secondary);
-  
+    
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
-  
+    
     const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
     const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
     

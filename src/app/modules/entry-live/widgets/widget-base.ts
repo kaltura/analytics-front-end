@@ -41,7 +41,7 @@ export abstract class WidgetBase<T> {
     this._state.next({ ...this._currentState, ...newState });
   }
   
-  protected _stopPolling(error = null): void {
+  public stopPolling(error = null): void {
     this._updateState({ polling: false, error });
     
     if (this._pollingSubscription) {
@@ -65,7 +65,7 @@ export abstract class WidgetBase<T> {
       this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
         .subscribe((response) => {
           if (response.error) {
-            this._stopPolling(response.error);
+            this.stopPolling(response.error);
             return;
           }
           
@@ -80,7 +80,7 @@ export abstract class WidgetBase<T> {
   }
   
   public restartPolling(): void {
-    this._stopPolling();
+    this.stopPolling();
     this.startPolling();
   }
   
@@ -104,7 +104,7 @@ export abstract class WidgetBase<T> {
   public deactivate(): void {
     this._updateState({ activated: false, error: null });
     
-    this._stopPolling();
+    this.stopPolling();
     
     this._onDeactivate();
   }

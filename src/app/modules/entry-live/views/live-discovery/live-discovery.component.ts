@@ -23,6 +23,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _fields: ReportDataFields;
   public _selectedMetrics: string[];
   public _colorsMap: { [metric: string]: string } = {};
+  public _isPolling: boolean;
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _errorsManager: ErrorsManagerService,
@@ -35,6 +36,8 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._liveExploreWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isPolling = state.polling;
+
         if (state.error) {
           const actions = {
             'close': () => {
@@ -72,5 +75,15 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     if (!event.initialRun && this._discoveryChart) {
       this._discoveryChart.displayMetrics(this._selectedMetrics);
     }
+  }
+  
+  public _onTogglePolling(): void {
+    if (this._isPolling) {
+      this._liveExploreWidget.stopPolling();
+    } else {
+      this._liveExploreWidget.startPolling();
+      this._isBusy = true;
+    }
+    
   }
 }

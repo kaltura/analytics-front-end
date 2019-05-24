@@ -10,6 +10,8 @@
                          [fields]="_fields"
                          [colorsMap]="_colorsMap"
                          [isBusy]="_isBusy"
-                         [selectedMetrics]="_selectedMetrics"></app-discovery-chart>
+                         [isPolling]="_isPolling"
+                         [selectedMetrics]="_selectedMetrics"
+                         (togglePolling)="_onTogglePolling()"></app-discovery-chart>
   </k-area-blocker>
 </div>

@@ -449,6 +449,8 @@
       "discovery": {
         "title": "Explore",
         "vs": "vs",
+        "pauseUpdates": "Pause Updates",
+        "resumeUpdates": "Resume Updates",
         "filter": {
           "hours": "Hours",
           "days": "Days",
