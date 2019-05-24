@@ -69,18 +69,18 @@ export class DiscoveryChartComponent {
     const getMinValue = createFunc(Math.min);
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
-    const currentMax = getMaxValue(main) || 1;
-    const compareMax = getMaxValue(secondary) || 1;
-    let currentMin = getMinValue(main);
-    let compareMin = getMinValue(secondary);
+    const mainMax = getMaxValue(main) || 1;
+    const secondaryMax = getMaxValue(secondary) || 1;
+    let mainMin = getMinValue(main);
+    let secondaryMin = getMinValue(secondary);
   
     // prevent having min equals max
-    currentMin = currentMin === currentMax ? 0 : currentMin;
-    compareMin = compareMin === compareMax ? 0 : compareMin;
+    mainMin = mainMin === mainMax ? 0 : mainMin;
+    secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
   
-    const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(2));
-    const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(2));
-
+    const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
+    const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
+    
     return {
       color: this.selectedMetrics.map(metric => getColor(metric)),
       textStyle: {
@@ -88,6 +88,22 @@ export class DiscoveryChartComponent {
       },
       grid: {
         top: 24, left: 24, bottom: 74, right: 24, containLabel: true
+      },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999'
+        },
+        axisPointer: {
+          lineStyle: {
+            color: '#dadada'
+          },
+          z: 0
+        },
       },
       xAxis: {
         type: 'category',
@@ -116,17 +132,17 @@ export class DiscoveryChartComponent {
           ...yAxisCommon,
           name: mainMetric,
           nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
-          max: currentMax,
-          min: currentMin,
-          interval: currentInterval
+          // max: mainMax,
+          // min: mainMin,
+          // interval: mainInterval
         },
         {
           ...yAxisCommon,
           name: secondaryMetric,
           nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
-          max: compareMax,
-          min: compareMin,
-          interval: compareInterval
+          // max: secondaryMax,
+          // min: secondaryMin,
+          // interval: secondaryInterval
         },
       ],
       series: [
