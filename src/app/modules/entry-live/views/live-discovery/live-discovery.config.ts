@@ -14,39 +14,45 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
       [ReportDataSection.graph]: {
         fields: {
           'avg_view_dropped_frames_ratio': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true, false),
             colors: ['#9b64e6'],
             graphType: GraphType.line,
+            units: () => '%',
             sortOrder: 1,
           },
           'view_unique_buffering_users': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true, false),
             colors: ['#e1962e'],
             graphType: GraphType.line,
+            units: () => '%',
             sortOrder: 2,
           },
           'avg_view_bitrate': {
-            format: value => ReportHelper.numberOrZero(value) + 'Kbps',
+            format: value => ReportHelper.numberOrZero(value),
             colors: ['#f7c25c'],
             graphType: GraphType.line,
+            units: () => 'Kbps',
             sortOrder: 3,
           },
           'avg_view_latency': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => ReportHelper.percents(value / 100, false, true, false),
             colors: ['#f3737b'],
             graphType: GraphType.line,
+            units: () => '%',
             sortOrder: 4,
           },
           'avg_view_downstream_bandwidth': {
-            format: value => ReportHelper.numberOrZero(value) + 'sec',
+            format: value => ReportHelper.numberOrZero(value),
             colors: ['#e0313a'],
             graphType: GraphType.line,
+            units: () => 'sec',
             sortOrder: 5,
           },
           'sum_view_time': {
-            format: value => ReportHelper.numberOrZero(value) + 'sec',
+            format: value => ReportHelper.numberOrZero(value),
             colors: ['#487adf'], // replace with relevant color
             graphType: GraphType.line,
+            units: () => 'sec',
             sortOrder: 6,
           },
           'view_unique_audience': {

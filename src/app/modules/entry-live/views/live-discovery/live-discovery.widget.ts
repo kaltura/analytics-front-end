@@ -3,33 +3,47 @@ import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveDiscoveryRequestFactory } from './live-discovery-request-factory';
-import { KalturaReportGraph, KalturaReportInterval } from 'kaltura-ngx-client';
+import { KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportService } from 'shared/services';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { DateRangeServerValue } from './filters/filters.service';
+import { DateRange, DateRangeServerValue, FiltersService, TimeInterval } from './filters/filters.service';
+import { getResponseByType } from 'shared/utils/get-response-by-type';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { DateFiltersChangedEvent } from './filters/filters.component';
 
-export interface LiveUsersData {
-  activeUsers: number[];
-  engagedUsers: number[];
-  dates: string[];
+export interface LiveDiscoveryData {
+  graphs: { [key: string]: string[] };
+  totals?: any; // TODO
 }
 
 @Injectable()
-export class LiveDiscoveryWidget extends WidgetBase<any> {
+export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   protected _widgetId = 'explore';
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
+  protected _dateRange: DateRange;
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig,
-              protected _reportService: ReportService) {
+              protected _reportService: ReportService,
+              protected _filterService: FiltersService) {
     super(_serverPolls);
-  
+    
     this._dataConfig = this._dataConfigService.getConfig();
+  }
+  
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._pollsFactory.interval = event.timeIntervalServerValue;
+    this._pollsFactory.dateRange = event.dateRangeServerValue;
+
+    this._dateRange = event.dateRange;
+    
+    this.restartPolling();
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -38,16 +52,39 @@ export class LiveDiscoveryWidget extends WidgetBase<any> {
     return ObservableOf(null);
   }
   
-  protected _responseMapping(reports: KalturaReportGraph[]): any {
-    this._pollsFactory.updateDateInterval();
+  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportGraph[]>[]): LiveDiscoveryData {
+    this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+
+    const graphsResponse = getResponseByType(responses, KalturaReportGraph) as KalturaReportGraph[] || [];
+    const totalsResponse = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
   
-    console.warn(reports);
-  }
+    const config = this._dataConfig[ReportDataSection.graph].fields;
+    const graphs = graphsResponse.reduce((result, graph) => {
+      const times = [];
+      const graphData = [];
+      
+      graph.data.split(';')
+        .filter(Boolean)
+        .forEach(valueString => {
+          const [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
+          const value = config[graph.id] ? config[graph.id].format(rawValue) : rawValue;
+          const time = DateFilterUtils.getTimeStringFromDateString(rawDate);
   
-  public updateFilters(interval: KalturaReportInterval, range: DateRangeServerValue): void {
-    this._pollsFactory.interval = interval;
-    this._pollsFactory.timeRange = range;
+          times.push(time);
+          graphData.push(value);
+        });
+      
+      if (!result['times']) {
+        result['times'] = times;
+      }
+
+      result[graph.id] = graphData;
+
+      return result;
+    }, {});
   
-    this.restartPolling();
+    return {
+      graphs,
+    };
   }
 }

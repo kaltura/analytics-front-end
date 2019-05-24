@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LiveDiscoveryWidget, LiveUsersData } from './live-discovery.widget';
+import { LiveDiscoveryData, LiveDiscoveryWidget, LiveUsersData } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
@@ -16,17 +16,19 @@ import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.compo
 })
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
-
+  
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
-  public _data: any;
+  public _data: LiveDiscoveryData;
   public _fields: ReportDataFields;
   public _selectedMetrics: string[];
-
+  public _colorsMap: { [metric: string]: string } = {};
+  
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _errorsManager: ErrorsManagerService,
               protected _dataConfigService: LiveDiscoveryConfig) {
     this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
+    this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
   }
   
   ngOnInit() {
@@ -49,19 +51,19 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     
     this._liveExploreWidget.data$
       .pipe(cancelOnDestroy(this))
-      .subscribe((data: LiveUsersData) => {
+      .subscribe((data: LiveDiscoveryData) => {
         this._isBusy = false;
         this._data = data;
       });
   }
-
+  
   ngOnDestroy(): void {
   }
-
+  
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
     if (!event.initialRun) {
       this._isBusy = true;
-      this._liveExploreWidget.updateFilters(event.timeIntervalServerValue, event.dateRangeServerValue);
+      this._liveExploreWidget.updateFilters(event);
     }
   }
   

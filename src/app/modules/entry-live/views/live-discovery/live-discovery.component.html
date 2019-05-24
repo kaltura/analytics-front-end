@@ -1,12 +1,15 @@
-<div data-aid="report-discovery" class="kReport kOverrideFAIcons kDiscovery">
+<div class="kReport kOverrideFAIcons kDiscovery" data-aid="report-discovery">
   <app-live-discovery-filters (filtersChanged)="_onFiltersChanged($event)">
-    <app-live-discovery-metrics-selector [fields]="_fields"
+    <app-live-discovery-metrics-selector [colorsMap]="_colorsMap"
+                                         [fields]="_fields"
                                          (selectorChange)="_onMetricsSelectorChange($event)"></app-live-discovery-metrics-selector>
   </app-live-discovery-filters>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <app-discovery-chart [isBusy]="_isBusy"
-                         [data]="_data"
+    <app-discovery-chart [data]="_data"
+                         [fields]="_fields"
+                         [colorsMap]="_colorsMap"
+                         [isBusy]="_isBusy"
                          [selectedMetrics]="_selectedMetrics"></app-discovery-chart>
   </k-area-blocker>
 </div>

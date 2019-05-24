@@ -61,7 +61,8 @@ export class FiltersService {
         from = moment().subtract(7, 'days');
         break;
       default:
-        throw Error(`Unsupported date range: ${dateRange}`);
+        from = moment().subtract(1, 'minute');
+        break;
     }
     
     return {
@@ -143,7 +144,7 @@ export class FiltersService {
       case TimeInterval.Days:
         return KalturaReportInterval.days;
       default:
-        throw new Error(`Unsupported interval: ${interval}`);
+        return KalturaReportInterval.tenSeconds;
     }
   }
 }

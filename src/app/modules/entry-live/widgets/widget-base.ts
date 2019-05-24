@@ -3,7 +3,7 @@ import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { AnalyticsServerPollsBase } from 'shared/services/server-polls-base.service';
+import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 
 export interface WidgetState {
   polling?: boolean;
@@ -30,7 +30,7 @@ export abstract class WidgetBase<T> {
   
   protected abstract _widgetId: string;
   
-  protected abstract _pollsFactory: RequestFactory<KalturaRequest<any> | KalturaMultiRequest, T>;
+  protected abstract _pollsFactory: RequestFactory<KalturaRequest<any> | KalturaMultiRequest, T> & OnPollTickSuccess;
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
@@ -71,6 +71,10 @@ export abstract class WidgetBase<T> {
           
           const data = this._responseMapping(response.result);
           this._data.next(data);
+  
+          if (typeof this._pollsFactory.onPollTickSuccess === 'function') {
+            this._pollsFactory.onPollTickSuccess();
+          }
         });
     }
   }

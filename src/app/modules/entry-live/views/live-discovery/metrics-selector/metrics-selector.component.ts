@@ -15,6 +15,7 @@ export interface MetricsSelectorChangeEvent {
 })
 export class MetricsSelectorComponent implements OnInit {
   @Input() fields: ReportDataFields;
+  @Input() colorsMap: { [metric: string]: string } = {};
   
   @Output() selectorChange = new EventEmitter<MetricsSelectorChangeEvent>();
   
@@ -24,7 +25,6 @@ export class MetricsSelectorComponent implements OnInit {
   public _secondaryMetricsOptions: SelectItem[] = [];
   public _selectedMain: string;
   public _selectedSecondary: string;
-  public _colorsMap: { [metric: string]: string } = {};
   
   constructor(private _translate: TranslateService) {
   }
@@ -32,7 +32,6 @@ export class MetricsSelectorComponent implements OnInit {
   ngOnInit() {
     if (this.fields) {
       this._metrics = Object.keys(this.fields);
-      this._colorsMap = this._metrics.reduce((acc, val) => (acc[val] = this.fields[val].colors[0], acc), {});
       this._onChange(true);
     }
   }

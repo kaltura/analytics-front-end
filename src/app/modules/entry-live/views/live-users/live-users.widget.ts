@@ -8,6 +8,7 @@ import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EChartOption } from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export interface LiveUsersData {
   activeUsers: number[];
@@ -32,8 +33,6 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   }
   
   protected _responseMapping(reports: KalturaReportGraph[]): LiveUsersData {
-    this._pollsFactory.updateDateInterval();
-    
     if (!reports.length) {
       return null;
     }
@@ -46,13 +45,6 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     
     const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
     const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
-    const getTime = dateString => {
-      const rawTime = dateString.substring(8);
-      const hours = rawTime.substring(0, 2);
-      const minutes = rawTime.substring(2, 4);
-      const seconds = rawTime.substring(4);
-      return `${hours}:${minutes}:${seconds}`;
-    };
     
     if (activeUsersData) {
       activeUsersData.data.split(';')
@@ -60,7 +52,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach(valueString => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
           result.activeUsers.push(Number(value));
-          result.dates.push(getTime(date));
+          result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
         });
     }
     
