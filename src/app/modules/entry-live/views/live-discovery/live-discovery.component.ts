@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LiveDiscoveryData, LiveDiscoveryWidget, LiveUsersData } from './live-discovery.widget';
+import { LiveDiscoveryData, LiveDiscoveryWidget } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
