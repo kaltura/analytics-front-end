@@ -3,6 +3,8 @@ import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
 import { LiveDiscoveryData } from '../live-discovery.widget';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-discovery-chart',
@@ -42,6 +44,19 @@ export class DiscoveryChartComponent {
     const metrics = this.selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
     this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+  }
+  
+  private _getTooltipFormatter(params: any[]): string {
+    // seriesName
+    const [main, secondary] = params;
+    const getFormatFn = (name, val) => typeof this.fields[name].graphTooltip === 'function'
+      ? this.fields[name].graphTooltip(val)
+      : val;
+
+    const mainValue = getFormatFn(main.seriesName, main.value);
+    const secondaryValue = getFormatFn(secondary.seriesName, secondary.value);
+
+    return `<div class="kGraphTooltip">${main.name}<br/><span class="kBullet" style="color: ${this.colorsMap[main.seriesName]}">&bull;</span>&nbsp;${mainValue}<br/><span class="kBullet" style="color: ${this.colorsMap[secondary.seriesName]}">&bull;</span>&nbsp;${secondaryValue}</div>`;
   }
   
   private _getGraphConfig(metrics: string[], main: string[], secondary: string[], times: string[]): EChartOption {
@@ -94,6 +109,7 @@ export class DiscoveryChartComponent {
         top: 24, left: 24, bottom: 74, right: 24, containLabel: true
       },
       tooltip: {
+        formatter: this._getTooltipFormatter.bind(this),
         trigger: 'axis',
         backgroundColor: '#ffffff',
         borderColor: '#dadada',
