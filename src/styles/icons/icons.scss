@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-resume:before {
+  content: "\e919";
+}
+.icon-preview:before {
+  content: "\e91a";
+}
+.icon-pause:before {
+  content: "\e91b";
+}
 .icon-stream_processing:before {
   content: "\e900";
 }
