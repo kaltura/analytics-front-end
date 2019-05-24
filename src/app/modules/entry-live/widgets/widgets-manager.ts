@@ -19,4 +19,8 @@ export class WidgetsManager {
     
     this._widgets.map(widget => widget.activate(widgetsArgs));
   }
+  
+  public deactivateAll(): void {
+    this._widgets.forEach(widget => widget.deactivate());
+  }
 }

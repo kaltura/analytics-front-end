@@ -101,6 +101,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   ngOnDestroy() {
     this._entryLiveWidget.deactivate();
+    this._widgetsManager.deactivateAll();
   }
   
   // DO NOT register to entry data widget here!
