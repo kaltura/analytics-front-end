@@ -441,7 +441,8 @@
         "view_unique_audience": "Active Users",
         "distribution": "Active Users Distribution",
         "view_unique_buffering_users": "Avg. Buffer Rate",
-        "view_unique_engaged_users": "Engaged Users"
+        "view_unique_engaged_users": "Engaged Users",
+        "last3Hours": "Last 3 hours"
       },
       "devices": {
         "title": "Active Users Per Devices"

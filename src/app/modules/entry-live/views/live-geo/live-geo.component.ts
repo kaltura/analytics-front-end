@@ -20,6 +20,8 @@ import { DataTable } from 'primeng/primeng';
 import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Component({
   selector: 'app-live-geo',
@@ -54,6 +56,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _reportType = KalturaReportType.mapOverlayCountry;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
+  public _showTable = false;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -206,5 +209,11 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom }] }, false);
       this._echartsIntance.setOption({ series: [{ roam: roam }] }, false);
     }
+  }
+  
+  public _toggleTable(): void {
+    this._showTable = !this._showTable;
+  
+    this._liveGeoWidget.updateLayout();
   }
 }

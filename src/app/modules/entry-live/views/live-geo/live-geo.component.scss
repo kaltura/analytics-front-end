@@ -25,6 +25,12 @@ k-area-blocker {
   height: 24px;
 }
 
+.kTimePeriod {
+  white-space: nowrap;
+  color: $kGrayscale3;
+  margin-right: 24px;
+}
+
 .kFlagColumn{
   padding-left: 18px !important;
 }

@@ -89,11 +89,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
     return result ? result.result : null;
   }
-  
-  public setTimeRange(range: { to?: number, from?: number }): void {
-    this._pollsFactory.timeRange = range;
-  }
-  
+
   public updatePollsFilter(drillDown: string[], restart = false): void {
     this._pollsFactory.drillDown = drillDown;
     

@@ -29,22 +29,6 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     responseOptions: this._responseOptions,
   };
   
-  public set timeRange(value: { from?: number, to?: number }) {
-    if (value) {
-      const { from, to } = value;
-      
-      if (from) {
-        this._getTableActionArgs.reportInputFilter.fromDate = moment(from).unix();
-        this._getTotalsActionArgs.reportInputFilter.fromDate = moment(from).unix();
-      }
-  
-      if (to) {
-        this._getTableActionArgs.reportInputFilter.toDate = moment(to).unix();
-        this._getTotalsActionArgs.reportInputFilter.toDate = moment(to).unix();
-      }
-    }
-  }
-  
   public set reportType(value: KalturaReportType) {
     this._getTableActionArgs.reportType = this._getTotalsActionArgs.reportType = value;
   }
@@ -71,7 +55,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   }
   
   private _getFromDate(): number {
-    return moment().subtract(30, 'seconds').unix();
+    return moment().subtract(3, 'hours').unix();
   }
   
   public updateDateInterval(): void {
