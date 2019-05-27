@@ -12,6 +12,7 @@ import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-b
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -31,8 +32,9 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _translate: TranslateService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _dataConfigService: LiveDevicesConfig) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }
