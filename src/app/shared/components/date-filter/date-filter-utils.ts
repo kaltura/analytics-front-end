@@ -175,6 +175,15 @@ export class DateFilterUtils {
     return moment(value, 'YYYYMMDD');
   }
   
+  // YYYMMDDHHMMSS => HH:MM:SS
+  static getTimeStringFromDateString(dateString: string, separator = ':'): string {
+    const rawTime = dateString.substring(8);
+    const hours = rawTime.substring(0, 2);
+    const minutes = rawTime.substring(2, 4);
+    const seconds = rawTime.substring(4);
+    return `${hours}${separator}${minutes}${separator}${seconds}`;
+  }
+  
   private static _isUnixDate(number: number): boolean {
     return number.toString().length === 10;
   }

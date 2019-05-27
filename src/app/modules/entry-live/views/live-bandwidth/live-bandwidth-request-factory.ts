@@ -3,14 +3,15 @@ import { KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, Ka
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 
-export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
+export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
   
-  private _getTableActionArgs: ReportGetGraphsActionArgs = {
+  private _getGraphActionArgs: ReportGetGraphsActionArgs = {
     reportType: KalturaReportType.qosOverviewRealtime,
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
@@ -22,7 +23,7 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   };
   
   constructor(private _entryId: string) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    this._getGraphActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
   private _getTime(seconds: number): number {
@@ -30,14 +31,14 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   }
   
   
-  public updateDateInterval(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(30);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(200);
+  public onPollTickSuccess(): void {
+    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(30);
+    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(200);
   }
   
   public create(): KalturaMultiRequest {
     return new KalturaMultiRequest(
-      new ReportGetGraphsAction(this._getTableActionArgs),
+      new ReportGetGraphsAction(this._getGraphActionArgs),
     );
   }
 }

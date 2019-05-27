@@ -15,6 +15,7 @@ import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widge
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
+import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -41,7 +42,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
               private _liveGeo: LiveGeoWidget,
-              private _liveDevices: LiveDevicesWidget) {
+              private _liveDevices: LiveDevicesWidget,
+              private _liveDiscovery: LiveDiscoveryWidget) {
   }
   
   
@@ -114,6 +116,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         this._liveStreamHealth,
         this._liveGeo,
         this._liveDevices,
+        this._liveDiscovery,
         // <-- append new widgets here
       ], { entryId: this._entryId });
     }

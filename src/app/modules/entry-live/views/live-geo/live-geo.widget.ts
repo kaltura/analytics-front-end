@@ -41,8 +41,6 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
-    this._pollsFactory.updateDateInterval();
-
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];

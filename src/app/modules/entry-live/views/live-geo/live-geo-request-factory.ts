@@ -2,8 +2,9 @@ import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
+import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 
-export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse> {
+export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
@@ -58,7 +59,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     return moment().subtract(3, 'hours').unix();
   }
   
-  public updateDateInterval(): void {
+  public onPollTickSuccess(): void {
     this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
     this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
     this._getTotalsActionArgs.reportInputFilter.toDate = moment().unix();
