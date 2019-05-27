@@ -66,6 +66,8 @@ export abstract class WidgetBase<T> {
       
       this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
         .subscribe((response) => {
+          this.updateLayout();
+
           if (response.error) {
             this._stopPolling(response.error);
             return;
@@ -73,8 +75,6 @@ export abstract class WidgetBase<T> {
           
           const data = this._responseMapping(response.result);
           this._data.next(data);
-  
-          this.updateLayout();
         });
     }
   }
