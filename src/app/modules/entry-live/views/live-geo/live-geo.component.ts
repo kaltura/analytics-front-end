@@ -54,7 +54,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
-  public _reportType = KalturaReportType.mapOverlayCountry;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
   public _showTable = false;
@@ -190,8 +189,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this.onDrillDown.emit({reportType: this._reportType, drillDown: this._drillDown});
+    const reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this.onDrillDown.emit({reportType: reportType, drillDown: this._drillDown});
   }
   
   public _onChartInit(ec) {
