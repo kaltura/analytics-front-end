@@ -9,8 +9,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
     super(_translate);
   }
 
-  // view_unique_audience|view_unique_engaged_users|view_unique_buffering_users|avg_view_downstream_bandwidth|view_unique_audience_dvr|
-  // avg_view_bitrate|sum_view_time|avg_view_latency|avg_view_dropped_frames_ratio
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
