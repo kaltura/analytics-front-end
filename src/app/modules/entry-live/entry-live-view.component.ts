@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from 'kaltura-ngx-client';
+import {KalturaClient, KalturaReportType} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -140,5 +140,19 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
     }
+  }
+
+  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 }

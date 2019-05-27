@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ErrorsManagerService, ReportConfig } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -35,6 +35,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     }
   }
   @ViewChild('table') _table: DataTable;
+  @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
@@ -189,6 +190,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
+    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this.onDrillDown.emit({reportType: this._reportType, drillDown: this._drillDown});
   }
   
   public _onChartInit(ec) {

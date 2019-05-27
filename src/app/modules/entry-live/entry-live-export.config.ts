@@ -27,29 +27,22 @@ export class EntryLiveExportConfig extends ExportConfigService {
         endDate: this._getTime(30)
       },
       {
+        id: "geo",
         label: this._translate.instant('app.entryLive.exportLabels.geo'),
-        reportType: KalturaReportType.contentDropoff,
-        sections: [KalturaReportExportItemType.total],
-        order: '-count_plays',
-      },
-      {
-        label: this._translate.instant('app.entryLive.exportLabels.devices'),
         reportType: KalturaReportType.mapOverlayCountry,
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
+        startDate: this._getFromDate(),
+        endDate: moment().unix()
       },
       {
-        label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
-        reportType: KalturaReportType.platforms,
+        label: this._translate.instant('app.entryLive.exportLabels.devices'),
+        reportType: KalturaReportType.platformsRealtime,
         sections: [KalturaReportExportItemType.table],
-      },
-      {
-        id: 'syndication',
-        label: this._translate.instant('app.entry.exportLabels.syndication'),
-        reportType: KalturaReportType.topSyndication,
-        sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
-      },
+        order: null,
+        startDate: this._getFromDate(),
+        endDate: moment().unix()
+      }
     ];
   }
 
@@ -58,6 +51,6 @@ export class EntryLiveExportConfig extends ExportConfigService {
   }
 
   private _getFromDate(): number {
-    return moment().subtract(10, 'seconds').unix();
+    return moment().subtract(3, 'hours').unix();
   }
 }
