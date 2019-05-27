@@ -12,6 +12,8 @@ import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-b
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { getResponseByType } from 'shared/utils/get-response-by-type';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -31,8 +33,9 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _translate: TranslateService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _dataConfigService: LiveDevicesConfig) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }
@@ -44,10 +47,8 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveDevicesData {
-    this._pollsFactory.updateDateInterval();
-
-    const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
-    const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
+    const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
+    const totals = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
     let tabsData = [];
     let result = {
       data: [],
@@ -57,22 +58,16 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     if (totals && totals.data && totals.header) {
       tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
     }
-
+    
     if (table && table.header && table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data } = this._getOverviewData(table, relevantFields);
-  
+      
       result.totalCount = table.totalCount;
       result.data = this._getSummaryData(data, tabsData);
     }
     
     return result;
-  }
-  
-  protected _getResponseByType(responses: KalturaResponse<any>[], type: any): any {
-    const isType = t => r => r.result instanceof t || Array.isArray(r.result) && r.result.length && r.result[0] instanceof t;
-    const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
-    return result ? result.result : null;
   }
   
   protected _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {

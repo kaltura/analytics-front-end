@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export interface LiveQoSData {
   bandwidth: number[];
@@ -20,8 +22,9 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
+              protected _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -31,8 +34,6 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   }
   
   protected _responseMapping(reports: KalturaReportGraph[]): LiveQoSData {
-    this._pollsFactory.updateDateInterval();
-    
     if (!reports.length) {
       return null;
     }
@@ -46,14 +47,6 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
     const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
     const bufferingUsersData = reports.find(({ id }) => id === 'view_unique_buffering_users');
     const bandwidthData = reports.find(({ id }) => id === 'avg_view_downstream_bandwidth');
-  
-    const getTime = dateString => {
-      const rawTime = dateString.substring(8);
-      const hours = rawTime.substring(0, 2);
-      const minutes = rawTime.substring(2, 4);
-      const seconds = rawTime.substring(4);
-      return `${hours}:${minutes}:${seconds}`;
-    };
     
     if (activeUsersData && bufferingUsersData) {
       const bufferingUsers = bufferingUsersData.data.split(';');
@@ -66,7 +59,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           const bufferingUsersVal = Number(bufferingUsersRawValue);
           const bufferingValue = bufferingUsersVal ? (activeUsersVal / bufferingUsersVal).toFixed(1) : 0;
           result.buffering.push(bufferingValue);
-          result.dates.push(getTime(date));
+          result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
         });
     }
     

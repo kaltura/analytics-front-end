@@ -1,0 +1,17 @@
+.kFilters {
+  width: auto !important;
+  height: auto !important;
+  padding: 16px 24px;
+
+  &.kSubFilters {
+    padding-top: 0;
+  }
+
+  .kTitle {
+    padding: 0 !important;
+  }
+
+  /deep/ .ui-button .ui-button-text {
+    white-space: nowrap;
+  }
+}

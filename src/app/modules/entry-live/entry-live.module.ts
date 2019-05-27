@@ -39,6 +39,16 @@ import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
+import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
+import { LiveDiscoveryComponent } from './views/live-discovery/live-discovery.component';
+import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
+import { SelectButtonModule } from 'primeng/primeng';
+import { FiltersComponent } from './views/live-discovery/filters/filters.component';
+import { FiltersService } from './views/live-discovery/filters/filters.service';
+import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.config';
+import { MetricsSelectorComponent } from './views/live-discovery/metrics-selector/metrics-selector.component';
+import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
+import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
 
 @NgModule({
   imports: [
@@ -57,6 +67,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     RouterModule.forChild(routing),
     KalturaUIModule,
     InputHelperModule,
+    SelectButtonModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -74,6 +85,11 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     CodeToHealthIconPipe,
     LiveGeoComponent,
     LiveDevicesComponent,
+    LiveDiscoveryComponent,
+    FiltersComponent,
+    MetricsSelectorComponent,
+    MetricsSelectorDropdownComponent,
+    DiscoveryChartComponent,
   ],
   exports: [],
   providers: [
@@ -83,10 +99,13 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     EntryLiveService,
     LiveGeoConfig,
     LiveDevicesConfig,
+    FiltersService,
+    LiveDiscoveryConfig,
     
     // polls services
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,
+    EntryLiveDiscoveryPollsService,
 
     // widgets
     EntryLiveWidget,
@@ -95,6 +114,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
     LiveStreamHealthWidget,
     LiveGeoWidget,
     LiveDevicesWidget,
+    LiveDiscoveryWidget,
   ]
 })
 export class EntryLiveModule {

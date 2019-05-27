@@ -3,6 +3,10 @@
 $cleanHeight: calc(100% - 24px);
 $kOrange: #f8a61a;
 
+:host {
+  margin-bottom: 24px;
+}
+
 kScrollToTopContainer {
   overflow-y: auto;
   height: 100%;

@@ -9,6 +9,7 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
+    <div class="kTimePeriod">{{'app.entryLive.last3Hours' | translate}}</div>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kMap">
@@ -22,7 +23,13 @@
       </div>
     </div>
     <div class="kTable">
-      <div class="kTableContainer">
+      <div class="kToggle">
+        <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+        <a (click)="_toggleTable()">
+          {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+        </a>
+      </div>
+      <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
         <p-table #table [value]="_tableData" [paginator]="true" [rows]="5">
           <ng-template pTemplate="header">
             <tr>

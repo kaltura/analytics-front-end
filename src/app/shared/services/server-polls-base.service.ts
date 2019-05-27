@@ -5,6 +5,10 @@ import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import { catchError, map } from 'rxjs/operators';
 
+export interface OnPollTickSuccess {
+  onPollTickSuccess(): void;
+}
+
 export class AnalyticsServerPollsBase extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestroy = new Subject<void>();
   private _isKSValid = true;

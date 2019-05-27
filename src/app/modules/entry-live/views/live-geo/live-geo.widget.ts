@@ -10,6 +10,7 @@ import { ReportHelper, ReportService } from 'shared/services';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveGeoConfig } from './live-geo.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
@@ -26,8 +27,9 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
+              protected _frameEventManager: FrameEventManagerService,
               private _dataConfigService: LiveGeoConfig) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
@@ -39,8 +41,6 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
-    this._pollsFactory.updateDateInterval();
-
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];
@@ -87,11 +87,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
     return result ? result.result : null;
   }
-  
-  public setTimeRange(range: { to?: number, from?: number }): void {
-    this._pollsFactory.timeRange = range;
-  }
-  
+
   public updatePollsFilter(drillDown: string[], restart = false): void {
     this._pollsFactory.drillDown = drillDown;
     
