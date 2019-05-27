@@ -18,7 +18,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
-  totals?: any; // TODO
+  totals?: { [key: string]: string };
 }
 
 @Injectable()
@@ -58,9 +58,8 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
 
     const graphsResponse = getResponseByType(responses, KalturaReportGraph) as KalturaReportGraph[] || [];
-    const totalsResponse = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
-  
-    const config = this._dataConfig[ReportDataSection.graph].fields;
+    const reportGraphFields = this._dataConfig[ReportDataSection.graph].fields;
+    let totals = null;
     const graphs = graphsResponse.reduce((result, graph) => {
       const times = [];
       const graphData = [];
@@ -69,7 +68,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         .filter(Boolean)
         .forEach(valueString => {
           const [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
-          const value = config[graph.id] ? config[graph.id].format(rawValue) : rawValue;
+          const value = reportGraphFields[graph.id] ? reportGraphFields[graph.id].format(rawValue) : rawValue;
           const time = DateFilterUtils.getTimeStringFromDateString(rawDate);
   
           times.push(time);
@@ -85,8 +84,24 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       return result;
     }, {});
   
+    const totalsResponse = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
+    if (totalsResponse && totalsResponse.header && totalsResponse.data) {
+      const reportTotalFields = this._dataConfig[ReportDataSection.totals].fields;
+      const columns = totalsResponse.header.split(analyticsConfig.valueSeparator);
+      const values = totalsResponse.data.split(analyticsConfig.valueSeparator);
+      totals = columns
+        .reduce((result, column, index) => {
+          if (reportTotalFields[column]) {
+            result[column] = reportTotalFields[column].format(values[index]);
+          }
+  
+          return result;
+        }, {});
+    }
+  
     return {
       graphs,
+      totals,
     };
   }
 }
