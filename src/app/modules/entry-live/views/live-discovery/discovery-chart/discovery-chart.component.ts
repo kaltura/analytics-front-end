@@ -83,7 +83,7 @@ export class DiscoveryChartComponent {
       },
     };
     
-    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series.map(({ data }) => data))).toFixed(1));
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
@@ -163,9 +163,9 @@ export class DiscoveryChartComponent {
             fontWeight: 'bold',
             formatter: param => yAxisLabelFormatter(param, mainMetric),
           },
-          // max: mainMax,
-          // min: mainMin,
-          // interval: mainInterval
+          max: mainMax,
+          min: mainMin,
+          interval: mainInterval
         },
         {
           ...yAxisCommon,
@@ -176,9 +176,9 @@ export class DiscoveryChartComponent {
             fontWeight: 'bold',
             formatter: param => yAxisLabelFormatter(param, secondaryMetric),
           },
-          // max: secondaryMax,
-          // min: secondaryMin,
-          // interval: secondaryInterval
+          max: secondaryMax,
+          min: secondaryMin,
+          interval: secondaryInterval
         },
       ],
       series: [
