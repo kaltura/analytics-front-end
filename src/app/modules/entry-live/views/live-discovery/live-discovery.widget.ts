@@ -14,6 +14,7 @@ import { getResponseByType } from 'shared/utils/get-response-by-type';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateFiltersChangedEvent } from './filters/filters.component';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -31,8 +32,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
               protected _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig,
               protected _reportService: ReportService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     
     this._dataConfig = this._dataConfigService.getConfig();
   }

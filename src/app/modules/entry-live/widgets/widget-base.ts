@@ -3,6 +3,7 @@ import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 
 export interface WidgetState {
@@ -34,7 +35,8 @@ export abstract class WidgetBase<T> {
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void>;
   
-  protected constructor(protected _serverPolls: AnalyticsServerPollsBase) {
+  protected constructor(protected _serverPolls: AnalyticsServerPollsBase,
+                        protected _frameEventManager: FrameEventManagerService) {
   }
   
   protected _updateState(newState: WidgetState): void {
@@ -64,6 +66,8 @@ export abstract class WidgetBase<T> {
       
       this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
         .subscribe((response) => {
+          this.updateLayout();
+
           if (response.error) {
             this.stopPolling(response.error);
             return;
@@ -111,5 +115,14 @@ export abstract class WidgetBase<T> {
   
   public retry(): void {
     this.activate(this._activationArgs);
+  }
+  
+  public updateLayout(): void {
+    if (analyticsConfig.isHosted) {
+      const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 350);
+    }
   }
 }

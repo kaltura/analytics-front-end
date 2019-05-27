@@ -8,6 +8,7 @@ import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EChartOption } from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 export interface LiveUsersData {
@@ -22,8 +23,9 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _pollsFactory: LiveUsersRequestFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _translate: TranslateService) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {

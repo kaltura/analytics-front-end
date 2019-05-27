@@ -10,6 +10,7 @@ import { ReportHelper, ReportService } from 'shared/services';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveGeoConfig } from './live-geo.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
@@ -26,8 +27,9 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
+              protected _frameEventManager: FrameEventManagerService,
               private _dataConfigService: LiveGeoConfig) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }

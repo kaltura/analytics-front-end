@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
@@ -17,9 +18,10 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _logger: KalturaLogger,
               private _codeToSeverityPipe: CodeToSeverityPipe) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._logger = _logger.subLogger('LiveStreamHealthWidget');
     
     this._data.next({
