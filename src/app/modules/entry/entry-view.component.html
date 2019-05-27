@@ -70,7 +70,8 @@
         <div class="kReportContainer">
           <app-top-countries [dateFilter]="_dateFilter"
                              [refineFilter]="_refineFilter"
-                             [entryId]="_entryId"></app-top-countries>
+                             [entryId]="_entryId"
+                              (onDrillDown)="_onGeoDrilldown($event)"></app-top-countries>
         </div>
 
         <div class="kReportContainer">
@@ -84,7 +85,7 @@
                            [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"
                            [refineFilter]="_refineFilter"
-                           (onDrillDown)="_onDrillDown($event)"></app-syndication>
+                           (onDrillDown)="_onSyndicationDrillDown($event)"></app-syndication>
         </div>
       </div>
     </div>

@@ -210,7 +210,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     }
   }
   
-  public _onDrillDown(event: string): void {
+  public _onSyndicationDrillDown(event: string): void {
     let update: Partial<ExportItem> = {};
     if (event) {
       update.objectIds = event;
@@ -218,4 +218,19 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     
     this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
   }
+
+  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+
+    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
+  }
+
 }
