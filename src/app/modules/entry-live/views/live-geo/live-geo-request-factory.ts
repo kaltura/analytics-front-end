@@ -29,7 +29,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     }),
     responseOptions: this._responseOptions,
   };
-
+  
   public set reportType(value: KalturaReportType) {
     this._getTableActionArgs.reportType = this._getTotalsActionArgs.reportType = value;
   }
@@ -56,7 +56,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   }
   
   private _getFromDate(): number {
-    return moment().subtract(30, 'seconds').unix();
+    return moment().subtract(3, 'hours').unix();
   }
   
   public onPollTickSuccess(): void {
