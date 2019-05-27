@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from 'kaltura-ngx-client';
+import {KalturaClient, KalturaReportType} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -16,11 +16,14 @@ import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-h
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
+import { EntryLiveExportConfig } from "./entry-live-export.config";
+import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 
 @Component({
   selector: 'app-entry-live',
   templateUrl: './entry-live-view.component.html',
   styleUrls: ['./entry-live-view.component.scss'],
+  providers: [ EntryLiveExportConfig ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _widgetsRegistered = false;
@@ -29,7 +32,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
-  
+  public _exportConfig: ExportItem[] = [];
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
               private _router: Router,
@@ -42,8 +46,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
               private _liveGeo: LiveGeoWidget,
+              private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
-              private _liveDiscovery: LiveDiscoveryWidget) {
+              private _exportConfigService: EntryLiveExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
   }
   
   
@@ -111,11 +117,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._widgetsRegistered = true;
 
       this._widgetsManager.register([
-        // this._liveUsers,
-        // this._liveBandwidth,
-        // this._liveStreamHealth,
-        // this._liveGeo,
-        // this._liveDevices,
+        this._liveUsers,
+        this._liveBandwidth,
+        this._liveStreamHealth,
+        this._liveGeo,
+        this._liveDevices,
         this._liveDiscovery,
         // <-- append new widgets here
       ], { entryId: this._entryId });
@@ -134,5 +140,19 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
     }
+  }
+
+  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 }

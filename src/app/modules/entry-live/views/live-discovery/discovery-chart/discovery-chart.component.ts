@@ -39,7 +39,7 @@ export class DiscoveryChartComponent {
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
   
   public _chartData: EChartOption;
-  public _totalsData: { [key: string]: { value: string, units: string } };
+  public _totalsData: { [key: string]: string };
   
   private _handleData(value: LiveDiscoveryData): void {
     const chartData = value.graphs;

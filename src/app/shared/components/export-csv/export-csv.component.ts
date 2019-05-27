@@ -122,6 +122,10 @@ export class ExportCsvComponent implements OnDestroy {
       .map(({ data }) => data);
     
     selection.forEach(item => {
+      if (item.startDate && item.endDate) {
+        filter.fromDate = item.startDate;
+        filter.toDate = item.endDate;
+      }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({
           reportTitle: item.label,

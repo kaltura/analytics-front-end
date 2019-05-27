@@ -30,6 +30,7 @@ export class EntryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
       {
+        id: 'geo',
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: KalturaReportType.mapOverlayCountry,
         sections: [KalturaReportExportItemType.table],
