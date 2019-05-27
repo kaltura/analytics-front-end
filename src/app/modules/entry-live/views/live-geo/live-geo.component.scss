@@ -25,6 +25,12 @@ k-area-blocker {
   height: 24px;
 }
 
+.kTimePeriod {
+  white-space: nowrap;
+  color: $kGrayscale3;
+  margin-right: 24px;
+}
+
 .kFlagColumn{
   padding-left: 18px !important;
 }
@@ -50,7 +56,7 @@ k-area-blocker {
   position: relative;
   .kChart{
     width: 100%;
-    height: 268px;
+    height: 368px;
     margin-bottom: 24px;
   }
   .kZoomWidget{

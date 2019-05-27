@@ -3,6 +3,10 @@
 $cleanHeight: calc(100% - 24px);
 $kOrange: #f8a61a;
 
+:host {
+  margin-bottom: 24px;
+}
+
 kScrollToTopContainer {
   overflow-y: auto;
   height: 100%;
@@ -111,21 +115,21 @@ kScrollToTopContainer {
 /* player height according to screen resolution */
 @media screen and (max-width: 991px) {
   :host {
-    height: 349px;
+    height: 355px;
   }
 }
 @media screen and (min-width: 992px) {
   :host {
-    height: 309px;
+    height: 315px;
   }
 }
 @media screen and (min-width: 1280px) {
   :host {
-    height: 269px;
+    height: 275px;
   }
 }
 @media screen and (min-width: 1610px) {
   :host {
-    height: 229px;
+    height: 235px;
   }
 }

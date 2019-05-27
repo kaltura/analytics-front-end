@@ -434,6 +434,7 @@
       "primary": "Primary",
       "secondary": "Secondary",
       "stream": "Stream",
+      "last3Hours": "Last 3 hours",
       "geo": {
         "title": "Geo Location",
         "object_id": "Name",
