@@ -10,6 +10,12 @@
   min-width: 370px;
 }
 
+.kTimePeriod {
+  white-space: nowrap;
+  color: $kGrayscale3;
+  margin-right: 24px;
+}
+
 .kDevicesOverview {
   margin-bottom: 10px;
 

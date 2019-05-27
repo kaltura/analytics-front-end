@@ -30,7 +30,7 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   };
   
   private _getFromDate(): number {
-    return moment().subtract(30, 'seconds').unix();
+    return moment().subtract(3, 'hours').unix();
   }
   
   constructor(private _entryId: string) {

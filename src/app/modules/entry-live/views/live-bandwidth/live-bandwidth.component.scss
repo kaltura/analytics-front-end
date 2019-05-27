@@ -1,5 +1,9 @@
 @import '../../../../../styles/variables';
 
+:host {
+  margin-bottom: 24px;
+}
+
 .kUsersBandwidth {
   padding: 24px;
   padding-bottom: 0px;
