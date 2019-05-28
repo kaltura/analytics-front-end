@@ -133,10 +133,10 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
-    map.center = mapCenter;
+    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.series[0];
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 && this._canMapDrillDown ? 'false' : 'move';
+    map.center = this._drillDown.length === 0 && this._echartsIntance.getOption().series.length ? this._echartsIntance.getOption().series[0].center : mapCenter;
+    map.roam = this._drillDown.length === 0 && this._canMapDrillDown && this._mapZoom === 1.2 ? 'false' : 'move';
     this._mapChartData = mapConfig;
   }
 
