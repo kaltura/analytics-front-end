@@ -27,6 +27,7 @@ export class DiscoveryChartComponent {
       this._data = value;
       this._handleData(value);
     } else {
+      this._totalsData = null;
       this._chartData = null;
       this._data = null;
     }
@@ -38,12 +39,14 @@ export class DiscoveryChartComponent {
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
   
   public _chartData: EChartOption;
+  public _totalsData: { [key: string]: string };
   
   private _handleData(value: LiveDiscoveryData): void {
     const chartData = value.graphs;
     const metrics = this.selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
     this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+    this._totalsData = value.totals;
   }
   
   private _getTooltipFormatter(params: any[]): string {
@@ -86,6 +89,7 @@ export class DiscoveryChartComponent {
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
+    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users', 'avg_view_latency'].indexOf(metric) !== -1 ? 100 : 1;
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
     const yAxisLabelFormatter = (param, metric) => {
@@ -94,8 +98,8 @@ export class DiscoveryChartComponent {
       }
       return param;
     };
-    const mainMax = getMaxValue(main) || 1;
-    const secondaryMax = getMaxValue(secondary) || 1;
+    const mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
+    const secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
     let mainMin = getMinValue(main);
     let secondaryMin = getMinValue(secondary);
     

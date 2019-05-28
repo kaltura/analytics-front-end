@@ -54,18 +54,34 @@
     }
   }
 
-  .kSummary {
+  .kRightSide {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 
-  }
+    .kSummary {
+      margin-right: 24px;
+      font-size: 15px;
 
-  .kControls {
-    .kTogglePolling {
-      height: 34px;
-      width: 160px;
+      .kSummaryItem {
+        margin-left: 24px;
 
-      /deep/ .ui-button-text {
-        line-height: 24px;
-        padding: .25em 1em .25em 2.9em;
+        .kSummaryItemValue {
+          font-weight: bold;
+          margin-right: 18px;
+        }
+      }
+    }
+
+    .kControls {
+      .kTogglePolling {
+        height: 34px;
+        width: 160px;
+
+        /deep/ .ui-button-text {
+          line-height: 24px;
+          padding: .25em 1em .25em 2.9em;
+        }
       }
     }
   }

@@ -13,9 +13,12 @@
       </div>
     </div>
 
-    <div style="margin-left: auto">
-      <div class="kSummary">
-
+    <div class="kRightSide">
+      <div class="kSummary" *ngIf="_totalsData">
+        <span class="kSummaryItem" *ngFor="let metric of selectedMetrics">
+          <span class="kSummaryItemValue">{{_totalsData[metric]}}</span>
+          {{('app.entryLive.discovery.totals.' + metric) | translate}}
+        </span>
       </div>
 
       <div class="kControls">
