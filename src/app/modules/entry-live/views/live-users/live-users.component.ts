@@ -6,6 +6,7 @@ import { ErrorsManagerService, ReportHelper } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
+import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
 
 @Component({
   selector: 'app-live-users',
@@ -36,7 +37,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   public _data: LiveUsersData;
   public _graphData: { [key: string]: any } = {};
   public _activeUsersCount = '0';
-  public _engagedUsersCount = '0';
+  public _engagedUsersCount = '0%';
   
   constructor(private _liveUsersWidget: LiveUsersWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -82,8 +83,8 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       activeUsers: Array.from({ length: 18 }, () => 0),
       engagedUsers: Array.from({ length: 18 }, () => 0),
       dates: [],
-      currentActiveUsers: '',
-      currentEngagedUsers: ''
+      currentActiveUsers: '0',
+      currentEngagedUsers: '0%'
     });
   }
 

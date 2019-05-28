@@ -10,6 +10,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { Report, ReportHelper } from 'shared/services';
+import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
 
 export interface LiveQoSData {
   bandwidth: number[];
@@ -60,7 +61,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           const [_, bufferingUsersRawValue] = bufferingUsers[index].split(analyticsConfig.valueSeparator);
           const activeUsersVal = Number(activeUsersRawValue);
           const bufferingUsersVal = Number(bufferingUsersRawValue);
-          const bufferingValue = bufferingUsersVal ? activeUsersVal / bufferingUsersVal * 100 : 0;
+          const bufferingValue = activeUsersVal ? bufferingUsersVal / activeUsersVal * 100 : 0;
           result.buffering.push(bufferingValue);
           result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
         });
@@ -83,6 +84,10 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   }
   
   public getGraphConfig(buffering: number[], bandwidth: number[]): { [key: string]: any } {
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
+    const getMaxValue = createFunc(Math.max);
+    const bandwidthMax = getMaxValue(bandwidth) || 1;
+
     return {
       color: ['#d48d2b', '#FBF4EB', '#e0313a', '#F4E1D9'],
       textStyle: {
@@ -126,13 +131,24 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           padding: [8, 0, 0, 0],
         }
       },
-      yAxis: {
-        show: false,
-      },
+      yAxis: [
+        {
+          show: false,
+          name: 'buffering',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          // max: 100,
+        },
+        {
+          show: false,
+          name: 'bandwidth',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          // max: bandwidthMax + 1,
+        },
+      ],
       series: [
         {
           type: 'line',
-          name: 'activeUsers',
+          name: 'buffering',
           symbol: 'none',
           hoverAnimation: false,
           data: buffering,
@@ -145,7 +161,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         },
         {
           type: 'line',
-          name: 'engagedUsers',
+          name: 'bandwidth',
           symbol: 'none',
           hoverAnimation: false,
           data: bandwidth,

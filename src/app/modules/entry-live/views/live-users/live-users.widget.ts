@@ -11,6 +11,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
+import { getPrimaryColor } from 'shared/utils/colors';
+import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
 
 export interface LiveUsersData {
   activeUsers: number[];
@@ -80,6 +82,10 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   }
   
   public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
+    const getMaxValue = createFunc(Math.max);
+    const activeUsersMax = getMaxValue(activeUsers) || 1;
+
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
       textStyle: {
@@ -108,6 +114,20 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engagedValue}</div></div>`;
         }
       },
+      yAxis: [
+        {
+          show: false,
+          name: 'activeUsers',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 10,
+        },
+        {
+          show: false,
+          name: 'engagedUsers',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 100,
+        },
+      ],
       xAxis: {
         boundaryGap: false,
         type: 'category',
@@ -122,9 +142,6 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           color: '#999999',
           padding: [8, 0, 0, 0],
         }
-      },
-      yAxis: {
-        show: false,
       },
       series: [
         {
