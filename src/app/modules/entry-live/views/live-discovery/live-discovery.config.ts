@@ -38,7 +38,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             sortOrder: 3,
           },
           'avg_view_latency': {
-            format: value => (value * 100).toFixed(1),
+            format: value => Number(value).toFixed(1),
             colors: ['#f3737b'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_latency')}: ${ReportHelper.percents(value / 100, false)}`,
@@ -96,7 +96,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => `${value} Kbps`,
           },
           'avg_view_latency': {
-            format: value => ReportHelper.percents(value, false),
+            format: value => ReportHelper.percents(value / 100, false),
           },
           'avg_view_downstream_bandwidth': {
             format: value => `${value} Sec`,
