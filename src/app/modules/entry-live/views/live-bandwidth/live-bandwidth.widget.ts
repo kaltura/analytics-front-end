@@ -9,10 +9,11 @@ import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { ReportHelper } from 'shared/services';
 
 export interface LiveQoSData {
-  bandwidth: number[];
-  buffering: number[];
+  bandwidth: string[];
+  buffering: string[];
   dates: string[];
 }
 
@@ -57,7 +58,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           const [_, bufferingUsersRawValue] = bufferingUsers[index].split(analyticsConfig.valueSeparator);
           const activeUsersVal = Number(activeUsersRawValue);
           const bufferingUsersVal = Number(bufferingUsersRawValue);
-          const bufferingValue = bufferingUsersVal ? (activeUsersVal / bufferingUsersVal).toFixed(1) : 0;
+          const bufferingValue = bufferingUsersVal ? ReportHelper.percents(activeUsersVal / bufferingUsersVal, false, false, false) : 0;
           result.buffering.push(bufferingValue);
           result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
         });
@@ -68,7 +69,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         .filter(Boolean)
         .forEach(valueString => {
           const [_, value] = valueString.split(analyticsConfig.valueSeparator);
-          result.bandwidth.push(value);
+          result.bandwidth.push(ReportHelper.numberOrZero(value));
         });
     }
     

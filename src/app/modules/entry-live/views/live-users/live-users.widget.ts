@@ -10,10 +10,11 @@ import { EChartOption } from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { ReportHelper } from 'shared/services';
 
 export interface LiveUsersData {
-  activeUsers: number[];
-  engagedUsers: number[];
+  activeUsers: string[];
+  engagedUsers: string[];
   dates: string[];
 }
 
@@ -53,7 +54,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .filter(Boolean)
         .forEach(valueString => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
-          result.activeUsers.push(Number(value));
+          result.activeUsers.push(ReportHelper.numberOrZero(value));
           result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
         });
     }
@@ -64,7 +65,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach((valueString, index) => {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const relevantActiveUser = activeUsersData[index] || 0;
-          const value = relevantActiveUser ? Math.round(Number(rawValue) / relevantActiveUser * 100) : 0;
+          const value = relevantActiveUser ? ReportHelper.percents(rawValue, false, false, false) : 0;
           result.engagedUsers.push(value);
         });
     }
