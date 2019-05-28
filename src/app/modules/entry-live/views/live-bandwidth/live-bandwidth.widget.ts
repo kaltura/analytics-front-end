@@ -83,10 +83,6 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   }
   
   public getGraphConfig(buffering: number[], bandwidth: number[]): { [key: string]: any } {
-    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
-    const getMaxValue = createFunc(Math.max);
-    const bandwidthMax = getMaxValue(bandwidth) || 1;
-
     return {
       color: ['#d48d2b', '#FBF4EB', '#e0313a', '#F4E1D9'],
       textStyle: {

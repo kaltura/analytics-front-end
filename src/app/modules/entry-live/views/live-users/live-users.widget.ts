@@ -80,10 +80,6 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   }
   
   public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
-    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
-    const getMaxValue = createFunc(Math.max);
-    const activeUsersMax = getMaxValue(activeUsers) || 1;
-
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
       textStyle: {
