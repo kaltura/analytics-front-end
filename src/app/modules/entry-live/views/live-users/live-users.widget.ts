@@ -119,7 +119,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           show: false,
           name: 'activeUsers',
           nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
-          max: 10,
+          max: 'dataMax',
         },
         {
           show: false,
@@ -161,6 +161,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           type: 'line',
           name: 'engagedUsers',
           symbol: 'none',
+          yAxisIndex: 1,
           hoverAnimation: false,
           data: engagedUsers,
           lineStyle: {

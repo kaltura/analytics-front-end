@@ -136,13 +136,13 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           show: false,
           name: 'buffering',
           nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
-          // max: 100,
+          max: 100,
         },
         {
           show: false,
           name: 'bandwidth',
           nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
-          // max: bandwidthMax + 1,
+          max: 'dataMax',
         },
       ],
       series: [
@@ -163,6 +163,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           type: 'line',
           name: 'bandwidth',
           symbol: 'none',
+          yAxisIndex:1,
           hoverAnimation: false,
           data: bandwidth,
           lineStyle: {
