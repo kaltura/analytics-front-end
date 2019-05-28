@@ -9,8 +9,7 @@ import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { Report, ReportHelper } from 'shared/services';
-import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
+import { ReportHelper } from 'shared/services';
 
 export interface LiveQoSData {
   bandwidth: number[];

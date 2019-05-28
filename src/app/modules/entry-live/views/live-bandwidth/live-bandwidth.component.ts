@@ -6,7 +6,6 @@ import { ErrorsManagerService, ReportHelper } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
-import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
 
 @Component({
   selector: 'app-live-bandwidth',

@@ -11,8 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
-import { getPrimaryColor } from 'shared/utils/colors';
-import { getGraphAxisBoundaries } from 'shared/utils/graph-interval-utils';
 
 export interface LiveUsersData {
   activeUsers: number[];
