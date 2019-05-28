@@ -5,6 +5,7 @@ $kOrange: #f8a61a;
 
 :host {
   margin-bottom: 24px;
+  position: relative;
 }
 
 kScrollToTopContainer {
@@ -111,7 +112,16 @@ kScrollToTopContainer {
     }
   }
 }
-
+.kLineCover{
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 62%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 62%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 62%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  position: absolute;
+  bottom: 0px;
+  height: 20px;
+  width: 100%;
+  right: 20px;
+}
 /* player height according to screen resolution */
 @media screen and (max-width: 991px) {
   :host {
