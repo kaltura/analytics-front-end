@@ -14,7 +14,9 @@ import { ReportHelper } from 'shared/services';
 
 export interface LiveUsersData {
   activeUsers: number[];
+  currentActiveUsers: string;
   engagedUsers: number[];
+  currentEngagedUsers: string;
   dates: string[];
 }
 
@@ -55,7 +57,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach(valueString => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
           result.activeUsers.push(Number(value));
-          result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
+          result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
         });
     }
     
@@ -65,12 +67,16 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach((valueString, index) => {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const relevantActiveUser = result.activeUsers[index] || 0;
-          const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser : 0;
+          const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
           result.engagedUsers.push(value);
         });
     }
-    
-    return result;
+  
+    return {
+      ...result,
+      currentActiveUsers: ReportHelper.numberOrZero([...result.activeUsers].pop()),
+      currentEngagedUsers: ReportHelper.percents([...result.engagedUsers].pop() / 100, false, false),
+    };
   }
   
   public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
@@ -98,7 +104,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           const [active, engaged] = params;
           const title = active.axisValue;
           const activeValue = ReportHelper.numberOrZero(active.data);
-          const engagedValue = ReportHelper.percents(engaged.data, false, false);
+          const engagedValue = ReportHelper.percents(engaged.data / 100, false, false);
           return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engagedValue}</div></div>`;
         }
       },
