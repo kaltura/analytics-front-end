@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LiveBandwidthWidget, LiveQoSData } from './live-bandwidth.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import { ErrorsManagerService, ReportHelper } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
@@ -39,8 +39,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _graphData: { [key: string]: any } = {};
-  public _bufferCount = 0;
-  public _bandwidthCount = 0;
+  public _bufferCount = '0';
+  public _bandwidthCount = '0';
   
   constructor(private _bandwidthWidget: LiveBandwidthWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -104,8 +104,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
       });
     }
   
-    this._bufferCount = [...this._graphPoints[0]].pop();
-    this._bandwidthCount = [...this._graphPoints[1]].pop();
+    this._bufferCount = ReportHelper.percents([...this._graphPoints[0]].pop(), false, false);
+    this._bandwidthCount = `${ReportHelper.numberOrZero([...this._graphPoints[1]].pop())} Kbps`;
   }
   
   public _onChartInit(ec: any): void {

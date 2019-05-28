@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LiveUsersData, LiveUsersWidget } from './live-users.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import { ErrorsManagerService, ReportHelper } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
@@ -39,8 +39,8 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveUsersData;
   public _graphData: { [key: string]: any } = {};
-  public _activeUsersCount = 0;
-  public _engagedUsersCount = 0;
+  public _activeUsersCount = '0';
+  public _engagedUsersCount = '0';
   
   constructor(private _liveUsersWidget: LiveUsersWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -103,8 +103,8 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       });
     }
   
-    this._activeUsersCount = [...this._graphPoints[0]].pop(); // get last item
-    this._engagedUsersCount = [...this._graphPoints[1]].pop(); // get last item
+    this._activeUsersCount = ReportHelper.numberOrZero([...this._graphPoints[0]].pop()); // get last item
+    this._engagedUsersCount = ReportHelper.percents([...this._graphPoints[1]].pop(), false, false); // get last item
   }
   
   public _onChartInit(ec: any): void {

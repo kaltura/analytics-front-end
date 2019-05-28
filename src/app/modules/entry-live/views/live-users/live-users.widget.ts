@@ -13,8 +13,8 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { ReportHelper } from 'shared/services';
 
 export interface LiveUsersData {
-  activeUsers: string[];
-  engagedUsers: string[];
+  activeUsers: number[];
+  engagedUsers: number[];
   dates: string[];
 }
 
@@ -54,7 +54,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .filter(Boolean)
         .forEach(valueString => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
-          result.activeUsers.push(ReportHelper.numberOrZero(value));
+          result.activeUsers.push(Number(value));
           result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
         });
     }
@@ -64,8 +64,8 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .filter(Boolean)
         .forEach((valueString, index) => {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
-          const relevantActiveUser = activeUsersData[index] || 0;
-          const value = relevantActiveUser ? ReportHelper.percents(rawValue, false, false, false) : 0;
+          const relevantActiveUser = result.activeUsers[index] || 0;
+          const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser : 0;
           result.engagedUsers.push(value);
         });
     }
@@ -97,7 +97,9 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         formatter: (params) => {
           const [active, engaged] = params;
           const title = active.axisValue;
-          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${active.data}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engaged.data}%</div></div>`;
+          const activeValue = ReportHelper.numberOrZero(active.data);
+          const engagedValue = ReportHelper.percents(engaged.data, false, false);
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engagedValue}</div></div>`;
         }
       },
       xAxis: {
