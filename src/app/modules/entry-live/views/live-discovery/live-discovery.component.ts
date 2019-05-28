@@ -64,6 +64,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   }
   
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
+    this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     if (!event.initialRun) {
       this._isBusy = true;
       this._liveExploreWidget.updateFilters(event);

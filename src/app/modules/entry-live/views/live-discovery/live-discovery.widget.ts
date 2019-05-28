@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveDiscoveryRequestFactory } from './live-discovery-request-factory';
-import { KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
+import { KalturaReportGraph, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportService } from 'shared/services';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { DateRange, DateRangeServerValue, FiltersService, TimeInterval } from './filters/filters.service';
+import { DateRange, FiltersService, TimeInterval } from './filters/filters.service';
 import { getResponseByType } from 'shared/utils/get-response-by-type';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
@@ -27,6 +27,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _dateRange: DateRange;
+  protected _timeInterval: TimeInterval;
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _translate: TranslateService,
@@ -69,7 +70,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         .forEach(valueString => {
           const [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const value = reportGraphFields[graph.id] ? reportGraphFields[graph.id].format(rawValue) : rawValue;
-          const time = DateFilterUtils.getTimeStringFromEpoch(rawDate);
+          const time = DateFilterUtils.getTimeStringFromEpoch(rawDate, ':', this._timeInterval === TimeInterval.Days);
   
           times.push(time);
           graphData.push(value);
@@ -103,5 +104,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       graphs,
       totals,
     };
+  }
+  
+  public setCurrentInterval(interval: TimeInterval): void {
+    this._timeInterval = interval;
   }
 }

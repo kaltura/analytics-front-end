@@ -175,9 +175,15 @@ export class DateFilterUtils {
     return moment(value, 'YYYYMMDD');
   }
   
-  static getTimeStringFromEpoch(epoch: string, separator = ':'): string {
+  static getTimeStringFromEpoch(epoch: string, separator = ':', days = false): string {
     const date = moment.unix(Number(epoch));
-    return date.isValid() ? date.format(`hh${separator}mm${separator}ss`) : null;
+    if (!date.isValid()) {
+      return null;
+    }
+  
+    const format = days ? 'MMM DD' : `hh${separator}mm${separator}ss`;
+
+    return date.format(format);
   }
   
   private static _isUnixDate(number: number): boolean {
