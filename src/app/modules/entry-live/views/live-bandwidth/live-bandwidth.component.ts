@@ -35,8 +35,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _graphData: { [key: string]: any } = {};
-  public _bufferCount = '0';
-  public _bandwidthCount = '0';
+  public _bufferCount = '0%';
+  public _bandwidthCount = '0 Kbps';
   
   constructor(private _bandwidthWidget: LiveBandwidthWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -83,8 +83,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
         buffering: Array.from({ length: 18 }, () => 0),
         bandwidth: Array.from({ length: 18 }, () => 0),
         dates: [],
-        currentBandwidth: '0%',
-        currentBuffering: '0 Kbps'
+        currentBandwidth: '0 Kbps',
+        currentBuffering: '0%'
       }
     );
   }
