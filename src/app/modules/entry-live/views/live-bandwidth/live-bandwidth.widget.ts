@@ -9,11 +9,13 @@ import { KalturaReportGraph } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { Report, ReportHelper } from 'shared/services';
+import { ReportHelper } from 'shared/services';
 
 export interface LiveQoSData {
   bandwidth: number[];
+  currentBandwidth: string;
   buffering: number[];
+  currentBuffering: string;
   dates: string[];
 }
 
@@ -58,9 +60,9 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           const [_, bufferingUsersRawValue] = bufferingUsers[index].split(analyticsConfig.valueSeparator);
           const activeUsersVal = Number(activeUsersRawValue);
           const bufferingUsersVal = Number(bufferingUsersRawValue);
-          const bufferingValue = bufferingUsersVal ? activeUsersVal / bufferingUsersVal : 0;
+          const bufferingValue = activeUsersVal ? bufferingUsersVal / activeUsersVal * 100 : 0;
           result.buffering.push(bufferingValue);
-          result.dates.push(DateFilterUtils.getTimeStringFromDateString(date));
+          result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
         });
     }
     
@@ -73,7 +75,11 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         });
     }
     
-    return result;
+    return {
+      ...result,
+      currentBuffering: ReportHelper.percents([...result.buffering].pop() / 100, false, false),
+      currentBandwidth: `${ReportHelper.numberOrZero([...result.bandwidth].pop())} Kbps`,
+    };
   }
   
   public getGraphConfig(buffering: number[], bandwidth: number[]): { [key: string]: any } {
@@ -100,7 +106,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         formatter: (params) => {
           const [bandwidth, buffering] = params;
           const title = bandwidth.axisValue;
-          const bandwidthValue = ReportHelper.percents(bandwidth.data, false, false);
+          const bandwidthValue = ReportHelper.percents(bandwidth.data / 100, false, false);
           const bufferingValue = `${ReportHelper.numberOrZero(buffering.data)} Kbps`;
           return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}&nbsp;${bandwidthValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBW')}&nbsp;${bufferingValue}</div></div>`;
         }
@@ -120,13 +126,24 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           padding: [8, 0, 0, 0],
         }
       },
-      yAxis: {
-        show: false,
-      },
+      yAxis: [
+        {
+          show: false,
+          name: 'buffering',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 100,
+        },
+        {
+          show: false,
+          name: 'bandwidth',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 'dataMax',
+        },
+      ],
       series: [
         {
           type: 'line',
-          name: 'activeUsers',
+          name: 'buffering',
           symbol: 'none',
           hoverAnimation: false,
           data: buffering,
@@ -139,8 +156,9 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         },
         {
           type: 'line',
-          name: 'engagedUsers',
+          name: 'bandwidth',
           symbol: 'none',
+          yAxisIndex:1,
           hoverAnimation: false,
           data: bandwidth,
           lineStyle: {

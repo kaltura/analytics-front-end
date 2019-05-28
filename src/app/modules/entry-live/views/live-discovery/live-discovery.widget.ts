@@ -69,7 +69,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         .forEach(valueString => {
           const [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const value = reportGraphFields[graph.id] ? reportGraphFields[graph.id].format(rawValue) : rawValue;
-          const time = DateFilterUtils.getTimeStringFromDateString(rawDate);
+          const time = DateFilterUtils.getTimeStringFromEpoch(rawDate);
   
           times.push(time);
           graphData.push(value);

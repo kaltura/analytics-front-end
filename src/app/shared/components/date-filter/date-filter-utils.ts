@@ -175,13 +175,9 @@ export class DateFilterUtils {
     return moment(value, 'YYYYMMDD');
   }
   
-  // YYYMMDDHHMMSS => HH:MM:SS
-  static getTimeStringFromDateString(dateString: string, separator = ':'): string {
-    const rawTime = dateString.substring(8);
-    const hours = rawTime.substring(0, 2);
-    const minutes = rawTime.substring(2, 4);
-    const seconds = rawTime.substring(4);
-    return `${hours}${separator}${minutes}${separator}${seconds}`;
+  static getTimeStringFromEpoch(epoch: string, separator = ':'): string {
+    const date = moment.unix(Number(epoch));
+    return date.isValid() ? date.format(`hh${separator}mm${separator}ss`) : null;
   }
   
   private static _isUnixDate(number: number): boolean {

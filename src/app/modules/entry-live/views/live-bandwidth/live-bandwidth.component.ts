@@ -16,15 +16,11 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
       this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
-  
+      
       if (!this._isLive) {
         this._resetGraph();
       } else if (this._data) {
-        this._updateGraphPoints(
-          this._data.buffering,
-          this._data.bandwidth,
-          this._data.dates,
-        );
+        this._updateGraphPoints(this._data);
       }
     } else {
       this._resetGraph();
@@ -39,8 +35,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _graphData: { [key: string]: any } = {};
-  public _bufferCount = '0';
-  public _bandwidthCount = '0';
+  public _bufferCount = '0%';
+  public _bandwidthCount = '0 Kbps';
   
   constructor(private _bandwidthWidget: LiveBandwidthWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -70,13 +66,9 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
       .subscribe((data: LiveQoSData) => {
         this._isBusy = false;
         this._data = data;
-  
+        
         if (this._isLive) {
-          this._updateGraphPoints(
-            this._data.buffering,
-            this._data.bandwidth,
-            this._data.dates,
-          );
+          this._updateGraphPoints(this._data);
         }
       });
     
@@ -87,25 +79,29 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   }
   
   private _resetGraph(): void {
-    this._updateGraphPoints(
-      Array.from({ length: 18 }, () => 0),
-      Array.from({ length: 18 }, () => 0),
-      []
+    this._updateGraphPoints({
+        buffering: Array.from({ length: 18 }, () => 0),
+        bandwidth: Array.from({ length: 18 }, () => 0),
+        dates: [],
+        currentBandwidth: '0 Kbps',
+        currentBuffering: '0%'
+      }
     );
   }
-
-  private _updateGraphPoints(buffer: number[], bandwidth: number[], times: string[]): void {
-    this._graphPoints = [buffer, bandwidth];
+  
+  private _updateGraphPoints(data: LiveQoSData): void {
+    const { dates, buffering, bandwidth, currentBuffering, currentBandwidth } = data;
+    this._graphPoints = [buffering, bandwidth];
     
     if (this._echartsIntance) {
       this._echartsIntance.setOption({
-        series: [{ data: buffer }, { data: bandwidth }],
-        xAxis: [{ data: times }],
+        series: [{ data: buffering }, { data: bandwidth }],
+        xAxis: [{ data: dates }],
       });
     }
-  
-    this._bufferCount = ReportHelper.percents([...this._graphPoints[0]].pop(), false, false);
-    this._bandwidthCount = `${ReportHelper.numberOrZero([...this._graphPoints[1]].pop())} Kbps`;
+    
+    this._bufferCount = currentBuffering;
+    this._bandwidthCount = currentBandwidth;
   }
   
   public _onChartInit(ec: any): void {

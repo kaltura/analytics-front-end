@@ -20,11 +20,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       if (!this._isLive) {
         this._resetGraph();
       } else if (this._data) {
-        this._updateGraphPoints(
-          this._data.activeUsers,
-          this._data.engagedUsers,
-          this._data.dates,
-        );
+        this._updateGraphPoints(this._data);
       }
     } else {
       this._resetGraph();
@@ -40,7 +36,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   public _data: LiveUsersData;
   public _graphData: { [key: string]: any } = {};
   public _activeUsersCount = '0';
-  public _engagedUsersCount = '0';
+  public _engagedUsersCount = '0%';
   
   constructor(private _liveUsersWidget: LiveUsersWidget,
               private _errorsManager: ErrorsManagerService) {
@@ -72,11 +68,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
         this._data = data;
         
         if (this._isLive) {
-          this._updateGraphPoints(
-            this._data.activeUsers,
-            this._data.engagedUsers,
-            this._data.dates,
-          );
+          this._updateGraphPoints(this._data);
         }
       });
     this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
@@ -86,25 +78,28 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   }
   
   private _resetGraph(): void {
-    this._updateGraphPoints(
-      Array.from({ length: 18 }, () => 0),
-      Array.from({ length: 18 }, () => 0),
-      []
-    );
+    this._updateGraphPoints({
+      activeUsers: Array.from({ length: 18 }, () => 0),
+      engagedUsers: Array.from({ length: 18 }, () => 0),
+      dates: [],
+      currentActiveUsers: '0',
+      currentEngagedUsers: '0%'
+    });
   }
 
-  private _updateGraphPoints(active: number[], engaged: number[], times: string[]): void {
-    this._graphPoints = [active, engaged];
+  private _updateGraphPoints(data: LiveUsersData): void {
+    const { dates, activeUsers, engagedUsers, currentEngagedUsers, currentActiveUsers } = data;
+    this._graphPoints = [activeUsers, engagedUsers];
     
     if (this._echartsIntance) {
       this._echartsIntance.setOption({
-        series: [{ data: active }, { data: engaged }],
-        xAxis: [{ data: times }],
+        series: [{ data: activeUsers }, { data: engagedUsers }],
+        xAxis: [{ data: dates }],
       });
     }
   
-    this._activeUsersCount = ReportHelper.numberOrZero([...this._graphPoints[0]].pop()); // get last item
-    this._engagedUsersCount = ReportHelper.percents([...this._graphPoints[1]].pop(), false, false); // get last item
+    this._activeUsersCount = currentActiveUsers;
+    this._engagedUsersCount = currentEngagedUsers;
   }
   
   public _onChartInit(ec: any): void {
