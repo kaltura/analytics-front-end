@@ -73,7 +73,7 @@ export class VideoPerformanceComponent extends EntryBase {
     searchInAdminTags: false
   });
   public _tableModes = [
-    { label: this._translate.instant('app.entry.times'), value: TableModes.dates },
+    { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.entry.users'), value: TableModes.users },
   ];
 
