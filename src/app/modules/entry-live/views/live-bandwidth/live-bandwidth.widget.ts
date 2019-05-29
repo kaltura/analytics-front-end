@@ -112,7 +112,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         }
       },
       xAxis: {
-        boundaryGap: false,
+        boundaryGap: true,
         type: 'category',
         axisLine: {
           lineStyle: {
@@ -120,10 +120,10 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           },
         },
         axisLabel: {
-          align: 'right',
+          align: 'center',
           fontWeight: 'bold',
           color: '#999999',
-          padding: [8, 0, 0, 0],
+          padding: [8, 0, 0, 24],
         }
       },
       yAxis: [
