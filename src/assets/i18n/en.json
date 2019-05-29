@@ -454,6 +454,8 @@
         "resumeUpdates": "Resume Updates",
         "viewPresence": "View Presence",
         "hidePresence": "Hide Presence",
+        "users": "Users",
+        "devices": "Devices",
         "filter": {
           "hours": "Hours",
           "days": "Days",

@@ -3,6 +3,9 @@ import { LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
+import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { SelectItem } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -13,8 +16,14 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
+  public _tableMode: TableModes;
+  public _tableModes: SelectItem[] = [
+    { label: this._translate.instant('app.entryLive.discovery.users'), value: TableModes.users },
+    { label: this._translate.instant('app.entryLive.discovery.devices'), value: TableModes.devices },
+  ];
   
   constructor(private _errorsManager: ErrorsManagerService,
+              private _translate: TranslateService,
               public _liveDiscoveryTableWidget: LiveDiscoveryTableWidget) {
     
   }
@@ -47,5 +56,9 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this._liveDiscoveryTableWidget.stopPolling();
+  }
+  
+  public _onTableModeChange(mode: TableModes): void {
+    this._tableMode = mode;
   }
 }

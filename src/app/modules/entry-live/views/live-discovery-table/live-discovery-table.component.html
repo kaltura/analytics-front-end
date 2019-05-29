@@ -10,7 +10,25 @@
        [class.kOpen]="_liveDiscoveryTableWidget.showTable"
        [class.kClose]="!_liveDiscoveryTableWidget.showTable">
     <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-      <h1>Hello there!</h1>
+      <div class="kTableModeSelector">
+        <p-dropdown [style]="{'width': '172px'}"
+                    [options]="_tableModes"
+                    (onChange)="_onTableModeChange($event.value)"
+                    [(ngModel)]="_tableMode">
+          <ng-template let-option pTemplate="selectedItem">
+            <div class="kOptionsLabelWrapper">
+              <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+              <span>{{option.label}}</span>
+            </div>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="kOptionsLabelWrapper">
+              <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+              <span>{{option.label}}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
     </k-area-blocker>
   </div>
 </div>
