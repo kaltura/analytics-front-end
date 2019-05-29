@@ -123,7 +123,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         },
       ],
       xAxis: {
-        boundaryGap: false,
+        boundaryGap: true,
         type: 'category',
         axisLine: {
           lineStyle: {
@@ -131,10 +131,10 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           },
         },
         axisLabel: {
-          align: 'right',
+          align: 'center',
           fontWeight: 'bold',
           color: '#999999',
-          padding: [8, 0, 0, 0],
+          padding: [8, 0, 0, 24],
         }
       },
       series: [

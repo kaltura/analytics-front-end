@@ -137,13 +137,14 @@ export class DiscoveryChartComponent {
       },
       xAxis: {
         type: 'category',
-        boundaryGap: true,
+        boundaryGap: false,
         data: times,
         axisLabel: {
           color: '#999999',
           fontSize: 12,
           fontWeight: 'bold',
           fontFamily: 'Lato',
+          padding: [12, 0, 0, 0],
         },
         axisTick: {
           length: 8,
