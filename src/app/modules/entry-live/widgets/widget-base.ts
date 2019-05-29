@@ -119,10 +119,10 @@ export abstract class WidgetBase<T> {
   
   public updateLayout(): void {
     if (analyticsConfig.isHosted) {
-      const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
       setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
-      }, 350);
+      }, 0);
     }
   }
 }
