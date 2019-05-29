@@ -36,7 +36,7 @@ export class StreamStatePipe implements PipeTransform {
       case KalturaStreamStatus.preview:
         result = {
           status: this._appLocalization.instant('app.entryLive.streamStatus.preview'),
-          icon: 'kStatusActive',
+          icon: 'icon-preview',
         };
         break;
       default:
