@@ -452,6 +452,8 @@
         "vs": "vs",
         "pauseUpdates": "Pause Updates",
         "resumeUpdates": "Resume Updates",
+        "viewPresence": "View Presence",
+        "hidePresence": "Hide Presence",
         "filter": {
           "hours": "Hours",
           "days": "Days",

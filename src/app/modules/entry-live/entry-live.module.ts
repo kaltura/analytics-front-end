@@ -49,6 +49,9 @@ import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.confi
 import { MetricsSelectorComponent } from './views/live-discovery/metrics-selector/metrics-selector.component';
 import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
 import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
+import { LiveDiscoveryTableComponent } from './views/live-discovery-table/live-discovery-table.component';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
+import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-discovery-table.config';
 
 @NgModule({
   imports: [
@@ -90,6 +93,7 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     MetricsSelectorComponent,
     MetricsSelectorDropdownComponent,
     DiscoveryChartComponent,
+    LiveDiscoveryTableComponent,
   ],
   exports: [],
   providers: [
@@ -101,6 +105,7 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     LiveDevicesConfig,
     FiltersService,
     LiveDiscoveryConfig,
+    LiveDiscoveryTableConfig,
     
     // polls services
     EntryLiveGeneralPollsService,
@@ -115,6 +120,7 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     LiveGeoWidget,
     LiveDevicesWidget,
     LiveDiscoveryWidget,
+    LiveDiscoveryTableWidget,
   ]
 })
 export class EntryLiveModule {

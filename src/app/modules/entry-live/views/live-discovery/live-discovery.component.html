@@ -6,12 +6,15 @@
   </app-live-discovery-filters>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <app-discovery-chart [data]="_data"
-                         [fields]="_fields"
-                         [colorsMap]="_colorsMap"
-                         [isBusy]="_isBusy"
-                         [isPolling]="_isPolling"
-                         [selectedMetrics]="_selectedMetrics"
-                         (togglePolling)="_onTogglePolling()"></app-discovery-chart>
+    <div class="kReportContent">
+      <app-discovery-chart [data]="_data"
+                           [fields]="_fields"
+                           [colorsMap]="_colorsMap"
+                           [isBusy]="_isBusy"
+                           [isPolling]="_isPolling"
+                           [selectedMetrics]="_selectedMetrics"
+                           (togglePolling)="_onTogglePolling()"></app-discovery-chart>
+      <app-live-discovery-table></app-live-discovery-table>
+    </div>
   </k-area-blocker>
 </div>
