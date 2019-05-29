@@ -9,6 +9,7 @@ import { ReportDataFields, ReportDataSection } from 'shared/services/storage-dat
 import { MetricsSelectorChangeEvent } from './metrics-selector/metrics-selector.component';
 import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.component';
 import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-live-discovery',
@@ -55,7 +56,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       });
     
     this._liveExploreWidget.data$
-      .pipe(cancelOnDestroy(this))
+      .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryData) => {
         this._isBusy = false;
         this._data = data;

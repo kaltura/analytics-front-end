@@ -6,10 +6,10 @@
       {{(_liveDiscoveryTableWidget.showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>
-  <div class="kTableContainer"
-       [class.kOpen]="_liveDiscoveryTableWidget.showTable"
-       [class.kClose]="!_liveDiscoveryTableWidget.showTable">
-    <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kTableContainer"
+         [class.kOpen]="_liveDiscoveryTableWidget.showTable"
+         [class.kClose]="!_liveDiscoveryTableWidget.showTable">
       <div class="kTableModeSelector">
         <p-dropdown [style]="{'width': '172px'}"
                     [options]="_tableModes"
@@ -29,6 +29,39 @@
           </ng-template>
         </p-dropdown>
       </div>
-    </k-area-blocker>
-  </div>
+
+      <p-table appScrollTopOnPaging
+               [value]="_tableData"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               (sortFunction)="_onSortChanged($event)"
+               (onPage)="_onPaginationChange($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of _columns" [pSortableColumn]="col">
+              {{'app.entry.' + col | translate}}
+              <p-sortIcon [field]="col"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+      <p-paginator [rows]="_pager.pageSize"
+                   [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                   [totalRecords]="_totalCount"
+                   (onPageChange)="_onPaginationChange($event)"></p-paginator>
+
+    </div>
+  </k-area-blocker>
 </div>
