@@ -16,7 +16,6 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-discovery-table.component.scss']
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
-  public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _tableMode: TableModes;
@@ -46,7 +45,6 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._liveDiscoveryTableWidget.retry();
             },
           };
@@ -55,16 +53,14 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
       });
     
     this._liveDiscoveryTableWidget.data$
-      .pipe(cancelOnDestroy(this))
+      .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: any) => {
-        this._isBusy = false;
         this._data = data;
         this._firstTimeLoading = false;
       });
   }
   
   ngOnDestroy(): void {
-    this._liveDiscoveryTableWidget.stopPolling();
   }
   
   public _onTableModeChange(mode: TableModes): void {

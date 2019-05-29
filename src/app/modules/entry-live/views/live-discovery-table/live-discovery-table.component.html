@@ -6,7 +6,7 @@
       {{(_liveDiscoveryTableWidget.showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>
-  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_liveDiscoveryTableWidget.isBusy" [message]="_blockerMessage">
     <div class="kTableContainer"
          [class.kOpen]="_liveDiscoveryTableWidget.showTable"
          [class.kClose]="!_liveDiscoveryTableWidget.showTable">

@@ -9,7 +9,7 @@ import { LiveDiscoveryTableConfig } from './live-discovery-table.config';
 import { ReportService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { DateRange, FiltersService, TimeInterval } from '../live-discovery/filters/filters.service';
+import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
 
 export interface LiveDiscoveryData {
@@ -25,6 +25,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
   protected _dateRange: DateRange;
   
   public showTable = false;
+  public isBusy = false;
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _translate: TranslateService,
@@ -35,6 +36,23 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
     super(_serverPolls, _frameEventManager);
     
     this._dataConfig = this._dataConfigService.getConfig();
+  }
+  
+  protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
+    this._pollsFactory = new LiveDiscoveryTableRequestFactory(widgetsArgs.entryId);
+    
+    return ObservableOf(null);
+  }
+  
+  protected _responseMapping(responses: any): any {
+    this.isBusy = false;
+
+    return responses;
+  }
+  
+  public retry(): void {
+    super.retry();
+    this.isBusy = true;
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
@@ -48,24 +66,15 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
     }
   }
   
-  protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDiscoveryTableRequestFactory(widgetsArgs.entryId);
-    
-    return ObservableOf(null);
-  }
-  
-  protected _responseMapping(responses: any): any {
-    return responses;
-  }
-  
   public toggleTable(): void {
     this.showTable = !this.showTable;
-  
+    
     this.updateLayout();
     
     if (!this.showTable) {
       this.stopPolling();
     } else {
+      this.isBusy = true;
       this.startPolling();
     }
   }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {KalturaClient, KalturaReportType} from 'kaltura-ngx-client';
+import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -16,24 +16,25 @@ import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-h
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
-import { EntryLiveExportConfig } from "./entry-live-export.config";
-import { ExportItem } from "shared/components/export-csv/export-config-base.service";
+import { EntryLiveExportConfig } from './entry-live-export.config';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 
 @Component({
   selector: 'app-entry-live',
   templateUrl: './entry-live-view.component.html',
   styleUrls: ['./entry-live-view.component.scss'],
-  providers: [ EntryLiveExportConfig ]
+  providers: [EntryLiveExportConfig]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _widgetsRegistered = false;
-
+  
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
-
+  
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
               private _router: Router,
@@ -48,6 +49,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveGeo: LiveGeoWidget,
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
+              private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _exportConfigService: EntryLiveExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
@@ -117,14 +119,18 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._widgetsRegistered = true;
 
       this._widgetsManager.register([
-        // this._liveUsers,
-        // this._liveBandwidth,
-        // this._liveStreamHealth,
-        // this._liveGeo,
-        // this._liveDevices,
-        this._liveDiscovery,
-        // <-- append new widgets here
-      ], { entryId: this._entryId });
+          // this._liveUsers,
+          // this._liveBandwidth,
+          // this._liveStreamHealth,
+          // this._liveGeo,
+          // this._liveDevices,
+          this._liveDiscovery,
+          // <-- append new widgets here
+        ],
+        { entryId: this._entryId },
+        [
+          this._liveDiscoveryTable,
+        ]);
     }
   }
   

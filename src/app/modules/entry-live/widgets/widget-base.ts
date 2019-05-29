@@ -88,7 +88,7 @@ export abstract class WidgetBase<T> {
     this.startPolling();
   }
   
-  public activate(widgetsArgs: WidgetsActivationArgs): void {
+  public activate(widgetsArgs: WidgetsActivationArgs, silent = false): void {
     if (this._currentState.activated) {
       return;
     }
@@ -99,7 +99,10 @@ export abstract class WidgetBase<T> {
       .subscribe(
         () => {
           this._updateState({ activated: true, error: null });
-          this.startPolling();
+          
+          if (!silent) {
+            this.startPolling();
+          }
         }, error => {
           this._updateState({ activated: false, error });
         });
