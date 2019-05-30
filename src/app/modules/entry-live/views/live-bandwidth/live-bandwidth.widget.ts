@@ -11,10 +11,17 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
 
+export interface GraphPoint {
+  value: number;
+  symbol?: string;
+  symbolSize?: number;
+  itemStyle?: { color: string };
+}
+
 export interface LiveQoSData {
-  bandwidth: number[];
+  bandwidth: GraphPoint[];
   currentBandwidth: string;
-  buffering: number[];
+  buffering: GraphPoint[];
   currentBuffering: string;
   dates: string[];
 }
@@ -55,13 +62,21 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
       const bufferingUsers = bufferingUsersData.data.split(';');
       activeUsersData.data.split(';')
         .filter(Boolean)
-        .forEach((valueString, index) => {
+        .forEach((valueString, index, array) => {
           const [date, activeUsersRawValue] = valueString.split(analyticsConfig.valueSeparator);
           const [_, bufferingUsersRawValue] = bufferingUsers[index].split(analyticsConfig.valueSeparator);
           const activeUsersVal = Number(activeUsersRawValue);
           const bufferingUsersVal = Number(bufferingUsersRawValue);
           const bufferingValue = activeUsersVal ? bufferingUsersVal / activeUsersVal * 100 : 0;
-          result.buffering.push(bufferingValue);
+  
+          const graphPoint = { value: bufferingValue };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#d48d2b'};
+          }
+          result.buffering.push(graphPoint);
+  
           result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
         });
     }
@@ -69,20 +84,27 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
     if (bandwidthData) {
       bandwidthData.data.split(';')
         .filter(Boolean)
-        .forEach(valueString => {
+        .forEach((valueString, index, array) => {
           const [_, value] = valueString.split(analyticsConfig.valueSeparator);
-          result.bandwidth.push(value);
+  
+          const graphPoint = { value: Number(value) };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#e0313a'};
+          }
+          result.bandwidth.push(graphPoint);
         });
     }
     
     return {
       ...result,
-      currentBuffering: ReportHelper.percents([...result.buffering].pop() / 100, false, false),
-      currentBandwidth: `${ReportHelper.numberOrZero([...result.bandwidth].pop())} Kbps`,
+      currentBuffering: ReportHelper.percents([...result.buffering].pop().value / 100, false, false),
+      currentBandwidth: `${ReportHelper.numberOrZero([...result.bandwidth].pop().value)} Kbps`,
     };
   }
   
-  public getGraphConfig(buffering: number[], bandwidth: number[]): { [key: string]: any } {
+  public getGraphConfig(buffering: GraphPoint[], bandwidth: GraphPoint[]): { [key: string]: any } {
     return {
       color: ['#d48d2b', '#FBF4EB', '#e0313a', '#F4E1D9'],
       textStyle: {
@@ -158,7 +180,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           type: 'line',
           name: 'bandwidth',
           symbol: 'none',
-          yAxisIndex:1,
+          yAxisIndex: 1,
           hoverAnimation: false,
           data: bandwidth,
           lineStyle: {

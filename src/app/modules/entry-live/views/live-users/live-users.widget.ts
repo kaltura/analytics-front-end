@@ -12,10 +12,17 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
 
+export interface GraphPoint {
+  value: number;
+  symbol?: string;
+  symbolSize?: number;
+  itemStyle?: { color: string };
+}
+
 export interface LiveUsersData {
-  activeUsers: number[];
+  activeUsers: GraphPoint[];
   currentActiveUsers: string;
-  engagedUsers: number[];
+  engagedUsers: GraphPoint[];
   currentEngagedUsers: string;
   dates: string[];
 }
@@ -54,32 +61,47 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     if (activeUsersData) {
       activeUsersData.data.split(';')
         .filter(Boolean)
-        .forEach(valueString => {
+        .forEach((valueString, index, array) => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
-          result.activeUsers.push(Number(value));
           result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
+          
+          const graphPoint = { value: Number(value) };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#60BBA7'};
+          }
+          result.activeUsers.push(graphPoint);
         });
     }
     
     if (engagedUsersData) {
       engagedUsersData.data.split(';')
         .filter(Boolean)
-        .forEach((valueString, index) => {
+        .forEach((valueString, index, array) => {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
-          const relevantActiveUser = result.activeUsers[index] || 0;
+          const relevantActiveUser = result.activeUsers[index] ? result.activeUsers[index].value || 0 : 0;
+          
           const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
-          result.engagedUsers.push(value);
+          
+          const graphPoint = { value };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#367064'};
+          }
+          result.engagedUsers.push(graphPoint);
         });
     }
-  
+
     return {
       ...result,
-      currentActiveUsers: ReportHelper.numberOrZero([...result.activeUsers].pop()),
-      currentEngagedUsers: ReportHelper.percents([...result.engagedUsers].pop() / 100, false, false),
+      currentActiveUsers: ReportHelper.numberOrZero([...result.activeUsers].pop().value),
+      currentEngagedUsers: ReportHelper.percents([...result.engagedUsers].pop().value / 100, false, false),
     };
   }
   
-  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): EChartOption {
+  public getGraphConfig(activeUsers: GraphPoint[], engagedUsers: GraphPoint[]): EChartOption {
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
       textStyle: {
