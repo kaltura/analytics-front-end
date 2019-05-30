@@ -34,13 +34,13 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
             format: value => value,
           },
           'view_unique_audience': {
-            format: value => ReportHelper.numberOrNA(value),
+            format: value => value,
           },
           'view_unique_buffering_users': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => value,
           },
           'view_unique_engaged_users': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => value,
           }
         }
       },

@@ -11,6 +11,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveGeoConfig } from './live-geo.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
@@ -64,16 +65,22 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
       
       result.totalCount = table.totalCount;
       result.columns = columns;
-      result.table = tableData.map((row, index) => {
+      result.table = tableData.map((row) => {
         const calculateDistribution = (key: string): number => {
           const tab = tabsData.find(item => item.key === key);
-          const total = tab ? parseFloat((tab.rawValue as string).replace(new RegExp(',', 'g'), '')) : 0;
-          const rowValue = row[key] ? parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) : 0;
+          const total = tab ? parseFormattedValue(tab.rawValue) : 0;
+          const rowValue = parseFormattedValue(row[key]);
           return significantDigits((rowValue / total) * 100);
         };
         const usersDistribution = calculateDistribution('view_unique_audience');
-        
         row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+  
+        const activeUsers = parseFormattedValue(row['view_unique_audience']);
+        const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
+        const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
+        row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
+        row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
+        row['view_unique_audience'] = ReportHelper.numberOrZero(activeUsers);
         
         return row;
       });

@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LiveUsersData, LiveUsersWidget } from './live-users.widget';
+import { GraphPoint, LiveUsersData, LiveUsersWidget } from './live-users.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, ReportHelper } from 'shared/services';
+import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
@@ -27,7 +27,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
     }
   }
   
-  private _graphPoints: number[][];
+  private _graphPoints: GraphPoint[][];
   private _echartsIntance: any;
   private _isLive = false;
   
@@ -79,8 +79,8 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   
   private _resetGraph(): void {
     this._updateGraphPoints({
-      activeUsers: Array.from({ length: 18 }, () => 0),
-      engagedUsers: Array.from({ length: 18 }, () => 0),
+      activeUsers: Array.from({ length: 18 }, () => ({ value: 0 })),
+      engagedUsers: Array.from({ length: 18 }, () => ({ value: 0 })),
       dates: [],
       currentActiveUsers: '0',
       currentEngagedUsers: '0%'

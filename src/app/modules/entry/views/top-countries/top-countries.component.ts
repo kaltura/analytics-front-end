@@ -20,6 +20,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { GeoComponent } from './geo/geo.component';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 @Component({
   selector: 'app-top-countries',
@@ -236,8 +237,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     return tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = tabsData.find(item => item.key === key);
-        const total = tab ? parseFloat((tab.rawValue as string).replace(new RegExp(',', 'g'), '')) : 0;
-        const rowValue = row[key] ? parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) : 0;
+        const total = tab ? parseFormattedValue(tab.rawValue) : 0;
+        const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
       const playsDistribution = calculateDistribution('count_plays');
