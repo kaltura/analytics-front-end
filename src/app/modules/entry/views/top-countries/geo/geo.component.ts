@@ -9,6 +9,7 @@ import { getCountryName } from 'shared/utils/get-country-name';
 import { TopCountriesConfig } from '../top-countries.config';
 import { DataTable } from 'primeng/primeng';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 @Component({
   selector: 'app-entry-geo',
@@ -84,7 +85,7 @@ export class GeoComponent {
     this.tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this.selectedMetrics].replace(new RegExp(',', 'g'), '')));
+      value.push(parseFormattedValue(data[this.selectedMetrics]));
       mapConfig.series[0].data.push({
         name: this.drillDownItems.length === 0
           ? getCountryName(data.country, false)
@@ -94,7 +95,7 @@ export class GeoComponent {
         value
       });
       if (parseInt(data[this.selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this.selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        maxValue = parseFormattedValue(data[this.selectedMetrics]);
       }
     });
     
