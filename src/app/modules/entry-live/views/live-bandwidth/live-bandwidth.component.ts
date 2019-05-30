@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LiveBandwidthWidget, LiveQoSData } from './live-bandwidth.widget';
+import { GraphPoint, LiveBandwidthWidget, LiveQoSData } from './live-bandwidth.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, ReportHelper } from 'shared/services';
@@ -27,7 +27,7 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
     }
   }
   
-  private _graphPoints: number[][];
+  private _graphPoints: GraphPoint[][];
   private _echartsIntance: any;
   private _isLive = false;
   
@@ -80,8 +80,8 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   
   private _resetGraph(): void {
     this._updateGraphPoints({
-        buffering: Array.from({ length: 18 }, () => 0),
-        bandwidth: Array.from({ length: 18 }, () => 0),
+        buffering: Array.from({ length: 18 }, () => ({ value: 0 })),
+        bandwidth: Array.from({ length: 18 }, () => ({ value: 0 })),
         dates: [],
         currentBandwidth: '0 Kbps',
         currentBuffering: '0%'
