@@ -73,8 +73,14 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
           return significantDigits((rowValue / total) * 100);
         };
         const usersDistribution = calculateDistribution('view_unique_audience');
-        
         row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+  
+        const activeUsers = parseFormattedValue(row['view_unique_audience']);
+        const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
+        const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
+        row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
+        row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
+        row['view_unique_audience'] = ReportHelper.numberOrZero(activeUsers);
         
         return row;
       });
