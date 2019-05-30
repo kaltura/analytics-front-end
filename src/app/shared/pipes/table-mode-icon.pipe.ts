@@ -17,7 +17,7 @@ export class TableModeIconPipe implements PipeTransform {
       case TableModes.dates:
         return 'kIconcalendar';
       case TableModes.devices:
-        return 'icon-desktop';
+        return 'icon-devices';
       default:
         return '';
     }

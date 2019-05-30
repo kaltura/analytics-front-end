@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-devices:before {
+  content: "\e91c";
+}
 .icon-resume:before {
   content: "\e919";
 }
@@ -109,4 +112,3 @@
 .icon-regression:before {
   content: "\e918";
 }
-
