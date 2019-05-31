@@ -1,0 +1,19 @@
+<div class="kTableModeSelector">
+  <p-dropdown [style]="{'width': '172px'}"
+              [options]="_tableModes"
+              (onChange)="tableModeChange.emit($event.value)"
+              [(ngModel)]="tableMode">
+    <ng-template let-option pTemplate="selectedItem">
+      <div class="kOptionsLabelWrapper">
+        <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+        <span>{{option.label}}</span>
+      </div>
+    </ng-template>
+    <ng-template let-option pTemplate="item">
+      <div class="kOptionsLabelWrapper">
+        <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+        <span>{{option.label}}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
+</div>

@@ -4,8 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
-import { SelectItem, SortEvent } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
+import { SortEvent } from 'primeng/api';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
@@ -19,20 +18,16 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
-  public _tableMode: TableModes;
+  public _tableMode = TableModes.users;
+  public _tableModes = TableModes;
   public _firstTimeLoading = true;
   public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _totalCount = 0;
   public _columns = [];
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
-  public _tableModes: SelectItem[] = [
-    { label: this._translate.instant('app.entryLive.discovery.users'), value: TableModes.users },
-    { label: this._translate.instant('app.entryLive.discovery.devices'), value: TableModes.devices },
-  ];
   
   constructor(private _errorsManager: ErrorsManagerService,
-              private _translate: TranslateService,
               public _liveDiscoveryTableWidget: LiveDiscoveryTableWidget) {
     
   }
@@ -66,7 +61,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   }
   
   public _onTableModeChange(mode: TableModes): void {
-    this._tableMode = mode;
+    console.warn(mode);
   }
   
   public _onPaginationChange(event): void {

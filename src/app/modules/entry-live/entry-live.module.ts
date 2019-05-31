@@ -55,6 +55,7 @@ import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-disc
 import { DiscoveryFilterComponent } from './views/live-discovery-table/filter/filter.component';
 import { UsersFilterComponent } from './views/live-discovery-table/filter/users-filter/users-filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { TableSelectorComponent } from './views/live-discovery-table/table-selector/table-selector.component';
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
     LiveDiscoveryTableComponent,
     DiscoveryFilterComponent,
     UsersFilterComponent,
+    TableSelectorComponent,
   ],
   exports: [],
   providers: [
