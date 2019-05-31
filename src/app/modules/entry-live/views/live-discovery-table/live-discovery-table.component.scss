@@ -18,6 +18,25 @@
   }
 }
 
+.kStatus {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.kLive {
+    background-color: #31bea6;
+  }
+
+  &.kDvr {
+    background-color: #60e4cc;
+  }
+
+  &.kOffline {
+    border: solid 2px $kGrayscale4;
+  }
+}
+
 :host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: 64px;
 }
