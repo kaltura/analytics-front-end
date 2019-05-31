@@ -46,6 +46,8 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
   
   protected _responseMapping(responses: any): any {
     this.isBusy = false;
+    
+    console.warn(responses);
 
     return responses;
   }

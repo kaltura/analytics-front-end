@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -24,6 +25,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _totalCount = 0;
   public _columns = [];
   public _tableData: TableRow[] = [];
+  public _selectedRefineFilters: RefineFilter = null;
   public _tableModes: SelectItem[] = [
     { label: this._translate.instant('app.entryLive.discovery.users'), value: TableModes.users },
     { label: this._translate.instant('app.entryLive.discovery.devices'), value: TableModes.devices },
@@ -72,6 +74,10 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   }
   
   public _onSortChanged(event: SortEvent): void {
+    console.warn(event);
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
     console.warn(event);
   }
 }

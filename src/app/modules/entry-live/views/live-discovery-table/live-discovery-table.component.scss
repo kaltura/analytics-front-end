@@ -14,9 +14,6 @@
 }
 
 .kTableModeSelector {
-  margin-left: 24px;
-  margin-bottom: 16px;
-
   .kOptionsLabelWrapper {
     display: flex;
     align-items: center;
@@ -37,6 +34,7 @@
   .ui-dropdown {
     width: 172px !important;
   }
+
   .ui-dropdown-item {
     position: relative;
 

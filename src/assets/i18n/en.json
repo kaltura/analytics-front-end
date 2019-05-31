@@ -456,6 +456,7 @@
         "hidePresence": "Hide Presence",
         "users": "Users",
         "devices": "Devices",
+        "totalActiveUsers": "Active Users {{0}}",
         "filter": {
           "hours": "Hours",
           "days": "Days",

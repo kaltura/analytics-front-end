@@ -52,6 +52,9 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
 import { LiveDiscoveryTableComponent } from './views/live-discovery-table/live-discovery-table.component';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-discovery-table.config';
+import { DiscoveryFilterComponent } from './views/live-discovery-table/filter/filter.component';
+import { UsersFilterComponent } from './views/live-discovery-table/filter/users-filter/users-filter.component';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -71,6 +74,7 @@ import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-disc
     KalturaUIModule,
     InputHelperModule,
     SelectButtonModule,
+    AutoCompleteModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -94,6 +98,8 @@ import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-disc
     MetricsSelectorDropdownComponent,
     DiscoveryChartComponent,
     LiveDiscoveryTableComponent,
+    DiscoveryFilterComponent,
+    UsersFilterComponent,
   ],
   exports: [],
   providers: [

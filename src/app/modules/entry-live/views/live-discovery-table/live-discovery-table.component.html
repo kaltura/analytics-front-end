@@ -10,25 +10,29 @@
     <div class="kTableContainer"
          [class.kOpen]="_liveDiscoveryTableWidget.showTable"
          [class.kClose]="!_liveDiscoveryTableWidget.showTable">
-      <div class="kTableModeSelector">
-        <p-dropdown [style]="{'width': '172px'}"
-                    [options]="_tableModes"
-                    (onChange)="_onTableModeChange($event.value)"
-                    [(ngModel)]="_tableMode">
-          <ng-template let-option pTemplate="selectedItem">
-            <div class="kOptionsLabelWrapper">
-              <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
-              <span>{{option.label}}</span>
-            </div>
-          </ng-template>
-          <ng-template let-option pTemplate="item">
-            <div class="kOptionsLabelWrapper">
-              <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
-              <span>{{option.label}}</span>
-            </div>
-          </ng-template>
-        </p-dropdown>
-      </div>
+      <app-discovery-filter [totalCount]="_totalCount"
+                            [selectedFilters]="_selectedRefineFilters"
+                            (filterChange)="_onRefineFilterChange($event)">
+        <div class="kTableModeSelector">
+          <p-dropdown [style]="{'width': '172px'}"
+                      [options]="_tableModes"
+                      (onChange)="_onTableModeChange($event.value)"
+                      [(ngModel)]="_tableMode">
+            <ng-template let-option pTemplate="selectedItem">
+              <div class="kOptionsLabelWrapper">
+                <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                <span>{{option.label}}</span>
+              </div>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              <div class="kOptionsLabelWrapper">
+                <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                <span>{{option.label}}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </app-discovery-filter>
 
       <p-table appScrollTopOnPaging
                [value]="_tableData"
