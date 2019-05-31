@@ -632,3 +632,14 @@ ui-carousel {
     }
   }
 }
+
+.kTimePeriodLabel {
+  font-size: 15px;
+  white-space: nowrap;
+  color: $kGrayscale1;
+  margin-right: 24px;
+  background-color: $kGrayscale7;
+  border-radius: 3px;
+  padding: .25em .5em;
+}
+
