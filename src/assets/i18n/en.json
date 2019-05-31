@@ -490,6 +490,24 @@
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_latency": "AVG Latency",
           "avg_view_dropped_frames_ratio": "AVG Dropped Frames"
+        },
+        "tables": {
+          "devices": {
+            "name": "Devices",
+            "view_unique_audience": "Active Users",
+            "view_unique_engaged_users": "User Engaged",
+            "view_unique_buffering_users": "User Buffering",
+            "sum_view_time": "Minutes Viewed",
+            "top_flavor": "Top Served Flavor"
+          },
+          "users": {
+            "user_id": "Username",
+            "status": "Status",
+            "view_unique_buffering_users": "Avg. Buffer Rate",
+            "sum_view_time": "Minutes Viewed",
+            "top_flavor": "Top Served Flavor",
+            "view_unique_engaged_users": "Avg. Engagement"
+          }
         }
       },
       "alerts": {
