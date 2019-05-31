@@ -17,7 +17,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
-
+  
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _tableMode = TableModes.users;
@@ -28,6 +28,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _columns = [];
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
+  public _order: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
               public _liveDiscoveryTableWidget: LiveDiscoveryTableWidget) {
@@ -62,19 +63,20 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
   
-  public _onTableModeChange(mode: TableModes): void {
-    console.warn(mode);
-  }
-  
-  public _onPaginationChange(event): void {
-    console.warn(event);
+  public _onPaginationChange(event: { page: number }): void {
+    if (event.page !== (this._pager.pageIndex - 1)) {
+      this._pager.pageIndex = event.page + 1;
+      this._liveDiscoveryTableWidget.paginationChange(this._pager);
+    }
   }
   
   public _onSortChanged(event: SortEvent): void {
-    console.warn(event);
-  }
-  
-  public _onRefineFilterChange(event: RefineFilter): void {
-    console.warn(event);
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        this._liveDiscoveryTableWidget.sortChange(this._order);
+      }
+    }
   }
 }

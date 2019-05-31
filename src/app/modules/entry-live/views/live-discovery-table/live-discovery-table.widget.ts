@@ -12,6 +12,8 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -86,7 +88,23 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
     }
   }
   
-  public changeTableMode(tableMode: TableModes): void {
+  public tableModeChange(tableMode: TableModes): void {
+    // switch requests
+    // reload data
+  }
   
+  public usersFilterChange(refineFilter: RefineFilter): void {
+    // update filter
+    // reload data
+  }
+  
+  public sortChange(event): void {
+    // update filter
+    // reload data
+  }
+  
+  public paginationChange(pager: KalturaFilterPager): void {
+    // update filter
+    // reload data
   }
 }

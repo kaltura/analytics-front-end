@@ -14,14 +14,14 @@
         <app-discovery-filter *ngSwitchCase="_tableModes.users"
                               [totalCount]="_totalCount"
                               [selectedFilters]="_selectedRefineFilters"
-                              (filterChange)="_onRefineFilterChange($event)">
-          <app-table-selector (tableModeChange)="_onTableModeChange($event)"
+                              (filterChange)="_liveDiscoveryTableWidget.usersFilterChange($event)">
+          <app-table-selector (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
                               [(tableMode)]="_tableMode"></app-table-selector>
         </app-discovery-filter>
 
         <app-table-selector *ngSwitchCase="_tableModes.devices"
                             class="kDevicesModeTableSelector"
-                            (tableModeChange)="_onTableModeChange($event)"
+                            (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
                             [(tableMode)]="_tableMode"></app-table-selector>
       </ng-container>
 
@@ -30,7 +30,7 @@
                [customSort]="true"
                [defaultSortOrder]="-1"
                [sortOrder]="-1"
-               (sortFunction)="_onSortChanged($event)"
+               (sortFunction)="_liveDiscoveryTableWidget.sortChange($event)"
                (onPage)="_onPaginationChange($event)">
         <ng-template pTemplate="header">
           <tr>
