@@ -2,7 +2,7 @@
   <div class="kToggle">
     <i [class.kIcondropdown_arrow_bottom]="!_liveDiscoveryTableWidget.showTable"
        [class.kIcondropdown_arrow_top]="_liveDiscoveryTableWidget.showTable"></i>
-    <a (click)="_liveDiscoveryTableWidget.toggleTable()">
+    <a (click)="_liveDiscoveryTableWidget.toggleTable(isPolling)">
       {{(_liveDiscoveryTableWidget.showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>

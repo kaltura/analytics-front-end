@@ -73,7 +73,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
     }
   }
   
-  public toggleTable(): void {
+  public toggleTable(isPolling: boolean): void {
     this.showTable = !this.showTable;
     
     this.updateLayout();
@@ -82,7 +82,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
       this.stopPolling();
     } else {
       this.isBusy = true;
-      this.startPolling();
+      this.startPolling(!isPolling);
     }
   }
   

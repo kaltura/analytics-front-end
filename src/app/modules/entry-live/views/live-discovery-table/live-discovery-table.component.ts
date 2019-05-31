@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -16,6 +16,8 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
   styleUrls: ['./live-discovery-table.component.scss']
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
+  @Input() isPolling: boolean;
+
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _tableMode = TableModes.users;

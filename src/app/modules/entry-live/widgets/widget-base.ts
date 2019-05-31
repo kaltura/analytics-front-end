@@ -64,7 +64,7 @@ export abstract class WidgetBase<T> {
     // empty by design
   }
   
-  public startPolling(): void {
+  public startPolling(pollOnce = false): void {
     if (!this._currentState.polling && this._pollsFactory && this._canStartPolling()) {
       this._updateState({ polling: true });
       
@@ -82,6 +82,10 @@ export abstract class WidgetBase<T> {
   
           if (typeof this._pollsFactory.onPollTickSuccess === 'function') {
             this._pollsFactory.onPollTickSuccess();
+          }
+          
+          if (pollOnce) {
+            this.stopPolling();
           }
         });
     }
