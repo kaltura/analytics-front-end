@@ -39,6 +39,10 @@ export abstract class WidgetBase<T> {
                         protected _frameEventManager: FrameEventManagerService) {
   }
   
+  protected _canStartPolling(): boolean {
+    return true;
+  }
+  
   protected _updateState(newState: WidgetState): void {
     this._state.next({ ...this._currentState, ...newState });
   }
@@ -61,7 +65,7 @@ export abstract class WidgetBase<T> {
   }
   
   public startPolling(): void {
-    if (!this._currentState.polling && this._pollsFactory) {
+    if (!this._currentState.polling && this._pollsFactory && this._canStartPolling()) {
       this._updateState({ polling: true });
       
       this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)

@@ -85,8 +85,10 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _onTogglePolling(): void {
     if (this._isPolling) {
       this._liveExploreWidget.stopPolling();
+      this._liveDiscoveryTable.stopPolling();
     } else {
       this._liveExploreWidget.startPolling();
+      this._liveDiscoveryTable.startPolling();
       this._isBusy = true;
     }
     

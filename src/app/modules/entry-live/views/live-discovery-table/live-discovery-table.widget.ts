@@ -11,6 +11,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
+import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -36,6 +37,10 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
     super(_serverPolls, _frameEventManager);
     
     this._dataConfig = this._dataConfigService.getConfig();
+  }
+  
+  protected _canStartPolling(): boolean {
+    return this.showTable;
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -79,5 +84,9 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
       this.isBusy = true;
       this.startPolling();
     }
+  }
+  
+  public changeTableMode(tableMode: TableModes): void {
+  
   }
 }
