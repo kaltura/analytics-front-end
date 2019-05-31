@@ -42,6 +42,14 @@ export class EntryLiveExportConfig extends ExportConfigService {
         order: null,
         startDate: this._getFromDate(),
         endDate: moment().unix()
+      },
+      {
+        label: this._translate.instant('app.entryLive.exportLabels.discovery'),
+        reportType: KalturaReportType.discoveryRealtime,
+        sections: [KalturaReportExportItemType.graph],
+        order: null,
+        startDate: this._getTime(60),
+        endDate: moment().unix()
       }
     ];
   }

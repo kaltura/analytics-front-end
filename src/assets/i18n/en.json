@@ -590,7 +590,8 @@
         "users": "Active & Engaged Users",
         "bandwidth": "Users Buffering & Downstream Bandwidth",
         "geo": "Geo Location",
-        "devices": "Active Users Per Devices"
+        "devices": "Active Users Per Devices",
+        "discovery": "Discovery"
       }
     },
     "entry": {
