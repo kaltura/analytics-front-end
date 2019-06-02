@@ -37,6 +37,7 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       redundancy: this._entryLiveService.getRedundancyStatus(nodes),
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
+      owner: responses[3].result.fullName
     });
     
     this._entryLiveService.setStreamStatus(liveEntry, nodes);
