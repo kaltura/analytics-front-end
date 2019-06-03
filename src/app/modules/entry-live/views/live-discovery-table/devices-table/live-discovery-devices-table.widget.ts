@@ -49,6 +49,8 @@ export class LiveDiscoveryDevicesTableWidget extends WidgetBase<LiveDiscoveryTab
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
+    this._isBusy.next(true);
+
     this._pollsFactory = new LiveDiscoveryDevicesTableRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);

@@ -1,15 +1,15 @@
 <div class="kTable">
   <div class="kToggle">
-    <i [class.kIcondropdown_arrow_bottom]="!(_widgetProxy.showTable$ | async)"
-       [class.kIcondropdown_arrow_top]="_widgetProxy.showTable$ | async"></i>
-    <a (click)="_widgetProxy.toggleTable(isPolling)">
-      {{((_widgetProxy.showTable$ | async) ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
+    <i [class.kIcondropdown_arrow_bottom]="!_showTable"
+       [class.kIcondropdown_arrow_top]="_showTable"></i>
+    <a (click)="_toggleTable()">
+      {{(_showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>
   <k-area-blocker [showLoader]="_widgetProxy.isBusy$ | async" [message]="_blockerMessage">
     <div class="kTableContainer"
-         [class.kOpen]="_widgetProxy.showTable$ | async"
-         [class.kClose]="!(_widgetProxy.showTable$ | async)">
+         [class.kOpen]="_showTable"
+         [class.kClose]="!_showTable">
 
       <ng-container [ngSwitch]="_tableMode">
 
@@ -18,7 +18,7 @@
           <app-discovery-filter [totalCount]="_totalCount"
                                 [selectedFilters]="_selectedRefineFilters"
                                 (filterChange)="_widgetProxy.usersFilterChange($event)">
-            <app-table-selector (tableModeChange)="_widgetProxy.setTableMode($event)"
+            <app-table-selector (tableModeChange)="_widgetProxy.setTableMode($event, isPolling)"
                                 [(tableMode)]="_tableMode"></app-table-selector>
           </app-discovery-filter>
           <app-users-table [tableData]="_tableData"
@@ -31,7 +31,7 @@
         <ng-container *ngSwitchCase="_tableModes.devices">
           <div class="kContent">
             <app-table-selector class="kDevicesModeTableSelector"
-                                (tableModeChange)="_widgetProxy.setTableMode($event)"
+                                (tableModeChange)="_widgetProxy.setTableMode($event, isPolling)"
                                 [(tableMode)]="_tableMode"></app-table-selector>
             <span class="kTotalCount">
               {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}

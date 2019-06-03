@@ -19,12 +19,11 @@ export interface LiveDiscoveryTableData {
 }
 
 export interface LiveDiscoveryTableWidget {
-  showTable$: Observable<boolean>;
   isBusy$: Observable<boolean>;
   
   updateFilters(event: DateFiltersChangedEvent): void;
   
-  toggleTable(isPolling: boolean): void;
+  toggleTable(showTable: boolean, isPolling: boolean): void;
   
   retry(): void;
 }
@@ -43,10 +42,6 @@ export class LiveDiscoveryTableProxyWidget {
   
   public get state$(): Observable<WidgetState> {
     return this._currentService.state$;
-  }
-  
-  public get showTable$(): Observable<boolean> {
-    return this._currentService.showTable$;
   }
   
   public get isBusy$(): Observable<boolean> {
@@ -102,18 +97,18 @@ export class LiveDiscoveryTableProxyWidget {
     this._currentService.stopPolling();
   }
   
-  public toggleTable(isPolling: boolean): void {
-    this._currentService.toggleTable(isPolling);
+  public toggleTable(showTable: boolean, isPolling: boolean): void {
+    this._currentService.toggleTable(showTable, isPolling);
   }
   
-  public setTableMode(tableMode: TableModes): void {
+  public setTableMode(tableMode: TableModes, isPolling: boolean): void {
     this._tableMode = tableMode;
     
     this.deactivate();
     
     this._setService(tableMode);
     
-    this.activate(this._widgetArgs, !this.isPolling);
+    this.activate(this._widgetArgs, !isPolling);
   }
   
   public usersFilterChange(refineFilter: RefineFilter): void {

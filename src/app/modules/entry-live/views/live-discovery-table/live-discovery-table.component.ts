@@ -28,6 +28,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
   public _order: string;
+  public _showTable = true;
   
   constructor(private _errorsManager: ErrorsManagerService,
               public _widgetProxy: LiveDiscoveryTableProxyWidget) {
@@ -62,9 +63,15 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
       });
     
     // TODO remove
-    this._widgetProxy.toggleTable(this.isPolling);
+    this._widgetProxy.toggleTable(this._showTable, this.isPolling);
   }
   
   ngOnDestroy(): void {
   }
+  
+  public _toggleTable(): void {
+    this._showTable = !this._showTable;
+    this._widgetProxy.toggleTable(this._showTable, this.isPolling);
+  }
+  
 }

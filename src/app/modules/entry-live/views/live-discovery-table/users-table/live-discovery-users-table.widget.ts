@@ -21,10 +21,9 @@ export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTable
   protected _devicesDataConfig: ReportDataConfig;
   protected _dateRange: DateRange;
   
-  public _showTable = new BehaviorSubject<boolean>(false);
+  public _showTable = true;
   public _isBusy = new BehaviorSubject<boolean>(false);
   
-  public showTable$ = this._showTable.asObservable();
   public isBusy$ = this._isBusy.asObservable();
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
@@ -38,21 +37,23 @@ export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTable
   }
   
   ngOnDestroy(): void {
-    this._showTable.complete();
     this._isBusy.complete();
   }
   
   protected _canStartPolling(): boolean {
-    return this._showTable.getValue();
+    return this._showTable;
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
+    this._isBusy.next(true);
+
     this._pollsFactory = new LiveDiscoveryUsersTableRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): any {
+    this._isBusy.next(false);
     return responses;
   }
   
@@ -67,17 +68,17 @@ export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTable
     
     this._dateRange = event.dateRange;
     
-    if (this._showTable.getValue()) {
+    if (this._showTable) {
       this.restartPolling();
     }
   }
   
-  public toggleTable(isPolling: boolean): void {
-    this._showTable.next(!this._showTable.getValue());
+  public toggleTable(showTable: boolean, isPolling: boolean): void {
+    this._showTable = showTable;
     
     this.updateLayout();
     
-    if (!this._showTable.getValue()) {
+    if (!this._showTable) {
       this.stopPolling();
     } else {
       this._isBusy.next(true);
