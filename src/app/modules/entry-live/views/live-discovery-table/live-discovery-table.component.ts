@@ -1,14 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
-import { SortEvent } from 'primeng/api';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { LiveDiscoveryTableData, LiveDiscoveryTableProxyWidget } from './live-discovery-table-proxy.widget';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -23,17 +22,20 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _tableMode = TableModes.devices;
   public _tableModes = TableModes;
   public _firstTimeLoading = true;
+  public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _totalCount = 0;
   public _columns = [];
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
+  public _order: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
-              public _liveDiscoveryTableWidget: LiveDiscoveryTableWidget) {
+              public _widgetProxy: LiveDiscoveryTableProxyWidget) {
+    
   }
   
   ngOnInit() {
-    this._liveDiscoveryTableWidget.state$
+    this._widgetProxy.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
         if (state.error) {
@@ -42,25 +44,25 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._liveDiscoveryTableWidget.retry();
+              this._widgetProxy.retry();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
     
-    this._liveDiscoveryTableWidget.data$
+    this._widgetProxy.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryTableData) => {
         this._data = data;
-        this._columns = data.table.columns;
         this._tableData = data.table.data;
+        this._columns = data.table.columns;
         this._totalCount = data.table.totalCount;
         this._firstTimeLoading = false;
       });
-  
+    
     // TODO remove
-    this._liveDiscoveryTableWidget.toggleTable(this.isPolling);
+    this._widgetProxy.toggleTable(this.isPolling);
   }
   
   ngOnDestroy(): void {

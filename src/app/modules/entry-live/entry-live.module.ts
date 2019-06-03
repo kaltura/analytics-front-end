@@ -50,14 +50,17 @@ import { MetricsSelectorComponent } from './views/live-discovery/metrics-selecto
 import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
 import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
 import { LiveDiscoveryTableComponent } from './views/live-discovery-table/live-discovery-table.component';
-import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
-import { LiveDiscoveryDevicesTableConfig } from './views/live-discovery-table/live-discovery-devices-table.config';
+import { LiveDiscoveryDevicesTableConfig } from './views/live-discovery-table/devices-table/live-discovery-devices-table.config';
 import { DiscoveryFilterComponent } from './views/live-discovery-table/filter/filter.component';
 import { UsersFilterComponent } from './views/live-discovery-table/filter/users-filter/users-filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableSelectorComponent } from './views/live-discovery-table/table-selector/table-selector.component';
 import { DevicesTableComponent } from './views/live-discovery-table/devices-table/devices-table.component';
 import { UsersTableComponent } from './views/live-discovery-table/users-table/users-table.component';
+import { LiveDiscoveryDevicesTableWidget } from './views/live-discovery-table/devices-table/live-discovery-devices-table.widget';
+import { LiveDiscoveryUsersTableWidget } from './views/live-discovery-table/users-table/live-discovery-users-table.widget';
+import { LiveDiscoveryTableProxyWidget } from './views/live-discovery-table/live-discovery-table-proxy.widget';
+import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
 
 @NgModule({
   imports: [
@@ -118,6 +121,8 @@ import { UsersTableComponent } from './views/live-discovery-table/users-table/us
     FiltersService,
     LiveDiscoveryConfig,
     LiveDiscoveryDevicesTableConfig,
+    LiveDiscoveryUsersTableConfig,
+    LiveDiscoveryTableProxyWidget,
     
     // polls services
     EntryLiveGeneralPollsService,
@@ -132,7 +137,8 @@ import { UsersTableComponent } from './views/live-discovery-table/users-table/us
     LiveGeoWidget,
     LiveDevicesWidget,
     LiveDiscoveryWidget,
-    LiveDiscoveryTableWidget,
+    LiveDiscoveryDevicesTableWidget,
+    LiveDiscoveryUsersTableWidget,
   ]
 })
 export class EntryLiveModule {

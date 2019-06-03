@@ -12,7 +12,7 @@ export interface WidgetState {
   error?: KalturaAPIException;
 }
 
-export abstract class WidgetBase<T> {
+export abstract class WidgetBase<T = any> {
   protected _pollingSubscription: Unsubscribable;
   protected _data = new BehaviorSubject<T>(null);
   protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });

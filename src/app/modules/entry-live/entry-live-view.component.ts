@@ -18,7 +18,8 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
 import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
+import { LiveDiscoveryTableProxyWidget } from './views/live-discovery-table/live-discovery-table-proxy.widget';
+import { WidgetBase } from './widgets/widget-base';
 
 @Component({
   selector: 'app-entry-live',
@@ -49,7 +50,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveGeo: LiveGeoWidget,
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
-              private _liveDiscoveryTable: LiveDiscoveryTableWidget,
+              private _liveDiscoveryTable: LiveDiscoveryTableProxyWidget,
               private _exportConfigService: EntryLiveExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
@@ -117,6 +118,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _registerWidgets(): void {
     if (!this._widgetsRegistered) {
       this._widgetsRegistered = true;
+  
+      const widgetArgs = { entryId: this._entryId };
 
       this._widgetsManager.register([
           // this._liveUsers,
@@ -126,11 +129,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
           // this._liveDevices,
           this._liveDiscovery,
           // <-- append new widgets here
-        ],
-        { entryId: this._entryId },
-        [
-          this._liveDiscoveryTable,
-        ]);
+        ], widgetArgs);
+  
+      this._liveDiscoveryTable.activate(widgetArgs, true);
     }
   }
   

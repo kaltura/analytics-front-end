@@ -1,15 +1,15 @@
 <div class="kTable">
   <div class="kToggle">
-    <i [class.kIcondropdown_arrow_bottom]="!_liveDiscoveryTableWidget.showTable"
-       [class.kIcondropdown_arrow_top]="_liveDiscoveryTableWidget.showTable"></i>
-    <a (click)="_liveDiscoveryTableWidget.toggleTable(isPolling)">
-      {{(_liveDiscoveryTableWidget.showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
+    <i [class.kIcondropdown_arrow_bottom]="!(_widgetProxy.showTable$ | async)"
+       [class.kIcondropdown_arrow_top]="_widgetProxy.showTable$ | async"></i>
+    <a (click)="_widgetProxy.toggleTable(isPolling)">
+      {{((_widgetProxy.showTable$ | async) ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>
-  <k-area-blocker [showLoader]="_liveDiscoveryTableWidget.isBusy" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_widgetProxy.isBusy$ | async" [message]="_blockerMessage">
     <div class="kTableContainer"
-         [class.kOpen]="_liveDiscoveryTableWidget.showTable"
-         [class.kClose]="!_liveDiscoveryTableWidget.showTable">
+         [class.kOpen]="_widgetProxy.showTable$ | async"
+         [class.kClose]="!(_widgetProxy.showTable$ | async)">
 
       <ng-container [ngSwitch]="_tableMode">
 
@@ -17,8 +17,8 @@
         <ng-container *ngSwitchCase="_tableModes.users">
           <app-discovery-filter [totalCount]="_totalCount"
                                 [selectedFilters]="_selectedRefineFilters"
-                                (filterChange)="_liveDiscoveryTableWidget.usersFilterChange($event)">
-            <app-table-selector (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
+                                (filterChange)="_widgetProxy.usersFilterChange($event)">
+            <app-table-selector (tableModeChange)="_widgetProxy.setTableMode($event)"
                                 [(tableMode)]="_tableMode"></app-table-selector>
           </app-discovery-filter>
           <app-users-table [tableData]="_tableData"
@@ -31,7 +31,7 @@
         <ng-container *ngSwitchCase="_tableModes.devices">
           <div class="kContent">
             <app-table-selector class="kDevicesModeTableSelector"
-                                (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
+                                (tableModeChange)="_widgetProxy.setTableMode($event)"
                                 [(tableMode)]="_tableMode"></app-table-selector>
             <span class="kTotalCount">
               {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}

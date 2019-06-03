@@ -11,8 +11,6 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
 
   public getConfig(): ReportDataConfig {
     return {
-      // device|view_unique_audience|view_unique_engaged_users|view_unique_buffering_users
-      // |sum_view_time|avg_view_buffering|avg_view_engagement|known_flavor_params_view_count
       [ReportDataSection.table]: {
         fields: {
           'device': {
@@ -39,14 +37,6 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 3,
           },
-          // 'avg_view_buffering': {
-          //   format: value => value,
-          //   sortOrder: 7,
-          // },
-          // 'avg_view_engagement': {
-          //   format: value => value,
-          //   sortOrder: 8,
-          // },
         }
       }
     };

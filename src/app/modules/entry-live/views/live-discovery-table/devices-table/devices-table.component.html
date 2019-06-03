@@ -9,7 +9,10 @@
          (sortFunction)="_onSortChanged($event)">
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col">
+      <th [ngStyle]="{'width': '60px'}"></th>
+      <th *ngFor="let col of columns; let i = index"
+          [pSortableColumn]="col"
+          [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px')}">
         {{'app.entryLive.discovery.tables.devices.' + col | translate}}
         <p-sortIcon [field]="col"></p-sortIcon>
       </th>
@@ -17,7 +20,13 @@
   </ng-template>
   <ng-template pTemplate="body" let-data>
     <tr>
-
+      <td><i class="kIcon" [ngClass]="data['device'] | appDeviceIcon"></i></td>
+      <td *ngFor="let col of columns; let i = index"
+          [class.kHighlight]="i === 0"
+          [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px'), 'width': '100%'}">
+        <span *ngIf="col === 'device'">{{('app.audience.technology.devices.' + data[col]) | translate}}</span>
+        <span *ngIf="col !== 'device'">{{data[col]}}</span>
+      </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">
