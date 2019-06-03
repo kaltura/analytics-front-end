@@ -2,7 +2,7 @@
   <div class="kIconMediaType" [ngClass]="entry?.mediaType | mediaType: false"></div>
   <span>{{entry?.mediaType | mediaType: true}}</span>
   <div class="kSeparator"></div>
-  <span>{{'app.entryLive.owner' | translate: {'0': entry?.creatorId} }}</span>
+  <span>{{'app.entryLive.owner' | translate: {'0': entry?.owner} }}</span>
   <div class="kSeparator"></div>
   <span>{{'app.entryLive.createdOn' | translate: {'0': +entry?.createdAt | kDate:'dateOnly'} }}</span>
   <div class="kSeparator"></div>
