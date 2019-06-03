@@ -115,7 +115,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
         
         return {
           value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.views`) },
+          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) },
           label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           icon: this._deviceIconPipe.transform(item.device),
         };
