@@ -1,5 +1,10 @@
 @import '../../../../../../styles/variables';
 
+:host {
+  display: block;
+  padding-bottom: 8px !important;
+}
+
 .kTableHeader {
   padding: 0 24px;
   display: flex;

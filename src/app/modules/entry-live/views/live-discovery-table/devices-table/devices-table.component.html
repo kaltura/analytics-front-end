@@ -1,0 +1,29 @@
+<p-table appScrollTopOnPaging
+         sortField="count_plays"
+         [value]="tableData"
+         [customSort]="true"
+         [defaultSortOrder]="-1"
+         [sortOrder]="-1"
+         [paginator]="true"
+         [rows]="5"
+         (sortFunction)="_onSortChanged($event)">
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col">
+        {{'app.entryLive.discovery.tables.devices.' + col | translate}}
+        <p-sortIcon [field]="col"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <div class="emptymessage">
+      <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+      <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    </div>
+  </ng-template>
+</p-table>

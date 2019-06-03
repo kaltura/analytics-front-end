@@ -457,6 +457,7 @@
         "users": "Users",
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
+        "totalDevices": "{{0}} Devices",
         "filter": {
           "hours": "Hours",
           "days": "Days",
@@ -493,12 +494,12 @@
         },
         "tables": {
           "devices": {
-            "name": "Devices",
+            "device": "Devices",
             "view_unique_audience": "Active Users",
             "view_unique_engaged_users": "User Engaged",
             "view_unique_buffering_users": "User Buffering",
             "sum_view_time": "Minutes Viewed",
-            "top_flavor": "Top Served Flavor"
+            "known_flavor_params_view_count": "Top Served Flavor"
           },
           "users": {
             "user_id": "Username",

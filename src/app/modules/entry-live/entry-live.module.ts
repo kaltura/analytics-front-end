@@ -51,11 +51,13 @@ import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics
 import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
 import { LiveDiscoveryTableComponent } from './views/live-discovery-table/live-discovery-table.component';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
-import { LiveDiscoveryTableConfig } from './views/live-discovery-table/live-discovery-table.config';
+import { LiveDiscoveryDevicesTableConfig } from './views/live-discovery-table/live-discovery-devices-table.config';
 import { DiscoveryFilterComponent } from './views/live-discovery-table/filter/filter.component';
 import { UsersFilterComponent } from './views/live-discovery-table/filter/users-filter/users-filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableSelectorComponent } from './views/live-discovery-table/table-selector/table-selector.component';
+import { DevicesTableComponent } from './views/live-discovery-table/devices-table/devices-table.component';
+import { UsersTableComponent } from './views/live-discovery-table/users-table/users-table.component';
 
 @NgModule({
   imports: [
@@ -102,6 +104,8 @@ import { TableSelectorComponent } from './views/live-discovery-table/table-selec
     DiscoveryFilterComponent,
     UsersFilterComponent,
     TableSelectorComponent,
+    DevicesTableComponent,
+    UsersTableComponent,
   ],
   exports: [],
   providers: [
@@ -113,7 +117,7 @@ import { TableSelectorComponent } from './views/live-discovery-table/table-selec
     LiveDevicesConfig,
     FiltersService,
     LiveDiscoveryConfig,
-    LiveDiscoveryTableConfig,
+    LiveDiscoveryDevicesTableConfig,
     
     // polls services
     EntryLiveGeneralPollsService,

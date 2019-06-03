@@ -2,29 +2,36 @@ import { Observable, of as ObservableOf } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
-import { LiveDiscoveryTableRequestFactory } from './live-discovery-table-request-factory';
+import { LiveDiscoveryDevicesTableRequestFactory } from './live-discovery-devices-table-request-factory';
 import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
-import { LiveDiscoveryTableConfig } from './live-discovery-table.config';
-import { ReportService } from 'shared/services';
+import { LiveDiscoveryDevicesTableConfig } from './live-discovery-devices-table.config';
+import { ReportHelper, ReportService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
+import { DateRange } from '../live-discovery/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaReportTable } from 'kaltura-ngx-client';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { getResponseByType } from 'shared/utils/get-response-by-type';
 
-export interface LiveDiscoveryData {
-  graphs: { [key: string]: string[] };
+export interface LiveDiscoveryTableData {
+  table: {
+    data: TableRow[],
+    columns: string[],
+    totalCount: number,
+  };
   totals?: { [key: string]: string };
 }
 
 @Injectable()
-export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
+export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData> {
   protected _widgetId = 'discovery-table';
-  protected _pollsFactory: LiveDiscoveryTableRequestFactory = null;
-  protected _dataConfig: ReportDataConfig;
+  protected _pollsFactory: LiveDiscoveryDevicesTableRequestFactory = null;
+  protected _devicesDataConfig: ReportDataConfig;
   protected _dateRange: DateRange;
   
   public showTable = false;
@@ -32,13 +39,12 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _translate: TranslateService,
-              protected _dataConfigService: LiveDiscoveryTableConfig,
+              protected _devicesDataConfigService: LiveDiscoveryDevicesTableConfig,
               protected _reportService: ReportService,
-              protected _frameEventManager: FrameEventManagerService,
-              protected _filterService: FiltersService) {
+              protected _frameEventManager: FrameEventManagerService) {
     super(_serverPolls, _frameEventManager);
     
-    this._dataConfig = this._dataConfigService.getConfig();
+    this._devicesDataConfig = this._devicesDataConfigService.getConfig();
   }
   
   protected _canStartPolling(): boolean {
@@ -46,7 +52,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDiscoveryTableRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveDiscoveryDevicesTableRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
   }
@@ -54,9 +60,35 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryData> {
   protected _responseMapping(responses: any): any {
     this.isBusy = false;
     
-    console.warn(responses);
+    let result = {
+      table: [],
+      columns: [],
+      totalCount: 0,
+    };
+    
+    const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
 
-    return responses;
+    if (table && table.data && table.header) {
+      const { columns, tableData } = this._reportService.parseTableData(table, this._devicesDataConfig.table);
+
+      result.totalCount = table.totalCount;
+      result.columns = columns;
+      result.table = tableData.map((row) => {
+        const activeUsers = parseFormattedValue(row['view_unique_audience']);
+        const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
+        const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
+        row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
+        row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
+        row['view_unique_audience'] = ReportHelper.numberOrZero(activeUsers);
+
+        return row;
+      });
+    }
+    
+    return {
+      table: result,
+      totals: null,
+    };
   }
   
   public retry(): void {

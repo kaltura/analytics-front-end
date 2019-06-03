@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LiveDiscoveryTableWidget } from './live-discovery-table.widget';
+import { LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
@@ -20,19 +20,16 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
-  public _tableMode = TableModes.users;
+  public _tableMode = TableModes.devices;
   public _tableModes = TableModes;
   public _firstTimeLoading = true;
-  public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _totalCount = 0;
   public _columns = [];
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
-  public _order: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
               public _liveDiscoveryTableWidget: LiveDiscoveryTableWidget) {
-    
   }
   
   ngOnInit() {
@@ -54,29 +51,18 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
     
     this._liveDiscoveryTableWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe((data: any) => {
+      .subscribe((data: LiveDiscoveryTableData) => {
         this._data = data;
+        this._columns = data.table.columns;
+        this._tableData = data.table.data;
+        this._totalCount = data.table.totalCount;
         this._firstTimeLoading = false;
       });
+  
+    // TODO remove
+    this._liveDiscoveryTableWidget.toggleTable(this.isPolling);
   }
   
   ngOnDestroy(): void {
-  }
-  
-  public _onPaginationChange(event: { page: number }): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
-      this._liveDiscoveryTableWidget.paginationChange(this._pager);
-    }
-  }
-  
-  public _onSortChanged(event: SortEvent): void {
-    if (event.data.length && event.field && event.order) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this._order) {
-        this._order = order;
-        this._liveDiscoveryTableWidget.sortChange(this._order);
-      }
-    }
   }
 }

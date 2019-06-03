@@ -10,53 +10,39 @@
     <div class="kTableContainer"
          [class.kOpen]="_liveDiscoveryTableWidget.showTable"
          [class.kClose]="!_liveDiscoveryTableWidget.showTable">
+
       <ng-container [ngSwitch]="_tableMode">
-        <app-discovery-filter *ngSwitchCase="_tableModes.users"
-                              [totalCount]="_totalCount"
-                              [selectedFilters]="_selectedRefineFilters"
-                              (filterChange)="_liveDiscoveryTableWidget.usersFilterChange($event)">
-          <app-table-selector (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
-                              [(tableMode)]="_tableMode"></app-table-selector>
-        </app-discovery-filter>
 
-        <app-table-selector *ngSwitchCase="_tableModes.devices"
-                            class="kDevicesModeTableSelector"
-                            (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
-                            [(tableMode)]="_tableMode"></app-table-selector>
-      </ng-container>
+        <!-- USERS TABLE-->
+        <ng-container *ngSwitchCase="_tableModes.users">
+          <app-discovery-filter [totalCount]="_totalCount"
+                                [selectedFilters]="_selectedRefineFilters"
+                                (filterChange)="_liveDiscoveryTableWidget.usersFilterChange($event)">
+            <app-table-selector (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
+                                [(tableMode)]="_tableMode"></app-table-selector>
+          </app-discovery-filter>
+          <app-users-table [tableData]="_tableData"
+                           [columns]="_columns"
+                           [firstTimeLoading]="_firstTimeLoading"
+                           [totalCount]="_totalCount"></app-users-table>
+        </ng-container>
 
-      <p-table appScrollTopOnPaging
-               [value]="_tableData"
-               [customSort]="true"
-               [defaultSortOrder]="-1"
-               [sortOrder]="-1"
-               (sortFunction)="_liveDiscoveryTableWidget.sortChange($event)"
-               (onPage)="_onPaginationChange($event)">
-        <ng-template pTemplate="header">
-          <tr>
-            <th *ngFor="let col of _columns" [pSortableColumn]="col">
-              {{'app.entry.' + col | translate}}
-              <p-sortIcon [field]="col"></p-sortIcon>
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-data>
-          <tr>
-
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <div class="emptymessage">
-            <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-            <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+        <!-- DEVICES TABLE-->
+        <ng-container *ngSwitchCase="_tableModes.devices">
+          <div class="kContent">
+            <app-table-selector class="kDevicesModeTableSelector"
+                                (tableModeChange)="_liveDiscoveryTableWidget.tableModeChange($event)"
+                                [(tableMode)]="_tableMode"></app-table-selector>
+            <span class="kTotalCount">
+              {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}
+            </span>
           </div>
-        </ng-template>
-      </p-table>
-      <p-paginator [rows]="_pager.pageSize"
-                   [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                   [totalRecords]="_totalCount"
-                   (onPageChange)="_onPaginationChange($event)"></p-paginator>
+          <app-devices-table [tableData]="_tableData"
+                             [columns]="_columns"
+                             [firstTimeLoading]="_firstTimeLoading"></app-devices-table>
+        </ng-container>
 
+      </ng-container>
     </div>
   </k-area-blocker>
 </div>

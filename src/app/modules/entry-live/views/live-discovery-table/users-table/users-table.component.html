@@ -1,0 +1,31 @@
+<p-table appScrollTopOnPaging
+         [value]="tableData"
+         [customSort]="true"
+         [defaultSortOrder]="-1"
+         [sortOrder]="-1"
+         (sortFunction)="_onSortChanged($event)"
+         (onPage)="_onPaginationChange($event)">
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col">
+        {{'app.entryLive.discovery.tables.users.' + col | translate}}
+        <p-sortIcon [field]="col"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <div class="emptymessage">
+      <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+      <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    </div>
+  </ng-template>
+</p-table>
+<p-paginator [rows]="_pager.pageSize"
+             [first]="(_pager.pageIndex -1) * _pager.pageSize"
+             [totalRecords]="totalCount"
+             (onPageChange)="_onPaginationChange($event)"></p-paginator>
