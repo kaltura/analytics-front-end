@@ -15,15 +15,15 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
           'device': {
             format: value => value,
           },
-          'views': {
+          'view_unique_audience': {
             format: value => value,
           }
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'views',
+        preSelected: 'view_unique_audience',
         fields: {
-          'views': {
+          'view_unique_audience': {
             format: value => value,
           }
         }
