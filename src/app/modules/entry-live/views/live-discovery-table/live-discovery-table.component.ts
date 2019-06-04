@@ -7,7 +7,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableProxyWidget } from './live-discovery-table-proxy.widget';
+import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -18,7 +18,6 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
   
   public _blockerMessage: AreaBlockerMessage;
-  public _data: any;
   public _tableMode = TableModes.users;
   public _tableModes = TableModes;
   public _firstTimeLoading = true;
@@ -28,16 +27,16 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _tableData: TableRow[] = [];
   public _selectedRefineFilters: RefineFilter = null;
   public _order: string;
-  public _showTable = true;
+  public _showTable = false;
   public _summaryData: LiveDiscoverySummaryData;
   
   constructor(private _errorsManager: ErrorsManagerService,
-              public _widgetProxy: LiveDiscoveryTableProxyWidget) {
+              public _widget: LiveDiscoveryTableWidget) {
     
   }
   
   ngOnInit() {
-    this._widgetProxy.state$
+    this._widget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
         if (state.error) {
@@ -46,17 +45,17 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._widgetProxy.retry();
+              this._widget.retry();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
     
-    this._widgetProxy.data$
+    this._widget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryTableData) => {
-        this._data = data;
+        this._tableMode = data.tableMode;
         this._tableData = data.table.data;
         this._columns = data.table.columns;
         this._totalCount = data.table.totalCount;
@@ -65,7 +64,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
       });
     
     // TODO remove
-    this._widgetProxy.toggleTable(this._showTable, this.isPolling);
+    // this._widgetProxy.toggleTable(this._showTable, this.isPolling);
   }
   
   ngOnDestroy(): void {
@@ -73,7 +72,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-    this._widgetProxy.toggleTable(this._showTable, this.isPolling);
+    this._widget.toggleTable(this._showTable, this.isPolling);
   }
   
 }

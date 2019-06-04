@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { LiveDiscoveryUsersTableWidget } from './live-discovery-users-table.widget';
-import { LiveDiscoverySummaryData } from '../live-discovery-table-proxy.widget';
+import { LiveDiscoveryUsersTableProvider } from './live-discovery-users-table-provider';
+import { LiveDiscoverySummaryData, LiveDiscoveryTableWidget } from '../live-discovery-table.widget';
 
 @Component({
   selector: 'app-users-table',
@@ -20,7 +20,7 @@ export class UsersTableComponent {
   public _order: string;
   public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   
-  constructor(public _widget: LiveDiscoveryUsersTableWidget) {
+  constructor(public _widget: LiveDiscoveryTableWidget) {
   }
   
   public _onPaginationChange(event: { page: number }): void {

@@ -18,8 +18,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
 import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import { LiveDiscoveryTableProxyWidget } from './views/live-discovery-table/live-discovery-table-proxy.widget';
-import { WidgetBase } from './widgets/widget-base';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 
 @Component({
   selector: 'app-entry-live',
@@ -50,7 +49,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveGeo: LiveGeoWidget,
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
-              private _liveDiscoveryTable: LiveDiscoveryTableProxyWidget,
+              private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _exportConfigService: EntryLiveExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
@@ -103,7 +102,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-  
+        
         this._registerWidgets();
       });
   }
@@ -118,20 +117,20 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _registerWidgets(): void {
     if (!this._widgetsRegistered) {
       this._widgetsRegistered = true;
-  
+      
       const widgetArgs = { entryId: this._entryId };
-
+      
       this._widgetsManager.register([
-          // this._liveUsers,
-          // this._liveBandwidth,
-          // this._liveStreamHealth,
-          // this._liveGeo,
-          // this._liveDevices,
-          this._liveDiscovery,
-          // <-- append new widgets here
-        ], widgetArgs);
-  
-      this._liveDiscoveryTable.activate(widgetArgs, true);
+        // this._liveUsers,
+        // this._liveBandwidth,
+        // this._liveStreamHealth,
+        // this._liveGeo,
+        // this._liveDevices,
+        this._liveDiscovery,
+        // <-- append new widgets here
+      ], widgetArgs, [
+        this._liveDiscoveryTable,
+      ]);
     }
   }
   
@@ -148,18 +147,18 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
     }
   }
-
-  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
+  
+  public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
     let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
-
+    
     if (event.drillDown && event.drillDown.length > 0) {
       update.additionalFilters.countryIn = event.drillDown[0];
     }
-
+    
     if (event.drillDown && event.drillDown.length > 1) {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
-
+    
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 }

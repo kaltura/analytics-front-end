@@ -57,10 +57,10 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableSelectorComponent } from './views/live-discovery-table/table-selector/table-selector.component';
 import { DevicesTableComponent } from './views/live-discovery-table/devices-table/devices-table.component';
 import { UsersTableComponent } from './views/live-discovery-table/users-table/users-table.component';
-import { LiveDiscoveryDevicesTableWidget } from './views/live-discovery-table/devices-table/live-discovery-devices-table.widget';
-import { LiveDiscoveryUsersTableWidget } from './views/live-discovery-table/users-table/live-discovery-users-table.widget';
-import { LiveDiscoveryTableProxyWidget } from './views/live-discovery-table/live-discovery-table-proxy.widget';
+import { LiveDiscoveryDevicesTableProvider } from './views/live-discovery-table/devices-table/live-discovery-devices-table-provider';
+import { LiveDiscoveryUsersTableProvider } from './views/live-discovery-table/users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 
 @NgModule({
   imports: [
@@ -122,7 +122,8 @@ import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/user
     LiveDiscoveryConfig,
     LiveDiscoveryDevicesTableConfig,
     LiveDiscoveryUsersTableConfig,
-    LiveDiscoveryTableProxyWidget,
+    LiveDiscoveryDevicesTableProvider,
+    LiveDiscoveryUsersTableProvider,
     
     // polls services
     EntryLiveGeneralPollsService,
@@ -137,8 +138,7 @@ import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/user
     LiveGeoWidget,
     LiveDevicesWidget,
     LiveDiscoveryWidget,
-    LiveDiscoveryDevicesTableWidget,
-    LiveDiscoveryUsersTableWidget,
+    LiveDiscoveryTableWidget,
   ]
 })
 export class EntryLiveModule {

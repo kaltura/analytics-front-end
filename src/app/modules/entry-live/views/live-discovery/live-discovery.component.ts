@@ -9,7 +9,7 @@ import { ReportDataFields, ReportDataSection } from 'shared/services/storage-dat
 import { MetricsSelectorChangeEvent } from './metrics-selector/metrics-selector.component';
 import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.component';
 import { filter } from 'rxjs/operators';
-import { LiveDiscoveryTableProxyWidget } from '../live-discovery-table/live-discovery-table-proxy.widget';
+import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
 
 @Component({
   selector: 'app-live-discovery',
@@ -28,7 +28,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _isPolling: boolean;
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
-              private _liveDiscoveryTable: LiveDiscoveryTableProxyWidget,
+              private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _errorsManager: ErrorsManagerService,
               protected _dataConfigService: LiveDiscoveryConfig) {
     this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
