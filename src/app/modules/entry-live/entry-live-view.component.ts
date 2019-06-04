@@ -15,7 +15,7 @@ import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widge
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
-import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
+import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
 import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';

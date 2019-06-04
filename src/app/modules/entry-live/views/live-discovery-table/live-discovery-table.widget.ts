@@ -9,8 +9,8 @@ import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-disco
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
-import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
+import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
+import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-discovery-devices-table-request-factory';
 import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
