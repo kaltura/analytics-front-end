@@ -13,6 +13,8 @@ import { LiveDiscoveryUsersTableConfig } from './live-discovery-users-table.conf
 import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
 import { DateFiltersChangedEvent } from '../../live-discovery/filters/filters.component';
 import { LiveDiscoveryTableData, LiveDiscoveryTableWidget } from '../live-discovery-table-proxy.widget';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { getResponseByType } from 'shared/utils/get-response-by-type';
 
 @Injectable()
 export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTableData> implements LiveDiscoveryTableWidget, OnDestroy {
@@ -54,7 +56,27 @@ export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTable
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): any {
     this._isBusy.next(false);
-    return responses;
+  
+    let tableResult = {
+      data: [],
+      columns: [],
+      totalCount: 0,
+    };
+    let summary = {};
+  
+    const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
+    if (table && table.data && table.header) {
+      const { columns, tableData } = this._reportService.parseTableData(table, this._devicesDataConfig.table);
+      
+      tableResult.totalCount = table.totalCount;
+      tableResult.columns = columns;
+      tableResult.data = tableData;
+    }
+
+    return {
+      summary,
+      table: tableResult,
+    };
   }
   
   public retry(): void {
@@ -91,6 +113,10 @@ export class LiveDiscoveryUsersTableWidget extends WidgetBase<LiveDiscoveryTable
   }
   
   public sortChange(event): void {
+  
+  }
+  
+  public userFilterChange(event: RefineFilter): void {
   
   }
 }

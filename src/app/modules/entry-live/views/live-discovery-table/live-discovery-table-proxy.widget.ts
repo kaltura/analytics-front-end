@@ -35,7 +35,7 @@ export interface LiveDiscoveryTableWidget {
 @Injectable()
 export class LiveDiscoveryTableProxyWidget {
   private _currentService: WidgetBase<LiveDiscoveryTableData> & LiveDiscoveryTableWidget;
-  private _tableMode = TableModes.devices;
+  private _tableMode = TableModes.users;
   private _widgetArgs: WidgetsActivationArgs;
   
   public isPolling: boolean;
@@ -116,7 +116,8 @@ export class LiveDiscoveryTableProxyWidget {
   }
   
   public usersFilterChange(refineFilter: RefineFilter): void {
-    // update filter
-    // reload data
+    if (this._tableMode === TableModes.users) {
+      (<LiveDiscoveryUsersTableWidget>this._currentService).userFilterChange(refineFilter);
+    }
   }
 }

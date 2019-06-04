@@ -503,12 +503,12 @@
             "known_flavor_params_view_count": "Top Served Flavor"
           },
           "users": {
-            "user_id": "Username",
+            "creator_name": "Username",
             "status": "Status",
-            "view_unique_buffering_users": "Avg. Buffer Rate",
+            "avg_view_buffering": "Avg. Buffer Rate",
             "sum_view_time": "Minutes Viewed",
-            "top_flavor": "Top Served Flavor",
-            "view_unique_engaged_users": "Avg. Engagement"
+            "known_flavor_params_view_count": "Top Served Flavor",
+            "avg_view_engagement": "Avg. Engagement"
           }
         }
       },

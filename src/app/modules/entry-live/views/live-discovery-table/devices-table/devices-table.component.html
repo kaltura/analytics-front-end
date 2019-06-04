@@ -17,7 +17,7 @@
         <p-sortIcon [field]="col"></p-sortIcon>
       </th>
     </tr>
-    <tr class="kSummaryRow">
+    <tr *ngIf="tableData?.length" class="kSummaryRow">
       <th [ngStyle]="{'width': '60px'}"></th>
       <th *ngFor="let col of columns; let i = index"
           [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px'), 'width': '100%'}">

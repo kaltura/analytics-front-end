@@ -7,15 +7,24 @@
          (onPage)="_onPaginationChange($event)">
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col">
+      <th *ngFor="let col of columns; let i = index" [pSortableColumn]="col">
         {{'app.entryLive.discovery.tables.users.' + col | translate}}
         <p-sortIcon [field]="col"></p-sortIcon>
+      </th>
+    </tr>
+    <tr *ngIf="tableData?.length" class="kSummaryRow">
+      <th *ngFor="let col of columns">
+        <span *ngIf="col === 'creator_name'">{{'app.entryLive.discovery.summary' | translate}}</span>
+        <span *ngIf="col !== 'creator_name'">{{summary[col]}}</span>
       </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-data>
     <tr>
-
+      <td *ngFor="let col of columns; let i = index"
+          [class.kHighlight]="i === 0" [ngStyle]="{'width': '100%'}">
+        <span>{{data[col]}}</span>
+      </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">

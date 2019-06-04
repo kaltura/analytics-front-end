@@ -30,7 +30,7 @@
 
         <!-- DEVICES TABLE-->
         <ng-container *ngSwitchCase="_tableModes.devices">
-          <div class="kContent">
+          <div class="kTableContent">
             <app-table-selector class="kDevicesModeTableSelector"
                                 (tableModeChange)="_widgetProxy.setTableMode($event, isPolling)"
                                 [(tableMode)]="_tableMode"></app-table-selector>

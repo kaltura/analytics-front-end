@@ -20,7 +20,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   private _interval = KalturaReportInterval.tenSeconds;
   
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
-    reportType: KalturaReportType.platformsDiscoveryRealtime,
+    reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
@@ -31,7 +31,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   };
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.platformsDiscoveryRealtime,
+    reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,

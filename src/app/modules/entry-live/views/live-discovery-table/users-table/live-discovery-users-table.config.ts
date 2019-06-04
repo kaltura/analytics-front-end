@@ -8,45 +8,50 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
+  
+  private _getFlavor(value: string): string {
+    const flavorsValueSeparator = '/';
+    const topFlavors = value
+      .split(flavorsValueSeparator)
+      .map(flavor => {
+        const [name, count] = flavor.split(':');
+        return {
+          name: name.replace(/"/g, ''),
+          count: Number(count),
+        };
+      })
+      .sort((a, b) => a.count - b.count);
+    return topFlavors.length ? topFlavors[0].name : 'N/A';
+  }
 
   public getConfig(): ReportDataConfig {
     return {
-      // device|view_unique_audience|view_unique_engaged_users|view_unique_buffering_users
-      // |sum_view_time|avg_view_buffering|avg_view_engagement|known_flavor_params_view_count
       [ReportDataSection.table]: {
         fields: {
-          'device': {
+          'user_id': {
+            format: value => value,
+            hidden: true,
+          },
+          'creator_name': {
             format: value => value,
             sortOrder: 1,
           },
-          'view_unique_audience': {
-            format: value => value,
+          'avg_view_buffering': {
+            format: value => ReportHelper.percents(value, false),
             sortOrder: 2,
-          },
-          'view_unique_buffering_users': {
-            format: value => value,
-            sortOrder: 4,
           },
           'sum_view_time': {
             format: value => `${ReportHelper.numberOrZero(value / 60)} Min`,
-            sortOrder: 5,
-          },
-          'known_flavor_params_view_count': {
-            format: value => value,
-            sortOrder: 6,
-          },
-          'view_unique_engaged_users': {
-            format: value => value,
             sortOrder: 3,
           },
-          // 'avg_view_buffering': {
-          //   format: value => value,
-          //   sortOrder: 7,
-          // },
-          // 'avg_view_engagement': {
-          //   format: value => value,
-          //   sortOrder: 8,
-          // },
+          'known_flavor_params_view_count': {
+            format: value => this._getFlavor(value),
+            sortOrder: 4,
+          },
+          'avg_view_engagement': {
+            format: value => ReportHelper.percents(value, false),
+            sortOrder: 5,
+          },
         }
       }
     };

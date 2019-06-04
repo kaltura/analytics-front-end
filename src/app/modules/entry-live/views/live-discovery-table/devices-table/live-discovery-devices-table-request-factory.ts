@@ -14,7 +14,7 @@ export class LiveDiscoveryDevicesTableRequestFactory implements RequestFactory<K
   
   private _dateRange: DateRangeServerValue = {
     toDate: moment().unix(),
-    fromDate: moment().subtract(7, 'days').unix(),
+    fromDate: moment().subtract(1, 'minute').unix(),
   };
   
   private _interval = KalturaReportInterval.tenSeconds;

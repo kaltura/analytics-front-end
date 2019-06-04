@@ -19,7 +19,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
-  public _tableMode = TableModes.devices;
+  public _tableMode = TableModes.users;
   public _tableModes = TableModes;
   public _firstTimeLoading = true;
   public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
