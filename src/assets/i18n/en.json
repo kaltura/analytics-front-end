@@ -458,6 +458,7 @@
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
         "totalDevices": "{{0}} Devices",
+        "summary": "Summary",
         "filter": {
           "hours": "Hours",
           "days": "Days",

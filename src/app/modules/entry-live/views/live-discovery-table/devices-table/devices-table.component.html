@@ -1,5 +1,5 @@
 <p-table appScrollTopOnPaging
-         sortField="count_plays"
+         sortField="view_unique_buffering_users"
          [value]="tableData"
          [customSort]="true"
          [defaultSortOrder]="-1"
@@ -15,6 +15,14 @@
           [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px')}">
         {{'app.entryLive.discovery.tables.devices.' + col | translate}}
         <p-sortIcon [field]="col"></p-sortIcon>
+      </th>
+    </tr>
+    <tr class="kSummaryRow">
+      <th [ngStyle]="{'width': '60px'}"></th>
+      <th *ngFor="let col of columns; let i = index"
+          [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px'), 'width': '100%'}">
+        <span *ngIf="col === 'device'">{{'app.entryLive.discovery.summary' | translate}}</span>
+        <span *ngIf="col !== 'device'">{{summary[col]}}</span>
       </th>
     </tr>
   </ng-template>

@@ -22,6 +22,7 @@
                                 [(tableMode)]="_tableMode"></app-table-selector>
           </app-discovery-filter>
           <app-users-table [tableData]="_tableData"
+                           [summary]="_summaryData"
                            [columns]="_columns"
                            [firstTimeLoading]="_firstTimeLoading"
                            [totalCount]="_totalCount"></app-users-table>
@@ -38,6 +39,7 @@
             </span>
           </div>
           <app-devices-table [tableData]="_tableData"
+                             [summary]="_summaryData"
                              [columns]="_columns"
                              [firstTimeLoading]="_firstTimeLoading"></app-devices-table>
         </ng-container>

@@ -9,13 +9,17 @@ import { WidgetBase, WidgetState } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 
+export interface LiveDiscoverySummaryData {
+  [key: string]: string;
+}
+
 export interface LiveDiscoveryTableData {
   table: {
     data: TableRow[],
     columns: string[],
     totalCount: number,
   };
-  totals?: { [key: string]: string };
+  summary?: LiveDiscoverySummaryData;
 }
 
 export interface LiveDiscoveryTableWidget {

@@ -4,7 +4,7 @@ import { LiveDiscoveryDevicesTableRequestFactory } from './live-discovery-device
 import { TranslateService } from '@ngx-translate/core';
 import { LiveDiscoveryDevicesTableConfig } from './live-discovery-devices-table.config';
 import { ReportHelper, ReportService } from 'shared/services';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
@@ -26,7 +26,6 @@ export class LiveDiscoveryDevicesTableWidget extends WidgetBase<LiveDiscoveryTab
   public _showTable = new BehaviorSubject<boolean>(false);
   public _isBusy = new BehaviorSubject<boolean>(false);
   
-  public showTable$ = this._showTable.asObservable();
   public isBusy$ = this._isBusy.asObservable();
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
@@ -64,29 +63,36 @@ export class LiveDiscoveryDevicesTableWidget extends WidgetBase<LiveDiscoveryTab
       columns: [],
       totalCount: 0,
     };
+    let summary = {};
+  
+    const mapData = row => {
+      const activeUsers = parseFormattedValue(row['view_unique_audience']);
+      const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
+      const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
+      row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
+      row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
+      return row;
+    };
     
     const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
-    
     if (table && table.data && table.header) {
       const { columns, tableData } = this._reportService.parseTableData(table, this._devicesDataConfig.table);
       
       tableResult.totalCount = table.totalCount;
       tableResult.columns = columns;
-      tableResult.data = tableData.map((row) => {
-        const activeUsers = parseFormattedValue(row['view_unique_audience']);
-        const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
-        const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
-        row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
-        row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
-        row['view_unique_audience'] = ReportHelper.numberOrZero(activeUsers);
-        
-        return row;
-      });
+      tableResult.data = tableData.map(mapData);
+    }
+  
+    const totals = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
+    if (totals && totals.data && totals.header) {
+      const { columns, tableData: totalsData } = this._reportService.parseTableData(totals, this._devicesDataConfig[ReportDataSection.totals]);
+      const summaryValues = totalsData.map(mapData)[0];
+      summary = columns.reduce((acc, val) => (acc[val] = summaryValues[val], acc), {});
     }
     
     return {
+      summary,
       table: tableResult,
-      totals: null,
     };
   }
   

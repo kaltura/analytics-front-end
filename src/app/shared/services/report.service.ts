@@ -211,7 +211,7 @@ export class ReportService implements OnDestroy {
   ngOnDestroy() {
   }
   
-  public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
+  public parseTableData(table: KalturaReportTable | KalturaReportTotal, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
     let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];

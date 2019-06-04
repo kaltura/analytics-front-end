@@ -7,7 +7,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { LiveDiscoveryTableData, LiveDiscoveryTableProxyWidget } from './live-discovery-table-proxy.widget';
+import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableProxyWidget } from './live-discovery-table-proxy.widget';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -29,6 +29,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _selectedRefineFilters: RefineFilter = null;
   public _order: string;
   public _showTable = true;
+  public _summaryData: LiveDiscoverySummaryData;
   
   constructor(private _errorsManager: ErrorsManagerService,
               public _widgetProxy: LiveDiscoveryTableProxyWidget) {
@@ -59,6 +60,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
         this._tableData = data.table.data;
         this._columns = data.table.columns;
         this._totalCount = data.table.totalCount;
+        this._summaryData = data.summary;
         this._firstTimeLoading = false;
       });
     

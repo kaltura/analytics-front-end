@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { LiveDiscoverySummaryData } from '../live-discovery-table-proxy.widget';
 
 @Component({
   selector: 'app-devices-table',
@@ -10,6 +11,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 })
 export class DevicesTableComponent {
   @Input() tableData: TableRow[] = [];
+  @Input() summary: LiveDiscoverySummaryData;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
 

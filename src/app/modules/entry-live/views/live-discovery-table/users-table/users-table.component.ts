@@ -3,6 +3,7 @@ import { SortEvent } from 'primeng/api';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveDiscoveryUsersTableWidget } from './live-discovery-users-table.widget';
+import { LiveDiscoverySummaryData } from '../live-discovery-table-proxy.widget';
 
 @Component({
   selector: 'app-users-table',
@@ -11,6 +12,7 @@ import { LiveDiscoveryUsersTableWidget } from './live-discovery-users-table.widg
 })
 export class UsersTableComponent {
   @Input() tableData: TableRow[] = [];
+  @Input() summary: LiveDiscoverySummaryData;
   @Input() columns: string[] = [];
   @Input() totalCount = 0;
   @Input() firstTimeLoading = true;

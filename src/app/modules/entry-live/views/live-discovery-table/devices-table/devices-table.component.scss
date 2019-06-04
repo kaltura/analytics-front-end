@@ -4,3 +4,20 @@
   font-size: 22px;
   color: $kGrayscale3;
 }
+
+:host /deep/ {
+  .ui-table-wrapper {
+    min-height: 224px;
+  }
+}
+
+.kSummaryRow {
+  height: 48px;
+  border-top: 1px solid $kGrayscale6;
+
+  th {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
