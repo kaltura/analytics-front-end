@@ -125,9 +125,9 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         formatter: (params) => {
           const [active, engaged] = params;
           const title = active.axisValue;
-          const activeValue = ReportHelper.numberOrZero(active.data);
-          const engagedValue = ReportHelper.percents(engaged.data / 100, false, false);
-          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engagedValue}</div></div>`;
+          const activeValue = ReportHelper.numberOrZero(active.data.value);
+          const engagedValue = ReportHelper.percents(engaged.data.value / 100, false, false);
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}:&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}:&nbsp;${engagedValue}</div></div>`;
         }
       },
       yAxis: [

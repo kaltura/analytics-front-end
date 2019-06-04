@@ -128,9 +128,9 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         formatter: (params) => {
           const [bandwidth, buffering] = params;
           const title = bandwidth.axisValue;
-          const bandwidthValue = ReportHelper.percents(bandwidth.data / 100, false, false);
-          const bufferingValue = `${ReportHelper.numberOrZero(buffering.data)} Kbps`;
-          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}&nbsp;${bandwidthValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBW')}&nbsp;${bufferingValue}</div></div>`;
+          const bandwidthValue = ReportHelper.percents(bandwidth.data.value / 100, false, false);
+          const bufferingValue = `${ReportHelper.numberOrZero(buffering.data.value)} Kbps`;
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #d48d2b"></span>${this._translate.instant('app.entryLive.usersBuffering')}:&nbsp;${bandwidthValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #e0313a"></span>${this._translate.instant('app.entryLive.downstreamBW')}:&nbsp;${bufferingValue}</div></div>`;
         }
       },
       xAxis: {
