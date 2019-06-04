@@ -1,5 +1,18 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaReportInputFilter,
+  KalturaReportInterval,
+  KalturaReportResponseOptions,
+  KalturaReportType,
+  ReportGetTableAction,
+  ReportGetTableActionArgs,
+  ReportGetTotalAction,
+  ReportGetTotalActionArgs
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
@@ -21,7 +34,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
     reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
@@ -32,7 +45,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
@@ -65,6 +78,20 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
       this._getTotalActionArgs.reportInputFilter.interval = interval;
     }
   }
+  
+  public set userIds(userIds: string) {
+    (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds = userIds;
+    (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds = userIds;
+  }
+  
+  public set pager(pager: KalturaFilterPager) {
+    this._getTableActionArgs.pager = pager;
+  }
+  
+  public set order(order: string) {
+    this._getTableActionArgs.order = order;
+  }
+  
   
   public onPollTickSuccess(): void {
     this._getTableActionArgs.reportInputFilter.toDate = this._dateRange.toDate;

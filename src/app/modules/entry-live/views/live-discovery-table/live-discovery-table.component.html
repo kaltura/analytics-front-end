@@ -16,7 +16,6 @@
         <!-- USERS TABLE-->
         <ng-container *ngSwitchCase="_tableModes.users">
           <app-discovery-filter [totalCount]="_totalCount"
-                                [selectedFilters]="_selectedRefineFilters"
                                 (filterChange)="_widget.usersFilterChange($event)">
             <app-table-selector [tableMode]="_tableMode"
                                 (tableModeChange)="_widget.setTableMode($event)"></app-table-selector>

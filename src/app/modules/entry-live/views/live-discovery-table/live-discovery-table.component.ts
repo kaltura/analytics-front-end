@@ -62,9 +62,6 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
         this._summaryData = data.summary;
         this._firstTimeLoading = false;
       });
-    
-    // TODO remove
-    // this._widgetProxy.toggleTable(this._showTable, this.isPolling);
   }
   
   ngOnDestroy(): void {
