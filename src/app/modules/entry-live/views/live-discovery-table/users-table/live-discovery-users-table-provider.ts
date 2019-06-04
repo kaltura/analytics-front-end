@@ -6,6 +6,7 @@ import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
 import { LiveDiscoveryTableData, LiveDiscoveryTableWidgetPollFactory, LiveDiscoveryTableWidgetProvider } from '../live-discovery-table.widget';
 import { LiveDiscoveryUsersTableRequestFactory } from './live-discovery-users-table-request-factory';
 import { LiveDiscoveryUsersTableConfig } from './live-discovery-users-table.config';
+import { ReportDataSection } from 'shared/services/storage-data-base.config';
 
 @Injectable()
 export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidgetProvider {
@@ -36,6 +37,13 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
       tableResult.totalCount = table.totalCount;
       tableResult.columns = columns;
       tableResult.data = tableData;
+    }
+  
+    const totals = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
+    if (totals && totals.data && totals.header) {
+      const { columns, tableData: totalsData } = this._reportService.parseTableData(totals, this._dataConfig[ReportDataSection.totals]);
+      const summaryValues = totalsData[0];
+      summary = columns.reduce((acc, val) => (acc[val] = summaryValues[val], acc), {});
     }
     
     return {
