@@ -9,7 +9,7 @@ import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-disco
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { DateRange } from '../live-discovery/filters/filters.service';
+import { DateRange, FiltersService } from '../live-discovery/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery/filters/filters.component';
 import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-discovery-devices-table-request-factory';
 import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
@@ -44,17 +44,22 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _provider: LiveDiscoveryTableWidgetProvider;
   private _widgetArgs: WidgetsActivationArgs;
   private _tableMode = TableModes.users;
+  private _dateFilter: DateFiltersChangedEvent;
   
   protected _widgetId = 'discovery-devices-table';
   protected _pollsFactory: LiveDiscoveryTableWidgetPollFactory = null;
   protected _dataConfig: ReportDataConfig;
-  protected _dateRange: DateRange;
   protected _showTable = false;
   
   public isBusy = false;
   
+  private get _dateRange(): DateRange {
+    return this._dateFilter ? this._dateFilter.dateRange : null;
+  }
+  
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _frameEventManager: FrameEventManagerService,
+              protected _filterService: FiltersService,
               private _devicesProvider: LiveDiscoveryDevicesTableProvider,
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
     super(_serverPolls, _frameEventManager);
@@ -90,11 +95,19 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     
     this._pollsFactory = this._provider.getPollFactory(widgetsArgs);
     
+    if (this._dateFilter) {
+      this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    }
+    
     return ObservableOf(null);
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
     this.isBusy = false;
+  
+    this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    
     return { tableMode: this._tableMode, ...this._provider.responseMapping(responses) };
   }
   
@@ -109,10 +122,10 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+
     this._pollsFactory.interval = event.timeIntervalServerValue;
     this._pollsFactory.dateRange = event.dateRangeServerValue;
-    
-    this._dateRange = event.dateRange;
     
     if (this._showTable) {
       this.restartPolling();
