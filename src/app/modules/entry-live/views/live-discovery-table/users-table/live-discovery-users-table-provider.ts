@@ -12,17 +12,27 @@ import { Observable, of as ObservableOf } from 'rxjs';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { LiveDiscoveryUsersLiveTableRequestFactory } from './live-discovery-users-live-table-request-factory';
 import { FiltersService } from '../../live-discovery-chart/filters/filters.service';
+import { LiveDiscoveryUsersLiveTableConfig } from './live-discovery-users-live-table.config';
+
+export enum UserStatus {
+  offline = 'offline',
+  dvr = 'dvr',
+  live = 'live',
+}
 
 @Injectable()
 export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidgetProvider {
   private readonly _dataConfig: ReportDataConfig;
+  private readonly _statusDataConfig: ReportDataConfig;
   private _entryId: string;
   
   constructor(private _reportService: ReportService,
               private _filterService: FiltersService,
               private _kalturaClient: KalturaClient,
-              private _dataConfigService: LiveDiscoveryUsersTableConfig) {
+              private _dataConfigService: LiveDiscoveryUsersTableConfig,
+              private _statusDataConfigService: LiveDiscoveryUsersLiveTableConfig) {
     this._dataConfig = _dataConfigService.getConfig();
+    this._statusDataConfig = _statusDataConfigService.getConfig();
   }
   
   getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
@@ -80,8 +90,31 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
           
           return this._kalturaClient.multiRequest(liveDataRequestFactory.create())
             .pipe(map(liveDataResponse => {
-              console.warn(liveDataResponse);
-              
+              if (liveDataResponse.hasErrors()) {
+                return { ...response, error: liveDataResponse.getFirstError() };
+              }
+  
+              const statusData = liveDataResponse[0].result;
+  
+              let usersStatusList = [];
+              if (statusData && statusData.data && statusData.header) {
+                const { tableData } = this._reportService.parseTableData(statusData, this._statusDataConfig.table);
+  
+                usersStatusList = tableData.filter((statusItem, index, self) => {
+                  return index === self.findIndex(item => item['user_id'] === statusItem['user_id']);
+                });
+              }
+  
+              // add user status data
+              result.table.data.forEach(item => {
+                const relevantStatus = usersStatusList.find(statusItem => statusItem['user_id'] === item['user_id']);
+                item['status'] = relevantStatus && UserStatus[relevantStatus['playback_type']]
+                  ? UserStatus[relevantStatus['playback_type']]
+                  : UserStatus.offline;
+              });
+  
+              result.table.columns.splice(1, 0, 'status'); // add status column
+
               return { ...response, result };
             }));
         }

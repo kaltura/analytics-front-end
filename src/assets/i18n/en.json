@@ -493,6 +493,11 @@
           "avg_view_latency": "AVG Latency",
           "avg_view_dropped_frames_ratio": "AVG Dropped Frames"
         },
+        "userStatus": {
+          "offline": "Offline",
+          "dvr": "DVR",
+          "live": "Live"
+        },
         "tables": {
           "devices": {
             "device": "Devices",

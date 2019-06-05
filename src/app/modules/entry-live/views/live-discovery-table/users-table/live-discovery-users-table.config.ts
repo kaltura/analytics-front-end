@@ -36,21 +36,25 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'status': {
+            format: value => value,
+            sortOrder: 2,
+          },
           'avg_view_buffering': {
             format: value => ReportHelper.percents(value, false),
-            sortOrder: 2,
+            sortOrder: 3,
           },
           'sum_view_time': {
             format: value => `${ReportHelper.numberOrZero(value / 60)} Min`,
-            sortOrder: 3,
+            sortOrder: 4,
           },
           'known_flavor_params_view_count': {
             format: value => this._getFlavor(value),
-            sortOrder: 4,
+            sortOrder: 5,
           },
           'avg_view_engagement': {
             format: value => ReportHelper.percents(value, false),
-            sortOrder: 5,
+            sortOrder: 6,
           },
         }
       },

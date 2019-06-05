@@ -42,7 +42,7 @@ export class LiveDiscoveryUsersLiveTableRequestFactory implements RequestFactory
   }
   
   private _getFromDate(): number {
-    return moment().subtract(7, 'days').unix();
+    return moment().subtract(1, 'minute').unix();
   }
   
   public set userIds(userIds: string) {

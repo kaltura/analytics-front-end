@@ -16,3 +16,32 @@
     font-weight: bold;
   }
 }
+
+.kStatus {
+  display: flex;
+  align-items: center;
+
+  .kCircle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &.offline {
+      border: solid 2px $kGrayscale4;
+    }
+
+    &.dvr {
+      background-color: #60e4cc;
+    }
+
+    &.live {
+      background-color: #31bea6;
+    }
+  }
+
+  .kStatusName {
+    margin-left: 8px;
+    color: $kGrayscale1;
+  }
+}

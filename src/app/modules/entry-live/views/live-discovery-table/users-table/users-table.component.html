@@ -23,7 +23,11 @@
     <tr>
       <td *ngFor="let col of columns; let i = index"
           [class.kHighlight]="i === 0" [ngStyle]="{'width': '100%'}">
-        <span>{{data[col]}}</span>
+        <span *ngIf="col !== 'status'">{{data[col]}}</span>
+        <span *ngIf="col === 'status'" class="kStatus">
+          <span class="kCircle" [ngClass]="data[col]"></span>
+          <span class="kStatusName">{{('app.entryLive.discovery.userStatus.' + data[col]) | translate}}</span>
+        </span>
       </td>
     </tr>
   </ng-template>

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { Observable, of, of as ObservableOf } from 'rxjs';
+import { Observable, of as ObservableOf } from 'rxjs';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -16,7 +16,6 @@ import { LiveDiscoveryUsersAggregatedTableRequestFactory } from './users-table/l
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { map, switchMap } from 'rxjs/operators';
 
 export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersAggregatedTableRequestFactory;
 
@@ -109,7 +108,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
       (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
       (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
     }
-  
+    
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
@@ -124,11 +123,11 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     if (!silent) {
       this.isBusy = true;
     }
-
+    
     this._widgetArgs = widgetsArgs;
     
     this._pollsFactory = this._provider.getPollFactory(widgetsArgs);
-  
+    
     this._applyFilters();
     
     return ObservableOf(null);
@@ -137,7 +136,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   // actual response mapping is already done in _hooksToPoll function
   protected _responseMapping(data: LiveDiscoveryTableData): LiveDiscoveryTableData {
     this.isBusy = false;
-  
+    
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     
     return { tableMode: this._tableMode, ...data };
@@ -149,19 +148,19 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   public setTableMode(tableMode: TableModes): void {
     this._tableMode = tableMode;
-  
+    
     this._resetUsersFilter();
     
     this.deactivate();
     
     this._setProvider(tableMode);
-
+    
     this.activate(this._widgetArgs);
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
-
+    
     this._pollsFactory.interval = event.timeIntervalServerValue;
     this._pollsFactory.dateRange = event.dateRangeServerValue;
     
