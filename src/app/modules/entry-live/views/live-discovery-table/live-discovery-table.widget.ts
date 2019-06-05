@@ -1,23 +1,24 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { Observable, of as ObservableOf } from 'rxjs';
+import { Observable, of, of as ObservableOf } from 'rxjs';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-discovery-devices-table-request-factory';
-import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
+import { LiveDiscoveryUsersAggregatedTableRequestFactory } from './users-table/live-discovery-users-aggregated-table-request-factory';
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { map, switchMap } from 'rxjs/operators';
 
-export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
+export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersAggregatedTableRequestFactory;
 
 export interface LiveDiscoverySummaryData {
   [key: string]: string;
@@ -33,10 +34,19 @@ export interface LiveDiscoveryTableData {
   tableMode?: TableModes;
 }
 
+export interface UsersTableFilter {
+  userIds: string;
+  pager: KalturaFilterPager;
+  order: string;
+}
+
 export interface LiveDiscoveryTableWidgetProvider {
   getPollFactory(args: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory;
   
   responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData;
+  
+  hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>,
+              usersTableFilter?: UsersTableFilter): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }>;
 }
 
 @Injectable()
@@ -45,11 +55,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _widgetArgs: WidgetsActivationArgs;
   private _tableMode = TableModes.users;
   private _dateFilter: DateFiltersChangedEvent;
-  private _usersFilter: {
-    userIds: string,
-    pager: KalturaFilterPager,
-    order: string,
-  };
+  private _usersFilter: UsersTableFilter;
   
   protected _widgetId = 'discovery-devices-table';
   protected _pollsFactory: LiveDiscoveryTableWidgetPollFactory = null;
@@ -65,6 +71,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
+              private _kalturaClient: KalturaClient,
               private _devicesProvider: LiveDiscoveryDevicesTableProvider,
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
     super(_serverPolls, _frameEventManager);
@@ -98,9 +105,9 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   private _applyFilters(): void {
     if (this._tableMode === TableModes.users) {
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
     }
   
     if (this._dateFilter) {
@@ -127,12 +134,17 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
+  // actual response mapping is already done in _hooksToPoll function
+  protected _responseMapping(data: LiveDiscoveryTableData): LiveDiscoveryTableData {
     this.isBusy = false;
   
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     
-    return { tableMode: this._tableMode, ...this._provider.responseMapping(responses) };
+    return { tableMode: this._tableMode, ...data };
+  }
+  
+  protected _hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
+    return this._provider.hookToPolls(poll$, this._usersFilter);
   }
   
   public setTableMode(tableMode: TableModes): void {
@@ -174,7 +186,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public usersFilterChange(refineFilter: RefineFilter): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.userIds = refineFilter.map(filter => filter.value.id).join(analyticsConfig.valueSeparator);
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
       this.isBusy = true;
       this.restartPolling();
     }
@@ -183,7 +195,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public sortChange(order: string): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.order = order;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
       this.isBusy = true;
       this.restartPolling();
     }
@@ -192,7 +204,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public paginationChange(pager: KalturaFilterPager): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.pager.pageIndex = pager.pageIndex;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
       this.isBusy = true;
       this.restartPolling();
     }

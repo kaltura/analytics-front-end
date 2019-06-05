@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { LiveDiscoveryDevicesTableRequestFactory } from './live-discovery-devices-table-request-factory';
 import { LiveDiscoveryDevicesTableConfig } from './live-discovery-devices-table.config';
 import { ReportHelper, ReportService } from 'shared/services';
-import { ReportDataSection } from 'shared/services/storage-data-base.config';
-import { KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { KalturaAPIException, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { getResponseByType } from 'shared/utils/get-response-by-type';
 import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
 import { LiveDiscoveryTableData, LiveDiscoveryTableWidgetPollFactory, LiveDiscoveryTableWidgetProvider } from '../live-discovery-table.widget';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider {
-  private readonly _dataConfig;
+  private readonly _dataConfig: ReportDataConfig;
   
   constructor(private _reportService: ReportService,
               private _dataConfigService: LiveDiscoveryDevicesTableConfig) {
@@ -60,5 +62,16 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
       summary,
       table: tableResult,
     };
+  }
+  
+  hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
+    return poll$
+      .pipe(map(response => {
+        if (response.error) { // pass thru an error
+          return { ...response, result: null };
+        }
+        
+        return { ...response, result: this.responseMapping(response.result) };
+      }));
   }
 }

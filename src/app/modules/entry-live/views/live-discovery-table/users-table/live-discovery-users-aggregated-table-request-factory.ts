@@ -19,7 +19,7 @@ import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 
-export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
+export class LiveDiscoveryUsersAggregatedTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
@@ -80,8 +80,14 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   }
   
   public set userIds(userIds: string) {
-    (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds = userIds;
-    (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds = userIds;
+    if (userIds) {
+      (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds = userIds;
+      (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds = userIds;
+    } else {
+      delete (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds;
+      delete (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds;
+    }
+    
   }
   
   public set pager(pager: KalturaFilterPager) {

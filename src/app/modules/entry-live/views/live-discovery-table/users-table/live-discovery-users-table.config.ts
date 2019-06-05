@@ -57,7 +57,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'avg_view_buffering': {
-            format: value => ReportHelper.percents(value, false),
+            format: value => `${ReportHelper.percents(value, false)} Buffering Users`,
             sortOrder: 1,
           },
           'sum_view_time': {

@@ -56,7 +56,7 @@ export abstract class WidgetBase<T = any> {
     }
   }
   
-  protected _responseMapping(responses: any): T {
+  protected _responseMapping(responses: unknown): unknown | T {
     return responses;
   }
   
@@ -64,11 +64,17 @@ export abstract class WidgetBase<T = any> {
     // empty by design
   }
   
+  protected _hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: unknown }>): Observable<{ error: KalturaAPIException; result: unknown }> {
+    return poll$;
+  }
+  
   public startPolling(pollOnce = false): void {
     if (!this._currentState.polling && this._pollsFactory && this._canStartPolling()) {
       this._updateState({ polling: true });
+  
+      const poll$ = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory);
       
-      this._pollingSubscription = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory)
+      this._pollingSubscription = this._hookToPolls(poll$)
         .subscribe((response) => {
           this.updateLayout();
 
@@ -77,7 +83,7 @@ export abstract class WidgetBase<T = any> {
             return;
           }
           
-          const data = this._responseMapping(response.result);
+          const data = this._responseMapping(response.result) as T;
           this._data.next(data);
   
           if (typeof this._pollsFactory.onPollTickSuccess === 'function') {
