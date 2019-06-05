@@ -100,6 +100,8 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               if (statusData && statusData.data && statusData.header) {
                 const { tableData } = this._reportService.parseTableData(statusData, this._statusDataConfig.table);
   
+                // the server might return several statuses for a user
+                // grab first matching status by user_id and remove the rest
                 usersStatusList = tableData.filter((statusItem, index, self) => {
                   return index === self.findIndex(item => item['user_id'] === statusItem['user_id']);
                 });
