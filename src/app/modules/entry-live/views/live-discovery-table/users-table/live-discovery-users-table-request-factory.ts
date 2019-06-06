@@ -18,6 +18,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
+import { liveDiscoveryTablePageSize } from '../table-config';
 
 export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -51,7 +52,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
       fromDate: this._dateRange.fromDate,
       interval: this._interval,
     }),
-    pager: new KalturaFilterPager(),
+    pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1}),
     responseOptions: this._responseOptions
   };
   

@@ -16,6 +16,7 @@ import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discov
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { liveDiscoveryTablePageSize } from './table-config';
 
 export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
 
@@ -84,7 +85,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _resetUsersFilter(): void {
     this._usersFilter = {
       userIds: '',
-      pager: new KalturaFilterPager({ pageSize: 10, pageIndex: 1 }),
+      pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 }),
       order: '-avg_view_buffering',
     };
   }
@@ -186,6 +187,11 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     if (this._tableMode === TableModes.users) {
       this._usersFilter.userIds = refineFilter.map(filter => filter.value.id).join(analyticsConfig.valueSeparator);
       (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
+      
+      // reset page
+      this._usersFilter.pager.pageIndex = 1;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+
       this.isBusy = true;
       this.restartPolling();
     }

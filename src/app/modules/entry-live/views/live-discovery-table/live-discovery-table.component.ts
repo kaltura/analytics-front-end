@@ -8,6 +8,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
+import { liveDiscoveryTablePageSize } from './table-config';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -21,7 +22,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _tableMode = TableModes.users;
   public _tableModes = TableModes;
   public _firstTimeLoading = true;
-  public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 });
   public _totalCount = 0;
   public _columns = [];
   public _tableData: TableRow[] = [];

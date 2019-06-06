@@ -1,23 +1,9 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import {
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaMultiRequest,
-  KalturaMultiResponse,
-  KalturaReportInputFilter,
-  KalturaReportInterval,
-  KalturaReportResponseOptions,
-  KalturaReportType,
-  ReportGetTableAction,
-  ReportGetTableActionArgs,
-  ReportGetTotalAction,
-  ReportGetTotalActionArgs
-} from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 
 export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -45,7 +31,6 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
       fromDate: this._getFromDate(),
       interval: KalturaReportInterval.tenSeconds,
     }),
-    order: '-avg_view_buffering',
     pager: new KalturaFilterPager(),
     responseOptions: this._responseOptions
   };
@@ -56,7 +41,7 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
   }
   
   private _getFromDate(): number {
-    return moment().subtract(1, 'minute').unix();
+    return moment().subtract(7, 'days').unix();
   }
   
   public set userIds(userIds: string) {
@@ -68,14 +53,6 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
       delete (<KalturaEndUserReportInputFilter>this._getTotalTableActionArgs.reportInputFilter).userIds;
     }
     
-  }
-  
-  public set pager(pager: KalturaFilterPager) {
-    this._getTableActionArgs.pager = pager;
-  }
-  
-  public set order(order: string) {
-    this._getTableActionArgs.order = order;
   }
   
   public onPollTickSuccess(): void {

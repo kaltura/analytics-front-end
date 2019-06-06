@@ -93,9 +93,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
         if (userIds) { // call for live status data if userIds is not empty
           const liveDataRequestFactory = new LiveDiscoveryUsersStatusRequestFactory(this._entryId);
           liveDataRequestFactory.userIds = userIds;
-          liveDataRequestFactory.pager = usersTableFilter.pager;
-          liveDataRequestFactory.order = usersTableFilter.order;
-          
+
           return this._kalturaClient.multiRequest(liveDataRequestFactory.create())
             .pipe(map(liveDataResponse => {
               if (liveDataResponse.hasErrors()) {
