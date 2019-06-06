@@ -62,6 +62,7 @@ import { LiveDiscoveryUsersTableProvider } from './views/live-discovery-table/us
 import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
+import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/use
     TableSelectorComponent,
     DevicesTableComponent,
     UsersTableComponent,
+    StatusBulletComponent,
   ],
   exports: [],
   providers: [

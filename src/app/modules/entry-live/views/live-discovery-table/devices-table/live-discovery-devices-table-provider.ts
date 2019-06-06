@@ -21,11 +21,11 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
     
   }
   
-  getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
+  public getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
     return new LiveDiscoveryDevicesTableRequestFactory(widgetsArgs.entryId);
   }
   
-  responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
+  public responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
     let tableResult = {
       data: [],
       columns: [],
@@ -64,7 +64,7 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
     };
   }
   
-  hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
+  public hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
     return poll$
       .pipe(map(response => {
         if (response.error) { // pass thru an error

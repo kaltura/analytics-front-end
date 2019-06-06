@@ -12,13 +12,9 @@ import { Observable, of as ObservableOf } from 'rxjs';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { LiveDiscoveryUsersStatusRequestFactory } from './live-discovery-users-status-request-factory';
 import { FiltersService } from '../../live-discovery-chart/filters/filters.service';
-import { LiveDiscoveryUsersStatusConfig } from './live-discovery-users-status.config';
-
-export enum UserStatus {
-  offline = 'offline',
-  dvr = 'dvr',
-  live = 'live',
-}
+import { LiveDiscoveryUsersStatusConfig, UserStatus } from './live-discovery-users-status.config';
+import { DateFiltersChangedEvent } from '../../live-discovery-chart/filters/filters.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidgetProvider {
@@ -29,19 +25,32 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
   constructor(private _reportService: ReportService,
               private _filterService: FiltersService,
               private _kalturaClient: KalturaClient,
+              private _translate: TranslateService,
               private _dataConfigService: LiveDiscoveryUsersTableConfig,
               private _statusDataConfigService: LiveDiscoveryUsersStatusConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._statusDataConfig = _statusDataConfigService.getConfig();
   }
   
-  getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
+  private _getStatusColor(status: UserStatus): string {
+    switch (status) {
+      case UserStatus.live:
+        return '#31bea6';
+      case UserStatus.dvr:
+        return '#60e4cc';
+      case UserStatus.offline:
+      default:
+        return '#cccccc';
+    }
+  }
+  
+  public getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
     this._entryId = widgetsArgs.entryId;
     
     return new LiveDiscoveryUsersTableRequestFactory(this._entryId);
   }
   
-  responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
+  public responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
     let tableResult = {
       data: [],
       columns: [],
@@ -71,8 +80,8 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
     };
   }
   
-  hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>,
-              usersTableFilter?: UsersTableFilter): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
+  public hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>,
+                     usersTableFilter?: UsersTableFilter): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
     return poll$
       .pipe(switchMap(response => {
         if (response.error) { // pass thru an error
@@ -93,20 +102,19 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               if (liveDataResponse.hasErrors()) {
                 return { ...response, error: liveDataResponse.getFirstError() };
               }
-  
+              
               const statusData = liveDataResponse[0].result;
-  
               let usersStatusList = [];
               if (statusData && statusData.data && statusData.header) {
                 const { tableData } = this._reportService.parseTableData(statusData, this._statusDataConfig.table);
-  
+                
                 // the server might return several statuses for a user
                 // grab first matching status by user_id and remove the rest
                 usersStatusList = tableData.filter((statusItem, index, self) => {
                   return index === self.findIndex(item => item['user_id'] === statusItem['user_id']);
                 });
               }
-  
+              
               // add user status data
               result.table.data.forEach(item => {
                 const relevantStatus = usersStatusList.find(statusItem => statusItem['user_id'] === item['user_id']);
@@ -114,9 +122,28 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
                   ? UserStatus[relevantStatus['playback_type']]
                   : UserStatus.offline;
               });
-  
+              
               result.table.columns.splice(1, 0, 'status'); // add status column
-
+              
+              const totalStatusData = liveDataResponse[1].result;
+              let statusTotals = [{
+                  value: 0,
+                  label: this._translate.instant('app.entryLive.discovery.userStatus.offline'),
+                  color: this._getStatusColor(UserStatus.offline),
+                }];
+              if (totalStatusData && totalStatusData.data && totalStatusData.header) {
+                const { tableData } = this._reportService.parseTableData(totalStatusData, this._statusDataConfig['totalsTable']);
+                statusTotals = tableData.map(item => {
+                  return {
+                    value: Number(item['sum_view_time']),
+                    label: this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`),
+                    color: this._getStatusColor(item['playback_type'] as UserStatus),
+                  };
+                });
+              }
+              
+              result.summary['status'] = statusTotals as any;
+              
               return { ...response, result };
             }));
         }
