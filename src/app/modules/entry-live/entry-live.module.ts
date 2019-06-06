@@ -61,7 +61,7 @@ import { LiveDiscoveryDevicesTableProvider } from './views/live-discovery-table/
 import { LiveDiscoveryUsersTableProvider } from './views/live-discovery-table/users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
-import { LiveDiscoveryUsersLiveTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-live-table.config';
+import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
 
 @NgModule({
   imports: [
@@ -125,7 +125,7 @@ import { LiveDiscoveryUsersLiveTableConfig } from './views/live-discovery-table/
     LiveDiscoveryUsersTableConfig,
     LiveDiscoveryDevicesTableProvider,
     LiveDiscoveryUsersTableProvider,
-    LiveDiscoveryUsersLiveTableConfig,
+    LiveDiscoveryUsersStatusConfig,
     
     // polls services
     EntryLiveGeneralPollsService,

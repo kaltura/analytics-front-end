@@ -4,15 +4,15 @@ import { KalturaAPIException, KalturaClient, KalturaReportTable, KalturaReportTo
 import { getResponseByType } from 'shared/utils/get-response-by-type';
 import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
 import { LiveDiscoveryTableData, LiveDiscoveryTableWidgetPollFactory, LiveDiscoveryTableWidgetProvider, UsersTableFilter } from '../live-discovery-table.widget';
-import { LiveDiscoveryUsersAggregatedTableRequestFactory } from './live-discovery-users-aggregated-table-request-factory';
+import { LiveDiscoveryUsersTableRequestFactory } from './live-discovery-users-table-request-factory';
 import { LiveDiscoveryUsersTableConfig } from './live-discovery-users-table.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { LiveDiscoveryUsersLiveTableRequestFactory } from './live-discovery-users-live-table-request-factory';
+import { LiveDiscoveryUsersStatusRequestFactory } from './live-discovery-users-status-request-factory';
 import { FiltersService } from '../../live-discovery-chart/filters/filters.service';
-import { LiveDiscoveryUsersLiveTableConfig } from './live-discovery-users-live-table.config';
+import { LiveDiscoveryUsersStatusConfig } from './live-discovery-users-status.config';
 
 export enum UserStatus {
   offline = 'offline',
@@ -30,7 +30,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               private _filterService: FiltersService,
               private _kalturaClient: KalturaClient,
               private _dataConfigService: LiveDiscoveryUsersTableConfig,
-              private _statusDataConfigService: LiveDiscoveryUsersLiveTableConfig) {
+              private _statusDataConfigService: LiveDiscoveryUsersStatusConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._statusDataConfig = _statusDataConfigService.getConfig();
   }
@@ -38,7 +38,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
   getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
     this._entryId = widgetsArgs.entryId;
     
-    return new LiveDiscoveryUsersAggregatedTableRequestFactory(this._entryId);
+    return new LiveDiscoveryUsersTableRequestFactory(this._entryId);
   }
   
   responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
@@ -83,7 +83,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
         const userIds = result.table.data.map((row) => row['user_id']).join(analyticsConfig.valueSeparator);
         
         if (userIds) { // call for live status data if userIds is not empty
-          const liveDataRequestFactory = new LiveDiscoveryUsersLiveTableRequestFactory(this._entryId);
+          const liveDataRequestFactory = new LiveDiscoveryUsersStatusRequestFactory(this._entryId);
           liveDataRequestFactory.userIds = userIds;
           liveDataRequestFactory.pager = usersTableFilter.pager;
           liveDataRequestFactory.order = usersTableFilter.order;

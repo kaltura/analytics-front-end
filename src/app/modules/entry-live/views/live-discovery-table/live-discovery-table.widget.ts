@@ -12,12 +12,12 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-discovery-devices-table-request-factory';
-import { LiveDiscoveryUsersAggregatedTableRequestFactory } from './users-table/live-discovery-users-aggregated-table-request-factory';
+import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
 
-export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersAggregatedTableRequestFactory;
+export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
 
 export interface LiveDiscoverySummaryData {
   [key: string]: string;
@@ -104,9 +104,9 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   private _applyFilters(): void {
     if (this._tableMode === TableModes.users) {
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
     }
     
     if (this._dateFilter) {
@@ -185,7 +185,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public usersFilterChange(refineFilter: RefineFilter): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.userIds = refineFilter.map(filter => filter.value.id).join(analyticsConfig.valueSeparator);
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
       this.isBusy = true;
       this.restartPolling();
     }
@@ -194,7 +194,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public sortChange(order: string): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.order = order;
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
       this.isBusy = true;
       this.restartPolling();
     }
@@ -203,7 +203,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public paginationChange(pager: KalturaFilterPager): void {
     if (this._tableMode === TableModes.users) {
       this._usersFilter.pager.pageIndex = pager.pageIndex;
-      (<LiveDiscoveryUsersAggregatedTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
       this.isBusy = true;
       this.restartPolling();
     }

@@ -19,7 +19,7 @@ import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 
-export class LiveDiscoveryUsersLiveTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
+export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets

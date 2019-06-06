@@ -4,7 +4,7 @@ import { GraphType, ReportDataBaseConfig, ReportDataConfig, ReportDataSection } 
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class LiveDiscoveryUsersLiveTableConfig extends ReportDataBaseConfig {
+export class LiveDiscoveryUsersStatusConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
