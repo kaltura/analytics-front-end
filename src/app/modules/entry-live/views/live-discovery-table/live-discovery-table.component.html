@@ -7,10 +7,7 @@
     </a>
   </div>
   <k-area-blocker [showLoader]="_widget.isBusy" [message]="_blockerMessage">
-    <div class="kTableContainer"
-         [class.kOpen]="_showTable"
-         [class.kClose]="!_showTable">
-
+    <div class="kTableContainer" *ngIf="_showTable">
       <ng-container [ngSwitch]="_tableMode">
 
         <!-- USERS TABLE-->

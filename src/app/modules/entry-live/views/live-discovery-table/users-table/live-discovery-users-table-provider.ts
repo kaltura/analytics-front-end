@@ -13,7 +13,6 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { LiveDiscoveryUsersStatusRequestFactory } from './live-discovery-users-status-request-factory';
 import { FiltersService } from '../../live-discovery-chart/filters/filters.service';
 import { LiveDiscoveryUsersStatusConfig, UserStatus } from './live-discovery-users-status.config';
-import { DateFiltersChangedEvent } from '../../live-discovery-chart/filters/filters.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
@@ -127,17 +126,19 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               
               const totalStatusData = liveDataResponse[1].result;
               let statusTotals = [{
-                  value: 0,
-                  label: this._translate.instant('app.entryLive.discovery.userStatus.offline'),
-                  color: this._getStatusColor(UserStatus.offline),
-                }];
+                value: 0,
+                label: this._translate.instant('app.entryLive.discovery.userStatus.offline'),
+                color: this._getStatusColor(UserStatus.offline),
+              }];
               if (totalStatusData && totalStatusData.data && totalStatusData.header) {
                 const { tableData } = this._reportService.parseTableData(totalStatusData, this._statusDataConfig['totalsTable']);
                 statusTotals = tableData.map(item => {
+                  const typeLabel = this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`);
                   return {
                     value: Number(item['sum_view_time']),
-                    label: this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`),
                     color: this._getStatusColor(item['playback_type'] as UserStatus),
+                    label: typeLabel,
+                    tooltip: typeLabel,
                   };
                 });
               }

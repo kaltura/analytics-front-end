@@ -17,7 +17,7 @@ export class UsersTableComponent {
   @Input() totalCount = 0;
   @Input() firstTimeLoading = true;
   
-  public _order: string;
+  public _order = '-avg_view_buffering';
   public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   
   constructor(public _widget: LiveDiscoveryTableWidget) {

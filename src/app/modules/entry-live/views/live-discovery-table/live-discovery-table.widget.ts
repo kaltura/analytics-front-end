@@ -111,7 +111,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+      this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     }
   }
   

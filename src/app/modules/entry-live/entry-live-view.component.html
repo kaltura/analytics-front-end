@@ -13,24 +13,24 @@
         </div>
 
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
-<!--        <div class="kEntryWidgets">-->
-<!--          <div class="kWideColumn">-->
-<!--            <app-live-users [entry]="_entry"></app-live-users>-->
-<!--            <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>-->
-<!--            <div class="kReport kNoBottomMargin">-->
-<!--              <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="kNarrowColumn">-->
-<!--            <app-live-status [entry]="_entry"></app-live-status>-->
-<!--            <app-live-player [entryId]="_entry?.id"></app-live-player>-->
-<!--            <app-live-stream-health></app-live-stream-health>-->
+        <div class="kEntryWidgets">
+          <div class="kWideColumn">
+            <app-live-users [entry]="_entry"></app-live-users>
+            <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
+            <div class="kReport kNoBottomMargin">
+              <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
+            </div>
+          </div>
+          <div class="kNarrowColumn">
+            <app-live-status [entry]="_entry"></app-live-status>
+            <app-live-player [entryId]="_entry?.id"></app-live-player>
+            <app-live-stream-health></app-live-stream-health>
 
-<!--            <div class="kReport kNoBottomMargin">-->
-<!--              <app-live-devices></app-live-devices>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+            <div class="kReport kNoBottomMargin">
+              <app-live-devices></app-live-devices>
+            </div>
+          </div>
+        </div>
         <div class="kReport">
           <app-live-discovery></app-live-discovery>
         </div>

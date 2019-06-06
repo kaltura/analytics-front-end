@@ -121,11 +121,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       const widgetArgs = { entryId: this._entryId };
       
       this._widgetsManager.register([
-        // this._liveUsers,
-        // this._liveBandwidth,
-        // this._liveStreamHealth,
-        // this._liveGeo,
-        // this._liveDevices,
+        this._liveUsers,
+        this._liveBandwidth,
+        this._liveStreamHealth,
+        this._liveGeo,
+        this._liveDevices,
         this._liveDiscovery,
         // <-- append new widgets here
       ], widgetArgs, [
