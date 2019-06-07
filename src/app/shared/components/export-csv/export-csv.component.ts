@@ -165,29 +165,29 @@ export class ExportCsvComponent implements OnDestroy {
     
     this._exportingCsv = true;
     
-    // this._kalturaClient.request(exportAction)
-    //   .pipe(
-    //     cancelOnDestroy(this),
-    //     finalize(() => {
-    //       this._exportingCsv = false;
-    //
-    //       if (this._popup) {
-    //         this._popup.close();
-    //       }
-    //     })
-    //   )
-    //   .subscribe(
-    //     () => {
-    //       this._browserService.alert({
-    //         header: this._translate.instant('app.exportReports.exportReports'),
-    //         message: this._translate.instant('app.exportReports.successMessage'),
-    //       });
-    //     },
-    //     () => {
-    //       this._browserService.alert({
-    //         header: this._translate.instant('app.exportReports.exportReports'),
-    //         message: this._translate.instant('app.exportReports.errorMessage'),
-    //       });
-    //     });
+    this._kalturaClient.request(exportAction)
+      .pipe(
+        cancelOnDestroy(this),
+        finalize(() => {
+          this._exportingCsv = false;
+
+          if (this._popup) {
+            this._popup.close();
+          }
+        })
+      )
+      .subscribe(
+        () => {
+          this._browserService.alert({
+            header: this._translate.instant('app.exportReports.exportReports'),
+            message: this._translate.instant('app.exportReports.successMessage'),
+          });
+        },
+        () => {
+          this._browserService.alert({
+            header: this._translate.instant('app.exportReports.exportReports'),
+            message: this._translate.instant('app.exportReports.errorMessage'),
+          });
+        });
   }
 }
