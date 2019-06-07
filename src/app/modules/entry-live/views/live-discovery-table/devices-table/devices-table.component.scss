@@ -21,3 +21,11 @@
     font-weight: bold;
   }
 }
+
+.kNoData /deep/ thead {
+  border-top: none !important;
+}
+
+.kEmptyMessage {
+  border: none !important;
+}

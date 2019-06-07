@@ -1,5 +1,6 @@
 <p-table appScrollTopOnPaging
          sortField="view_unique_buffering_users"
+         [class.kNoData]="!tableData?.length"
          [value]="tableData"
          [customSort]="true"
          [defaultSortOrder]="-1"
