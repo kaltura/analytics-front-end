@@ -2,14 +2,15 @@ import { KalturaEndUserReportInputFilter, KalturaReportExportItemType, KalturaRe
 
 export interface ExportItem {
   id?: string;
-  label: string;
-  reportType: KalturaReportType;
-  sections: KalturaReportExportItemType[];
+  label?: string;
+  reportType?: KalturaReportType;
+  sections?: KalturaReportExportItemType[];
   order?: string;
   objectIds?: string;
   startDate?: number;
   endDate?: number;
   additionalFilters?: Partial<KalturaEndUserReportInputFilter>;
+  items?: ExportItem[];
 }
 
 export abstract class ExportConfigService {

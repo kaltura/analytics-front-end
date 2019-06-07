@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 @Injectable()
 export class EntryLiveExportConfig extends ExportConfigService {
@@ -45,11 +45,22 @@ export class EntryLiveExportConfig extends ExportConfigService {
       },
       {
         label: this._translate.instant('app.entryLive.exportLabels.discovery'),
-        reportType: KalturaReportType.discoveryRealtime,
-        sections: [KalturaReportExportItemType.graph],
-        order: null,
-        startDate: this._getTime(60),
-        endDate: moment().unix()
+        items: [
+          {
+            reportType: KalturaReportType.discoveryRealtime,
+            sections: [KalturaReportExportItemType.graph],
+            order: null,
+            startDate: this._getTime(60),
+            endDate: moment().unix()
+          },
+          {
+            reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
+            sections: [KalturaReportExportItemType.table],
+            order: null,
+            startDate: this._getTime(60),
+            endDate: moment().unix()
+          },
+        ]
       }
     ];
   }
