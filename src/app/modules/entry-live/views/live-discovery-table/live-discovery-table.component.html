@@ -15,7 +15,7 @@
           <app-discovery-filter [totalCount]="_totalCount"
                                 (filterChange)="_widget.usersFilterChange($event)">
             <app-table-selector [tableMode]="_tableMode"
-                                (tableModeChange)="_widget.setTableMode($event)"></app-table-selector>
+                                (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
           </app-discovery-filter>
           <app-users-table [tableData]="_tableData"
                            [summary]="_summaryData"
@@ -29,7 +29,7 @@
           <div class="kTableContent">
             <app-table-selector class="kDevicesModeTableSelector"
                                 [tableMode]="_tableMode"
-                                (tableModeChange)="_widget.setTableMode($event)"></app-table-selector>
+                                (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
             <span class="kTotalCount">
               {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}
             </span>

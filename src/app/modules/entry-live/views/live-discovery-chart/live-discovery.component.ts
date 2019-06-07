@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { LiveDiscoveryData, LiveDiscoveryWidget } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -10,6 +10,8 @@ import { MetricsSelectorChangeEvent } from './metrics-selector/metrics-selector.
 import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.component';
 import { filter } from 'rxjs/operators';
 import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
+import { KalturaReportType } from 'kaltura-ngx-client';
+import { DateRange } from './filters/filters.service';
 
 @Component({
   selector: 'app-live-discovery',
@@ -17,6 +19,8 @@ import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery
   styleUrls: ['./live-discovery.component.scss']
 })
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
+  @Output() tableChange = new EventEmitter<KalturaReportType>();
+  @Output() dateFilterChange = new EventEmitter<DateRange>();
   @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
   
   public _isBusy = true;
@@ -73,6 +77,8 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
     }
+  
+    this.dateFilterChange.emit(event.dateRange);
   }
   
   public _onMetricsSelectorChange(event: MetricsSelectorChangeEvent): void {

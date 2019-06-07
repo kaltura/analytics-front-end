@@ -14,7 +14,8 @@
                            [isPolling]="_isPolling"
                            [selectedMetrics]="_selectedMetrics"
                            (togglePolling)="_onTogglePolling()"></app-discovery-chart>
-      <app-live-discovery-table [isPolling]="_isPolling"></app-live-discovery-table>
+      <app-live-discovery-table [isPolling]="_isPolling"
+                                (tableChange)="tableChange.emit($event)"></app-live-discovery-table>
     </div>
   </k-area-blocker>
 </div>

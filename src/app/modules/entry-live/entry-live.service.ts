@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   ConversionProfileAssetParamsListAction,
   EntryServerNodeListAction,
-  KalturaClient,
   KalturaConversionProfileAssetParamsFilter,
   KalturaDetachedResponseProfile,
   KalturaEntryServerNode,
@@ -29,10 +28,6 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
 
 @Injectable()
 export class EntryLiveService {
-  
-  constructor(private _kalturaClient: KalturaClient) {
-  }
-  
   private _getLiveStreamAction(entryId): LiveStreamGetAction {
     return new LiveStreamGetAction({ entryId })
       .setRequestOptions(

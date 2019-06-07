@@ -123,8 +123,8 @@ export class ExportCsvComponent implements OnDestroy {
   
     const mapReportItem = (item, label = null) => {
       if (item.startDate && item.endDate) {
-        filter.fromDate = item.startDate;
-        filter.toDate = item.endDate;
+        filter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
+        filter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
       }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({

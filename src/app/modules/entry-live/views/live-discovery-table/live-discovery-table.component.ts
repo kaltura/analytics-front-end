@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaReportType } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -17,6 +17,8 @@ import { liveDiscoveryTablePageSize } from './table-config';
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
+  
+  @Output() tableChange = new EventEmitter<KalturaReportType>();
   
   public _blockerMessage: AreaBlockerMessage;
   public _tableMode = TableModes.users;
@@ -73,4 +75,10 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
     this._widget.toggleTable(this._showTable, this.isPolling);
   }
   
+  public _onTableModeChange(event: TableModes): void {
+    this._widget.setTableMode(event);
+  
+    const reportType = event === TableModes.users ? KalturaReportType.entryLevelUsersDiscoveryRealtime : KalturaReportType.platformsDiscoveryRealtime;
+    this.tableChange.emit(reportType);
+  }
 }

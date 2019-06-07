@@ -7,8 +7,8 @@ export interface ExportItem {
   sections?: KalturaReportExportItemType[];
   order?: string;
   objectIds?: string;
-  startDate?: number;
-  endDate?: number;
+  startDate?: number | Function;
+  endDate?: number | Function;
   additionalFilters?: Partial<KalturaEndUserReportInputFilter>;
   items?: ExportItem[];
 }

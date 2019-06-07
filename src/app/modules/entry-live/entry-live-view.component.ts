@@ -19,6 +19,7 @@ import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery
 import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
+import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 
 @Component({
   selector: 'app-entry-live',
@@ -37,6 +38,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
+              private _dateFilter: FiltersService,
               private _router: Router,
               private _kalturaClient: KalturaClient,
               private _route: ActivatedRoute,
@@ -159,6 +161,31 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
     
-    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'geo', update);
+  }
+  
+  public _onTableModeChange(reportType: KalturaReportType): void {
+    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
+    const table = currentValue.items.find(({ id }) => id === 'table');
+    const tableIndex = currentValue.items.indexOf(table);
+    
+    table.reportType = reportType;
+    
+    const update = { items: [...currentValue.items.slice(0, tableIndex), table, ...currentValue.items.slice(tableIndex + 1)] };
+    
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+  }
+  
+  public _onDiscoveryDateFilterChange(dateRange: DateRange): void {
+    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
+    const items = currentValue.items.map(item => {
+      item.startDate = () => this._dateFilter.getDateRangeServerValue(dateRange).fromDate;
+      item.endDate = () => this._dateFilter.getDateRangeServerValue(dateRange).toDate;
+      return item;
+    });
+    
+    const update = { items };
+    
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
 }
