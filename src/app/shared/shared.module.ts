@@ -55,6 +55,7 @@ import { CompareMetricComponent } from 'shared/components/compare-metric/compare
 import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
+import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-pagi
     HorizontalBarRowComponent,
     HorizontalBarChartComponent,
     ScrollTopOnPagingDirective,
+    TableModeIconPipe,
     ...FilterComponentsList,
   ],
   exports: [
@@ -151,6 +153,7 @@ import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-pagi
     HorizontalBarRowComponent,
     HorizontalBarChartComponent,
     ScrollTopOnPagingDirective,
+    TableModeIconPipe,
     ...FilterComponentsList,
   ],
   providers: [

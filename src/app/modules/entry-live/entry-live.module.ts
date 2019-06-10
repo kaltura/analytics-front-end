@@ -39,16 +39,30 @@ import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
-import { LiveDiscoveryWidget } from './views/live-discovery/live-discovery.widget';
-import { LiveDiscoveryComponent } from './views/live-discovery/live-discovery.component';
+import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
+import { LiveDiscoveryComponent } from './views/live-discovery-chart/live-discovery.component';
 import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
 import { SelectButtonModule } from 'primeng/primeng';
-import { FiltersComponent } from './views/live-discovery/filters/filters.component';
-import { FiltersService } from './views/live-discovery/filters/filters.service';
-import { LiveDiscoveryConfig } from './views/live-discovery/live-discovery.config';
-import { MetricsSelectorComponent } from './views/live-discovery/metrics-selector/metrics-selector.component';
-import { MetricsSelectorDropdownComponent } from './views/live-discovery/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
-import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/discovery-chart.component';
+import { FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
+import { FiltersService } from './views/live-discovery-chart/filters/filters.service';
+import { LiveDiscoveryConfig } from './views/live-discovery-chart/live-discovery.config';
+import { MetricsSelectorComponent } from './views/live-discovery-chart/metrics-selector/metrics-selector.component';
+import { MetricsSelectorDropdownComponent } from './views/live-discovery-chart/metrics-selector/metrics-selector-dropdown/metrics-selector-dropdown.component';
+import { DiscoveryChartComponent } from './views/live-discovery-chart/discovery-chart/discovery-chart.component';
+import { LiveDiscoveryTableComponent } from './views/live-discovery-table/live-discovery-table.component';
+import { LiveDiscoveryDevicesTableConfig } from './views/live-discovery-table/devices-table/live-discovery-devices-table.config';
+import { DiscoveryFilterComponent } from './views/live-discovery-table/filter/filter.component';
+import { UsersFilterComponent } from './views/live-discovery-table/filter/users-filter/users-filter.component';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { TableSelectorComponent } from './views/live-discovery-table/table-selector/table-selector.component';
+import { DevicesTableComponent } from './views/live-discovery-table/devices-table/devices-table.component';
+import { UsersTableComponent } from './views/live-discovery-table/users-table/users-table.component';
+import { LiveDiscoveryDevicesTableProvider } from './views/live-discovery-table/devices-table/live-discovery-devices-table-provider';
+import { LiveDiscoveryUsersTableProvider } from './views/live-discovery-table/users-table/live-discovery-users-table-provider';
+import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
+import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
+import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 
 @NgModule({
   imports: [
@@ -68,6 +82,7 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     KalturaUIModule,
     InputHelperModule,
     SelectButtonModule,
+    AutoCompleteModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -90,6 +105,13 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     MetricsSelectorComponent,
     MetricsSelectorDropdownComponent,
     DiscoveryChartComponent,
+    LiveDiscoveryTableComponent,
+    DiscoveryFilterComponent,
+    UsersFilterComponent,
+    TableSelectorComponent,
+    DevicesTableComponent,
+    UsersTableComponent,
+    StatusBulletComponent,
   ],
   exports: [],
   providers: [
@@ -101,6 +123,11 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     LiveDevicesConfig,
     FiltersService,
     LiveDiscoveryConfig,
+    LiveDiscoveryDevicesTableConfig,
+    LiveDiscoveryUsersTableConfig,
+    LiveDiscoveryDevicesTableProvider,
+    LiveDiscoveryUsersTableProvider,
+    LiveDiscoveryUsersStatusConfig,
     
     // polls services
     EntryLiveGeneralPollsService,
@@ -115,6 +142,7 @@ import { DiscoveryChartComponent } from './views/live-discovery/discovery-chart/
     LiveGeoWidget,
     LiveDevicesWidget,
     LiveDiscoveryWidget,
+    LiveDiscoveryTableWidget,
   ]
 })
 export class EntryLiveModule {

@@ -1,0 +1,7 @@
+<div class="kBullet">
+  <div class="kBar"
+       *ngFor="let item of _values"
+       [kTooltip]="item.tooltip" [escape]="false"
+       [style.background-color]="item.color"
+       [style.width]="item.value+'%'"></div>
+</div>

@@ -120,37 +120,45 @@ export class ExportCsvComponent implements OnDestroy {
     const selection: ExportItem[] = this._selected
       .filter(({ parent }) => !!parent)
       .map(({ data }) => data);
-    
-    selection.forEach(item => {
+  
+    const mapReportItem = (item, label = null) => {
       if (item.startDate && item.endDate) {
-        filter.fromDate = item.startDate;
-        filter.toDate = item.endDate;
+        filter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
+        filter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
       }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({
-          reportTitle: item.label,
+          reportTitle: label || item.label,
           action: section,
           reportType: item.reportType,
           filter,
           responseOptions,
         });
-        
+    
         if (item.order) {
           reportItem.order = item.order;
         }
-        
+    
         if (item.objectIds) {
           reportItem.objectIds = item.objectIds;
         }
-        
+    
         if (item.additionalFilters) {
           Object.keys(item.additionalFilters).forEach(key => {
             reportItem.filter[key] = item.additionalFilters[key];
           });
         }
-        
+    
         reportItems.push(reportItem);
       });
+    };
+    
+    selection.forEach(item => {
+      if (Array.isArray(item.items)) {
+        item.items.forEach(i => mapReportItem(i, item.label));
+      } else {
+        mapReportItem(item);
+      }
     });
     
     const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportItems }) });
@@ -162,7 +170,7 @@ export class ExportCsvComponent implements OnDestroy {
         cancelOnDestroy(this),
         finalize(() => {
           this._exportingCsv = false;
-          
+
           if (this._popup) {
             this._popup.close();
           }

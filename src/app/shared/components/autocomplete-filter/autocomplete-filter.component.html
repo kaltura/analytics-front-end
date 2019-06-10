@@ -1,5 +1,5 @@
 <div class="kColumn kAutocompleteFilter">
-  <div class="kColumnLabel">{{label}}</div>
+  <div *ngIf="label" class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
     <kAutoComplete suggestionItemField="item"
                    suggestionSelectableField="isSelectable"

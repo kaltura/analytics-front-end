@@ -32,7 +32,8 @@
           </div>
         </div>
         <div class="kReport">
-          <app-live-discovery></app-live-discovery>
+          <app-live-discovery (tableChange)="_onTableModeChange($event)"
+                              (dateFilterChange)="_onDiscoveryDateFilterChange($event)"></app-live-discovery>
         </div>
       </div>
     </div>

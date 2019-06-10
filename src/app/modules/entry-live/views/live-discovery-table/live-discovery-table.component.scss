@@ -1,0 +1,54 @@
+@import '../../../../../styles/variables';
+
+.kTableContainer.kOpen {
+  min-height: 296px;
+}
+
+.kTableContent {
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  padding-bottom: 16px;
+
+  .kTotalCount {
+    display: inline-block;
+    font-size: 15px;
+    margin-left: 16px;
+  }
+}
+
+.kDevicesModeTableSelector {
+  display: block;
+}
+
+.emptymessage {
+  height: 175px;
+  border-bottom: none;
+
+  .kEmptyMessage {
+    border-bottom: none;
+  }
+}
+
+.kStatus {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.kLive {
+    background-color: #31bea6;
+  }
+
+  &.kDvr {
+    background-color: #60e4cc;
+  }
+
+  &.kOffline {
+    border: solid 2px $kGrayscale4;
+  }
+}
+
+:host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
+  height: 64px;
+}

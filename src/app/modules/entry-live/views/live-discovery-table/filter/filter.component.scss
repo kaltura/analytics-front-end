@@ -1,0 +1,44 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  display: block;
+  padding-bottom: 8px !important;
+}
+
+.kTableHeader {
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .kTableContent {
+    display: flex;
+    align-items: center;
+  }
+
+  .kTotalCount {
+    display: inline-block;
+    font-size: 15px;
+    margin-left: 16px;
+  }
+}
+
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+
+    /deep/ .kTags {
+      width: auto;
+      padding: 0 8px 0 16px;
+    }
+  }
+}
+
+:host /deep/ {
+  .ui-autocomplete-multiple-container {
+    width: 200px !important;
+    min-height: 34px;
+    padding: 3px 6px !important;
+  }
+}

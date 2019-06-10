@@ -17,11 +17,7 @@ import { SelectItem, SortEvent } from 'primeng/api';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
-
-export enum TableModes {
-  dates = 'dates',
-  users = 'users'
-}
+import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 @Component({
   selector: 'app-video-performance',
