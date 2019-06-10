@@ -3,6 +3,7 @@ import { SortEvent } from 'primeng/api';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveDiscoverySummaryData } from '../live-discovery-table.widget';
+import { liveDiscoveryTablePageSize } from '../table-config';
 
 @Component({
   selector: 'app-devices-table',
@@ -14,6 +15,8 @@ export class DevicesTableComponent {
   @Input() summary: LiveDiscoverySummaryData;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
+  
+  public _pageSize = liveDiscoveryTablePageSize;
 
   public _onSortChanged(event: SortEvent): void {
     if (event.data.length && event.field && event.order) {

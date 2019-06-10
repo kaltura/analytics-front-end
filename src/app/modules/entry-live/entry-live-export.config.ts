@@ -48,6 +48,7 @@ export class EntryLiveExportConfig extends ExportConfigService {
         label: this._translate.instant('app.entryLive.exportLabels.discovery'),
         items: [
           {
+            id: 'graph',
             reportType: KalturaReportType.discoveryRealtime,
             sections: [KalturaReportExportItemType.graph],
             order: null,
