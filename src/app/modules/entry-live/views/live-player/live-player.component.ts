@@ -13,9 +13,27 @@ export class LivePlayerComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this._frameSrc = `${getKalturaServerUri()}/p/${analyticsConfig.pid}/embedPlaykitJs/partner_id/${analyticsConfig.pid}/uiconf_id/${analyticsConfig.live.previewLiveUIConf}?iframeembed=true&entry_id=${this.entryId}&config[playback]={"autoplay": true}&config[plugins]={"kava": {"disable": true}}`;
+      this._frameSrc = this._createUrl();
     }, 0);
 
+  }
+
+  private _createUrl(): string {
+
+    let result = "";
+
+    // create preview embed code
+
+    const entryId = this.entryId;
+    const UIConfID = analyticsConfig.kalturaServer.previewUIConf;
+    const partnerID = analyticsConfig.pid;
+    const ks = analyticsConfig.ks || '';
+    const serverUri = getKalturaServerUri();
+
+    let flashVars = `flashvars[autoPlay]=true&flashvars[autoMute]=true&flashvars[kAnalony.plugin]=false&flashvars[ks]=${ks}&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false`;
+    result = `${serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}`;
+
+    return result;
   }
 
 
