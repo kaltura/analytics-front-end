@@ -93,25 +93,25 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
           },
           'avg_view_bitrate': {
-            format: value => `${value} Kbps`,
+            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
           },
           'avg_view_latency': {
             format: value => ReportHelper.percents(value / 100, false),
           },
           'avg_view_downstream_bandwidth': {
-            format: value => `${value} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'sum_view_time': {
-            format: value => `${value} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'view_unique_audience': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'view_unique_audience_dvr': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
           'view_unique_engaged_users': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
         }
       },
