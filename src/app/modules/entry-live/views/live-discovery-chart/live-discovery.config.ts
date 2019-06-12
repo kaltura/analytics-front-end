@@ -87,31 +87,31 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'avg_view_dropped_frames_ratio': {
-            format: value => ReportHelper.percents(value, false),
+            format: value => ReportHelper.percents(value),
           },
           'view_unique_buffering_users': {
             format: value => ReportHelper.percents(value, false),
           },
           'avg_view_bitrate': {
-            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
+            format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           },
           'avg_view_latency': {
-            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value, true)} Sec`,
           },
           'avg_view_downstream_bandwidth': {
             format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
           },
           'sum_view_time': {
-            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value, true)} Sec`,
           },
           'view_unique_audience': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(value, true),
           },
           'view_unique_audience_dvr': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(value, true),
           },
           'view_unique_engaged_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.numberOrZero(value, true),
           },
         }
       },
