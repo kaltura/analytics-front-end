@@ -41,8 +41,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => Number(value).toFixed(1),
             colors: ['#f3737b'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_latency')}: ${ReportHelper.percents(value / 100, false)}`,
-            units: () => '%',
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_latency')}: ${ReportHelper.numberOrZero(value)} Sec`,
+            units: () => 'Sec',
             sortOrder: 4,
           },
           'avg_view_downstream_bandwidth': {
@@ -96,7 +96,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
           },
           'avg_view_latency': {
-            format: value => ReportHelper.percents(value / 100, false),
+            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'avg_view_downstream_bandwidth': {
             format: value => `${ReportHelper.numberOrZero(value)} Sec`,
