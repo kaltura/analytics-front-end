@@ -3,8 +3,6 @@ import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
 import { LiveDiscoveryData } from '../live-discovery.widget';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-discovery-chart',
@@ -37,6 +35,8 @@ export class DiscoveryChartComponent {
   
   private _data: LiveDiscoveryData;
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
+  private _dataZoomStart = 0;
+  private _dataZoomEnd = 100;
   
   public _chartData: EChartOption;
   public _totalsData: { [key: string]: string };
@@ -205,8 +205,8 @@ export class DiscoveryChartComponent {
         {
           show: true,
           realtime: true,
-          start: 0,
-          end: 100,
+          start: this._dataZoomStart,
+          end: this._dataZoomEnd,
           fillerColor: 'rgba(49, 190, 166, .5)',
           handleSize: '125%',
           backgroundColor: 'white',
@@ -225,6 +225,18 @@ export class DiscoveryChartComponent {
         }
       ],
     };
+  }
+  
+  public _onChartInit(chartInstance): void {
+    chartInstance.on('datazoom', ({ start, end }) => {
+      this._dataZoomStart = start;
+      this._dataZoomEnd = end;
+    });
+  }
+  
+  public resetDataZoom(): void {
+    this._dataZoomStart = 0;
+    this._dataZoomEnd = 100;
   }
   
   public displayMetrics(metrics: string[]): void {

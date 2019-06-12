@@ -74,6 +74,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     if (!event.initialRun) {
       this._isBusy = true;
+      this._discoveryChart.resetDataZoom();
       this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
     }
