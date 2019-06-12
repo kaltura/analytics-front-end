@@ -1,5 +1,8 @@
 <div class="kChart">
-  <div echarts class="kChart" *ngIf="_chartData" [options]="_chartData"></div>
+  <div *ngIf="_chartData"
+       echarts class="kChart"
+       [options]="_chartData"
+       (chartInit)="_onChartInit($event)"></div>
 
   <div *ngIf="!isBusy && !_chartData" class="kNoResults">
     <span>{{'app.common.noResults' | translate}}</span>
