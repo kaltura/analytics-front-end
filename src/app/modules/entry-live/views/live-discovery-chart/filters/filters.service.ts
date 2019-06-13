@@ -121,7 +121,7 @@ export class FiltersService {
       {
         value: TimeInterval.TenSeconds,
         label: this._translate.instant('app.entryLive.discovery.filter.10sec'),
-        disabled: [DateRange.Last3D, DateRange.Last7D].indexOf(dateRange) !== -1,
+        disabled: [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M].indexOf(dateRange) === -1,
       },
       {
         value: TimeInterval.Minutes,
