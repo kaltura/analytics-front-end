@@ -33,7 +33,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => value,
             colors: ['#f7c25c'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value)} Kbps`,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
             units: () => 'Kbps',
             sortOrder: 3,
           },
@@ -87,7 +87,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'avg_view_dropped_frames_ratio': {
-            format: value => ReportHelper.percents(value),
+            format: value => ReportHelper.percents(value, false),
           },
           'view_unique_buffering_users': {
             format: value => ReportHelper.percents(value, false),
@@ -96,22 +96,22 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           },
           'avg_view_latency': {
-            format: value => `${ReportHelper.numberOrZero(value, true)} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'avg_view_downstream_bandwidth': {
             format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
           },
           'sum_view_time': {
-            format: value => `${ReportHelper.numberOrZero(value, true)} Sec`,
+            format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'view_unique_audience': {
-            format: value => ReportHelper.numberOrZero(value, true),
+            format: value => ReportHelper.numberOrZero(value),
           },
           'view_unique_audience_dvr': {
-            format: value => ReportHelper.numberOrZero(value, true),
+            format: value => ReportHelper.numberOrZero(value),
           },
           'view_unique_engaged_users': {
-            format: value => ReportHelper.numberOrZero(value, true),
+            format: value => ReportHelper.numberOrZero(value),
           },
         }
       },
