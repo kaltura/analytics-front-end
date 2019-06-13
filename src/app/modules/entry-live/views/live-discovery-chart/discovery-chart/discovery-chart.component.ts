@@ -98,8 +98,8 @@ export class DiscoveryChartComponent {
       }
       return param;
     };
-    const mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
-    const secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
+    let mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
+    let secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
     let mainMin = getMinValue(main);
     let secondaryMin = getMinValue(secondary);
     
@@ -109,6 +109,12 @@ export class DiscoveryChartComponent {
     
     const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
     const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
+
+    if (mainMax < secondaryMax && mainMax / secondaryMax >= 0.5) {
+      mainMax = secondaryMax;
+    } else if (mainMax > secondaryMax && secondaryMax / mainMax >= 0.5) {
+      secondaryMax  = mainMax;
+    }
     
     return {
       color: this.selectedMetrics.map(metric => getColor(metric)),
