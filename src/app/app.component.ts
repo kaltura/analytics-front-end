@@ -113,7 +113,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
-    analyticsConfig.permissions = config.permissions || {enableLiveViews: true};
+    analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
 
     // set ks in ngx-client
