@@ -33,13 +33,16 @@ export class FiltersComponent implements OnInit {
     this._onFilterChange(true);
   }
   
-  private _updateInterval(): void {
+  private _updateInterval(selected = null): void {
     this._timeIntervalOptions = this._filterService.getTimeIntervalList(this._selectedDateRange);
-    this._selectedTimeInterval = this._timeIntervalOptions.find(({ disabled }) => !disabled).value; // find first enabled option
+  
+    this._selectedTimeInterval = selected && !this._timeIntervalOptions.find(({ value }) => value === selected).disabled
+      ? selected
+      : this._timeIntervalOptions.find(({ disabled }) => !disabled).value; // find first enabled option
   }
   
   public _onFilterChange(firstRun = false): void {
-    this._updateInterval();
+    this._updateInterval(this._selectedTimeInterval);
   
     this.filtersChanged.emit({
       initialRun: firstRun,
