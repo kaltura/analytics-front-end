@@ -3,13 +3,40 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="./">
+  <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+
+  <script type="text/javascript">
+    var analyticsConfig = {
+      kalturaServer: {
+        uri : "lbd.kaltura.com",
+        "previewUIConf": 38524931,
+      },
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      ks: "djJ8MTY0NTE2MXxKkY0RVeZ1Ax4QnRqlng8MbMuUcMEHS73hp5Ul6dOBT5bI1PaFm-g1zwu9Jdd1-aB5AP8232nKuFKVKxjPMuRtAjF5cdpK9o9L_HqJ7hSy3azWqI5c4bc7Gqf7FehZJJWyKnQnc1Sg0yOLhZ59IfhebxvhvguwTE9Yi34hecjbnw==",
+      pid: "1645161",
+      locale: "en",
+      live: {
+        "pollInterval": 30,
+        "healthNotificationsCount": 50,
+      },
+      liveAnalytics: {
+        uri: "/__local_machine_only__/live-analytics-v2.7.2/index.html",
+        uiConfId: "36060752",
+        mapUrls: ["cf1.kaltura.com/content/static/maps/v1", "cf2.kaltura.com/content/static/maps/v1", "cf3.kaltura.com/content/static/maps/v1"],
+        mapZoomLevels: "12"
+      }
+    }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>
