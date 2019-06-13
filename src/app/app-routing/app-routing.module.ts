@@ -36,13 +36,8 @@ const routes: Routes = [
         loadChildren: '../modules/bandwidth/bandwidth.module#BandwidthModule'
       },
       {
-        path: 'live', children: [
-        { path: '', redirectTo: 'live-reports', pathMatch: 'full' },
-        {
-          path: 'live-reports',
-          loadChildren: '../modules/live/views/live-reports/live-reports.module#LiveReportsModule'
-        }
-      ]
+        path: 'live',
+        loadChildren: '../modules/live/live.module#LiveModule'
       }
     ]
   }
