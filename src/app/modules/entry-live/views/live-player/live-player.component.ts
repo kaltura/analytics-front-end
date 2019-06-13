@@ -14,7 +14,7 @@ export class LivePlayerComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this._frameSrc = this._createUrl();
-    }, 0);
+    }, 200); // safari needs it
 
   }
 
