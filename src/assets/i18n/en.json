@@ -688,6 +688,12 @@
         "playback": "Playback Rate",
         "highlights": "Highlights"
       }
+    },
+    "entriesLive": {
+      "title": "Live Entries",
+      "entriesCount": "{{0}} Entries",
+      "period": "Last 7 days",
+      "searchEntries": "Search Entries"
     }
   }
 }

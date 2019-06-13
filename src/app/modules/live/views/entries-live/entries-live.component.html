@@ -1,1 +1,54 @@
-<h1>IT WORKS</h1>
+<div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
+  <div class="kEntriesHeader kContent">
+    <span class="kTitle">{{'app.entriesLive.title' | translate}}</span>
+    <span class="kTimePeriodLabel">{{'app.entriesLive.period' | translate}}</span>
+  </div>
+  <div class="kEntriesHolder kContent">
+    <div class="kEntriesTableFilters kContent">
+      <span class="kSelectedEntriesNum">{{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}</span>
+
+      <div class="kFilters">
+        <input type="text" pInputText class="kSearchInput"
+               [placeholder]="'app.entriesLive.searchEntries' | translate"
+               (keyup.enter)="_onSearch()"
+               [(ngModel)]="_freeText">
+      </div>
+    </div>
+    <k-area-blocker [showLoader]="_isBusy"
+                    [message]="_blockerMessage"
+                    [bodyScroll]="true">
+      <p-table [value]="_tableData" class="kEntriesTable">
+        <ng-template pTemplate="header">
+          <tr>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
+              <div class="kThumbnailHolder" #holder (click)="_drillDown(data)">
+                <img [src]="data.thumbnailUrl"
+                     onError="this.onerror=null;this.style.display='none'"
+                     (error)="holder.classList.add('error')">
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage">{{'app.common.noResults' | translate}}</div>
+          </div>
+        </ng-template>
+      </p-table>
+    </k-area-blocker>
+
+    <div class="kEntriesTableFooter kContent">
+      <p-paginator [rows]="_pager.pageSize"
+                   [first]="(_pager.pageIndex - 1) * _pager.pageSize"
+                   [totalRecords]="_totalCount"
+                   [rowsPerPageOptions]="[25,50,100,250]"
+                   (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+
+    </div>
+  </div>
+</div>
