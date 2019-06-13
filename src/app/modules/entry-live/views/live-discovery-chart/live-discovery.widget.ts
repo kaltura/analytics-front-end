@@ -43,10 +43,25 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._pollsFactory.interval = event.timeIntervalServerValue;
     this._pollsFactory.dateRange = event.dateRangeServerValue;
-
+    
     this._dateRange = event.dateRange;
     
     this.restartPolling();
+  }
+  
+  private _getFormatByInterval() {
+    switch (this._timeInterval) {
+      case TimeInterval.Days:
+        return 'MMM DD';
+      
+      case TimeInterval.Minutes:
+      case TimeInterval.Hours:
+        return 'hh:mm';
+      
+      case TimeInterval.TenSeconds:
+      default:
+        return 'hh:mm:ss';
+    }
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -57,9 +72,10 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportGraph[]>[]): LiveDiscoveryData {
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
-
+    
     const graphsResponse = getResponseByType(responses, KalturaReportGraph) as KalturaReportGraph[] || [];
     const reportGraphFields = this._dataConfig[ReportDataSection.graph].fields;
+    const format = this._getFormatByInterval();
     let totals = null;
     const activeUsers = [];
     const graphs = graphsResponse.reduce((result, graph) => {
@@ -80,8 +96,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
           }
           
           const value = reportGraphFields[graph.id] ? reportGraphFields[graph.id].format(rawValue) : rawValue;
-          const time = DateFilterUtils.getTimeStringFromEpoch(rawDate, ':', this._timeInterval === TimeInterval.Days);
-  
+          
+          const time = DateFilterUtils.getTimeStringFromEpoch(rawDate, format);
+          
           times.push(time);
           graphData.push(value);
         });
@@ -89,12 +106,12 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       if (!result['times']) {
         result['times'] = times;
       }
-
+      
       result[graph.id] = graphData;
-
+      
       return result;
     }, {});
-  
+    
     const totalsResponse = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
     if (totalsResponse && totalsResponse.header && totalsResponse.data) {
       const reportTotalFields = this._dataConfig[ReportDataSection.totals].fields;
@@ -109,14 +126,14 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
               const value = Number(rawValue) || 0;
               rawValue = String(activeUsers ? value / activeUsers : 0);
             }
-
+            
             result[column] = reportTotalFields[column].format(rawValue);
           }
-  
+          
           return result;
         }, {});
     }
-  
+    
     return {
       graphs,
       totals,

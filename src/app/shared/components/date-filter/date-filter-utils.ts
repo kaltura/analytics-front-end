@@ -175,14 +175,12 @@ export class DateFilterUtils {
     return moment(value, 'YYYYMMDD');
   }
   
-  static getTimeStringFromEpoch(epoch: string, separator = ':', days = false): string {
+  static getTimeStringFromEpoch(epoch: string, format = 'hh:mm:ss'): string {
     const date = moment.unix(Number(epoch));
     if (!date.isValid()) {
       return null;
     }
   
-    const format = days ? 'MMM DD' : `hh${separator}mm${separator}ss`;
-
     return date.format(format);
   }
   
