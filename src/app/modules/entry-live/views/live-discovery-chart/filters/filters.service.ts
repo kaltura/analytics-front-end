@@ -113,17 +113,17 @@ export class FiltersService {
       {
         value: TimeInterval.TenSeconds,
         label: this._translate.instant('app.entryLive.discovery.filter.10sec'),
-        disabled: [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M].indexOf(dateRange) === -1,
+        disabled: [DateRange.Last3D, DateRange.Last7D].indexOf(dateRange) !== -1,
       },
       {
         value: TimeInterval.Minutes,
         label: this._translate.instant('app.entryLive.discovery.filter.minutes'),
-        disabled: [DateRange.Last5M, DateRange.Last30M, DateRange.LastHour, DateRange.Last3H].indexOf(dateRange) === -1,
+        disabled: DateRange.LastMin === dateRange,
       },
       {
         value: TimeInterval.Hours,
         label: this._translate.instant('app.entryLive.discovery.filter.hours'),
-        disabled: [DateRange.Last3H, DateRange.Last6H].indexOf(dateRange) === -1,
+        disabled: [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M, DateRange.LastHour].indexOf(dateRange) !== -1,
       },
       {
         value: TimeInterval.Days,
