@@ -484,11 +484,11 @@
         "avg_view_latency": "Avg. Latency Rate",
         "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
         "totals": {
-          "view_unique_audience": "AVG Active Users",
+          "view_unique_audience": "Total Active Users",
           "view_unique_engaged_users": "AVG Engaged Users",
           "view_unique_buffering_users": "AVG Buffer Rate ",
           "avg_view_downstream_bandwidth": "AVG Bandwidth",
-          "view_unique_audience_dvr": "AVG DVR Users",
+          "view_unique_audience_dvr": "SUM DVR Users",
           "avg_view_bitrate": "AVG Bitrate",
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_latency": "AVG Latency",
