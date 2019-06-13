@@ -470,6 +470,7 @@
           "lastHour": "Last hour",
           "last3Hours": "Last 3 hours",
           "last6Hours": "Last 6 hours",
+          "last24Hours": "Last 24 hours",
           "last3Days": "Last 3 days",
           "last7Days": "Last 7 days"
         },

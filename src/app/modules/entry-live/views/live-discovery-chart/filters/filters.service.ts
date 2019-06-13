@@ -18,6 +18,7 @@ export enum DateRange {
   LastHour = 'LastHour',
   Last3H = 'Last3Hours',
   Last6H = 'Last6Hours',
+  Last24H = 'Last24Hours',
   Last3D = 'Last3Days',
   Last7D = 'Last7Days'
 }
@@ -53,6 +54,9 @@ export class FiltersService {
         break;
       case DateRange.Last6H:
         from = moment().subtract(6, 'hours');
+        break;
+      case DateRange.Last24H:
+        from = moment().subtract(24, 'hours');
         break;
       case DateRange.Last3D:
         from = moment().subtract(3, 'days');
@@ -96,6 +100,10 @@ export class FiltersService {
       {
         value: DateRange.Last6H,
         label: this._translate.instant('app.entryLive.discovery.filter.last6Hours'),
+      },
+      {
+        value: DateRange.Last24H,
+        label: this._translate.instant('app.entryLive.discovery.filter.last24Hours'),
       },
       {
         value: DateRange.Last3D,
