@@ -33,7 +33,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => value,
             colors: ['#f7c25c'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value)} Kbps`,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
             units: () => 'Kbps',
             sortOrder: 3,
           },
@@ -93,7 +93,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
           },
           'avg_view_bitrate': {
-            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
+            format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           },
           'avg_view_latency': {
             format: value => `${ReportHelper.numberOrZero(value)} Sec`,
