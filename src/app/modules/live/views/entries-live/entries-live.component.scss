@@ -30,7 +30,7 @@
   }
 
   .kEntriesHolder {
-    min-height: $minTableHeight;
+    min-height: calc(100vh - 125px);
     height: 100%;
     border: none;
     position: relative;
@@ -126,6 +126,16 @@
     display: block;
     z-index: 3;
   }
+}
+
+.kEntriesLiveRow {
+  height: 72px;
+}
+
+.kEntryLink {
+  cursor: pointer;
+  font-weight: bold;
+  color: $kGrayscale1;
 }
 
 :host /deep/ .kEntriesTableFooter {

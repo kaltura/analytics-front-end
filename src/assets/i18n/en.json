@@ -693,7 +693,11 @@
       "title": "Live Entries",
       "entriesCount": "{{0}} Entries",
       "period": "Last 7 days",
-      "searchEntries": "Search Entries"
+      "searchEntries": "Search Entries",
+      "thumbnail": "Thumbnail",
+      "entry_name": "Name",
+      "creator_name": "Creator",
+      "created_at": "Created At"
     }
   }
 }
