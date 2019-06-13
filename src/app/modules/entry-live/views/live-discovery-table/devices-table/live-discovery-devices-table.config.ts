@@ -10,7 +10,7 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
   }
   
   private _getFlavor(value: string): string {
-    const flavorsValueSeparator = '/';
+    const flavorsValueSeparator = ' / ';
     const topFlavors = value
       .split(flavorsValueSeparator)
       .map(flavor => {
