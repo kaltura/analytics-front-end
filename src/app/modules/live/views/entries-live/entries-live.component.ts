@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaEntryStatus, KalturaFilterPager } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesLiveService } from './entries-live.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
+import { EntryDetailsOverlayData } from '../../../audience/views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
+import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 
 @Component({
   selector: 'app-entries-live',
@@ -20,6 +22,8 @@ import * as moment from 'moment';
   ]
 })
 export class EntriesLiveComponent implements OnInit, OnDestroy {
+  @ViewChild('overlay') _overlay: OverlayComponent;
+  
   public _tableData: TableRow[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 25 });
   public _totalCount = 0;
@@ -29,6 +33,8 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   public _order = '-entry_name';
   public _firstTimeLoading = true;
   public _periodTooltip: string;
+  public _entryData: TableRow;
+  private timeoutId = null;
   
   constructor(private _entriesLiveService: EntriesLiveService,
               private _errorsManager: ErrorsManagerService,
@@ -88,7 +94,7 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   
   
   public _drillDown(entry: TableRow): void {
-    const entryId = entry['object_id'];
+    const entryId = entry['entry_id'];
     if (analyticsConfig.isHosted) {
       const params = this._browserService.getCurrentQueryParams('string');
       this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry-live?id=${entryId}&${params}`);
@@ -111,6 +117,31 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
       if (order !== this._order) {
         this._order = order;
         this._entriesLiveService.sortChange(this._order);
+      }
+    }
+  }
+  
+  public _showOverlay(event: MouseEvent, entryId: string): void {
+    if (this._overlay) {
+      this._entryData = this._tableData.find(row => entryId === row['entry_id']);
+      if (this.timeoutId === null) {
+        this.timeoutId = setTimeout(() => {
+          if (this._entryData.status === KalturaEntryStatus.ready) {
+            this._overlay.show(event);
+            this.timeoutId = null;
+          }
+        }, 1000);
+      }
+    }
+  }
+  
+  public _hideOverlay(): void {
+    if (this._overlay) {
+      this._entryData = null;
+      this._overlay.hide();
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
       }
     }
   }

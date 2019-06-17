@@ -13,12 +13,15 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule, PaginatorModule } from 'primeng/primeng';
 import { TranslateModule } from '@ngx-translate/core';
 import { EntriesLiveDataConfig } from './views/entries-live/entries-live-data.config';
+import { EntryDetailsOverlayComponent } from './views/entries-live/entry-details-overlay/entry-details-overlay.component';
+import { SharedModule } from 'shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routing),
     KalturaUIModule,
+    SharedModule,
     TableModule,
     PaginatorModule,
     TranslateModule,
@@ -30,6 +33,7 @@ import { EntriesLiveDataConfig } from './views/entries-live/entries-live-data.co
     LiveComponent,
     EntriesLiveComponent,
     LiveReportsComponent,
+    EntryDetailsOverlayComponent,
   ],
   providers: [
     EntriesLiveGuard,

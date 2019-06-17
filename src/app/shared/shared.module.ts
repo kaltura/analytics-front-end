@@ -56,6 +56,7 @@ import { HorizontalBarRowComponent } from 'shared/components/horizontal-bar-row/
 import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
 import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
+import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
     HorizontalBarChartComponent,
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
+    StreamDurationPipe,
     ...FilterComponentsList,
   ],
   exports: [
@@ -154,6 +156,7 @@ import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
     HorizontalBarChartComponent,
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
+    StreamDurationPipe,
     ...FilterComponentsList,
   ],
   providers: [

@@ -66,9 +66,11 @@ export class EntriesLiveService implements OnDestroy {
       if (relevantEntry) {
         row['entry_name'] = relevantEntry.name;
         row['thumbnailUrl'] = relevantEntry.thumbnailUrl;
-        row['status'] = [KalturaEntryServerNodeStatus.broadcasting, KalturaEntryServerNodeStatus.playable].indexOf(relevantEntry.liveStatus) !== -1; // meaning is live, might change to actual status
+        row['creator'] = relevantEntry.creatorId;
+        row['status'] = relevantEntry.status;
+        row['liveStatus'] = [KalturaEntryServerNodeStatus.broadcasting, KalturaEntryServerNodeStatus.playable].indexOf(relevantEntry.liveStatus) !== -1; // meaning is live, might change to actual status
         row['type'] = relevantEntry.mediaType;
-        row['created_at'] = relevantEntry.createdAt;
+        row['created_at'] = ReportHelper.format('serverDate', String(+relevantEntry.createdAt));
         row['stream_started'] = relevantEntry.currentBroadcastStartTime;
       }
     });
@@ -117,7 +119,6 @@ export class EntriesLiveService implements OnDestroy {
       )
       .subscribe(
         data => {
-          console.warn(data);
           this._data.next(data);
           this._state.next({ isBusy: false });
           this._updateHostLayout();

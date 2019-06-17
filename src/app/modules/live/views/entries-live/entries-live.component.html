@@ -57,11 +57,13 @@
                     *ngIf="col === 'entry_name'"
                     [kTooltip]="data[col]"
                     [showOnEllipsis]="true"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['entry_id'])"
                     (click)="_drillDown(data)">{{data[col]}}</span>
             </td>
             <td [ngStyle]="{'width': '100px'}">
-              <span class="kStatus" *ngIf="data['status']">
-                <span class="kCircle" [ngClass]="data[col]"></span>
+              <span class="kStatus" *ngIf="data['liveStatus']">
+                <span class="kCircle"></span>
                 <span class="kStatusName">{{'app.entriesLive.live' | translate}}</span>
               </span>
             </td>
@@ -81,3 +83,7 @@
     </k-area-blocker>
   </div>
 </div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+</k-overlayPanel>
