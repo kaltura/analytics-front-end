@@ -12,7 +12,7 @@ export class EntriesLiveRequestFactory implements RequestFactory<KalturaMultiReq
   });
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.topContentCreator,
+    reportType: KalturaReportType.contentRealtime,
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: moment().unix(),

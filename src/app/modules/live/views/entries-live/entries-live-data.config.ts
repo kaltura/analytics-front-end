@@ -14,9 +14,10 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
+      // entry_id|view_unique_audience|avg_view_engagement|avg_view_buffering|avg_view_downstream_bandwidth
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
+          'entry_id': {
             format: value => value,
             hidden: true,
           },
@@ -28,9 +29,21 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 2,
           },
-          'created_at': {
-            format: value => ReportHelper.format('serverDate', value),
+          'view_unique_audience': {
+            format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
+          },
+          'avg_view_engagement': {
+            format: value => ReportHelper.percents(value, false),
+            sortOrder: 4,
+          },
+          'avg_view_buffering': {
+            format: value => ReportHelper.percents(value, false),
+            sortOrder: 5,
+          },
+          'avg_view_downstream_bandwidth': {
+            format: value => `${ReportHelper.numberOrZero(value)} KBps`,
+            sortOrder: 6,
           },
         }
       },

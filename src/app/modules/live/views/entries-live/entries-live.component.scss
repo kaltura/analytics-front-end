@@ -123,6 +123,24 @@
   }
 }
 
+.kStatus {
+  display: flex;
+  align-items: center;
+
+  .kCircle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: $kDandger;
+  }
+
+  .kStatusName {
+    margin-left: 8px;
+    color: $kGrayscale1;
+  }
+}
+
 .kEntriesLiveRow {
   height: 72px;
 }

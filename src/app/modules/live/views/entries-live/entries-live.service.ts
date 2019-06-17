@@ -1,15 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EntriesLivePollsService } from './entries-live-polls.service';
-import { ReportService } from 'shared/services';
+import { ReportHelper, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EntriesLiveRequestFactory } from './entries-live-request-factory';
-import { BehaviorSubject, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, of, Unsubscribable } from 'rxjs';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { KalturaAPIException, KalturaFilterPager, KalturaReportTable } from 'kaltura-ngx-client';
+import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaClient, KalturaEntryServerNodeStatus, KalturaFilterPager, KalturaLiveStreamEntry, KalturaReportTable } from 'kaltura-ngx-client';
 import { EntriesLiveDataConfig } from './entries-live-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { map, switchMap } from 'rxjs/operators';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 export interface EntriesLiveData {
   table: TableRow[];
@@ -23,10 +25,6 @@ export class EntriesLiveService implements OnDestroy {
   private _data = new BehaviorSubject<EntriesLiveData>({ totalCount: 0, columns: [], table: [] });
   private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException }>({ isBusy: false });
   private _pollingSubscription: Unsubscribable;
-  private _partnerId = analyticsConfig.pid;
-  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
-    ? analyticsConfig.kalturaServer.uri
-    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private _pollsFactory = new EntriesLiveRequestFactory();
   
   public readonly data$ = this._data.asObservable();
@@ -34,6 +32,7 @@ export class EntriesLiveService implements OnDestroy {
   
   constructor(private _serverPolls: EntriesLivePollsService,
               private _reportService: ReportService,
+              private _kalturaClient: KalturaClient,
               private _dataConfigService: EntriesLiveDataConfig,
               private _frameEventManager: FrameEventManagerService) {
     this._dataConfig = this._dataConfigService.getConfig();
@@ -44,7 +43,7 @@ export class EntriesLiveService implements OnDestroy {
     this._state.complete();
   }
   
-  private _handleTick(table: KalturaReportTable): void {
+  private _parseReportData(table: KalturaReportTable): EntriesLiveData {
     const result = {
       totalCount: 0,
       columns: [],
@@ -56,15 +55,26 @@ export class EntriesLiveService implements OnDestroy {
       result.table = tableData;
       result.columns = columns;
       result.totalCount = table.totalCount;
-      
-      result.table.forEach(item => {
-        item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
-      });
     }
     
-    this._data.next(result);
+    return result;
+  }
   
-    this._updateHostLayout();
+  private _mapReportData(entries: KalturaLiveStreamEntry[], data: EntriesLiveData): EntriesLiveData {
+    data.table.forEach(row => {
+      const relevantEntry = entries.find(({ id }) => id === row['entry_id']) as KalturaLiveStreamEntry;
+      if (relevantEntry) {
+        row['entry_name'] = relevantEntry.name;
+        row['thumbnailUrl'] = relevantEntry.thumbnailUrl;
+        row['status'] = [KalturaEntryServerNodeStatus.broadcasting, KalturaEntryServerNodeStatus.playable].indexOf(relevantEntry.liveStatus) !== -1; // meaning is live, might change to actual status
+        row['type'] = relevantEntry.mediaType;
+        row['created_at'] = relevantEntry.createdAt;
+        row['stream_started'] = relevantEntry.currentBroadcastStartTime;
+      }
+    });
+    data.columns.unshift('entry_name');
+  
+    return data;
   }
   
   private _updateHostLayout(): void {
@@ -82,16 +92,39 @@ export class EntriesLiveService implements OnDestroy {
       analyticsConfig.live.pollInterval,
       this._pollsFactory,
     )
-      .pipe(cancelOnDestroy(this))
-      .subscribe(response => {
-        if (response.error) {
-          this._state.next({ isBusy: false, error: response.error });
-          return;
-        }
-        
-        this._state.next({ isBusy: false });
-        this._handleTick(response.result);
-      });
+      .pipe(
+        cancelOnDestroy(this),
+        map(response => {
+          if (response.error) {
+            throw response.error;
+          }
+          return this._parseReportData(response.result);
+        }),
+        switchMap(data => {
+          if (data.table.length) {
+            const idIn = data.table.map(row => row['entry_id']).join(',');
+            
+            return this._kalturaClient
+              .request(new BaseEntryListAction({
+                filter: new KalturaBaseEntryFilter({ idIn })
+              }))
+              .pipe(
+                map(response => this._mapReportData(response.objects as KalturaLiveStreamEntry[], data))
+              );
+          }
+          return of(data);
+        })
+      )
+      .subscribe(
+        data => {
+          console.warn(data);
+          this._data.next(data);
+          this._state.next({ isBusy: false });
+          this._updateHostLayout();
+        },
+        error => {
+          this._state.next({ isBusy: false, error });
+        });
   }
   
   public stopPolling(): void {

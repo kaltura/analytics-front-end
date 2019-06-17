@@ -32,12 +32,13 @@
             </th>
             <th *ngFor="let col of _columns"
                 [pSortableColumn]="col"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}"
                 [kTooltip]="'app.entriesLive.' + col | translate"
                 [showOnEllipsis]="true">
               {{'app.entriesLive.' + col | translate}}
               <p-sortIcon [field]="col"></p-sortIcon>
             </th>
+            <th [ngStyle]="{'width': '100px'}"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
@@ -50,13 +51,19 @@
               </div>
             </td>
             <td *ngFor="let col of _columns; let i = index"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}">
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}">
               <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
               <span class="kEntryLink kTableColumn"
                     *ngIf="col === 'entry_name'"
                     [kTooltip]="data[col]"
                     [showOnEllipsis]="true"
                     (click)="_drillDown(data)">{{data[col]}}</span>
+            </td>
+            <td [ngStyle]="{'width': '100px'}">
+              <span class="kStatus" *ngIf="data['status']">
+                <span class="kCircle" [ngClass]="data[col]"></span>
+                <span class="kStatusName">{{'app.entriesLive.live' | translate}}</span>
+              </span>
             </td>
           </tr>
         </ng-template>
