@@ -30,12 +30,12 @@
   }
 
   .kEntriesHolder {
-    min-height: calc(100vh - 125px);
     height: 100%;
     border: none;
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: #ffffff;
 
     .kEntriesTableFilters {
       color: $kGrayscale1;
@@ -64,6 +64,14 @@
           width: 250px;
         }
       }
+    }
+
+    /deep/ .ui-table {
+      min-height: calc(100vh - 235px);
+    }
+
+    k-area-blocker {
+      display: block !important;
     }
   }
 
@@ -113,19 +121,6 @@
       }
     }
   }
-
-  .kEntriesTableFooter {
-    bottom: 0;
-    height: 34px;
-    background-color: white;
-    border-top: 1px solid $kGrayscale6;
-    position: fixed;
-    box-sizing: border-box;
-    flex: 0 0 auto;
-    padding: 0 14px 28px;
-    display: block;
-    z-index: 3;
-  }
 }
 
 .kEntriesLiveRow {
@@ -136,10 +131,4 @@
   cursor: pointer;
   font-weight: bold;
   color: $kGrayscale1;
-}
-
-:host /deep/ .kEntriesTableFooter {
-  .ui-dropdown-panel {
-    min-width: 70px;
-  }
 }

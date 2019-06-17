@@ -16,9 +16,7 @@
                [(ngModel)]="_freeText">
       </div>
     </div>
-    <k-area-blocker [showLoader]="_isBusy"
-                    [message]="_blockerMessage"
-                    [bodyScroll]="true">
+    <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
       <p-table class="kEntriesTable"
                [value]="_tableData"
                [sortField]="'entry_name'"
@@ -69,15 +67,10 @@
           </div>
         </ng-template>
       </p-table>
-    </k-area-blocker>
-
-    <div class="kEntriesTableFooter kContent">
       <p-paginator [rows]="_pager.pageSize"
                    [first]="(_pager.pageIndex - 1) * _pager.pageSize"
                    [totalRecords]="_totalCount"
-                   [rowsPerPageOptions]="[25,50,100,250]"
                    (onPageChange)="_onPaginationChange($event)"></p-paginator>
-
-    </div>
+    </k-area-blocker>
   </div>
 </div>
