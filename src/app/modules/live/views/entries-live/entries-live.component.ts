@@ -9,6 +9,7 @@ import { SortEvent } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-entries-live',
@@ -25,9 +26,9 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   public _columns: string[] = [];
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage;
-  public _freeText = '';
   public _order = '-entry_name';
   public _firstTimeLoading = true;
+  public _periodTooltip: string;
   
   constructor(private _entriesLiveService: EntriesLiveService,
               private _errorsManager: ErrorsManagerService,
@@ -37,9 +38,10 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService) {
   }
   
-  
   ngOnInit(): void {
     this._entriesLiveService.startPolling();
+  
+    this._periodTooltip = this._getPeriodTooltip();
     
     this._entriesLiveService.data$
       .pipe(cancelOnDestroy(this))
@@ -48,6 +50,7 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
         this._tableData = data.table;
         this._totalCount = data.totalCount;
         this._firstTimeLoading = false;
+        this._periodTooltip = this._getPeriodTooltip();
       });
     
     this._entriesLiveService.state$
@@ -71,6 +74,12 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _getPeriodTooltip() {
+    const from = moment().subtract(7, 'days').format('MMM DD, YYYY');
+    const to = moment().format('MMM DD, YYYY');
+    return `${from} - ${to}`;
   }
   
   public _rowTrackBy(index: number, item: TableRow): string {

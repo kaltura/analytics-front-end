@@ -1,7 +1,7 @@
 <div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
   <div class="kEntriesHeader kContent">
     <span class="kTitle">{{'app.entriesLive.title' | translate}}</span>
-    <span class="kTimePeriodLabel">{{'app.entriesLive.period' | translate}}</span>
+    <span class="kTimePeriodLabel" [kTooltip]="_periodTooltip">{{'app.entriesLive.period' | translate}}</span>
   </div>
   <div class="kEntriesHolder kContent">
     <div class="kEntriesTableFilters kContent">
