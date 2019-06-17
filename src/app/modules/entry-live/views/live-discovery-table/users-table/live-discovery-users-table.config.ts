@@ -32,7 +32,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
-          'creator_name': {
+          'user_name': {
             format: value => value,
             sortOrder: 1,
           },

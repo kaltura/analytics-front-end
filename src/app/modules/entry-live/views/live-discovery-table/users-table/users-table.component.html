@@ -15,9 +15,9 @@
     </tr>
     <tr *ngIf="tableData?.length" class="kSummaryRow">
       <th *ngFor="let col of columns">
-        <span *ngIf="col === 'creator_name'">{{'app.entryLive.discovery.summary' | translate}}</span>
+        <span *ngIf="col === 'user_name'">{{'app.entryLive.discovery.summary' | translate}}</span>
         <app-status-bullet *ngIf="col === 'status'" [values]="summary[col]"></app-status-bullet>
-        <span *ngIf="col !== 'creator_name' && col !== 'status'">{{summary[col]}}</span>
+        <span *ngIf="col !== 'user_name' && col !== 'status'">{{summary[col]}}</span>
       </th>
     </tr>
   </ng-template>
