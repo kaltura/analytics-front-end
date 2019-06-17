@@ -9,12 +9,12 @@
         {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
       </span>
 
-      <div class="kFilters">
-        <input type="text" pInputText class="kSearchInput"
-               [placeholder]="'app.entriesLive.searchEntries' | translate"
-               (keyup.enter)="_onSearch()"
-               [(ngModel)]="_freeText">
-      </div>
+<!--      <div class="kFilters">-->
+<!--        <input type="text" pInputText class="kSearchInput"-->
+<!--               [placeholder]="'app.entriesLive.searchEntries' | translate"-->
+<!--               (keyup.enter)="_onSearch()"-->
+<!--               [(ngModel)]="_freeText">-->
+<!--      </div>-->
     </div>
     <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
       <p-table class="kEntriesTable"

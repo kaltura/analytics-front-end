@@ -105,8 +105,4 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
-  public _onSearch(): void {
-    console.warn(this._freeText);
-  }
 }

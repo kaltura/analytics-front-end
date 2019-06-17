@@ -9,6 +9,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { KalturaAPIException, KalturaFilterPager, KalturaReportTable } from 'kaltura-ngx-client';
 import { EntriesLiveDataConfig } from './entries-live-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface EntriesLiveData {
   table: TableRow[];
@@ -33,7 +34,8 @@ export class EntriesLiveService implements OnDestroy {
   
   constructor(private _serverPolls: EntriesLivePollsService,
               private _reportService: ReportService,
-              private _dataConfigService: EntriesLiveDataConfig) {
+              private _dataConfigService: EntriesLiveDataConfig,
+              private _frameEventManager: FrameEventManagerService) {
     this._dataConfig = this._dataConfigService.getConfig();
   }
   
@@ -61,6 +63,16 @@ export class EntriesLiveService implements OnDestroy {
     }
     
     this._data.next(result);
+  
+    this._updateHostLayout();
+  }
+  
+  private _updateHostLayout(): void {
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height: document.getElementById('analyticsApp').getBoundingClientRect().height });
+      }, 0);
+    }
   }
   
   public startPolling(): void {
