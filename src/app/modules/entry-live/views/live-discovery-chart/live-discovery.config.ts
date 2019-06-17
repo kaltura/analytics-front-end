@@ -37,11 +37,11 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             units: () => 'Kbps',
             sortOrder: 3,
           },
-          'avg_view_latency': {
+          'avg_view_live_latency': {
             format: value => Number(value).toFixed(1),
             colors: ['#f3737b'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_latency')}: ${ReportHelper.numberOrZero(value)} Sec`,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_live_latency')}: ${ReportHelper.numberOrZero(value)} Sec`,
             units: () => 'Sec',
             sortOrder: 4,
           },
@@ -95,7 +95,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'avg_view_bitrate': {
             format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           },
-          'avg_view_latency': {
+          'avg_view_live_latency': {
             format: value => `${ReportHelper.numberOrZero(value)} Sec`,
           },
           'avg_view_downstream_bandwidth': {
