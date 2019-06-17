@@ -41,8 +41,8 @@ export class FiltersComponent implements OnInit {
       : this._timeIntervalOptions.find(({ disabled }) => !disabled).value; // find first enabled option
   }
   
-  public _onFilterChange(firstRun = false): void {
-    this._updateInterval(this._selectedTimeInterval);
+  public _onFilterChange(firstRun = false, timeInterval = this._selectedTimeInterval): void {
+    this._updateInterval(timeInterval);
   
     this.filtersChanged.emit({
       initialRun: firstRun,
