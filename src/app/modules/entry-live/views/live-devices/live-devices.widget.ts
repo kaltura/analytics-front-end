@@ -46,25 +46,18 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveDevicesData {
-    const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
-    const totals = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
-    let tabsData = [];
+  protected _responseMapping(table: KalturaReportTable): LiveDevicesData {
     let result = {
       data: [],
       totalCount: 0
     };
-    // IMPORTANT to handle totals first, summary rely on totals
-    if (totals && totals.data && totals.header) {
-      tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
-    }
     
     if (table && table.header && table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data } = this._getOverviewData(table, relevantFields);
       
       result.totalCount = table.totalCount;
-      result.data = this._getSummaryData(data, tabsData);
+      result.data = this._getSummaryData(data);
     }
     
     return result;
@@ -92,7 +85,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     return { data, columns };
   }
   
-  protected _getSummaryData(data: { [key: string]: string }[], tabsData: Tab[]): BarChartRow[] {
+  protected _getSummaryData(data: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
     const getValue = (itemValue, totalValue) => {
       let value = 0;
@@ -104,24 +97,18 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       }
       return value;
     };
-    
-    const relevantCurrentTotal = tabsData.find(total => total.key === key);
-    if (relevantCurrentTotal) {
-      const totalValue = parseFloat(relevantCurrentTotal.value);
-      
-      return data.map(item => {
-        const rawValue = parseFloat(item[key]);
-        const currentValue = getValue(rawValue, totalValue);
-        
-        return {
-          value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) },
-          label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-          icon: this._deviceIconPipe.transform(item.device),
-        };
-      });
-    }
-    
+
+    const totalValue = data.reduce((acc, item) => acc + parseFloat(item[key]), 0);
+    return data.map(item => {
+      const rawValue = parseFloat(item[key]);
+      const currentValue = getValue(rawValue, totalValue);
+      return {
+        value: currentValue,
+        tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) },
+        label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+        icon: this._deviceIconPipe.transform(item.device),
+      };
+    });
     return [];
   }
 }
