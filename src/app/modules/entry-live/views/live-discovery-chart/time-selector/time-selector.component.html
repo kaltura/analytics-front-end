@@ -6,8 +6,8 @@
 </div>
 
 
-<kPopupWidget #datesPopup [attr.data-aid]="'time-selector' + name"
-              [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 900}">
+<kPopupWidget #datesPopup [attr.data-aid]="'time-selector'"
+              [popupWidth]="352" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 900}">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
 
@@ -38,11 +38,30 @@
       </div>
 
       <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
-        <p-calendar selectionMode="range"
+        <p-calendar class="kMainCalendar"
+                    selectionMode="range"
                     [inline]="true"
-                    [showTime]="true"
+                    [showTime]="false"
+                    [maxDate]="_maxDate"
+                    [minDate]="_minDate"
                     [yearRange]="'2010:2050'"
                     [(ngModel)]="specificDateRange"></p-calendar>
+        <div class="kTimeSelectorsGroup">
+          <div class="kTimeSelector kLeft">
+            <span class="kLabel">{{'app.entryLive.from' | translate}}</span>
+            <p-calendar [inline]="true"
+                        [timeOnly]="true"
+                        [(ngModel)]="_fromTime"
+                        (ngModelChange)="_timeChange($event, 'from')"></p-calendar>
+          </div>
+          <div class="kTimeSelector kRight">
+            <span class="kLabel">{{'app.entryLive.to' | translate}}</span>
+            <p-calendar [inline]="true"
+                        [timeOnly]="true"
+                        [(ngModel)]="_toTime"
+                        (ngModelChange)="_timeChange($event, 'to')"></p-calendar>
+          </div>
+        </div>
       </div>
       <hr>
       <button pButton class="kButtonBranded"

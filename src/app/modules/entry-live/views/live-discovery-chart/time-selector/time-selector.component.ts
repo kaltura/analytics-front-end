@@ -18,8 +18,7 @@ import * as moment from 'moment';
 })
 export class TimeSelectorComponent implements OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
-  @Input() name = 'default';
-  
+
   @Input() set dateRange(value: DateRange) {
     if (value) {
       this._defaultDateRange = value;
@@ -35,6 +34,10 @@ export class TimeSelectorComponent implements OnDestroy {
   
   public _defaultDateRange = DateRange.LastMin;
   public _dateRange = this._defaultDateRange;
+  public _maxDate = new Date();
+  public _minDate = moment().subtract(7, 'days').toDate();
+  public _fromTime = new Date();
+  public _toTime = new Date();
   
   public leftDateRangeItems: SelectItem[] = [];
   public rightDateRangeItems: SelectItem[] = [];
@@ -106,4 +109,7 @@ export class TimeSelectorComponent implements OnDestroy {
     });
   }
   
+  public _timeChange(date: Date, type: 'from' | 'to') {
+    console.warn(event);
+  }
 }

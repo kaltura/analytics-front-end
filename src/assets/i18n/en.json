@@ -425,6 +425,8 @@
       "ms": "-{{0}}s",
       "noHistory": "No Broadcast History",
       "view_unique_audience": "Users",
+      "to": "To:",
+      "from": "From:",
       "streamStatus": {
         "live": "Live",
         "initializing": "Going Live",

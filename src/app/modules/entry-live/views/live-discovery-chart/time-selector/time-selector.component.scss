@@ -1,20 +1,19 @@
 @import '../../../../../../styles/variables';
 
-.kDateFilter{
+.kDateFilter {
   display: flex;
   align-items: center;
-  .kExitCompare{
-    white-space: nowrap;
-    margin-left: 12px;
-  }
-  .kLabel{
+
+  .kLabel {
     color: $kGrayscale1;
     margin-right: 8px;
   }
-  .kMargin{
+
+  .kMargin {
     margin-left: 16px;
   }
-  .datesRangeDropDown{
+
+  .datesRangeDropDown {
     background-color: white;
     min-width: 210px;
     height: 34px;
@@ -26,66 +25,76 @@
     padding-right: 8px;
     box-sizing: border-box;
     cursor: pointer;
-    &:hover{
+
+    &:hover {
       border-color: $kPrimary;
     }
-    &:active{
-      box-shadow: 0 0 0 3px rgba(0,167,132,0.4);
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
     }
-    span{
+
+    span {
       font-size: 15px;
       white-space: nowrap;
       margin-right: 12px;
     }
-    i{
+
+    i {
       margin-left: auto;
       font-size: 12px;
       color: $kGrayscale3;
     }
-    .compareIcon{
-      font-size: 24px;
-      color: $kOrange;
-    }
   }
 }
-.kDateFilterPopup{
+
+.kDateFilterPopup {
   height: 100%;
   border: 1px solid $kGrayscale5;
   border-radius: 4px;
-  .kFilters{
+
+  .kFilters {
     width: 100%;
     height: 100%;
-    &.kPreset{
+
+    &.kPreset {
       display: flex;
-      .col{
+
+      .col {
         width: 50%;
         display: flex;
         flex-direction: column;
-        .kTitle{
-          font-size:14px;
+
+        .kTitle {
+          font-size: 14px;
           color: $kGrayscale3;
           padding-left: 24px;
           margin-bottom: 8px;
         }
-        p-radiobutton{
+
+        p-radiobutton {
           width: 100%;
           height: 32px;
           box-sizing: border-box;
           cursor: pointer;
-          &:hover{
+
+          &:hover {
             background-color: $kGrayscale6;
           }
-          /deep/ .ui-radiobutton{
+
+          /deep/ .ui-radiobutton {
             float: right;
             margin-right: 16px;
 
-            .ui-radiobutton-box{
+            .ui-radiobutton-box {
               display: none;
-              &.ui-state-active{
+
+              &.ui-state-active {
                 display: block;
                 border: none;
                 margin-top: 7px;
                 background: transparent;
+
                 .pi-circle-on:before {
                   content: "\e91c";
                   color: $kGrayscale1;
@@ -94,7 +103,8 @@
               }
             }
           }
-          /deep/ .ui-radiobutton-label{
+
+          /deep/ .ui-radiobutton-label {
             font-weight: normal;
             margin-left: 24px;
             display: block;
@@ -102,56 +112,91 @@
             height: 36px;
             padding-top: 7px;
             cursor: pointer;
-            &.ui-label-active{
+
+            &.ui-label-active {
               font-weight: 700;
             }
           }
         }
       }
     }
-    &.kSpecific{
+
+    &.kSpecific {
       display: flex;
       justify-content: center;
-      p-calendar{
-        /deep/ .ui-calendar .ui-datepicker{
-          width: 380px;
-          .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
+      align-items: center;
+      flex-direction: column;
+
+      .kMainCalendar {
+        /deep/ .ui-calendar .ui-datepicker {
+          width: 304px;
+          border-bottom: none;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+          border-left: none;
+
+          .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover {
             background-color: $kPrimary;
           }
         }
       }
-    }
-  }
-  .kViews{
-    width: 100%;
-    display: flex;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    justify-content: center;
-    /deep/ p-selectbutton .ui-button{
-      min-width: 190px;
-    }
-  }
-  .kCompare{
-    /deep/ .ui-chkbox-label{
-      font-weight: normal;
-    }
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    padding-bottom: 0px;
-    p-radiobutton{
-      margin-top: 12px;
-      margin-left: 24px;
-      /deep/ .ui-radiobutton-label{
-        font-weight: normal;
+
+      .kTimeSelectorsGroup {
+        display: flex;
+
+        p-calendar /deep/ .ui-calendar .ui-datepicker {
+          width: 152px;
+          border-top: none;
+          border-bottom: 1px solid #d9d9d9;
+          border-radius: 0 0 3px 3px;
+        }
+
+        .kTimeSelector {
+          position: relative;
+
+          &.kLeft {
+            /deep/ .ui-calendar .ui-datepicker {
+              border-bottom-right-radius: 0;
+              border-right: none;
+            }
+          }
+
+          &.kRight {
+            /deep/ .ui-calendar .ui-datepicker {
+              border-bottom-left-radius: 0;
+            }
+          }
+
+          /deep/ .ui-timepicker {
+            padding-left: 50px;
+          }
+
+          .kLabel {
+            position: absolute;
+            z-index: 1;
+            color: $kGrayscale1;
+            font-size: 14px;
+            top: 20px;
+            left: 20px;
+          }
+        }
+
       }
     }
-    p-calendar {
-      margin-top: 12px;
-      margin-left: 48px;
+  }
+
+  .kViews {
+    width: 100%;
+    display: flex;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    justify-content: center;
+
+    /deep/ p-selectbutton .ui-button {
+      min-width: 147px;
     }
   }
+
   hr {
     display: block;
     height: 1px;
@@ -161,9 +206,10 @@
     margin-bottom: 0px;
     padding: 0;
   }
-  button{
+
+  button {
     width: 80px;
-    margin-left: 316px;
+    margin-left: 246px;
     margin-bottom: 24px;
     margin-top: 24px;
   }
