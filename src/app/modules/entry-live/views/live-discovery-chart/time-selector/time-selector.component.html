@@ -52,14 +52,14 @@
             <p-calendar [inline]="true"
                         [timeOnly]="true"
                         [(ngModel)]="_fromTime"
-                        (ngModelChange)="_timeChange($event, 'from')"></p-calendar>
+                        (ngModelChange)="_timeChange('from')"></p-calendar>
           </div>
           <div class="kTimeSelector kRight">
             <span class="kLabel">{{'app.entryLive.to' | translate}}</span>
             <p-calendar [inline]="true"
                         [timeOnly]="true"
                         [(ngModel)]="_toTime"
-                        (ngModelChange)="_timeChange($event, 'to')"></p-calendar>
+                        (ngModelChange)="_timeChange('to')"></p-calendar>
           </div>
         </div>
       </div>

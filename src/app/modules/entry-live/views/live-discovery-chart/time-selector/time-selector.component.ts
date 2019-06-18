@@ -109,7 +109,8 @@ export class TimeSelectorComponent implements OnDestroy {
     });
   }
   
-  public _timeChange(date: Date, type: 'from' | 'to') {
-    console.warn(event);
+  public _timeChange(type: 'from' | 'to') {
+    const time = type === 'from' ? this._fromTime : this._toTime;
+    console.warn(time);
   }
 }
