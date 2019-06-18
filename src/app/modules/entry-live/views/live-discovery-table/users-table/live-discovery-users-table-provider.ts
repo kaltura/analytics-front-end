@@ -130,12 +130,13 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               }];
               if (totalStatusData && totalStatusData.data && totalStatusData.header) {
                 const { tableData } = this._reportService.parseTableData(totalStatusData, this._statusDataConfig['totalsTable']);
+                const totalViewTime = tableData.reduce((acc, val) => acc + Number(val['sum_view_time']), 0);
                 statusTotals = tableData.map(item => {
                   const parsedValue = Number(item['sum_view_time']);
                   const typeLabel = this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`);
                   const tooltip = this._translate.instant(
                     `app.entryLive.discovery.userStatusCount.${item['playback_type']}`,
-                    [ReportHelper.numberOrZero(parsedValue)]
+                    [totalViewTime ? ReportHelper.percents(parsedValue / totalViewTime) : '0%']
                   );
                   return {
                     value: parsedValue,

@@ -500,8 +500,8 @@
           "live": "Live"
         },
         "userStatusCount": {
-          "dvr": "DVR: {{0}} Seconds",
-          "live": "Live: {{0}} Seconds"
+          "dvr": "DVR Views: {{0}}",
+          "live": "Live Views: {{0}}"
         },
         "tables": {
           "devices": {
