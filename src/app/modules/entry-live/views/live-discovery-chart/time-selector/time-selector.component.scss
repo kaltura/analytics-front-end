@@ -1,0 +1,170 @@
+@import '../../../../../../styles/variables';
+
+.kDateFilter{
+  display: flex;
+  align-items: center;
+  .kExitCompare{
+    white-space: nowrap;
+    margin-left: 12px;
+  }
+  .kLabel{
+    color: $kGrayscale1;
+    margin-right: 8px;
+  }
+  .kMargin{
+    margin-left: 16px;
+  }
+  .datesRangeDropDown{
+    background-color: white;
+    min-width: 210px;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    &:hover{
+      border-color: $kPrimary;
+    }
+    &:active{
+      box-shadow: 0 0 0 3px rgba(0,167,132,0.4);
+    }
+    span{
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+    i{
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+    .compareIcon{
+      font-size: 24px;
+      color: $kOrange;
+    }
+  }
+}
+.kDateFilterPopup{
+  height: 100%;
+  border: 1px solid $kGrayscale5;
+  border-radius: 4px;
+  .kFilters{
+    width: 100%;
+    height: 100%;
+    &.kPreset{
+      display: flex;
+      .col{
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        .kTitle{
+          font-size:14px;
+          color: $kGrayscale3;
+          padding-left: 24px;
+          margin-bottom: 8px;
+        }
+        p-radiobutton{
+          width: 100%;
+          height: 32px;
+          box-sizing: border-box;
+          cursor: pointer;
+          &:hover{
+            background-color: $kGrayscale6;
+          }
+          /deep/ .ui-radiobutton{
+            float: right;
+            margin-right: 16px;
+
+            .ui-radiobutton-box{
+              display: none;
+              &.ui-state-active{
+                display: block;
+                border: none;
+                margin-top: 7px;
+                background: transparent;
+                .pi-circle-on:before {
+                  content: "\e91c";
+                  color: $kGrayscale1;
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+          /deep/ .ui-radiobutton-label{
+            font-weight: normal;
+            margin-left: 24px;
+            display: block;
+            width: 100%;
+            height: 36px;
+            padding-top: 7px;
+            cursor: pointer;
+            &.ui-label-active{
+              font-weight: 700;
+            }
+          }
+        }
+      }
+    }
+    &.kSpecific{
+      display: flex;
+      justify-content: center;
+      p-calendar{
+        /deep/ .ui-calendar .ui-datepicker{
+          width: 380px;
+          .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
+            background-color: $kPrimary;
+          }
+        }
+      }
+    }
+  }
+  .kViews{
+    width: 100%;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: center;
+    /deep/ p-selectbutton .ui-button{
+      min-width: 190px;
+    }
+  }
+  .kCompare{
+    /deep/ .ui-chkbox-label{
+      font-weight: normal;
+    }
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    padding-bottom: 0px;
+    p-radiobutton{
+      margin-top: 12px;
+      margin-left: 24px;
+      /deep/ .ui-radiobutton-label{
+        font-weight: normal;
+      }
+    }
+    p-calendar {
+      margin-top: 12px;
+      margin-left: 48px;
+    }
+  }
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid $kGrayscale4;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    padding: 0;
+  }
+  button{
+    width: 80px;
+    margin-left: 316px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+  }
+}

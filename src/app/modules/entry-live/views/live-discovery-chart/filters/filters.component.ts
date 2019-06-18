@@ -2,6 +2,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DateRange, DateRangeServerValue, FiltersService, TimeInterval } from './filters.service';
 import { SelectItem } from 'primeng/api';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
+import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export interface DateFiltersChangedEvent {
   dateRange: DateRange;
@@ -23,6 +25,7 @@ export class FiltersComponent implements OnInit {
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
   public _selectedDateRange = DateRange.LastMin;
+  public _dateRange = DateRanges.Last30D;
   
   constructor(private _filterService: FiltersService) {
     this._dateRangeOptions = _filterService.getDateRangeList();
@@ -51,5 +54,9 @@ export class FiltersComponent implements OnInit {
       timeInterval: this._selectedTimeInterval,
       timeIntervalServerValue: this._filterService.getTimeIntervalServerValue(this._selectedTimeInterval),
     });
+  }
+  
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    console.warn(event);
   }
 }

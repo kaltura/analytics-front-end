@@ -1,0 +1,54 @@
+<div class="kDateFilter kOverrideFAIcons">
+  <div #datesBtn class="datesRangeDropDown" (click)="openPopup()">
+    <span>{{_dateRangeLabel}}</span>
+    <i class="kIcondropdown_arrow_bottom"></i>
+  </div>
+</div>
+
+
+<kPopupWidget #datesPopup [attr.data-aid]="'time-selector' + name"
+              [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 900}">
+  <ng-template>
+    <div class="kDateFilterPopup kOverrideFAIcons">
+
+      <div class="kViews">
+        <p-selectButton [options]="viewItems" [(ngModel)]="selectedView"></p-selectButton>
+      </div>
+      <div class="kFilters kPreset" *ngIf="selectedView==='preset'">
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let _dateRangeLast of leftDateRangeItems"
+                         name="dates"
+                         [label]="_dateRangeLast.label"
+                         [value]="_dateRangeLast.value"
+                         [kTooltip]="_dateRangeLast.value.tooltip"
+                         [placement]="'left'"
+                         [(ngModel)]="selectedDateRange"></p-radioButton>
+        </div>
+        <div class="col">
+          <span class="kTitle">&nbsp;</span>
+          <p-radioButton *ngFor="let _dateRangeCurrent of rightDateRangeItems"
+                         name="dates"
+                         [label]="_dateRangeCurrent.label"
+                         [value]="_dateRangeCurrent.value"
+                         [kTooltip]="_dateRangeCurrent.value.tooltip"
+                         [placement]="'right'"
+                         [(ngModel)]="selectedDateRange"></p-radioButton>
+        </div>
+      </div>
+
+      <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
+        <p-calendar selectionMode="range"
+                    [inline]="true"
+                    [showTime]="true"
+                    [yearRange]="'2010:2050'"
+                    [(ngModel)]="specificDateRange"></p-calendar>
+      </div>
+      <hr>
+      <button pButton class="kButtonBranded"
+              [disabled]="_applyDisabled"
+              [label]="'app.common.apply' | translate"
+              (click)="updateDataRanges();datesPopup.close()"></button>
+    </div>
+  </ng-template>
+</kPopupWidget>
