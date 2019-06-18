@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ReportService } from 'shared/services';
+import { ReportHelper, ReportService } from 'shared/services';
 import { KalturaAPIException, KalturaClient, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { getResponseByType } from 'shared/utils/get-response-by-type';
 import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
@@ -131,12 +131,17 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
               if (totalStatusData && totalStatusData.data && totalStatusData.header) {
                 const { tableData } = this._reportService.parseTableData(totalStatusData, this._statusDataConfig['totalsTable']);
                 statusTotals = tableData.map(item => {
+                  const parsedValue = Number(item['sum_view_time']);
                   const typeLabel = this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`);
+                  const tooltip = this._translate.instant(
+                    `app.entryLive.discovery.userStatusCount.${item['playback_type']}`,
+                    [ReportHelper.numberOrZero(parsedValue)]
+                  );
                   return {
-                    value: Number(item['sum_view_time']),
+                    value: parsedValue,
                     color: this._getStatusColor(item['playback_type'] as UserStatus),
                     label: typeLabel,
-                    tooltip: typeLabel,
+                    tooltip: tooltip,
                   };
                 });
               }

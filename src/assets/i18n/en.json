@@ -499,6 +499,10 @@
           "dvr": "DVR",
           "live": "Live"
         },
+        "userStatusCount": {
+          "dvr": "DVR: {{0}} Seconds",
+          "live": "Live: {{0}} Seconds"
+        },
         "tables": {
           "devices": {
             "device": "Devices",
