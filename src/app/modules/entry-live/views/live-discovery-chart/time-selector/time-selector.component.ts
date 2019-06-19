@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { TimeSelectorService } from './time-selector.service';
+import { DateChangeEvent, TimeSelectorService } from './time-selector.service';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -21,16 +21,15 @@ export class TimeSelectorComponent implements OnDestroy {
   
   @Input() set dateRange(value: DateRange) {
     if (value) {
-      this._defaultDateRange = value;
-      this._dateRange = value;
+      this._selectedDateRange = value;
     } else {
-      this._dateRange = this._defaultDateRange;
+      this._selectedDateRange = DateRange.LastMin;
     }
   }
   
   @Input() showCompare = true;
   
-  @Output() filterChange: EventEmitter<any> = new EventEmitter();
+  @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
   private _lastSelectedDateRange: DateRange; // used for revert selection
   private _startDate: Date;
@@ -39,8 +38,6 @@ export class TimeSelectorComponent implements OnDestroy {
   
   public _invalidFrom = false;
   public _invalidTo = false;
-  public _defaultDateRange = DateRange.LastMin;
-  public _dateRange = this._defaultDateRange;
   public _maxDate = new Date();
   public _minDate = moment().subtract(6, 'days').toDate();
   public _fromTime = moment().subtract(1, 'minute').toDate();
@@ -48,7 +45,7 @@ export class TimeSelectorComponent implements OnDestroy {
   public _popupOpened = false;
   public _leftDateRangeItems: SelectItem[] = [];
   public _rightDateRangeItems: SelectItem[] = [];
-  public _selectedDateRange: DateRange;
+  public _selectedDateRange = DateRange.LastMin;
   public _viewItems: SelectItem[] = [
     { label: this._translate.instant('app.dateFilter.preset'), value: 'preset' },
     { label: this._translate.instant('app.dateFilter.specific'), value: 'specific' },
@@ -76,7 +73,6 @@ export class TimeSelectorComponent implements OnDestroy {
   private _init(): void {
     this._leftDateRangeItems = this._dateFilterService.getDateRange('left');
     this._rightDateRangeItems = this._dateFilterService.getDateRange('right');
-    this._selectedDateRange = this._lastSelectedDateRange = this._dateRange;
     setTimeout(() => {
       this._updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
@@ -94,10 +90,10 @@ export class TimeSelectorComponent implements OnDestroy {
   
   private _triggerChangeEvent(): void {
     this.filterChange.emit({
+      isPresetMode: this._selectedView === 'preset',
       startDate: moment(this._startDate).unix(),
       endDate: moment(this._endDate).unix(),
-      s: this._startDate,
-      e: this._endDate,
+      dateRange: this._selectedDateRange,
     });
   }
   
@@ -152,10 +148,10 @@ export class TimeSelectorComponent implements OnDestroy {
   
   public _timeChange(type: 'from' | 'to'): void {
     const isFromTime = type === 'from';
-    const time = isFromTime ? moment(this._fromTime) : moment(this._toTime);
+    const time = moment(isFromTime ? this._fromTime : this._toTime).set({ second: 0 });
     
-    this._invalidFrom = isFromTime && time.isSameOrAfter(moment(this._toTime));
-    this._invalidTo = !isFromTime && time.isSameOrBefore(moment(this._fromTime));
+    this._invalidFrom = isFromTime && time.isSameOrAfter(moment(this._toTime).set({ second: 0 }));
+    this._invalidTo = !isFromTime && time.isSameOrBefore(moment(this._fromTime).set({ second: 0 }));
   
     this._invalidTimes = this._invalidFrom || this._invalidTo;
   }

@@ -4,10 +4,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { DateRange, FiltersService } from '../filters/filters.service';
 import * as moment from 'moment';
 
-export type DateChangeEvent = {
+export interface DateChangeEvent {
+  isPresetMode: boolean;
   startDate: number;
   endDate: number;
-};
+  dateRange: DateRange;
+}
 
 @Injectable()
 export class TimeSelectorService {
