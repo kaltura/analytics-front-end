@@ -11,6 +11,7 @@ import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 import { DiagnosticsHealthInfo, LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
@@ -19,9 +20,10 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
+              protected _translate: TranslateService,
               protected _logger: KalturaLogger,
               private _codeToSeverityPipe: CodeToSeverityPipe) {
-    super(_serverPolls, _frameEventManager);
+    super(_serverPolls, _frameEventManager, _translate);
     this._logger = _logger.subLogger('LiveStreamHealthWidget');
     
     this._data.next({

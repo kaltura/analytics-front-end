@@ -34,13 +34,17 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     return this._dateFilter ? this._dateFilter.dateRange : null;
   }
   
+  private get _isPresetMode(): boolean {
+    return this._dateFilter ? this._dateFilter.isPresetMode : true;
+  }
+  
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService) {
-    super(_serverPolls, _frameEventManager);
+    super(_serverPolls, _frameEventManager, _translate);
     
     this._dataConfig = this._dataConfigService.getConfig();
   }
@@ -50,7 +54,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
   
-    if (this._dateFilter.isPresetMode) {
+    if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
       this._pollsFactory.dateRange = {
@@ -59,7 +63,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       };
     }
 
-    this.restartPolling(!this._dateFilter.isPresetMode);
+    this.restartPolling(!this._isPresetMode);
   }
   private _getFormatByInterval() {
     switch (this._timeInterval) {
@@ -83,7 +87,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportGraph[]>[]): LiveDiscoveryData {
-    if (this._dateFilter.isPresetMode) {
+    if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     } else {
       this._pollsFactory.dateRange = {

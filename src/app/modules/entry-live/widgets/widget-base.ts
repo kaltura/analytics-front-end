@@ -5,6 +5,7 @@ import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface WidgetState {
   polling?: boolean;
@@ -36,7 +37,8 @@ export abstract class WidgetBase<T = any> {
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs, silent?: boolean): Observable<void>;
   
   protected constructor(protected _serverPolls: AnalyticsServerPollsBase,
-                        protected _frameEventManager: FrameEventManagerService) {
+                        protected _frameEventManager: FrameEventManagerService,
+                        protected _translate: TranslateService) {
   }
   
   protected _canStartPolling(): boolean {
@@ -79,7 +81,11 @@ export abstract class WidgetBase<T = any> {
           this.updateLayout();
 
           if (response.error) {
-            this.stopPolling(response.error);
+            const error = response.error;
+            if (error.code === 'kmc-server_polls_global_error') {
+              error.message = this._translate.instant('app.entryLive.generalErrorMessage');
+            }
+            this.stopPolling(error);
             return;
           }
           

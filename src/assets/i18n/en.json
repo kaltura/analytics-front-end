@@ -429,6 +429,7 @@
       "from": "From:",
       "invalidFromTime": "Invalid start time",
       "invalidToTime": "Invalid end time",
+      "generalErrorMessage": "That’s a lot of data, please reduce the date range and try again",
       "streamStatus": {
         "live": "Live",
         "initializing": "Going Live",

@@ -35,7 +35,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _translate: TranslateService) {
-    super(_serverPolls, _frameEventManager);
+    super(_serverPolls, _frameEventManager, _translate);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {

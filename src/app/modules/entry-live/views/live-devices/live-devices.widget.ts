@@ -35,7 +35,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
               protected _translate: TranslateService,
               protected _frameEventManager: FrameEventManagerService,
               protected _dataConfigService: LiveDevicesConfig) {
-    super(_serverPolls, _frameEventManager);
+    super(_serverPolls, _frameEventManager, _translate);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }

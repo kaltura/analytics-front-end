@@ -17,6 +17,7 @@ import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-us
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { liveDiscoveryTablePageSize } from './table-config';
+import { TranslateService } from '@ngx-translate/core';
 
 export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
 
@@ -68,13 +69,18 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     return this._dateFilter ? this._dateFilter.dateRange : null;
   }
   
+  private get _isPresetMode(): boolean {
+    return this._dateFilter ? this._dateFilter.isPresetMode : true;
+  }
+  
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
+              protected _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _devicesProvider: LiveDiscoveryDevicesTableProvider,
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
-    super(_serverPolls, _frameEventManager);
+    super(_serverPolls, _frameEventManager, _translate);
     this._setProvider(this._tableMode);
     this._resetUsersFilter();
   }
@@ -113,7 +119,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
       
-      if (this._dateFilter.isPresetMode) {
+      if (this._isPresetMode) {
         this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
       } else {
         this._pollsFactory.dateRange = {
@@ -172,7 +178,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
     
-    if (this._dateFilter.isPresetMode) {
+    if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
       this._pollsFactory.dateRange = {
@@ -182,7 +188,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     }
     
     if (this._showTable) {
-      this.restartPolling(!this._dateFilter.isPresetMode);
+      this.restartPolling(!this._isPresetMode);
     }
   }
   
