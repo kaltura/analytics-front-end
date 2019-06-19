@@ -19,7 +19,6 @@ import { LiveStatusComponent } from './views/live-status/live-status.component';
 import { EntryLiveWidget } from './entry-live.widget';
 import { EntryLiveService } from './entry-live.service';
 import { StreamStatePipe } from './pipes/stream-state.pipe';
-import { DurationPipe } from './pipes/duration.pipe';
 import { WidgetsManager } from './widgets/widgets-manager';
 import { LiveUsersComponent } from './views/live-users/live-users.component';
 import { LiveUsersWidget } from './views/live-users/live-users.widget';
@@ -94,7 +93,6 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
     LivePlayerComponent,
     LiveStatusComponent,
     StreamStatePipe,
-    DurationPipe,
     LiveUsersComponent,
     LiveBandwidthComponent,
     LiveStreamHealthComponent,
@@ -118,7 +116,6 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
     StatusBulletComponent,
     TimeSelectorComponent,
   ],
-  exports: [],
   providers: [
     CodeToSeverityPipe,
     SeverityToHealthPipe,

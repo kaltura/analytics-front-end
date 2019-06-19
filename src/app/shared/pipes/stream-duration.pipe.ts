@@ -5,7 +5,7 @@ import * as moment from 'moment';
 @Pipe({
   name: 'appStreamDuration'
 })
-export class DurationPipe implements PipeTransform {
+export class StreamDurationPipe implements PipeTransform {
   constructor(private _translate: TranslateService) {
   }
   
