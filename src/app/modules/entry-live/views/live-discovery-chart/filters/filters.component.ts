@@ -25,7 +25,6 @@ export class FiltersComponent implements OnInit {
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
   public _selectedDateRange = DateRange.LastMin;
-  public _dateRange = DateRanges.Last30D;
   
   constructor(private _filterService: FiltersService) {
     this._dateRangeOptions = _filterService.getDateRangeList();

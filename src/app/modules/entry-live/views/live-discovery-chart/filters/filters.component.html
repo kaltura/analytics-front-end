@@ -1,10 +1,7 @@
 <div class="kFilters kOverrideFAIcons">
   <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
 
-  <app-time-selector #dateFilter
-                   name="engagement"
-                   [dateRange]="_dateRange"
-                   (filterChange)="_onDateFilterChange($event)"></app-time-selector>
+  <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
 
 </div>
 <div class="kFilters kSubFilters">

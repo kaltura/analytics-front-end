@@ -42,7 +42,7 @@ export class TimeSelectorComponent implements OnDestroy {
   public _defaultDateRange = DateRange.LastMin;
   public _dateRange = this._defaultDateRange;
   public _maxDate = new Date();
-  public _minDate = moment().subtract(7, 'days').toDate();
+  public _minDate = moment().subtract(6, 'days').toDate();
   public _fromTime = moment().subtract(1, 'minute').toDate();
   public _toTime = new Date();
   public _popupOpened = false;
