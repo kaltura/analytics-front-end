@@ -13,7 +13,10 @@ export class DateFilterUtils {
     if (startDate) {
       dateClone.setHours(0, 0, 0);     // force start of day
     } else {
-      dateClone.setHours(23, 59, 59);  // force end of day
+      const currentOffset = this.getTimeZoneOffset();
+      const dateOffset = dateClone.getTimezoneOffset();
+      const hoursDiff = (currentOffset - dateOffset) / 60;
+      dateClone.setHours(23 + hoursDiff, 59, 59);  // force end of day
     }
     return value ? Math.floor(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
   }
