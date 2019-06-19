@@ -138,7 +138,7 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,
     EntryLiveDiscoveryPollsService,
-
+    
     // widgets
     EntryLiveWidget,
     LiveUsersWidget,

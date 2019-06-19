@@ -38,6 +38,7 @@ export class TimeSelectorComponent implements OnDestroy {
   public _minDate = moment().subtract(7, 'days').toDate();
   public _fromTime = new Date();
   public _toTime = new Date();
+  public _popupOpened = false;
   
   public leftDateRangeItems: SelectItem[] = [];
   public rightDateRangeItems: SelectItem[] = [];
@@ -78,11 +79,18 @@ export class TimeSelectorComponent implements OnDestroy {
     this.rightDateRangeItems = this._dateFilterService.getDateRange('right');
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout(() => {
-      this.updateDataRanges(); // use a timeout to allow data binding to complete
+      this._updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
   }
   
-  public updateDataRanges(): void {
+  private _triggerChangeEvent(): void {
+    this.filterChange.emit({
+      startDate: moment(this.startDate).unix(),
+      endDate: moment(this.endDate).unix(),
+    });
+  }
+  
+  public _updateDataRanges(): void {
     this.lastSelectedDateRange = this.selectedDateRange;
     if (this.selectedView === 'preset') {
       const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange);
@@ -95,18 +103,14 @@ export class TimeSelectorComponent implements OnDestroy {
       this._dateRangeLabel = DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY, HH:mm') + ' - ' + DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY, HH:mm');
     }
     
-    this.triggerChangeEvent();
+    this._triggerChangeEvent();
   }
   
-  public openPopup(): void {
-    this.selectedDateRange = this.lastSelectedDateRange;
-  }
-  
-  private triggerChangeEvent(): void {
-    this.filterChange.emit({
-      startDate: moment(this.startDate).unix(),
-      endDate: moment(this.endDate).unix(),
-    });
+  public _togglePopup(): void {
+    this._popupOpened = !this._popupOpened;
+    if (this._popupOpened) {
+      this.selectedDateRange = this.lastSelectedDateRange;
+    }
   }
   
   public _timeChange(type: 'from' | 'to') {

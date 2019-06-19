@@ -1,4 +1,8 @@
 @import '../../../../../../styles/variables';
+:host {
+  position: relative;
+  overflow: visible;
+}
 
 .kDateFilter {
   display: flex;
@@ -48,10 +52,22 @@
   }
 }
 
-.kDateFilterPopup {
+.kPopup {
+  display: block;
   width: 352px;
-  height: 100%;
   max-height: 504px;
+  height: auto;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.24) !important;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  z-index: 999;
+}
+
+.kDateFilterPopup {
+  height: 100%;
   border: 1px solid $kGrayscale5;
   border-radius: 4px;
 

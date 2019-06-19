@@ -1,11 +1,11 @@
 <div class="kDateFilter kOverrideFAIcons">
-  <div class="datesRangeDropDown" (click)="op.toggle($event); openPopup()">
+  <div class="datesRangeDropDown" (click)="_togglePopup()">
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
 </div>
 
-<k-overlayPanel #op [offset]="65">
+<div class="kPopup" *ngIf="_popupOpened">
   <div class="kDateFilterPopup kOverrideFAIcons">
     <div class="kViews">
       <p-selectButton [options]="viewItems" [(ngModel)]="selectedView"></p-selectButton>
@@ -63,6 +63,6 @@
     <button pButton class="kButtonBranded"
             [disabled]="_applyDisabled"
             [label]="'app.common.apply' | translate"
-            (click)="updateDataRanges(); op.hide()"></button>
+            (click)="_updateDataRanges();_popupOpened = false"></button>
   </div>
-</k-overlayPanel>
+</div>
