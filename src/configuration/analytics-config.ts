@@ -7,6 +7,7 @@ export interface AnalyticsConfig {
   defaultPageSize: number;
   permissions: {
     lazyLoadCategories?: boolean;
+    enableLiveViews?: boolean;
   };
   kalturaServer?: {
       uri?: string,

@@ -1,0 +1,91 @@
+<div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
+  <div class="kEntriesHeader kContent">
+    <span class="kTitle">{{'app.entriesLive.title' | translate}}</span>
+    <span class="kTimePeriodLabel" [kTooltip]="_periodTooltip" placement="left">
+      {{'app.entriesLive.period' | translate}}
+    </span>
+  </div>
+  <div class="kEntriesHolder kContent">
+    <div class="kEntriesTableFilters kContent">
+      <span class="kSelectedEntriesNum" *ngIf="_totalCount">
+        {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
+      </span>
+
+<!--      <div class="kFilters">-->
+<!--        <input type="text" pInputText class="kSearchInput"-->
+<!--               [placeholder]="'app.entriesLive.searchEntries' | translate"-->
+<!--               (keyup.enter)="_onSearch()"-->
+<!--               [(ngModel)]="_freeText">-->
+<!--      </div>-->
+    </div>
+    <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+      <p-table class="kEntriesTable"
+               [value]="_tableData"
+               [sortField]="'entry_name'"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               [rowTrackBy]="_rowTrackBy"
+               (sortFunction)="_onSortChanged($event)">
+        <ng-template pTemplate="header">
+          <tr class="kEntriesLiveHeaderRow">
+            <th [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
+              {{'app.entriesLive.thumbnail' | translate}}
+            </th>
+            <th *ngFor="let col of _columns"
+                [pSortableColumn]="col"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}"
+                [kTooltip]="'app.entriesLive.' + col | translate"
+                [showOnEllipsis]="true">
+              {{'app.entriesLive.' + col | translate}}
+              <p-sortIcon [field]="col"></p-sortIcon>
+            </th>
+            <th [ngStyle]="{'width': '100px'}"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr class="kEntriesLiveRow">
+            <td [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
+              <div class="kThumbnailHolder" #holder (click)="_drillDown(data)">
+                <img [src]="data.thumbnailUrl"
+                     onError="this.onerror=null;this.style.display='none'"
+                     (error)="holder.classList.add('error')">
+              </div>
+            </td>
+            <td *ngFor="let col of _columns; let i = index"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}">
+              <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
+              <span class="kEntryLink kTableColumn"
+                    *ngIf="col === 'entry_name'"
+                    [kTooltip]="data[col]"
+                    [showOnEllipsis]="true"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['entry_id'])"
+                    (click)="_drillDown(data)">{{data[col]}}</span>
+            </td>
+            <td [ngStyle]="{'width': '100px'}">
+              <span class="kStatus" *ngIf="data['liveStatus']">
+                <span class="kCircle"></span>
+                <span class="kStatusName">{{'app.entriesLive.live' | translate}}</span>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+      <p-paginator [rows]="_pager.pageSize"
+                   [first]="(_pager.pageIndex - 1) * _pager.pageSize"
+                   [totalRecords]="_totalCount"
+                   (onPageChange)="_onPaginationChange($event)"></p-paginator>
+    </k-area-blocker>
+  </div>
+</div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+</k-overlayPanel>

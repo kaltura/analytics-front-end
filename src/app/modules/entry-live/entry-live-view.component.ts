@@ -146,7 +146,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
     } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
+      this._router.navigate(['live/entries-live']);
     }
   }
   

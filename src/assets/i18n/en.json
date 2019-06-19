@@ -692,6 +692,26 @@
         "playback": "Playback Rate",
         "highlights": "Highlights"
       }
+    },
+    "entriesLive": {
+      "title": "Live Entries",
+      "entriesCount": "{{0}} Entries",
+      "period": "Last 7 days",
+      "searchEntries": "Search Entries",
+      "thumbnail": "Thumbnail",
+      "entry_name": "Name",
+      "creator_name": "Creator",
+      "view_unique_audience": "Active Users",
+      "avg_view_engagement": "Engaged Users",
+      "avg_view_buffering": "Users Buffering",
+      "avg_view_downstream_bandwidth": "Avg. Dowstream BW",
+      "live": "Live",
+      "entryDetails": {
+        "type": "Type",
+        "creator": "Creator",
+        "creationDate": "Creation Date",
+        "elapsedTime": "Elapsed Time"
+      }
     }
   }
 }
