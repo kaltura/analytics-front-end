@@ -6,12 +6,11 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { EntriesLiveRequestFactory } from './entries-live-request-factory';
 import { BehaviorSubject, of, Unsubscribable } from 'rxjs';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaClient, KalturaEntryServerNodeStatus, KalturaFilterPager, KalturaLiveStreamEntry, KalturaReportTable } from 'kaltura-ngx-client';
+import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryServerNodeStatus, KalturaFilterPager, KalturaLiveStreamEntry, KalturaReportTable, KalturaRequestOptions, KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { EntriesLiveDataConfig } from './entries-live-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { map, switchMap } from 'rxjs/operators';
-import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 export interface EntriesLiveData {
   table: TableRow[];
@@ -66,7 +65,6 @@ export class EntriesLiveService implements OnDestroy {
       if (relevantEntry) {
         row['entry_name'] = relevantEntry.name;
         row['thumbnailUrl'] = relevantEntry.thumbnailUrl;
-        row['creator'] = relevantEntry.creatorId;
         row['status'] = relevantEntry.status;
         row['liveStatus'] = [KalturaEntryServerNodeStatus.broadcasting, KalturaEntryServerNodeStatus.playable].indexOf(relevantEntry.liveStatus) !== -1; // meaning is live, might change to actual status
         row['type'] = relevantEntry.mediaType;
@@ -75,7 +73,7 @@ export class EntriesLiveService implements OnDestroy {
       }
     });
     data.columns.unshift('entry_name');
-  
+    
     return data;
   }
   
@@ -107,9 +105,18 @@ export class EntriesLiveService implements OnDestroy {
             const idIn = data.table.map(row => row['entry_id']).join(',');
             
             return this._kalturaClient
-              .request(new BaseEntryListAction({
-                filter: new KalturaBaseEntryFilter({ idIn })
-              }))
+              .request(
+                new BaseEntryListAction({
+                  filter: new KalturaBaseEntryFilter({ idIn })
+                }).setRequestOptions(
+                  new KalturaRequestOptions({
+                    responseProfile: new KalturaDetachedResponseProfile({
+                      type: KalturaResponseProfileType.includeFields,
+                      fields: 'id,name,thumbnailUrl,status,liveStatus,mediaType,createdAt,currentBroadcastStartTime'
+                    })
+                  })
+                )
+              )
               .pipe(
                 map(response => this._mapReportData(response.objects as KalturaLiveStreamEntry[], data))
               );
@@ -121,6 +128,7 @@ export class EntriesLiveService implements OnDestroy {
         data => {
           this._data.next(data);
           this._state.next({ isBusy: false });
+          this._pollsFactory.onPollTickSuccess();
           this._updateHostLayout();
         },
         error => {
