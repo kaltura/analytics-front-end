@@ -97,9 +97,9 @@ export abstract class WidgetBase<T = any> {
     }
   }
   
-  public restartPolling(): void {
+  public restartPolling(pollOnce = false): void {
     this.stopPolling();
-    this.startPolling();
+    this.startPolling(pollOnce);
   }
   
   public activate(widgetsArgs: WidgetsActivationArgs, silent = false): void {

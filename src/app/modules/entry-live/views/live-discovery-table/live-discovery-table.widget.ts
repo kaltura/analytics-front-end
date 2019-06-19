@@ -112,7 +112,15 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-      this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+      
+      if (this._dateFilter.isPresetMode) {
+        this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+      } else {
+        this._pollsFactory.dateRange = {
+          fromDate: this._dateFilter.startDate,
+          toDate: this._dateFilter.endDate,
+        };
+      }
     }
   }
   
@@ -162,11 +170,19 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
     
-    this._pollsFactory.interval = event.timeIntervalServerValue;
-    this._pollsFactory.dateRange = event.dateRangeServerValue;
+    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+    
+    if (this._dateFilter.isPresetMode) {
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
     
     if (this._showTable) {
-      this.restartPolling();
+      this.restartPolling(!this._dateFilter.isPresetMode);
     }
   }
   

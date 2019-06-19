@@ -30,6 +30,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _selectedMetrics: string[];
   public _colorsMap: { [metric: string]: string } = {};
   public _isPolling: boolean;
+  public _pollingBtnDisabled = false;
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
@@ -72,6 +73,8 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
+    this._pollingBtnDisabled = !event.isPresetMode;
+
     if (!event.initialRun) {
       this._isBusy = true;
       this._discoveryChart.resetDataZoom();
