@@ -49,6 +49,8 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
         this._isPolling = state.polling;
         
         if (state.error) {
+          this._isBusy = false;
+
           const actions = {
             'close': () => {
               this._blockerMessage = null;
