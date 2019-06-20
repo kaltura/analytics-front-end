@@ -78,6 +78,7 @@
 
     &.kPreset {
       display: flex;
+      align-items: flex-start;
 
       .col {
         width: 50%;

@@ -114,6 +114,15 @@ export class TimeSelectorComponent implements OnDestroy {
     return momentDate.toDate();
   }
   
+  private _formatDateRangeLabel(from: Date, to: Date): string {
+    const startDate = DateFilterUtils.getMomentDate(from);
+    const endDate = DateFilterUtils.getMomentDate(to);
+    const getDate = date => date.format('MM/D/YYYY');
+    const getTime = date => date.format('HH:mm');
+  
+    return `${getDate(startDate)}, <b>${getTime(startDate)}</b> – ${getDate(endDate)}, <b>${getTime(endDate)}</b>`;
+  }
+  
   public _updateDataRanges(): void {
     this._lastSelectedDateRange = this._selectedDateRange;
     if (this._selectedView === 'preset') {
@@ -124,7 +133,7 @@ export class TimeSelectorComponent implements OnDestroy {
     } else {
       this._startDate = this._getDate(this._specificDateRange[0], this._fromTime);
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);
-      this._dateRangeLabel = DateFilterUtils.getMomentDate(this._startDate).format('MMM D, YYYY, HH:mm') + ' - ' + DateFilterUtils.getMomentDate(this._endDate).format('MMM D, YYYY, HH:mm');
+      this._dateRangeLabel = this._formatDateRangeLabel(this._startDate, this._endDate);
     }
     
     this._triggerChangeEvent();
