@@ -30,7 +30,7 @@ export type OnShowConfirmationFn = (confirmation: Confirmation) => void;
 
 @Injectable()
 export class BrowserService {
-  private _currentQueryParams: Params; // keep current query params since they're not accessible under host app
+  private _currentQueryParams: Params = {}; // keep current query params since they're not accessible under host app
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
         // this is the default confirmation dialog provided by the browser.

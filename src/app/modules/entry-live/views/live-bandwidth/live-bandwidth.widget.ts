@@ -99,8 +99,8 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
     
     return {
       ...result,
-      currentBuffering: ReportHelper.percents([...result.buffering].pop().value / 100, false, false),
-      currentBandwidth: `${ReportHelper.numberOrZero([...result.bandwidth].pop().value)} Kbps`,
+      currentBuffering: result.buffering.length ?  ReportHelper.percents([...result.buffering].pop().value / 100, false, false) : '0%',
+      currentBandwidth: result.bandwidth.length ? `${ReportHelper.numberOrZero([...result.bandwidth].pop().value)} Kbps` : '0 Kbps',
     };
   }
   

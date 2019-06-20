@@ -69,7 +69,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';
             graphPoint['symbolSize'] = 8;
-            graphPoint['itemStyle'] = { color: '#60BBA7'};
+            graphPoint['itemStyle'] = { color: '#60BBA7' };
           }
           result.activeUsers.push(graphPoint);
         });
@@ -88,16 +88,16 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';
             graphPoint['symbolSize'] = 8;
-            graphPoint['itemStyle'] = { color: '#367064'};
+            graphPoint['itemStyle'] = { color: '#367064' };
           }
           result.engagedUsers.push(graphPoint);
         });
     }
-
+    
     return {
       ...result,
-      currentActiveUsers: ReportHelper.numberOrZero([...result.activeUsers].pop().value),
-      currentEngagedUsers: ReportHelper.percents([...result.engagedUsers].pop().value / 100, false, false),
+      currentActiveUsers: result.activeUsers.length ? ReportHelper.numberOrZero([...result.activeUsers].pop().value) : '0',
+      currentEngagedUsers: result.engagedUsers.length ? ReportHelper.percents([...result.engagedUsers].pop().value / 100, false, false) : '0%',
     };
   }
   
