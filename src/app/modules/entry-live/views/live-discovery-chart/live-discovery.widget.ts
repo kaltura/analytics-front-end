@@ -14,6 +14,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateFiltersChangedEvent } from './filters/filters.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import * as moment from 'moment';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -49,9 +50,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
-  
+    
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-  
+    
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
@@ -60,17 +61,37 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         toDate: this._dateFilter.endDate,
       };
     }
-
+    
     this.restartPolling(!this._isPresetMode);
   }
-  private _getFormatByInterval() {
+  
+  private _getDaysCount(): any {
+    let startDate;
+    let endDate;
+    
+    if (this._isPresetMode) {
+      startDate = this._dateFilter.dateRangeServerValue.fromDate;
+      endDate = this._dateFilter.dateRangeServerValue.toDate;
+    } else {
+      startDate = this._dateFilter.startDate;
+      endDate = this._dateFilter.endDate;
+    }
+    
+    startDate = moment.unix(startDate);
+    endDate = moment.unix(endDate);
+    
+    // add one day when not in preset mode since time is part of calculation
+    return endDate.diff(startDate, 'days') + (this._isPresetMode ? 0 : 1);
+  }
+  
+  private _getFormatByInterval(): string {
     switch (this._timeInterval) {
       case TimeInterval.Days:
         return 'MMM DD';
       
       case TimeInterval.Minutes:
       case TimeInterval.Hours:
-        return 'hh:mm';
+        return this._getDaysCount() > 1 ? 'MMM DD hh:mm' : 'hh:mm';
       
       case TimeInterval.TenSeconds:
       default:
