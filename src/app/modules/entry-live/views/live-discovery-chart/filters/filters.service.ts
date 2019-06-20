@@ -115,28 +115,36 @@ export class FiltersService {
       },
     ];
   }
-
-  public getTimeIntervalList(dateRange: DateRange, enableAll = false): SelectItem[] {
+  
+  public getTimeIntervalList(dateRange: DateRange, daysCount = null): SelectItem[] {
     return [
       {
         value: TimeInterval.TenSeconds,
         label: this._translate.instant('app.entryLive.discovery.filter.10sec'),
-        disabled: enableAll ? false : [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M].indexOf(dateRange) === -1,
+        disabled: daysCount !== null
+          ? daysCount > 1
+          : [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M].indexOf(dateRange) === -1,
       },
       {
         value: TimeInterval.Minutes,
         label: this._translate.instant('app.entryLive.discovery.filter.minutes'),
-        disabled: enableAll ? false : DateRange.LastMin === dateRange,
+        disabled: daysCount !== null
+          ? daysCount < 1
+          : DateRange.LastMin === dateRange,
       },
       {
         value: TimeInterval.Hours,
         label: this._translate.instant('app.entryLive.discovery.filter.hours'),
-        disabled: enableAll ? false : [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M, DateRange.LastHour].indexOf(dateRange) !== -1,
+        disabled: daysCount !== null
+          ? daysCount < 1
+          : [DateRange.LastMin, DateRange.Last5M, DateRange.Last30M, DateRange.LastHour].indexOf(dateRange) !== -1,
       },
       {
         value: TimeInterval.Days,
         label: this._translate.instant('app.entryLive.discovery.filter.days'),
-        disabled: enableAll ? false : [DateRange.Last3D, DateRange.Last7D].indexOf(dateRange) === -1,
+        disabled: daysCount !== null
+          ? daysCount < 2
+          : [DateRange.Last3D, DateRange.Last7D].indexOf(dateRange) === -1,
       },
     ];
   }

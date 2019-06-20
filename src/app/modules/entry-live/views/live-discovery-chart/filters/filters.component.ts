@@ -27,6 +27,7 @@ export class FiltersComponent {
   private _isPresetMode = true;
   private _startDate: number;
   private _endDate: number;
+  private _daysCount: number = null;
   
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
@@ -36,7 +37,7 @@ export class FiltersComponent {
   }
   
   private _updateInterval(selected = null): void {
-    this._timeIntervalOptions = this._filterService.getTimeIntervalList(this._selectedDateRange, !this._isPresetMode);
+    this._timeIntervalOptions = this._filterService.getTimeIntervalList(this._selectedDateRange, this._daysCount);
     
     this._selectedTimeInterval = selected && !this._timeIntervalOptions.find(({ value }) => value === selected).disabled
       ? selected
@@ -63,6 +64,7 @@ export class FiltersComponent {
     this._startDate = event.startDate;
     this._endDate = event.endDate;
     this._selectedDateRange = event.dateRange;
+    this._daysCount = event.daysCount;
     
     this._onFilterChange(this._initialRun, null);
     this._initialRun = false;

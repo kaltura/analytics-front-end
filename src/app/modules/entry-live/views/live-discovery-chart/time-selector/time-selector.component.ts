@@ -89,10 +89,15 @@ export class TimeSelectorComponent implements OnDestroy {
   }
   
   private _triggerChangeEvent(): void {
+    const isPresetMode = this._selectedView === 'preset';
+    const startDate = moment(this._startDate);
+    const endDate = moment(this._endDate);
+    const daysCount = !isPresetMode ? endDate.diff(startDate, 'days') + 1 : null;
     this.filterChange.emit({
-      isPresetMode: this._selectedView === 'preset',
-      startDate: moment(this._startDate).unix(),
-      endDate: moment(this._endDate).unix(),
+      isPresetMode,
+      daysCount,
+      startDate: startDate.unix(),
+      endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
     });
   }

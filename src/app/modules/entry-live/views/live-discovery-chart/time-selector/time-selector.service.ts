@@ -9,6 +9,7 @@ export interface DateChangeEvent {
   startDate: number;
   endDate: number;
   dateRange: DateRange;
+  daysCount: number;
 }
 
 @Injectable()
