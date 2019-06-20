@@ -16,7 +16,8 @@ export class DateFilterUtils {
       const currentOffset = this.getTimeZoneOffset();
       const dateOffset = dateClone.getTimezoneOffset();
       const hoursDiff = (currentOffset - dateOffset) / 60;
-      dateClone.setHours(23 + hoursDiff, 59, 59);  // force end of day
+      const updatedHours =  hoursDiff < 0 ? 23 + hoursDiff : 23;
+      dateClone.setHours(updatedHours, 59, 59);  // force end of day
     }
     return value ? Math.floor(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
   }
