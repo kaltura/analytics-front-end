@@ -62,7 +62,7 @@ export class FiltersService {
         from = moment().subtract(3, 'days');
         break;
       case DateRange.Last7D:
-        from = moment().subtract(7, 'days');
+        from = moment().subtract(6, 'days');
         break;
       default:
         from = moment().subtract(1, 'minute');

@@ -83,7 +83,7 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   }
   
   private _getPeriodTooltip() {
-    const from = moment().subtract(7, 'days').format('MMM DD, YYYY');
+    const from = moment().subtract(6, 'days').format('MMM DD, YYYY');
     const to = moment().format('MMM DD, YYYY');
     return `${from} - ${to}`;
   }

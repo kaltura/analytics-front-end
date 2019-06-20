@@ -24,7 +24,7 @@ export class EntriesLiveRequestFactory implements RequestFactory<KalturaMultiReq
   };
   
   private _getFromTime(): number {
-    return moment().subtract(7, 'days').unix();
+    return moment().subtract(6, 'days').unix();
   }
   
   public set pager(pager: KalturaFilterPager) {
