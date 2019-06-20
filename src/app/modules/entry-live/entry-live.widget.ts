@@ -8,7 +8,6 @@ import { KalturaStreamStatus } from './utils/get-stream-status';
 import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
@@ -17,9 +16,8 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
-              protected _translate: TranslateService,
-              private _entryLiveService: EntryLiveService,) {
-    super(_serverPolls, _frameEventManager, _translate);
+              private _entryLiveService: EntryLiveService) {
+    super(_serverPolls, _frameEventManager);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {

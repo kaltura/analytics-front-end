@@ -17,7 +17,6 @@ import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-us
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { liveDiscoveryTablePageSize } from './table-config';
-import { TranslateService } from '@ngx-translate/core';
 
 export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
 
@@ -76,11 +75,10 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
-              protected _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _devicesProvider: LiveDiscoveryDevicesTableProvider,
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
-    super(_serverPolls, _frameEventManager, _translate);
+    super(_serverPolls, _frameEventManager);
     this._setProvider(this._tableMode);
     this._resetUsersFilter();
   }

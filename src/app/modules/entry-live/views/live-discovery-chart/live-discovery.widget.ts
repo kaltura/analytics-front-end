@@ -4,7 +4,6 @@ import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveDiscoveryRequestFactory } from './live-discovery-request-factory';
 import { KalturaReportGraph, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
-import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportService } from 'shared/services';
@@ -39,12 +38,11 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
   
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
-              protected _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService) {
-    super(_serverPolls, _frameEventManager, _translate);
+    super(_serverPolls, _frameEventManager);
     
     this._dataConfig = this._dataConfigService.getConfig();
   }

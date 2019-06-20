@@ -37,8 +37,7 @@ export abstract class WidgetBase<T = any> {
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs, silent?: boolean): Observable<void>;
   
   protected constructor(protected _serverPolls: AnalyticsServerPollsBase,
-                        protected _frameEventManager: FrameEventManagerService,
-                        protected _translate: TranslateService) {
+                        protected _frameEventManager: FrameEventManagerService) {
   }
   
   protected _canStartPolling(): boolean {
@@ -81,11 +80,7 @@ export abstract class WidgetBase<T = any> {
           this.updateLayout();
 
           if (response.error) {
-            const error = response.error;
-            if (error.code === 'kmc-server_polls_global_error') {
-              error.message = this._translate.instant('app.entryLive.generalErrorMessage');
-            }
-            this.stopPolling(error);
+            this.stopPolling(response.error);
             return;
           }
           
