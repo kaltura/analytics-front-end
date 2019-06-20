@@ -4,7 +4,6 @@ import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveDiscoveryRequestFactory } from './live-discovery-request-factory';
 import { KalturaReportGraph, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
-import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-discovery-polls.service';
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportService } from 'shared/services';
@@ -15,6 +14,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateFiltersChangedEvent } from './filters/filters.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import * as moment from 'moment';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -23,14 +23,22 @@ export interface LiveDiscoveryData {
 
 @Injectable()
 export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
+  private _dateFilter: DateFiltersChangedEvent;
+  
   protected _widgetId = 'explore';
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
-  protected _dateRange: DateRange;
   protected _timeInterval: TimeInterval;
   
+  private get _dateRange(): DateRange {
+    return this._dateFilter ? this._dateFilter.dateRange : null;
+  }
+  
+  private get _isPresetMode(): boolean {
+    return this._dateFilter ? this._dateFilter.isPresetMode : true;
+  }
+  
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
-              protected _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
@@ -41,22 +49,49 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
-    this._pollsFactory.interval = event.timeIntervalServerValue;
-    this._pollsFactory.dateRange = event.dateRangeServerValue;
+    this._dateFilter = event;
     
-    this._dateRange = event.dateRange;
+    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
     
-    this.restartPolling();
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+    
+    this.restartPolling(!this._isPresetMode);
   }
   
-  private _getFormatByInterval() {
+  private _getDaysCount(): any {
+    let startDate;
+    let endDate;
+    
+    if (this._isPresetMode) {
+      startDate = this._dateFilter.dateRangeServerValue.fromDate;
+      endDate = this._dateFilter.dateRangeServerValue.toDate;
+    } else {
+      startDate = this._dateFilter.startDate;
+      endDate = this._dateFilter.endDate;
+    }
+    
+    startDate = moment.unix(startDate);
+    endDate = moment.unix(endDate);
+    
+    // add one day when not in preset mode since time is part of calculation
+    return endDate.diff(startDate, 'days') + (this._isPresetMode ? 0 : 1);
+  }
+  
+  private _getFormatByInterval(): string {
     switch (this._timeInterval) {
       case TimeInterval.Days:
         return 'MMM DD';
       
       case TimeInterval.Minutes:
       case TimeInterval.Hours:
-        return 'hh:mm';
+        return this._getDaysCount() > 1 ? 'MMM DD hh:mm' : 'hh:mm';
       
       case TimeInterval.TenSeconds:
       default:
@@ -71,7 +106,14 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportGraph[]>[]): LiveDiscoveryData {
-    this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
     
     const graphsResponse = getResponseByType(responses, KalturaReportGraph) as KalturaReportGraph[] || [];
     const reportGraphFields = this._dataConfig[ReportDataSection.graph].fields;

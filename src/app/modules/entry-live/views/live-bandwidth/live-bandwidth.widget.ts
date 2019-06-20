@@ -33,7 +33,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
-              private _translate: TranslateService) {
+              protected _translate: TranslateService) {
     super(_serverPolls, _frameEventManager);
   }
   

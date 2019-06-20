@@ -41,7 +41,7 @@ import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
 import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
 import { LiveDiscoveryComponent } from './views/live-discovery-chart/live-discovery.component';
 import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
-import { SelectButtonModule } from 'primeng/primeng';
+import { CalendarModule, RadioButtonModule, SelectButtonModule } from 'primeng/primeng';
 import { FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
 import { FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { LiveDiscoveryConfig } from './views/live-discovery-chart/live-discovery.config';
@@ -62,6 +62,7 @@ import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/user
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
 import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
+import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 
 @NgModule({
   imports: [
@@ -82,6 +83,8 @@ import { StatusBulletComponent } from './views/live-discovery-table/users-table/
     InputHelperModule,
     SelectButtonModule,
     AutoCompleteModule,
+    RadioButtonModule,
+    CalendarModule,
   ],
   declarations: [
     EntryLiveViewComponent,
@@ -110,6 +113,7 @@ import { StatusBulletComponent } from './views/live-discovery-table/users-table/
     DevicesTableComponent,
     UsersTableComponent,
     StatusBulletComponent,
+    TimeSelectorComponent,
   ],
   providers: [
     CodeToSeverityPipe,
@@ -130,7 +134,7 @@ import { StatusBulletComponent } from './views/live-discovery-table/users-table/
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,
     EntryLiveDiscoveryPollsService,
-
+    
     // widgets
     EntryLiveWidget,
     LiveUsersWidget,

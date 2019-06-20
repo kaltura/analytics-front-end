@@ -13,7 +13,6 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { getResponseByType } from 'shared/utils/get-response-by-type';
 
 export interface LiveDevicesData {
   data: BarChartRow[];

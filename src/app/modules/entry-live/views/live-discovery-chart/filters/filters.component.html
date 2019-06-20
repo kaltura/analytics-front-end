@@ -1,9 +1,7 @@
-<div class="kFilters">
+<div class="kFilters kOverrideFAIcons">
   <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
-  <p-dropdown [style]="{'width': '180px'}"
-              [options]="_dateRangeOptions"
-              [(ngModel)]="_selectedDateRange"
-              (onChange)="_onFilterChange(false, null)"></p-dropdown>
+
+  <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
 
 </div>
 <div class="kFilters kSubFilters">

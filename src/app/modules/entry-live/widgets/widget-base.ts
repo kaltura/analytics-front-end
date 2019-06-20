@@ -5,6 +5,7 @@ import { WidgetsActivationArgs } from './widgets-manager';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface WidgetState {
   polling?: boolean;
@@ -97,9 +98,9 @@ export abstract class WidgetBase<T = any> {
     }
   }
   
-  public restartPolling(): void {
+  public restartPolling(pollOnce = false): void {
     this.stopPolling();
-    this.startPolling();
+    this.startPolling(pollOnce);
   }
   
   public activate(widgetsArgs: WidgetsActivationArgs, silent = false): void {

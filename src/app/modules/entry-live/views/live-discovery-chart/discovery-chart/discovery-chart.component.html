@@ -26,6 +26,7 @@
 
       <div class="kControls">
         <button pButton class="kTogglePolling"
+                [disabled]="togglePollingDisabled"
                 [ngClass]="isPolling ? 'kButtonDefault' : 'kButtonBranded'"
                 [icon]="isPolling ? 'icon-pause' : 'icon-resume'"
                 [label]="(isPolling ? 'app.entryLive.discovery.pauseUpdates' : 'app.entryLive.discovery.resumeUpdates') | translate"

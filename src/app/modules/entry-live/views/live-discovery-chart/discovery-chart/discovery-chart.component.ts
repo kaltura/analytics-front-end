@@ -20,6 +20,8 @@ export class DiscoveryChartComponent {
   
   @Input() isPolling = true;
   
+  @Input() togglePollingDisabled = false;
+  
   @Input() set data(value: LiveDiscoveryData) {
     if (value) {
       this._data = value;

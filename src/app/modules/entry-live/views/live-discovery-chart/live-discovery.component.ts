@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
 import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
 import { KalturaReportType } from 'kaltura-ngx-client';
 import { DateRange } from './filters/filters.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-live-discovery',
@@ -30,10 +31,12 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _selectedMetrics: string[];
   public _colorsMap: { [metric: string]: string } = {};
   public _isPolling: boolean;
+  public _pollingBtnDisabled = false;
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _errorsManager: ErrorsManagerService,
+              private _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig) {
     this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
     this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
@@ -44,17 +47,24 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
         this._isPolling = state.polling;
-
+        
         if (state.error) {
+          this._isBusy = false;
+
           const actions = {
             'close': () => {
               this._blockerMessage = null;
-            },
-            'retry': () => {
+            }
+          };
+          
+          if (state.error.code === 'kmc-server_polls_global_error') {
+            state.error.message = this._translate.instant('app.entryLive.generalErrorMessage');
+          } else {
+            actions['retry'] = () => {
               this._isBusy = true;
               this._liveExploreWidget.retry();
-            },
-          };
+            };
+          }
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
@@ -72,13 +82,15 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
+    this._pollingBtnDisabled = !event.isPresetMode;
+    
     if (!event.initialRun) {
       this._isBusy = true;
       this._discoveryChart.resetDataZoom();
       this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
     }
-  
+    
     this.dateFilterChange.emit(event.dateRange);
   }
   
