@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
-import { KalturaReportGraph, KalturaReportInterval } from 'kaltura-ngx-client';
+import { KalturaReportInterval } from 'kaltura-ngx-client';
 import { Report, ReportService } from 'shared/services';
 import { HighlightsDatesConfig } from './highlights-dates.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -21,7 +21,7 @@ export class DatesTableComponent implements OnInit {
   @Input() currentPeriod: { from: number, to: number };
   @Input() comparePeriod: { from: number, to: number };
   
-  @Input() set data(value: { current: any, compare: any }) {
+  @Input() set data(value: { current: Report, compare?: Report }) {
     if (value) {
       if (value.compare) {
         this._handleCompare(value.current, value.compare);
