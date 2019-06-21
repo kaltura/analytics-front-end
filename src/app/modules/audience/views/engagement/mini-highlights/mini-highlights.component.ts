@@ -30,6 +30,7 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
   @Input() dateFilterComponent: DateFilterComponent;
   
   @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>;
+  @Input() videosCount$: BehaviorSubject<number>;
   
   private _dataConfig: ReportDataConfig;
   
