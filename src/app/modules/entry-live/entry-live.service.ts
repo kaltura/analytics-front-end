@@ -2,23 +2,18 @@ import { Injectable } from '@angular/core';
 import {
   ConversionProfileAssetParamsListAction,
   EntryServerNodeListAction,
-  KalturaAssetParamsOrigin,
-  KalturaClient,
   KalturaConversionProfileAssetParamsFilter,
   KalturaDetachedResponseProfile,
-  KalturaDVRStatus,
   KalturaEntryServerNode,
   KalturaEntryServerNodeStatus,
   KalturaEntryServerNodeType,
   KalturaLiveEntry,
   KalturaLiveEntryServerNodeFilter, KalturaMultiRequest,
-  KalturaRecordStatus,
   KalturaRequestOptions,
   KalturaResponseProfileType,
-  LiveStreamGetAction
+  LiveStreamGetAction,
+  UserGetAction
 } from 'kaltura-ngx-client';
-import { map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { getStreamStatus, KalturaStreamStatus } from './utils/get-stream-status';
 
 export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
@@ -28,14 +23,11 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   redundancy: boolean;
   serverType: KalturaEntryServerNodeType;
   streamStatus: KalturaStreamStatus;
+  owner: string;
 }
 
 @Injectable()
 export class EntryLiveService {
-  
-  constructor(private _kalturaClient: KalturaClient) {
-  }
-  
   private _getLiveStreamAction(entryId): LiveStreamGetAction {
     return new LiveStreamGetAction({ entryId })
       .setRequestOptions(
@@ -108,12 +100,26 @@ export class EntryLiveService {
     liveEntry.streamStatus = result.status;
     liveEntry.serverType = result.serverType;
   }
+
+
+  private _getUserAction(): UserGetAction {
+    return new UserGetAction({ userId: null })
+      .setRequestOptions(
+        new KalturaRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'id,fullName'
+          })
+        })
+      );
+  }
   
   public getEntryDateRequest(entryId): KalturaMultiRequest {
     return new KalturaMultiRequest(
       this._getLiveStreamAction(entryId),
       this._getConversionProfileAssetParamsListAction(),
       this._getEntryServerNodeListAction(entryId),
+      this._getUserAction().setDependency(['userId', 0, 'userId'])
     );
   }
 }

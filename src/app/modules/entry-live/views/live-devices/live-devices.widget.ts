@@ -12,6 +12,7 @@ import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-b
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -31,46 +32,34 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _translate: TranslateService,
+              protected _frameEventManager: FrameEventManagerService,
               protected _dataConfigService: LiveDevicesConfig) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId, widgetsArgs.streamStartTime);
+    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId);
     
     return ObservableOf(null);
   }
   
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveDevicesData {
-    const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
-    const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
-    let tabsData = [];
+  protected _responseMapping(table: KalturaReportTable): LiveDevicesData {
     let result = {
       data: [],
       totalCount: 0
     };
-    // IMPORTANT to handle totals first, summary rely on totals
-    if (totals && totals.data && totals.header) {
-      tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
-    }
     
     if (table && table.header && table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data } = this._getOverviewData(table, relevantFields);
-  
+      
       result.totalCount = table.totalCount;
-      result.data = this._getSummaryData(data, tabsData);
+      result.data = this._getSummaryData(data);
     }
-  
+    
     return result;
-  }
-  
-  protected _getResponseByType(responses: KalturaResponse<any>[], type: any): any {
-    const isType = t => r => r.result instanceof t || Array.isArray(r.result) && r.result.length && r.result[0] instanceof t;
-    const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
-    return result ? result.result : null;
   }
   
   protected _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
@@ -95,7 +84,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     return { data, columns };
   }
   
-  protected _getSummaryData(data: { [key: string]: string }[], tabsData: Tab[]): BarChartRow[] {
+  protected _getSummaryData(data: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
     const getValue = (itemValue, totalValue) => {
       let value = 0;
@@ -107,24 +96,18 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       }
       return value;
     };
-    
-    const relevantCurrentTotal = tabsData.find(total => total.key === key);
-    if (relevantCurrentTotal) {
-      const totalValue = parseFloat(relevantCurrentTotal.value);
-      
-      return data.map(item => {
-        const rawValue = parseFloat(item[key]);
-        const currentValue = getValue(rawValue, totalValue);
-        
-        return {
-          value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
-          label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
-          icon: this._deviceIconPipe.transform(item.device),
-        };
-      });
-    }
-    
+
+    const totalValue = data.reduce((acc, item) => acc + parseFloat(item[key]), 0);
+    return data.map(item => {
+      const rawValue = parseFloat(item[key]);
+      const currentValue = getValue(rawValue, totalValue);
+      return {
+        value: currentValue,
+        tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) },
+        label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
+        icon: this._deviceIconPipe.transform(item.device),
+      };
+    });
     return [];
   }
 }

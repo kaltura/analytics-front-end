@@ -28,8 +28,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { EntryExportConfig } from './entry-export.config';
+import { EngagementExportConfig } from '../audience/views/engagement/engagement-export.config';
 
 @Component({
   selector: 'app-entry',
@@ -207,6 +208,29 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
+  }
+  
+  public _onSyndicationDrillDown(event: string): void {
+    let update: Partial<ExportItem> = {};
+    if (event) {
+      update.objectIds = event;
+    }
+    
+    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
+  }
+
+  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+
+    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 
 }

@@ -114,7 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
     analyticsConfig.permissions = config.permissions || {};
-    analyticsConfig.live = config.live || { pollInterval: 10 };
+    analyticsConfig.live = config.live || { pollInterval: 30 };
 
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);

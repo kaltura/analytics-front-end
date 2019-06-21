@@ -16,6 +16,10 @@
     background-color: $kGrayscale2;
   }
 
+  &.kPreview {
+    background-color: #F8A61A;
+  }
+
   &.kInitializing {
     background-image: repeating-linear-gradient(
         105deg,
@@ -38,6 +42,7 @@
 
     .kStreamStatus {
       text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .kStatusIcon {

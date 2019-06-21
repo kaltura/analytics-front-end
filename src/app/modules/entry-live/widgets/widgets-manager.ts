@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 
 export interface WidgetsActivationArgs {
   entryId: string;
-  streamStartTime?: number;
 }
 
 @Injectable()
@@ -15,9 +14,17 @@ export class WidgetsManager {
     this._logger = _logger.subLogger('WidgetsManager');
   }
   
-  public register(widgets: WidgetBase<any>[], widgetsArgs: WidgetsActivationArgs): void {
-    this._widgets = widgets;
-    
-    this._widgets.map(widget => widget.activate(widgetsArgs));
+  /*
+   Silent widgets are widgets that are activated, but don't start polling upon activation
+   */
+  public register(widgets: WidgetBase<any>[], widgetsArgs: WidgetsActivationArgs, silentWidgets: WidgetBase<any>[] = []): void {
+    this._widgets = [...widgets, ...silentWidgets];
+  
+    widgets.map(widget => widget.activate(widgetsArgs));
+    silentWidgets.map(widget => widget.activate(widgetsArgs, true));
+  }
+  
+  public deactivateAll(): void {
+    this._widgets.forEach(widget => widget.deactivate());
   }
 }

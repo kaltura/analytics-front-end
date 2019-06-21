@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-csv.component';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
+import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 
 @Injectable()
-export class EntryExportConfig implements ExportConfigService {
+export class EntryExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
+    super();
   }
   
   public getConfig(): ExportItem[] {
@@ -29,6 +30,7 @@ export class EntryExportConfig implements ExportConfigService {
         order: '-count_plays',
       },
       {
+        id: 'geo',
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: KalturaReportType.mapOverlayCountry,
         sections: [KalturaReportExportItemType.table],
@@ -40,6 +42,7 @@ export class EntryExportConfig implements ExportConfigService {
         sections: [KalturaReportExportItemType.table],
       },
       {
+        id: 'syndication',
         label: this._translate.instant('app.entry.exportLabels.syndication'),
         reportType: KalturaReportType.topSyndication,
         sections: [KalturaReportExportItemType.table],

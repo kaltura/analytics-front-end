@@ -23,8 +23,9 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { DataTable } from 'primeng/primeng';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
-import { ExportItem } from 'shared/components/export-csv/export-csv.component';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 @Component({
   selector: 'app-geo-location',
@@ -150,8 +151,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         () => ({ order: `${event.order === -1 ? '-' : '+'}${event.field}` })
       );
       event.data.sort((data1, data2) => {
-        let value1 = data1[event.field].replace(new RegExp(',', 'g'), '');
-        let value2 = data2[event.field].replace(new RegExp(',', 'g'), '');
+        let value1 = String(parseFormattedValue(data1[event.field]));
+        let value2 = String(parseFormattedValue(data2[event.field]));
         const result = value1.localeCompare(value2, undefined, { numeric: true });
         return (event.order * result);
       });
@@ -200,8 +201,24 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     if (this._table) {
       this._table.reset();
     }
+  
+    this._updateExportConfig();
     
     this.loadReport();
+  }
+  
+  private _updateExportConfig(): void {
+    let update: Partial<ExportItem> = { reportType: this.reportType, additionalFilters: {} };
+  
+    if (this._drillDown.length > 0) {
+      update.additionalFilters.countryIn = this._drillDown[0];
+    }
+    
+    if (this._drillDown.length > 1) {
+      update.additionalFilters.regionIn = this._drillDown[1];
+    }
+    
+    this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
 
   private loadReport(sections = this._dataConfig): void {
@@ -252,8 +269,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFloat((tab.rawValue as string).replace(new RegExp(',', 'g'), '')) : 0;
-        const rowValue = parseFloat((row[key] as string).replace(new RegExp(',', 'g'), '')) || 0;
+        const total = tab ? parseFormattedValue(tab.rawValue) : 0;
+        const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
       const playsDistribution = calculateDistribution('count_plays');
@@ -284,7 +301,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
+      value.push(parseFormattedValue(data[this._selectedMetrics]));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -294,7 +311,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        maxValue = parseFormattedValue(data[this._selectedMetrics]);
       }
     });
 

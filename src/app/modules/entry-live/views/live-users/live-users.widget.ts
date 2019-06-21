@@ -3,21 +3,39 @@ import { Injectable } from '@angular/core';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveUsersRequestFactory } from './live-users-request-factory';
-import { TranslateService } from '@ngx-translate/core';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
+import { KalturaReportGraph } from 'kaltura-ngx-client';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { EChartOption } from 'echarts';
+import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { ReportHelper } from 'shared/services';
+
+export interface GraphPoint {
+  value: number;
+  symbol?: string;
+  symbolSize?: number;
+  itemStyle?: { color: string };
+}
 
 export interface LiveUsersData {
-  watchers: number;
+  activeUsers: GraphPoint[];
+  currentActiveUsers: string;
+  engagedUsers: GraphPoint[];
+  currentEngagedUsers: string;
+  dates: string[];
 }
 
 @Injectable()
 export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
-  protected _pollsFactory = null;
+  protected _pollsFactory: LiveUsersRequestFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
-              private _translate: TranslateService) {
-    super(_serverPolls);
+              protected _frameEventManager: FrameEventManagerService,
+              protected _translate: TranslateService) {
+    super(_serverPolls, _frameEventManager);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -26,7 +44,64 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     return ObservableOf(null);
   }
   
-  public getGraphConfig(activeUsers: number[], engagedUsers: number[]): { [key: string]: any } {
+  protected _responseMapping(reports: KalturaReportGraph[]): LiveUsersData {
+    if (!reports.length) {
+      return null;
+    }
+    
+    let result = {
+      activeUsers: [],
+      engagedUsers: [],
+      dates: [],
+    };
+    
+    const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
+    const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
+    
+    if (activeUsersData) {
+      activeUsersData.data.split(';')
+        .filter(Boolean)
+        .forEach((valueString, index, array) => {
+          const [date, value] = valueString.split(analyticsConfig.valueSeparator);
+          result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
+          
+          const graphPoint = { value: Number(value) };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#60BBA7' };
+          }
+          result.activeUsers.push(graphPoint);
+        });
+    }
+    
+    if (engagedUsersData) {
+      engagedUsersData.data.split(';')
+        .filter(Boolean)
+        .forEach((valueString, index, array) => {
+          const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
+          const relevantActiveUser = result.activeUsers[index] ? result.activeUsers[index].value || 0 : 0;
+          
+          const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
+          
+          const graphPoint = { value };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#367064' };
+          }
+          result.engagedUsers.push(graphPoint);
+        });
+    }
+    
+    return {
+      ...result,
+      currentActiveUsers: result.activeUsers.length ? ReportHelper.numberOrZero([...result.activeUsers].pop().value) : '0',
+      currentEngagedUsers: result.engagedUsers.length ? ReportHelper.percents([...result.engagedUsers].pop().value / 100, false, false) : '0%',
+    };
+  }
+  
+  public getGraphConfig(activeUsers: GraphPoint[], engagedUsers: GraphPoint[]): EChartOption {
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
       textStyle: {
@@ -50,11 +125,27 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         formatter: (params) => {
           const [active, engaged] = params;
           const title = active.axisValue;
-          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}&nbsp;${active.data}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}&nbsp;${engaged.data}%</div></div>`;
+          const activeValue = ReportHelper.numberOrZero(active.data.value);
+          const engagedValue = ReportHelper.percents(engaged.data.value / 100, false, false);
+          return `<div class="kLiveGraphTooltip"><span class="kHeader">${title}</span><div class="kUsers"><span class="kBullet" style="background-color: #60BBA7"></span>${this._translate.instant('app.entryLive.activeUsers')}:&nbsp;${activeValue}</div><div class="kUsers"><span class="kBullet" style="background-color: #367064"></span>${this._translate.instant('app.entryLive.engagedUsers')}:&nbsp;${engagedValue}</div></div>`;
         }
       },
+      yAxis: [
+        {
+          show: false,
+          name: 'activeUsers',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 'dataMax',
+        },
+        {
+          show: false,
+          name: 'engagedUsers',
+          nameTextStyle: { color: 'rgba(0, 0, 0, 0)' },
+          max: 100,
+        },
+      ],
       xAxis: {
-        boundaryGap: false,
+        boundaryGap: true,
         type: 'category',
         axisLine: {
           lineStyle: {
@@ -62,14 +153,11 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           },
         },
         axisLabel: {
-          align: 'right',
+          align: 'center',
           fontWeight: 'bold',
           color: '#999999',
-          padding: [8, 0, 0, 0],
+          padding: [8, 0, 0, 24],
         }
-      },
-      yAxis: {
-        show: false,
       },
       series: [
         {
@@ -89,6 +177,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           type: 'line',
           name: 'engagedUsers',
           symbol: 'none',
+          yAxisIndex: 1,
           hoverAnimation: false,
           data: engagedUsers,
           lineStyle: {

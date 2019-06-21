@@ -9,6 +9,7 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
+    <div class="kTimePeriodLabel">{{'app.entryLive.last3Hours' | translate}}</div>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kMap">
@@ -22,32 +23,52 @@
       </div>
     </div>
     <div class="kTable">
-      <div class="kTableContainer">
+      <div class="kToggle">
+        <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+        <a (click)="_toggleTable()">
+          {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+        </a>
+      </div>
+      <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
         <p-table #table [value]="_tableData" [paginator]="true" [rows]="5">
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width': '42px'}">
-                <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+                <span *ngIf="_tableData?.length">{{'app.entryLive.geo.index' | translate}}</span>
               </th>
               <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
-              <th [ngStyle]="{'width': '20%'}">
+              <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
-                  {{'app.audience.geo.object_id' | translate}}
-                </span>
-                </div>
-              </th>
-              <th [ngStyle]="{'width': '20%'}">
-                <div class="kColumnHeader">
-                <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
-                  {{'app.audience.geo.count_plays' | translate}}
+                <span [kTooltip]="'app.entryLive.geo.object_id' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.object_id' | translate}}
                 </span>
                 </div>
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
-                  {{'app.audience.geo.distribution' | translate}}
+                <span [kTooltip]="'app.entryLive.geo.view_unique_audience' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.view_unique_audience' | translate}}
+                </span>
+                </div>
+              </th>
+              <th>
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.entryLive.geo.distribution' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.distribution' | translate}}
+                </span>
+                </div>
+              </th>
+              <th>
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.entryLive.geo.view_unique_buffering_users' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.view_unique_buffering_users' | translate}}
+                </span>
+                </div>
+              </th>
+              <th>
+                <div class="kColumnHeader">
+                <span [kTooltip]="'app.entryLive.geo.view_unique_engaged_users' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.view_unique_engaged_users' | translate}}
                 </span>
                 </div>
               </th>
@@ -67,12 +88,24 @@
                 <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
               </td>
               <td>
-                <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+                <span *ngIf="!data['view_unique_audience']?.value">
+                  {{data['view_unique_audience']}}
+                </span>
               </td>
-              <td *ngIf="!data['count_plays']?.value">
+              <td *ngIf="!data['view_unique_audience']?.value">
                 <div>
-                  <app-bullet [value]="data['plays_distribution']" [animate]="false"></app-bullet>
+                  <app-bullet [value]="data['unique_users_distribution']" [animate]="false"></app-bullet>
                 </div>
+              </td>
+              <td>
+                <span *ngIf="!data['view_unique_buffering_users']?.value">
+                  {{data['view_unique_buffering_users']}}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="!data['view_unique_engaged_users']?.value">
+                  {{data['view_unique_engaged_users']}}
+                </span>
               </td>
             </tr>
           </ng-template>

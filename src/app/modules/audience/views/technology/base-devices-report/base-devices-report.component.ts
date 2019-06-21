@@ -79,6 +79,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   @Output() deviceFilterChange = new EventEmitter<string[]>();
+  @Output() onDrillDown = new EventEmitter<{ drillDown: string, reportType: KalturaReportType, name: string }>();
   
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   private _paginationChanged = new Subject<void>();
@@ -358,6 +359,12 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._drillDown = family;
     this._reportType = family ? this._drillDownReportType : this._defaultReportType;
     this._pager.pageIndex = 1;
+  
+    this.onDrillDown.emit({
+      drillDown: this._drillDown,
+      reportType: this._reportType,
+      name: this._name,
+    });
 
     const prop = this._getDrillDownFilterPropByReportType();
     if (family) {

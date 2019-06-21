@@ -13,7 +13,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
                              suggestionLabelField="name"
                              tooltipResolver="__tooltip"
                              classField="__class"
-                             [label]="label ? label : 'app.filters.owners' | translate"
+                             [label]="label"
                              [selectedFilters]="selectedFilters"
                              [provider]="_usersProvider"
                              (search)="_searchUsers($event)"
@@ -22,7 +22,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
   `,
 })
 export class OwnersFilterComponent implements OnDestroy {
-  @Input() label: string;
+  @Input() label = this._translate.instant('app.filters.owners');
   @Input() selectedFilters: KalturaUser[] = [];
   @Input() dateFilter: DateChangeEvent;
 

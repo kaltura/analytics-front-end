@@ -16,8 +16,9 @@ export class LiveStatusComponent implements OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
       this._entry = value;
+      this._isPreview = KalturaStreamStatus.preview === value.streamStatus;
       this._initializing = KalturaStreamStatus.initializing === value.streamStatus;
-      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
+      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing, KalturaStreamStatus.preview].indexOf(value.streamStatus) === -1;
       
       if (this._isLive) {
         this._startTimer();
@@ -31,6 +32,7 @@ export class LiveStatusComponent implements OnDestroy {
   
   public _entry: KalturaExtendedLiveEntry;
   public _isLive = false;
+  public _isPreview = false;
   public _initializing = false;
   public _streamDuration: moment.Duration;
   

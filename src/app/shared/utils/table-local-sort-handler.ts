@@ -1,4 +1,5 @@
 import { SortEvent } from 'primeng/api';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 export type TableRow<T = any> = { [key: string]: T };
 
@@ -20,8 +21,8 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         }
     
         if (typeof value1 === 'string' && typeof value2 === 'string') {
-          value1 = value1.replace(new RegExp(',', 'g'), '');
-          value2 = value2.replace(new RegExp(',', 'g'), '');
+          value1 = String(parseFormattedValue(value1));
+          value2 = String(parseFormattedValue(value2));
           result = value1.localeCompare(value2, undefined, { numeric: true });
         } else {
           result = (value1 > value2) ? -1 : (value1 < value2) ? 1 : 0;

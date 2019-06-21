@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaPager, KalturaReportExportItem, KalturaReportExportItemType, KalturaReportExportParams, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportExportToCsvAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEndUserReportInputFilter, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -11,17 +11,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { finalize } from 'rxjs/operators';
-
-export interface ExportConfigService {
-  getConfig(): ExportItem[];
-}
-
-export interface ExportItem {
-  label: string;
-  reportType: KalturaReportType;
-  sections: KalturaReportExportItemType[];
-  order?: string;
-}
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 
 @Component({
   selector: 'app-export-csv',
@@ -73,8 +63,8 @@ export class ExportCsvComponent implements OnDestroy {
   ngOnDestroy(): void {
   }
   
-  private _getFilter(): KalturaReportInputFilter {
-    let filter = new KalturaReportInputFilter();
+  private _getFilter(): KalturaEndUserReportInputFilter {
+    let filter = new KalturaEndUserReportInputFilter();
     
     if (this.dateFilter) {
       filter.timeZoneOffset = this.dateFilter.timeZoneOffset;
@@ -86,7 +76,7 @@ export class ExportCsvComponent implements OnDestroy {
     if (this.refineFilter) {
       refineFilterToServerValue(this.refineFilter, filter);
     }
-
+    
     if (this.entryId) {
       filter.entryIdIn = this.entryId;
     }
@@ -119,7 +109,7 @@ export class ExportCsvComponent implements OnDestroy {
     if (!this._selected.length) {
       return;
     }
-
+    
     const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     const reportItems = [];
     const filter = this._getFilter();
@@ -130,22 +120,45 @@ export class ExportCsvComponent implements OnDestroy {
     const selection: ExportItem[] = this._selected
       .filter(({ parent }) => !!parent)
       .map(({ data }) => data);
-    
-    selection.forEach(item => {
+  
+    const mapReportItem = (item, label = null) => {
+      if (item.startDate && item.endDate) {
+        filter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
+        filter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
+      }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({
-          reportTitle: item.label,
+          reportTitle: label || item.label,
           action: section,
           reportType: item.reportType,
           filter,
           responseOptions,
         });
-        
+    
         if (item.order) {
           reportItem.order = item.order;
         }
+    
+        if (item.objectIds) {
+          reportItem.objectIds = item.objectIds;
+        }
+    
+        if (item.additionalFilters) {
+          Object.keys(item.additionalFilters).forEach(key => {
+            reportItem.filter[key] = item.additionalFilters[key];
+          });
+        }
+    
         reportItems.push(reportItem);
       });
+    };
+    
+    selection.forEach(item => {
+      if (Array.isArray(item.items)) {
+        item.items.forEach(i => mapReportItem(i, item.label));
+      } else {
+        mapReportItem(item);
+      }
     });
     
     const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportItems }) });
@@ -157,7 +170,7 @@ export class ExportCsvComponent implements OnDestroy {
         cancelOnDestroy(this),
         finalize(() => {
           this._exportingCsv = false;
-          
+
           if (this._popup) {
             this._popup.close();
           }

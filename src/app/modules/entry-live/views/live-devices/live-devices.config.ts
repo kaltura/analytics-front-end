@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class LiveDevicesConfig extends ReportDataBaseConfig {
@@ -16,18 +15,16 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
           'device': {
             format: value => value,
           },
-          'count_plays': {
+          'view_unique_audience': {
             format: value => value,
           }
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'view_unique_audience',
         fields: {
-          'count_plays': {
+          'view_unique_audience': {
             format: value => value,
-            title: this._translate.instant(`app.audience.technology.count_plays`),
-            sortOrder: 1,
           }
         }
       }

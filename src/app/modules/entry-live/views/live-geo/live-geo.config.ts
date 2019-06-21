@@ -30,21 +30,26 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
-          'count_plays': {
-            format: value => ReportHelper.numberOrNA(value)
-          },
           'coordinates': {
-            format: value => value
+            format: value => value,
+          },
+          'view_unique_audience': {
+            format: value => value,
+          },
+          'view_unique_buffering_users': {
+            format: value => value,
+          },
+          'view_unique_engaged_users': {
+            format: value => value,
           }
         }
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'count_plays',
+        preSelected: 'view_unique_audience',
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.audience.geo.count_plays`),
+          'view_unique_audience': {
+            format: value => value,
           }
         }
       }
@@ -72,11 +77,7 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
         },
         formatter: (params) => {
           if (params.name && params.data && params.data.value && params.data.value.length === 3) {
-            let tooltip = '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2];
-            if (params.seriesName === 'Avg. Drop Off') {
-              tooltip = tooltip + '%';
-            }
-            return tooltip;
+            return '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2];
           } else {
             return this._translate.instant('app.common.na');
           }

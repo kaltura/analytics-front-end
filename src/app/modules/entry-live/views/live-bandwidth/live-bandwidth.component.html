@@ -1,7 +1,8 @@
 <div data-aid="report-users-count" class="kReport kOverrideFAIcons kUsersBandwidth">
   <div class="kHeader">
+    <div class="kTimePeriodLabel">{{'app.entryLive.now' | translate}}</div>
     <div class="kMetrics">
-      <span class="kValue">{{_bufferCount}}%</span>
+      <span class="kValue">{{_bufferCount}}</span>
       <div class="kTitle">
         <span class="kBullet kBuffering"></span>
         {{'app.entryLive.usersBuffering' | translate}}
@@ -12,7 +13,7 @@
     </div>
 
     <div class="kUsers">
-      <span class="kValue">{{_bandwidthCount}} Kbps</span>
+      <span class="kValue">{{_bandwidthCount}}</span>
       <div class="kTitle">
         <span class="kBullet kBandwidth"></span>
         {{'app.entryLive.downstreamBandwidth' | translate}}

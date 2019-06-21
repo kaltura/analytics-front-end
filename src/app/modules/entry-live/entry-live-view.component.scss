@@ -29,6 +29,10 @@
   }
 }
 
+.kNoBottomMargin {
+  margin-bottom: 0 !important;
+}
+
 .kEntryWidgets {
   display: flex;
   margin-bottom: 24px;
@@ -47,4 +51,8 @@
     border-top-right-radius: 3px;
     overflow: hidden;
   }
+}
+
+:host /deep/ .kExport .kDropDown {
+  margin-right: 0px !important;
 }

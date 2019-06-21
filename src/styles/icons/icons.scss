@@ -25,6 +25,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-devices:before {
+  content: "\e91c";
+}
+.icon-resume:before {
+  content: "\e919";
+}
+.icon-preview:before {
+  content: "\e91a";
+}
+.icon-pause:before {
+  content: "\e91b";
+}
 .icon-stream_processing:before {
   content: "\e900";
 }
@@ -100,4 +112,3 @@
 .icon-regression:before {
   content: "\e918";
 }
-

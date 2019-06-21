@@ -1,0 +1,14 @@
+<div class="kFilters kOverrideFAIcons">
+  <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
+
+  <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
+
+</div>
+<div class="kFilters kSubFilters">
+  <div style="width: 100%">
+    <ng-content></ng-content>
+  </div>
+  <p-selectButton [options]="_timeIntervalOptions"
+                  [(ngModel)]="_selectedTimeInterval"
+                  (onChange)="_onFilterChange()"></p-selectButton>
+</div>

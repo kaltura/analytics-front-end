@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -15,22 +15,30 @@ import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widge
 import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
 import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
+import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
+import { EntryLiveExportConfig } from './entry-live-export.config';
+import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
+import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 
 @Component({
   selector: 'app-entry-live',
   templateUrl: './entry-live-view.component.html',
   styleUrls: ['./entry-live-view.component.scss'],
+  providers: [EntryLiveExportConfig]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _widgetsRegistered = false;
-
+  
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
+  public _exportConfig: ExportItem[] = [];
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
+              private _dateFilter: FiltersService,
               private _router: Router,
               private _kalturaClient: KalturaClient,
               private _route: ActivatedRoute,
@@ -41,7 +49,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
               private _liveGeo: LiveGeoWidget,
-              private _liveDevices: LiveDevicesWidget) {
+              private _liveDiscovery: LiveDiscoveryWidget,
+              private _liveDevices: LiveDevicesWidget,
+              private _liveDiscoveryTable: LiveDiscoveryTableWidget,
+              private _exportConfigService: EntryLiveExportConfig) {
+    this._exportConfig = _exportConfigService.getConfig();
   }
   
   
@@ -92,13 +104,14 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-  
+        
         this._registerWidgets();
       });
   }
   
   ngOnDestroy() {
     this._entryLiveWidget.deactivate();
+    this._widgetsManager.deactivateAll();
   }
   
   // DO NOT register to entry data widget here!
@@ -106,15 +119,20 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _registerWidgets(): void {
     if (!this._widgetsRegistered) {
       this._widgetsRegistered = true;
-
+      
+      const widgetArgs = { entryId: this._entryId };
+      
       this._widgetsManager.register([
         this._liveUsers,
         this._liveBandwidth,
         this._liveStreamHealth,
         this._liveGeo,
         this._liveDevices,
+        this._liveDiscovery,
         // <-- append new widgets here
-      ], { entryId: this._entryId, streamStartTime: +this._entry.createdAt });
+      ], widgetArgs, [
+        this._liveDiscoveryTable,
+      ]);
     }
   }
   
@@ -128,7 +146,46 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
     } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
+      this._router.navigate(['live/entries-live']);
     }
+  }
+  
+  public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+    
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+    
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+    
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'geo', update);
+  }
+  
+  public _onTableModeChange(reportType: KalturaReportType): void {
+    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
+    const table = currentValue.items.find(({ id }) => id === 'table');
+    const tableIndex = currentValue.items.indexOf(table);
+    
+    table.reportType = reportType;
+    
+    const update = { items: [...currentValue.items.slice(0, tableIndex), table, ...currentValue.items.slice(tableIndex + 1)] };
+    
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+  }
+  
+  public _onDiscoveryDateFilterChange(dateRange: DateRange): void {
+    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
+    const items = currentValue.items.map(item => {
+      item.startDate = () => this._dateFilter.getDateRangeServerValue(dateRange).fromDate;
+      item.endDate = () => this._dateFilter.getDateRangeServerValue(dateRange).toDate;
+      return item;
+    });
+    
+    const update = { items };
+    
+    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
 }

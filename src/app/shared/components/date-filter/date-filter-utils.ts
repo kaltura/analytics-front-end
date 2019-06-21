@@ -13,7 +13,11 @@ export class DateFilterUtils {
     if (startDate) {
       dateClone.setHours(0, 0, 0);     // force start of day
     } else {
-      dateClone.setHours(23, 59, 59);  // force end of day
+      const currentOffset = this.getTimeZoneOffset();
+      const dateOffset = dateClone.getTimezoneOffset();
+      const hoursDiff = (currentOffset - dateOffset) / 60;
+      const updatedHours =  hoursDiff < 0 ? 23 + hoursDiff : 23;
+      dateClone.setHours(updatedHours, 59, 59);  // force end of day
     }
     return value ? Math.floor(dateClone.getTime() / 1000) : null; // divide by 1000 to convert to seconds as required by Kaltura API
   }
@@ -173,6 +177,15 @@ export class DateFilterUtils {
     }
   
     return moment(value, 'YYYYMMDD');
+  }
+  
+  static getTimeStringFromEpoch(epoch: string, format = 'hh:mm:ss'): string {
+    const date = moment.unix(Number(epoch));
+    if (!date.isValid()) {
+      return null;
+    }
+  
+    return date.format(format);
   }
   
   private static _isUnixDate(number: number): boolean {

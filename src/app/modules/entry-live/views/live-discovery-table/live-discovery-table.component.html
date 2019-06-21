@@ -1,0 +1,46 @@
+<div class="kTable">
+  <div class="kToggle">
+    <i [class.kIcondropdown_arrow_bottom]="!_showTable"
+       [class.kIcondropdown_arrow_top]="_showTable"></i>
+    <a (click)="_toggleTable()">
+      {{(_showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
+    </a>
+  </div>
+  <k-area-blocker [showLoader]="_widget.isBusy" [message]="_blockerMessage">
+    <div class="kTableContainer" *ngIf="_showTable">
+      <ng-container [ngSwitch]="_tableMode">
+
+        <!-- USERS TABLE-->
+        <ng-container *ngSwitchCase="_tableModes.users">
+          <app-discovery-filter [totalCount]="_totalCount"
+                                (filterChange)="_widget.usersFilterChange($event)">
+            <app-table-selector [tableMode]="_tableMode"
+                                (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
+          </app-discovery-filter>
+          <app-users-table [tableData]="_tableData"
+                           [summary]="_summaryData"
+                           [columns]="_columns"
+                           [firstTimeLoading]="_firstTimeLoading"
+                           [totalCount]="_totalCount"></app-users-table>
+        </ng-container>
+
+        <!-- DEVICES TABLE-->
+        <ng-container *ngSwitchCase="_tableModes.devices">
+          <div class="kTableContent">
+            <app-table-selector class="kDevicesModeTableSelector"
+                                [tableMode]="_tableMode"
+                                (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
+            <span class="kTotalCount">
+              {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}
+            </span>
+          </div>
+          <app-devices-table [tableData]="_tableData"
+                             [summary]="_summaryData"
+                             [columns]="_columns"
+                             [firstTimeLoading]="_firstTimeLoading"></app-devices-table>
+        </ng-container>
+
+      </ng-container>
+    </div>
+  </k-area-blocker>
+</div>

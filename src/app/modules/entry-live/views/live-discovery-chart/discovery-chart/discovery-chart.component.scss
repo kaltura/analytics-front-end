@@ -1,0 +1,88 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kChart {
+  min-height: 328px;
+  height: auto !important;
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 328px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+
+.kSummaryRow {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+
+  .kCustomLegend {
+    display: flex;
+    align-items: center;
+
+    .kLegendItemContainer {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 24px;
+
+      .kLegendItem {
+        font-size: 12px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+
+      .kCircle {
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .kRightSide {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    .kSummary {
+      margin-right: 24px;
+      font-size: 15px;
+
+      .kSummaryItem {
+        margin-left: 24px;
+
+        .kSummaryItemValue {
+          font-weight: bold;
+          margin-right: 18px;
+        }
+      }
+    }
+
+    .kControls {
+      .kTogglePolling {
+        height: 34px;
+        width: 160px;
+
+        /deep/ .ui-button-text {
+          line-height: 24px;
+          padding: .25em .8em .25em 2.9em;
+        }
+      }
+    }
+  }
+}

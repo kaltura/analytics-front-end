@@ -112,7 +112,7 @@
       "document": "Document",
       "other": "Other"
     },
-    "dateFilter":{
+    "dateFilter": {
       "preset": "Preset",
       "specific": "Specific Date Range",
       "last": "Last",
@@ -417,18 +417,24 @@
       "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
       "stream_duration_in_months": "{{months}} Months, {{days}} Days",
       "activeUsers": "Active Users",
-      "activeUsersHelpTip": "Active Users",
+      "activeUsersHelpTip": "Users that are now viewing the broadcast",
       "engagedUsers": "Engaged Users",
-      "engagedUsersHelpTip": "Engaged Users",
+      "engagedUsersHelpTip": "Users that are now viewing the broadcast with the tab in focus and with sound on",
       "usersBuffering": "Users Buffering",
-      "usersBufferingHelpTip": "Users Buffering",
+      "usersBufferingHelpTip": "Users that are experiencing buffering issue of over 1 second",
       "downstreamBandwidth": "Downstream Bandwidth",
       "downstreamBW": "Downstream BW",
-      "downstreamBandwidthHelpTip": "Downstream Bandwidth",
+      "downstreamBandwidthHelpTip": "The size of the downloaded media divided by seconds",
       "now": "Now",
       "m180s": "-180s",
       "ms": "-{{0}}s",
       "noHistory": "No Broadcast History",
+      "view_unique_audience": "Users",
+      "to": "To:",
+      "from": "From:",
+      "invalidFromTime": "Invalid start time",
+      "invalidToTime": "Invalid end time",
+      "generalErrorMessage": "That’s a lot of data, please reduce the date range and try again",
       "streamStatus": {
         "live": "Live",
         "initializing": "Going Live",
@@ -438,11 +444,102 @@
       "primary": "Primary",
       "secondary": "Secondary",
       "stream": "Stream",
+      "last3Hours": "Last 3 hours",
       "geo": {
-        "title": "Geo Location"
+        "title": "Geo Location",
+        "object_id": "Name",
+        "index": "#",
+        "view_unique_audience": "Active Users",
+        "distribution": "Active Users Distribution",
+        "view_unique_buffering_users": "Avg. Buffer Rate",
+        "view_unique_engaged_users": "Engaged Users"
       },
       "devices": {
         "title": "Active Users Per Devices"
+      },
+      "discovery": {
+        "title": "Explore",
+        "vs": "vs",
+        "pauseUpdates": "Pause Updates",
+        "resumeUpdates": "Resume Updates",
+        "viewPresence": "View Presence",
+        "hidePresence": "Hide Presence",
+        "users": "Users",
+        "devices": "Devices",
+        "totalActiveUsers": "{{0}} Active Users",
+        "totalDevices": "{{0}} Devices",
+        "summary": "Summary",
+        "filter": {
+          "hours": "Hours",
+          "days": "Days",
+          "minutes": "Minutes",
+          "10sec": "10 Seconds",
+          "lastMinute": "Last minute",
+          "last5Minutes": "Last 5 minutes",
+          "last30Minutes": "Last 30 minutes",
+          "lastHour": "Last hour",
+          "last3Hours": "Last 3 hours",
+          "last6Hours": "Last 6 hours",
+          "last24Hours": "Last 24 hours",
+          "last3Days": "Last 3 days",
+          "last7Days": "Last 7 days",
+          "minute": "Minute",
+          "5Minutes": "5 minutes",
+          "30Minutes": "30 minutes",
+          "hour": "Hour",
+          "3Hours": "3 hours",
+          "6Hours": "6 hours",
+          "24Hours": "24 hours",
+          "3Days": "3 days",
+          "7Days": "7 days"
+        },
+        "view_unique_audience": "Active Users",
+        "view_unique_engaged_users": "Engaged Users",
+        "view_unique_buffering_users": "Buffering Users",
+        "avg_view_downstream_bandwidth": "Downstream Bandwidth",
+        "view_unique_audience_dvr": "DVR Users",
+        "avg_view_bitrate": "Bitrate",
+        "sum_view_time": "Minutes Viewed",
+        "avg_view_live_latency": "Avg. Latency Rate",
+        "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
+        "totals": {
+          "view_unique_audience": "Total Active Users",
+          "view_unique_engaged_users": "AVG Engaged Users",
+          "view_unique_buffering_users": "AVG Buffer Rate ",
+          "avg_view_downstream_bandwidth": "AVG Bandwidth",
+          "view_unique_audience_dvr": "SUM DVR Users",
+          "avg_view_bitrate": "AVG Bitrate",
+          "sum_view_time": "Total Viewed Minutes",
+          "avg_view_live_latency": "AVG Latency",
+          "avg_view_dropped_frames_ratio": "AVG Dropped Frames"
+        },
+        "userStatus": {
+          "offline": "Offline",
+          "dvr": "DVR",
+          "live": "Live"
+        },
+        "userStatusCount": {
+          "dvr": "DVR Views: {{0}}",
+          "live": "Live Views: {{0}}"
+        },
+        "tables": {
+          "devices": {
+            "device": "Devices",
+            "view_unique_audience": "Active Users",
+            "view_unique_engaged_users": "User Engaged",
+            "view_unique_buffering_users": "User Buffering",
+            "sum_view_time": "Minutes Viewed",
+            "known_flavor_params_view_count": "Top Served Flavor"
+          },
+          "users": {
+            "user_name": "Username",
+            "status": "Status",
+            "avg_view_buffering": "Avg. Buffer Rate",
+            "sum_view_time": "Minutes Viewed",
+            "known_flavor_params_view_count": "Top Served Flavor",
+            "avg_view_engagement": "Avg. Engagement"
+          }
+        }
       },
       "alerts": {
         "no-alerts": "No reported issues",
@@ -519,7 +616,13 @@
           "message-log": "Exceeded max encoded entries allowed",
           "message-text-box": "Exceeded max encoded entries allowed, please contact support"
         }
-
+      },
+      "exportLabels": {
+        "users": "Active & Engaged Users",
+        "bandwidth": "Users Buffering & Downstream Bandwidth",
+        "geo": "Geo Location",
+        "devices": "Active Users Per Devices",
+        "discovery": "Discovery"
       }
     },
     "entry": {
@@ -607,6 +710,26 @@
         "moderation": "Moderation",
         "playback": "Playback Rate",
         "highlights": "Highlights"
+      }
+    },
+    "entriesLive": {
+      "title": "Live Entries",
+      "entriesCount": "{{0}} Entries",
+      "period": "Last 7 days",
+      "searchEntries": "Search Entries",
+      "thumbnail": "Thumbnail",
+      "entry_name": "Name",
+      "creator_name": "Creator",
+      "view_unique_audience": "Active Users",
+      "avg_view_engagement": "Engaged Users",
+      "avg_view_buffering": "Users Buffering",
+      "avg_view_downstream_bandwidth": "Avg. Dowstream BW",
+      "live": "Live",
+      "entryDetails": {
+        "type": "Type",
+        "creator": "Creator",
+        "creationDate": "Creation Date",
+        "elapsedTime": "Elapsed Time"
       }
     }
   }

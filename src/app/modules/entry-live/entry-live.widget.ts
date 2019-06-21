@@ -7,6 +7,7 @@ import { EntryLiveRequestFactory } from './entry-live-request-factory';
 import { KalturaStreamStatus } from './utils/get-stream-status';
 import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
@@ -14,8 +15,9 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   protected _pollsFactory = null;
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
+              protected _frameEventManager: FrameEventManagerService,
               private _entryLiveService: EntryLiveService) {
-    super(_serverPolls);
+    super(_serverPolls, _frameEventManager);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -35,6 +37,7 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       redundancy: this._entryLiveService.getRedundancyStatus(nodes),
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
+      owner: responses[3].result.fullName
     });
     
     this._entryLiveService.setStreamStatus(liveEntry, nodes);

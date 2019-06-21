@@ -6,9 +6,10 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
-<!--          <app-export-csv name="entry"-->
-<!--                          [reports]="_exportConfig"-->
-<!--                          [entryId]="_entryId"></app-export-csv>-->
+          <app-export-csv name="entry"
+                          [width]="380"
+                          [reports]="_exportConfig"
+                          [entryId]="_entryId"></app-export-csv>
         </div>
 
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
@@ -16,18 +17,23 @@
           <div class="kWideColumn">
             <app-live-users [entry]="_entry"></app-live-users>
             <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
+            <div class="kReport kNoBottomMargin">
+              <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
+            </div>
           </div>
           <div class="kNarrowColumn">
             <app-live-status [entry]="_entry"></app-live-status>
             <app-live-player [entryId]="_entry?.id"></app-live-player>
             <app-live-stream-health></app-live-stream-health>
+
+            <div class="kReport kNoBottomMargin">
+              <app-live-devices></app-live-devices>
+            </div>
           </div>
         </div>
         <div class="kReport">
-          <app-live-geo></app-live-geo>
-        </div>
-        <div class="kReport">
-          <app-live-devices></app-live-devices>
+          <app-live-discovery (tableChange)="_onTableModeChange($event)"
+                              (dateFilterChange)="_onDiscoveryDateFilterChange($event)"></app-live-discovery>
         </div>
       </div>
     </div>

@@ -1,0 +1,38 @@
+.kMetricsSelector {
+  .kOptionsLabelWrapper {
+    display: flex;
+    align-items: center;
+
+    &.kItemLabel {
+      width: calc(100% - 15px);
+    }
+
+    .kOptionLabel {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .kCompareMetricBullet {
+      font-size: 18px;
+      font-style: normal;
+      margin-right: 8px
+    }
+  }
+}
+
+:host /deep/ .kMetricsSelector {
+  .ui-dropdown-panel {
+    width: 240px !important;
+  }
+  .ui-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
+}

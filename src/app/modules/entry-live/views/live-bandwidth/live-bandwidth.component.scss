@@ -1,5 +1,9 @@
 @import '../../../../../styles/variables';
 
+:host {
+  margin-bottom: 24px;
+}
+
 .kUsersBandwidth {
   padding: 24px;
   padding-bottom: 0px;
@@ -11,6 +15,14 @@
     display: flex;
     align-items: center;
     margin-bottom: 16px;
+    position: relative;
+
+    .kTimePeriodLabel {
+      position: absolute;
+      right: 0;
+      margin: 0;
+      top: 0;
+    }
 
     .kMetrics {
       margin-right: 52px;

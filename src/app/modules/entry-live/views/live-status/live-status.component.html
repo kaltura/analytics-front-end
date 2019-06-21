@@ -1,5 +1,5 @@
 <div class="kLiveStatus"
-     [ngClass]="{'kInitializing': this._initializing, 'kOffline': !this._isLive && !this._initializing}">
+     [ngClass]="{'kInitializing': _initializing, 'kPreview': _isPreview, 'kOffline': !_isLive && !_initializing && !_isPreview}">
   <div class="kStatus">
     <i class="kStatusIcon" [ngClass]="_entry?.streamStatus | appStreamState:true"></i>
     <span class="kStreamStatus">{{_entry?.streamStatus | appStreamState}}</span>

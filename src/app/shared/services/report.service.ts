@@ -211,7 +211,7 @@ export class ReportService implements OnDestroy {
   ngOnDestroy() {
   }
   
-  public parseTableData(table: KalturaReportTable, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
+  public parseTableData(table: KalturaReportTable | KalturaReportTotal, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
     let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
     const tableData = [];
@@ -298,7 +298,9 @@ export class ReportService implements OnDestroy {
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-              : DateFilterUtils.formatFullDateString(label);
+              : reportInterval === KalturaReportInterval.hours
+                ? label
+                : DateFilterUtils.formatFullDateString(label);
           } else {
             this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }

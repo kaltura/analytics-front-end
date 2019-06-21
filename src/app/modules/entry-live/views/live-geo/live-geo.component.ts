@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ErrorsManagerService, ReportConfig } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -20,6 +20,9 @@ import { DataTable } from 'primeng/primeng';
 import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 @Component({
   selector: 'app-live-geo',
@@ -30,10 +33,10 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
       this._entry = value;
-      this._liveGeoWidget.setTimeRange({ from: +value.createdAt });
     }
   }
   @ViewChild('table') _table: DataTable;
+  @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
@@ -52,9 +55,9 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
-  public _reportType = KalturaReportType.mapOverlayCountry;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
+  public _showTable = false;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -109,13 +112,13 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   
   private _updateMap(mapCenter: number[]): void {
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
-    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
+    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.view_unique_audience');
     mapConfig.series[0].data = [];
     let maxValue = 0;
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFloat(data[this._selectedMetrics].replace(new RegExp(',', 'g'), '')));
+      value.push(parseFormattedValue(data[this._selectedMetrics]));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -125,16 +128,16 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
         value
       });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseInt(data[this._selectedMetrics].replace(new RegExp(',', 'g'), ''));
+        maxValue = parseFormattedValue(data[this._selectedMetrics]);
       }
     });
     
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
-    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
-    map.center = mapCenter;
+    const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.series[0];
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 && this._canMapDrillDown ? 'false' : 'move';
+    map.center = this._drillDown.length === 0 && this._echartsIntance && this._echartsIntance.getOption().series.length ? this._echartsIntance.getOption().series[0].center : mapCenter;
+    map.roam = this._drillDown.length === 0 && this._canMapDrillDown && this._mapZoom === 1.2 ? 'false' : 'move';
     this._mapChartData = mapConfig;
   }
 
@@ -187,6 +190,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
+    const reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this.onDrillDown.emit({reportType: reportType, drillDown: this._drillDown});
   }
   
   public _onChartInit(ec) {
@@ -207,5 +212,11 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom }] }, false);
       this._echartsIntance.setOption({ series: [{ roam: roam }] }, false);
     }
+  }
+  
+  public _toggleTable(): void {
+    this._showTable = !this._showTable;
+  
+    this._liveGeoWidget.updateLayout();
   }
 }
