@@ -13,7 +13,9 @@
              *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
              [options]="_lineChartData[_selectedMetrics]"></div>
 
-        <div *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)" class="kNoResults">
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
       </div>
@@ -28,8 +30,7 @@
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
-                        [options]="_tableModes"
-                        (onChange)="_onTableModeChange($event.value)"
+                        [options]="_tableModesOptions"
                         [(ngModel)]="_tableMode">
               <ng-template let-option pTemplate="selectedItem">
                 <div class="kOptionsLabelWrapper">
@@ -46,56 +47,16 @@
             </p-dropdown>
           </div>
 
-          <p-table appScrollTopOnPaging
-                   [sortField]="_sortField"
-                   [value]="_tableData"
-                   [customSort]="true"
-                   [paginator]="!_customPaginator"
-                   [rows]="_pageSize"
-                   [defaultSortOrder]="-1"
-                   [sortOrder]="-1"
-                   (sortFunction)="_onSortChanged($event)">
-            <ng-template pTemplate="header">
-              <tr [ngStyle]="{'width': '100%'}">
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col" [ngStyle]="{'width': '100%'}">
-                  {{'app.engagement.highlightsReport.' + col | translate}}
-                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
-                </th>
-
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-data>
-              <tr [ngStyle]="{'width': '100%'}">
-                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'width': '100%'}">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
-                    <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
-                      <app-trend-value [value]="data[col].value"
-                                       [units]="data[col].units"
-                                       [trend]="data[col].trend"></app-trend-value>
-                    </span>
-                  </span>
-                  <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id'">
-                    <span>{{data[col]}}</span>
-                  </ng-container>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <div class="emptymessage">
-                <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-                <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
-              </div>
-            </ng-template>
-          </p-table>
-          <p-paginator *ngIf="_customPaginator"
-                       [rows]="_pager.pageSize"
-                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                       [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
+          <ng-container [ngSwitch]="_tableMode">
+            <app-dates-table *ngSwitchCase="_tableModes.dates"
+                             [data]="_datesTableData"
+                             [isCompareMode]="_isCompareMode"
+                             [reportInterval]="_reportInterval"
+                             [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
+          </ng-container>
         </div>
       </div>
     </div>
-
   </k-area-blocker>
 </div>
 

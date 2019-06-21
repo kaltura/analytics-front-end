@@ -15,8 +15,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { SortEvent } from 'primeng/api';
-import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 @Component({
@@ -35,13 +34,12 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _order = '-date_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
-  private _ignoreFirstSortEvent = false;
   
   protected _componentId = 'highlights';
   
   public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
   
-  public _customPaginator = false;
+  public _tableModes = TableModes;
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _firstTimeLoading = true;
@@ -57,16 +55,18 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _totalCount = 0;
   public _pageSize = analyticsConfig.defaultPageSize;
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
+  public _datesTableData: { current: Report, compare?: Report } = { current: null };
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
-  public _tableModes = [
+  public _tableModesOptions = [
     { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
     { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
   ];
-  public _sortField = this._columns[0];
+  public _currentPeriod: { from: number, to: number };
+  public _comparePeriod: { from: number, to: number };
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -94,7 +94,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
@@ -106,28 +106,27 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         }
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
-
+        
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-    
+          
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
-    
+          
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
           }
-
+          
           if (compare) {
+            this._datesTableData = { current: report, compare: compare };
             this._handleCompare(report, compare);
           } else {
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
               
-              if (this._tableMode === TableModes.dates) {
-                this._handleTable(report.graphs); // handle table
-              }
+              this._datesTableData = { current: report };
             }
           }
           this._firstTimeLoading = false;
@@ -173,49 +172,20 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-
+    this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+    
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
-        currentPeriod,
-        comparePeriod,
+        this._currentPeriod,
+        this._comparePeriod,
         current.graphs,
         compare.graphs,
         this._dataConfig.graph,
         this._reportInterval,
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
-  
-      if (this._tableMode === TableModes.dates) {
-        const compareTableData = this._compareService.compareTableFromGraph(
-          currentPeriod,
-          comparePeriod,
-          current.graphs,
-          compare.graphs,
-          this._dataConfig.table,
-          this._reportInterval,
-        );
-  
-        if (compareTableData) {
-          const { columns, tableData, totalCount } = compareTableData;
-          this._totalCount = totalCount;
-          this._columns = columns;
-          this._tableData = tableData;
-        }
-      }
     }
-  }
-  
-  private _handleTable(graphs: KalturaReportGraph[]): void {
-    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
-      graphs,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
-    this._totalCount = totalCount;
-    this._columns = columns;
-    this._tableData = tableData;
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
@@ -229,7 +199,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-
+    
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   
@@ -249,89 +219,5 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
       }, 0);
     }
-  }
-  
-  public _onSortChanged(event: SortEvent) {
-    if (this._tableMode === TableModes.dates) {
-      this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
-      this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
-    } else if (event.data.length && event.field && event.order && !this._isCompareMode) {
-      // prevent handling first sort event after mode switching to users to prevent redundant loadReport call
-      // because event.field will be outdated at the time
-      if (this._ignoreFirstSortEvent) {
-        this._ignoreFirstSortEvent = false;
-        return;
-      }
-  
-      setTimeout(() => {
-        const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-        if (order !== this._order) {
-          this._order = order;
-          // TODO reload table DATA
-        }
-      });
-    }
-  }
-  
-  public _onTableModeChange(mode: TableModes): void {
-    this._tableMode = mode;
-    this._customPaginator = this._ignoreFirstSortEvent = this._tableMode !== TableModes.dates;
-  
-    if (mode === TableModes.dates) {
-      this._sortField = this._columns[0];
-    } else if (mode === TableModes.users) {
-      this._sortField = '-name';
-    } else {
-      this._sortField = '-entry_name';
-    }
-
-    // TODO switch table DATA
-  }
-  
-  public _onPaginationChange(event: { page: number, first: number, rows: number, pageCount: number }): void {
-    if (this._customPaginator && event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
-      // TODO reload table DATA
-    }
-  }
-  
-  public _loadTableData(reportType: KalturaReportType): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-  
-    const reportConfig: ReportConfig = { reportType, filter: this._filter, order: this._order };
-    this._reportService.getReport(reportConfig)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-      
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
-        return this._reportService.getReport(compareReportConfig).pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          this._tableData = [];
-
-          if (compare) {
-            // handle table compare
-          } else {
-            if (report.table && report.table.data && report.table.header) {
-              // handle table
-            }
-          }
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
   }
 }
