@@ -50,6 +50,8 @@
           <ng-container [ngSwitch]="_tableMode">
             <app-dates-table *ngSwitchCase="_tableModes.dates"
                              [data]="_datesTableData"
+                             [currentPeriod]="_currentPeriod"
+                             [comparePeriod]="_comparePeriod"
                              [isCompareMode]="_isCompareMode"
                              [reportInterval]="_reportInterval"
                              [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
