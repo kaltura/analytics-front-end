@@ -108,16 +108,16 @@ export class DiscoveryChartComponent {
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
-    
-    const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
-    const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
 
     if (mainMax < secondaryMax && mainMax / secondaryMax >= 0.5) {
       mainMax = secondaryMax;
     } else if (mainMax > secondaryMax && secondaryMax / mainMax >= 0.5) {
       secondaryMax  = mainMax;
     }
-    
+
+    const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
+    const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
+
     return {
       color: this.selectedMetrics.map(metric => getColor(metric)),
       textStyle: {
