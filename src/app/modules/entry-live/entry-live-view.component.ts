@@ -67,8 +67,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
           map(({ queryParams }) => queryParams['id'] || null),
         )
         .subscribe(entryId => {
-          this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId });
+          if (entryId) {
+            this._entryId = entryId;
+            this._entryLiveWidget.activate({ entryId });
+          }
         });
     } else {
       this._route.params
