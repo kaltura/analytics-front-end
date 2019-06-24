@@ -95,7 +95,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       
       case TimeInterval.TenSeconds:
       default:
-        return 'hh:mm:ss';
+        return 'HH:mm:ss';
     }
   }
   
