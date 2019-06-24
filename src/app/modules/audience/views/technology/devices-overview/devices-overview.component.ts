@@ -264,7 +264,9 @@ export class DevicesOverviewComponent implements OnDestroy {
   
   private _getSummaryData(data: { [key: string]: string }[], relevantFields: string[]): Summary {
     return relevantFields.reduce((summaryData, key) => {
-      const relevantTotal = this._tabsData.find(total => total.key === key);
+      const relevantTotal = key === 'unique_known_users'
+        ? { value: String(data.reduce((acc, val) => acc + parseFloat(val['unique_known_users']), 0)) }
+        : this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
         summaryData[key] = data
