@@ -44,9 +44,9 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
-          <tr class="kEntriesLiveRow">
+          <tr class="kEntriesLiveRow" (click)="_drillDown(data)">
             <td [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
-              <div class="kThumbnailHolder" #holder (click)="_drillDown(data)">
+              <div class="kThumbnailHolder" #holder>
                 <img [src]="data.thumbnailUrl"
                      onError="this.onerror=null;this.style.display='none'"
                      (error)="holder.classList.add('error')">
@@ -60,8 +60,7 @@
                     [kTooltip]="data[col]"
                     [showOnEllipsis]="true"
                     (mouseleave)="_hideOverlay()"
-                    (mouseenter)="_showOverlay($event, data['entry_id'])"
-                    (click)="_drillDown(data)">{{data[col]}}</span>
+                    (mouseenter)="_showOverlay($event, data['entry_id'])">{{data[col]}}</span>
             </td>
             <td [ngStyle]="{'width': '100px'}">
               <span class="kStatus" *ngIf="data['liveStatus']">
