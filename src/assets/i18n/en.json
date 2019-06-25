@@ -655,6 +655,7 @@
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "users": "Users",
       "dates": "Dates",
+      "entry_name": "Name",
       "heatMap": {
         "duration": "Duration {{0}}",
         "tooltip": {

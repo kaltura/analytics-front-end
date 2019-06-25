@@ -63,6 +63,14 @@
                              [isCompareMode]="_isCompareMode"
                              [reportInterval]="_reportInterval"
                              [firstTimeLoading]="_firstTimeLoading"></app-users-table>
+
+            <app-entries-table *ngSwitchCase="_tableModes.entries"
+                             [filterChange]="_filterChange$"
+                             [filter]="_filter"
+                             [compareFilter]="_compareFilter"
+                             [isCompareMode]="_isCompareMode"
+                             [reportInterval]="_reportInterval"
+                             [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
           </ng-container>
         </div>
       </div>
