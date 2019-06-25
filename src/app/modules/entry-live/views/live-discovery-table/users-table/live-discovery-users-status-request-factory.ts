@@ -41,7 +41,7 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
   }
   
   private _getFromDate(): number {
-    return moment().subtract(10, 'seconds').unix();
+    return moment().subtract(30, 'seconds').unix();
   }
   
   public set userIds(userIds: string) {
