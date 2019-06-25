@@ -91,11 +91,11 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       
       case TimeInterval.Minutes:
       case TimeInterval.Hours:
-        return this._getDaysCount() > 1 ? 'MMM DD hh:mm' : 'hh:mm';
+        return this._getDaysCount() > 1 ? 'MMM DD HH:mm' : 'HH:mm';
       
       case TimeInterval.TenSeconds:
       default:
-        return 'hh:mm:ss';
+        return 'HH:mm:ss';
     }
   }
   

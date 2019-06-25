@@ -98,7 +98,7 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
   private _handleHealthBeacon(beaconTime: number, isPrimary: boolean, metaData: any, diagnosticsObject: { updatedTime?: number, data?: DiagnosticsHealthInfo }): void {
     let report = {
       updatedTime: beaconTime,
-      updatedFormattedTime: moment(beaconTime).format('hh:mm A MM/DD/YYYY'),
+      updatedFormattedTime: moment(beaconTime).format('HH:mm MM/DD/YYYY'),
       severity: metaData.maxSeverity,
       isPrimary: isPrimary,
       alerts: Array.isArray(metaData.alerts)
