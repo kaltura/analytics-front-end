@@ -57,6 +57,7 @@
                              [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
 
             <app-users-table *ngSwitchCase="_tableModes.users"
+                             [filterChange]="_filterChange$"
                              [filter]="_filter"
                              [compareFilter]="_compareFilter"
                              [isCompareMode]="_isCompareMode"

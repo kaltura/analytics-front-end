@@ -5,7 +5,7 @@ import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPage
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,6 +34,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   private _order = '-date_id';
   private _reportType = KalturaReportType.userEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+  private _filterChange = new Subject();
   
   protected _componentId = 'highlights';
   
@@ -67,6 +68,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   ];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
+  public _filterChange$ = this._filterChange.asObservable();
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -87,6 +89,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   ngOnDestroy() {
+    this._filterChange.complete();
     this.highlights$.complete();
   }
   
@@ -99,7 +102,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
+    this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
@@ -107,7 +110,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
         
-        return this._reportService.getReport(compareReportConfig, sections)
+        return this._reportService.getReport(compareReportConfig, sections, false)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
@@ -162,6 +165,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     } else {
       this._compareFilter = null;
     }
+  
+    this._filterChange.next();
   }
   
   protected _updateRefineFilter(): void {
@@ -169,6 +174,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
+  
+    this._filterChange.next();
   }
   
   private _handleCompare(current: Report, compare: Report): void {
