@@ -5,12 +5,14 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
 import { SortEvent } from 'primeng/api';
 import { EntriesTableConfig } from './entries-table.config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-entries-table',
@@ -39,6 +41,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   constructor(private _reportService: ReportService,
               private _compareService: CompareService,
+              private _browserService: BrowserService,
+              private _router: Router,
+              private _activatedRoute: ActivatedRoute,
+              private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: EntriesTableConfig) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -62,14 +68,14 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   private _loadReport(): void {
     this._isBusy = true;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order };
+        const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, this._dataConfig, false)
           .pipe(map(compare => ({ report, compare })));
@@ -112,9 +118,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
         compare.table,
         this._dataConfig.table,
         this.reportInterval,
+        'object_id',
       );
       this._columns = columns;
-      this._totalCount = compare.table.totalCount;
+      this._totalCount = current.table.totalCount;
       this._tableData = tableData;
     }
   }
@@ -140,6 +147,16 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
         this._order = order;
         this._loadReport();
       }
+    }
+  }
+  
+  public _drillDown(row: TableRow): void {
+    // status is already being transformed by formatter function
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string');
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${row['object_id']}&${params}`);
+    } else {
+      this._router.navigate(['entry', row['object_id']], { queryParams: this._activatedRoute.snapshot.queryParams });
     }
   }
 }

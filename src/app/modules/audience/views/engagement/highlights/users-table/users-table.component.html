@@ -27,10 +27,7 @@
             </span>
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'name'">
-            <span *ngIf="col !== 'avg_completion_rate'">{{data[col]}}</span>
-            <app-bullet *ngIf="col === 'avg_completion_rate'"
-                        colorScheme="dropoff"
-                        [value]="data['avg_completion_rate']"></app-bullet>
+            <span>{{data[col]}}</span>
           </ng-container>
         </td>
       </tr>

@@ -62,14 +62,14 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   
   private _loadReport(): void {
     this._isBusy = true;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
-        const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order };
+        const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, this._dataConfig, false)
           .pipe(map(compare => ({ report, compare })));
@@ -112,9 +112,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         compare.table,
         this._dataConfig.table,
         this.reportInterval,
+        'name',
       );
       this._columns = columns;
-      this._totalCount = compare.table.totalCount;
+      this._totalCount = current.table.totalCount;
       this._tableData = tableData;
     }
   }
