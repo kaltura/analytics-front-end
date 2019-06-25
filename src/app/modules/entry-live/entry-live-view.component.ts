@@ -25,7 +25,19 @@ import { DateRange, FiltersService } from './views/live-discovery-chart/filters/
   selector: 'app-entry-live',
   templateUrl: './entry-live-view.component.html',
   styleUrls: ['./entry-live-view.component.scss'],
-  providers: [EntryLiveExportConfig]
+  providers: [
+    EntryLiveExportConfig,
+  
+    // widgets
+    EntryLiveWidget,
+    LiveUsersWidget,
+    LiveBandwidthWidget,
+    LiveStreamHealthWidget,
+    LiveGeoWidget,
+    LiveDevicesWidget,
+    LiveDiscoveryWidget,
+    LiveDiscoveryTableWidget,
+  ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   private _widgetsRegistered = false;

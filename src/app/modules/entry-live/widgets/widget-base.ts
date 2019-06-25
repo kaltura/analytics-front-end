@@ -6,6 +6,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { TranslateService } from '@ngx-translate/core';
+import { OnDestroy } from '@angular/core';
 
 export interface WidgetState {
   polling?: boolean;
@@ -13,7 +14,7 @@ export interface WidgetState {
   error?: KalturaAPIException;
 }
 
-export abstract class WidgetBase<T = any> {
+export abstract class WidgetBase<T = any> implements OnDestroy {
   protected _pollingSubscription: Unsubscribable;
   protected _data = new BehaviorSubject<T>(null);
   protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });
@@ -38,6 +39,11 @@ export abstract class WidgetBase<T = any> {
   
   protected constructor(protected _serverPolls: AnalyticsServerPollsBase,
                         protected _frameEventManager: FrameEventManagerService) {
+  }
+  
+  ngOnDestroy(): void {
+    this._data.complete();
+    this._state.complete();
   }
   
   protected _canStartPolling(): boolean {
