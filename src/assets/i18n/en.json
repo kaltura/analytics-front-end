@@ -502,7 +502,7 @@
           "view_unique_engaged_users": "AVG Engaged Users",
           "view_unique_buffering_users": "AVG Buffer Rate ",
           "avg_view_downstream_bandwidth": "AVG Bandwidth",
-          "view_unique_audience_dvr": "SUM DVR Users",
+          "view_unique_audience_dvr": "Total DVR Users",
           "avg_view_bitrate": "AVG Bitrate",
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_live_latency": "AVG Latency",
