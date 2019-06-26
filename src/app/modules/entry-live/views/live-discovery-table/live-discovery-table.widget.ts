@@ -205,7 +205,9 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   public usersFilterChange(refineFilter: RefineFilter): void {
     if (this._tableMode === TableModes.users) {
-      this._usersFilter.userIds = refineFilter.map(filter => filter.value.id).join(analyticsConfig.valueSeparator);
+      this._usersFilter.userIds = refineFilter
+        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator);
       (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
       
       // reset page
