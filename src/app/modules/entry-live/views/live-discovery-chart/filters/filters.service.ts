@@ -59,7 +59,7 @@ export class FiltersService {
         from = moment().subtract(24, 'hours');
         break;
       case DateRange.Last3D:
-        from = moment().subtract(3, 'days');
+        from = moment().subtract(2, 'days');
         break;
       case DateRange.Last7D:
         from = moment().subtract(6, 'days');
