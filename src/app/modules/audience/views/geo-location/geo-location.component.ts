@@ -27,6 +27,12 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { GeoExportConfig } from './geo-export.config';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
+export enum GeoTableModes {
+  countries = 'countries',
+  regions = 'regions',
+  cities = 'cities',
+}
+
 @Component({
   selector: 'app-geo-location',
   templateUrl: './geo-location.component.html',
@@ -77,7 +83,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   );
 
-  public _selectedCountries: SelectItem[] = [];
   public _drillDown: string[] = [];
   private mapCenter = [0, 10];
   private _canMapDrillDown = true;
@@ -86,6 +91,12 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private echartsIntance: any; // echart instance
   public _mapZoom = 1.2;
   public _mapDataReady = false;
+  public _tableMode = GeoTableModes.countries;
+  public _tableModes: SelectItem[] = [
+    { value: GeoTableModes.countries, label: this._translate.instant('app.audience.geo.tableMode.countries') },
+    { value: GeoTableModes.regions, label: this._translate.instant('app.audience.geo.tableMode.regions') },
+    { value: GeoTableModes.cities, label: this._translate.instant('app.audience.geo.tableMode.cities') },
+  ];
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -447,4 +458,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {}
+  
+  public _onTableModeChange(mode: GeoTableModes): void {
+    console.warn(mode);
+  }
 }

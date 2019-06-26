@@ -273,7 +273,15 @@
         "selectCountry": "Filter Country",
         "exportLabels": {
           "geo": "Geo Location"
-        }
+        },
+        "tableMode": {
+          "countries": "Top Countries",
+          "regions": "Top Regions",
+          "cities": "Top Cities"
+        },
+        "countries": "{{0}} Countries",
+        "regions": "{{0}} Regions",
+        "cities": "{{0}} Cities"
       },
       "technology": {
         "title": "Technology",
