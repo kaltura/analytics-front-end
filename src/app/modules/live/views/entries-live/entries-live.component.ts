@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
-import { EntryDetailsOverlayData } from '../../../audience/views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-entries-live',
@@ -46,11 +46,11 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this._entriesLiveService.startPolling();
-  
+    
     this._periodTooltip = this._getPeriodTooltip();
     
     this._entriesLiveService.data$
-      .pipe(cancelOnDestroy(this))
+      .pipe(cancelOnDestroy(this), skip(1))
       .subscribe(data => {
         this._columns = data.columns;
         this._tableData = data.table;
@@ -70,7 +70,6 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._entriesLiveService.restartPolling();
             },
           };
@@ -112,6 +111,10 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   }
   
   public _onSortChanged(event: SortEvent): void {
+    if (this._firstTimeLoading) { // skip first event
+      return;
+    }
+    
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {

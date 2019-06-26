@@ -151,3 +151,32 @@
   font-weight: bold;
   color: $kGrayscale1;
 }
+
+.kTable {
+  min-height: calc(100vh - 185px);
+}
+
+.kNoData {
+  width: 100%;
+  min-height: calc(100vh - 185px);
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+
+  .kNoDataIcon {
+    margin-bottom: 24px;
+  }
+
+  .kNoDataTitle {
+    color: $kGrayscale1;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .kNoDataMessage {
+    color: $kGrayscale2;
+    font-weight: normal;
+  }
+}
