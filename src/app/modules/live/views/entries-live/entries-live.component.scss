@@ -152,13 +152,9 @@
   color: $kGrayscale1;
 }
 
-.kTable {
-  min-height: calc(100vh - 185px);
-}
-
 .kNoData {
   width: 100%;
-  min-height: calc(100vh - 185px);
+  min-height: calc(100vh - 54px);
   display: flex;
   flex-direction: column;
   font-size: 15px;
