@@ -16,16 +16,12 @@ import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
 import { LivePlayerComponent } from './views/live-player/live-player.component';
 import { LiveStatusComponent } from './views/live-status/live-status.component';
-import { EntryLiveWidget } from './entry-live.widget';
 import { EntryLiveService } from './entry-live.service';
 import { StreamStatePipe } from './pipes/stream-state.pipe';
 import { WidgetsManager } from './widgets/widgets-manager';
 import { LiveUsersComponent } from './views/live-users/live-users.component';
-import { LiveUsersWidget } from './views/live-users/live-users.widget';
 import { LiveBandwidthComponent } from './views/live-bandwidth/live-bandwidth.component';
-import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
 import { LiveStreamHealthComponent } from './views/live-stream-health/live-stream-health.component';
-import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
 import { CodeToSeverityPipe } from './views/live-stream-health/pipes/code-to-severity.pipe';
 import { SeverityToHealthPipe } from './views/live-stream-health/pipes/severity-to-health.pipe';
 import { NotificationTitlePipe } from './views/live-stream-health/pipes/notification-title.pipe';
@@ -33,12 +29,9 @@ import { CodeToHealthIconPipe } from './views/live-stream-health/pipes/code-to-h
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { EntryLiveGeoDevicesPollsService } from './providers/entry-live-geo-devices-polls.service';
 import { LiveGeoComponent } from './views/live-geo/live-geo.component';
-import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
 import { LiveGeoConfig } from './views/live-geo/live-geo.config';
 import { LiveDevicesComponent } from './views/live-devices/live-devices.component';
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
-import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
-import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
 import { LiveDiscoveryComponent } from './views/live-discovery-chart/live-discovery.component';
 import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
 import { CalendarModule, RadioButtonModule, SelectButtonModule } from 'primeng/primeng';
@@ -59,7 +52,6 @@ import { UsersTableComponent } from './views/live-discovery-table/users-table/us
 import { LiveDiscoveryDevicesTableProvider } from './views/live-discovery-table/devices-table/live-discovery-devices-table-provider';
 import { LiveDiscoveryUsersTableProvider } from './views/live-discovery-table/users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/users-table/live-discovery-users-table.config';
-import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
 import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
@@ -134,16 +126,6 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,
     EntryLiveDiscoveryPollsService,
-    
-    // widgets
-    EntryLiveWidget,
-    LiveUsersWidget,
-    LiveBandwidthWidget,
-    LiveStreamHealthWidget,
-    LiveGeoWidget,
-    LiveDevicesWidget,
-    LiveDiscoveryWidget,
-    LiveDiscoveryTableWidget,
   ]
 })
 export class EntryLiveModule {
