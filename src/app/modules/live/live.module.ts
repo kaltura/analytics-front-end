@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EntriesLiveDataConfig } from './views/entries-live/entries-live-data.config';
 import { EntryDetailsOverlayComponent } from './views/entries-live/entry-details-overlay/entry-details-overlay.component';
 import { SharedModule } from 'shared/shared.module';
+import { EntriesLiveNoDataIconComponent } from './views/entries-live/entries-live-no-data-icon/entries-live-no-data-icon.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { SharedModule } from 'shared/shared.module';
     EntriesLiveComponent,
     LiveReportsComponent,
     EntryDetailsOverlayComponent,
+    EntriesLiveNoDataIconComponent,
   ],
   providers: [
     EntriesLiveGuard,

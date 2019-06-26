@@ -1,22 +1,22 @@
 <div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
-  <div class="kEntriesHeader kContent">
+  <div class="kEntriesHeader kContent" *ngIf="_isBusy || _tableData.length">
     <span class="kTitle">{{'app.entriesLive.title' | translate}}</span>
     <span class="kTimePeriodLabel" [kTooltip]="_periodTooltip" placement="left">
       {{'app.entriesLive.period' | translate}}
     </span>
   </div>
-  <div class="kEntriesHolder kContent">
+  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length">
     <div class="kEntriesTableFilters kContent">
       <span class="kSelectedEntriesNum" *ngIf="_totalCount">
         {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
       </span>
 
-<!--      <div class="kFilters">-->
-<!--        <input type="text" pInputText class="kSearchInput"-->
-<!--               [placeholder]="'app.entriesLive.searchEntries' | translate"-->
-<!--               (keyup.enter)="_onSearch()"-->
-<!--               [(ngModel)]="_freeText">-->
-<!--      </div>-->
+      <!--      <div class="kFilters">-->
+      <!--        <input type="text" pInputText class="kSearchInput"-->
+      <!--               [placeholder]="'app.entriesLive.searchEntries' | translate"-->
+      <!--               (keyup.enter)="_onSearch()"-->
+      <!--               [(ngModel)]="_freeText">-->
+      <!--      </div>-->
     </div>
     <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
       <p-table class="kEntriesTable"
@@ -28,7 +28,7 @@
                [rowTrackBy]="_rowTrackBy"
                (sortFunction)="_onSortChanged($event)">
         <ng-template pTemplate="header">
-          <tr class="kEntriesLiveHeaderRow">
+          <tr class="kEntriesLiveHeaderRow" *ngIf="_columns.length">
             <th [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
               {{'app.entriesLive.thumbnail' | translate}}
             </th>
@@ -70,18 +70,17 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <div class="emptymessage">
-            <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-            <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
-          </div>
-        </ng-template>
       </p-table>
       <p-paginator [rows]="_pager.pageSize"
                    [first]="(_pager.pageIndex - 1) * _pager.pageSize"
                    [totalRecords]="_totalCount"
                    (onPageChange)="_onPaginationChange($event)"></p-paginator>
     </k-area-blocker>
+  </div>
+  <div *ngIf="!_firstTimeLoading && !_tableData.length" class="kNoData">
+    <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
+    <span class="kNoDataTitle">{{'app.entriesLive.noLiveEntriesTitle' | translate}}</span>
+    <span class="kNoDataMessage">{{'app.entriesLive.noLiveEntriesMessage' | translate}}</span>
   </div>
 </div>
 
