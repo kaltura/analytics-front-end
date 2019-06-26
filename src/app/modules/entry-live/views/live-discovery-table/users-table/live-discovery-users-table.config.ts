@@ -20,7 +20,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
           count: parseFloat(count),
         };
       })
-      .sort((a, b) => a.count - b.count);
+      .sort((a, b) => b.count - a.count);
     return topFlavors.length ? topFlavors[0].name : 'N/A';
   }
 
