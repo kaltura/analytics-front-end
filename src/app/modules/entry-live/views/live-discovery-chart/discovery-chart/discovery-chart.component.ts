@@ -95,7 +95,7 @@ export class DiscoveryChartComponent {
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
-    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users', 'avg_view_live_latency'].indexOf(metric) !== -1 ? 100 : 1;
+    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio'].indexOf(metric) !== -1 ? 100 : 1;
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
     const yAxisLabelFormatter = (param, metric) => {

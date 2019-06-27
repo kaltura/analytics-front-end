@@ -49,20 +49,20 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             units: () => '%',
             sortOrder: 5,
           },
-          'avg_view_bitrate': {
-            format: value => Number(value).toFixed(1),
-            colors: ['#f7c25c'],
-            graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} KBPS`,
-            units: () => 'KBPS',
-            sortOrder: 6,
-          },
+          // 'avg_view_bitrate': {
+          //   format: value => Number(value).toFixed(1),
+          //   colors: ['#f7c25c'],
+          //   graphType: GraphType.line,
+          //   graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} KBPS`,
+          //   units: () => 'KBPS',
+          //   sortOrder: 6,
+          // },
           'avg_view_live_latency': {
-            format: value => (value * 100).toFixed(1),
+            format: value => Math.round(value),
             colors: ['#f3737b'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_live_latency')}: ${ReportHelper.percents(value / 100)}`,
-            units: () => '%',
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_live_latency')}: ${ReportHelper.numberOrZero(value)} Seconds`,
+            units: () => 'Seconds',
             sortOrder: 7,
           },
           'avg_view_downstream_bandwidth': {
@@ -89,13 +89,13 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
           },
           'view_unique_buffering_users': {
-            format: value => ReportHelper.percents(value, false),
+            format: value => ReportHelper.numberOrZero(value),
           },
-          'avg_view_bitrate': {
-            format: value => `${ReportHelper.numberOrZero(value, false)} KBPS`,
-          },
+          // 'avg_view_bitrate': {
+          //   format: value => `${ReportHelper.numberOrZero(value, false)} KBPS`,
+          // },
           'avg_view_live_latency': {
-            format: value => `${ReportHelper.percents(value, false)}`,
+            format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
           },
           'avg_view_downstream_bandwidth': {
             format: value => `${ReportHelper.numberOrZero(value)} KBPS`,
