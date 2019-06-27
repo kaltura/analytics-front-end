@@ -47,8 +47,12 @@ export class DiscoveryChartComponent {
     const chartData = value.graphs;
     const metrics = this.selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
-    this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
     this._totalsData = value.totals;
+
+    // postpone data update to make sure all local properties are updated before the graph update
+    setTimeout(() => {
+      this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+    }, 0);
   }
   
   private _getTooltipFormatter(params: any[]): string {
