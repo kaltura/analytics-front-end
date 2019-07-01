@@ -89,7 +89,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
           },
           'view_unique_buffering_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.percents(value, false),
           },
           // 'avg_view_bitrate': {
           //   format: value => `${ReportHelper.numberOrZero(value, false)} KBPS`,
@@ -107,10 +107,10 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           },
           'view_unique_audience_dvr': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.percents(value, false),
           },
           'view_unique_engaged_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.percents(value, false),
           },
         }
       },
