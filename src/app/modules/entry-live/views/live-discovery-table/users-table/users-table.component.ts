@@ -46,4 +46,8 @@ export class UsersTableComponent {
       }
     }
   }
+  
+  public _isSortable(column: string): string {
+    return ['user_name', 'known_flavor_params_view_count'].indexOf(column) === -1 ? column : null;
+  }
 }
