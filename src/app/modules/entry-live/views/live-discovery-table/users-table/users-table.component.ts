@@ -1,16 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableWidget } from '../live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from '../table-config';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-users-table',
   templateUrl: './users-table.component.html',
   styleUrls: ['./users-table.component.scss']
 })
-export class UsersTableComponent {
+export class UsersTableComponent implements OnDestroy {
   @Input() tableData: TableRow[] = [];
   @Input() summary: LiveDiscoverySummaryData;
   @Input() columns: string[] = [];
@@ -23,6 +24,14 @@ export class UsersTableComponent {
   public _pager = new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 });
   
   constructor(public _widget: LiveDiscoveryTableWidget) {
+    this._widget.filtersChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(() => {
+        this._pager.pageIndex = 1;
+      });
+  }
+  
+  ngOnDestroy(): void {
   }
   
   public _onPaginationChange(event: { page: number }): void {
@@ -37,7 +46,7 @@ export class UsersTableComponent {
       this._initialSortEvent = false;
       return;
     }
-
+    
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
