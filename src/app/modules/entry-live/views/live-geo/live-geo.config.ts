@@ -34,13 +34,13 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
             format: value => value,
           },
           'view_unique_audience': {
-            format: value => value,
+            format: value => ReportHelper.numberOrZero(value),
           },
-          'view_unique_buffering_users': {
-            format: value => value,
+          'avg_view_buffering': {
+            format: value => ReportHelper.percents(value, false),
           },
-          'view_unique_engaged_users': {
-            format: value => value,
+          'avg_view_engagement': {
+            format: value => ReportHelper.percents(value, false),
           }
         }
       },
