@@ -167,7 +167,7 @@ export class VideoPerformanceComponent extends EntryBase {
           if (compare) {
             this._handleCompare(report, compare);
           } else {
-            if (report.graphs) {
+            if (report.graphs && report.graphs.length) {
               this._rawGraphData = report.graphs;
             }
 
