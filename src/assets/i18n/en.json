@@ -617,7 +617,7 @@
         "bandwidth": "Users Buffering & Downstream Bandwidth",
         "geo": "Geo Location",
         "devices": "Active Users Per Devices",
-        "discovery": "Discovery"
+        "discovery": "Discovery Graph"
       }
     },
     "entry": {
