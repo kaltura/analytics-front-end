@@ -236,7 +236,7 @@ export class DiscoveryChartComponent {
     };
   }
 
-  private shouldNormalize(metric1, metric2): boolean {
+  private shouldNormalize(metric1: string, metric2: string): boolean {
     const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
     return normalizedMetrics.indexOf(metric1) > -1 && normalizedMetrics.indexOf(metric2) > -1;
   }
