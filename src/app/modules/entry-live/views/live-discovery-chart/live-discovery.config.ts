@@ -53,8 +53,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           //   format: value => Number(value).toFixed(1),
           //   colors: ['#f7c25c'],
           //   graphType: GraphType.line,
-          //   graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} KBPS`,
-          //   units: () => 'KBPS',
+          //   graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
+          //   units: () => 'Kbps',
           //   sortOrder: 6,
           // },
           'avg_view_live_latency': {
@@ -69,8 +69,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => Math.round(value),
             colors: ['#e0313a'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_downstream_bandwidth')}: ${ReportHelper.numberOrZero(value)} KBPS`,
-            units: () => 'KBPS',
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_downstream_bandwidth')}: ${ReportHelper.numberOrZero(value)} Kbps`,
+            units: () => 'Kbps',
             sortOrder: 8,
           },
           'sum_view_time': {
@@ -92,13 +92,13 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
           },
           // 'avg_view_bitrate': {
-          //   format: value => `${ReportHelper.numberOrZero(value, false)} KBPS`,
+          //   format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           // },
           'avg_view_live_latency': {
             format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
           },
           'avg_view_downstream_bandwidth': {
-            format: value => `${ReportHelper.numberOrZero(value)} KBPS`,
+            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
           },
           'sum_view_time': {
             format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
