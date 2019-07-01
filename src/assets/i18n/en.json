@@ -446,8 +446,8 @@
         "index": "#",
         "view_unique_audience": "Active Users",
         "distribution": "Active Users Distribution",
-        "view_unique_buffering_users": "Avg. Buffer Rate",
-        "view_unique_engaged_users": "Engaged Users"
+        "avg_view_buffering": "Avg. Buffer Rate",
+        "avg_view_engagement": "Avg. Engaged Users"
       },
       "devices": {
         "title": "Active Users Per Devices"

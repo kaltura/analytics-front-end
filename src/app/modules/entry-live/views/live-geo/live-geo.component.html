@@ -60,15 +60,15 @@
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.entryLive.geo.view_unique_buffering_users' | translate" [showOnEllipsis]="true">
-                  {{'app.entryLive.geo.view_unique_buffering_users' | translate}}
+                <span [kTooltip]="'app.entryLive.geo.avg_view_buffering' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.avg_view_buffering' | translate}}
                 </span>
                 </div>
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.entryLive.geo.view_unique_engaged_users' | translate" [showOnEllipsis]="true">
-                  {{'app.entryLive.geo.view_unique_engaged_users' | translate}}
+                <span [kTooltip]="'app.entryLive.geo.avg_view_engagement' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.avg_view_engagement' | translate}}
                 </span>
                 </div>
               </th>
@@ -98,13 +98,13 @@
                 </div>
               </td>
               <td>
-                <span *ngIf="!data['view_unique_buffering_users']?.value">
-                  {{data['view_unique_buffering_users']}}
+                <span *ngIf="!data['avg_view_buffering']?.value">
+                  {{data['avg_view_buffering']}}
                 </span>
               </td>
               <td>
-                <span *ngIf="!data['view_unique_engaged_users']?.value">
-                  {{data['view_unique_engaged_users']}}
+                <span *ngIf="!data['avg_view_engagement']?.value">
+                  {{data['avg_view_engagement']}}
                 </span>
               </td>
             </tr>
