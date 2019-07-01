@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { Observable, of as ObservableOf } from 'rxjs';
+import { Observable, of as ObservableOf, Subject } from 'rxjs';
 import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -56,6 +56,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _tableMode = TableModes.users;
   private _dateFilter: DateFiltersChangedEvent;
   private _usersFilter: UsersTableFilter;
+  private _filtersChange = new Subject<void>();
   
   protected _widgetId = 'discovery-devices-table';
   protected _pollsFactory: LiveDiscoveryTableWidgetPollFactory = null;
@@ -63,6 +64,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   protected _showTable = false;
   
   public isBusy = false;
+  public filtersChange$ = this._filtersChange.asObservable();
   
   private get _dateRange(): DateRange {
     return this._dateFilter ? this._dateFilter.dateRange : null;
@@ -84,6 +86,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   }
   
   ngOnDestroy(): void {
+    this._filtersChange.complete();
   }
   
   private _resetUsersFilter(): void {
@@ -172,6 +175,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
+    this._filtersChange.next();
     this._dateFilter = event;
     
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;

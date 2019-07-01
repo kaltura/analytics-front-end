@@ -1,4 +1,5 @@
-<p-table appScrollTopOnPaging
+<p-table #table
+         appScrollTopOnPaging
          sortField="view_unique_buffering_users"
          [class.kNoData]="!tableData?.length"
          [value]="tableData"
