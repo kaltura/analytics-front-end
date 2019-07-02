@@ -95,8 +95,7 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   public _drillDown(entry: TableRow): void {
     const entryId = entry['entry_id'];
     if (analyticsConfig.isHosted) {
-      const params = this._browserService.getCurrentQueryParams('string');
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry-live?id=${entryId}&${params}`);
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry-live?id=${entryId}`);
     } else {
       this._router.navigate(['entry-live', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
     }

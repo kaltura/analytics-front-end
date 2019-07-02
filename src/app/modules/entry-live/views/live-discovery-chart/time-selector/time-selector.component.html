@@ -41,6 +41,7 @@
                   [maxDate]="_maxDate"
                   [minDate]="_minDate"
                   [yearRange]="'2010:2050'"
+                  (ngModelChange)="_validateTimeInputs()"
                   [(ngModel)]="_specificDateRange"></p-calendar>
       <div class="kTimeSelectorsGroup">
         <div class="kTimeSelectorWrapper">

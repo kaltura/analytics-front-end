@@ -82,9 +82,8 @@ export class TimeSelectorComponent implements OnDestroy {
     if (this._invalidTimes) {
       this._fromTime = moment().subtract(1, 'minute').toDate();
       this._toTime = new Date();
-      
-      this._timeChange('from');
-      this._timeChange('to');
+  
+      this._validateTimeInputs();
     }
   }
   
@@ -128,6 +127,14 @@ export class TimeSelectorComponent implements OnDestroy {
     return `${getDate(startDate)}, <b>${getTime(startDate)}</b> – ${getDate(endDate)}, <b>${getTime(endDate)}</b>`;
   }
   
+  public _validateTimeInputs(): void {
+    // postpone checks to make sure all properties are updated
+    setTimeout(() => {
+      this._timeChange('from');
+      this._timeChange('to');
+    }, 0);
+  }
+  
   public _updateDataRanges(): void {
     this._lastSelectedDateRange = this._selectedDateRange;
     if (this._selectedView === 'preset') {
@@ -163,9 +170,10 @@ export class TimeSelectorComponent implements OnDestroy {
   public _timeChange(type: 'from' | 'to'): void {
     const isFromTime = type === 'from';
     const time = moment(isFromTime ? this._fromTime : this._toTime).set({ second: 0 });
-    
-    this._invalidFrom = isFromTime && time.isSameOrAfter(moment(this._toTime).set({ second: 0 }));
-    this._invalidTo = !isFromTime && time.isSameOrBefore(moment(this._fromTime).set({ second: 0 }));
+    const isSameDay = moment(this._specificDateRange[0]).isSame(moment(this._specificDateRange[1]), 'day');
+
+    this._invalidFrom = isFromTime && isSameDay && time.isSameOrAfter(moment(this._toTime).set({ second: 0 }));
+    this._invalidTo = !isFromTime && isSameDay && time.isSameOrBefore(moment(this._fromTime).set({ second: 0 }));
   
     this._invalidTimes = this._invalidFrom || this._invalidTo;
   }

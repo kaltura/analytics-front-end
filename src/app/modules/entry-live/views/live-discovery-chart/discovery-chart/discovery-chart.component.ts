@@ -47,8 +47,12 @@ export class DiscoveryChartComponent {
     const chartData = value.graphs;
     const metrics = this.selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
-    this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
     this._totalsData = value.totals;
+
+    // postpone data update to make sure all local properties are updated before the graph update
+    setTimeout(() => {
+      this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+    }, 0);
   }
   
   private _getTooltipFormatter(params: any[]): string {
@@ -91,7 +95,7 @@ export class DiscoveryChartComponent {
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
-    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users', 'avg_view_live_latency'].indexOf(metric) !== -1 ? 100 : 1;
+    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio'].indexOf(metric) !== -1 ? 100 : 1;
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
     const yAxisLabelFormatter = (param, metric) => {
@@ -102,18 +106,15 @@ export class DiscoveryChartComponent {
     };
     let mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
     let secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
+    if (this.shouldNormalize(mainMetric, secondaryMetric)) {
+      mainMax = secondaryMax = Math.max(mainMax, secondaryMax);
+    }
     let mainMin = getMinValue(main);
     let secondaryMin = getMinValue(secondary);
     
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
-
-    if (mainMax < secondaryMax && mainMax / secondaryMax >= 0.5) {
-      mainMax = secondaryMax;
-    } else if (mainMax > secondaryMax && secondaryMax / mainMax >= 0.5) {
-      secondaryMax  = mainMax;
-    }
 
     const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
     const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
@@ -233,6 +234,11 @@ export class DiscoveryChartComponent {
         }
       ],
     };
+  }
+
+  private shouldNormalize(metric1: string, metric2: string): boolean {
+    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
+    return normalizedMetrics.indexOf(metric1) > -1 && normalizedMetrics.indexOf(metric2) > -1;
   }
   
   public _onChartInit(chartInstance): void {

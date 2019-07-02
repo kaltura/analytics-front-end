@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaEndUserReportInputFilter, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObject, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -122,16 +122,17 @@ export class ExportCsvComponent implements OnDestroy {
       .map(({ data }) => data);
   
     const mapReportItem = (item, label = null) => {
+      const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
       if (item.startDate && item.endDate) {
-        filter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
-        filter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
+        itemFilter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
+        itemFilter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
       }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({
           reportTitle: label || item.label,
           action: section,
           reportType: item.reportType,
-          filter,
+          filter: itemFilter,
           responseOptions,
         });
     

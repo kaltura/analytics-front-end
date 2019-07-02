@@ -8,9 +8,9 @@
          (onPage)="_onPaginationChange($event)">
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let col of columns; let i = index" [pSortableColumn]="col">
+      <th *ngFor="let col of columns; let i = index" [pSortableColumn]="_isSortable(col)">
         {{'app.entryLive.discovery.tables.users.' + col | translate}}
-        <p-sortIcon [field]="col"></p-sortIcon>
+        <p-sortIcon [field]="_isSortable(col)"></p-sortIcon>
       </th>
     </tr>
     <tr *ngIf="tableData?.length" class="kSummaryRow">
