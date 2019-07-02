@@ -150,15 +150,8 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       const values = totalsResponse.data.split(analyticsConfig.valueSeparator);
       totals = columns
         .reduce((result, column, index) => {
-          if (reportTotalFields[column]) {
-            let rawValue = values[index];
-            if (['view_unique_buffering_users', 'view_unique_audience_dvr', 'view_unique_engaged_users'].indexOf(column) !== -1) {
-              const activeUsers = Number(values[columns.indexOf('view_unique_audience')]) || 0;
-              const value = Number(rawValue) || 0;
-              rawValue = String(activeUsers ? value / activeUsers : 0);
-            }
-            
-            result[column] = reportTotalFields[column].format(rawValue);
+          if (reportTotalFields.hasOwnProperty(column)) {
+            result[column] = reportTotalFields[column].format(values[index]);
           }
           
           return result;
