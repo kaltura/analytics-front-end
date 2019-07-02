@@ -150,7 +150,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       const values = totalsResponse.data.split(analyticsConfig.valueSeparator);
       totals = columns
         .reduce((result, column, index) => {
-          if (reportTotalFields[column]) {
+          if (reportTotalFields.hasOwnProperty(column)) {
             result[column] = reportTotalFields[column].format(values[index]);
           }
           

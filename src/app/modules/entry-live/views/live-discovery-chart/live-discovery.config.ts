@@ -8,6 +8,19 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
+  
+  public static mapTotalsMetric(metric: string): string {
+    switch (metric) {
+      case 'view_unique_buffering_users':
+        return 'avg_view_buffering';
+      case 'view_unique_audience_dvr':
+        return 'avg_view_dvr';
+      case 'view_unique_engaged_users':
+        return 'avg_view_engagement';
+      default:
+        return metric;
+    }
+  }
 
   public getConfig(): ReportDataConfig {
     return {
