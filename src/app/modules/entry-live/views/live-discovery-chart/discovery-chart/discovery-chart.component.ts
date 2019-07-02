@@ -39,6 +39,7 @@ export class DiscoveryChartComponent {
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
   private _dataZoomStart = 0;
   private _dataZoomEnd = 100;
+  private _echartsIntance: any;
   
   public _chartData: EChartOption;
   public _totalsData: { [key: string]: string };
@@ -48,11 +49,12 @@ export class DiscoveryChartComponent {
     const metrics = this.selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
     this._totalsData = value.totals;
-
-    // postpone data update to make sure all local properties are updated before the graph update
-    setTimeout(() => {
-      this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
-    }, 0);
+    this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+    if (this._echartsIntance) {
+      this._echartsIntance.setOption({
+        dataZoom: [{start: this._dataZoomStart, end: this._dataZoomEnd}]
+      });
+    }
   }
   
   private _getTooltipFormatter(params: any[]): string {
@@ -242,6 +244,7 @@ export class DiscoveryChartComponent {
   }
   
   public _onChartInit(chartInstance): void {
+    this._echartsIntance = chartInstance;
     chartInstance.on('datazoom', ({ start, end }) => {
       this._dataZoomStart = start;
       this._dataZoomEnd = end;
