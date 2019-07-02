@@ -14,8 +14,7 @@
       </div>
     </div>
 
-    <app-date-filter #dateFilter
-                     name="geo"
+    <app-date-filter name="geo"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
                      [showCompare]="false"
@@ -25,7 +24,6 @@
   <div class="kReportContainer kNoPadding">
     <app-geo-filter [opened]="_refineFilterOpened"
                     [dateFilter]="_dateFilter"
-                    [selectedFilters]="_selectedRefineFilters"
                     (closeFilters)="_refineFilterOpened = false"
                     (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>
   </div>
@@ -49,11 +47,11 @@
       <div class="kMap">
         <div *ngIf="_mapDataReady" echarts class="kChart"
              [options]="_mapChartData[_selectedMetrics]"
-             (chartClick)="onChartClick($event)"
-             (chartInit)="onChartInit($event)"></div>
+             (chartClick)="_onChartClick($event)"
+             (chartInit)="_onChartInit($event)"></div>
         <div class="kZoomWidget">
-          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="zoom('out')"></button>
-          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="zoom('in')"></button>
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
         </div>
       </div>
       <div class="kTable">
@@ -77,7 +75,7 @@
               </ng-template>
             </p-dropdown>
             <span *ngIf="_totalCount" class="kEntitiesCount">
-              {{('app.audience.geo.' + _tableMode) | translate: {'0': _totalCount} }}
+              {{('app.audience.geo.' + _tableMode) | translate: { '0': _totalCount } }}
             </span>
           </div>
           <p-table #table
@@ -144,7 +142,7 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td>
-                  <span>{{rowIndex+1}}</span>
+                  <span>{{rowIndex + 1}}</span>
                 </td>
                 <td class="kFlagColumn" *ngIf="!_drillDown.length">
                   <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
@@ -175,8 +173,10 @@
                 </td>
                 <td [ngStyle]="{'paddingLeft': '0px'}">
                   <span>
-                    <h5 class="mini-loader" *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
-                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend" [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
+                    <h5 class="mini-loader"
+                        *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
+                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend"
+                          [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
                       <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
                                        [units]="data[_selectedMetrics+'_trend']?.units"
                                        [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
