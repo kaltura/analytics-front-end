@@ -58,7 +58,7 @@
         <div class="kTableContainer">
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
-                        [options]="_tableModes"
+                        [options]="_tableModeOptions"
                         (onChange)="_onTableModeChange($event.value)"
                         [(ngModel)]="_tableMode">
               <ng-template let-option pTemplate="selectedItem">
@@ -148,9 +148,11 @@
                   <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
                 </td>
                 <td class="kHighlight">
-                  <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
-                  <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
-                  <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
+                  <a *ngIf="_tableMode === _tableModes.countries"
+                     (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
+                  <a *ngIf="_tableMode === _tableModes.regions"
+                     (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+                  <span *ngIf="_tableMode === _tableModes.cities">{{data['city']}}</span>
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays'">
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>

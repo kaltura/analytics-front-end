@@ -76,7 +76,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _drillDown: string[] = [];
   public _mapDataReady = false;
   public _tableMode = GeoTableModes.countries;
-  public _tableModes: SelectItem[] = [
+  public _tableModes = GeoTableModes;
+  public _tableModeOptions: SelectItem[] = [
     { value: GeoTableModes.countries, label: this._translate.instant('app.audience.geo.tableMode.countries') },
     { value: GeoTableModes.regions, label: this._translate.instant('app.audience.geo.tableMode.regions') },
     { value: GeoTableModes.cities, label: this._translate.instant('app.audience.geo.tableMode.cities') },
@@ -110,7 +111,34 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
   
   public _onTableModeChange(mode: GeoTableModes): void {
-    console.warn(mode);
+    this._logger.trace('Handle change table mode action by user', { mode });
+    let reportType: KalturaReportType;
+    switch (mode) {
+      case GeoTableModes.cities:
+        reportType = KalturaReportType.mapOverlayCity;
+        break;
+      case GeoTableModes.regions:
+        reportType = KalturaReportType.mapOverlayRegion;
+        break;
+      case GeoTableModes.countries:
+        reportType = KalturaReportType.mapOverlayCountry;
+        break;
+      default:
+        reportType = null;
+        break;
+    }
+    
+    this._reportType = reportType;
+    this._mapZoom = this._tableMode !== GeoTableModes.countries || !this._canMapDrillDown ? 1.2 : this._mapZoom;
+    this._pager.pageIndex = 1;
+  
+    if (this._table) {
+      this._table.reset();
+    }
+  
+    this._updateExportConfig();
+  
+    this._loadReport();
   }
   
   public _onChartInit(ec: any): void {
@@ -179,13 +207,16 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   }
   
-  public _onDrillDown(country: string): void {
+  public _onDrillDown(country: string, reportType: KalturaReportType = null): void {
     this._logger.trace('Handle drill down to country action by user', { country });
     if (country === '') {
       this._drillDown = [];
+      this._tableMode = GeoTableModes.countries;
     } else if (this._drillDown.length < 2) {
+      this._tableMode = GeoTableModes.regions;
       this._drillDown.push(getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
+      this._tableMode = GeoTableModes.cities;
       this._drillDown.pop();
     }
     this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
@@ -289,7 +320,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
   
   private _updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
+    const isScatter = this._drillDown.length > 0 && this._canMapDrillDown || this._tableMode !== GeoTableModes.countries;
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(isScatter);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
