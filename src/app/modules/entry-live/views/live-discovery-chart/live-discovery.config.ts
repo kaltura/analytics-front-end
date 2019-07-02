@@ -88,7 +88,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'avg_view_dropped_frames_ratio': {
             format: value => ReportHelper.percents(value, false),
           },
-          'view_unique_buffering_users': {
+          'avg_view_buffering': {
             format: value => ReportHelper.percents(value, false),
           },
           // 'avg_view_bitrate': {
@@ -106,10 +106,10 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'view_unique_audience': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'view_unique_audience_dvr': {
+          'avg_view_dvr': {
             format: value => ReportHelper.percents(value, false),
           },
-          'view_unique_engaged_users': {
+          'avg_view_engagement': {
             format: value => ReportHelper.percents(value, false),
           },
         }
