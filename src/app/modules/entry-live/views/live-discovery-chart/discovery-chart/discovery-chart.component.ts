@@ -116,12 +116,14 @@ export class DiscoveryChartComponent {
     };
     let mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
     let secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
-    if (this.shouldNormalize(mainMetric, secondaryMetric)) {
+
+    if (this.shouldNormalize(mainMetric) && this.shouldNormalize(secondaryMetric)) {
       mainMax = secondaryMax = Math.max(mainMax, secondaryMax);
     }
-    let mainMin = getMinValue(main);
-    let secondaryMin = getMinValue(secondary);
-    
+
+    let mainMin = this.shouldNormalize(mainMetric) ? 0 : getMinValue(main);
+    let secondaryMin = this.shouldNormalize(secondaryMetric) ? 0 : getMinValue(secondary);
+
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
@@ -246,9 +248,9 @@ export class DiscoveryChartComponent {
     };
   }
   
-  private shouldNormalize(metric1: string, metric2: string): boolean {
+  private shouldNormalize(metric: string): boolean {
     const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
-    return normalizedMetrics.indexOf(metric1) > -1 && normalizedMetrics.indexOf(metric2) > -1;
+    return normalizedMetrics.indexOf(metric) > -1;
   }
   
   public _onChartInit(chartInstance): void {
