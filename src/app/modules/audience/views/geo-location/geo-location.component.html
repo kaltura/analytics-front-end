@@ -75,7 +75,7 @@
               </ng-template>
             </p-dropdown>
             <span *ngIf="_totalCount" class="kEntitiesCount">
-              {{('app.audience.geo.' + _tableMode) | translate: { '0': _totalCount } }}
+              {{('app.audience.geo.' + _currentTableLevel) | translate: { '0': _totalCount } }}
             </span>
           </div>
           <p-table #table
@@ -93,7 +93,7 @@
                 <th [ngStyle]="{'width': '42px'}">
                   <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
                 </th>
-                <th *ngIf="_tableMode === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
+                <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
@@ -144,15 +144,15 @@
                 <td>
                   <span>{{rowIndex + 1}}</span>
                 </td>
-                <td class="kFlagColumn" *ngIf="_tableMode === _tableModes.countries">
+                <td class="kFlagColumn" *ngIf="_currentTableLevel === _tableModes.countries">
                   <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
                 </td>
                 <td class="kHighlight">
-                  <a *ngIf="_tableMode === _tableModes.countries"
+                  <a *ngIf="_currentTableLevel === _tableModes.countries"
                      (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
-                  <a *ngIf="_tableMode === _tableModes.regions"
+                  <a *ngIf="_currentTableLevel === _tableModes.regions"
                      (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
-                  <span *ngIf="_tableMode === _tableModes.cities">{{data['city']}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.cities">{{data['city']}}</span>
                 </td>
                 <td *ngIf="_selectedMetrics==='count_plays'">
                   <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>

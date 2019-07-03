@@ -26,6 +26,7 @@ import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { Table } from 'primeng/table';
 
 export enum GeoTableModes {
   countries = 'countries',
@@ -58,6 +59,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private order = '-count_plays';
   private _mapZoom = 1.2;
   
+  public _currentTableLevel = GeoTableModes.countries;
+
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
@@ -82,6 +85,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     { value: GeoTableModes.regions, label: this._translate.instant('app.audience.geo.tableMode.regions') },
     { value: GeoTableModes.cities, label: this._translate.instant('app.audience.geo.tableMode.cities') },
   ];
+  
+  private get _isScatter(): boolean {
+    return this._currentTableLevel !== GeoTableModes.countries;
+  }
   
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -127,9 +134,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         reportType = null;
         break;
     }
-    
+  
+    this._currentTableLevel = mode;
     this._reportType = reportType;
-    this._mapZoom = this._tableMode !== GeoTableModes.countries || !this._canMapDrillDown ? 1.2 : this._mapZoom;
+    this._mapZoom = this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
     this._drillDown = [];
   
@@ -163,7 +171,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     
     refineFilterToServerValue(this._refineFilter, this._filter);
     refineFilterToServerValue(this._refineFilter, this._trendFilter);
-    
+  
+    this._currentTableLevel = this._tableMode = GeoTableModes.countries;
+
     this._onDrillDown('');
   }
   
@@ -201,7 +211,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._logger.trace('Handle zoom action by user', { direction });
     this._mapZoom = direction === 'in' ? this._mapZoom * 2 : this._mapZoom / 2;
     const roam = this._mapZoom > 1.2 ? 'move' : 'false';
-    if (this._drillDown.length > 0 && this._canMapDrillDown) {
+    if (this._isScatter && this._canMapDrillDown) {
       this._echartsIntance.setOption({ geo: [{ zoom: this._mapZoom, roam }] }, false);
     } else {
       this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom, roam }] }, false);
@@ -320,8 +330,21 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._selectedTab = this._tabsData[0];
   }
   
+  private _getName(data: TableRow): string {
+    switch (this._currentTableLevel) {
+      case GeoTableModes.countries:
+        return getCountryName(data.country, false);
+      case GeoTableModes.regions:
+        return data.region;
+      case GeoTableModes.cities:
+        return data.city;
+      default:
+        return null;
+    }
+  }
+  
   private _updateMap(): void {
-    const isScatter = this._drillDown.length > 0 && this._canMapDrillDown || this._tableMode !== GeoTableModes.countries;
+    const isScatter = this._canMapDrillDown && this._isScatter;
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(isScatter);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
@@ -331,14 +354,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
       value.push(parseFormattedValue(data[this._selectedMetrics]));
-      mapConfig.series[0].data.push({
-        name: this._drillDown.length === 0
-          ? getCountryName(data.country, false)
-          : this._drillDown.length === 1
-            ? data.region
-            : data.city,
-        value
-      });
+      mapConfig.series[0].data.push({ name: this._getName(data), value });
       if (parseInt(data[this._selectedMetrics]) > maxValue) {
         maxValue = parseFormattedValue(data[this._selectedMetrics]);
       }
@@ -349,7 +365,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
     map.center = this._mapCenter;
     map.zoom = this._mapZoom;
-    map.roam = this._drillDown.length === 0 || this._canMapDrillDown ? 'false' : 'move';
+    map.roam = !this._isScatter || this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
   
@@ -460,12 +476,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
 
-    if (this._tableMode !== GeoTableModes.countries && this._canMapDrillDown) {
-      const location = this._drillDown.length === 1 ? this._drillDown[0] : this._drillDown[1];
+    if (this._isScatter && this._canMapDrillDown) {
+      const location = this._isScatter ? this._drillDown[1] : this._drillDown[0];
       let found = false;
       this._tableData.forEach(data => {
-        const name = this._drillDown.length === 1 ? data.country : data.region;
-        if (location === name) {
+        if (location === this._getName(data)) {
           found = true;
           this._mapCenter = [data['coordinates'].split('/')[1], data['coordinates'].split('/')[0]];
         }
