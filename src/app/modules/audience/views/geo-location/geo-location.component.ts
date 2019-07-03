@@ -131,6 +131,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._reportType = reportType;
     this._mapZoom = this._tableMode !== GeoTableModes.countries || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
+    this._drillDown = [];
   
     if (this._table) {
       this._table.reset();
@@ -458,7 +459,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
-    if (this._drillDown.length > 0 && this._canMapDrillDown) {
+
+    if (this._tableMode !== GeoTableModes.countries && this._canMapDrillDown) {
       const location = this._drillDown.length === 1 ? this._drillDown[0] : this._drillDown[1];
       let found = false;
       this._tableData.forEach(data => {
