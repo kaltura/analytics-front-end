@@ -201,7 +201,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
   
   public _onChartClick(event): void {
-    if (event.data && event.data.name && this._drillDown.length < 2) {
+    if (event.data && event.data.name && this._currentTableLevel !== GeoTableModes.cities) {
       this._logger.trace('Handle click on chart by user', { country: event.data.name });
       this._onDrillDown(event.data.name);
     }
@@ -218,20 +218,23 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   }
   
-  public _onDrillDown(country: string, reportType: KalturaReportType = null): void {
+  public _onDrillDown(country: string): void {
+    
+    //TODO figure out drilldown
     this._logger.trace('Handle drill down to country action by user', { country });
     if (country === '') {
       this._drillDown = [];
-      this._tableMode = GeoTableModes.countries;
+      this._currentTableLevel = GeoTableModes.countries;
     } else if (this._drillDown.length < 2) {
-      this._tableMode = GeoTableModes.regions;
+      this._currentTableLevel = GeoTableModes.regions;
       this._drillDown.push(getCountryName(country, true));
     } else if (this._drillDown.length === 2) {
-      this._tableMode = GeoTableModes.cities;
+      this._currentTableLevel = GeoTableModes.cities;
       this._drillDown.pop();
     }
+
     this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this._mapZoom = this._drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
+    this._mapZoom = !this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
     
     this._canMapDrillDown = canDrillDown(this._drillDown[0]);
@@ -462,14 +465,22 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
     reportConfig.objectIds = '';
     
-    if (this._drillDown.length > 0) {
-      reportConfig.filter.countryIn = this._drillDown[0];
-    } else if (countriesFilterApplied) {
-      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
-    }
-    
-    if (this._drillDown.length > 1) {
-      reportConfig.filter.regionIn = this._drillDown[1];
+    if (this._currentTableLevel === GeoTableModes.countries) {
+      if (this._drillDown.length > 0) {
+        reportConfig.filter.countryIn = this._drillDown[0];
+      } else if (countriesFilterApplied) {
+        refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+      }
+  
+      if (this._drillDown.length > 1) {
+        reportConfig.filter.regionIn = this._drillDown[1];
+      }
+    } else if (this._currentTableLevel === GeoTableModes.regions) {
+      if (this._drillDown.length > 0) {
+        reportConfig.filter.regionIn = this._drillDown[0];
+      } else if (countriesFilterApplied) {
+        refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+      }
     }
   }
   
