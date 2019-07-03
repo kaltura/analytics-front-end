@@ -9,7 +9,7 @@ import { EntryLiveDiscoveryPollsService } from '../../providers/entry-live-disco
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaAPIException, KalturaClient, KalturaFilterPager, KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
+import { DateRange, DateRangeServerValue, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-discovery-devices-table-request-factory';
 import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
@@ -41,6 +41,8 @@ export interface UsersTableFilter {
 }
 
 export interface LiveDiscoveryTableWidgetProvider {
+  dateRange: DateRangeServerValue;
+
   getPollFactory(args: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory;
   
   responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData;
@@ -110,6 +112,17 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     }
   }
   
+  private _updateProviderDateRange(): void {
+    if (this._isPresetMode) {
+      this._provider.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    } else {
+      this._provider.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+  }
+  
   private _applyFilters(): void {
     if (this._tableMode === TableModes.users) {
       (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
@@ -128,6 +141,8 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
           toDate: this._dateFilter.endDate,
         };
       }
+  
+      this._updateProviderDateRange();
     }
   }
   
@@ -154,6 +169,8 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     this.isBusy = false;
     
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+  
+    this._updateProviderDateRange();
     
     return { tableMode: this._tableMode, ...data };
   }
@@ -188,6 +205,8 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
         toDate: this._dateFilter.endDate,
       };
     }
+  
+    this._updateProviderDateRange();
     
     if (this._showTable) {
       this.restartPolling(!this._isPresetMode);
