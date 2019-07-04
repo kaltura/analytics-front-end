@@ -236,7 +236,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           this._reportType = KalturaReportType.mapOverlayCity;
         }
         break;
-      
       case GeoTableModes.regions:
         if (drillDown === '') {
           this._drillDown = [];
@@ -515,7 +514,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
     if (this._isScatter && this._canMapDrillDown) {
-      const location = this._isScatter ? this._drillDown[1] : this._drillDown[0];
+      const location = this._isScatter && this._tableMode === GeoTableModes.countries ? this._drillDown[1] : this._drillDown[0];
       let found = false;
       this._tableData.forEach(data => {
         if (location === this._getName(data)) {
