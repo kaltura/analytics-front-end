@@ -26,7 +26,6 @@ import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
-import { Table } from 'primeng/table';
 
 export enum GeoTableModes {
   countries = 'countries',
@@ -60,7 +59,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private _mapZoom = 1.2;
   
   public _currentTableLevel = GeoTableModes.countries;
-
+  
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
@@ -134,19 +133,19 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         reportType = null;
         break;
     }
-  
+    
     this._currentTableLevel = mode;
     this._reportType = reportType;
     this._mapZoom = this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
     this._drillDown = [];
-  
+    
     if (this._table) {
       this._table.reset();
     }
-  
+    
     this._updateExportConfig();
-  
+    
     this._loadReport();
   }
   
@@ -171,9 +170,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     
     refineFilterToServerValue(this._refineFilter, this._filter);
     refineFilterToServerValue(this._refineFilter, this._trendFilter);
-  
+    
     this._currentTableLevel = this._tableMode = GeoTableModes.countries;
-
+    
     this._onDrillDown('');
   }
   
@@ -218,22 +217,44 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
   }
   
-  public _onDrillDown(country: string): void {
+  public _onDrillDown(drillDown: string, goBack = false): void {
+    this._logger.trace('Handle drill down to country action by user', { drillDown });
     
-    //TODO figure out drilldown
-    this._logger.trace('Handle drill down to country action by user', { country });
-    if (country === '') {
-      this._drillDown = [];
-      this._currentTableLevel = GeoTableModes.countries;
-    } else if (this._drillDown.length < 2) {
-      this._currentTableLevel = GeoTableModes.regions;
-      this._drillDown.push(getCountryName(country, true));
-    } else if (this._drillDown.length === 2) {
-      this._currentTableLevel = GeoTableModes.cities;
-      this._drillDown.pop();
+    switch (this._tableMode) {
+      case GeoTableModes.countries:
+        if (drillDown === '') {
+          this._drillDown = [];
+          this._currentTableLevel = GeoTableModes.countries;
+          this._reportType = KalturaReportType.mapOverlayCountry;
+        } else if (this._drillDown.length === 0 || goBack) {
+          this._currentTableLevel = GeoTableModes.regions;
+          this._drillDown = [getCountryName(drillDown, true)];
+          this._reportType = KalturaReportType.mapOverlayRegion;
+        } else if (this._drillDown.length === 1) {
+          this._currentTableLevel = GeoTableModes.cities;
+          this._drillDown.push(getCountryName(drillDown, true));
+          this._reportType = KalturaReportType.mapOverlayCity;
+        }
+        break;
+      
+      case GeoTableModes.regions:
+        if (drillDown === '') {
+          this._drillDown = [];
+          this._currentTableLevel = GeoTableModes.regions;
+          this._reportType = KalturaReportType.mapOverlayRegion;
+        } else if (this._drillDown.length === 0) {
+          this._currentTableLevel = GeoTableModes.cities;
+          this._drillDown = [getCountryName(drillDown, true)];
+          this._reportType = KalturaReportType.mapOverlayCity;
+        }
+        break;
+      case GeoTableModes.cities:
+        this._drillDown = [];
+        this._currentTableLevel = GeoTableModes.cities;
+        this._reportType = KalturaReportType.mapOverlayCity;
+        break;
     }
-
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    
     this._mapZoom = !this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
     
@@ -465,28 +486,34 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     }
     reportConfig.objectIds = '';
     
-    if (this._currentTableLevel === GeoTableModes.countries) {
-      if (this._drillDown.length > 0) {
-        reportConfig.filter.countryIn = this._drillDown[0];
-      } else if (countriesFilterApplied) {
-        refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
-      }
-  
-      if (this._drillDown.length > 1) {
-        reportConfig.filter.regionIn = this._drillDown[1];
-      }
-    } else if (this._currentTableLevel === GeoTableModes.regions) {
-      if (this._drillDown.length > 0) {
-        reportConfig.filter.regionIn = this._drillDown[0];
-      } else if (countriesFilterApplied) {
-        refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
-      }
+    switch (this._tableMode) {
+      case GeoTableModes.countries:
+        if (this._drillDown.length > 0) {
+          reportConfig.filter.countryIn = this._drillDown[0];
+        } else if (countriesFilterApplied) {
+          refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+        }
+        if (this._drillDown.length > 1) {
+          reportConfig.filter.regionIn = this._drillDown[1];
+        }
+        break;
+      case GeoTableModes.regions:
+        if (this._drillDown.length > 0) {
+          reportConfig.filter.regionIn = this._drillDown[0];
+        } else if (countriesFilterApplied) {
+          refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+        }
+        break;
+      case GeoTableModes.cities:
+        if (countriesFilterApplied) {
+          refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+        }
+        break;
     }
   }
   
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
-
     if (this._isScatter && this._canMapDrillDown) {
       const location = this._isScatter ? this._drillDown[1] : this._drillDown[0];
       let found = false;

@@ -256,7 +256,6 @@
     "audience":{
       "geo": {
         "title": "Geo Location",
-        "top": "Top Countries",
         "count_plays": "Plays",
         "unique_known_users": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
