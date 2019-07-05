@@ -29,7 +29,7 @@
       margin-top: auto;
       display: flex;
       align-items: flex-end;
-      /deep/ .kValue{
+      ::ng-deep .kValue{
         font-size: 24px;
         font-weight: 400;
         color: $kGrayscale1;

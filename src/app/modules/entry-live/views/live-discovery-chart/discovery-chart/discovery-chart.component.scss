@@ -78,7 +78,7 @@
         height: 34px;
         width: 160px;
 
-        /deep/ .ui-button-text {
+        ::ng-deep .ui-button-text {
           line-height: 24px;
           padding: .25em .8em .25em 2.9em;
         }

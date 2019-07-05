@@ -11,7 +11,7 @@
     padding: 0 !important;
   }
 
-  /deep/ .ui-button .ui-button-text {
+  ::ng-deep .ui-button .ui-button-text {
     white-space: nowrap;
   }
 }

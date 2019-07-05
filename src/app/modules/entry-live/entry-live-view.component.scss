@@ -53,6 +53,6 @@
   }
 }
 
-:host /deep/ .kExport .kDropDown {
+:host ::ng-deep .kExport .kDropDown {
   margin-right: 0px !important;
 }

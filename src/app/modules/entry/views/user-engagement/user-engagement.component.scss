@@ -18,7 +18,7 @@
   }
 }
 
-:host /deep/ .kRowExpansion {
+:host ::ng-deep .kRowExpansion {
   padding: 0 !important;
   text-align: center;
 }

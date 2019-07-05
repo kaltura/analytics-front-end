@@ -4,11 +4,11 @@
   justify-content: space-between;
   flex-direction: column;
 
-  /deep/ .ui-multiselect {
+  ::ng-deep .ui-multiselect {
     width: 230px !important;
   }
 
-  /deep/ .expandWidth .ui-multiselect {
+  ::ng-deep .expandWidth .ui-multiselect {
     width: 432px !important;
   }
 }

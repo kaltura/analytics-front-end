@@ -85,11 +85,11 @@
   }
 }
 
-:host /deep/ .ui-multiselect-item{
+:host ::ng-deep .ui-multiselect-item{
   display: flex;
   align-items: center;
 }
-:host /deep/ .ui-multiselect-panel .ui-multiselect-items-wrapper{
+:host ::ng-deep .ui-multiselect-panel .ui-multiselect-items-wrapper{
   overflow-x: hidden;
 }
 :host {

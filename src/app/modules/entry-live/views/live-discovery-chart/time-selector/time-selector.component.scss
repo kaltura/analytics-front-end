@@ -102,7 +102,7 @@
             background-color: $kGrayscale6;
           }
 
-          /deep/ .ui-radiobutton {
+          ::ng-deep .ui-radiobutton {
             float: right;
             margin-right: 16px;
 
@@ -124,7 +124,7 @@
             }
           }
 
-          /deep/ .ui-radiobutton-label {
+          ::ng-deep .ui-radiobutton-label {
             font-weight: normal;
             margin-left: 24px;
             display: block;
@@ -148,7 +148,7 @@
       flex-direction: column;
 
       .kMainCalendar {
-        /deep/ .ui-calendar .ui-datepicker {
+        ::ng-deep .ui-calendar .ui-datepicker {
           width: 304px;
           border-bottom: none;
           border-bottom-left-radius: 0;
@@ -164,7 +164,7 @@
       .kTimeSelectorsGroup {
         display: flex;
 
-        p-calendar /deep/ .ui-calendar .ui-datepicker {
+        p-calendar ::ng-deep .ui-calendar .ui-datepicker {
           width: 152px;
           border-top: none;
           border-bottom: 1px solid #d9d9d9;
@@ -184,19 +184,19 @@
             }
 
             &.kLeft {
-              /deep/ .ui-calendar .ui-datepicker {
+              ::ng-deep .ui-calendar .ui-datepicker {
                 border-bottom-right-radius: 0;
                 border-right: none;
               }
             }
 
             &.kRight {
-              /deep/ .ui-calendar .ui-datepicker {
+              ::ng-deep .ui-calendar .ui-datepicker {
                 border-bottom-left-radius: 0;
               }
             }
 
-            /deep/ .ui-timepicker {
+            ::ng-deep .ui-timepicker {
               padding-left: 50px;
             }
 
@@ -228,7 +228,7 @@
     padding-bottom: 24px;
     justify-content: center;
 
-    /deep/ p-selectbutton .ui-button {
+    ::ng-deep p-selectbutton .ui-button {
       min-width: 147px;
     }
   }
