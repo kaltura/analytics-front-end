@@ -26,7 +26,6 @@ import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule, InputH
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
-import { CheckboxModule, OverlayPanelModule } from 'primeng/primeng';
 import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
@@ -44,6 +43,8 @@ import { MiniTopPlaybackSpeedComponent } from './views/content-interactions/mini
 import { MiniTopStatsComponent } from './views/content-interactions/mini-top-stats/mini-top-stats.component';
 import { InteractionsTableComponent } from './views/content-interactions/interactions/interactions-table/interactions-table.component';
 import { EvenTableHeightDirective } from './views/content-interactions/interactions/even-table-height.directive';
+import { CheckboxModule } from 'primeng/checkbox';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   imports: [

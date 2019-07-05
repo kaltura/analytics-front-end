@@ -5,10 +5,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { BrowserService } from 'shared/services';
-import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,8 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
-  @ViewChild('alert') private _alertDialog: ConfirmDialog;
+  @ViewChild('confirm', { static: false }) private _confirmDialog: ConfirmDialog;
+  @ViewChild('alert', { static: false }) private _alertDialog: ConfirmDialog;
 
   public _windowEventListener = null;
   public _confirmDialogAlignLeft = false;

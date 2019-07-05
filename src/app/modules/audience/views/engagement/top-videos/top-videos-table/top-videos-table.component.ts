@@ -31,7 +31,7 @@ export class TopVideosTableComponent implements OnDestroy {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];

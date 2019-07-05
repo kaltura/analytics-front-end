@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   @Output() dateFilterChange = new EventEmitter<DateRange>();
-  @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
+  @ViewChild(DiscoveryChartComponent, { static: false }) _discoveryChart: DiscoveryChartComponent;
   
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;

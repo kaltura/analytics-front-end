@@ -12,7 +12,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-stream-health.component.scss']
 })
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
-  @ViewChild(ScrollToTopContainerComponent) _listContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];

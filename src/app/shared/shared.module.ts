@@ -41,7 +41,6 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule, MultiSelectModule, PaginatorModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
@@ -57,6 +56,9 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
 import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
 import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
 import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   imports: [

@@ -25,7 +25,7 @@ export class CategoryFilterComponent {
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
   
-  @ViewChild('categoriesPopup') _categoriesPopup: PopupWidgetComponent;
+  @ViewChild('categoriesPopup', { static: false }) _categoriesPopup: PopupWidgetComponent;
   
   private _listDiffer: IterableDiffer<any>;
   

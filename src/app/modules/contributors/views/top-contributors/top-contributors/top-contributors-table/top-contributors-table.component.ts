@@ -27,7 +27,7 @@ export class TopContributorsTableComponent implements OnDestroy {
   
   @Output() sortFieldChanged = new EventEmitter<string>();
   
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];

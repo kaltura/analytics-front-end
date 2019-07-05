@@ -21,7 +21,7 @@ import { refineFilterToServerValue } from 'shared/components/filter/filter-to-se
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getCountryName } from 'shared/utils/get-country-name';
-import { DataTable } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
@@ -38,7 +38,7 @@ import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
   ]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
-  @ViewChild('table') _table: DataTable;
+  @ViewChild('table', { static: false }) _table: Table;
 
   private _dataConfig: ReportDataConfig;
 

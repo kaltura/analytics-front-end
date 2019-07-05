@@ -33,7 +33,7 @@ import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export
 })
 export class EndUserStorageComponent implements OnInit, OnDestroy {
 
-  @ViewChild('userFilter') private userFilter: UsersFilterComponent;
+  @ViewChild('userFilter', { static: false }) private userFilter: UsersFilterComponent;
   
   private _paginationChanged = new Subject<void>();
   
