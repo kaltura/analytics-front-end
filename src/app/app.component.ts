@@ -115,6 +115,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.isHosted = this.hosted;
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
+    analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
 
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);

@@ -20,6 +20,7 @@ export interface AnalyticsConfig {
   ks?: string;
   pid?: string;
   locale?: string;
+  dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
   live?: {

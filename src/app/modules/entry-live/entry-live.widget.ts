@@ -8,6 +8,7 @@ import { KalturaStreamStatus } from './utils/get-stream-status';
 import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
@@ -37,7 +38,8 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       redundancy: this._entryLiveService.getRedundancyStatus(nodes),
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
-      owner: responses[3].result.fullName
+      owner: responses[3].result.fullName,
+      displayCreatedAt: DateFilterUtils.formatFullDateString(entry.createdAt),
     });
     
     this._entryLiveService.setStreamStatus(liveEntry, nodes);
