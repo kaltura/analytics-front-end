@@ -10,6 +10,7 @@ import { DateRange } from '../filters/filters.service';
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 
 @Component({
   selector: 'app-time-selector',
@@ -62,6 +63,7 @@ export class TimeSelectorComponent implements OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
               private _router: Router,
+              private _pageScrollService: PageScrollService,
               private _dateFilterService: TimeSelectorService) {
     this._init();
   }
@@ -81,7 +83,21 @@ export class TimeSelectorComponent implements OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._popupOpened = true;
+        this._scrollToPopup();
       });
+  }
+  
+  private _scrollToPopup(): void {
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById('discovery-time-selector') as HTMLElement;
+      if (targetEl) {
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance = PageScrollInstance.simpleInstance(document, '#discovery-time-selector');
+      this._pageScrollService.start(pageScrollInstance);
+    }
   }
   
   private _resetTime(): void {
