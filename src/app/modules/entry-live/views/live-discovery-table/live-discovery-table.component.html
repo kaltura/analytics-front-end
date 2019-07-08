@@ -13,6 +13,8 @@
         <!-- USERS TABLE-->
         <ng-container *ngSwitchCase="_tableModes.users">
           <app-discovery-filter [totalCount]="_totalCount"
+                                [rangeLabel]="rangeLabel"
+                                (openTimeSelector)="_openTimeSelector()"
                                 (filterChange)="_widget.usersFilterChange($event)">
             <app-table-selector [tableMode]="_tableMode"
                                 (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
@@ -33,6 +35,10 @@
             <span class="kTotalCount">
               {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}
             </span>
+            <div class="kTimePeriodLabel">
+              <span [innerHTML]="rangeLabel"></span>
+              <a (click)="_openTimeSelector()">{{'app.entryLive.changeDate' | translate}}</a>
+            </div>
           </div>
           <app-devices-table [tableData]="_tableData"
                              [summary]="_summaryData"

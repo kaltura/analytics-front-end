@@ -11,6 +11,15 @@
   justify-content: space-between;
   align-items: center;
 
+  .kRightSide {
+    display: flex;
+    align-items: center;
+
+    .kTimePeriodLabel a {
+      margin-left: 5px;
+    }
+  }
+
   .kTableContent {
     display: flex;
     align-items: center;

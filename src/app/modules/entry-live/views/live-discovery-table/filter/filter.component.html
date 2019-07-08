@@ -4,9 +4,15 @@
     <span class="kTotalCount">{{'app.entryLive.discovery.totalActiveUsers' | translate: { '0': totalCount } }}</span>
   </div>
 
-  <div class="kSearch">
-    <app-discovery-users-filter [selectedUsers]="_selectedValues['users']"
+  <div class="kRightSide">
+    <div class="kTimePeriodLabel">
+      <span [innerHTML]="rangeLabel"></span>
+      <a (click)="openTimeSelector.emit()">{{'app.entryLive.changeDate' | translate}}</a>
+    </div>
+    <div class="kSearch">
+      <app-discovery-users-filter [selectedUsers]="_selectedValues['users']"
                                 (itemSelected)="_onItemSelected($event, 'users')"></app-discovery-users-filter>
+    </div>
   </div>
 </div>
 

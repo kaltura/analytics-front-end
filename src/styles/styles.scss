@@ -635,6 +635,7 @@ ui-carousel {
 }
 
 .kTimePeriodLabel {
+  max-height: 18px;
   font-size: 15px;
   white-space: nowrap;
   color: $kGrayscale1;
@@ -642,5 +643,9 @@ ui-carousel {
   background-color: $kGrayscale7;
   border-radius: 3px;
   padding: .25em .5em;
+
+  a {
+    margin-left: 5px;
+  }
 }
 

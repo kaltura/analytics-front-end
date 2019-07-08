@@ -9,12 +9,12 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { DateRange } from '../filters/filters.service';
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-time-selector',
   templateUrl: './time-selector.component.html',
   styleUrls: ['./time-selector.component.scss'],
-  providers: [TimeSelectorService]
 })
 export class TimeSelectorComponent implements OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
@@ -76,6 +76,12 @@ export class TimeSelectorComponent implements OnDestroy {
     setTimeout(() => {
       this._updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
+  
+    this._dateFilterService.popupOpened$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(() => {
+        this._popupOpened = true;
+      });
   }
   
   private _resetTime(): void {
@@ -98,6 +104,7 @@ export class TimeSelectorComponent implements OnDestroy {
       startDate: startDate.unix(),
       endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
+      rangeLabel: this._dateRangeLabel,
     });
   }
   
