@@ -399,6 +399,7 @@
       }
     },
     "entryLive": {
+      "changeDate": "Change Date",
       "createdOn": "Created On: {{0}}",
       "owner": "Owner: {{0}}",
       "seeAll": "See All Details",

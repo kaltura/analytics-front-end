@@ -20,6 +20,7 @@ import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
+import { TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 
 @Component({
   selector: 'app-entry-live',
@@ -27,6 +28,7 @@ import { DateRange, FiltersService } from './views/live-discovery-chart/filters/
   styleUrls: ['./entry-live-view.component.scss'],
   providers: [
     EntryLiveExportConfig,
+    TimeSelectorService,
   
     // widgets
     EntryLiveWidget,

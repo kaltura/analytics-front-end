@@ -9,12 +9,13 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { DateRange } from '../filters/filters.service';
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 
 @Component({
   selector: 'app-time-selector',
   templateUrl: './time-selector.component.html',
   styleUrls: ['./time-selector.component.scss'],
-  providers: [TimeSelectorService]
 })
 export class TimeSelectorComponent implements OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
@@ -62,6 +63,7 @@ export class TimeSelectorComponent implements OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
               private _router: Router,
+              private _pageScrollService: PageScrollService,
               private _dateFilterService: TimeSelectorService) {
     this._init();
   }
@@ -76,6 +78,27 @@ export class TimeSelectorComponent implements OnDestroy {
     setTimeout(() => {
       this._updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
+  
+    this._dateFilterService.popupOpened$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(() => {
+        this._popupOpened = true;
+        this._scrollToPopup();
+      });
+  }
+  
+  private _scrollToPopup(): void {
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById('discovery-time-selector') as HTMLElement;
+      if (targetEl) {
+        const position = targetEl.getBoundingClientRect().top + window.pageYOffset - 54;
+        this._frameEventManager.publish(FrameEvents.ScrollTo, position);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance = PageScrollInstance.simpleInstance(document, '#discovery-time-selector');
+      this._pageScrollService.start(pageScrollInstance);
+    }
   }
   
   private _resetTime(): void {
@@ -98,6 +121,7 @@ export class TimeSelectorComponent implements OnDestroy {
       startDate: startDate.unix(),
       endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
+      rangeLabel: this._dateRangeLabel,
     });
   }
   

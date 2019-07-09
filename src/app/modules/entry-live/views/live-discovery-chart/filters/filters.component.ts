@@ -13,6 +13,7 @@ export interface DateFiltersChangedEvent {
   isPresetMode: boolean;
   startDate: number;
   endDate: number;
+  rangeLabel: string;
 }
 
 @Component({
@@ -28,6 +29,7 @@ export class FiltersComponent {
   private _startDate: number;
   private _endDate: number;
   private _daysCount: number = null;
+  private _rangeLabel: string;
   
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
@@ -56,6 +58,7 @@ export class FiltersComponent {
       isPresetMode: this._isPresetMode,
       startDate: this._startDate,
       endDate: this._endDate,
+      rangeLabel: this._rangeLabel,
     });
   }
   
@@ -65,6 +68,7 @@ export class FiltersComponent {
     this._endDate = event.endDate;
     this._selectedDateRange = event.dateRange;
     this._daysCount = event.daysCount;
+    this._rangeLabel = event.rangeLabel;
     
     this._onFilterChange(this._initialRun, null);
     this._initialRun = false;

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateRange, FiltersService } from '../filters/filters.service';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
 
 export interface DateChangeEvent {
   isPresetMode: boolean;
@@ -10,12 +11,25 @@ export interface DateChangeEvent {
   endDate: number;
   dateRange: DateRange;
   daysCount: number;
+  rangeLabel: string;
 }
 
 @Injectable()
-export class TimeSelectorService {
+export class TimeSelectorService implements OnDestroy {
+  private _popupOpened = new Subject();
+  
+  public readonly popupOpened$ = this._popupOpened.asObservable();
+  
   constructor(private _translate: TranslateService,
               private _filterService: FiltersService) {
+  }
+  
+  ngOnDestroy(): void {
+    this._popupOpened.complete();
+  }
+  
+  public openPopup(): void {
+    this._popupOpened.next();
   }
   
   public getDateRange(type: 'left' | 'right'): SelectItem[] {
