@@ -107,8 +107,9 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
             const compareValue = params[1].value;
-            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MM/DD/YY');
-            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MM/DD/YY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MM/DD/YY');
+            const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYY' : 'DD/MM/YYYY';
+            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
+            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
 
             tooltip = `
               <div style="font-weight: normal; color: #999999">${progressValue}</div>

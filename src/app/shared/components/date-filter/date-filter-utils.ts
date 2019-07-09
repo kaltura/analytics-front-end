@@ -62,12 +62,18 @@ export class DateFilterUtils {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
       const day: string = value.substring(6, 8);
-      result = month + '/' + day + '/' + year;
+      result = analyticsConfig.dateFormat === 'month-day-year'
+        ? month + '/' + day + '/' + year
+        : day + '/' + month + '/' + year;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = this._getMonth(date) + '/' + this._getDate(date) + '/' + date.getFullYear();
+      result = analyticsConfig.dateFormat === 'month-day-year'
+        ? this._getMonth(date) + '/' + this._getDate(date) + '/' + date.getFullYear()
+        : this._getDate(date) + '/' + this._getMonth(date) + '/' + date.getFullYear();
     } else if (value instanceof Date) {
-      result = this._getMonth(value) + '/' + this._getDate(value) + '/' + value.getFullYear();
+      result = analyticsConfig.dateFormat === 'month-day-year'
+        ? this._getMonth(value) + '/' + this._getDate(value) + '/' + value.getFullYear()
+        : this._getDate(value) + '/' + this._getMonth(value) + '/' + value.getFullYear();
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
@@ -123,12 +129,16 @@ export class DateFilterUtils {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
       const day: string = value.substring(6, 8);
-      result = month + '/' + day;
+      result = analyticsConfig.dateFormat === 'month-day-year' ? month + '/' + day : day + '/' + month;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
-      result = this._getMonth(date) + '/' + this._getDate(date);
+      result = analyticsConfig.dateFormat === 'month-day-year'
+        ? this._getMonth(date) + '/' + this._getDate(date)
+        : this._getDate(date) + '/' + this._getMonth(date);
     } else if (value instanceof Date) {
-      result = this._getMonth(value) + '/' + this._getDate(value);
+      result = analyticsConfig.dateFormat === 'month-day-year'
+        ? this._getMonth(value) + '/' + this._getDate(value)
+        : this._getDate(value) + '/' + this._getMonth(value);
     } else {
       throw new Error(`Unsupported value: ${value}`);
     }
