@@ -37,7 +37,7 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
             sortOrder: 4,
           },
           'avg_view_downstream_bandwidth': {
-            format: value => `${ReportHelper.numberOrZero(value)} KBps`,
+            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
             sortOrder: 5,
           },
         }

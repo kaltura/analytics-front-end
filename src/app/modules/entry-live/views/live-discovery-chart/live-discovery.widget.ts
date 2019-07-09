@@ -119,7 +119,6 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     const reportGraphFields = this._dataConfig[ReportDataSection.graph].fields;
     const format = this._getFormatByInterval();
     let totals = null;
-    const activeUsers = [];
     const graphs = graphsResponse.reduce((result, graph) => {
       const times = [];
       const graphData = [];
@@ -127,18 +126,8 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       graph.data.split(';')
         .filter(Boolean)
         .forEach((valueString, index) => {
-          let [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
-          
-          if (graph.id === 'view_unique_audience') {
-            activeUsers.push(rawValue);
-          } else if (graph.id === 'view_unique_buffering_users') {
-            const bufferingUsers = Number(rawValue) || 0;
-            const activeUsersCount = Number(activeUsers[index]) || 0;
-            rawValue = String(activeUsersCount ? bufferingUsers / activeUsersCount : 0);
-          }
-          
+          const [rawDate, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const value = reportGraphFields[graph.id] ? reportGraphFields[graph.id].format(rawValue) : rawValue;
-          
           const time = DateFilterUtils.getTimeStringFromEpoch(rawDate, format);
           
           times.push(time);
@@ -161,15 +150,8 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       const values = totalsResponse.data.split(analyticsConfig.valueSeparator);
       totals = columns
         .reduce((result, column, index) => {
-          if (reportTotalFields[column]) {
-            let rawValue = values[index];
-            if (column === 'view_unique_buffering_users') {
-              const activeUsers = Number(values[columns.indexOf('view_unique_audience')]) || 0;
-              const value = Number(rawValue) || 0;
-              rawValue = String(activeUsers ? value / activeUsers : 0);
-            }
-            
-            result[column] = reportTotalFields[column].format(rawValue);
+          if (reportTotalFields.hasOwnProperty(column)) {
+            result[column] = reportTotalFields[column].format(values[index]);
           }
           
           return result;

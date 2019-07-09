@@ -3,6 +3,7 @@ import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
 import { LiveDiscoveryData } from '../live-discovery.widget';
+import { LiveDiscoveryConfig } from '../live-discovery.config';
 
 @Component({
   selector: 'app-discovery-chart',
@@ -16,7 +17,12 @@ export class DiscoveryChartComponent {
   
   @Input() colorsMap: { [metric: string]: string } = {};
   
-  @Input() selectedMetrics: string[];
+  @Input() set selectedMetrics(value: string[]) {
+    if (Array.isArray(value)) {
+      this._selectedMetrics = value;
+      this._selectedTotalsMetrics = value.map(LiveDiscoveryConfig.mapTotalsMetric);
+    }
+  }
   
   @Input() isPolling = true;
   
@@ -36,19 +42,27 @@ export class DiscoveryChartComponent {
   @Output() togglePolling = new EventEmitter<void>();
   
   private _data: LiveDiscoveryData;
-  private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users'];
+  private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'avg_view_buffering'];
   private _dataZoomStart = 0;
   private _dataZoomEnd = 100;
+  private _echartsIntance: any;
   
   public _chartData: EChartOption;
   public _totalsData: { [key: string]: string };
+  public _selectedMetrics: string[];
+  public _selectedTotalsMetrics: string[];
   
   private _handleData(value: LiveDiscoveryData): void {
     const chartData = value.graphs;
-    const metrics = this.selectedMetrics || this._defaultMetrics;
+    const metrics = this._selectedMetrics || this._defaultMetrics;
     const [mainMetric, secondaryMetric] = metrics;
-    this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
     this._totalsData = value.totals;
+    this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
+    if (this._echartsIntance) {
+      this._echartsIntance.setOption({
+        dataZoom: [{ start: this._dataZoomStart, end: this._dataZoomEnd }]
+      });
+    }
   }
   
   private _getTooltipFormatter(params: any[]): string {
@@ -57,10 +71,10 @@ export class DiscoveryChartComponent {
     const getFormatFn = (name, val) => typeof this.fields[name].graphTooltip === 'function'
       ? this.fields[name].graphTooltip(val)
       : val;
-
+    
     const mainValue = getFormatFn(main.seriesName, main.value);
     const secondaryValue = getFormatFn(secondary.seriesName, secondary.value);
-
+    
     return `<div class="kGraphTooltip">${main.name}<br/><span class="kBullet" style="color: ${this.colorsMap[main.seriesName]}">&bull;</span>&nbsp;${mainValue}<br/><span class="kBullet" style="color: ${this.colorsMap[secondary.seriesName]}">&bull;</span>&nbsp;${secondaryValue}</div>`;
   }
   
@@ -91,7 +105,7 @@ export class DiscoveryChartComponent {
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
-    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio', 'view_unique_buffering_users', 'avg_view_live_latency'].indexOf(metric) !== -1 ? 100 : 1;
+    const getDefaultMax = metric => ['avg_view_dropped_frames_ratio'].indexOf(metric) !== -1 ? 100 : 1;
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
     const yAxisLabelFormatter = (param, metric) => {
@@ -102,24 +116,23 @@ export class DiscoveryChartComponent {
     };
     let mainMax = getMaxValue(main) || getDefaultMax(mainMetric);
     let secondaryMax = getMaxValue(secondary) || getDefaultMax(secondaryMetric);
-    let mainMin = getMinValue(main);
-    let secondaryMin = getMinValue(secondary);
-    
+
+    if (this.shouldNormalize(mainMetric) && this.shouldNormalize(secondaryMetric)) {
+      mainMax = secondaryMax = Math.max(mainMax, secondaryMax);
+    }
+
+    let mainMin = this.shouldNormalize(mainMetric) ? 0 : getMinValue(main);
+    let secondaryMin = this.shouldNormalize(secondaryMetric) ? 0 : getMinValue(secondary);
+
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
-
-    if (mainMax < secondaryMax && mainMax / secondaryMax >= 0.5) {
-      mainMax = secondaryMax;
-    } else if (mainMax > secondaryMax && secondaryMax / mainMax >= 0.5) {
-      secondaryMax  = mainMax;
-    }
-
+    
     const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
     const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
-
+    
     return {
-      color: this.selectedMetrics.map(metric => getColor(metric)),
+      color: this._selectedMetrics.map(metric => getColor(metric)),
       textStyle: {
         fontFamily: 'Lato',
       },
@@ -235,7 +248,13 @@ export class DiscoveryChartComponent {
     };
   }
   
+  private shouldNormalize(metric: string): boolean {
+    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
+    return normalizedMetrics.indexOf(metric) > -1;
+  }
+  
   public _onChartInit(chartInstance): void {
+    this._echartsIntance = chartInstance;
     chartInstance.on('datazoom', ({ start, end }) => {
       this._dataZoomStart = start;
       this._dataZoomEnd = end;
@@ -248,7 +267,8 @@ export class DiscoveryChartComponent {
   }
   
   public displayMetrics(metrics: string[]): void {
-    this.selectedMetrics = metrics;
+    this._selectedMetrics = metrics;
+    this._selectedTotalsMetrics = metrics.map(LiveDiscoveryConfig.mapTotalsMetric);
     
     if (this._data) {
       this._handleData(this._data);

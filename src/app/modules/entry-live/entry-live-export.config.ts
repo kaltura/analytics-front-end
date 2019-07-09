@@ -29,7 +29,7 @@ export class EntryLiveExportConfig extends ExportConfigService {
       {
         id: 'geo',
         label: this._translate.instant('app.entryLive.exportLabels.geo'),
-        reportType: KalturaReportType.mapOverlayCountry,
+        reportType: KalturaReportType.mapOverlayCountryRealtime,
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
         startDate: () => this._getFromDate(),

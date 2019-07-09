@@ -139,12 +139,13 @@ body{
             cursor: pointer;
           }
         }
-        .kTableContainer{
+        .kTableContainer {
+          width: 100%;
           overflow-y: hidden;
-          &.kOpen{
+          &.kOpen {
             height: auto;
           }
-          &.kClose{
+          &.kClose {
             height: 0px;
           }
         }

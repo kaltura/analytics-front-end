@@ -10,17 +10,17 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
   }
   
   private _getFlavor(value: string): string {
-    const flavorsValueSeparator = ' / ';
+    const flavorsValueSeparator = /"[^"]+":\d+\/?/gi;
     const topFlavors = value
-      .split(flavorsValueSeparator)
+      .match(flavorsValueSeparator)
       .map(flavor => {
         const [name, count] = flavor.split(':');
         return {
           name: name.replace(/"/g, ''),
-          count: Number(count),
+          count: parseFloat(count),
         };
       })
-      .sort((a, b) => a.count - b.count);
+      .sort((a, b) => b.count - a.count);
     return topFlavors.length ? topFlavors[0].name : 'N/A';
   }
 

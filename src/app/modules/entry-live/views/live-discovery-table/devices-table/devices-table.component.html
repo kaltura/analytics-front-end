@@ -1,4 +1,5 @@
-<p-table appScrollTopOnPaging
+<p-table #table
+         appScrollTopOnPaging
          sortField="view_unique_buffering_users"
          [class.kNoData]="!tableData?.length"
          [value]="tableData"
@@ -23,7 +24,10 @@
       <th *ngFor="let col of columns; let i = index"
           [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px'), 'width': '100%'}">
         <span *ngIf="col === 'device'">{{'app.entryLive.discovery.summary' | translate}}</span>
-        <span *ngIf="col !== 'device'">{{summary[col]}}</span>
+        <span *ngIf="col !== 'device'"
+              class="kTableColumn"
+              [kTooltip]="summary[col]"
+              [showOnEllipsis]="true">{{summary[col]}}</span>
       </th>
     </tr>
   </ng-template>
@@ -34,7 +38,10 @@
           [class.kHighlight]="i === 0"
           [ngStyle]="{'padding-left': (i === 0 ? '0' : '24px'), 'width': '100%'}">
         <span *ngIf="col === 'device'">{{('app.audience.technology.devices.' + data[col]) | translate}}</span>
-        <span *ngIf="col !== 'device'">{{data[col]}}</span>
+        <span *ngIf="col !== 'device'"
+              class="kTableColumn"
+              [kTooltip]="data[col]"
+              [showOnEllipsis]="true">{{data[col]}}</span>
       </td>
     </tr>
   </ng-template>
