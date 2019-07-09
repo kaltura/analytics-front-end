@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { FilterComponent } from 'shared/components/filter/filter.component';
 
@@ -10,6 +10,9 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
 })
 export class DiscoveryFilterComponent extends FilterComponent {
   @Input() totalCount = 0;
+  @Input() rangeLabel: string;
+  
+  @Output() openTimeSelector = new EventEmitter<void>();
 
   public _onItemSelected(item: any, type: string): void {
     super._onItemSelected(item, type);

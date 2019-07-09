@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from './table-config';
+import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-selector.service';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -17,6 +18,7 @@ import { liveDiscoveryTablePageSize } from './table-config';
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
+  @Input() rangeLabel: string;
   
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   
@@ -34,6 +36,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _summaryData: LiveDiscoverySummaryData;
   
   constructor(private _errorsManager: ErrorsManagerService,
+              private _timeSelector: TimeSelectorService,
               public _widget: LiveDiscoveryTableWidget) {
     
   }
@@ -82,5 +85,9 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   
     const reportType = event === TableModes.users ? KalturaReportType.entryLevelUsersDiscoveryRealtime : KalturaReportType.platformsDiscoveryRealtime;
     this.tableChange.emit(reportType);
+  }
+  
+  public _openTimeSelector(): void {
+    this._timeSelector.openPopup();
   }
 }
