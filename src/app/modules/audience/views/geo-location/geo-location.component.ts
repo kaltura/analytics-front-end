@@ -391,8 +391,8 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
-    const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
-    compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
+    const currentValue = parseFormattedValue(row[field]);
+    compareValue = parseFormattedValue(compareValue.toString());
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}`;
     row[field + '_trend'] = {
