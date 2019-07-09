@@ -91,7 +91,8 @@ export class TimeSelectorComponent implements OnDestroy {
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById('discovery-time-selector') as HTMLElement;
       if (targetEl) {
-        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+        const position = targetEl.getBoundingClientRect().top + window.pageYOffset - 54;
+        this._frameEventManager.publish(FrameEvents.ScrollTo, position);
       }
     } else {
       PageScrollConfig.defaultDuration = 500;
