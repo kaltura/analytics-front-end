@@ -6,10 +6,15 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
-          <app-export-csv name="entry"
-                          [width]="380"
-                          [reports]="_exportConfig"
-                          [entryId]="_entryId"></app-export-csv>
+          <div class="kControls">
+            <app-toggle-live-btn *ngIf="_canShowToggleLive"
+                                 [entry]="_entry"
+                                 (entryToggled)="_updateEntry($event)"></app-toggle-live-btn>
+            <app-export-csv name="entry"
+                            [width]="380"
+                            [reports]="_exportConfig"
+                            [entryId]="_entryId"></app-export-csv>
+          </div>
         </div>
 
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>

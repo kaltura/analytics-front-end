@@ -440,6 +440,10 @@
       "secondary": "Secondary",
       "stream": "Stream",
       "last3Hours": "Last 3 hours",
+      "goLive": "Go Live",
+      "endLive": "End Live",
+      "endLiveHeader": "Hold your horses!",
+      "endLiveMessage": "Are you sure you want to end the live broadcast?<br>This action can not be undone",
       "geo": {
         "title": "Geo Location",
         "object_id": "Name",

@@ -47,6 +47,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
+  public _canShowToggleLive = false;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -117,8 +118,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
-        this._entry = data;
-        
+        this._updateEntry(data);
         this._registerWidgets();
       });
   }
@@ -201,5 +201,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     const update = { items };
     
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+  }
+  
+  public _updateEntry(entry: KalturaExtendedLiveEntry): void {
+    this._entry = entry;
+    this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
   }
 }
