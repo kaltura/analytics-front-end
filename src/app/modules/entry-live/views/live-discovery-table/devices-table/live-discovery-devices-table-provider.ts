@@ -10,10 +10,13 @@ import { WidgetsActivationArgs } from '../../../widgets/widgets-manager';
 import { LiveDiscoveryTableData, LiveDiscoveryTableWidgetPollFactory, LiveDiscoveryTableWidgetProvider } from '../live-discovery-table.widget';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 
 @Injectable()
 export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider {
   private readonly _dataConfig: ReportDataConfig;
+  
+  public dateRange: DateRangeServerValue;
   
   constructor(private _reportService: ReportService,
               private _dataConfigService: LiveDiscoveryDevicesTableConfig) {
