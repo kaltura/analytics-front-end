@@ -16,6 +16,14 @@ const routes: Routes = [
         loadChildren: '../modules/entry/entry.module#EntryModule'
       },
       {
+        path: 'user/:id',
+        loadChildren: '../modules/user/user.module#UserModule'
+      },
+      {
+        path: 'user',
+        loadChildren: '../modules/user/user.module#UserModule'
+      },
+      {
         path: 'entry-live/:id',
         loadChildren: '../modules/entry-live/entry-live.module#EntryLiveModule'
       },
