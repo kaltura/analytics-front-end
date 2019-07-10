@@ -15,6 +15,7 @@ import { SharedModule } from 'shared/shared.module';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { UserFilterComponent } from './filter/filter.component';
+import { UserTotalsComponent } from './views/user-totals/user-totals.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { UserFilterComponent } from './filter/filter.component';
   declarations: [
     UserViewComponent,
     UserFilterComponent,
+    UserTotalsComponent,
   ],
   exports: [],
   providers: []
