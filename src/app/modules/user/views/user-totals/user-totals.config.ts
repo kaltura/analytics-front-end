@@ -12,30 +12,23 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
+        preSelected: 'count_plays',
         fields: {
           'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.count_plays`),
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.user.count_plays`),
             sortOrder: 1,
           },
-          'unique_known_users': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entry.viewers`),
-            tooltip: this._translate.instant('app.entry.viewers_tt'),
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.count_viral`),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'count_download': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.minutes`),
-            units: value => 'min',
+            title: this._translate.instant(`app.user.count_download`),
             sortOrder: 3,
           },
-          'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
-            title: this._translate.instant(`app.entry.watched`),
-            tooltip: this._translate.instant('app.entry.watched_tt'),
-            sortOrder: 4,
-          }
         }
       }
     };

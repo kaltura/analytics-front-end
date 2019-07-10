@@ -33,20 +33,21 @@ import { UserBase } from '../user-base/user-base';
   ],
 })
 export class UserHighlightsComponent extends UserBase implements OnDestroy {
+  @Input() userId: string;
+  
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   
-  protected _componentId = 'interactions';
+  protected _componentId = 'highlights';
   
-  public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
   public _updateTableHeight$ = this._updateTableHeight.asObservable();
   
   public _columns: string[] = [];
@@ -72,10 +73,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _compareTableBusy = false;
   public _currentTableBlockerMessage: AreaBlockerMessage = null;
   public _compareTableBlockerMessage: AreaBlockerMessage = null;
-  public _filter = new KalturaEndUserReportInputFilter({
-    searchInTags: true,
-    searchInAdminTags: false
-  });
+  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -100,16 +98,17 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   
   ngOnDestroy() {
     this._updateTableHeight.complete();
-    this.highlights$.complete();
   }
   
   private _loadTableData(isCompare = false): void {
     let reportConfig: ReportConfig;
     if (isCompare) {
+      this._compareFilter.userIds = this.userId;
       reportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._comparePager };
       this._compareTableBusy = true;
       this._compareTableBlockerMessage = null;
     } else {
+      this._filter.userIds = this.userId;
       reportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
       this._currentTableBusy = true;
       this._currentTableBlockerMessage = null;
@@ -177,9 +176,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    if (sections[ReportDataSection.totals]) {
-      this.highlights$.next({ current: null, compare: null, busy: true, error: null });
-    }
     this._isBusy = true;
     this._blockerMessage = null;
     
@@ -198,9 +194,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
       .subscribe(({ report, compare }) => {
           this._totalCount = 0;
           this._tableData = [];
-          if (sections[ReportDataSection.totals]) {
-            this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
-          }
           
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
@@ -235,9 +228,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          if (sections[ReportDataSection.totals]) {
-            this.highlights$.next({ current: null, compare: null, busy: false, error: error });
-          }
           this._updateTableHeight.next();
         });
   }

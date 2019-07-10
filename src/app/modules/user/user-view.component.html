@@ -1,7 +1,7 @@
 <div data-aid="report-group-user" class="kMain">
   <k-area-blocker [showLoader]="_loadingUser" [message]="_blockerMessage">
     <div class="kReportView">
-      <div class="kReport kContent kOverrideFAIcons">
+      <div *ngIf="_user" class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
@@ -35,12 +35,13 @@
                          (filterChange)="_onRefineFilterChange($event)"></app-user-filter>
 
         <div class="kReportContainer">
-          <app-user-totals [highlights$]="highlights.highlights$"
-                           [dateFilterComponent]="dateFilter"></app-user-totals>
+          <app-user-totals [dateFilter]="_dateFilter"
+                           [userId]="_user.id"
+                           [refineFilter]="_refineFilter"></app-user-totals>
         </div>
 
         <div class="kReportContainer">
-          <app-user-highlights #highlights
+          <app-user-highlights [userId]="_user.id"
                                [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-user-highlights>

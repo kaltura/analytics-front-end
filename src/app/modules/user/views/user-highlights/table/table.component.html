@@ -14,13 +14,13 @@
         <ng-template pTemplate="header">
           <tr [ngStyle]="{'width': '100%'}">
             <th
-              [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
+              [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.user.index' | translate}}</th>
             <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
-                [kTooltip]="'app.contentInteractions.' + col | translate"
+                [kTooltip]="'app.user.' + col | translate"
                 [showOnEllipsis]="true">
-              {{'app.contentInteractions.' + col | translate}}
+              {{'app.user.' + col | translate}}
               <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
             </th>
 

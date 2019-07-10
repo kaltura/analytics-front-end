@@ -17,7 +17,7 @@
 
   .kTotalContainer {
     background-color: #ffffff;
-    width: 28%;
+    width: 33%;
     height: 100%;
     display: flex;
     padding-left: 24px;
@@ -27,7 +27,7 @@
 
     &:not(:last-child) {
       border-right: 1px solid $kGrayscale6;
-      width: 24%;
+      width: 33%;
     }
 
     .kTotal {
@@ -71,14 +71,9 @@
 
       }
 
-      &.orange {
-        background-color: rgba(225, 150, 46, 0.2);
-        color: #E1962E;
-      }
-
-      &.darkgreen {
-        background-color: rgba(129, 204, 111, 0.2);
-        color: #81CC6F;
+      &.violet {
+        background-color: rgba(155, 100, 230, 0.2);
+        color: #9B64E6;
       }
     }
   }

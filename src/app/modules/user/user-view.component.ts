@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KalturaClient, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType, UserGetAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -27,6 +27,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   private _requestSubscription: Unsubscribable;
   private _subscription: Unsubscribable;
   
+  public _user: KalturaUser;
   public _loadingUser = false;
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
@@ -105,6 +106,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (user) => {
+          this._user = user;
           this._userName = user.fullName;
           this._requestSubscription = null;
           this._loadingUser = false;

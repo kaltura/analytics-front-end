@@ -729,6 +729,16 @@
         "creationDate": "Creation Date",
         "elapsedTime": "Elapsed Time"
       }
+    },
+    "user": {
+      "index": "#",
+      "count_plays": "Plays",
+      "count_viral": "Shares",
+      "count_download": "Downloads",
+      "sum_time_viewed": "Minutes Viewed",
+      "avg_time_viewed": "Avg. Min Viewed",
+      "count_loads": "Player Impressions",
+      "avg_completion_rate": "Avg. Completion Rate"
     }
   }
 }
