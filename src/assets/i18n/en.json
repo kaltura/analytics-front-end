@@ -732,6 +732,7 @@
     },
     "user": {
       "index": "#",
+      "entry_name": "Name",
       "count_plays": "Plays",
       "count_viral": "Shares",
       "count_download": "Downloads",

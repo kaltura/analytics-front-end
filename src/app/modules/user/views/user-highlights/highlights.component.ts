@@ -39,7 +39,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = KalturaReportType.topContent;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
