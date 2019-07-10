@@ -1,10 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { AuthService, ErrorsManagerService, Report, ReportService } from 'shared/services';
+import { BehaviorSubject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +11,8 @@ import { UserTotalsConfig } from './user-totals.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { UserBase } from '../user-base/user-base';
+import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-user-totals',
@@ -19,16 +20,16 @@ import { UserBase } from '../user-base/user-base';
   styleUrls: ['./user-totals.component.scss'],
   providers: [UserTotalsConfig, ReportService]
 })
-export class UserTotalsComponent extends UserBase {
-  @Input() userId = '';
-
-  private _order = '-month_id';
-  private _reportType = KalturaReportType.userTopContent;
+export class UserTotalsComponent extends UserBase implements OnInit, OnDestroy {
+  @Input() dateFilterComponent: DateFilterComponent;
+  
+  @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>;
+  
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
-
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -49,59 +50,41 @@ export class UserTotalsComponent extends UserBase {
               private _authService: AuthService,
               private _dataConfigService: UserTotalsConfig) {
     super();
-
+    
     this._dataConfig = _dataConfigService.getConfig();
   }
   
-  protected _loadReport(sections = this._dataConfig): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = this.userId;
-
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-        
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-        if (compareReportConfig['objectIds__null']) {
-          delete compareReportConfig['objectIds__null'];
-        }
-        compareReportConfig.objectIds = this.userId;
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          if (compare) {
-            this._handleCompare(report, compare);
-          } else {
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle totals
-            }
-          }
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
+  ngOnInit(): void {
+    if (this.highlights$) {
+      this.highlights$
+        .pipe(cancelOnDestroy(this))
+        .subscribe(({ current, compare, busy, error }) => {
+          this._isBusy = busy;
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, {
             'close': () => {
               this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+            }
+          });
+          if (compare) {
+            this._handleCompare(current, compare);
+          } else {
+            if (current && current.totals) {
+              this._handleTotals(current.totals); // handle totals
+            }
+          }
         });
+    }
+  }
+  
+  ngOnDestroy(): void {
+  }
+  
+  protected _loadReport(sections = this._dataConfig): void {
+    // empty by design
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -139,9 +122,8 @@ export class UserTotalsComponent extends UserBase {
       );
     }
   }
-
+  
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
   }
-
 }

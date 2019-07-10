@@ -33,6 +33,18 @@
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-user-filter>
+
+        <div class="kReportContainer">
+          <app-user-totals [highlights$]="highlights.highlights$"
+                           [dateFilterComponent]="dateFilter"></app-user-totals>
+        </div>
+
+        <div class="kReportContainer">
+          <app-user-highlights #highlights
+                               [dateFilterComponent]="dateFilter"
+                               [dateFilter]="_dateFilter"
+                               [refineFilter]="_refineFilter"></app-user-highlights>
+        </div>
       </div>
     </div>
   </k-area-blocker>
