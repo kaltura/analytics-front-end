@@ -118,7 +118,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
-        this._updateEntry(data);
+        this._entry = data;
+        this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
         this._registerWidgets();
       });
   }
@@ -203,8 +204,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
   
-  public _updateEntry(entry: KalturaExtendedLiveEntry): void {
-    this._entry = entry;
-    this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
+  public _liveToggled(): void {
+    this._entryLiveWidget.restartPolling();
   }
 }

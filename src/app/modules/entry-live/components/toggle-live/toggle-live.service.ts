@@ -8,8 +8,10 @@ import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 @Injectable()
 export class ToggleLiveService implements OnDestroy {
   private _updatedEntry = new Subject<KalturaExtendedLiveEntry>();
+  private _isBusy = new Subject<boolean>();
   
   public readonly updatedEntry$ = this._updatedEntry.asObservable();
+  public readonly isBusy$ = this._isBusy.asObservable();
   
   constructor(private _browserService: BrowserService,
               private _kalturaClient: KalturaClient,
@@ -18,6 +20,7 @@ export class ToggleLiveService implements OnDestroy {
   
   ngOnDestroy(): void {
     this._updatedEntry.complete();
+    this._isBusy.complete();
   }
   
   private _updatePreviewMode(entry: KalturaExtendedLiveEntry, viewMode: KalturaViewMode, recordingStatus: KalturaRecordingStatus): void {
@@ -37,10 +40,12 @@ export class ToggleLiveService implements OnDestroy {
         error => {
           this._browserService.alert({ message: error.message });
           this._updatedEntry.next(entry);
+          this._isBusy.next(false);
         });
   }
   
   public toggle(entry: KalturaExtendedLiveEntry): void {
+    this._isBusy.next(true);
     if (entry.viewMode === KalturaViewMode.preview) {
       this._updatePreviewMode(entry, KalturaViewMode.allowAll, KalturaRecordingStatus.active);
     } else {
@@ -51,7 +56,8 @@ export class ToggleLiveService implements OnDestroy {
           acceptLabel: this._translation.instant('app.entryLive.endLive'),
           accept: () => {
             this._updatePreviewMode(entry, KalturaViewMode.preview, KalturaRecordingStatus.stopped);
-          }
+          },
+          reject: () => this._isBusy.next(false)
         });
     }
   }

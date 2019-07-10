@@ -30,8 +30,12 @@ export class ToggleLiveComponent implements OnDestroy {
   constructor(private _toggleLiveService: ToggleLiveService) {
     this._toggleLiveService.updatedEntry$
       .pipe(cancelOnDestroy(this))
-      .subscribe(entry => {
-        this.entryToggled.emit(entry);
+      .subscribe(() => this.entryToggled.emit());
+    
+    this._toggleLiveService.isBusy$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isBusy => {
+        this._canToggle = !isBusy;
       });
   }
   
@@ -39,7 +43,6 @@ export class ToggleLiveComponent implements OnDestroy {
   }
   
   public _toggleViewMode(): void {
-    this._canToggle = false;
     this._toggleLiveService.toggle(this._entry);
   }
 }

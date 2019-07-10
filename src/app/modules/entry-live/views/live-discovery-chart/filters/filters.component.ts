@@ -23,7 +23,7 @@ export interface DateFiltersChangedEvent {
 export class FiltersComponent {
   @Output() filtersChanged = new EventEmitter<DateFiltersChangedEvent>();
   
-  private _initialRun = false;
+  private _initialRun = true;
   private _isPresetMode = true;
   private _startDate: number;
   private _endDate: number;

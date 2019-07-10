@@ -9,7 +9,7 @@
           <div class="kControls">
             <app-toggle-live-btn *ngIf="_canShowToggleLive"
                                  [entry]="_entry"
-                                 (entryToggled)="_updateEntry($event)"></app-toggle-live-btn>
+                                 (entryToggled)="_liveToggled()"></app-toggle-live-btn>
             <app-export-csv name="entry"
                             [width]="380"
                             [reports]="_exportConfig"
