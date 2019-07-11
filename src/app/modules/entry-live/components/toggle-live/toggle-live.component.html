@@ -1,0 +1,5 @@
+<button *ngIf="_entry" pButton
+        [ngClass]="{'kButtonBranded': _isPreview, 'kButtonDanger': !_isPreview}"
+        [disabled]="!_canToggle"
+        [label]="(_isPreview ? 'app.entryLive.goLive' : 'app.entryLive.endLive') | translate"
+        (click)="_toggleViewMode()"></button>
