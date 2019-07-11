@@ -350,11 +350,6 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   public _tooltipFormatter(value: string, label: string): string {
-    return `
-      <div class="kDevicesGraphTooltip">
-        <div class="kTitle">${label}</div>
-        <div class="kValue">${value}</div>
-      </div>
-    `;
+    return `<div class="kDevicesGraphTooltip"><div class="kTitle">${label}</div><div class="kValue">${value}</div></div>`;
   }
 }
