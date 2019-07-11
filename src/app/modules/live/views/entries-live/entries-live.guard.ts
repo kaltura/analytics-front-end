@@ -8,7 +8,7 @@ export class EntriesLiveGuard implements CanActivate {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!analyticsConfig.permissions.enableLiveViews) {
+    if (!analyticsConfig.permissions.enableLiveViews && analyticsConfig.liveAnalytics) {
       this._router.navigate(['live/live-reports']);
       return;
     }
