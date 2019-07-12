@@ -498,9 +498,9 @@ k-area-blocker {
 
 .kDevicesGraphTooltip {
   display: flex;
-  height: 48px;
-  min-width: 158px;
-  padding: 16px;
+  max-height: 48px;
+  padding: 8px;
+  text-align: left;
   flex-direction: column;
 
   .kTitle {
