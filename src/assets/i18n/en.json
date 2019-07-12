@@ -4,7 +4,7 @@
       "audience": "Audience",
       "bandwidth": "Usage",
       "contributors": "Contributors",
-      "live": "Live"
+      "live": "Real-Time"
     },
     "filters": {
       "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
@@ -183,8 +183,8 @@
       "title": "Publisher Bandwidth & Storage Report",
       "month_id": "Month",
       "date_id": "Date",
-      "publisherStorage": "Publish Bandwidth & Storage Report",
-      "usersStorage": "End User Storage Report",
+      "publisherStorage": "Publishers Bandwidth & Storage",
+      "usersStorage": "End User Storage",
       "bandwidth_consumption": "Bandwidth Consumption",
       "average_storage": "Average Storage",
       "peak_storage": "Peak Storage",
@@ -253,7 +253,13 @@
         "publisher": "Publisher Bandwidth"
       }
     },
-    "audience":{
+    "audience": {
+      "menu": {
+        "engagement": "Engagement",
+        "contentInteractions": "Content Interactions",
+        "technology": "Technology",
+        "geoLocation": "Geo Location"
+      },
       "geo": {
         "title": "Geo Location",
         "top": "Top Countries",
