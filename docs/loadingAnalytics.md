@@ -39,7 +39,7 @@ permissions: {
 In order to load analytics app correctly the host app needs to provide a valid configuration 
 to the analytics app via iframe post message mechanism.
 
-First of all register to the message handler using `window.addEventListener('message', handlerFn)` approach.
+First of all the host app must register to the message event using `window.addEventListener('message', handlerFn)`.
 
 Then implement `analyticsInit` event handler (`event.data.messageType === 'analyticsInit'`,
 all events will be listed below and you can find a complete example at `dev/analyticsLoader.html`).

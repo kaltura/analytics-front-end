@@ -1,11 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      transition: height 0.3s;
+    }
+  </style>
+  <script>
+    const config = {
+      kalturaServer: {
+        uri: 'www.kaltura.com',
+        previewUIConf: 38524931,
+      },
+      cdnServers: {
+        serverUri: 'http://cdnapi.kaltura.com',
+        securedServerUri: 'https://cdnapisec.kaltura.com'
+      },
+      ks: 'djJ8MjMwNjAwMXzUrrUcUdzGIJ7GEOENeVP87c9-V3q9n063eYk-0FlvYuA2KMVnvRt9AQOeVmpEf6fQYRLs_rvnb8rf83z38_KYNdiPcCpmyByRJUq0Bm8V-hQHNe86BXKCt9PWx6_fENY=', // provide ks
+      pid: 1645161, // provide partnerId
+      locale: 'en',
+      permissions: {
+        enableLiveViews: true
+      },
+      live: {
+        pollInterval: 30,
+        healthNotificationsCount: 50,
+      },
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const analyticsApp = document.getElementById('analytics');
+
+      window.addEventListener('message', e => {
+        const postMessageData = e.data;
+        if (postMessageData.messageType === 'analyticsInit') {
+          if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+            analyticsApp.contentWindow.postMessage({ 'messageType': 'init', 'payload': config }, window.location.origin);
+          }
+        }
+
+        if (postMessageData.messageType === 'analyticsInitComplete') {
+          console.log('Initialization is completed');
+        }
+
+        if (postMessageData.messageType === 'updateLayout') {
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+        }
+      })
+    });
+  </script>
 </head>
 <body>
-  <h1>This is an external app loading Analytics in an iframe</h1>
-  <iframe src="../dist/index.html"></iframe>
+<h1>This is an external app loading Analytics in an iframe</h1>
+<iframe id="analytics" src="http://127.0.0.1:8000"></iframe>
 </body>
 </html>

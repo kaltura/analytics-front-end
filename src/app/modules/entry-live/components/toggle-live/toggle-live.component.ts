@@ -22,8 +22,7 @@ export class ToggleLiveComponent implements OnDestroy {
   
   @Output() entryToggled = new EventEmitter<KalturaExtendedLiveEntry>();
   
-  private _entry: KalturaExtendedLiveEntry;
-  
+  public _entry: KalturaExtendedLiveEntry;
   public _isPreview = false;
   public _canToggle = false;
   
