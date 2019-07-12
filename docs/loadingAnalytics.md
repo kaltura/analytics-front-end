@@ -13,7 +13,7 @@ kalturaServer: {
   previewUIConf: string, // UIConf of the player
 },
 cdnServers: string, // link to the cdn server
-liveAnalytics: { // configuration of the legacy live analytics app, is displayed in case "permissions.enableLiveViews" is false
+liveAnalytics?: { // configuration of the legacy live analytics app, is displayed in case "permissions.enableLiveViews" is false
   uri: string,
   uiConfId?: string,
   mapUrls?: string[],
@@ -22,19 +22,19 @@ liveAnalytics: { // configuration of the legacy live analytics app, is displayed
 ks: string, // partner's ks
 pid: number, // partner id
 locale: string, // locale code, currently only "en" translation is supported by analytics app
-dateFormat: 'month-day-year' | 'day-month-year', // style of date format, currently support only "mdy" and "dmy" formats
-live: { // configuration of the live module
+dateFormat?: 'month-day-year' | 'day-month-year', // style of date format, currently support only "mdy" and "dmy" formats
+live?: { // configuration of the live module
   pollInterval: 10 | 30 | 60 | 300, // how often the poll requests will be sent to the server
   healthNotificationsCount: number, // default is 50, amount of notifications that are displayed to user at once
 },
-permissions: {
+permissions?: {
   lazyLoadCategories: boolean, // used for categories filters, allow/disallow loading categories by chunks,
                                // usefull in case huge amount of categories, the limit for a single request is 500 items
   enableLiveViews: boolean, // based on kmc permission to display the new live analytics module 
 },
-menuConfig: {
+menuConfig?: {
   showMenu: boolean, // display internal menu
-  items: {
+  items?: {
     id: string,
     link: string, // link to the page inside the analytics app, please use [those](https://github.com/kaltura/analytics-front-end/blob/kms/src/app/app-menu/app-menu.component.ts#L23-L78) links only!
     label: string,
