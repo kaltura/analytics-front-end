@@ -31,6 +31,9 @@ permissions: {
   lazyLoadCategories: boolean, // used for categories filters, allow/disallow loading categories by chunks,
                                // usefull in case huge amount of categories, the limit for a single request is 500 items
   enableLiveViews: boolean, // based on kmc permission to display the new live analytics module 
+},
+menuConfig: {
+  showMenu: boolean, // display internal menu
 }
 ```
 

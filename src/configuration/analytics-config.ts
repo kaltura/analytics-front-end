@@ -23,6 +23,9 @@ export interface AnalyticsConfig {
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  menuConfig?: {
+    showMenu: boolean;
+  };
   live?: {
     pollInterval?: PollInterval;
     healthNotificationsCount?: number;

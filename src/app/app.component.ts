@@ -111,7 +111,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.kalturaServer = config.kalturaServer;
     analyticsConfig.cdnServers = config.cdnServers;
     analyticsConfig.liveAnalytics = config.liveAnalytics;
-    analyticsConfig.showNavBar = !this.hosted;
+    analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !this.hosted;
     analyticsConfig.isHosted = this.hosted;
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
