@@ -34,7 +34,7 @@ permissions: {
 }
 ```
 
-### Events
+### Bootstrapping
 
 In order to load analytics app correctly the host app needs to provide a valid configuration 
 to the analytics app via iframe post message mechanism.
@@ -49,7 +49,17 @@ to the analytics app with the payload containing the app configuration mentioned
 (`iframeDomNode.contentWindow.postMessage({ messageType: 'init', payload: configurationObject }, window.location.origin)`).
 
 Once configuration of the analytics app is done (on the analytics app side) the host app will receive `analyticsInitComplete` event without payload
-meaning the app was initialized correctly. Otherwise check a dev-tools console for errors.
+meaning the app was initialized correctly. In response to this event the host app has to send 2 events back to analytics:
+1) `navigate` – to notify which page show by default, the list of available pages can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/app.component.ts#L150)
+2) `updateFilters` - to set a default date filter or entry id, the list of available filter names and value can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/components/date-filter/date-filter.service.ts#L8-L26).
+In case of entry pages the host app must provide `{ queryParams: { id: '[realEntryId]' } }` params.
+
+Otherwise check a dev-tools console for errors.
+
+To prevent issue with 2 scrolls on the page the host app should implement `updateLayout` event handler,
+which receives the real height of the analytics apps (units: px) to update iframe height inside the host app.
+
+### Events
 
 The events are grouped by a direction that they can be used:
 - **H ← A** (from analytics to host)

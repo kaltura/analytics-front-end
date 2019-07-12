@@ -3,8 +3,16 @@
 <head>
   <base href="/">
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Analytics Loader</title>
   <style>
+    body {
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
     iframe {
       width: 100vw;
       height: 100vh;
@@ -12,52 +20,64 @@
       transition: height 0.3s;
     }
   </style>
-  <script>
-    const config = {
-      kalturaServer: {
-        uri: 'www.kaltura.com',
-        previewUIConf: 38524931,
-      },
-      cdnServers: {
-        serverUri: 'http://cdnapi.kaltura.com',
-        securedServerUri: 'https://cdnapisec.kaltura.com'
-      },
-      ks: 'djJ8MjMwNjAwMXzUrrUcUdzGIJ7GEOENeVP87c9-V3q9n063eYk-0FlvYuA2KMVnvRt9AQOeVmpEf6fQYRLs_rvnb8rf83z38_KYNdiPcCpmyByRJUq0Bm8V-hQHNe86BXKCt9PWx6_fENY=', // provide ks
-      pid: 1645161, // provide partnerId
-      locale: 'en',
-      permissions: {
-        enableLiveViews: true
-      },
-      live: {
-        pollInterval: 30,
-        healthNotificationsCount: 50,
-      },
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const analyticsApp = document.getElementById('analytics');
-
-      window.addEventListener('message', e => {
-        const postMessageData = e.data;
-        if (postMessageData.messageType === 'analyticsInit') {
-          if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
-            analyticsApp.contentWindow.postMessage({ 'messageType': 'init', 'payload': config }, window.location.origin);
-          }
-        }
-
-        if (postMessageData.messageType === 'analyticsInitComplete') {
-          console.log('Initialization is completed');
-        }
-
-        if (postMessageData.messageType === 'updateLayout') {
-          analyticsApp.style.height = `${postMessageData.payload.height}px`;
-        }
-      })
-    });
-  </script>
 </head>
 <body>
 <h1>This is an external app loading Analytics in an iframe</h1>
-<iframe id="analytics" src="http://127.0.0.1:8000"></iframe>
+<iframe id="analytics" src="http://localhost:4200"></iframe>
+<script>
+  const config = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 44299511,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: 'djJ8MjMwNjAwMXzUrrUcUdzGIJ7GEOENeVP87c9-V3q9n063eYk-0FlvYuA2KMVnvRt9AQOeVmpEf6fQYRLs_rvnb8rf83z38_KYNdiPcCpmyByRJUq0Bm8V-hQHNe86BXKCt9PWx6_fENY=', // provide ks
+    pid: 2306001, // provide partnerId
+    locale: 'en',
+    permissions: {
+      enableLiveViews: true
+    },
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          sendMessage({ messageType: 'init', payload: config });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+      }
+    })
+  });
+</script>
 </body>
 </html>
