@@ -1,15 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, MenuItem } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
-
-export interface MenuItem {
-  id: string;
-  link: string;
-  label: string;
-  items?: MenuItem[];
-}
 
 @Component({
   selector: 'app-menu',
@@ -87,6 +80,10 @@ export class AppMenuComponent implements OnDestroy {
       .subscribe((event: NavigationEnd) => {
         this.setSelectedRoute(event.urlAfterRedirects);
       });
+    
+    if (analyticsConfig.menuConfig && Array.isArray(analyticsConfig.menuConfig.items) && analyticsConfig.menuConfig.items.length) {
+      this._menu = analyticsConfig.menuConfig.items;
+    }
   }
   
   ngOnDestroy() {

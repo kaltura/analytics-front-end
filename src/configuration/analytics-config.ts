@@ -1,5 +1,12 @@
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 
+export interface MenuItem {
+  id: string;
+  link: string;
+  label: string;
+  items?: MenuItem[];
+}
+
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
@@ -25,6 +32,7 @@ export interface AnalyticsConfig {
   isHosted?: boolean;
   menuConfig?: {
     showMenu: boolean;
+    items?: MenuItem[];
   };
   live?: {
     pollInterval?: PollInterval;

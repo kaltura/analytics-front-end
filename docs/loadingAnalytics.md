@@ -34,6 +34,16 @@ permissions: {
 },
 menuConfig: {
   showMenu: boolean, // display internal menu
+  items: {
+    id: string,
+    link: string, // link to the page inside the analytics app, please use [those](https://github.com/kaltura/analytics-front-end/blob/kms/src/app/app-menu/app-menu.component.ts#L23-L78) links only!
+    label: string,
+    items?: {
+      id: string,
+      link: string, // link to the page inside the analytics app, please use [those](https://github.com/kaltura/analytics-front-end/blob/kms/src/app/app-menu/app-menu.component.ts#L23-L78) links only!
+      label: string,
+    }[], // optional array of sub items, has the same structure as item itself, only one level of nesting is supported
+  }[],
 }
 ```
 
