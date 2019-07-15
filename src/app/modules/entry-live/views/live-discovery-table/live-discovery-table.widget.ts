@@ -206,6 +206,10 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
       };
     }
   
+    // reset page
+    this._usersFilter.pager.pageIndex = 1;
+    (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+  
     this._updateProviderDateRange();
     
     if (this._showTable) {
