@@ -84,7 +84,7 @@ The events are grouped by a direction that they can be used:
 Event type | Event name | Payload | Description
 -----------|------------|---------|------------|
 H ← A | `analyticsInit` | none | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
-H → A | `init` | {config} | Init event send from host to analytics app, passing the configuration object
+H → A | `init` | `{ config: [shape described above] }` | Init event send from host to analytics app, passing the configuration object
 H ← A | `analyticsInitComplete` | none | Final event for initial phase, notifies the host app that initialization was completed
 H ← A | `logout`| none | Notify the host app to logout, might be useful in case of expired ks, since the analytics app doesn't handle authentication has to be handled by the host app
 H ← A | `updateLayout` | `{ height: number }` | Each time the analytics app changes its height it fires this event in order the host app to be able to update the frame height to prevent cutting of the content, the payload is the analytics app height in px 
