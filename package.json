@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "example": "node scripts/run-example.js"
+    "example": "concurrently --kill-others \"node scripts/run-example.js\" \"npm start\""
   },
   "private": true,
   "dependencies": {
@@ -55,6 +55,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "concurrently": "^4.1.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "protractor": "~5.4.0",
