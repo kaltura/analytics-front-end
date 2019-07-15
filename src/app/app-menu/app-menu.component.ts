@@ -66,7 +66,7 @@ export class AppMenuComponent implements OnDestroy {
     {
       id: 'live',
       link: 'live',
-      label: 'app.modules.audience',
+      label: 'app.modules.live',
     },
   ];
   
