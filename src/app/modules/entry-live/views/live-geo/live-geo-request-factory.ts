@@ -36,10 +36,14 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   
   public set drillDown(value: string[]) {
     this.reportType = value.length === 2 ? KalturaReportType.mapOverlayCityRealtime : value.length === 1 ? KalturaReportType.mapOverlayRegionRealtime : KalturaReportType.mapOverlayCountryRealtime;
-    if (value.length > 0) {
+    if (value.length === 1) {
       this._getTableActionArgs.reportInputFilter.countryIn = value[0];
       this._getTotalsActionArgs.reportInputFilter.countryIn = value[0];
-    } else  if (value.length > 1) {
+      delete this._getTableActionArgs.reportInputFilter.regionIn;
+      delete this._getTotalsActionArgs.reportInputFilter.regionIn;
+    } else if (value.length > 1) {
+      this._getTableActionArgs.reportInputFilter.countryIn = value[0];
+      this._getTotalsActionArgs.reportInputFilter.countryIn = value[0];
       this._getTableActionArgs.reportInputFilter.regionIn = value[1];
       this._getTotalsActionArgs.reportInputFilter.regionIn = value[1];
     } else {
