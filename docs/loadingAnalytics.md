@@ -96,3 +96,18 @@ H ← A | `entryNavigateBack` | none | In case direct drill-down from the host a
 H → A | `setLogsLevel` | `{ level: LogLevels }` | The analytics app implements logging and supports different type of levels, possible values are: 'All', 'Trace', 'Debug', 'Info', 'Warn', 'Error', 'Fatal', 'Off'
 H → A | `updateFilters` | `{ queryParams: { [key: string]: string } }` | Date filters in the analytics app are preserved via queryParams which allows to deep-link to required time range from the url, in case the host app handles all navigation it has to send the queryParams with required filters, otherwise the default one will be used
 H ⇆ A | `navigate` | A listens for: `{ url: string }`<br/>A sends: `{ [key: string]: string }` | In case the navigation is handled by the host app, the analytics app is listening for a url from the host app which which is mapped for according route inside the analytics. Upon a navigation event inside the analytics app it will send an event with updated queryParams to the host app which will should be updated and then send back via `updateFilters` event
+
+### Example
+
+To see analytics in action follow the steps:
+
+1. Make sure all dependencies are installed, otherwise run `npm install`
+2. Get valid KS and partner id
+3. Go to `src/dev/analyticsLoader.html` and copy them into the config (lines [37](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L37) and [38](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L38) accordingly)
+4. Run `npm run example`
+5. Wait until build is completed
+6. Go to your browser and open `http://localhost:4201`
+
+##### Troubleshooting
+
+Make sure the ports `4200` and `4201` are available, make sure the KS and partner id are valid and not expired.  
