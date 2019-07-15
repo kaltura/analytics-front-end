@@ -21,7 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @Output() tableChange = new EventEmitter<KalturaReportType>();
-  @Output() dateFilterChange = new EventEmitter<DateRange>();
+  @Output() dateFilterChange = new EventEmitter<DateFiltersChangedEvent>();
   @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
   
   public _isBusy = true;
@@ -93,7 +93,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveDiscoveryTable.updateFilters(event);
     }
     
-    this.dateFilterChange.emit(event.dateRange);
+    this.dateFilterChange.emit(event);
   }
   
   public _onMetricsSelectorChange(event: MetricsSelectorChangeEvent): void {
