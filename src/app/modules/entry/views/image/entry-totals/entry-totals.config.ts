@@ -13,9 +13,9 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.count_plays`),
+            title: this._translate.instant(`app.entry.count_loads`),
             sortOrder: 1,
           },
           'unique_known_users': {
@@ -24,18 +24,6 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant('app.entry.viewers_tt'),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.minutes`),
-            units: value => 'min',
-            sortOrder: 3,
-          },
-          'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
-            title: this._translate.instant(`app.entry.watched`),
-            tooltip: this._translate.instant('app.entry.watched_tt'),
-            sortOrder: 4,
-          }
         }
       }
     };

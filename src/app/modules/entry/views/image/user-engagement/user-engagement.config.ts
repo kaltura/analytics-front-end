@@ -22,14 +22,6 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 3,
-          },
-          'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
-            sortOrder: 4,
-          }
         }
       },
     };

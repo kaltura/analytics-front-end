@@ -1,17 +1,17 @@
 <div data-aid="report-group-entry" class="kMain">
   <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
     <ng-container [ngSwitch]="_entry?.mediaType">
-      <app-video-entry *ngSwitchCase="_mediaTypes.video"
-                       [entry]="_entry"
-                       [owner]="_owner"
-                       (back)="_back()"
-                       (navigateToEntry)="_navigateToEntry()"></app-video-entry>
-
       <app-image-entry *ngSwitchCase="_mediaTypes.image"
                        [entry]="_entry"
                        [owner]="_owner"
                        (back)="_back()"
                        (navigateToEntry)="_navigateToEntry()"></app-image-entry>
+
+      <app-video-entry *ngSwitchDefault
+                       [entry]="_entry"
+                       [owner]="_owner"
+                       (back)="_back()"
+                       (navigateToEntry)="_navigateToEntry()"></app-video-entry>
     </ng-container>
   </k-area-blocker>
 </div>
