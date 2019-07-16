@@ -78,6 +78,10 @@
         case 'updateLayout':
           analyticsApp.style.height = `${postMessageData.payload.height}px`;
           break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
       }
     })
   });
