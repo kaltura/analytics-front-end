@@ -8,18 +8,6 @@
                       (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
 
       </div>
-
-      <div class="chartContainer">
-        <div echarts class="kChart" [options]="_chartOptions" (click)="onChartClick($event)"></div>
-        <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
-          <div class="kLine"></div>
-          <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
-        </div>
-        <div class="kFooter">
-          <span>0:00</span>
-          <span class="kDuration">{{_duration | appDuration}}</span>
-        </div>
-      </div>
     </div>
   </k-area-blocker>
 </div>
