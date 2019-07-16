@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { VideoPerformanceConfig } from './video-performance.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { EntryBase } from '../entry-base/entry-base';
+import { EntryBase } from '../../shared/entry-base/entry-base';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { SelectItem, SortEvent } from 'primeng/api';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';

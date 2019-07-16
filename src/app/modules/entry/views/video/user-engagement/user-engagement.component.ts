@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { EntryBase } from '../entry-base/entry-base';
+import { EntryBase } from '../../shared/entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';

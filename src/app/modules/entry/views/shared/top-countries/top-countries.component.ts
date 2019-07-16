@@ -34,7 +34,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   @ViewChild('entryGeo') _entryGeo: GeoComponent;
   @ViewChild('entryCompareGeo') _entryCompareGeo: GeoComponent;
 
-  @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
+  @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];

@@ -11,12 +11,12 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
-import { EntryBase } from '../entry-base/entry-base';
+import { EntryBase } from '../../shared/entry-base/entry-base';
 import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import {map, switchMap} from "rxjs/operators";
 import {of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {environment} from "../../../../../environments/environment";
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-entry-preview',

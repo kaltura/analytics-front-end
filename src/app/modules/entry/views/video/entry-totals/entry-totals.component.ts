@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EntryTotalsConfig } from './entry-totals.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { EntryBase } from '../entry-base/entry-base';
+import { EntryBase } from '../../shared/entry-base/entry-base';
 
 @Component({
   selector: 'app-entry-totals',
