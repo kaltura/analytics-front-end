@@ -23,7 +23,6 @@
                  (sortFunction)="_onSortChanged($event)">
           <ng-template pTemplate="header">
             <tr>
-              <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
               <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col">
                 {{'app.entry.' + col | translate}}
                 <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
@@ -31,23 +30,17 @@
 
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-data let-expanded="expanded">
+          <ng-template pTemplate="body" let-data>
             <tr>
-              <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
-                <a [pRowToggler]="data">
-                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
-                     style="font-size: 1.25em"></i>
-                </a>
-              </td>
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-            <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name'"
-                  class="kTrend">
-              <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
-                <app-trend-value [value]="data[col].value"
-                                 [units]="data[col].units"
-                                 [trend]="data[col].trend"></app-trend-value>
-              </span>
-            </span>
+                <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name'"
+                      class="kTrend">
+                  <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data[col].value"
+                                     [units]="data[col].units"
+                                     [trend]="data[col].trend"></app-trend-value>
+                  </span>
+                </span>
                 <ng-container *ngIf="!_isCompareMode || col === 'name'">
                   <span *ngIf="col !== 'avg_completion_rate'">{{data[col]}}</span>
                   <app-bullet *ngIf="col === 'avg_completion_rate'"
@@ -62,17 +55,6 @@
               <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
               <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
             </div>
-          </ng-template>
-          <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
-            <tr *ngIf="!_isCompareMode">
-              <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-                <app-video-entry-heat-map [attr.data-aid]="'heat-map-' + index"
-                              [userId]="data['name']"
-                              [entryId]="entryId"
-                              [duration]="duration"
-                              [filter]="_filter"></app-video-entry-heat-map>
-              </td>
-            </tr>
           </ng-template>
         </p-table>
 

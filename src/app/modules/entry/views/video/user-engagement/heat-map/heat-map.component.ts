@@ -14,7 +14,7 @@ export interface HeatMapItem {
 }
 
 @Component({
-  selector: 'app-heat-map',
+  selector: 'app-video-entry-heat-map',
   templateUrl: './heat-map.component.html',
   styleUrls: ['./heat-map.component.scss']
 })

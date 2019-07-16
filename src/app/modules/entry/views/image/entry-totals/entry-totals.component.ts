@@ -14,12 +14,12 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../../shared/entry-base/entry-base';
 
 @Component({
-  selector: 'app-video-entry-totals',
+  selector: 'app-image-entry-totals',
   templateUrl: './entry-totals.component.html',
   styleUrls: ['./entry-totals.component.scss'],
   providers: [EntryTotalsConfig, ReportService]
 })
-export class VideoEntryTotalsComponent extends EntryBase {
+export class ImageEntryTotalsComponent extends EntryBase {
   @Input() entryId = '';
 
   private _order = '-month_id';

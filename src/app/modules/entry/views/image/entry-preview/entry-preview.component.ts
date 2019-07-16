@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,29 +12,29 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../../shared/entry-base/entry-base';
-import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
-import {map, switchMap} from "rxjs/operators";
-import {of as ObservableOf} from "rxjs";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
-  selector: 'app-video-entry-preview',
+  selector: 'app-image-entry-preview',
   templateUrl: './entry-preview.component.html',
   styleUrls: ['./entry-preview.component.scss'],
   providers: [EntryPreviewConfig, ReportService]
 })
-export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
+export class ImageEntryPreviewComponent extends EntryBase implements OnInit {
   @Input() entryId = '';
-
+  
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private playerInstance: any = null;
   private playerInitialized = false;
   private _reportType = KalturaReportType.percentiles;
-
+  
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
-
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -50,11 +50,11 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
   public _playProgress = 0;
   public _duration = 0;
   public _currentTime = 0;
-
+  
   public _chartOptions = {};
-
+  
   @ViewChild('player') player: KalturaPlayerComponent;
-
+  
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -70,7 +70,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-
+  
   ngOnInit() {
     this.initPlayer();
   }
@@ -87,15 +87,15 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       },
       xAxis: {
         show: false,
-        boundaryGap : false,
+        boundaryGap: false,
         type: 'category',
         data: Array.from({ length: 100 }, (_, i) => i + 1),
       },
-      tooltip : {
+      tooltip: {
         formatter: params => {
           const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
           const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
-          let tooltip =  `
+          let tooltip = `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>
               <div class="kValue">
@@ -109,7 +109,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
             const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYY' : 'DD/MM/YYYY';
             const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
             const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
-
+            
             tooltip = `
               <div style="font-weight: normal; color: #999999">${progressValue}</div>
               <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0px">
@@ -198,24 +198,24 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
-  
+    
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
-
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-
+        
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
@@ -227,15 +227,15 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-
+          
           if (report.table && report.table.header && report.table.data) {
-            const {tableData} = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData = tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
               .map(item => Number(item['count_viewers']));
-  
+            
             yAxisData[0] = yAxisData[1]; // fake first item because of limitation when first item always is 0
-
+            
             if (compare && compare.table) {
               let compareYAxisData = [];
               if (compare.table.header && compare.table.data) {
@@ -246,9 +246,9 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
               } else {
                 compareYAxisData = Array.from({ length: 100 }, () => 0);
               }
-  
+              
               compareYAxisData[0] = compareYAxisData[1]; // fake first item because of limitation when first item always is 0
-
+              
               this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
             } else {
               this._chartOptions = this._getGraphData(yAxisData);
@@ -256,7 +256,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
           } else {
             this._chartOptions = this._getGraphData(Array.from({ length: 100 }, () => 0));
           }
-
+          
         },
         error => {
           this._isBusy = false;
@@ -294,14 +294,14 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       this._compareFilter = null;
     }
   }
-
+  
   public onChartClick(event): void {
     const percent = event.offsetX / event.currentTarget.clientWidth;
     this.seekTo(percent);
   }
-
+  
   /* ------------------------ start of player logic --------------------------*/
-
+  
   private initPlayer(): void {
     if (!this.playerInitialized) {
       this.playerInitialized = true;
@@ -311,53 +311,53 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
-          "EmbedPlayer.LiveCuepoints": true,
+          'EmbedPlayer.LiveCuepoints': true,
           // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
-          "controlBarContainer": {
-            "plugin": true,
-            "hover": false
+          'controlBarContainer': {
+            'plugin': true,
+            'hover': false
           },
-          "durationLabel": {
-            "plugin": false
+          'durationLabel': {
+            'plugin': false
           },
-          "currentTimeLabel": {
-            "plugin": false
+          'currentTimeLabel': {
+            'plugin': false
           },
-          "fullScreenBtn": {
-            "plugin": false
+          'fullScreenBtn': {
+            'plugin': false
           },
-          "theme": {
-            "applyToLargePlayButton": true,
-            "buttonsSize": 12,
-            "buttonsColor": "rgb(51, 51, 51)",
-            "buttonsIconColor": "rgb(204, 204, 204)",
-            "sliderColor": "rgb(91, 91, 91)",
-            "scrubberColor": "rgb(1, 172, 205)",
-            "controlsBkgColor": "rgb(51, 51, 51)",
-            "watchedSliderColor": "rgb(1, 172, 205)",
-            "bufferedSliderColor": "#AFAFAF",
-            "timeLabelColor": "rgb(204, 204, 204)",
-            "buttonsIconColorDropShadow": true,
-            "plugin": true
+          'theme': {
+            'applyToLargePlayButton': true,
+            'buttonsSize': 12,
+            'buttonsColor': 'rgb(51, 51, 51)',
+            'buttonsIconColor': 'rgb(204, 204, 204)',
+            'sliderColor': 'rgb(91, 91, 91)',
+            'scrubberColor': 'rgb(1, 172, 205)',
+            'controlsBkgColor': 'rgb(51, 51, 51)',
+            'watchedSliderColor': 'rgb(1, 172, 205)',
+            'bufferedSliderColor': '#AFAFAF',
+            'timeLabelColor': 'rgb(204, 204, 204)',
+            'buttonsIconColorDropShadow': true,
+            'plugin': true
           },
-          "scrubber": {
-            "plugin": true,
+          'scrubber': {
+            'plugin': true,
             'insertMode': 'lastChild',
             'sliderPreview': false
           },
-          "dualScreen": {
-            "plugin": true,
-            "defaultDualScreenViewId": "pip-parent-in-small",
-            "showFirstSlideOnLoad": true
+          'dualScreen': {
+            'plugin': true,
+            'defaultDualScreenViewId': 'pip-parent-in-small',
+            'showFirstSlideOnLoad': true
           },
-          "chapters": {
-            "plugin": true
+          'chapters': {
+            'plugin': true
           },
-          "sideBarContainer": {
-            "plugin": true
+          'sideBarContainer': {
+            'plugin': true
           },
-          "quiz": {
-            "plugin": true
+          'quiz': {
+            'plugin': true
           }
         }
       };
@@ -366,17 +366,17 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       }, 0);
     }
   }
-
+  
   public onPlayerReady(player): void {
     this.playerInstance = player;
     setTimeout(() => {
       this._duration = parseFloat(this.playerInstance.evaluate('{duration}')) * 1000;
     }, 0);
-
+    
     // register to playhead update event to update our scrubber
     this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress = parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
@@ -392,18 +392,18 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
     });
     this.playerInstance.kBind('seeked', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress = parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
-
+    
     // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
     try {
-      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName("head")[0];
+      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName('head')[0];
       if (head) {
         let css = document.createElement('style');
         css['type'] = 'text/css';
-
+        
         let styles = `
         .scrubber .playHead {
           border-bottom-left-radius: 0 !important;
@@ -420,7 +420,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
         .controlsContainer{
           border-top: none !important;
         }`;
-
+        
         if (css['styleSheet']) {
           css['styleSheet'].cssText = styles;
         } else {
@@ -429,21 +429,21 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
         head.appendChild(css);
       }
     } catch (e) {
-      console.log("Failed to inject custom CSS to player");
+      console.log('Failed to inject custom CSS to player');
     }
-
+    
   }
-
+  
   private seekTo(percent: number, forcePlay = false): void {
-    this.playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+    this.playerInstance.sendNotification('doSeek', this._duration / 1000 * percent);
     if (forcePlay) {
-      this.playerInstance.sendNotification("doPlay");
+      this.playerInstance.sendNotification('doPlay');
     }
   }
-
+  
   /* -------------------------- end of player logic --------------------------*/
-
-
+  
+  
 }
 
 

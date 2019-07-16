@@ -12,21 +12,19 @@ import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../../shared/entry-base/entry-base';
-import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
-  selector: 'app-video-entry-user-engagement',
+  selector: 'app-image-entry-user-engagement',
   templateUrl: './user-engagement.component.html',
   styleUrls: ['./user-engagement.component.scss'],
   providers: [
-    HeatMapStoreService,
     UserEngagementConfig,
     ReportService
   ]
 })
-export class VideoEntryUserEngagementComponent extends EntryBase {
+export class ImageEntryUserEngagementComponent extends EntryBase {
   @Input() entryId = '';
   @Input() duration = 0;
   
@@ -61,7 +59,6 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   }
   
   constructor(private _frameEventManager: FrameEventManagerService,
-              private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -124,7 +121,6 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   }
   
   protected _updateRefineFilter(): void {
-    this._heatMapStore.clearCache();
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -132,7 +128,6 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   }
   
   protected _updateFilter(): void {
-    this._heatMapStore.clearCache();
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;

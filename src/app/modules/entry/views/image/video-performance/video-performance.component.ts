@@ -20,12 +20,12 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 @Component({
-  selector: 'app-video-entry-performance',
+  selector: 'app-image-entry-performance',
   templateUrl: './video-performance.component.html',
   styleUrls: ['./video-performance.component.scss'],
   providers: [VideoPerformanceConfig, ReportService]
 })
-export class VideoEntryPerformanceComponent extends EntryBase {
+export class ImageEntryPerformanceComponent extends EntryBase {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
   

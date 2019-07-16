@@ -6,6 +6,12 @@
                        [owner]="_owner"
                        (back)="_back()"
                        (navigateToEntry)="_navigateToEntry()"></app-video-entry>
+
+      <app-image-entry *ngSwitchCase="_mediaTypes.image"
+                       [entry]="_entry"
+                       [owner]="_owner"
+                       (back)="_back()"
+                       (navigateToEntry)="_navigateToEntry()"></app-image-entry>
     </ng-container>
   </k-area-blocker>
 </div>
