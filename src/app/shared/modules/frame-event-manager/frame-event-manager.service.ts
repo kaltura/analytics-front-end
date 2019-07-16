@@ -16,6 +16,7 @@ export enum FrameEvents {
   ModalOpened = 'modalOpened',
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
+  CustomData = 'customData',
 }
 
 @Injectable()
