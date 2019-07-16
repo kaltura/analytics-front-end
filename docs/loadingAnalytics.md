@@ -1,8 +1,37 @@
-1. pass config as we do in KMC and document each param
-2. fix internal menu as in KMC menu
-3. Allow configuring the menu: pass menu config to hosy app on event? allow passing menu config from host to analytics. make sure the menu is hidden until config is received
+1. pass config as we do in KMC and document each param +
+2. fix internal menu as in KMC menu +
+3. Allow configuring the menu: pass menu config to hosy app on event? allow passing menu config from host to analytics. make sure the menu is hidden until config is received +
 4. Toggling visibility of UI views and filters: provide host app ID to analytics in config: https://kaltura.atlassian.net/browse/AN-788
 5. Adding specific app features according to app ID: AN-795 - AN-800
+
+### Bootstrapping
+
+The host app must include an iframe which source `src` is a url to the deployed analytics app.
+To avoid CORS issues please deploy analytics to the same domain as the host app.
+
+In order to load analytics app correctly the host app needs to provide a valid configuration 
+to the analytics app via iframe post message mechanism.
+
+First of all the host app must register to the message event using `window.addEventListener('message', handlerFn)`.
+
+Then implement `analyticsInit` event handler (`event.data.messageType === 'analyticsInit'`,
+all events will be listed below and you can find a complete example at `dev/analyticsLoader.html`).
+
+In the response to `analyticsInit` event the host app must send `init` event
+to the analytics app with the payload containing the app configuration mentioned above 
+(`iframeDomNode.contentWindow.postMessage({ messageType: 'init', payload: configurationObject }, window.location.origin)`).
+
+Once configuration of the analytics app is done (on the analytics app side) the host app will receive `analyticsInitComplete` event without payload
+meaning the app was initialized correctly. In response to this event the host app has to send 2 events back to analytics:
+1) `navigate` – to notify which page show by default, the list of available pages can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/app.component.ts#L150).
+2) `updateFilters` – to set a default date filter or entry id, the list of available filter names and value can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/components/date-filter/date-filter.service.ts#L8-L26).
+For example: `{ queryParams: { dateBy: 'last30days' } }`.
+In case of entry pages the host app must provide `{ queryParams: { id: '[realEntryId]' } }` param.
+
+Otherwise check a dev-tools console for errors.
+
+To prevent issue with 2 scrolls on the page the host app should implement `updateLayout` event handler,
+which receives the real height of the analytics apps (units: px) to update iframe height inside the host app.
 
 ### Configuration
 The structure of the config required by analytics app:
@@ -47,32 +76,6 @@ menuConfig?: {
   }[],
 }
 ```
-
-### Bootstrapping
-
-In order to load analytics app correctly the host app needs to provide a valid configuration 
-to the analytics app via iframe post message mechanism.
-
-First of all the host app must register to the message event using `window.addEventListener('message', handlerFn)`.
-
-Then implement `analyticsInit` event handler (`event.data.messageType === 'analyticsInit'`,
-all events will be listed below and you can find a complete example at `dev/analyticsLoader.html`).
-
-In the response to `analyticsInit` event the host app must send `init` event
-to the analytics app with the payload containing the app configuration mentioned above 
-(`iframeDomNode.contentWindow.postMessage({ messageType: 'init', payload: configurationObject }, window.location.origin)`).
-
-Once configuration of the analytics app is done (on the analytics app side) the host app will receive `analyticsInitComplete` event without payload
-meaning the app was initialized correctly. In response to this event the host app has to send 2 events back to analytics:
-1) `navigate` – to notify which page show by default, the list of available pages can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/app.component.ts#L150).
-2) `updateFilters` – to set a default date filter or entry id, the list of available filter names and value can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/components/date-filter/date-filter.service.ts#L8-L26).
-For example: `{ queryParams: { dateBy: 'last30days' } }`.
-In case of entry pages the host app must provide `{ queryParams: { id: '[realEntryId]' } }` param.
-
-Otherwise check a dev-tools console for errors.
-
-To prevent issue with 2 scrolls on the page the host app should implement `updateLayout` event handler,
-which receives the real height of the analytics apps (units: px) to update iframe height inside the host app.
 
 ### Events
 
