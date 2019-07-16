@@ -18,8 +18,15 @@ import { EntryExportConfig } from './entry-export.config';
     EntryExportConfig,
   ]
 })
-export class VideoEntryViewComponent implements OnInit, OnDestroy {
-  @Input() entry: KalturaMediaEntry;
+export class VideoEntryViewComponent implements OnDestroy {
+  @Input() set entry(value: KalturaMediaEntry) {
+    if (value) {
+      this._entryName = value.name;
+      this._entryType = value.mediaType;
+      this._duration = value.msDuration || 0;
+      this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
+    }
+  }
   @Input() owner: string;
   @Output() back = new EventEmitter<void>();
   @Output() navigateToEntry = new EventEmitter<void>();
@@ -45,15 +52,6 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: EntryExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
-  }
-  
-  ngOnInit() {
-    if (this.entry) {
-      this._entryName = this.entry.name;
-      this._entryType = this.entry.mediaType;
-      this._duration = this.entry.msDuration || 0;
-      this._creationDate = DateFilterUtils.getMomentDate(this.entry.createdAt);
-    }
   }
   
   ngOnDestroy() {
