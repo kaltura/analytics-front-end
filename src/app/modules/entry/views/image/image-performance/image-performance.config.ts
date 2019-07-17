@@ -7,7 +7,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 
 @Injectable()
-export class VideoPerformanceConfig extends ReportDataBaseConfig {
+export class ImagePerformanceConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }

@@ -21,6 +21,7 @@ import { EntryExportConfig } from './entry-export.config';
 export class VideoEntryViewComponent implements OnDestroy {
   @Input() set entry(value: KalturaMediaEntry) {
     if (value) {
+      this._entryId = value.id;
       this._entryName = value.name;
       this._entryType = value.mediaType;
       this._duration = value.msDuration || 0;

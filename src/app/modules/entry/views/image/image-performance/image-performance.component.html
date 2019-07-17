@@ -1,6 +1,6 @@
 <div data-aid="report-entry-video-performance" class="kReport kNoMargin kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.entry.videoPerformance' | translate}}</span>
+    <span class="kTitle">{{'app.entry.imagePerformance' | translate}}</span>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
@@ -13,7 +13,7 @@
         <app-time-units *ngIf="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"
                         [dateFilter]="dateFilterComponent"
-                        [applyIn]="'video-performance'"></app-time-units>
+                        [applyIn]="'image-performance'"></app-time-units>
       </div>
       <div class="kChart">
         <div *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>

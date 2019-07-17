@@ -8,7 +8,7 @@ import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
-import { VideoPerformanceConfig } from './video-performance.config';
+import { ImagePerformanceConfig } from './image-performance.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../../shared/entry-base/entry-base';
@@ -21,9 +21,9 @@ import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 
 @Component({
   selector: 'app-image-entry-performance',
-  templateUrl: './video-performance.component.html',
-  styleUrls: ['./video-performance.component.scss'],
-  providers: [VideoPerformanceConfig, ReportService]
+  templateUrl: './image-performance.component.html',
+  styleUrls: ['./image-performance.component.scss'],
+  providers: [ImagePerformanceConfig, ReportService]
 })
 export class ImageEntryPerformanceComponent extends EntryBase {
   @Input() entryId = '';
@@ -38,7 +38,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
   public _metricsCompareTo: string = null;
   
   public _dateFilter: DateChangeEvent;
-  protected _componentId = 'video-performance';
+  protected _componentId = 'image-performance';
   
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
@@ -86,7 +86,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: VideoPerformanceConfig) {
+              private _dataConfigService: ImagePerformanceConfig) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();

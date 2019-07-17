@@ -1,6 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ReportService } from 'shared/services';
-import { EntryPreviewConfig } from './entry-preview.config';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 
@@ -8,7 +6,6 @@ import { analyticsConfig } from 'configuration/analytics-config';
   selector: 'app-image-entry-preview',
   templateUrl: './entry-preview.component.html',
   styleUrls: ['./entry-preview.component.scss'],
-  providers: [EntryPreviewConfig, ReportService]
 })
 export class ImageEntryPreviewComponent {
   @Input() set entry(value: KalturaMediaEntry) {

@@ -21,7 +21,6 @@
     background-color: #000000;
     white-space: nowrap;
     text-align: center;
-    border-radius: 3px;
 
     &.error {
       border: 1px solid #000000;
@@ -36,7 +35,7 @@
       margin: auto;
       width: auto;
       height: 480px;
-      border-radius: 3px;
+      border-radius: 0 !important;
     }
   }
 }
