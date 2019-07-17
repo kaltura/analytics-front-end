@@ -675,6 +675,7 @@
       "exportLabels": {
         "userEngagement": "User Engagement",
         "videoPerformance": "Video Performance",
+        "imagePerformance": "Image Performance",
         "impressions": "Impressions",
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",

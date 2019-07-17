@@ -18,7 +18,7 @@ export class EntryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
       {
-        label: this._translate.instant('app.entry.exportLabels.videoPerformance'),
+        label: this._translate.instant('app.entry.exportLabels.imagePerformance'),
         reportType: KalturaReportType.userTopContent,
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
