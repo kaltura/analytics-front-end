@@ -40,6 +40,7 @@ export class ImageEntryViewComponent implements OnInit, OnDestroy {
   public _duration = 0;
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
+  public _entryThumb: string;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
@@ -49,6 +50,7 @@ export class ImageEntryViewComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     if (this.entry) {
+      this._entryThumb = this.entry.thumbnailUrl;
       this._entryName = this.entry.name;
       this._entryType = this.entry.mediaType;
       this._duration = this.entry.msDuration || 0;

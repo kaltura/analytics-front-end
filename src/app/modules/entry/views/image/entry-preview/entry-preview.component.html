@@ -1,14 +1,8 @@
-<div data-aid="report-entry-preview" class="kReport kTotals kOverrideFAIcons">
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div style="display: flex; flex-direction: column; width: 100%">
-      <div class="kPlayer">
-        <app-k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
-                      [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
-                      [flashvars]="_playerConfig.flashvars" [lazy]="true"
-                      (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
-
-      </div>
-    </div>
-  </k-area-blocker>
+<div data-aid="report-entry-preview" class="kEntryPreview">
+  <div class="kThumbnailHolder" #holder>
+    <img [src]="_imgUrl" [alt]="_imgAlt"
+         onError="this.onerror=null;this.style.display='none'"
+         (error)="holder.classList.add('error')">
+  </div>
 </div>
 

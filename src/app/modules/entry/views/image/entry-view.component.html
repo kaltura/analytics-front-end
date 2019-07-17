@@ -40,23 +40,22 @@
                       (closeFilters)="_refineFilterOpened = false"
                       (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
-    <app-image-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId" [refineFilter]="_refineFilter"></app-image-entry-totals>
+    <app-image-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId"
+                            [refineFilter]="_refineFilter"></app-image-entry-totals>
 
     <div class="kReportContainer kEntryPreview">
-      <app-image-entry-preview [dateFilter]="_dateFilter"
-                         [entryId]="_entryId"
-                         [refineFilter]="_refineFilter"></app-image-entry-preview>
+      <app-image-entry-preview [entry]="entry"></app-image-entry-preview>
       <app-image-entry-user-engagement [dateFilter]="_dateFilter"
-                           [duration]="_duration"
-                           [refineFilter]="_refineFilter"
-                           [entryId]="_entryId"></app-image-entry-user-engagement>
+                                       [duration]="_duration"
+                                       [refineFilter]="_refineFilter"
+                                       [entryId]="_entryId"></app-image-entry-user-engagement>
     </div>
 
     <div class="kReportContainer">
       <app-image-entry-performance [dateFilterComponent]="dateFilter"
-                             [dateFilter]="_dateFilter"
-                             [entryId]="_entryId"
-                             [refineFilter]="_refineFilter"></app-image-entry-performance>
+                                   [dateFilter]="_dateFilter"
+                                   [entryId]="_entryId"
+                                   [refineFilter]="_refineFilter"></app-image-entry-performance>
     </div>
 
     <div class="kReportContainer">
