@@ -75,6 +75,12 @@
           menuConfigItems[0].items = menuConfigItems[0].items.slice(0, 2);
           // change second submenu label to 'interactions'
           menuConfigItems[0].items[1].label = 'interactions';
+          // push new menu subitem
+          menuConfigItems[0].items.push({
+            id: 'geo-location',
+            link: 'audience/geo-location',
+            label: 'geo',
+          });
           const payload = { ...config, menuConfig: { ...config.menuConfig, items: menuConfigItems } };
 
           sendMessage({ messageType: 'init', payload: payload });
