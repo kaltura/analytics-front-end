@@ -25,7 +25,7 @@ to the analytics app with the payload containing the app configuration mentioned
 
 Once configuration of the analytics app is done (on the analytics app side) the host app will receive `analyticsInitComplete` event without payload
 meaning the app was initialized correctly. In response to this event the host app has to send 2 events back to analytics:
-1) `navigate` – to notify which page show by default, the list of available pages can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/app.component.ts#L150).
+1) `navigate` – to notify which page show by default, the list of available pages can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/app.component.ts#L103).
 2) `updateFilters` – to set a default date filter or entry id, the list of available filter names and value can be found [here](https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/components/date-filter/date-filter.service.ts#L8-L26).
 For example: `{ queryParams: { dateBy: 'last30days' } }`.
 In case of entry pages the host app must provide `{ queryParams: { id: '[realEntryId]' } }` param.
@@ -112,6 +112,8 @@ To see analytics in action follow the steps:
 4. Run `npm run example`
 5. Wait until build is completed
 6. Go to your browser and open `http://localhost:4201`
+
+**DO NOT COMMIT ANYTHING WHILE THE EXAMPLE SCRIPT IS RUNNING**
 
 ##### Troubleshooting
 

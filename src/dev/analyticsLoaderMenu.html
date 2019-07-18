@@ -69,7 +69,17 @@
 
       switch (postMessageData.messageType) {
         case 'analyticsInit':
-          sendMessage({ messageType: 'init', payload: config });
+          // grab only audience menu
+          const menuConfigItems = postMessageData.payload.menu.filter(item => item.id === 'audience');
+          // remove all submenu items except first two
+          menuConfigItems[0].items = menuConfigItems[0].items.slice(0, 2);
+          // change second submenu label to 'interactions'
+          menuConfigItems[0].items[1].label = 'interactions';
+          const payload = { ...config, menuConfig: { ...config.menuConfig, items: menuConfigItems } };
+
+          console.warn(payload);
+
+          sendMessage({ messageType: 'init', payload: payload });
           break;
 
         case 'analyticsInitComplete':

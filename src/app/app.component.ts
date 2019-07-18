@@ -10,6 +10,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
 import { menu } from './app-menu/app-menu.config';
+import { AppService } from 'shared/services/app.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,6 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
 
-  public _windowEventListener = null;
   public _confirmDialogAlignLeft = false;
   public _confirmationLabels = {
     yes: 'Yes',
@@ -38,13 +38,14 @@ export class AppComponent implements OnInit, OnDestroy {
               private _logger: KalturaLogger,
               private _router: Router,
               private _browserService: BrowserService,
-              private _kalturaServerClient: KalturaClient) {
+              private _kalturaServerClient: KalturaClient,
+              private _appService: AppService) {
     if (window['analyticsConfig']) { // standalone
-      this._initApp(window['analyticsConfig']);
+      this._appService.init(window['analyticsConfig']);
     } else { // hosted
       this._frameEventManager.listen(FrameEvents.Init)
         .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(config => this._initApp(config, true));
+        .subscribe(config => this._appService.init(config, true));
     }
     
     this._frameEventManager.listen(FrameEvents.Navigate)
@@ -97,55 +98,6 @@ export class AppComponent implements OnInit, OnDestroy {
   
   ngOnDestroy() {
 
-  }
-
-  private _initApp(config = null, hosted = false): void {
-    if (!config) {
-      return;
-    }
-
-    this.hosted = hosted; // hosted;
-    
-    analyticsConfig.ks = config.ks;
-    analyticsConfig.pid = config.pid;
-    analyticsConfig.locale = config.locale;
-    analyticsConfig.kalturaServer = config.kalturaServer;
-    analyticsConfig.cdnServers = config.cdnServers;
-    analyticsConfig.liveAnalytics = config.liveAnalytics;
-    analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !this.hosted;
-    analyticsConfig.isHosted = this.hosted;
-    analyticsConfig.permissions = config.permissions || {};
-    analyticsConfig.live = config.live || { pollInterval: 30 };
-    analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
-
-    // set ks in ngx-client
-    this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
-    this._kalturaServerClient.setOptions({
-      endpointUrl: getKalturaServerUri(),
-      clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
-    });
-    this._kalturaServerClient.setDefaultRequestOptions({
-      ks: analyticsConfig.ks
-    });
-
-    // load localization
-    this._logger.info('Loading localization...');
-    this._translate.setDefaultLang(analyticsConfig.locale);
-    this._translate.use(analyticsConfig.locale).subscribe(
-      () => {
-        this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
-        if (this.hosted) {
-          this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
-        }
-      },
-      (error) => {
-        this._initAppError(error.message);
-      }
-    );
-  }
-
-  private _initAppError(errorMsg: string): void{
-    this._logger.error(errorMsg);
   }
 
   private mapRoutes(kmcRoute: string): string {
