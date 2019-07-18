@@ -36,8 +36,8 @@
       serverUri: 'http://cdnapi.kaltura.com',
       securedServerUri: 'https://cdnapisec.kaltura.com'
     },
-    ks: '', // provide ks
-    pid: '', // provide partnerId
+    ks: "djJ8MjMwNjAwMXzFVTHyveoGV14xDeAVtL59chCVUKzQR1pNCKH7QKHLwRFBb7lrBEC6qDIhWn8diAM2H9CsDunTHO6EL25ounRYpeWDWMKqvL8MWizLehSNcRHSyvW5oRaYuJZo9PvxIJU=", // provide ks
+    pid: '2306001', // provide partnerId
     locale: 'en',
     permissions: {
       enableLiveViews: true
@@ -76,8 +76,6 @@
           // change second submenu label to 'interactions'
           menuConfigItems[0].items[1].label = 'interactions';
           const payload = { ...config, menuConfig: { ...config.menuConfig, items: menuConfigItems } };
-
-          console.warn(payload);
 
           sendMessage({ messageType: 'init', payload: payload });
           break;
