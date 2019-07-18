@@ -86,7 +86,7 @@ The events are grouped by a direction that they can be used:
 
 Event type | Event name | Payload | Description
 -----------|------------|---------|------------|
-H ← A | `analyticsInit` | none | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
+H ← A | `analyticsInit` | `{ menu }` | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
 H → A | `init` | `{ config: [shape described above] }` | Init event send from host to analytics app, passing the configuration object
 H ← A | `analyticsInitComplete` | none | Final event for initial phase, notifies the host app that initialization was completed
 H ← A | `logout`| none | Notify the host app to logout, might be useful in case of expired ks, since the analytics app doesn't handle authentication has to be handled by the host app
@@ -98,7 +98,6 @@ H ← A | `navigateTo` | `string` | In case the custom navigation is implemented
 H ← A | `entryNavigateBack` | none | In case direct drill-down from the host app happens handle this event to properly navigate back to it
 H → A | `setLogsLevel` | `{ level: LogLevels }` | The analytics app implements logging and supports different type of levels, possible values are: 'All', 'Trace', 'Debug', 'Info', 'Warn', 'Error', 'Fatal', 'Off'
 H → A | `updateFilters` | `{ queryParams: { [key: string]: string } }` | Date filters in the analytics app are preserved via queryParams which allows to deep-link to required time range from the url, in case the host app handles all navigation it has to send the queryParams with required filters, otherwise the default one will be used
-H → A | `customData` | `any` | Use this event to pass any data that otherwise cannot be passed via other events.
 H ⇆ A | `navigate` | A listens for: `{ url: string }`<br/>A sends: `{ [key: string]: string }` | In case the navigation is handled by the host app, the analytics app is listening for a url from the host app which which is mapped for according route inside the analytics. Upon a navigation event inside the analytics app it will send an event with updated queryParams to the host app which will should be updated and then send back via `updateFilters` event
 
 ### Example

@@ -9,6 +9,7 @@ import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
+import { menu } from './app-menu/app-menu.config';
 
 @Component({
   selector: 'app-root',
@@ -91,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this._confirmationService.confirm(formattedMessage);
     });
 
-    this._frameEventManager.publish(FrameEvents.AnalyticsInit);
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit, { menu });
   }
   
   ngOnDestroy() {

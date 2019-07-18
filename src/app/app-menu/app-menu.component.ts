@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { analyticsConfig, MenuItem } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
-
+import { menu } from './app-menu.config';
 @Component({
   selector: 'app-menu',
   templateUrl: './app-menu.component.html',
@@ -13,62 +13,7 @@ export class AppMenuComponent implements OnDestroy {
   public _activeRoute = '';
   public _activeSubRoute = '';
   
-  public _menu: MenuItem[] = [
-    {
-      id: 'audience',
-      link: 'audience',
-      label: 'app.modules.audience',
-      items: [
-        {
-          id: 'engagement',
-          link: 'audience/engagement',
-          label: 'app.audience.menu.engagement',
-        },
-        {
-          id: 'content-interactions',
-          link: 'audience/content-interactions',
-          label: 'app.audience.menu.contentInteractions',
-        },
-        {
-          id: 'technology',
-          link: 'audience/technology',
-          label: 'app.audience.menu.technology',
-        },
-        {
-          id: 'geo-location',
-          link: 'audience/geo-location',
-          label: 'app.audience.menu.geoLocation',
-        },
-      ]
-    },
-    {
-      id: 'contributors',
-      link: 'contributors',
-      label: 'app.modules.contributors',
-    },
-    {
-      id: 'bandwidth',
-      link: 'bandwidth',
-      label: 'app.modules.bandwidth',
-      items: [
-        {
-          id: 'publisher',
-          link: 'bandwidth/publisher',
-          label: 'app.bandwidth.publisherStorage',
-        },
-        {
-          id: 'end-user',
-          link: 'bandwidth/end-user',
-          label: 'app.bandwidth.usersStorage',
-        },
-      ]
-    },
-    {
-      id: 'live',
-      link: 'live',
-      label: 'app.modules.live',
-    },
-  ];
+  public _menu: MenuItem[] = menu;
   
   public get _showNavBar(): boolean {
     return analyticsConfig.showNavBar;
