@@ -106,7 +106,7 @@ To see analytics in action follow the steps:
 
 1. Make sure all dependencies are installed, otherwise run `npm install`
 2. Get valid KS and partner id
-3. Go to `src/dev/analyticsLoader.html` and copy them into the config (lines [37](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L37) and [38](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L38) accordingly)
+3. Go to `src/dev/analyticsLoader.html` and copy them into the config (lines [37](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L37) and [38](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L38) accordingly as strings)
 4. Run `npm run example`
 5. Wait until build is completed
 6. Go to your browser and open `http://localhost:4201`
