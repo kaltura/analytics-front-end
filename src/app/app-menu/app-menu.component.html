@@ -8,6 +8,6 @@
   <div class="kSubMenu" *ngIf="_getSubMenu(_activeRoute) as subMenu">
     <a *ngFor="let subItem of subMenu"
        [class.activeLink]="_activeSubRoute === subItem.id"
-       (click)="_navigateToView(subItem.link)">{{subItem.label | translate}}</a>
+       (click)="_navigateToView(subItem.link)">{{subItem.label | translate | uppercase}}</a>
   </div>
 </ng-container>
