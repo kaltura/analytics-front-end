@@ -93,7 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this._confirmationService.confirm(formattedMessage);
     });
 
-    this._frameEventManager.publish(FrameEvents.AnalyticsInit, { menu });
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit, { menuConfig: menu });
   }
   
   ngOnDestroy() {
