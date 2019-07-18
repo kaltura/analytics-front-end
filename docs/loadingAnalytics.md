@@ -115,6 +115,12 @@ To see analytics in action follow the steps:
 
 **DO NOT COMMIT ANYTHING WHILE THE EXAMPLE SCRIPT IS RUNNING**
 
+There're 2 more examples: menu and view.
+The menu example shows how to configure the internal analytics menu from the host app.
+The view example shows hot to configure the analytics views and components from the host app.
+
+To run those example use `npm run example:menu` and `npm run example:view` commands accordingly.  
+
 ##### Troubleshooting
 
 Make sure the ports `4200` and `4201` are available, make sure the KS and partner id are valid and not expired.  
