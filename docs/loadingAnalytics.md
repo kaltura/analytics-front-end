@@ -16,6 +16,8 @@ First of all the host app must register to the message event using `window.addEv
 
 Then implement `analyticsInit` event handler (`event.data.messageType === 'analyticsInit'`,
 all events will be listed below and you can find a complete example at `dev/analyticsLoader.html`).
+With this event, the host app receives the menu config and the views config objects
+that may be used as a starting point to modify the menu or components visibility on pages of the analytics app.  
 
 In the response to `analyticsInit` event the host app must send `init` event
 to the analytics app with the payload containing the app configuration mentioned above 
@@ -86,7 +88,7 @@ The events are grouped by a direction that they can be used:
 
 Event type | Event name | Payload | Description
 -----------|------------|---------|------------|
-H ← A | `analyticsInit` | `{ menu }` | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
+H ← A | `analyticsInit` | `{ menu: [shape described above], views: [shape described above] }` | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
 H → A | `init` | `{ config: [shape described above] }` | Init event send from host to analytics app, passing the configuration object
 H ← A | `analyticsInitComplete` | none | Final event for initial phase, notifies the host app that initialization was completed
 H ← A | `logout`| none | Notify the host app to logout, might be useful in case of expired ks, since the analytics app doesn't handle authentication has to be handled by the host app
