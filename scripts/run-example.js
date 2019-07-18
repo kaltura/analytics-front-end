@@ -5,6 +5,7 @@ const { cleanup } = require('./lib/clean-up');
 const { srcPath } = require('./lib/definitions');
 const { serve } = require('./lib/serve');
 const { isExists, readFile, writeFile } = require('./lib/fs');
+const { getArgs } = require('./lib/get-args');
 
 const frameEventsServicePath = path.resolve(srcPath, 'app/shared/modules/frame-event-manager/frame-event-manager.service.ts');
 
@@ -24,7 +25,7 @@ function updateFrameEventTarget() {
 
 async function main() {
   updateFrameEventTarget();
-  serve('src/dev/analyticsLoader.html');
+  serve(getArgs().path || 'src/dev/analyticsLoader.html');
 }
 
 (async function () {
