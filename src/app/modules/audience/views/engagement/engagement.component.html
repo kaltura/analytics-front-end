@@ -31,20 +31,20 @@
 
   <div *ngIf="_miniViewsCount" class="kReportContainer">
     <div *ngIf="_engagementViewConfig.miniHighlights"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
                                       [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
     <div *ngIf="_engagementViewConfig.miniTopVideos"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
     </div>
 
     <div *ngIf="_engagementViewConfig.miniPeakDay"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <app-engagement-mini-peak-day [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-peak-day>
     </div>

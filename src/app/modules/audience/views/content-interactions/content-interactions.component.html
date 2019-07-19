@@ -1,24 +1,26 @@
 <div data-aid="report-group-content-interactions" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.contentInteractions.title' | translate}}</span>
-    <app-export-csv *ngIf="_contentInteractionsViewConfig.export"
-                    name="content-interactions"
-                    [reports]="_exportConfig"
-                    [refineFilter]="_refineFilter"
-                    [dateFilter]="_dateFilter"></app-export-csv>
-    <div *ngIf="_contentInteractionsViewConfig.refineFilter"
-         class="kFilter kOverrideFAIcons">
-      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
-        <span>{{'app.filters.filter' | translate}}</span>
-        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
-        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+    <div class="kControls">
+      <app-export-csv *ngIf="_contentInteractionsViewConfig.export"
+                      name="content-interactions"
+                      [reports]="_exportConfig"
+                      [refineFilter]="_refineFilter"
+                      [dateFilter]="_dateFilter"></app-export-csv>
+      <div *ngIf="_contentInteractionsViewConfig.refineFilter"
+           class="kFilter kOverrideFAIcons">
+        <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+          <span>{{'app.filters.filter' | translate}}</span>
+          <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+          <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+        </div>
       </div>
+      <app-date-filter #dateFilter
+                       name="content-interactions"
+                       [dateRange]="_dateRange"
+                       [selectedTimeUnit]="_timeUnit"
+                       (filterChange)="_onDateFilterChange($event)"></app-date-filter>
     </div>
-    <app-date-filter #dateFilter
-                     name="content-interactions"
-                     [dateRange]="_dateRange"
-                     [selectedTimeUnit]="_timeUnit"
-                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
@@ -32,21 +34,21 @@
 
   <div *ngIf="_miniViewsCount" class="kReportContainer">
     <div *ngIf="_contentInteractionsViewConfig.miniInteractions"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <app-mini-interactions [highlights$]="interactions.interactions$"
                              [dateFilter]="_dateFilter"
                              [refineFilter]="_refineFilter"></app-mini-interactions>
     </div>
 
     <div *ngIf="_contentInteractionsViewConfig.miniTopShared"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <app-mini-top-shared [dateFilter]="_dateFilter"
                            [refineFilter]="_refineFilter"></app-mini-top-shared>
     </div>
 
     <!--IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
     <div *ngIf="_contentInteractionsViewConfig.topStats || _contentInteractionsViewConfig.topPlaybackSpeed"
-         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
+         class="kMiniReportContainer">
       <ui-carousel [infinite]="true"
                    [autoPlay]="true"
                    [autoPlaySpeed]="10000"

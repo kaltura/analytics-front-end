@@ -33,7 +33,6 @@ export class EngagementComponent {
     this._engagementViewConfig.miniTopVideos,
     this._engagementViewConfig.miniPeakDay,
   ].filter(Boolean).length;
-  public _miniViewsWidth = this._miniViewsCount === 3 ? '30%' : this._miniViewsCount === 2 ? '50%' : '100%';
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

@@ -4,6 +4,15 @@
   height: 100%;
 }
 
+.kReportHeader {
+  .kControls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .kReportContainer {
   padding-bottom: 24px;
   background-color: $appBkgColor;

@@ -69,7 +69,17 @@
 
       switch (postMessageData.messageType) {
         case 'analyticsInit':
-          sendMessage({ messageType: 'init', payload: config });
+          const viewsConfig = postMessageData.payload.viewsConfig;
+          viewsConfig.audience.engagement.refineFilter = false;
+          viewsConfig.audience.engagement.miniTopVideos = false;
+          viewsConfig.audience.engagement.syndication = false;
+
+          viewsConfig.audience.contentInteractions.export = false;
+          viewsConfig.audience.contentInteractions.miniInteractions = false;
+          viewsConfig.audience.contentInteractions.miniTopShared = false;
+          viewsConfig.audience.contentInteractions.topPlaybackSpeed = false;
+
+          sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
         case 'analyticsInitComplete':

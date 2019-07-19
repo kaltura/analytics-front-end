@@ -29,11 +29,11 @@ export class ContentInteractionsComponent {
   public _exportConfig: ExportItem[] = [];
   public _contentInteractionsViewConfig = analyticsConfig.viewsConfig.audience.contentInteractions;
   public _miniViewsCount = [
-    this._contentInteractionsViewConfig.miniHighlights,
-    this._contentInteractionsViewConfig.miniTopVideos,
-    this._contentInteractionsViewConfig.miniPeakDay,
+    this._contentInteractionsViewConfig.miniInteractions,
+    this._contentInteractionsViewConfig.miniTopShared,
+    this._contentInteractionsViewConfig.topPlaybackSpeed,
+    this._contentInteractionsViewConfig.topStats,
   ].filter(Boolean).length;
-  public _miniViewsWidth = this._miniViewsCount === 3 ? '30%' : this._miniViewsCount === 2 ? '50%' : '100%';
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
