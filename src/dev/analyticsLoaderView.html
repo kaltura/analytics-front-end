@@ -79,6 +79,10 @@
           viewsConfig.audience.contentInteractions.miniTopShared = false;
           viewsConfig.audience.contentInteractions.topPlaybackSpeed = false;
 
+          viewsConfig.contributors.miniHighlights = false;
+          viewsConfig.contributors.miniTopContributors = false;
+          viewsConfig.contributors.miniTopSources = false;
+
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
