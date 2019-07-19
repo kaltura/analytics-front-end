@@ -11,7 +11,94 @@ export class AppService implements OnDestroy {
   private _appInit = new BehaviorSubject<boolean>(false);
   
   public readonly appInit$ = this._appInit.asObservable();
-
+  
+  public readonly viewsConfig = {
+    audience: {
+      engagement: {
+        export: true,
+        dateFilter: true,
+        refineFilter: true,
+        miniHighlights: true,
+        miniTopVideos: true,
+        miniPeakDay: true,
+        highlights: true,
+        impressions: true,
+        syndication: true,
+      },
+      contentInteractions: {
+        export: true,
+        dateFilter: true,
+        refineFilter: true,
+        miniInteractions: true,
+        miniTopShared: true,
+        topPlaybackSpeed: true,
+        topStats: true,
+        interactions: true,
+        moderation: true,
+      },
+      geo: {
+        export: true,
+        dateFilter: true,
+        refineFilter: true,
+      },
+      technology: {
+        export: true,
+        dateFilter: true,
+        devices: true,
+        topBrowsers: true,
+        topOs: true,
+      },
+    },
+    bandwidth: {
+      endUser: {
+        export: true,
+        dateFilter: true,
+        refineFilter: true,
+      },
+      publisher: {
+        export: true,
+        dateFilter: true,
+        refineFilter: true,
+      },
+    },
+    contributors: {
+      export: true,
+      dateFilter: true,
+      refineFilter: true,
+      miniHighlights: true,
+      miniTopContributors: true,
+      miniTopSources: true,
+      highlights: true,
+      contributors: true,
+      sources: true,
+    },
+    entry: {
+      export: true,
+      dateFilter: true,
+      refineFilter: true,
+      entryPreview: true,
+      userEngagement: true,
+      performance: true,
+      impressions: true,
+      geo: true,
+      devices: true,
+      syndication: true,
+    },
+    entryLive: {
+      export: true,
+      toggleLive: true,
+      details: true,
+      users: true,
+      bandwidth: true,
+      geo: true,
+      status: true,
+      player: true,
+      streamHealth: true,
+      devices: true,
+      discovery: true,
+    },
+  };
+  
   constructor(private _logger: KalturaLogger,
               private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService,
@@ -68,7 +155,7 @@ export class AppService implements OnDestroy {
     );
   }
   
-  private _initAppError(errorMsg: string): void{
+  private _initAppError(errorMsg: string): void {
     this._logger.error(errorMsg);
   }
 }

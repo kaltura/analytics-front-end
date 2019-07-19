@@ -30,8 +30,6 @@ export class AppComponent implements OnInit, OnDestroy {
     ok: 'OK'
   };
 
-  private hosted = false;
-
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _confirmationService: ConfirmationService,
@@ -93,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this._confirmationService.confirm(formattedMessage);
     });
 
-    this._frameEventManager.publish(FrameEvents.AnalyticsInit, { menuConfig: menu });
+    this._frameEventManager.publish(FrameEvents.AnalyticsInit, { menuConfig: menu, viewsConfig: this._appService.viewsConfig });
   }
   
   ngOnDestroy() {

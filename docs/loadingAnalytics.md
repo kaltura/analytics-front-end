@@ -1,9 +1,3 @@
-1. pass config as we do in KMC and document each param +
-2. fix internal menu as in KMC menu +
-3. Allow configuring the menu: pass menu config to hosy app on event? allow passing menu config from host to analytics. make sure the menu is hidden until config is received +
-4. Toggling visibility of UI views and filters: provide host app ID to analytics in config: https://kaltura.atlassian.net/browse/AN-788
-5. Adding specific app features according to app ID: AN-795 - AN-800
-
 ### Bootstrapping
 
 The host app must include an iframe which source `src` is a url to the deployed analytics app.
@@ -76,6 +70,9 @@ menuConfig?: {
       label: string,
     }[], // optional array of sub items, has the same structure as item itself, only one level of nesting is supported
   }[],
+},
+viewsConfig?: {
+  [key: string]: Object | boolean // the list of all view configs keys available is available here https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/services/app.service.ts#L15
 }
 ```
 
@@ -88,7 +85,7 @@ The events are grouped by a direction that they can be used:
 
 Event type | Event name | Payload | Description
 -----------|------------|---------|------------|
-H ← A | `analyticsInit` | `{ menu: [shape described above], views: [shape described above] }` | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
+H ← A | `analyticsInit` | `{ menuConfig: [shape described above], viewsConfig: [shape described above] }` | Initial event from the analytics app, that tells the host app that it's ready to bootstrap
 H → A | `init` | `{ config: [shape described above] }` | Init event send from host to analytics app, passing the configuration object
 H ← A | `analyticsInitComplete` | none | Final event for initial phase, notifies the host app that initialization was completed
 H ← A | `logout`| none | Notify the host app to logout, might be useful in case of expired ks, since the analytics app doesn't handle authentication has to be handled by the host app
