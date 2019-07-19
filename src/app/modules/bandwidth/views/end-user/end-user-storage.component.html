@@ -1,10 +1,12 @@
 <div data-aid="report-end-user" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
-    <app-export-csv name="end-user"
+    <app-export-csv *ngIf="_endUserViewConfig.export"
+                    name="end-user"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
-    <div class="kFilter kOverrideFAIcons">
+    <div *ngIf="_endUserViewConfig.refineFilter"
+         class="kFilter kOverrideFAIcons">
       <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
         <span>{{'app.filters.filter' | translate}}</span>
         <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>

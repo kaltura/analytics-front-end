@@ -5,6 +5,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { EngagementExportConfig } from './engagement-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement',
@@ -26,6 +27,13 @@ export class EngagementComponent {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
+  public _engagementViewConfig = analyticsConfig.viewsConfig.audience.engagement;
+  public _miniViewsCount = [
+    this._engagementViewConfig.miniHighlights,
+    this._engagementViewConfig.miniTopVideos,
+    this._engagementViewConfig.miniPeakDay,
+  ].filter(Boolean).length;
+  public _miniViewsWidth = this._miniViewsCount === 3 ? '30%' : this._miniViewsCount === 2 ? '50%' : '100%';
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

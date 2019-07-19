@@ -1,11 +1,12 @@
 <div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.engagement.title' | translate}}</span>
-    <app-export-csv name="engagement"
+    <app-export-csv *ngIf="_engagementViewConfig.export"
+                    name="engagement"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>
-    <div class="kFilter kOverrideFAIcons">
+    <div *ngIf="_engagementViewConfig.refineFilter" class="kFilter kOverrideFAIcons">
       <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
         <span>{{'app.filters.filter' | translate}}</span>
         <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
@@ -28,19 +29,22 @@
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
   </div>
 
-  <div class="kReportContainer">
-    <div class="kMiniReportContainer">
+  <div *ngIf="_miniViewsCount" class="kReportContainer">
+    <div *ngIf="_engagementViewConfig.miniHighlights"
+         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
       <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
                                       [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
 
-    <div class="kMiniReportContainer">
+    <div *ngIf="_engagementViewConfig.miniTopVideos"
+         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
       <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
     </div>
 
-    <div class="kMiniReportContainer">
+    <div *ngIf="_engagementViewConfig.miniPeakDay"
+         class="kMiniReportContainer" [style.width]="_miniViewsWidth">
       <app-engagement-mini-peak-day [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-peak-day>
     </div>
@@ -62,14 +66,16 @@
     <!--</div>-->
   </div>
 
-  <div id="highlights-report" class="kReportContainer">
+  <div [class.kHidden]="!_engagementViewConfig.highlights"
+       id="highlights-report" class="kReportContainer">
     <app-engagement-highlights #highlights
                                [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>
   </div>
 
-  <div id="top-videos" class="kReportContainer">
+  <div [class.kHidden]="!_engagementViewConfig.topVideos"
+       id="top-videos" class="kReportContainer">
     <app-engagement-top-videos #topVideos
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-top-videos>
@@ -80,7 +86,8 @@
                              [refineFilter]="_refineFilter"></app-engagement-duration>
   </div-->
 
-  <div class="kReportContainer">
+  <div *ngIf="_engagementViewConfig.impressions"
+       class="kReportContainer">
     <!--div class="kSmallReportContainer"-->
       <app-impressions [dateFilter]="_dateFilter"
                        [refineFilter]="_refineFilter"></app-impressions>
@@ -91,7 +98,8 @@
     </div-->
   </div>
 
-  <div class="kReportContainer">
+  <div *ngIf="_engagementViewConfig.syndication"
+       class="kReportContainer">
     <app-syndication [dateFilterComponent]="dateFilter"
                      [dateFilter]="_dateFilter"
                      [refineFilter]="_refineFilter"

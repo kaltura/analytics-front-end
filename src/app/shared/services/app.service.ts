@@ -16,18 +16,17 @@ export class AppService implements OnDestroy {
     audience: {
       engagement: {
         export: true,
-        dateFilter: true,
         refineFilter: true,
         miniHighlights: true,
         miniTopVideos: true,
         miniPeakDay: true,
+        topVideos: true,
         highlights: true,
         impressions: true,
         syndication: true,
       },
       contentInteractions: {
         export: true,
-        dateFilter: true,
         refineFilter: true,
         miniInteractions: true,
         miniTopShared: true,
@@ -38,12 +37,10 @@ export class AppService implements OnDestroy {
       },
       geo: {
         export: true,
-        dateFilter: true,
         refineFilter: true,
       },
       technology: {
         export: true,
-        dateFilter: true,
         devices: true,
         topBrowsers: true,
         topOs: true,
@@ -52,18 +49,15 @@ export class AppService implements OnDestroy {
     bandwidth: {
       endUser: {
         export: true,
-        dateFilter: true,
         refineFilter: true,
       },
       publisher: {
         export: true,
-        dateFilter: true,
         refineFilter: true,
       },
     },
     contributors: {
       export: true,
-      dateFilter: true,
       refineFilter: true,
       miniHighlights: true,
       miniTopContributors: true,
@@ -74,8 +68,9 @@ export class AppService implements OnDestroy {
     },
     entry: {
       export: true,
-      dateFilter: true,
       refineFilter: true,
+      details: true,
+      totals: true,
       entryPreview: true,
       userEngagement: true,
       performance: true,
@@ -127,6 +122,7 @@ export class AppService implements OnDestroy {
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
     analyticsConfig.menuConfig = config.menuConfig;
+    analyticsConfig.viewsConfig = config.viewsConfig || { ...this.viewsConfig };
     
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);

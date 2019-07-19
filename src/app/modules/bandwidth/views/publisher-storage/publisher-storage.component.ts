@@ -47,6 +47,7 @@ export class PublisherStorageComponent implements OnInit {
   public _lineChartData: any = {'bandwidth_consumption': {}};
   public _barChartData: any = {'bandwidth_consumption': {}};
   public _dateRange = DateRanges.CurrentQuarter;
+  public _publisherViewConfig = analyticsConfig.viewsConfig.bandwidth.publisher;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

@@ -6,12 +6,14 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
           <span class="kTitle">{{_entryName}}</span>
-          <app-export-csv name="entry"
+          <app-export-csv *ngIf="_entryViewConfig.export"
+                          name="entry"
                           [reports]="_exportConfig"
                           [refineFilter]="_refineFilter"
                           [dateFilter]="_dateFilter"
                           [entryId]="_entryId"></app-export-csv>
-          <div class="kFilter kOverrideFAIcons">
+          <div *ngIf="_entryViewConfig.refineFilter"
+               class="kFilter kOverrideFAIcons">
             <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
               <span>{{'app.filters.filter' | translate}}</span>
               <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
@@ -26,7 +28,8 @@
                            (filterChange)="_onDateFilterChange($event)"></app-date-filter>
         </div>
 
-        <div class="kEntryDetails">
+        <div *ngIf="_entryViewConfig.details"
+             class="kEntryDetails">
           <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
           <span>{{_entryType | mediaType: true}}</span>
           <div class="kSeparator"></div>
@@ -42,45 +45,56 @@
                           (closeFilters)="_refineFilterOpened = false"
                           (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
-        <app-entry-totals [dateFilter]="_dateFilter" [entryId]="_entryId" [refineFilter]="_refineFilter"></app-entry-totals>
+        <app-entry-totals *ngIf="_entryViewConfig.totals"
+                          [dateFilter]="_dateFilter"
+                          [entryId]="_entryId"
+                          [refineFilter]="_refineFilter"></app-entry-totals>
 
-        <div class="kReportContainer kEntryPreview">
-          <app-entry-preview [dateFilter]="_dateFilter"
+        <div *ngIf="_entryViewConfig.entryPreview || _entryViewConfig.userEngagement"
+             class="kReportContainer kEntryPreview">
+          <app-entry-preview *ngIf="_entryViewConfig.entryPreview"
+                             [dateFilter]="_dateFilter"
                              [entryId]="_entryId"
                              [refineFilter]="_refineFilter"></app-entry-preview>
-          <app-user-engagement [dateFilter]="_dateFilter"
+          <app-user-engagement *ngIf="_entryViewConfig.userEngagement"
+                               [dateFilter]="_dateFilter"
                                [duration]="_duration"
                                [refineFilter]="_refineFilter"
                                [entryId]="_entryId"></app-user-engagement>
         </div>
 
-        <div class="kReportContainer">
+        <div *ngIf="_entryViewConfig.performance"
+             class="kReportContainer">
           <app-video-performance [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
                                  [entryId]="_entryId"
                                  [refineFilter]="_refineFilter"></app-video-performance>
         </div>
 
-        <div class="kReportContainer">
+        <div *ngIf="_entryViewConfig.impressions"
+             class="kReportContainer">
           <app-impressions [dateFilter]="_dateFilter"
                            [entryId]="_entryId"
                            [refineFilter]="_refineFilter"></app-impressions>
         </div>
 
-        <div class="kReportContainer">
+        <div *ngIf="_entryViewConfig.geo"
+             class="kReportContainer">
           <app-top-countries [dateFilter]="_dateFilter"
                              [refineFilter]="_refineFilter"
                              [entryId]="_entryId"
-                              (onDrillDown)="_onGeoDrilldown($event)"></app-top-countries>
+                             (onDrillDown)="_onGeoDrilldown($event)"></app-top-countries>
         </div>
 
-        <div class="kReportContainer">
+        <div *ngIf="_entryViewConfig.devices"
+             class="kReportContainer">
           <app-entry-devices-overview [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"
                                       [entryId]="_entryId"></app-entry-devices-overview>
         </div>
 
-        <div class="kReportContainer">
+        <div *ngIf="_entryViewConfig.syndication"
+             class="kReportContainer">
           <app-syndication [entryId]="_entryId"
                            [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"

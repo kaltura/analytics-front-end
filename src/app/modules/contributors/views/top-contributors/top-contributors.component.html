@@ -1,11 +1,13 @@
 <div data-aid="report-group-contributors" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.contributors.title' | translate}}</span>
-    <app-export-csv name="top-contributors"
+    <app-export-csv *ngIf="_contributorsViewConfig.export"
+                    name="top-contributors"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>
-    <div class="kFilter kOverrideFAIcons">
+    <div *ngIf="_contributorsViewConfig.refineFilter"
+         class="kFilter kOverrideFAIcons">
       <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
         <span>{{'app.filters.filter' | translate}}</span>
         <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
@@ -28,19 +30,22 @@
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
   </div>
 
-  <div class="kReportContainer">
-    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
+  <div *ngIf="_miniViewsCount" class="kReportContainer">
+    <div *ngIf="_contributorsViewConfig.miniHighlights"
+         class="kMiniReportContainer" [ngStyle]="{'max-width': _miniViewsWidth}">
       <app-contributors-mini-highlights [dateFilter]="_dateFilter"
                                         [refineFilter]="_refineFilter"></app-contributors-mini-highlights>
     </div>
 
-    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
+    <div *ngIf="_contributorsViewConfig.miniTopContributors"
+         class="kMiniReportContainer" [ngStyle]="{'max-width': _miniViewsWidth}">
       <app-contributors-mini-top-contributors [topContributors$]="topContributors.topContributors$"
                                               [dateFilter]="_dateFilter"
                                               [refineFilter]="_refineFilter"></app-contributors-mini-top-contributors>
     </div>
 
-    <div class="kMiniReportContainer" [ngStyle]="{'max-width': '33%'}">
+    <div *ngIf="_contributorsViewConfig.miniTopSources"
+         class="kMiniReportContainer" [ngStyle]="{'max-width': _miniViewsWidth}">
       <app-contributors-mini-top-sources [dateFilter]="_dateFilter" [topSources$]="sources.topSources$"
                                          [refineFilter]="_refineFilter"></app-contributors-mini-top-sources>
     </div>
@@ -62,19 +67,20 @@
     <!--</div>-->
   </div>
 
-  <div id="highlights-report" class="kReportContainer">
+  <div *ngIf="_contributorsViewConfig.highlights"
+       id="highlights-report" class="kReportContainer">
     <app-contributors-highlights [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
                                  [refineFilter]="_refineFilter"></app-contributors-highlights>
   </div>
 
-  <div id="top-contributors" class="kReportContainer">
+  <div [class.kHidden]="!_contributorsViewConfig.contributors" id="top-contributors" class="kReportContainer">
     <app-contributors-top-contributors #topContributors
                                        [dateFilter]="_dateFilter"
                                        [refineFilter]="_refineFilter"></app-contributors-top-contributors>
   </div>
 
-  <div id="sources" class="kReportContainer">
+  <div [class.kHidden]="!_contributorsViewConfig.sources" id="sources" class="kReportContainer">
     <app-contributors-sources [dateFilter]="_dateFilter" #sources
                                 [refineFilter]="_refineFilter"></app-contributors-sources>
     <!--div class="kSmallReportContainer">

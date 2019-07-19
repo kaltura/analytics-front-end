@@ -10,33 +10,42 @@
             <app-toggle-live-btn *ngIf="_canShowToggleLive"
                                  [entry]="_entry"
                                  (entryToggled)="_liveToggled()"></app-toggle-live-btn>
-            <app-export-csv name="entry"
+            <app-export-csv *ngIf="_entryLiveViewConfig.export"
+                            name="entry"
                             [width]="380"
                             [reports]="_exportConfig"
                             [entryId]="_entryId"></app-export-csv>
           </div>
         </div>
 
-        <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+        <app-entry-details *ngIf="_entryLiveViewConfig.details"
+                           [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
         <div class="kEntryWidgets">
-          <div class="kWideColumn">
-            <app-live-users [entry]="_entry"></app-live-users>
-            <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
-            <div class="kReport kNoBottomMargin">
+          <div *ngIf="_entryLiveViewConfig.users || _entryLiveViewConfig.bandwidth || _entryLiveViewConfig.geo"
+               class="kWideColumn">
+            <app-live-users *ngIf="_entryLiveViewConfig.users"
+                            [entry]="_entry"></app-live-users>
+            <app-live-bandwidth *ngIf="_entryLiveViewConfig.bandwidth"
+                                [entry]="_entry"></app-live-bandwidth>
+            <div *ngIf="_entryLiveViewConfig.geo"
+                 class="kReport kNoBottomMargin">
               <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
             </div>
           </div>
-          <div class="kNarrowColumn">
-            <app-live-status [entry]="_entry"></app-live-status>
-            <app-live-player [entryId]="_entry?.id"></app-live-player>
-            <app-live-stream-health></app-live-stream-health>
+          <div *ngIf="_entryLiveViewConfig.status || _entryLiveViewConfig.player || _entryLiveViewConfig.streamHealth || _entryLiveViewConfig.devices"
+               class="kNarrowColumn">
+            <app-live-status *ngIf="_entryLiveViewConfig.status"
+                             [entry]="_entry"></app-live-status>
+            <app-live-player *ngIf="_entryLiveViewConfig.player"
+                             [entryId]="_entry?.id"></app-live-player>
+            <app-live-stream-health *ngIf="_entryLiveViewConfig.streamHealth"></app-live-stream-health>
 
-            <div class="kReport kNoBottomMargin">
+            <div *ngIf="_entryLiveViewConfig.devices" class="kReport kNoBottomMargin">
               <app-live-devices></app-live-devices>
             </div>
           </div>
         </div>
-        <div class="kReport">
+        <div *ngIf="_entryLiveViewConfig.discovery" class="kReport">
           <app-live-discovery (tableChange)="_onTableModeChange($event)"
                               (dateFilterChange)="_onDiscoveryDateFilterChange($event)"></app-live-discovery>
         </div>

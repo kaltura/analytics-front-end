@@ -7,6 +7,10 @@ export interface MenuItem {
   items?: MenuItem[];
 }
 
+export interface ViewConfigItem {
+  [key: string]: ViewConfigItem;
+}
+
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
@@ -33,6 +37,9 @@ export interface AnalyticsConfig {
   menuConfig?: {
     showMenu: boolean;
     items?: MenuItem[];
+  };
+  viewsConfig?: {
+    [key: string]: ViewConfigItem;
   };
   live?: {
     pollInterval?: PollInterval;

@@ -41,6 +41,7 @@ import { EngagementExportConfig } from '../audience/views/engagement/engagement-
   ]
 })
 export class EntryViewComponent implements OnInit, OnDestroy {
+  public _entryViewConfig = analyticsConfig.viewsConfig.entry;
   public _loadingEntry = false;
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;

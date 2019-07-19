@@ -61,6 +61,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _selectedRefineFilters: RefineFilter = null;
   public _refineFilter: RefineFilter = [];
   public _exportConfig: ExportItem[] = [];
+  public _geoViewConfig = analyticsConfig.viewsConfig.audience.geo;
 
   private pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
   public reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;

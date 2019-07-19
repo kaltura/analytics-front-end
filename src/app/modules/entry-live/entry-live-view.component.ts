@@ -51,6 +51,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
   public _canShowToggleLive = false;
+  public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -122,7 +123,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
+        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
         this._registerWidgets();
       });
   }
@@ -139,18 +140,35 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._widgetsRegistered = true;
       
       const widgetArgs = { entryId: this._entryId };
+      const widgets = [];
+      const silentWidgets = [];
       
-      this._widgetsManager.register([
-        this._liveUsers,
-        this._liveBandwidth,
-        this._liveStreamHealth,
-        this._liveGeo,
-        this._liveDevices,
-        this._liveDiscovery,
-        // <-- append new widgets here
-      ], widgetArgs, [
-        this._liveDiscoveryTable,
-      ]);
+      if (this._entryLiveViewConfig.users) {
+        widgets.push(this._liveUsers);
+      }
+  
+      if (this._entryLiveViewConfig.bandwidth) {
+        widgets.push(this._liveBandwidth);
+      }
+  
+      if (this._entryLiveViewConfig.streamHealth) {
+        widgets.push(this._liveStreamHealth);
+      }
+  
+      if (this._entryLiveViewConfig.geo) {
+        widgets.push(this._liveGeo);
+      }
+  
+      if (this._entryLiveViewConfig.devices) {
+        widgets.push(this._liveDevices);
+      }
+      
+      if (this._entryLiveViewConfig.discovery) {
+        widgets.push(this._liveDiscovery);
+        silentWidgets.push(this._liveDiscoveryTable);
+      }
+
+      this._widgetsManager.register(widgets, widgetArgs, silentWidgets);
     }
   }
   
