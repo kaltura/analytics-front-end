@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
+import { AnalyticsConfig, analyticsConfig, getKalturaServerUri, ViewConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class AppService implements OnDestroy {
@@ -12,85 +14,85 @@ export class AppService implements OnDestroy {
   
   public readonly appInit$ = this._appInit.asObservable();
   
-  public readonly viewsConfig = {
+  public readonly viewsConfig: ViewConfig = {
     audience: {
       engagement: {
-        export: true,
-        refineFilter: true,
-        miniHighlights: true,
-        miniTopVideos: true,
-        miniPeakDay: true,
-        topVideos: true,
-        highlights: true,
-        impressions: true,
-        syndication: true,
+        export: {},
+        refineFilter: {},
+        miniHighlights: {},
+        miniTopVideos: {},
+        miniPeakDay: {},
+        topVideos: {},
+        highlights: {},
+        impressions: {},
+        syndication: {},
       },
       contentInteractions: {
-        export: true,
-        refineFilter: true,
-        miniInteractions: true,
-        miniTopShared: true,
-        topPlaybackSpeed: true,
-        topStats: true,
-        interactions: true,
-        moderation: true,
+        export: {},
+        refineFilter: {},
+        miniInteractions: {},
+        miniTopShared: {},
+        topPlaybackSpeed: {},
+        topStats: {},
+        interactions: {},
+        moderation: {},
       },
       geo: {
-        export: true,
-        refineFilter: true,
+        export: {},
+        refineFilter: {},
       },
       technology: {
-        export: true,
-        devices: true,
-        topBrowsers: true,
-        topOs: true,
+        export: {},
+        devices: {},
+        topBrowsers: {},
+        topOs: {},
       },
     },
     bandwidth: {
       endUser: {
-        export: true,
-        refineFilter: true,
+        export: {},
+        refineFilter: {},
       },
       publisher: {
-        export: true,
-        refineFilter: true,
+        export: {},
+        refineFilter: {},
       },
     },
     contributors: {
-      export: true,
-      refineFilter: true,
-      miniHighlights: true,
-      miniTopContributors: true,
-      miniTopSources: true,
-      highlights: true,
-      contributors: true,
-      sources: true,
+      export: {},
+      refineFilter: {},
+      miniHighlights: {},
+      miniTopContributors: {},
+      miniTopSources: {},
+      highlights: {},
+      contributors: {},
+      sources: {},
     },
     entry: {
-      export: true,
-      refineFilter: true,
-      details: true,
-      totals: true,
-      entryPreview: true,
-      userEngagement: true,
-      performance: true,
-      impressions: true,
-      geo: true,
-      devices: true,
-      syndication: true,
+      export: {},
+      refineFilter: {},
+      details: {},
+      totals: {},
+      entryPreview: {},
+      userEngagement: {},
+      performance: {},
+      impressions: {},
+      geo: {},
+      devices: {},
+      syndication: {},
     },
     entryLive: {
-      export: true,
-      toggleLive: true,
-      details: true,
-      users: true,
-      bandwidth: true,
-      geo: true,
-      status: true,
-      player: true,
-      streamHealth: true,
-      devices: true,
-      discovery: true,
+      export: {},
+      toggleLive: {},
+      details: {},
+      users: {},
+      bandwidth: {},
+      geo: {},
+      status: {},
+      player: {},
+      streamHealth: {},
+      devices: {},
+      discovery: {},
     },
   };
   
@@ -99,6 +101,10 @@ export class AppService implements OnDestroy {
               private _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
+  
+    this._frameEventManager.listen(FrameEvents.UpdateConfig)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(config => this._setConfig(config, true));
   }
   
   ngOnDestroy(): void {
@@ -107,22 +113,11 @@ export class AppService implements OnDestroy {
   
   public init(config = null, hosted = false): void {
     if (!config) {
+      this._logger.error('No configuration provided! Abort initialization');
       return;
     }
-    
-    analyticsConfig.ks = config.ks;
-    analyticsConfig.pid = config.pid;
-    analyticsConfig.locale = config.locale;
-    analyticsConfig.kalturaServer = config.kalturaServer;
-    analyticsConfig.cdnServers = config.cdnServers;
-    analyticsConfig.liveAnalytics = config.liveAnalytics;
-    analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
-    analyticsConfig.isHosted = hosted;
-    analyticsConfig.permissions = config.permissions || {};
-    analyticsConfig.live = config.live || { pollInterval: 30 };
-    analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
-    analyticsConfig.menuConfig = config.menuConfig;
-    analyticsConfig.viewsConfig = config.viewsConfig || { ...this.viewsConfig };
+
+    this._setConfig(config, hosted);
     
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
@@ -149,6 +144,27 @@ export class AppService implements OnDestroy {
         this._initAppError(error.message);
       }
     );
+  }
+  
+  private _setConfig(config: AnalyticsConfig, hosted = false): void {
+    if (!config) {
+      this._logger.error('No configuration provided!');
+      return;
+    }
+    
+    analyticsConfig.ks = config.ks;
+    analyticsConfig.pid = config.pid;
+    analyticsConfig.locale = config.locale;
+    analyticsConfig.kalturaServer = config.kalturaServer;
+    analyticsConfig.cdnServers = config.cdnServers;
+    analyticsConfig.liveAnalytics = config.liveAnalytics;
+    analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
+    analyticsConfig.isHosted = hosted;
+    analyticsConfig.permissions = config.permissions || {};
+    analyticsConfig.live = config.live || { pollInterval: 30 };
+    analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
+    analyticsConfig.menuConfig = config.menuConfig;
+    analyticsConfig.viewsConfig = config.viewsConfig || { ...this.viewsConfig };
   }
   
   private _initAppError(errorMsg: string): void {

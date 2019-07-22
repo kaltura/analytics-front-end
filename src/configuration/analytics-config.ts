@@ -7,8 +7,8 @@ export interface MenuItem {
   items?: MenuItem[];
 }
 
-export interface ViewConfigItem {
-  [key: string]: ViewConfigItem;
+export interface ViewConfig {
+  [key: string]: ViewConfig;
 }
 
 export interface AnalyticsConfig {
@@ -39,7 +39,7 @@ export interface AnalyticsConfig {
     items?: MenuItem[];
   };
   viewsConfig?: {
-    [key: string]: ViewConfigItem;
+    [key: string]: ViewConfig;
   };
   live?: {
     pollInterval?: PollInterval;

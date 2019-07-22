@@ -70,18 +70,18 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
           const viewsConfig = postMessageData.payload.viewsConfig;
-          viewsConfig.audience.engagement.refineFilter = false;
-          viewsConfig.audience.engagement.miniTopVideos = false;
-          viewsConfig.audience.engagement.syndication = false;
+          viewsConfig.audience.engagement.refineFilter = null;
+          viewsConfig.audience.engagement.miniTopVideos = null;
+          viewsConfig.audience.engagement.syndication = null;
 
-          viewsConfig.audience.contentInteractions.export = false;
-          viewsConfig.audience.contentInteractions.miniInteractions = false;
-          viewsConfig.audience.contentInteractions.miniTopShared = false;
-          viewsConfig.audience.contentInteractions.topPlaybackSpeed = false;
+          viewsConfig.audience.contentInteractions.export = null;
+          viewsConfig.audience.contentInteractions.miniInteractions = null;
+          viewsConfig.audience.contentInteractions.miniTopShared = null;
+          viewsConfig.audience.contentInteractions.topPlaybackSpeed = null;
 
-          viewsConfig.contributors.miniHighlights = false;
-          viewsConfig.contributors.miniTopContributors = false;
-          viewsConfig.contributors.miniTopSources = false;
+          viewsConfig.contributors.miniHighlights = null;
+          viewsConfig.contributors.miniTopContributors = null;
+          viewsConfig.contributors.miniTopSources = null;
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
