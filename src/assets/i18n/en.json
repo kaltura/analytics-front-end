@@ -316,6 +316,11 @@
       }
     },
     "engagement": {
+      "dimensions": {
+        "dates": "Dates",
+        "users": "Users",
+        "entries": "Entries"
+      },
       "title": "Engagement",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
@@ -655,6 +660,7 @@
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "users": "Users",
       "dates": "Dates",
+      "entry_name": "Name",
       "heatMap": {
         "duration": "Duration {{0}}",
         "tooltip": {
