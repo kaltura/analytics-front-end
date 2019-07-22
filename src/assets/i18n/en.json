@@ -262,7 +262,6 @@
       },
       "geo": {
         "title": "Geo Location",
-        "top": "Top Countries",
         "count_plays": "Plays",
         "unique_known_users": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
@@ -279,7 +278,15 @@
         "selectCountry": "Filter Country",
         "exportLabels": {
           "geo": "Geo Location"
-        }
+        },
+        "tableMode": {
+          "countries": "Top Countries",
+          "regions": "Top Regions",
+          "cities": "Top Cities"
+        },
+        "countries": "{{0}} Countries",
+        "regions": "{{0}} Regions",
+        "cities": "{{0}} Cities"
       },
       "technology": {
         "title": "Technology",
@@ -322,7 +329,13 @@
       }
     },
     "engagement": {
+      "dimensions": {
+        "dates": "Dates",
+        "users": "Users",
+        "entries": "Entries"
+      },
       "title": "Engagement",
+      "playedEntries": "Out of {{0}} Played Entries",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
       "insights": "Insights",
@@ -335,7 +348,7 @@
       "users": "How many users watched at least once?",
       "playerImpressions": "Player Impressions",
       "plays": "Plays",
-      "playthrough1": "Plays that reached",
+      "playthrough1": "Impressions that resulted in",
       "playthrough2": "play-through",
       "perc25": "25% Play-through",
       "perc50": "50% Play-through",
@@ -661,6 +674,7 @@
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "users": "Users",
       "dates": "Dates",
+      "entry_name": "Name",
       "heatMap": {
         "duration": "Duration {{0}}",
         "tooltip": {

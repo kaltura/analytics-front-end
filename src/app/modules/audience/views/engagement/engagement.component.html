@@ -33,6 +33,7 @@
     <div *ngIf="_engagementViewConfig.miniHighlights"
          class="kMiniReportContainer">
       <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
+                                      [videosCount$]="topVideos.totalCount$"
                                       [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
     </div>
@@ -102,8 +103,7 @@
        class="kReportContainer">
     <app-syndication [dateFilterComponent]="dateFilter"
                      [dateFilter]="_dateFilter"
-                     [refineFilter]="_refineFilter"
-                     (onDrillDown)="_onDrillDown($event)"></app-syndication>
+                     [refineFilter]="_refineFilter"></app-syndication>
   </div>
 </div>
 
