@@ -34,6 +34,10 @@ export class ContentInteractionsComponent {
     this._contentInteractionsViewConfig.topPlaybackSpeed,
     this._contentInteractionsViewConfig.topStats,
   ].filter(Boolean).length;
+  public _carouselItemsCount = [
+    this._contentInteractionsViewConfig.topPlaybackSpeed,
+    this._contentInteractionsViewConfig.topStats,
+  ].filter(Boolean).length;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

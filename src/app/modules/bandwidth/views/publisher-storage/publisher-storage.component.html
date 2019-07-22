@@ -22,6 +22,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="engagement"
+                       [viewConfig]="_publisherViewConfig.refineFilter"
                        [showAutocompleteGroup]="false"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"

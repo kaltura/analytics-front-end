@@ -14,7 +14,8 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, ViewConfig } from 'configuration/analytics-config';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
 
 @Component({
   selector: 'app-user-engagement',
@@ -30,6 +31,16 @@ export class UserEngagementComponent extends EntryBase {
   @Input() entryId = '';
   @Input() duration = 0;
   
+  @Input() set viewConfig(value: ViewConfig) {
+    if (!isEmptyObject(value)) {
+      this._viewConfig = value;
+    } else {
+      this._viewConfig = {
+        userFilter: {},
+      };
+    }
+  }
+  
   private _order = '-count_plays';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
@@ -37,6 +48,9 @@ export class UserEngagementComponent extends EntryBase {
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
   
+  public _viewConfig: ViewConfig = {
+    userFilter: {},
+  };
   public _selectedRefineFilters: RefineFilter = null;
   public _columns: string[] = [];
   public _totalCount = 0;

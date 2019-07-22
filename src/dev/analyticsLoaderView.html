@@ -75,6 +75,9 @@
           viewsConfig.audience.engagement.syndication = null;
 
           viewsConfig.audience.contentInteractions.export = null;
+          viewsConfig.audience.contentInteractions.refineFilter.owners = null;
+          viewsConfig.audience.contentInteractions.refineFilter.tags = null;
+          viewsConfig.audience.contentInteractions.refineFilter.categories = null;
           viewsConfig.audience.contentInteractions.miniInteractions = null;
           viewsConfig.audience.contentInteractions.miniTopShared = null;
           viewsConfig.audience.contentInteractions.topPlaybackSpeed = null;
@@ -82,6 +85,8 @@
           viewsConfig.contributors.miniHighlights = null;
           viewsConfig.contributors.miniTopContributors = null;
           viewsConfig.contributors.miniTopSources = null;
+
+          viewsConfig.bandwidth.publisher.refineFilter.geo = null;
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;

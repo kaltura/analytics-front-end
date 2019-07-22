@@ -24,7 +24,8 @@
   </div>
 
   <div class="kReportContainer kNoPadding">
-    <app-geo-filter [opened]="_refineFilterOpened"
+    <app-geo-filter [viewConfig]="_geoViewConfig.refineFilter"
+                    [opened]="_refineFilterOpened"
                     [dateFilter]="_dateFilter"
                     (closeFilters)="_refineFilterOpened = false"
                     (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>

@@ -25,6 +25,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="refine-filter"
+                       [viewConfig]="_contentInteractionsViewConfig.refineFilter"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
@@ -47,10 +48,10 @@
     </div>
 
     <!--IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
-    <div *ngIf="_contentInteractionsViewConfig.topStats || _contentInteractionsViewConfig.topPlaybackSpeed"
+    <div *ngIf="_carouselItemsCount"
          class="kMiniReportContainer">
-      <ui-carousel [infinite]="true"
-                   [autoPlay]="true"
+      <ui-carousel [infinite]="_carouselItemsCount > 1"
+                   [autoPlay]="_carouselItemsCount > 1"
                    [autoPlaySpeed]="10000"
                    [arrows]="false"
                    [fade]="false"

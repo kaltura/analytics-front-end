@@ -20,13 +20,15 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
           <div class="kFilterContainerCol">
-            <app-country-filter [dateFilter]="_dateFilter"
+            <app-country-filter *ngIf="_viewConfig.geo"
+                                [dateFilter]="_dateFilter"
                                 [selectedFilters]="_selectedValues['countries']"
                                 (itemSelected)="_onItemSelected($event, 'countries')"
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
 
 
-            <app-category-filter [label]="'app.filters.categories' | translate"
+            <app-category-filter *ngIf="_viewConfig.categories"
+                                 [label]="'app.filters.categories' | translate"
                                  [selectedFilters]="_selectedValues['categories']"
                                  [linkLabel]="'app.filters.selectCategories' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
@@ -38,7 +40,7 @@
                                 <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
 
           </div>
-          <div class="kFilterContainerCol">
+          <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
             <app-owners-filter [selectedFilters]="_selectedValues['users']"
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"

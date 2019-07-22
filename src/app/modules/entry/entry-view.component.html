@@ -39,7 +39,8 @@
           <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
         </div>
 
-        <app-entry-filter [opened]="_refineFilterOpened"
+        <app-entry-filter [viewConfig]="_entryViewConfig.refineFilter"
+                          [opened]="_refineFilterOpened"
                           [dateFilter]="_dateFilter"
                           [selectedFilters]="_selectedRefineFilters"
                           (closeFilters)="_refineFilterOpened = false"
@@ -57,6 +58,7 @@
                              [entryId]="_entryId"
                              [refineFilter]="_refineFilter"></app-entry-preview>
           <app-user-engagement *ngIf="_entryViewConfig.userEngagement"
+                               [viewConfig]="_entryViewConfig.userEngagement.userFilter"
                                [dateFilter]="_dateFilter"
                                [duration]="_duration"
                                [refineFilter]="_refineFilter"

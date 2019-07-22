@@ -23,6 +23,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="contributors"
+                       [viewConfig]="_contributorsViewConfig.refineFilter"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"

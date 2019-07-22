@@ -18,7 +18,14 @@ export class AppService implements OnDestroy {
     audience: {
       engagement: {
         export: {},
-        refineFilter: {},
+        refineFilter: {
+          mediaType: {},
+          entrySource: {},
+          tags: {},
+          owners: {},
+          categories: {},
+          geo: {},
+        },
         miniHighlights: {},
         miniTopVideos: {},
         miniPeakDay: {},
@@ -29,7 +36,14 @@ export class AppService implements OnDestroy {
       },
       contentInteractions: {
         export: {},
-        refineFilter: {},
+        refineFilter: {
+          mediaType: {},
+          entrySource: {},
+          tags: {},
+          owners: {},
+          categories: {},
+          geo: {},
+        },
         miniInteractions: {},
         miniTopShared: {},
         topPlaybackSpeed: {},
@@ -39,7 +53,11 @@ export class AppService implements OnDestroy {
       },
       geo: {
         export: {},
-        refineFilter: {},
+        refineFilter: {
+          geo: {},
+          tags: {},
+          categories: {},
+        },
       },
       technology: {
         export: {},
@@ -51,16 +69,32 @@ export class AppService implements OnDestroy {
     bandwidth: {
       endUser: {
         export: {},
-        refineFilter: {},
+        refineFilter: {
+          mediaType: {},
+          entrySource: {},
+          owners: {},
+          geo: {},
+        },
       },
       publisher: {
         export: {},
-        refineFilter: {},
+        refineFilter: {
+          mediaType: {},
+          entrySource: {},
+          geo: {},
+        },
       },
     },
     contributors: {
       export: {},
-      refineFilter: {},
+      refineFilter: {
+        mediaType: {},
+        entrySource: {},
+        tags: {},
+        owners: {},
+        categories: {},
+        geo: {},
+      },
       miniHighlights: {},
       miniTopContributors: {},
       miniTopSources: {},
@@ -70,11 +104,17 @@ export class AppService implements OnDestroy {
     },
     entry: {
       export: {},
-      refineFilter: {},
+      refineFilter: {
+        geo: {},
+        owners: {},
+        categories: {},
+      },
       details: {},
       totals: {},
       entryPreview: {},
-      userEngagement: {},
+      userEngagement: {
+        userFilter: {},
+      },
       performance: {},
       impressions: {},
       geo: {},
