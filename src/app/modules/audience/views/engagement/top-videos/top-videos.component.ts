@@ -43,6 +43,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   protected _componentId = 'top-videos';
 
   public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
+  public totalCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
@@ -76,6 +77,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   
   protected _loadReport(): void {
     this.topVideos$.next({table: null, compare: null, busy: true, error: null});
+    this.totalCount$.next(0);
     this._isBusy = true;
     this._blockerMessage = null;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -97,8 +99,10 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
             this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
+            this.totalCount$.next(report.table.totalCount);
           } else {
             this.topVideos$.next({table: null, compare: null, busy: false, error: null});
+            this.totalCount$.next(0);
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
@@ -115,6 +119,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
             },
           };
           this.topVideos$.next({table: null, compare: null, busy: false, error: error});
+          this.totalCount$.next(0);
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
@@ -177,5 +182,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
 
   ngOnDestroy() {
     this.topVideos$.complete();
+    this.totalCount$.complete();
   }
 }
