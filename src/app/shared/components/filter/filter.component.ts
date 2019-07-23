@@ -321,6 +321,7 @@ export class FilterComponent {
     if (event.fromState === 'visible' && event.toState === 'hidden') {
       this._showFilters = false;
     }
+    this._updateLayout();
   }
   
   public _removeFilter(item: { value: string, label: string, type: string }): void {
