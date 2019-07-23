@@ -288,12 +288,14 @@ export class FilterComponent {
     this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
+    this._updateLayout();
   }
   
   public _onPopupClose(): void {
     this._logger.trace('Filters is closed by user, update selected values');
     this._currentFilters = [];
     this._updateSelectedValues(this._currentFilters);
+    this._updateLayout();
   }
   
   public _apply(forceApply = false): void {
