@@ -31,6 +31,7 @@
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
                         [options]="_tableModesOptions"
+                        (ngModelChange)="_onChangeMode()"
                         [(ngModel)]="_tableMode">
               <ng-template let-option pTemplate="selectedItem">
                 <div class="kOptionsLabelWrapper">
@@ -46,6 +47,11 @@
               </ng-template>
             </p-dropdown>
           </div>
+
+          <app-user-engagement-filter *ngIf="_tableMode === _tableModes.users"
+                                      [showTotal]="false"
+                                      [dateFilter]="_dateFilter"
+                                      (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
           <ng-container [ngSwitch]="_tableMode">
             <app-dates-table *ngSwitchCase="_tableModes.dates"

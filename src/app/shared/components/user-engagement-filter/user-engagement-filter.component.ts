@@ -10,6 +10,7 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
 })
 export class UserEngagementFilterComponent extends FilterComponent {
   @Input() totalCount = 0;
+  @Input() showTotal = true;
 
   public _onItemSelected(item: any, type: string): void {
     super._onItemSelected(item, type);
