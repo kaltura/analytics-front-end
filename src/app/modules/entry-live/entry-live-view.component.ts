@@ -21,6 +21,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
+import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
 
 @Component({
   selector: 'app-entry-live',
@@ -49,6 +50,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
+  public _canShowToggleLive = false;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -120,7 +122,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        
+        this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
         this._registerWidgets();
       });
   }
@@ -192,16 +194,25 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
   
-  public _onDiscoveryDateFilterChange(dateRange: DateRange): void {
+  public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
     const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
     const items = currentValue.items.map(item => {
-      item.startDate = () => this._dateFilter.getDateRangeServerValue(dateRange).fromDate;
-      item.endDate = () => this._dateFilter.getDateRangeServerValue(dateRange).toDate;
+      if (event.isPresetMode) {
+        item.startDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate;
+        item.endDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate;
+      } else {
+        item.startDate = () => event.startDate;
+        item.endDate = () => event.endDate;
+      }
       return item;
     });
     
     const update = { items };
     
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+  }
+  
+  public _liveToggled(): void {
+    this._entryLiveWidget.restartPolling();
   }
 }

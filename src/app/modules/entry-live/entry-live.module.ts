@@ -55,6 +55,7 @@ import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/user
 import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
 import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
+import { ToggleLiveComponent } from './components/toggle-live/toggle-live.component';
 
 @NgModule({
   imports: [
@@ -106,6 +107,7 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
     UsersTableComponent,
     StatusBulletComponent,
     TimeSelectorComponent,
+    ToggleLiveComponent,
   ],
   providers: [
     CodeToSeverityPipe,

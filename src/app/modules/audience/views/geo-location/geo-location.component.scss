@@ -12,33 +12,41 @@
   width: 24px;
   height: 24px;
 }
-.kFlagColumn{
+
+.kFlagColumn {
   padding-left: 18px !important;
 }
-.kCountryFilter{
+
+.kCountryFilter {
   margin-right: 24px;
 }
-.kMap{
+
+.kMap {
   position: relative;
-  .kChart{
+
+  .kChart {
     width: 100%;
     height: 360px;
     margin-bottom: 24px;
   }
-  .kZoomWidget{
+
+  .kZoomWidget {
     position: absolute;
     right: 24px;
     bottom: 12px;
-    button{
+
+    button {
       width: 42px;
       height: 34px;
     }
-    .kZoomInBtn{
+
+    .kZoomInBtn {
       border-left: none;
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px;
     }
-    .kZoomOutBtn{
+
+    .kZoomOutBtn {
       border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;
     }
@@ -85,13 +93,58 @@
   }
 }
 
-:host /deep/ .ui-multiselect-item{
+:host /deep/ .ui-multiselect-item {
   display: flex;
   align-items: center;
 }
-:host /deep/ .ui-multiselect-panel .ui-multiselect-items-wrapper{
+
+:host /deep/ .ui-multiselect-panel .ui-multiselect-items-wrapper {
   overflow-x: hidden;
 }
+
 :host {
   margin-bottom: 24px;
+}
+
+.kTableModeSelector {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 24px;
+  margin-bottom: 16px;
+
+  .kEntitiesCount {
+    margin-left: 16px;
+  }
+
+  .kOptionsLabelWrapper {
+    display: flex;
+    align-items: center;
+    width: calc(100% - 15px);
+    height: 100%;
+    font-weight: normal;
+
+    .kIcon {
+      color: $kGrayscale3;
+      margin-right: 12px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+:host /deep/ .kTableModeSelector {
+  .ui-dropdown {
+    width: 172px !important;
+  }
+
+  .ui-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
 }

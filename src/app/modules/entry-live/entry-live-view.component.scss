@@ -26,6 +26,16 @@
 
   .kReportHeader {
     height: 80px;
+
+    .kControls {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+
+      app-toggle-live-btn {
+        margin-right: 16px;
+      }
+    }
   }
 }
 

@@ -25,6 +25,7 @@ export class EntriesLiveService implements OnDestroy {
   private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException }>({ isBusy: false });
   private _pollingSubscription: Unsubscribable;
   private _pollsFactory = new EntriesLiveRequestFactory();
+  private _firstTimeLoading = true;
   
   public readonly data$ = this._data.asObservable();
   public readonly state$ = this._state.asObservable();
@@ -129,7 +130,12 @@ export class EntriesLiveService implements OnDestroy {
           this._data.next(data);
           this._state.next({ isBusy: false });
           this._pollsFactory.onPollTickSuccess();
-          this._updateHostLayout();
+
+          if (this._firstTimeLoading && data.totalCount) {
+            this._updateHostLayout();
+          }
+  
+          this._firstTimeLoading = false;
         },
         error => {
           this._state.next({ isBusy: false, error });
