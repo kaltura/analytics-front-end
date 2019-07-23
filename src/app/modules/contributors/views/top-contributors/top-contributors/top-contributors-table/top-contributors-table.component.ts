@@ -4,6 +4,10 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BrowserService } from 'shared/services';
 
 @Component({
   selector: 'app-contributors-top-contributors-table',
@@ -39,7 +43,11 @@ export class TopContributorsTableComponent implements OnDestroy {
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
   public _paginationChanged$ = this._paginationChanged.asObservable();
   
-  constructor(private _logger: KalturaLogger) {
+  constructor(private _logger: KalturaLogger,
+              private _browserService: BrowserService,
+              private _frameEventManager: FrameEventManagerService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router) {
   }
   
   ngOnDestroy(): void {
@@ -66,6 +74,19 @@ export class TopContributorsTableComponent implements OnDestroy {
     if (this._overlay) {
       this._userId = null;
       this._overlay.hide();
+    }
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['user_id'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    // status is already being transformed by formatter function
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string');
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['user_id']}&${params}`);
+    } else {
+      this._router.navigate(['user', row['user_id']], { queryParams: this._activatedRoute.snapshot.queryParams });
     }
   }
 }

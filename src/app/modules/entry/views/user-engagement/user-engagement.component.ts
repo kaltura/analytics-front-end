@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -15,6 +15,8 @@ import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-engagement',
@@ -61,6 +63,9 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   constructor(private _frameEventManager: FrameEventManagerService,
+              private _browserService: BrowserService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router,
               private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -222,5 +227,18 @@ export class UserEngagementComponent extends EntryBase {
     }
   
     this._loadReport();
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['name'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    // status is already being transformed by formatter function
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string');
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['name']}&${params}`);
+    } else {
+      this._router.navigate(['user', row['name']], { queryParams: this._activatedRoute.snapshot.queryParams });
+    }
   }
 }
