@@ -16,7 +16,7 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
-  permissions: {
+  permissions?: {
     lazyLoadCategories?: boolean;
     enableLiveViews?: boolean;
   };
@@ -90,5 +90,4 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  permissions: {},
 };

@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AnalyticsConfig, analyticsConfig, getKalturaServerUri, ViewConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Injectable()
 export class AppService implements OnDestroy {
@@ -139,9 +140,10 @@ export class AppService implements OnDestroy {
   constructor(private _logger: KalturaLogger,
               private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService,
-              private _frameEventManager: FrameEventManagerService) {
+              private _frameEventManager: FrameEventManagerService,
+              private _permissionsService: AnalyticsPermissionsService) {
     this._logger = _logger.subLogger('AppService');
-  
+    
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(config => this._setConfig(config, true));
@@ -156,7 +158,7 @@ export class AppService implements OnDestroy {
       this._logger.error('No configuration provided! Abort initialization');
       return;
     }
-
+    
     this._setConfig(config, hosted);
     
     // set ks in ngx-client
@@ -170,20 +172,22 @@ export class AppService implements OnDestroy {
     });
     
     // load localization
-    this._logger.info('Loading localization...');
+    this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang(analyticsConfig.locale);
-    this._translate.use(analyticsConfig.locale).subscribe(
-      () => {
-        this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
-        if (hosted) {
-          this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
-          this._appInit.next(true);
+    this._loadPermissions()
+      .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
+      .subscribe(
+        () => {
+          this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
+          if (hosted) {
+            this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
+            this._appInit.next(true);
+          }
+        },
+        (error) => {
+          this._initAppError(error.message);
         }
-      },
-      (error) => {
-        this._initAppError(error.message);
-      }
-    );
+      );
   }
   
   private _setConfig(config: AnalyticsConfig, hosted = false): void {
@@ -200,7 +204,6 @@ export class AppService implements OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
     analyticsConfig.isHosted = hosted;
-    analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
     analyticsConfig.menuConfig = config.menuConfig;
@@ -209,6 +212,44 @@ export class AppService implements OnDestroy {
   
   private _initAppError(errorMsg: string): void {
     this._logger.error(errorMsg);
+  }
+  
+  private _loadPermissions(): Observable<void> {
+    const getUserAction = new UserGetAction().setRequestOptions(
+      new KalturaRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'roleIds'
+        })
+      })
+    );
+    const getRoleAction = new UserRoleGetAction({ userRoleId: 0 }).setDependency(['userRoleId', 0, 'roleIds']);
+    const getPermissionsAction = new PermissionListAction({
+      filter: new KalturaPermissionFilter({ statusEqual: KalturaPermissionStatus.active, typeIn: '2,3' }),
+      pager: new KalturaFilterPager({ pageSize: 500 }),
+    })
+      .setRequestOptions(
+        new KalturaRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'name'
+          })
+        })
+      );
+    
+    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction))
+      .pipe(map(responses => {
+        if (responses.hasErrors()) {
+          throw responses.getFirstError();
+        }
+        
+        const [userResponse, roleResponse, permissionsResponse] = responses;
+        const permissionList = permissionsResponse.result;
+        const userRole = roleResponse.result;
+        const partnerPermissionList = permissionList.objects.map(item => item.name);
+        const userRolePermissionList = userRole.permissionNames.split(',');
+        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+      }));
   }
 }
 
