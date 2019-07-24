@@ -4,8 +4,8 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-user-engagement-filter',
-  templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.scss'],
+  templateUrl: './user-engagement-filter.component.html',
+  styleUrls: ['./user-engagement-filter.component.scss'],
   providers: [KalturaLogger.createLogger('UserEngagementFilterComponent')],
 })
 export class UserEngagementFilterComponent extends FilterComponent {
