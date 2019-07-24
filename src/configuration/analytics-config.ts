@@ -17,7 +17,6 @@ export interface AnalyticsConfig {
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
   permissions?: {
-    lazyLoadCategories?: boolean;
     enableLiveViews?: boolean;
   };
   kalturaServer?: {

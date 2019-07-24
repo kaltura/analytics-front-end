@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
