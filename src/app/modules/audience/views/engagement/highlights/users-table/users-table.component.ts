@@ -30,9 +30,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   
+  public totalCount = 0;
+  
   public _tableData: TableRow[] = [];
   public _columns: string[] = [];
-  public _totalCount = 0;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -115,14 +116,14 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         'name',
       );
       this._columns = columns;
-      this._totalCount = current.table.totalCount;
+      this.totalCount = current.table.totalCount;
       this._tableData = tableData;
     }
   }
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
+    this.totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }
