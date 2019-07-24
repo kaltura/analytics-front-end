@@ -1,4 +1,4 @@
-@import '../../../../../../styles/variables';
+@import '../../../../styles/variables';
 
 .kTableHeader {
   padding: 0 24px;
@@ -10,6 +10,10 @@
     display: inline-block;
     font-size: 15px;
   }
+}
+
+.kSearch {
+  margin-left: auto;
 }
 
 .kTagsContainer {

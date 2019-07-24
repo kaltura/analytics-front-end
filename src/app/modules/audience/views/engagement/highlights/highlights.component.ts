@@ -17,6 +17,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { RefineFilter } from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -165,7 +166,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     } else {
       this._compareFilter = null;
     }
-  
+    
     this._filterChange.next();
   }
   
@@ -174,7 +175,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
-  
+    
     this._filterChange.next();
   }
   
@@ -225,6 +226,39 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         this._logger.trace('Send update layout event to the host app', { height });
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
       }, 0);
+    }
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    const userIds = event.length
+      ? event
+        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator)
+      : null;
+    
+    if (userIds) {
+      this._filter.userIds = userIds;
+      
+      if (this._compareFilter) {
+        this._compareFilter.userIds = userIds;
+      }
+    } else {
+      delete this._filter.userIds;
+      
+      if (this._compareFilter) {
+        delete this._compareFilter.userIds;
+      }
+    }
+    
+    this._filterChange.next();
+  }
+  
+  public _onChangeMode(): void {
+    // clean up users filters
+    delete this._filter.userIds;
+    
+    if (this._compareFilter) {
+      delete this._compareFilter.userIds;
     }
   }
 }

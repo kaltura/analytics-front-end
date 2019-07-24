@@ -57,6 +57,8 @@ import { HorizontalBarChartComponent } from 'shared/components/horizontal-bar-ch
 import { ScrollTopOnPagingDirective } from 'shared/directives/scroll-top-on-paging.directive';
 import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
 import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
+import { UserEngagementFilterComponent } from 'shared/components/user-engagement-filter/user-engagement-filter.component';
+import { UserEngagementUsersFilterComponent } from 'shared/components/user-engagement-filter/users-filter/users-filter.component';
 
 @NgModule({
   imports: [
@@ -119,6 +121,8 @@ import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
     TableModeIconPipe,
     StreamDurationPipe,
     ...FilterComponentsList,
+    UserEngagementUsersFilterComponent,
+    UserEngagementFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -158,6 +162,8 @@ import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
     TableModeIconPipe,
     StreamDurationPipe,
     ...FilterComponentsList,
+    UserEngagementUsersFilterComponent,
+    UserEngagementFilterComponent,
   ],
   providers: [
   ]
