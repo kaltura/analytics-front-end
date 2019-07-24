@@ -22,6 +22,8 @@ import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-disc
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
+import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
+import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Component({
   selector: 'app-entry-live',
@@ -69,7 +71,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
-              private _exportConfigService: EntryLiveExportConfig) {
+              private _exportConfigService: EntryLiveExportConfig,
+              private _permissions: AnalyticsPermissionsService) {
     this._exportConfig = _exportConfigService.getConfig();
   }
   
@@ -123,7 +126,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
+        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive
+          && this._entry.explicitLive
+          && this._permissions.hasPermission(AnalyticsPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
         this._registerWidgets();
       });
   }

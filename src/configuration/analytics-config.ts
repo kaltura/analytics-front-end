@@ -16,9 +16,6 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
-  permissions?: {
-    enableLiveViews?: boolean;
-  };
   kalturaServer?: {
       uri?: string,
       previewUIConf?: number,
