@@ -31,6 +31,7 @@
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
                         [options]="_tableModesOptions"
+                        (ngModelChange)="_onChangeMode()"
                         [(ngModel)]="_tableMode">
               <ng-template let-option pTemplate="selectedItem">
                 <div class="kOptionsLabelWrapper">
@@ -56,21 +57,28 @@
                              [reportInterval]="_reportInterval"
                              [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
 
-            <app-users-table *ngSwitchCase="_tableModes.users"
-                             [filterChange]="_filterChange$"
-                             [filter]="_filter"
-                             [compareFilter]="_compareFilter"
-                             [isCompareMode]="_isCompareMode"
-                             [reportInterval]="_reportInterval"
-                             [firstTimeLoading]="_firstTimeLoading"></app-users-table>
+            <ng-container *ngSwitchCase="_tableModes.users">
+              <app-user-engagement-filter
+                [totalCount]="usersTableComponent.totalCount"
+                [dateFilter]="_dateFilter"
+                (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+
+              <app-users-table #usersTableComponent
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [firstTimeLoading]="_firstTimeLoading"></app-users-table>
+            </ng-container>
 
             <app-entries-table *ngSwitchCase="_tableModes.entries"
-                             [filterChange]="_filterChange$"
-                             [filter]="_filter"
-                             [compareFilter]="_compareFilter"
-                             [isCompareMode]="_isCompareMode"
-                             [reportInterval]="_reportInterval"
-                             [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
           </ng-container>
         </div>
       </div>

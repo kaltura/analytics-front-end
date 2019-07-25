@@ -47,6 +47,6 @@
 
   <p-paginator [rows]="_pager.pageSize"
                [first]="(_pager.pageIndex -1) * _pager.pageSize"
-               [totalRecords]="_totalCount"
+               [totalRecords]="totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </k-area-blocker>
