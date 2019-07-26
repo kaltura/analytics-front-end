@@ -14,8 +14,9 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { analyticsConfig, ViewConfig } from 'configuration/analytics-config';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ViewConfig } from 'configuration/view-config';
 
 @Component({
   selector: 'app-user-engagement',

@@ -8,10 +8,11 @@ import { LocationsFilterService } from './location-filter/locations-filter.servi
 import { LocationsFilterValue } from './location-filter/location-filter.component';
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { analyticsConfig, ViewConfig } from 'configuration/analytics-config';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { isEqual } from 'shared/utils/is-equals';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ViewConfig } from 'configuration/view-config';
 
 export interface OptionItem {
   value: any;

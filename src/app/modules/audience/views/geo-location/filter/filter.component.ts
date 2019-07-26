@@ -4,8 +4,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { FilterComponent } from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
-import { ViewConfig } from 'configuration/analytics-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ViewConfig } from 'configuration/view-config';
 
 @Component({
   selector: 'app-geo-filter',

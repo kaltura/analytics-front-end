@@ -1,4 +1,7 @@
 import { PollInterval } from '@kaltura-ng/kaltura-common';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
+import { Observable, of as ObservableOf } from 'rxjs';
+import { menu } from '../app/app-menu/app-menu.config';
 
 export interface MenuItem {
   id: string;
@@ -7,22 +10,19 @@ export interface MenuItem {
   items?: MenuItem[];
 }
 
-export interface ViewConfig {
-  [key: string]: ViewConfig;
-}
-
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
+  originTarget: string;
   permissions: {
     lazyLoadCategories?: boolean;
     enableLiveViews?: boolean;
   };
   kalturaServer?: {
-      uri?: string,
-      previewUIConf?: number,
+    uri?: string,
+    previewUIConf?: number,
   };
   cdnServers?: {
     serverUri?: string,
@@ -54,9 +54,9 @@ export interface AnalyticsConfig {
 }
 
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
-  let protocol =  (location.protocol || '').toLowerCase();
+  let protocol = (location.protocol || '').toLowerCase();
   if (protocol[protocol.length - 1] === ':') {
-    protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    protocol = location.protocol.substring(0, location.protocol.length - 1);
   }
   return `${protocol}://${urlWithoutProtocol}`;
 }
@@ -71,9 +71,9 @@ export function getKalturaServerUri(suffix: string = ''): string {
 }
 
 export function buildCDNUrl(suffix: string): string {
-  let protocol =  (location.protocol || '').toLowerCase();
+  let protocol = (location.protocol || '').toLowerCase();
   if (protocol[protocol.length - 1] === ':') {
-    protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    protocol = location.protocol.substring(0, location.protocol.length - 1);
   }
   let baseUrl = '';
   if (protocol === 'https') {
@@ -81,7 +81,7 @@ export function buildCDNUrl(suffix: string): string {
   } else {
     baseUrl = analyticsConfig.cdnServers.serverUri;
   }
-
+  
   return `${baseUrl}${suffix}`;
 }
 
@@ -91,4 +91,53 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   permissions: {},
+  originTarget: window.location.origin,
 };
+
+export function setConfig(config: AnalyticsConfig, hosted = false): void {
+  if (!config) {
+    throw Error('No configuration provided!');
+  }
+  
+  analyticsConfig.ks = config.ks;
+  analyticsConfig.pid = config.pid;
+  analyticsConfig.locale = config.locale;
+  analyticsConfig.kalturaServer = config.kalturaServer;
+  analyticsConfig.cdnServers = config.cdnServers;
+  analyticsConfig.liveAnalytics = config.liveAnalytics;
+  analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
+  analyticsConfig.isHosted = hosted;
+  analyticsConfig.permissions = config.permissions || {};
+  analyticsConfig.live = config.live || { pollInterval: 30 };
+  analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
+  analyticsConfig.menuConfig = config.menuConfig;
+  analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
+}
+
+export function initConfig(): Observable<void> {
+  if (window['analyticsConfig']) {
+    setConfig(window['analyticsConfig']);
+    return ObservableOf();
+  }
+  
+  window.parent.postMessage(
+    { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
+    analyticsConfig.originTarget,
+  );
+  
+  return new Observable(observer => {
+    const initEventHandler = event => {
+      if (event.data && event.data.messageType === 'init') {
+        setConfig(event.data.payload, true);
+        observer.next();
+        observer.complete();
+      }
+    };
+    
+    window.addEventListener('message', initEventHandler);
+    
+    return () => {
+      window.removeEventListener('message', initEventHandler);
+    };
+  });
+}
