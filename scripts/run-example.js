@@ -7,19 +7,19 @@ const { serve } = require('./lib/serve');
 const { isExists, readFile, writeFile } = require('./lib/fs');
 const { getArgs } = require('./lib/get-args');
 
-const frameEventsServicePath = path.resolve(srcPath, 'app/shared/modules/frame-event-manager/frame-event-manager.service.ts');
+const configPath = path.resolve(srcPath, 'configuration/analytics-config.ts');
 
 // setup clean up handler to revert changes in frame-event-manager service after script stop
 cleanup(async () => {
-  await exec('git', ['checkout', '--', frameEventsServicePath])
+  await exec('git', ['checkout', '--', configPath])
 });
 
 function updateFrameEventTarget() {
-  if (isExists(frameEventsServicePath)) {
-    const content = readFile(frameEventsServicePath);
+  if (isExists(configPath)) {
+    const content = readFile(configPath);
     // replace current origin with asterisk to avoid CORS issues with localhost
     const updatedContent = content.replace('window.location.origin', `'*'`);
-    writeFile(frameEventsServicePath, updatedContent);
+    writeFile(configPath, updatedContent);
   }
 }
 
