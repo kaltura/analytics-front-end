@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export enum FrameEvents {
   UpdateLayout = 'updateLayout',
@@ -22,14 +23,12 @@ export enum FrameEvents {
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
   private _parentEvents: { [key: string]: BehaviorSubject<{ payload: any }> } = {};
-  private _targetOrigin = window.location.origin;
   private _ready = false;
   
   constructor() {
     this._windowEventListener = this._windowEventListener.bind(this);
   }
-  
-  
+
   ngOnDestroy(): void {
     window.removeEventListener('message', this._windowEventListener);
     Object.values(this._parentEvents).forEach(event => event.complete());
@@ -74,7 +73,7 @@ export class FrameEventManagerService implements OnDestroy {
       message['payload'] = payload;
     }
     
-    window.parent.postMessage(message, this._targetOrigin);
+    window.parent.postMessage(message, analyticsConfig.originTarget);
   }
   
   public listen(eventName: FrameEvents): Observable<any> {

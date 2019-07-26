@@ -6,7 +6,7 @@ import { animate, group, state, style, transition, trigger } from '@angular/anim
 import { FilterComponent } from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { ViewConfig } from 'configuration/analytics-config';
+import { ViewConfig } from 'configuration/view-config';
 
 @Component({
   selector: 'app-entry-filter',

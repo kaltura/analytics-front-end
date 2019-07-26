@@ -4,7 +4,7 @@ import { analyticsConfig, MenuItem } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
 import { menu } from './app-menu.config';
-import { AppService } from 'shared/services/app.service';
+
 @Component({
   selector: 'app-menu',
   templateUrl: './app-menu.component.html',
@@ -20,21 +20,16 @@ export class AppMenuComponent implements OnDestroy {
     return analyticsConfig.showNavBar;
   }
   
-  constructor(private _router: Router,
-              private _appService: AppService) {
+  constructor(private _router: Router) {
     _router.events
       .pipe(cancelOnDestroy(this), filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.setSelectedRoute(event.urlAfterRedirects);
       });
   
-    _appService.appInit$
-      .pipe(filter(Boolean))
-      .subscribe(() => {
-        if (analyticsConfig.menuConfig && Array.isArray(analyticsConfig.menuConfig.items) && analyticsConfig.menuConfig.items.length) {
-          this._menu = analyticsConfig.menuConfig.items;
-        }
-      });
+    if (analyticsConfig.menuConfig && Array.isArray(analyticsConfig.menuConfig.items) && analyticsConfig.menuConfig.items.length) {
+      this._menu = analyticsConfig.menuConfig.items;
+    }
   }
   
   ngOnDestroy() {

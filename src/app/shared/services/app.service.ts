@@ -1,166 +1,42 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AnalyticsConfig, analyticsConfig, getKalturaServerUri, ViewConfig } from 'configuration/analytics-config';
+import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
+import { Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map, switchMap } from 'rxjs/operators';
+import { BrowserService } from 'shared/services/browser.service';
+import { ConfirmationService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { mapRoutes } from 'configuration/host-routing-mapping';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Injectable()
 export class AppService implements OnDestroy {
-  private _appInit = new BehaviorSubject<boolean>(false);
-  
-  public readonly appInit$ = this._appInit.asObservable();
-  
-  public readonly viewsConfig: ViewConfig = {
-    audience: {
-      engagement: {
-        export: {},
-        refineFilter: {
-          mediaType: {},
-          entrySource: {},
-          tags: {},
-          owners: {},
-          categories: {},
-          geo: {},
-        },
-        miniHighlights: {},
-        miniTopVideos: {},
-        miniPeakDay: {},
-        topVideos: {},
-        highlights: {},
-        impressions: {},
-        syndication: {},
-      },
-      contentInteractions: {
-        export: {},
-        refineFilter: {
-          mediaType: {},
-          entrySource: {},
-          tags: {},
-          owners: {},
-          categories: {},
-          geo: {},
-        },
-        miniInteractions: {},
-        miniTopShared: {},
-        topPlaybackSpeed: {},
-        topStats: {},
-        interactions: {},
-        moderation: {},
-      },
-      geo: {
-        export: {},
-        refineFilter: {
-          geo: {},
-          tags: {},
-          categories: {},
-        },
-      },
-      technology: {
-        export: {},
-        devices: {},
-        topBrowsers: {},
-        topOs: {},
-      },
-    },
-    bandwidth: {
-      endUser: {
-        export: {},
-        refineFilter: {
-          mediaType: {},
-          entrySource: {},
-          owners: {},
-          geo: {},
-        },
-      },
-      publisher: {
-        export: {},
-        refineFilter: {
-          mediaType: {},
-          entrySource: {},
-          geo: {},
-        },
-      },
-    },
-    contributors: {
-      export: {},
-      refineFilter: {
-        mediaType: {},
-        entrySource: {},
-        tags: {},
-        owners: {},
-        categories: {},
-        geo: {},
-      },
-      miniHighlights: {},
-      miniTopContributors: {},
-      miniTopSources: {},
-      highlights: {},
-      contributors: {},
-      sources: {},
-    },
-    entry: {
-      export: {},
-      refineFilter: {
-        geo: {},
-        owners: {},
-        categories: {},
-      },
-      details: {},
-      totals: {},
-      entryPreview: {},
-      userEngagement: {
-        userFilter: {},
-      },
-      performance: {},
-      impressions: {},
-      geo: {},
-      devices: {},
-      syndication: {},
-    },
-    entryLive: {
-      export: {},
-      toggleLive: {},
-      details: {},
-      users: {},
-      bandwidth: {},
-      geo: {},
-      status: {},
-      player: {},
-      streamHealth: {},
-      devices: {},
-      discovery: {},
-    },
+  public confirmDialogAlignLeft = false;
+  public confirmationLabels = {
+    yes: 'Yes',
+    no: 'No',
+    ok: 'OK'
   };
   
   constructor(private _logger: KalturaLogger,
               private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService,
-              private _frameEventManager: FrameEventManagerService,
-              private _permissionsService: AnalyticsPermissionsService) {
+              private _browserService: BrowserService,
+              private _confirmationService: ConfirmationService,
+              private _router: Router,
+              private _permissionsService: AnalyticsPermissionsService,
+              private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
-    
-    this._frameEventManager.listen(FrameEvents.UpdateConfig)
-      .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(config => this._setConfig(config, true));
   }
   
   ngOnDestroy(): void {
-    this._appInit.complete();
   }
   
-  public init(config = null, hosted = false): void {
-    if (!config) {
-      this._logger.error('No configuration provided! Abort initialization');
-      return;
-    }
-    
-    this._setConfig(config, hosted);
-    
+  public init(): void {
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
@@ -171,6 +47,53 @@ export class AppService implements OnDestroy {
       ks: analyticsConfig.ks
     });
     
+    this._browserService.registerOnShowConfirmation((confirmationMessage) => {
+      const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
+      const formattedMessage = Object.assign(
+        {},
+        confirmationMessage,
+        { message: htmlMessageContent },
+        {
+          accept: () => {
+            this._frameEventManager.publish(FrameEvents.ModalClosed);
+            if (typeof confirmationMessage.accept === 'function') {
+              confirmationMessage.accept();
+            }
+          },
+        },
+        {
+          reject: () => {
+            this._frameEventManager.publish(FrameEvents.ModalClosed);
+            if (typeof confirmationMessage.reject === 'function') {
+              confirmationMessage.reject();
+            }
+          },
+        }
+      );
+      
+      if (confirmationMessage.alignMessage === 'byContent') {
+        this.confirmDialogAlignLeft = confirmationMessage.message && /\r|\n/.test(confirmationMessage.message);
+      } else {
+        this.confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
+      }
+      
+      this._frameEventManager.publish(FrameEvents.ModalOpened);
+      
+      this._confirmationService.confirm(formattedMessage);
+    });
+    
+    this._frameEventManager.listen(FrameEvents.UpdateConfig)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(config => setConfig(config, true));
+    
+    this._frameEventManager.listen(FrameEvents.Navigate)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(({ url }) => this._router.navigateByUrl(mapRoutes(url)));
+    
+    this._frameEventManager.listen(FrameEvents.SetLogsLevel)
+      .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
+      .subscribe(({ level }) => this._logger.setOptions({ level }));
+    
     // load localization
     this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang(analyticsConfig.locale);
@@ -179,35 +102,14 @@ export class AppService implements OnDestroy {
       .subscribe(
         () => {
           this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
-          if (hosted) {
+          if (analyticsConfig.isHosted) {
             this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
-            this._appInit.next(true);
           }
         },
         (error) => {
           this._initAppError(error.message);
         }
       );
-  }
-  
-  private _setConfig(config: AnalyticsConfig, hosted = false): void {
-    if (!config) {
-      this._logger.error('No configuration provided!');
-      return;
-    }
-    
-    analyticsConfig.ks = config.ks;
-    analyticsConfig.pid = config.pid;
-    analyticsConfig.locale = config.locale;
-    analyticsConfig.kalturaServer = config.kalturaServer;
-    analyticsConfig.cdnServers = config.cdnServers;
-    analyticsConfig.liveAnalytics = config.liveAnalytics;
-    analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
-    analyticsConfig.isHosted = hosted;
-    analyticsConfig.live = config.live || { pollInterval: 30 };
-    analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
-    analyticsConfig.menuConfig = config.menuConfig;
-    analyticsConfig.viewsConfig = config.viewsConfig || { ...this.viewsConfig };
   }
   
   private _initAppError(errorMsg: string): void {
@@ -251,5 +153,7 @@ export class AppService implements OnDestroy {
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
       }));
   }
+  
+  
 }
 
