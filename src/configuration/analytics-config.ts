@@ -47,6 +47,9 @@ export interface AnalyticsConfig {
     mapUrls?: string[];
     mapZoomLevels?: string;
   };
+  customData?: {
+    [key: string]: any;
+  };
 }
 
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
@@ -106,6 +109,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
   analyticsConfig.menuConfig = config.menuConfig;
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
+  analyticsConfig.customData = config.customData || {};
 }
 
 export function initConfig(): Observable<void> {

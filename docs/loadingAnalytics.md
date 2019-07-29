@@ -73,7 +73,10 @@ menuConfig?: {
 },
 viewsConfig?: {
   [key: string]: Object | boolean // the list of all view configs keys available is available here https://github.com/kaltura/analytics-front-end/blob/master/src/app/shared/services/app.service.ts#L15
-}
+},
+customData?: { // the place to pass host app specific data to analytics
+  [key: string]: any,
+},
 ```
 
 ### Events
