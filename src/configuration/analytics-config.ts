@@ -1,6 +1,6 @@
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
-import { Observable, of as ObservableOf } from 'rxjs';
+import { Observable } from 'rxjs';
 import { menu } from '../app/app-menu/app-menu.config';
 
 export interface MenuItem {
@@ -16,10 +16,6 @@ export interface AnalyticsConfig {
   skipEmptyBuckets: boolean;
   defaultPageSize: number;
   originTarget: string;
-  permissions: {
-    lazyLoadCategories?: boolean;
-    enableLiveViews?: boolean;
-  };
   kalturaServer?: {
     uri?: string,
     previewUIConf?: number,
@@ -90,7 +86,6 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  permissions: {},
   originTarget: window.location.origin,
 };
 
@@ -107,7 +102,6 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.liveAnalytics = config.liveAnalytics;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
   analyticsConfig.isHosted = hosted;
-  analyticsConfig.permissions = config.permissions || {};
   analyticsConfig.live = config.live || { pollInterval: 30 };
   analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
   analyticsConfig.menuConfig = config.menuConfig;
@@ -115,17 +109,21 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
 }
 
 export function initConfig(): Observable<void> {
-  if (window['analyticsConfig']) {
-    setConfig(window['analyticsConfig']);
-    return ObservableOf();
-  }
-  
-  window.parent.postMessage(
-    { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
-    analyticsConfig.originTarget,
-  );
-  
   return new Observable(observer => {
+    if (window['analyticsConfig']) { // standalone
+      setConfig(window['analyticsConfig']);
+      observer.next();
+      observer.complete();
+      return () => {
+      };
+    }
+    
+    // hosted
+    window.parent.postMessage(
+      { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
+      analyticsConfig.originTarget,
+    );
+    
     const initEventHandler = event => {
       if (event.data && event.data.messageType === 'init') {
         setConfig(event.data.payload, true);

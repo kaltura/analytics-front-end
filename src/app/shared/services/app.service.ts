@@ -1,15 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
+import { Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { BrowserService } from 'shared/services/browser.service';
 import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { mapRoutes } from 'configuration/host-routing-mapping';
+import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Injectable()
 export class AppService implements OnDestroy {
@@ -26,6 +28,7 @@ export class AppService implements OnDestroy {
               private _browserService: BrowserService,
               private _confirmationService: ConfirmationService,
               private _router: Router,
+              private _permissionsService: AnalyticsPermissionsService,
               private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
   }
@@ -78,37 +81,77 @@ export class AppService implements OnDestroy {
       
       this._confirmationService.confirm(formattedMessage);
     });
-  
+    
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(config => setConfig(config, true));
-  
+    
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ url }) => this._router.navigateByUrl(mapRoutes(url)));
-  
+    
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
     
     // load localization
-    this._logger.info('Loading localization...');
+    this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang(analyticsConfig.locale);
-    this._translate.use(analyticsConfig.locale).subscribe(
-      () => {
-        this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
-        if (analyticsConfig.isHosted) {
-          this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
+    this._loadPermissions()
+      .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
+      .subscribe(
+        () => {
+          this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
+          if (analyticsConfig.isHosted) {
+            this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
+          }
+        },
+        (error) => {
+          this._initAppError(error.message);
         }
-      },
-      (error) => {
-        this._initAppError(error.message);
-      }
-    );
+      );
   }
   
   private _initAppError(errorMsg: string): void {
     this._logger.error(errorMsg);
+  }
+  
+  private _loadPermissions(): Observable<void> {
+    const getUserAction = new UserGetAction().setRequestOptions(
+      new KalturaRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'roleIds'
+        })
+      })
+    );
+    const getRoleAction = new UserRoleGetAction({ userRoleId: 0 }).setDependency(['userRoleId', 0, 'roleIds']);
+    const getPermissionsAction = new PermissionListAction({
+      filter: new KalturaPermissionFilter({ statusEqual: KalturaPermissionStatus.active, typeIn: '2,3' }),
+      pager: new KalturaFilterPager({ pageSize: 500 }),
+    })
+      .setRequestOptions(
+        new KalturaRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'name'
+          })
+        })
+      );
+    
+    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction))
+      .pipe(map(responses => {
+        if (responses.hasErrors()) {
+          throw responses.getFirstError();
+        }
+        
+        const [userResponse, roleResponse, permissionsResponse] = responses;
+        const permissionList = permissionsResponse.result;
+        const userRole = roleResponse.result;
+        const partnerPermissionList = permissionList.objects.map(item => item.name);
+        const userRolePermissionList = userRole.permissionNames.split(',');
+        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+      }));
   }
   
   
