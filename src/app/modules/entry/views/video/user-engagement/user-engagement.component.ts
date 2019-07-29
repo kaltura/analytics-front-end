@@ -205,7 +205,11 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {
-    const userIds = event.length ? event.map(({ value }) => value.id).join(analyticsConfig.valueSeparator) : null;
+    const userIds = event.length
+      ? event
+        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator)
+      : null;
     
     if (userIds) {
       this._filter.userIds = userIds;

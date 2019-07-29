@@ -4,6 +4,7 @@ export enum TableModes {
   dates = 'dates',
   users = 'users',
   devices = 'devices',
+  entries = 'entries',
 }
 
 @Pipe({
@@ -18,6 +19,8 @@ export class TableModeIconPipe implements PipeTransform {
         return 'kIconcalendar';
       case TableModes.devices:
         return 'icon-devices';
+      case TableModes.entries:
+        return 'kIconUnknown';
       default:
         return '';
     }

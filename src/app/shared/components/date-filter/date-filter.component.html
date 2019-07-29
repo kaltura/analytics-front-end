@@ -29,14 +29,14 @@
         </div>
       </div>
       <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
-        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'" (ngModelChange)="updateCompareMax()"></p-calendar>
+        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'" [dateFormat]="_dateFormat" (ngModelChange)="updateCompareMax()"></p-calendar>
       </div>
       <hr>
       <div class="kCompare" *ngIf="showCompare">
         <p-checkbox [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" binary="true"></p-checkbox>
         <p-radioButton name="compare" value="lastYear" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" [label]="'app.dateFilter.comparelastyear' | translate"></p-radioButton>
         <p-radioButton name="compare" value="specific" [class.kHidden]="!compare" [(ngModel)]="selectedComparePeriod" (ngModelChange)="updateSpecificCompareStartDate()" [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
-        <p-calendar [showIcon]="true" icon="kIconcalendar" [class.kHidden]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+        <p-calendar [dateFormat]="_dateFormat" [showIcon]="true" icon="kIconcalendar" [class.kHidden]="!compare || selectedComparePeriod!=='specific'" [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
       </div>
       <button pButton class="kButtonBranded"
               [disabled]="_applyDisabled"

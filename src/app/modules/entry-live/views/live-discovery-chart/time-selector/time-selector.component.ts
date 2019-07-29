@@ -145,7 +145,7 @@ export class TimeSelectorComponent implements OnDestroy {
   private _formatDateRangeLabel(from: Date, to: Date): string {
     const startDate = DateFilterUtils.getMomentDate(from);
     const endDate = DateFilterUtils.getMomentDate(to);
-    const getDate = date => date.format('MM/D/YYYY');
+    const getDate = date => date.format(analyticsConfig.dateFormat === 'month-day-year' ? 'MM/D/YYYY' : 'D/MM/YYYY');
     const getTime = date => date.format('HH:mm');
   
     return `${getDate(startDate)}, <b>${getTime(startDate)}</b> – ${getDate(endDate)}, <b>${getTime(endDate)}</b>`;

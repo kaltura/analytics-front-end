@@ -16,15 +16,15 @@ export class EntryLiveExportConfig extends ExportConfigService {
         label: this._translate.instant('app.entryLive.exportLabels.users'),
         reportType: KalturaReportType.usersOverviewRealtime,
         sections: [KalturaReportExportItemType.graph],
-        startDate: () => this._getTime(200),
-        endDate: () => this._getTime(30)
+        startDate: () => this._getTime(170),
+        endDate: () => this._getTime(0)
       },
       {
         label: this._translate.instant('app.entryLive.exportLabels.bandwidth'),
         reportType: KalturaReportType.qosOverviewRealtime,
         sections: [KalturaReportExportItemType.graph],
-        startDate: () => this._getTime(200),
-        endDate: () => this._getTime(30)
+        startDate: () => this._getTime(170),
+        endDate: () => this._getTime(0)
       },
       {
         id: 'geo',

@@ -297,7 +297,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
 
   public onChartClick(event): void {
     const percent = event.offsetX / event.currentTarget.clientWidth;
-    this.seekTo(percent);
+    this.seekTo(percent, true);
   }
 
   /* ------------------------ start of player logic --------------------------*/

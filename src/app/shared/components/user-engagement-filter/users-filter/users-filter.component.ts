@@ -20,7 +20,7 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
                    (completeMethod)="_searchUsers($event, true)"></kAutoComplete>
   `,
 })
-export class EngagementUsersFilterComponent implements OnDestroy {
+export class UserEngagementUsersFilterComponent implements OnDestroy {
   @Input() set selectedUsers(value: KalturaUser[]) {
     if (Array.isArray(value)) {
       this._selectedUsers = value;
