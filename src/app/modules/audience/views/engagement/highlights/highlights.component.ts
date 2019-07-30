@@ -171,9 +171,19 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   protected _updateRefineFilter(): void {
+    const userIds = this._filter.userIds;
+
     this._refineFilterToServerValue(this._filter);
+    
+    if (userIds) {
+      this._filter.userIds = userIds;
+    }
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
+  
+      if (userIds) {
+        this._compareFilter.userIds = userIds;
+      }
     }
     
     this._filterChange.next();

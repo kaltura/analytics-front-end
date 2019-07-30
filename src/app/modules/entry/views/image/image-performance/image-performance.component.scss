@@ -1,0 +1,93 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+
+.kChart {
+  margin-top: 12px;
+}
+
+.kCustomLegend {
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  top: 360px;
+  padding-left: 24px;
+
+  .kLegendItemContainer {
+    display: flex;
+    align-items: center;
+    height: 20px;
+
+    .kPeriod {
+      font-size: 12px;
+      font-weight: normal;
+      color: $kGrayscale1;
+    }
+
+    .kLegendItem {
+      font-size: 12px;
+      font-weight: bold;
+      color: $kGrayscale1;
+    }
+
+    .kCircle {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-left: 12px;
+      margin-right: 4px;
+    }
+  }
+}
+
+.kTableModeSelector {
+  margin-left: 24px;
+  margin-bottom: 16px;
+
+  .kOptionsLabelWrapper {
+    display: flex;
+    align-items: center;
+    width: calc(100% - 15px);
+    height: 100%;
+    font-weight: normal;
+
+    .kIcon {
+      color: $kGrayscale3;
+      margin-right: 12px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+:host /deep/ .kTableModeSelector {
+  .ui-dropdown {
+    width: 172px !important;
+  }
+
+  .ui-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
+}

@@ -366,6 +366,7 @@
         "month_id": "Month",
         "date_id": "Day",
         "count_plays": "Plays",
+        "count_loads": "Player Impressions",
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
         "avg_view_drop_off": "Avg. Drop Off Rate",
@@ -658,6 +659,7 @@
       "owner": "Owner:",
       "seeAll": "See All Details",
       "videoPerformance": "Video performance over time",
+      "imagePerformance": "Image performance over time",
       "month_id": "Month",
       "date_id": "Date",
       "count_plays": "Plays",
@@ -695,6 +697,7 @@
       "exportLabels": {
         "userEngagement": "User Engagement",
         "videoPerformance": "Video Performance",
+        "imagePerformance": "Image Performance",
         "impressions": "Impressions",
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",
