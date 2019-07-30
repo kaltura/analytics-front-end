@@ -50,8 +50,8 @@ export class HeatMapStoreService {
       this._cache[`${userId}_${entryId}`] = this._reportService.getReport(reportConfig, this._localConfig, false)
         .pipe(
           map(report => {
-            if (!report.table) {
-              return [];
+            if (!report.table || !report.table.data || !report.table.header) {
+              return Array.from({ length: 101 }, () => 0);
             }
   
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
