@@ -12,6 +12,9 @@ import { EntryTotalsConfig } from './entry-totals.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../../shared/entry-base/entry-base';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-image-entry-totals',
@@ -21,6 +24,15 @@ import { EntryBase } from '../../shared/entry-base/entry-base';
 })
 export class ImageEntryTotalsComponent extends EntryBase {
   @Input() entryId = '';
+  @Input() comments: number = null;
+  @Input() likes: number = null;
+  @Input() set viewConfig(value: ViewConfig) {
+    if (!isEmptyObject(value)) {
+      this._viewConfig = value;
+    } else {
+      this._viewConfig = { ...viewsConfig.entry.totals };
+    }
+  }
 
   private _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
@@ -36,6 +48,13 @@ export class ImageEntryTotalsComponent extends EntryBase {
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
+  public _viewConfig: ViewConfig = { ...viewsConfig.entry.totals };
+
+  public get _canShowKmsTotals(): boolean {
+    return !!analyticsConfig.customData.metadataProfileId
+      && (this.comments !== null || this.likes !== null)
+      && (!!this._viewConfig.comments || !!this._viewConfig.likes);
+  }
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;

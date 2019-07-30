@@ -2,7 +2,7 @@ export interface ViewConfig {
   [key: string]: ViewConfig;
 }
 
-export const viewsConfig: ViewConfig = {
+export const viewsConfig = {
   audience: {
     engagement: {
       export: {},
@@ -98,7 +98,14 @@ export const viewsConfig: ViewConfig = {
       categories: {},
     },
     details: {},
-    totals: {},
+    totals: {
+      plays: {},
+      uniqueViewers: {},
+      minutesViewed: {},
+      completionRate: {},
+      likes: {},
+      comments: {},
+    },
     entryPreview: {},
     userEngagement: {
       userFilter: {},

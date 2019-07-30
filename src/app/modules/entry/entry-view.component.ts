@@ -1,7 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BaseEntryGetAction, KalturaClient, KalturaDetachedResponseProfile, KalturaMediaEntry, KalturaMediaType, KalturaMultiRequest, KalturaMultiResponse, KalturaRequestOptions, KalturaResponseProfileType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import {
+  BaseEntryGetAction,
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaMediaEntry,
+  KalturaMediaType,
+  KalturaMetadata,
+  KalturaMetadataFilter,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaRequestOptions,
+  KalturaResponseProfileType,
+  KalturaUser,
+  MetadataListAction,
+  UserGetAction
+} from 'kaltura-ngx-client';
+import { cancelOnDestroy, XmlParser } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
@@ -22,6 +37,8 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _mediaTypes = KalturaMediaType;
   public _entryId = '';
   public _owner = '';
+  public _comments: number = null;
+  public _likes: number = null;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -62,12 +79,14 @@ export class EntryViewComponent implements OnInit, OnDestroy {
     this._loadingEntry = true;
     this._blockerMessage = null;
     
+    const metadataProfileId = analyticsConfig.customData.metadataProfileId;
+    
     const request = new KalturaMultiRequest(
       new BaseEntryGetAction({ entryId: this._entryId })
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,votes'
           })
         }),
       new UserGetAction({ userId: null })
@@ -81,6 +100,15 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           })
         )
     );
+    
+    if (metadataProfileId) {
+      request.requests.push(new MetadataListAction({
+        filter: new KalturaMetadataFilter({
+          objectIdEqual: this._entryId,
+          metadataProfileIdEqual: metadataProfileId,
+        })
+      }));
+    }
     
     this._kalturaClient
       .multiRequest(request)
@@ -103,13 +131,31 @@ export class EntryViewComponent implements OnInit, OnDestroy {
             });
           }
           
-          return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
+          const metadataList = responses.length === 3 ? responses[2].result : null;
+          const metadataItem = metadataList && metadataList.objects && metadataList.objects.length
+            ? metadataList.objects[0]
+            : null;
+          
+          return [
+            responses[0].result,
+            responses[1].result,
+            metadataItem,
+          ] as [KalturaMediaEntry, KalturaUser, KalturaMetadata];
         })
       )
       .subscribe(
-        ([entry, user]) => {
+        ([entry, user, metadataItem]) => {
           this._entry = entry;
           this._owner = user.fullName;
+          this._likes = entry.votes;
+
+          if (metadataItem) {
+            const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
+            this._comments = metadataObj.metadata && metadataObj.metadata.CommentsCount && metadataObj.metadata.CommentsCount.text
+              ? parseInt(metadataObj.metadata.CommentsCount.text, 10)
+              : 0;
+          }
+          
           this._loadingEntry = false;
         },
         error => {

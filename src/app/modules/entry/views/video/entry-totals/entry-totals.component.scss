@@ -8,7 +8,7 @@
   display: flex;
   .kTotalContainer{
     background-color: #ffffff;
-    width: 28%;
+    width: 50%;
     height: 100%;
     display: flex;
     padding-left: 24px;
@@ -17,7 +17,7 @@
     box-sizing: border-box;
     &:not(:last-child){
       border-right: 1px solid $kGrayscale6;
-      width: 24%;
+      width: 50%;
     }
     .kTotal{
       display: flex;

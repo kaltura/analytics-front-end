@@ -2,12 +2,16 @@
   <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
     <ng-container [ngSwitch]="_entry?.mediaType">
       <app-image-entry *ngSwitchCase="_mediaTypes.image"
+                       [likes]="_likes"
+                       [comments]="_comments"
                        [entry]="_entry"
                        [owner]="_owner"
                        (back)="_back()"
                        (navigateToEntry)="_navigateToEntry()"></app-image-entry>
 
       <app-video-entry *ngSwitchDefault
+                       [likes]="_likes"
+                       [comments]="_comments"
                        [entry]="_entry"
                        [owner]="_owner"
                        (back)="_back()"

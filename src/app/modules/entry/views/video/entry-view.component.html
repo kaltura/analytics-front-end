@@ -42,6 +42,9 @@
                       (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
     <app-video-entry-totals *ngIf="_viewConfig.totals"
+                            [viewConfig]="_viewConfig.totals"
+                            [comments]="comments"
+                            [likes]="likes"
                             [dateFilter]="_dateFilter"
                             [entryId]="_entryId"
                             [refineFilter]="_refineFilter"></app-video-entry-totals>

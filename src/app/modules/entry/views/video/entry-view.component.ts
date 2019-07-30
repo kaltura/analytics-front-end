@@ -9,7 +9,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { ErrorsManagerService } from 'shared/services';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { EntryExportConfig } from './entry-export.config';
-import { ViewConfig } from 'configuration/view-config';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 
 @Component({
@@ -35,27 +35,12 @@ export class VideoEntryViewComponent implements OnDestroy {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
     } else {
-      this._viewConfig = {
-        export: {},
-        refineFilter: {
-          geo: {},
-          owners: {},
-          categories: {},
-        },
-        details: {},
-        totals: {},
-        entryPreview: {},
-        userEngagement: {
-          userFilter: {},
-        },
-        performance: {},
-        impressions: {},
-        geo: {},
-        devices: {},
-        syndication: {},
-      };
+      this._viewConfig = { ...viewsConfig.entry };
     }
   }
+  @Input() comments: number = null;
+  @Input() likes: number = null;
+
   @Output() back = new EventEmitter<void>();
   @Output() navigateToEntry = new EventEmitter<void>();
   
@@ -75,25 +60,7 @@ export class VideoEntryViewComponent implements OnDestroy {
   public _duration = 0;
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
-  public _viewConfig: ViewConfig = {
-    export: {},
-    refineFilter: {
-      geo: {},
-      owners: {},
-      categories: {},
-    },
-    details: {},
-    totals: {},
-    entryPreview: {},
-    userEngagement: {
-      userFilter: {},
-    },
-    performance: {},
-    impressions: {},
-    geo: {},
-    devices: {},
-    syndication: {},
-  };
+  public _viewConfig: ViewConfig = { ...viewsConfig.entry };
   
   
   constructor(private _errorsManager: ErrorsManagerService,
