@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { UserExportConfig } from './user-export.config';
 import { Unsubscribable } from 'rxjs';
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-user',
@@ -30,6 +31,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _user: KalturaUser;
   public _loadingUser = false;
   public _creationDate: moment.Moment = null;
+  public _registrationDate: string;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
@@ -108,6 +110,8 @@ export class UserViewComponent implements OnInit, OnDestroy {
         (user) => {
           this._user = user;
           this._userName = user.fullName;
+          const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+          this._registrationDate = DateFilterUtils.getMomentDate(user.createdAt).format(dateFormat);
           this._requestSubscription = null;
           this._loadingUser = false;
         },
@@ -130,7 +134,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
     } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
+      this._router.navigate(['contributors'], { queryParams: this._route.snapshot.queryParams });
     }
   }
 }
