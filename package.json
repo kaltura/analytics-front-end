@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "example": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoader.html\" \"npm start\"",
     "example:menu": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderMenu.html\" \"npm start\"",
-    "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\""
+    "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\"",
+    "example:kms": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderKMS.html\" \"npm start\""
   },
   "private": true,
   "dependencies": {

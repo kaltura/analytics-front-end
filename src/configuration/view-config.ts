@@ -103,8 +103,8 @@ export const viewsConfig = {
       uniqueViewers: {},
       minutesViewed: {},
       completionRate: {},
-      likes: {},
-      comments: {},
+      likes: null,
+      comments: null,
     },
     entryPreview: {},
     userEngagement: {

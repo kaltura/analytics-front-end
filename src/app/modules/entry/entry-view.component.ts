@@ -37,8 +37,8 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _mediaTypes = KalturaMediaType;
   public _entryId = '';
   public _owner = '';
-  public _comments: number = null;
-  public _likes: number = null;
+  public _comments = 0;
+  public _likes = 0;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,

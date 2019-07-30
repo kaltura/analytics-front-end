@@ -78,6 +78,18 @@
           analyticsApp.style.height = `${postMessageData.payload.height}px`;
           break;
 
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
         default:
           console.log(`${postMessageData.messageType} event is not implemented`);
           break;

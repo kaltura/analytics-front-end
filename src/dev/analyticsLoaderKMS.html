@@ -36,8 +36,8 @@
       serverUri: 'http://cdnapi.kaltura.com',
       securedServerUri: 'https://cdnapisec.kaltura.com'
     },
-    ks: '', // provide ks
-    pid: '', // provide partnerId
+    ks: 'djJ8MTY0NTE2MXyHir-rC6W1yPzfVfDzVrwNlzCD0BwXrxg82ea6shRDM2b0QbMIAStV87RwCIGjtwTHdJctVIwjep8GUrbruxOIDs5t8qrIPgKlzwmXWGLzu-VEVMV1fozfpYvaDMDGuI9vx-v3LDRXOqnCeSMN8Fpp5xSAi8SZIX53TRHo8UYx2Q==', // provide ks
+    pid: '1645161', // provide partnerId
     locale: 'en',
     live: {
       pollInterval: 30,
@@ -46,6 +46,9 @@
     menuConfig: {
       showMenu: true,
     },
+    customData: {
+      metadataProfileId: 2877502, // provide metadataProfileId to be able to see comments
+    }
   };
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -67,23 +70,8 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
           const viewsConfig = postMessageData.payload.viewsConfig;
-          viewsConfig.audience.engagement.refineFilter = null;
-          viewsConfig.audience.engagement.miniTopVideos = null;
-          viewsConfig.audience.engagement.syndication = null;
-
-          viewsConfig.audience.contentInteractions.export = null;
-          viewsConfig.audience.contentInteractions.refineFilter.owners = null;
-          viewsConfig.audience.contentInteractions.refineFilter.tags = null;
-          viewsConfig.audience.contentInteractions.refineFilter.categories = null;
-          viewsConfig.audience.contentInteractions.miniInteractions = null;
-          viewsConfig.audience.contentInteractions.miniTopShared = null;
-          viewsConfig.audience.contentInteractions.topPlaybackSpeed = null;
-
-          viewsConfig.contributors.miniHighlights = null;
-          viewsConfig.contributors.miniTopContributors = null;
-          viewsConfig.contributors.miniTopSources = null;
-
-          viewsConfig.bandwidth.publisher.refineFilter.geo = null;
+          viewsConfig.entry.totals.comments = {}; // show comments
+          viewsConfig.entry.totals.likes = {};    // show likes
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
