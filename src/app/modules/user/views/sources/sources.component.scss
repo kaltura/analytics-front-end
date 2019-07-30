@@ -1,0 +1,48 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  /deep/ {
+    .kChartContainer {
+      padding: 10px 24px !important;
+    }
+
+    .kLabel {
+      flex: 0 1 auto !important;
+      width: 25%;
+    }
+
+    .kTrend {
+      width: 10%;
+    }
+  }
+}
+
+.kSources {
+  height: 100%;
+}
+
+.kFilters {
+  margin-bottom: 48px;
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+
+.kTitle {
+  width: auto !important;
+  padding-right: 0px !important;
+}

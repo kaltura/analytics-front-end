@@ -760,7 +760,9 @@
       "avg_completion_rate": "Avg. Completion Rate",
       "user_role": "User Role:",
       "email": "Email:",
-      "created": "Registration Date:"
+      "created": "Registration Date:",
+      "sources": "Which sources does {{0}} use most to add content?",
+      "userSources_tt": "Which method does the user use to add content into the platform"
     }
   }
 }
