@@ -82,19 +82,19 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.user.count_plays`),
             sortOrder: 1,
           },
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.count_loads`),
+            sortOrder: 2,
+          },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.sum_time_viewed`),
-            sortOrder: 2,
+            sortOrder: 3,
           },
           'avg_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.avg_time_viewed`),
-            sortOrder: 3,
-          },
-          'count_loads': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.count_loads`),
             sortOrder: 4,
           },
           'avg_completion_rate': {

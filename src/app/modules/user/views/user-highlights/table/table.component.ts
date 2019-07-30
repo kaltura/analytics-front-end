@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
 import { Subject } from 'rxjs';
-import { KalturaPager } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaPager } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
@@ -11,6 +11,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./table.component.scss']
 })
 export class UserHighlightsTableComponent {
+  @Input() userId: string;
   @Input() tableData: TableRow<string>[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
@@ -22,6 +23,7 @@ export class UserHighlightsTableComponent {
   @Input() pager: KalturaPager;
   @Input() areaBlockerMessage: AreaBlockerMessage;
   @Input() isBusy: boolean;
+  @Input() filter: KalturaEndUserReportInputFilter = null;
   
   @Output() drillDown = new EventEmitter<TableRow<string>>();
   @Output() sortChanged = new EventEmitter<SortEvent>();

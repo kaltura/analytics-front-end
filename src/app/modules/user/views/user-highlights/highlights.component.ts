@@ -21,6 +21,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { UserBase } from '../user-base/user-base';
+import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 
 @Component({
   selector: 'app-user-highlights',
@@ -29,12 +30,14 @@ import { UserBase } from '../user-base/user-base';
   providers: [
     KalturaLogger.createLogger('HighlightsComponent'),
     HighlightsConfig,
-    ReportService
+    ReportService,
+    HeatMapStoreService,
   ],
 })
 export class UserHighlightsComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+  @Input() userName = '';
+
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _updateTableHeight = new Subject<void>();
