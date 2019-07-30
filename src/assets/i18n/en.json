@@ -757,7 +757,10 @@
       "sum_time_viewed": "Minutes Viewed",
       "avg_time_viewed": "Avg. Min Viewed",
       "count_loads": "Player Impressions",
-      "avg_completion_rate": "Avg. Completion Rate"
+      "avg_completion_rate": "Avg. Completion Rate",
+      "user_role": "User Role:",
+      "email": "Email:",
+      "created": "Registration Date:"
     }
   }
 }

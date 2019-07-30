@@ -34,11 +34,7 @@
     color: $kGrayscale2;
     height: 36px;
 
-    .kIconMediaType {
-      margin-right: 8px;
-    }
-
-    .kOwner {
+    .kLabel {
       margin-left: 8px;
     }
 
@@ -49,10 +45,6 @@
       background-color: $kGrayscale4;
       margin-left: 16px;
       margin-right: 16px;
-    }
-
-    .link {
-      font-size: 14px;
     }
   }
 }
