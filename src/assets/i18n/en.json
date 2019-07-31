@@ -762,7 +762,16 @@
       "email": "Email:",
       "created": "Registration Date:",
       "sources": "Which sources does {{0}} use most to add content?",
-      "userSources_tt": "Which method does the user use to add content into the platform"
+      "userSources_tt": "Which method does the user use to add content into the platform",
+      "viewingEngagementFunnel": "Viewing Engagement Funnel",
+      "playerImpressions": "Played Impressions",
+      "played": "Played",
+      "notPlayed": "Not Played",
+      "completionRate100": "Completion Rate 100%",
+      "completionRate75_100": "Completion Rate Between 75% to 100%",
+      "completionRate50_75": "Completion Rate Between 50% to 75%",
+      "completionRate25_50": "Completion Rate Between 25% to 50%",
+      "completionRate0_25": "Completion Rate Under 25%"
     }
   }
 }
