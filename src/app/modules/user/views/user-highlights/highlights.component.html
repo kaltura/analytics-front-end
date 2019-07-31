@@ -24,16 +24,7 @@
       </div>
 
       <div class="kTable">
-        <div class="kToggle">
-          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-          <a (click)="_toggleTable()">
-            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
-          </a>
-        </div>
-        <div class="kTablesHolder" appEvenTableHeight
-             [updateListener]="_updateTableHeight$"
-             [class.kOpen]="_showTable"
-             [class.kClose]="!_showTable">
+        <div class="kTablesHolder" appEvenTableHeight [updateListener]="_updateTableHeight$">
           <app-user-highlights-table *ngIf="_isCompareMode"
                                      name="compare"
                                      [entryDetails]="_entryDetails"

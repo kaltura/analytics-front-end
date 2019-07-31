@@ -67,7 +67,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
-  public _showTable = false;
   public _totalCount = 0;
   public _compareTotalCount = 0;
   public _currentDates: string;
@@ -342,20 +341,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
-  }
-  
-  public _toggleTable(): void {
-    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
-    this._showTable = !this._showTable;
-    this._updateTableHeight.next();
-    
-    if (analyticsConfig.isHosted) {
-      setTimeout(() => {
-        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
-        this._logger.trace('Send update layout event to the host app', { height });
-        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
-      }, 0);
-    }
   }
   
   public _onPaginationChanged(isCompareTable: boolean, pager: KalturaPager, event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
