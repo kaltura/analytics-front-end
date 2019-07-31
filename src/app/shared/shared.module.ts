@@ -61,6 +61,7 @@ import { UserEngagementFilterComponent } from 'shared/components/user-engagement
 import { UserEngagementUsersFilterComponent } from 'shared/components/user-engagement-filter/users-filter/users-filter.component';
 import { EvenTableHeightDirective } from 'shared/directives/even-table-height.directive';
 import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component';
+import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @NgModule({
   imports: [
@@ -127,6 +128,7 @@ import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component'
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
     HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -170,6 +172,7 @@ import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component'
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
     HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   providers: [
   ]

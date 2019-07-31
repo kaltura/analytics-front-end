@@ -48,6 +48,22 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
+          'duration': {
+            format: value => parseInt(value, 10),
+            hidden: true,
+          },
+          'status': {
+            format: value => value !== KalturaEntryStatus.ready
+              ? value === KalturaEntryStatus.deleted
+                ? this._translate.instant('app.engagement.topVideosReport.entryStatus.deleted')
+                : this._translate.instant('app.engagement.topVideosReport.entryStatus.unavailable')
+              : '',
+            hidden: true,
+          },
+          'duration_msecs': {
+            format: value => parseInt(value, 10),
+            hidden: true,
+          },
           'entry_name': {
             format: value => value,
             sortOrder: 1,
@@ -56,7 +72,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
@@ -64,7 +80,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'count_loads': {
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
@@ -87,20 +103,46 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.user.count_loads`),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.sum_time_viewed`),
-            sortOrder: 3,
-          },
           'avg_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.avg_time_viewed`),
+            sortOrder: 3,
+          },
+          'sum_time_viewed': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.sum_time_viewed`),
             sortOrder: 4,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
             title: this._translate.instant(`app.user.avg_completion_rate`),
             sortOrder: 5,
+          }
+        }
+      },
+      entryDetails: {
+        fields: {
+          'object_id': {
+            format: value => value,
+            hidden: true,
+          },
+          'entry_name': {
+            format: value => value,
+          },
+          'status': {
+            format: value => value,
+          },
+          'creator_name': {
+            format: value => value,
+          },
+          'created_at': {
+            format: value => ReportHelper.format('serverDate', value),
+          },
+          'media_type': {
+            format: value => Number(value),
+          },
+          'duration_msecs': {
+            format: value => ReportHelper.time(value),
           }
         }
       }

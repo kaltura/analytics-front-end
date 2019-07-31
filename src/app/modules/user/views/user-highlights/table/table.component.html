@@ -35,7 +35,10 @@
               </a>
             </td>
             <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
-              <div class="kThumbnailHolder" #holder (click)="drillDown.emit(data)">
+              <div class="kThumbnailHolder" #holder
+                   (mouseleave)="_hideOverlay()"
+                   (mouseenter)="_showOverlay($event, data['object_id'])"
+                   (click)="drillDown.emit(data)">
                 <img [src]="data.thumbnailUrl"
                      onError="this.onerror=null;this.style.display='none'"
                      (error)="holder.classList.add('error')">
@@ -49,6 +52,8 @@
                     *ngIf="col === 'entry_name'"
                     [kTooltip]="data[col]"
                     [showOnEllipsis]="true"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['object_id'])"
                     (click)="drillDown.emit(data)">{{data[col]}}</span>
             </td>
           </tr>
@@ -65,7 +70,7 @@
               <app-heat-map [attr.data-aid]="'heat-map-' + index"
                             [userId]="userId"
                             [entryId]="data['object_id']"
-                            [duration]="data['duration']"
+                            [duration]="data['duration_msecs']"
                             [filter]="filter"></app-heat-map>
             </td>
           </tr>
@@ -78,3 +83,7 @@
                [totalRecords]="totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+</k-overlayPanel>

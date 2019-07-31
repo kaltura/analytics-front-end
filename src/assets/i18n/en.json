@@ -755,7 +755,7 @@
       "count_viral": "Shares",
       "count_download": "Downloads",
       "sum_time_viewed": "Minutes Viewed",
-      "avg_time_viewed": "Avg. Min Viewed",
+      "avg_time_viewed": "Avg. View Time",
       "count_loads": "Player Impressions",
       "avg_completion_rate": "Avg. Completion Rate",
       "user_role": "User Role:",

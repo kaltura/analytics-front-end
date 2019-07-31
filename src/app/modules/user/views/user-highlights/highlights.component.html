@@ -36,6 +36,7 @@
              [class.kClose]="!_showTable">
           <app-user-highlights-table *ngIf="_isCompareMode"
                                      name="compare"
+                                     [entryDetails]="_entryDetails"
                                      [userId]="userId"
                                      [isBusy]="_compareTableBusy"
                                      [areaBlockerMessage]="_compareTableBlockerMessage"
@@ -51,6 +52,7 @@
                                      (sortChanged)="_onSortChanged($event)"
                                      (paginationChanged)="_onPaginationChanged(true, _comparePager, $event)"></app-user-highlights-table>
           <app-user-highlights-table name="current"
+                                     [entryDetails]="_entryDetails"
                                      [userId]="userId"
                                      [filter]="_filter"
                                      [isBusy]="_currentTableBusy"
