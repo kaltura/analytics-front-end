@@ -6,7 +6,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { UserImpressionsDataConfig } from './user-impressions-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
@@ -66,11 +66,13 @@ export class UserImpressionsComponent extends UserBase implements OnInit {
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-  
+    // TODO
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
-    this._chartData = this._dataConfigService.getChartConfig();
+    const totalsData = this._reportService.parseTotals(totals, this._dataConfig[ReportDataSection.totals])
+      .reduce((acc, val) => (acc[val.key] = parseInt(val.rawValue as string, 10), acc), {});
+    this._chartData = this._dataConfigService.getChartConfig(totalsData);
   }
   
   protected _updateFilter(): void {
