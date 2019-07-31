@@ -98,6 +98,8 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
+  
+        this._compareFilter.userIds = this._filter.userIds;
         
         const compareReportConfig = {
           reportType: this._reportType,

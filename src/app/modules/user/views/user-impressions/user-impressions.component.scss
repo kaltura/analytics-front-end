@@ -1,0 +1,98 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kImpressions {
+  height: 100%;
+  margin-bottom: 0 !important;
+}
+
+.kCharts {
+  display: flex;
+
+  &.compare {
+    margin-left: 35%;
+  }
+
+  .kChart {
+    height: 360px !important;
+    width: 100%;
+
+    &.compare {
+      width: 80%;
+    }
+  }
+}
+
+.kCompareDates {
+  display: flex;
+  color: $kGrayscale3;
+
+  div {
+    width: 35%;
+    text-align: center;
+  }
+}
+
+.kData {
+  width: 78%;
+  position: absolute;
+  margin-top: 10px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 24px;
+
+  &.compare {
+    width: 77%;
+    margin-top: 27px;
+    top: 0px;
+  }
+
+  .kDataContainer {
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid $kGrayscale6;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kValue {
+    font-size: 24px;
+    color: $kGrayscale1;
+    font-weight: 700;
+    line-height: 52px;
+  }
+
+  .kLabel {
+    font-size: 15px;
+    color: $kGrayscale1;
+
+    &.compare {
+      margin-top: 12px;
+    }
+  }
+}
+
+.kPlaythrough {
+  margin-left: 24px;
+  position: absolute;
+  top: 288px;
+
+  &.compare {
+    top: 264px;
+  }
+}
+
+:host /deep/ p-dropdown {
+  .ui-dropdown {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 84px !important;
+  }
+}
+

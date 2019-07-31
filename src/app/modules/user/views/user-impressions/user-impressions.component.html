@@ -1,0 +1,49 @@
+<div class="kReport kOverrideFAIcons kImpressions">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.impressions' | translate}}</span>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kCompareDates" *ngIf="isCompareMode && _chartLoaded">
+        <div style="width: 30%"></div>
+        <div>{{_compareDates}}</div>
+        <div>{{_currentDates}}</div>
+      </div>
+      <div class="kData" *ngIf="_chartLoaded" [class.compare]="isCompareMode">
+        <div class="kDataContainer">
+          <span class="kValue" *ngIf="!isCompareMode">{{_funnelData.impressions | numberFormat}}</span>
+          <span class="kLabel" [class.compare]="isCompareMode">{{'app.engagement.playerImpressions' | translate}}</span>
+        </div>
+        <div class="kDataContainer">
+          <span class="kValue" *ngIf="!isCompareMode">{{_funnelData.plays | numberFormat}}</span>
+          <span class="kLabel" [class.compare]="isCompareMode">{{'app.engagement.plays' | translate}}</span>
+        </div>
+        <div class="kDataContainer">
+          <span class="kValue"
+                *ngIf="!isCompareMode">{{_funnelData.playThrough['perc' + _selectedPlaythrough] |numberFormat}}</span>
+        </div>
+      </div>
+
+      <div class="kCharts" [class.compare]="isCompareMode" [style.opacity]="_chartLoaded ? 1 : 0">
+        <div class="kChart" *ngIf="isCompareMode">
+          <div echarts class="kChart" [class.compare]="isCompareMode" [options]="_compareChartData"
+               (chartInit)="_onCompareChartInit($event)"></div>
+        </div>
+        <div class="kChart">
+          <div echarts class="kChart" [class.compare]="isCompareMode" [options]="_chartData"
+               (chartInit)="_onChartInit($event)"></div>
+        </div>
+      </div>
+
+      <div class="kPlaythrough" [class.compare]="isCompareMode" *ngIf="_chartLoaded">
+        <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
+        <p-dropdown [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough"
+                    (onChange)="_onPlaythroughChange()"></p-dropdown>
+        <span class="kLabel" [class.block]="isCompareMode">{{'app.engagement.playthrough2' | translate}}</span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

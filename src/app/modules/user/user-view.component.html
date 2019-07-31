@@ -56,6 +56,12 @@
         </div>
 
         <div class="kReportContainer">
+          <app-user-impressions [userId]="_user.id"
+                                [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-user-impressions>
+        </div>
+
+        <div class="kReportContainer">
           <app-user-sources [userId]="_user.id"
                             [userName]="_user.fullName"
                             [dateFilter]="_dateFilter"
