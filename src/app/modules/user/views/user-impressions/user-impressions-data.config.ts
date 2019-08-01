@@ -50,7 +50,20 @@ export class UserImpressionsDataConfig extends ReportDataBaseConfig {
     return {
       tooltip: {
         trigger: 'item',
-        triggerOn: 'mousemove'
+        triggerOn: 'mousemove',
+        backgroundColor: '#ffffff',
+        borderColor: '#dadada',
+        borderWidth: 1,
+        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+        textStyle: {
+          color: '#999999',
+        },
+        axisPointer: {
+          lineStyle: {
+            color: '#dadada',
+          },
+          z: 0,
+        },
       },
       series: {
         type: 'sankey',
