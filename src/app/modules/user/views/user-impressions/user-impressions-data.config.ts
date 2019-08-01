@@ -39,16 +39,25 @@ export class UserImpressionsDataConfig extends ReportDataBaseConfig {
   }
   
   public getChartConfig(totals: { [key: string]: number }): EChartOption {
-    const played = totals['count_plays'];
-    const notPlayed = totals['count_loads'] - played;
-    const played100 = totals['count_plays_100'];
-    const played25 = totals['count_plays_25'];
-    const played25_50 = Math.abs(totals['count_plays_25'] - totals['count_plays_50']);
-    const played50_75 = Math.abs(totals['count_plays_50'] - totals['count_plays_75']);
-    const played75_100 = Math.abs(totals['count_plays_75'] - totals['count_plays_100']);
+    const data = {
+      playerImpressions: totals['count_loads'],
+      played: totals['count_plays'],
+      notPlayed: totals['count_loads'] - totals['count_plays'],
+      completionRate100: totals['count_plays_100'],
+      completionRate0_25: totals['count_plays_25'],
+      completionRate25_50: Math.abs(totals['count_plays_25'] - totals['count_plays_50']),
+      completionRate50_75: Math.abs(totals['count_plays_50'] - totals['count_plays_75']),
+      completionRate75_100: Math.abs(totals['count_plays_75'] - totals['count_plays_100']),
+    };
     
     return {
+      textStyle: {
+        fontFamily: 'Lato',
+      },
       tooltip: {
+        formatter: params => {
+          console.warn(params);
+        },
         trigger: 'item',
         triggerOn: 'mousemove',
         backgroundColor: '#ffffff',
@@ -70,114 +79,151 @@ export class UserImpressionsDataConfig extends ReportDataBaseConfig {
         draggable: false,
         focusNodeAdjacency: 'allEdges',
         nodeGap: 25,
+        left: '24px',
+        right: '24px',
+        nodeWidth: 8,
+        label: {
+          fontSize: 15,
+          formatter: ({ name }) => `{bold|${data[name]}} ${this._translate.instant('app.user.' + name)}`,
+          rich: {
+            bold: {
+              fontSize: 15,
+              fontWeight: 'bold'
+            }
+          }
+        },
+        lineStyle: {
+          normal: {
+            color: '#EBEBEB',
+            opacity: 1,
+          }
+        },
         data: [
           {
-            name: this._translate.instant('app.user.playerImpressions'),
+            name: 'playerImpressions',
             itemStyle: {
               color: '#487ADF',
               borderWidth: 0,
+              
+            },
+            label: {
+              position: 'insideTopLeft',
+              offset: [10, 0]
             }
           },
           {
-            name: this._translate.instant('app.user.played'),
+            name: 'played',
             itemStyle: {
               color: '#88ACF6',
               borderWidth: 0,
+            },
+            label: {
+              position: 'insideTopLeft',
+              offset: [10, 0]
             }
           },
           {
-            name: this._translate.instant('app.user.notPlayed'),
+            name: 'notPlayed',
             itemStyle: {
               color: '#F3737B',
               borderWidth: 0,
+            },
+            label: {
+              position: 'insideTopRight',
+              offset: [-10, 0],
             }
           },
           {
-            name: this._translate.instant('app.user.completionRate100'),
+            name: 'completionRate100',
             itemStyle: {
               color: '#6DB25B',
               borderWidth: 0,
             },
             label: {
-              position: 'left'
+              position: 'insideTopRight',
+              offset: [-10, 0],
             },
           },
           {
-            name: this._translate.instant('app.user.completionRate75_100'),
+            name: 'completionRate75_100',
             itemStyle: {
               color: '#6DB25B',
               borderWidth: 0,
             },
             label: {
-              position: 'left'
+              position: 'insideTopRight',
+              offset: [-10, 0],
             },
           },
           {
-            name: this._translate.instant('app.user.completionRate50_75'),
+            name: 'completionRate50_75',
             itemStyle: {
               color: '#98DE85',
               borderWidth: 0,
             },
             label: {
-              position: 'left'
+              position: 'insideTopRight',
+              offset: [-10, 0],
             },
           },
           {
-            name: this._translate.instant('app.user.completionRate25_50'),
+            name: 'completionRate25_50',
             itemStyle: {
               color: '#E1952E',
               borderWidth: 0,
             },
             label: {
-              position: 'left'
+              position: 'insideTopRight',
+              offset: [-10, 0],
             },
           },
           {
-            name: this._translate.instant('app.user.completionRate0_25'),
+            name: 'completionRate0_25',
             itemStyle: {
               color: '#F7C25C',
               borderWidth: 0,
             },
             label: {
-              position: 'left'
+              position: 'insideTopRight',
+              offset: [-10, 0],
             },
           },
         ],
         links: [
           {
-            source: this._translate.instant('app.user.playerImpressions'),
-            target: this._translate.instant('app.user.played'),
-            value: played,
+            source: 'playerImpressions',
+            target: 'played',
+            value: data.played,
           },
           {
-            source: this._translate.instant('app.user.playerImpressions'),
-            target: this._translate.instant('app.user.notPlayed'),
-            value: notPlayed,
+            source: 'playerImpressions',
+            target: 'notPlayed',
+            value: data.notPlayed,
           },
           {
-            source: this._translate.instant('app.user.played'),
-            target: this._translate.instant('app.user.completionRate100'),
-            value: played100,
+            source: 'played',
+            target: 'completionRate100',
+            value: data.completionRate100,
           },
           {
-            source: this._translate.instant('app.user.played'),
-            target: this._translate.instant('app.user.completionRate75_100'),
-            value: played75_100,
+            source: 'played',
+            target: 'completionRate75_100',
+            value: data.completionRate75_100,
           },
           {
-            source: this._translate.instant('app.user.played'),
-            target: this._translate.instant('app.user.completionRate50_75'),
-            value: played50_75,
+            source: 'played',
+            target: 'completionRate50_75',
+            value: data.completionRate50_75,
           },
           {
-            source: this._translate.instant('app.user.played'),
-            target: this._translate.instant('app.user.completionRate25_50'),
-            value: played25_50,
+            source: 'played',
+            target: 'completionRate25_50',
+            value: data.completionRate25_50,
           },
           {
-            source: this._translate.instant('app.user.played'),
-            target: this._translate.instant('app.user.completionRate0_25'),
-            value: played25,
+            source: 'played',
+            target: 'completionRate0_25',
+            value: data.completionRate0_25,
           },
         ]
       }
