@@ -19,6 +19,7 @@ import { UserTotalsComponent } from './views/user-totals/user-totals.component';
 import { UserHighlightsTableComponent } from './views/user-highlights/table/table.component';
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
+import { ReportsDividerComponent } from './views/reports-divider/reports-divider.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { UserSourcesComponent } from './views/sources/sources.component';
     UserTotalsComponent,
     UserHighlightsTableComponent,
     UserHighlightsComponent,
-    UserSourcesComponent
+    UserSourcesComponent,
+    ReportsDividerComponent
   ],
   exports: [],
   providers: []
