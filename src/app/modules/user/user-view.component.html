@@ -48,6 +48,9 @@
                            [refineFilter]="_refineFilter"></app-user-totals>
         </div>
 
+        <app-reports-divider
+          [title]="'app.user.viewingEngagement' | translate: {'0': _user.fullName}"></app-reports-divider>
+
         <div class="kReportContainer">
           <app-user-highlights [userId]="_user.id"
                                [dateFilterComponent]="dateFilter"
@@ -60,6 +63,9 @@
                                 [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-user-impressions>
         </div>
+
+        <app-reports-divider
+          [title]="'app.user.collaboration' | translate: {'0': _user.fullName}"></app-reports-divider>
 
         <div class="kReportContainer">
           <app-user-sources [userId]="_user.id"

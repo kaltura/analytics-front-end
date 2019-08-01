@@ -778,7 +778,10 @@
       "between50to75": "Between 50% to 75%",
       "between25to50": "Between 25% to 50%",
       "under25": "Under 25%",
-      "fromAllImpressions": "from all Player Impressions"
+      "fromAllImpressions": "from all Player Impressions",
+      "userSources_tt": "Which method does the user use to add content into the platform",
+      "viewingEngagement": "{{0}} Viewing Engagement",
+      "collaboration": "{{0}} Collaboration"
     }
   }
 }

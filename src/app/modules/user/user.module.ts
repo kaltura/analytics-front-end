@@ -19,6 +19,7 @@ import { UserTotalsComponent } from './views/user-totals/user-totals.component';
 import { UserHighlightsTableComponent } from './views/user-highlights/table/table.component';
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
+import { ReportsDividerComponent } from './views/reports-divider/reports-divider.component';
 import { UserImpressionsComponent } from './views/user-impressions/user-impressions.component';
 
 
@@ -47,6 +48,7 @@ import { UserImpressionsComponent } from './views/user-impressions/user-impressi
     UserHighlightsTableComponent,
     UserHighlightsComponent,
     UserSourcesComponent,
+    ReportsDividerComponent,
     UserImpressionsComponent,
   ],
   exports: [],
