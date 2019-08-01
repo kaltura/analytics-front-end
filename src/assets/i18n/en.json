@@ -755,7 +755,7 @@
       "count_viral": "Shares",
       "count_download": "Downloads",
       "sum_time_viewed": "Minutes Viewed",
-      "avg_time_viewed": "Avg. Min Viewed",
+      "avg_time_viewed": "Avg. View Time",
       "count_loads": "Player Impressions",
       "avg_completion_rate": "Avg. Completion Rate",
       "user_role": "User Role:",
@@ -764,7 +764,8 @@
       "sources": "Which Sources Been Used to Add Content?",
       "userSources_tt": "Which method does the user use to add content into the platform",
       "viewingEngagement": "{{0}} Viewing Engagement",
-      "collaboration": "{{0}} Collaboration"
+      "collaboration": "{{0}} Collaboration",
+      "highlights": "Viewed Entries"
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -21,6 +21,9 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { UserBase } from '../user-base/user-base';
+import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
+import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-user-highlights',
@@ -29,17 +32,19 @@ import { UserBase } from '../user-base/user-base';
   providers: [
     KalturaLogger.createLogger('HighlightsComponent'),
     HighlightsConfig,
-    ReportService
+    ReportService,
+    HeatMapStoreService,
   ],
 })
 export class UserHighlightsComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+  @Input() userName = '';
   @Input() dateFilterComponent: DateFilterComponent;
   
+  public _entryDetails: TableRow[] = [];
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
-  private _reportType = KalturaReportType.topContent;
+  private _reportType = KalturaReportType.topContentCreator; // TODO use topUserContent once it's on lbd
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
@@ -62,7 +67,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
-  public _showTable = false;
   public _totalCount = 0;
   public _compareTotalCount = 0;
   public _currentDates: string;
@@ -118,10 +122,12 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
       if (report.table && report.table.data && report.table.header) {
         const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
         const totalCount = report.table.totalCount;
+        const { tableData: entryDetails } = this._reportService.parseTableData(report.table, this._dataConfig.entryDetails);
         
         return {
           totalCount,
-          tableData: tableData.map((item, index) => this._extendTableRow(item, index, pager))
+          tableData: tableData.map((item, index) => this._extendTableRow(item, index, pager)),
+          entryDetails: entryDetails.map((item, index) => this._extendTableRow(item, index, pager))
         };
       }
       
@@ -140,10 +146,12 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
             this._compareTotalCount = compare.totalCount;
             this._compareTableData = compare.tableData;
             this._compareTableBusy = false;
+            this._entryDetails = [...this._entryDetails, compare.entryDetails];
           } else {
             const current = getTableData(report, this._pager);
             this._totalCount = current.totalCount;
             this._tableData = current.tableData;
+            this._entryDetails = current.entryDetails;
             this._currentTableBusy = false;
           }
           this._updateTableHeight.next();
@@ -178,14 +186,16 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+  
+    this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+  
+        this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, sections)
@@ -297,6 +307,9 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((item, index) => this._extendTableRow(item, index, this._pager));
+  
+    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
+    this._entryDetails = entryDetails.map((item, index) => this._extendTableRow(item, index, this._pager));
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
@@ -304,6 +317,9 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
       this._compareTableData = compareTableData.map((item, index) => this._extendTableRow(item, index, this._comparePager));
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+  
+      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
+      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map((item, index) => this._extendTableRow(item, index, this._pager))];
     }
   }
   
@@ -325,20 +341,6 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
-  }
-  
-  public _toggleTable(): void {
-    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
-    this._showTable = !this._showTable;
-    this._updateTableHeight.next();
-    
-    if (analyticsConfig.isHosted) {
-      setTimeout(() => {
-        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
-        this._logger.trace('Send update layout event to the host app', { height });
-        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
-      }, 0);
-    }
   }
   
   public _onPaginationChanged(isCompareTable: boolean, pager: KalturaPager, event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
