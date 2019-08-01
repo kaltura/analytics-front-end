@@ -1,8 +1,11 @@
 <div data-aid="report-user-highlights" class="kReport kContent kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.user.highlights' | translate: {'0': userName} }}</span>
+  </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units applyIn="highlights"
                         [dateFilter]="dateFilterComponent"
@@ -21,18 +24,11 @@
       </div>
 
       <div class="kTable">
-        <div class="kToggle">
-          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-          <a (click)="_toggleTable()">
-            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
-          </a>
-        </div>
-        <div class="kTablesHolder" appEvenTableHeight
-             [updateListener]="_updateTableHeight$"
-             [class.kOpen]="_showTable"
-             [class.kClose]="!_showTable">
+        <div class="kTablesHolder" appEvenTableHeight [updateListener]="_updateTableHeight$">
           <app-user-highlights-table *ngIf="_isCompareMode"
                                      name="compare"
+                                     [entryDetails]="_entryDetails"
+                                     [userId]="userId"
                                      [isBusy]="_compareTableBusy"
                                      [areaBlockerMessage]="_compareTableBlockerMessage"
                                      [pager]="_comparePager"
@@ -47,6 +43,9 @@
                                      (sortChanged)="_onSortChanged($event)"
                                      (paginationChanged)="_onPaginationChanged(true, _comparePager, $event)"></app-user-highlights-table>
           <app-user-highlights-table name="current"
+                                     [entryDetails]="_entryDetails"
+                                     [userId]="userId"
+                                     [filter]="_filter"
                                      [isBusy]="_currentTableBusy"
                                      [areaBlockerMessage]="_currentTableBlockerMessage"
                                      [pager]="_pager"

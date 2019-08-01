@@ -30,7 +30,6 @@ import { CheckboxModule, OverlayPanelModule } from 'primeng/primeng';
 import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
-import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
 import { UICarouselModule } from 'ng-carousel-iuno';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
@@ -85,7 +84,6 @@ import { EntriesTableComponent } from './views/engagement/highlights/entries-tab
     TopBrowsersComponent,
     TopOsComponent,
     TopVideosTableComponent,
-    EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
     GeoFilterComponent,

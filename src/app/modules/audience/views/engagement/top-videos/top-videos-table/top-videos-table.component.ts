@@ -4,10 +4,10 @@ import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { BrowserService } from 'shared/services';
 import { Subject } from 'rxjs';
+import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos-table',

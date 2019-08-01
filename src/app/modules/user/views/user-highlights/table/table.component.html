@@ -5,6 +5,7 @@
     <k-area-blocker [showLoader]="isBusy" [message]="areaBlockerMessage">
       <p-table appScrollTopOnPaging
                sortField="count_viral"
+               dataKey="object_id"
                [customPaginationEvent]="_paginationChanged$"
                [value]="tableData"
                [customSort]="true"
@@ -13,8 +14,7 @@
                (sortFunction)="sortChanged.emit($event)">
         <ng-template pTemplate="header">
           <tr [ngStyle]="{'width': '100%'}">
-            <th
-              [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.user.index' | translate}}</th>
+            <th [ngStyle]="{'width':'40px'}" *ngIf="!isCompareMode"></th>
             <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
@@ -26,11 +26,19 @@
 
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-data>
+        <ng-template pTemplate="body" let-data let-expanded="expanded">
           <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
-            <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
+            <td [ngStyle]="{'width':'40px'}" *ngIf="!isCompareMode">
+              <a [pRowToggler]="data">
+                <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
+                   style="font-size: 1.25em"></i>
+              </a>
+            </td>
             <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
-              <div class="kThumbnailHolder" #holder (click)="drillDown.emit(data)">
+              <div class="kThumbnailHolder" #holder
+                   (mouseleave)="_hideOverlay()"
+                   (mouseenter)="_showOverlay($event, data['object_id'])"
+                   (click)="drillDown.emit(data)">
                 <img [src]="data.thumbnailUrl"
                      onError="this.onerror=null;this.style.display='none'"
                      (error)="holder.classList.add('error')">
@@ -44,6 +52,8 @@
                     *ngIf="col === 'entry_name'"
                     [kTooltip]="data[col]"
                     [showOnEllipsis]="true"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['object_id'])"
                     (click)="drillDown.emit(data)">{{data[col]}}</span>
             </td>
           </tr>
@@ -54,6 +64,17 @@
             <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
           </div>
         </ng-template>
+        <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
+          <tr *ngIf="!isCompareMode">
+            <td [attr.colspan]="columns.length + 2" class="kRowExpansion">
+              <app-heat-map [attr.data-aid]="'heat-map-' + index"
+                            [userId]="userId"
+                            [entryId]="data['object_id']"
+                            [duration]="data['duration_msecs']"
+                            [filter]="filter"></app-heat-map>
+            </td>
+          </tr>
+        </ng-template>
       </p-table>
     </k-area-blocker>
   </div>
@@ -62,3 +83,7 @@
                [totalRecords]="totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+</k-overlayPanel>
