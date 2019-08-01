@@ -761,7 +761,7 @@
       "user_role": "User Role:",
       "email": "Email:",
       "created": "Registration Date:",
-      "sources": "Which sources does {{0}} use most to add content?",
+      "sources": "Which Sources Been Used to Add Content?",
       "userSources_tt": "Which method does the user use to add content into the platform",
       "viewingEngagement": "{{0}} Viewing Engagement",
       "collaboration": "{{0}} Collaboration"
