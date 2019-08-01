@@ -545,6 +545,34 @@ k-area-blocker {
   }
 }
 
+.kSankeyTooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .kTitle {
+    color: #999999;
+    font-weight: bold;
+  }
+
+  .kItem {
+    color: #333333;
+    margin-top: 12px;
+
+    .kBullet {
+      font-weight: bold;
+      font-size: 22px;
+      line-height: 15px;
+      margin-right: 6px;
+    }
+
+    .kValue {
+      font-weight: bold;
+      margin-right: 8px;
+    }
+  }
+}
+
 // duplicate for IE
 .kTags {
   border-top: none !important;
