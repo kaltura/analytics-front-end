@@ -765,7 +765,17 @@
       "userSources_tt": "Which method does the user use to add content into the platform",
       "viewingEngagement": "{{0}} Viewing Engagement",
       "collaboration": "{{0}} Collaboration",
-      "highlights": "Viewed Entries"
+      "highlights": "Viewed Entries",
+      "entries": "Entries",
+      "topContent": "Top Content",
+      "topContentReport": {
+        "name": "Name",
+        "entries": "Entries",
+        "count_plays": "Plays",
+        "unique_known_users": "Unique Viewers",
+        "avg_completion_rate": "Avg. Completion Rate",
+        "score": "Score"
+      }
     }
   }
 }

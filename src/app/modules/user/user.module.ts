@@ -20,6 +20,8 @@ import { UserHighlightsTableComponent } from './views/user-highlights/table/tabl
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
 import { ReportsDividerComponent } from './views/reports-divider/reports-divider.component';
+import { UserTopVideoComponent } from './views/user-top-videos/top-videos.component';
+import { UserTopVideosTableComponent } from './views/user-top-videos/top-videos-table/top-videos-table.component';
 
 
 @NgModule({
@@ -47,7 +49,9 @@ import { ReportsDividerComponent } from './views/reports-divider/reports-divider
     UserHighlightsTableComponent,
     UserHighlightsComponent,
     UserSourcesComponent,
-    ReportsDividerComponent
+    ReportsDividerComponent,
+    UserTopVideoComponent,
+    UserTopVideosTableComponent,
   ],
   exports: [],
   providers: []
