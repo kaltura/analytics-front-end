@@ -15,7 +15,9 @@
         <ng-template pTemplate="header">
           <tr [ngStyle]="{'width': '100%'}">
             <th [ngStyle]="{'width':'40px'}" *ngIf="!isCompareMode"></th>
-            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
+            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
+              {{'app.user.entries' | translate}}
+            </th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
                 [kTooltip]="'app.user.' + col | translate"
