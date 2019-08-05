@@ -1,16 +1,22 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { UserBase } from '../user-base/user-base';
 import { UserMiniTopContentConfig } from './user-mini-top-content.config';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import * as moment from 'moment';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { CompareService } from 'shared/services/compare.service';
 
 @Component({
   selector: 'app-user-mini-top-content',
@@ -38,6 +44,14 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow[] = [];
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _currentDates: string;
+  public _compareDates: string;
+  public _reportInterval = KalturaReportInterval.days;
+  
+  public get _isCompareMode(): boolean {
+    return this._compareFilter !== null;
+  }
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
@@ -46,7 +60,8 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
               private _dataConfigService: UserMiniTopContentConfig,
               private _router: Router,
               private _activatedRoute: ActivatedRoute,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _compareService: CompareService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -62,12 +77,29 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(report => {
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+    
+        this._compareFilter.userIds = this.userId;
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
+    
+        return this._reportService.getReport(compareReportConfig, sections)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
           this._tableData = [];
-          
-          if (report.table && report.table.data && report.table.header) {
-            this._handleTable(report.table); // handle table
+    
+          if (compare) {
+            this._handleCompare(report, compare);
+          } else {
+            this._currentDates = null;
+            this._compareDates = null;
+      
+            if (report.table && report.table.data && report.table.header) {
+              this._handleTable(report.table); // handle table
+            }
           }
           
           this._firstTimeLoading = false;
@@ -92,10 +124,24 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
+    this._reportInterval = this._dateFilter.timeUnits;
+    if (this._dateFilter.compare.active) {
+      const compare = this._dateFilter.compare;
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
+    } else {
+      this._compareFilter = null;
+    }
   }
   
   protected _updateRefineFilter(): void {
+    this._pager.pageIndex = 1;
+    
     this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
   private _extendTableRow(item: TableRow<string>): TableRow<string> {
@@ -107,6 +153,14 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._columns = columns;
     this._tableData = tableData.map(this._extendTableRow.bind(this));
+  }
+  
+  private _handleCompare(current: Report, compare: Report): void {
+    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+    
+    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
+    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
   }
   
   public _drillDown(row: TableRow<string>): void {
