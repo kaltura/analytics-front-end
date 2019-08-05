@@ -28,7 +28,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   
-  private _reportType = KalturaReportType.topContent;
+  private _reportType = KalturaReportType.topContentCreator;
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   

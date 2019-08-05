@@ -19,30 +19,30 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kFilterContainerCol">
-            <app-country-filter [dateFilter]="_dateFilter"
-                                [selectedFilters]="_selectedValues['countries']"
-                                (itemSelected)="_onItemSelected($event, 'countries')"
-                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+          <div class="kListFilters">
+            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
+                                        [options]="_mediaTypes"
+                                        [selectedFilters]="_selectedValues['mediaType']"
+                                        (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                        (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
+            <app-checkboxes-list-filter class="kLastItem"
+                                        [label]="'app.filters.entrySources.title' | translate"
+                                        [options]="_entrySources"
+                                        [selectedFilters]="_selectedValues['entrySources']"
+                                        (itemSelected)="_onItemSelected($event, 'entrySources')"
+                                        (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
+          </div>
+          <div class="kMiscFilters">
+            <app-tags-filter [selectedFilters]="_selectedValues['tags']"
+                             (itemSelected)="_onItemSelected($event, 'tags')"
+                             (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
 
             <app-category-filter [label]="'app.filters.categories' | translate"
                                  [selectedFilters]="_selectedValues['categories']"
                                  [linkLabel]="'app.filters.selectCategories' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
-
-            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
-                                <!--[selectedFilters]="_selectedValues['domains']"-->
-                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
-                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
-
-          </div>
-          <div class="kFilterContainerCol">
-            <app-owners-filter [selectedFilters]="_selectedValues['users']"
-                               [label]="'app.filters.users' | translate"
-                               (itemSelected)="_onItemSelected($event, 'users')"
-                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
           </div>
         </div>
       </div>

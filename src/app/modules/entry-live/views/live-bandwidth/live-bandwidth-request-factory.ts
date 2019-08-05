@@ -32,8 +32,8 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   
   
   public onPollTickSuccess(): void {
-    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(30);
-    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(200);
+    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(0);
+    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(170);
   }
   
   public create(): KalturaMultiRequest {

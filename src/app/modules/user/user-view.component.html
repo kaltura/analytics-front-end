@@ -48,6 +48,28 @@
                            [refineFilter]="_refineFilter"></app-user-totals>
         </div>
 
+        <div class="kReportContainer">
+          <div class="kLeftCol">
+            <app-user-mini-highlights></app-user-mini-highlights>
+            <app-user-mini-top-content [dateFilter]="_dateFilter"
+                                       [userId]="_user.id"
+                                       [refineFilter]="_refineFilter"></app-user-mini-top-content>
+          </div>
+          <div class="kRightCol">
+            <ui-carousel height="100%"
+                         [infinite]="false"
+                         [autoPlay]="false"
+                         [autoPlaySpeed]="5000"
+                         [arrows]="false"
+                         [fade]="false"
+                         [speed]="200">
+              <ui-carousel-item>
+                <div style="background: #FFFFFF; width: 100%; height: 100%;">&nbsp;</div>
+              </ui-carousel-item>
+            </ui-carousel>
+          </div>
+        </div>
+
         <app-reports-divider
           [title]="'app.user.viewingEngagement' | translate: {'0': _user.fullName}"></app-reports-divider>
 
@@ -67,6 +89,12 @@
 
         <app-reports-divider
           [title]="'app.user.collaboration' | translate: {'0': _user.fullName}"></app-reports-divider>
+
+        <div class="kReportContainer">
+          <app-user-top-content [userId]="_user.id"
+                                [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-user-top-content>
+        </div>
 
         <div class="kReportContainer">
           <app-user-sources [userId]="_user.id"

@@ -1,0 +1,80 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 233px;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+}
+
+.kHeader {
+  padding: 24px;
+
+  .kTitle {
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.kReportContainer {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px 24px;
+
+  .kThumbnailHolder {
+    cursor: pointer;
+  }
+
+  .kCard {
+    display: flex;
+    flex-direction: column;
+
+    .kLabel {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kThumbnailHolder {
+    width: 202px;
+    height: 101px;
+    cursor: pointer;
+
+    img {
+      width: 202px;
+    }
+  }
+
+  .kCard {
+    width: 202px;
+  }
+
+  .kCard:nth-child(3),
+  .kCard:nth-child(4) {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .kThumbnailHolder {
+    width: 171px;
+    height: 101px;
+
+    img {
+      width: 171px;
+    }
+  }
+
+  .kCard {
+    width: 171px;
+  }
+}

@@ -20,6 +20,11 @@ import { UserHighlightsTableComponent } from './views/user-highlights/table/tabl
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
 import { ReportsDividerComponent } from './views/reports-divider/reports-divider.component';
+import { UICarouselModule } from 'ng-carousel-iuno';
+import { UserMiniTopContentComponent } from './views/user-mini-top-content/user-mini-top-content.component';
+import { TopContentTableComponent } from './views/user-top-content/top-content-table/top-content-table.component';
+import { TopContentComponent } from './views/user-top-content/top-content.component';
+import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-mini-highlights.component';
 import { UserImpressionsComponent } from './views/user-impressions/user-impressions.component';
 
 
@@ -40,6 +45,7 @@ import { UserImpressionsComponent } from './views/user-impressions/user-impressi
     NgxEchartsModule,
     RouterModule.forChild(routing),
     AutoCompleteModule,
+    UICarouselModule,
   ],
   declarations: [
     UserViewComponent,
@@ -49,6 +55,10 @@ import { UserImpressionsComponent } from './views/user-impressions/user-impressi
     UserHighlightsComponent,
     UserSourcesComponent,
     ReportsDividerComponent,
+    TopContentTableComponent,
+    TopContentComponent,
+    UserMiniTopContentComponent,
+    UserMiniHighlightsComponent,
     UserImpressionsComponent,
   ],
   exports: [],

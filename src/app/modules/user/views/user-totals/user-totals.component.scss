@@ -65,16 +65,29 @@
         color: #487ADF;
       }
 
-      &.green {
-        background-color: rgba(49, 190, 166, 0.2);
-        color: #31BEA6;
-
-      }
-
       &.violet {
         background-color: rgba(155, 100, 230, 0.2);
         color: #9B64E6;
       }
+
+      &.orange {
+        background-color: rgba(225, 150, 46, 0.2);
+        color: #E1962E;
+      }
+
+      .icon-upload {
+        transform: rotate(180deg);
+      }
     }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kTotalContainer {
+    width: 50% !important;
+  }
+
+  .kHide960 {
+    display: none !important;
   }
 }
