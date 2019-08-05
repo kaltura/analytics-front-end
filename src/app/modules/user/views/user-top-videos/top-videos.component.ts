@@ -83,7 +83,7 @@ export class UserTopVideoComponent extends UserBase implements OnInit, OnDestroy
     this._isBusy = true;
     this._blockerMessage = null;
   
-    this._filter.userIds = this.userId;
+    this._filter.ownerIdsIn = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
@@ -91,7 +91,7 @@ export class UserTopVideoComponent extends UserBase implements OnInit, OnDestroy
           return ObservableOf({ report, compare: null });
         }
   
-        this._compareFilter.userIds = this.userId;
+        this._compareFilter.ownerIdsIn = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
