@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { TopVideosDataConfig } from './top-videos-data.config';
+import { TopContentDataConfig } from './top-content-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -17,16 +17,16 @@ import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay
 import { UserBase } from '../user-base/user-base';
 
 @Component({
-  selector: 'app-user-top-videos',
-  templateUrl: './top-videos.component.html',
-  styleUrls: ['./top-videos.component.scss'],
+  selector: 'app-user-top-content',
+  templateUrl: './top-content.component.html',
+  styleUrls: ['./top-content.component.scss'],
   providers: [
-    KalturaLogger.createLogger('UserTopVideoComponent'),
-    TopVideosDataConfig,
+    KalturaLogger.createLogger('TopContentComponent'),
+    TopContentDataConfig,
     ReportService
   ]
 })
-export class UserTopVideoComponent extends UserBase implements OnInit, OnDestroy {
+export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
   @Input() userId: string;
   
   private _partnerId = analyticsConfig.pid;
@@ -66,7 +66,7 @@ export class UserTopVideoComponent extends UserBase implements OnInit, OnDestroy
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopVideosDataConfig,
+              private _dataConfigService: TopContentDataConfig,
               private _logger: KalturaLogger) {
     super();
     

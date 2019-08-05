@@ -10,11 +10,11 @@ import { Subject } from 'rxjs';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
-  selector: 'app-engagement-top-videos-table',
-  templateUrl: './top-videos-table.component.html',
-  styleUrls: ['./top-videos-table.component.scss']
+  selector: 'app-top-content',
+  templateUrl: './top-content-table.component.html',
+  styleUrls: ['./top-content-table.component.scss']
 })
-export class UserTopVideosTableComponent implements OnDestroy {
+export class TopContentTableComponent implements OnDestroy {
   @Input() set tableData(value: TableRow<string>[]) {
     value = Array.isArray(value) ? value : [];
     this._originalTable = [...value];

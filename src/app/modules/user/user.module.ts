@@ -20,8 +20,11 @@ import { UserHighlightsTableComponent } from './views/user-highlights/table/tabl
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
 import { ReportsDividerComponent } from './views/reports-divider/reports-divider.component';
-import { UserTopVideoComponent } from './views/user-top-videos/top-videos.component';
-import { UserTopVideosTableComponent } from './views/user-top-videos/top-videos-table/top-videos-table.component';
+import { UICarouselModule } from 'ng-carousel-iuno';
+import { UserMiniTopContentComponent } from './views/user-mini-top-content/user-mini-top-content.component';
+import { TopContentTableComponent } from './views/user-top-content/top-content-table/top-content-table.component';
+import { TopContentComponent } from './views/user-top-content/top-content.component';
+import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-mini-highlights.component';
 
 
 @NgModule({
@@ -41,6 +44,7 @@ import { UserTopVideosTableComponent } from './views/user-top-videos/top-videos-
     NgxEchartsModule,
     RouterModule.forChild(routing),
     AutoCompleteModule,
+    UICarouselModule,
   ],
   declarations: [
     UserViewComponent,
@@ -50,8 +54,10 @@ import { UserTopVideosTableComponent } from './views/user-top-videos/top-videos-
     UserHighlightsComponent,
     UserSourcesComponent,
     ReportsDividerComponent,
-    UserTopVideoComponent,
-    UserTopVideosTableComponent,
+    TopContentTableComponent,
+    TopContentComponent,
+    UserMiniTopContentComponent,
+    UserMiniHighlightsComponent,
   ],
   exports: [],
   providers: []

@@ -5,7 +5,7 @@ import { ReportHelper } from 'shared/services';
 import {KalturaEntryStatus} from "kaltura-ngx-client";
 
 @Injectable()
-export class TopVideosDataConfig extends ReportDataBaseConfig {
+export class TopContentDataConfig extends ReportDataBaseConfig {
   private translate: TranslateService;
   constructor(_translate: TranslateService) {
     super(_translate);

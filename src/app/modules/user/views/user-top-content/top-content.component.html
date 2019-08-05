@@ -4,22 +4,22 @@
   </div>
   <div class="kReportContent">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-      <app-engagement-top-videos-table *ngIf="_isCompareMode"
+      <app-top-content *ngIf="_isCompareMode"
                                        name="compare"
                                        [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
                                        [firstTimeLoading]="_compareFirstTimeLoading"
-                                       [columns]="_columns"></app-engagement-top-videos-table>
-      <app-engagement-top-videos-table name="current"
+                                       [columns]="_columns"></app-top-content>
+      <app-top-content name="current"
                                        [tableData]="_tableData"
                                        [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
                                        [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"></app-engagement-top-videos-table>
+                                       [columns]="_columns"></app-top-content>
     </k-area-blocker>
   </div>
 </div>
