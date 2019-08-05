@@ -4,7 +4,7 @@
       <div class="kTotalContainer">
         <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
         <div class="kTotal">
-          <span class="kLable">{{_tabsData[0]?.title}}</span>
+          <span class="kLable">{{'app.user.count_plays' | translate}}</span>
           <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[0]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"
                 [kTooltip]="_tabsData[0]?.tooltip"
@@ -19,12 +19,12 @@
         </div>
       </div>
       <div class="kTotalContainer">
-        <div class="kMiniIcon violet"><i class="icon-share"></i></div>
+        <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
         <div class="kTotal"
              [kTooltip]="_tabsData[1]?.tooltip"
              [maxWidth]="500"
              [escape]="false">
-          <span class="kLable">{{_tabsData[1]?.title}}</span>
+          <span class="kLable">{{'app.user.sum_time_viewed' | translate}}</span>
           <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[1]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend">
             <app-trend-value valueStyleClass="kValue"
@@ -35,13 +35,13 @@
           </span>
         </div>
       </div>
-      <div class="kTotalContainer">
-        <div class="kMiniIcon green"><i class="icon-download"></i></div>
+      <div class="kTotalContainer kHide960">
+        <div class="kMiniIcon violet"><i class="icon-download"></i></div>
         <div class="kTotal"
              [kTooltip]="_tabsData[2]?.tooltip"
              [maxWidth]="500"
              [escape]="false">
-          <span class="kLable">{{_tabsData[2]?.title}}</span>
+          <span class="kLable">{{'app.user.count_download' | translate}}</span>
           <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend">
             <app-trend-value valueStyleClass="kValue"
@@ -52,57 +52,54 @@
           </span>
         </div>
       </div>
-
       <div class="kTotalContainer">
-        <div class="kMiniIcon green"><i class="icon-download"></i></div>
+        <div class="kMiniIcon blue"><i class="icon-small-like"></i></div>
         <div class="kTotal"
-             [kTooltip]="_tabsData[2]?.tooltip"
+             [kTooltip]="_tabsData[3]?.tooltip"
              [maxWidth]="500"
              [escape]="false">
-          <span class="kLable">{{_tabsData[2]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
+          <span class="kLable">{{'app.user.votes' | translate}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[3]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[2]?.value"
-                             [units]="_tabsData[2]?.units"
-                             [trend]="_tabsData[2]?.trend"></app-trend-value>
+                             [value]="_tabsData[3]?.value"
+                             [units]="_tabsData[3]?.units"
+                             [trend]="_tabsData[3]?.trend"></app-trend-value>
           </span>
         </div>
       </div>
-
-      <div class="kTotalContainer">
-        <div class="kMiniIcon green"><i class="icon-download"></i></div>
+      <div class="kTotalContainer kHide960">
+        <div class="kMiniIcon blue"><i class="icon-share"></i></div>
         <div class="kTotal"
-             [kTooltip]="_tabsData[2]?.tooltip"
+             [kTooltip]="_tabsData[4]?.tooltip"
              [maxWidth]="500"
              [escape]="false">
-          <span class="kLable">{{_tabsData[2]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
+          <span class="kLable">{{'app.user.count_viral' | translate}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[4]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[2]?.value"
-                             [units]="_tabsData[2]?.units"
-                             [trend]="_tabsData[2]?.trend"></app-trend-value>
+                             [value]="_tabsData[4]?.value"
+                             [units]="_tabsData[4]?.units"
+                             [trend]="_tabsData[4]?.trend"></app-trend-value>
           </span>
         </div>
       </div>
-
       <div class="kTotalContainer">
-        <div class="kMiniIcon green"><i class="icon-download"></i></div>
+        <div class="kMiniIcon violet"><i class="icon-download icon-upload"></i></div>
         <div class="kTotal"
-             [kTooltip]="_tabsData[2]?.tooltip"
+             [kTooltip]="_tabsData[5]?.tooltip"
              [maxWidth]="500"
              [escape]="false">
-          <span class="kLable">{{_tabsData[2]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
+          <span class="kLable">{{'app.user.added_entries' | translate}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[5]?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[2]?.value"
-                             [units]="_tabsData[2]?.units"
-                             [trend]="_tabsData[2]?.trend"></app-trend-value>
+                             [value]="_tabsData[5]?.value"
+                             [units]="_tabsData[5]?.units"
+                             [trend]="_tabsData[5]?.trend"></app-trend-value>
           </span>
         </div>
       </div>

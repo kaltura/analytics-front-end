@@ -768,6 +768,8 @@
       "highlights": "Viewed Entries",
       "entries": "Entries",
       "topContent": "Top Content",
+      "added_entries": "Added Entries",
+      "votes": "Likes",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

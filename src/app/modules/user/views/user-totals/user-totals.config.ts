@@ -19,15 +19,25 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.user.count_plays`),
             sortOrder: 1,
           },
-          'count_viral': {
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.count_viral`),
+            title: this._translate.instant(`app.user.sum_time_viewed`),
             sortOrder: 2,
           },
           'count_download': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.count_download`),
             sortOrder: 3,
+          },
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.count_viral`),
+            sortOrder: 4,
+          },
+          'added_entries': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.added_entries`),
+            sortOrder: 5,
           },
         }
       }
