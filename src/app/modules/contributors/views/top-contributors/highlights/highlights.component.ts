@@ -14,7 +14,6 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-contributors-highlights',
