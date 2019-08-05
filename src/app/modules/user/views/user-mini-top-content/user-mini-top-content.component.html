@@ -13,7 +13,8 @@
         </div>
         <span class="kLabel kTableColumn"
               [kTooltip]="card.entry_name"
-              [showOnEllipsis]="true">
+              [showOnEllipsis]="true"
+              (click)="_drillDown(card)">
           {{card.entry_name}}
         </span>
       </div>
