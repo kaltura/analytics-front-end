@@ -32,8 +32,8 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
   
   
   public onPollTickSuccess(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(30);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(200);
+    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(0);
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(170);
   }
   
   public create(): KalturaMultiRequest {
