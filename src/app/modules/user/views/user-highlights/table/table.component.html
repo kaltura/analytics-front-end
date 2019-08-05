@@ -4,7 +4,7 @@
     <div class="kDivider" *ngIf="showDivider"></div>
     <k-area-blocker [showLoader]="isBusy" [message]="areaBlockerMessage">
       <p-table appScrollTopOnPaging
-               sortField="count_viral"
+               sortField="count_plays"
                dataKey="object_id"
                [customPaginationEvent]="_paginationChanged$"
                [value]="tableData"

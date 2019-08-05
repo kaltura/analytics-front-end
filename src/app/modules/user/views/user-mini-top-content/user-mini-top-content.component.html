@@ -1,3 +1,22 @@
-<p>
-  user-mini-top-content works!
-</p>
+<div data-aid="report-mini-highlights" class="kReport kOverrideFAIcons">
+  <div class="kHeader">
+    <span class="kTitle">{{'app.user.lastViewedEntries' | translate}}</span>
+  </div>
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kReportContainer">
+      <div class="kCard" *ngFor="let card of _tableData">
+        <div class="kThumbnailHolder" #holder
+             (click)="_drillDown(card)">
+          <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
+               onError="this.onerror=null;this.style.display='none'"
+               (error)="holder.classList.add('error')">
+        </div>
+        <span class="kLabel kTableColumn"
+              [kTooltip]="card.entry_name"
+              [showOnEllipsis]="true">
+          {{card.entry_name}}
+        </span>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>

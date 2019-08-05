@@ -771,6 +771,7 @@
       "topContent": "Top Content",
       "added_entries": "Added Entries",
       "votes": "Likes",
+      "lastViewedEntries": "Last Viewed Entries",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

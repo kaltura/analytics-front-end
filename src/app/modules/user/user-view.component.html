@@ -51,7 +51,9 @@
         <div class="kReportContainer">
           <div class="kLeftCol">
             <app-user-mini-highlights></app-user-mini-highlights>
-            <app-user-mini-top-content></app-user-mini-top-content>
+            <app-user-mini-top-content [dateFilter]="_dateFilter"
+                                       [userId]="_user.id"
+                                       [refineFilter]="_refineFilter"></app-user-mini-top-content>
           </div>
           <div class="kRightCol">
             <ui-carousel height="100%"
@@ -84,8 +86,8 @@
 
         <div class="kReportContainer">
           <app-user-top-content [userId]="_user.id"
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-user-top-content>
+                                [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-user-top-content>
         </div>
 
         <div class="kReportContainer">
