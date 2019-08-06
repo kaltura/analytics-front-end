@@ -29,7 +29,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   
   private _order = '-count_plays';
   private _pager = new KalturaFilterPager({ pageSize: 4, pageIndex: 1 });
-  private _reportType = KalturaReportType.topContentCreator; // TODO use topUserContent once it's on lbd
+  private _reportType = KalturaReportType.topUserContent;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')

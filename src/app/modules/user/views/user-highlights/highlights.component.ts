@@ -44,7 +44,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _entryDetails: TableRow[] = [];
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.topContentCreator; // TODO use topUserContent once it's on lbd
+  private _reportType = KalturaReportType.topUserContent;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
