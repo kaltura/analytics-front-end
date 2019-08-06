@@ -14,4 +14,8 @@ export interface UserMiniHighlightsGeoData {
 })
 export class GeoComponent {
   @Input() data: UserMiniHighlightsGeoData = null;
+  @Input() compare: UserMiniHighlightsGeoData = null;
+  @Input() isCompare = false;
+  @Input() currentDates: string = null;
+  @Input() compareDates: string = null;
 }

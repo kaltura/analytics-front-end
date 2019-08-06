@@ -1,13 +1,33 @@
 <div class="kHeader">{{'app.user.topLocation' | translate}}</div>
-<div *ngIf="data" class="kGeo">
-  <i class="kFlag" [ngClass]="'kFlag-' + data['country_code']"></i>
-  <div class="kValue">
-    <span class="kCity">{{data['city']}}</span>
-    <span class="kRegion" [kTooltip]="data['region'] + ', ' + data['country']" [showOnEllipsis]="true">
+
+<div [ngStyle]="{'display': 'flex', 'flex-direction': isCompare ? 'column' : 'row'}">
+  <div class="kGeoWrapper">
+    <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
+    <div *ngIf="compare" class="kGeo" [class.kCompare]="isCompare">
+      <i class="kFlag" [ngClass]="'kFlag-' + compare['country_code']"></i>
+      <div class="kValue">
+        <span class="kCity">{{compare['city']}}</span>
+        <span class="kRegion" [kTooltip]="compare['region'] + ', ' + compare['country']" [showOnEllipsis]="true">
+      {{compare['region']}}, {{compare['country']}}
+    </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="kGeoWrapper">
+    <span *ngIf="currentDates" class="kPeriod">{{currentDates}}</span>
+    <div *ngIf="data" class="kGeo" [class.kCompare]="isCompare">
+      <i class="kFlag" [ngClass]="'kFlag-' + data['country_code']"></i>
+      <div class="kValue">
+        <span class="kCity">{{data['city']}}</span>
+        <span class="kRegion" [kTooltip]="data['region'] + ', ' + data['country']" [showOnEllipsis]="true">
       {{data['region']}}, {{data['country']}}
     </span>
+      </div>
+    </div>
   </div>
 </div>
+
 <div *ngIf="!data" class="kNoData">
   {{'app.common.noResults' | translate }}
 </div>

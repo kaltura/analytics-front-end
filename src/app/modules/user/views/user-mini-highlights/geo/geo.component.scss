@@ -16,6 +16,19 @@
   white-space: nowrap;
 }
 
+.kGeoWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  .kPeriod {
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    margin-left: 24px;
+  }
+}
+
 .kGeo {
   width: 100%;
   display: flex;
@@ -50,6 +63,33 @@
     }
   }
 }
+
+.kCompare {
+  align-items: flex-start;
+
+  .kFlag {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-right: 16px;
+  }
+
+  .kValue {
+    height: 40px;
+    font-size: 15px;
+
+    .kCity {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .kRegion {
+      max-width: 140px;
+    }
+  }
+}
+
 
 .kNoData {
   margin-left: 24px;

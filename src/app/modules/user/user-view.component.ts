@@ -46,6 +46,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _filter = new KalturaReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _userId = '';
   public _userName = '';
+  public _isCompare = false;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -93,6 +94,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
+    this._isCompare = this._dateFilter.compare.active;
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {

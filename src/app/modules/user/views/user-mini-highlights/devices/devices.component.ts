@@ -20,4 +20,8 @@ export interface UserMiniHighlightsDevicesData {
 })
 export class DevicesComponent {
   @Input() data: UserMiniHighlightsDevicesData;
+  @Input() compare: UserMiniHighlightsDevicesData = null;
+  @Input() isCompare = false;
+  @Input() currentDates: string = null;
+  @Input() compareDates: string = null;
 }

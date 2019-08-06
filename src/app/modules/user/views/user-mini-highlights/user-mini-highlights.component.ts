@@ -26,6 +26,8 @@ import { Observable, of as ObservableOf } from 'rxjs';
 import { UserMiniHighlightsGeoData } from './geo/geo.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { UserMiniHighlightsDevicesData } from './devices/devices.component';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import * as moment from 'moment';
 
 export interface UserMiniHighlightsReportData {
   geo: { table: KalturaReportTable };
@@ -55,7 +57,9 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   public _compareDates: string;
   public _reportInterval = KalturaReportInterval.days;
   public _geoData: UserMiniHighlightsGeoData = null;
+  public _compareGeoData: UserMiniHighlightsGeoData = null;
   public _devicesData: UserMiniHighlightsDevicesData = null;
+  public _compareDevicesData: UserMiniHighlightsDevicesData = null;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -138,16 +142,26 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     if (compare) {
       this._handleCompareReportData(current, compare);
     } else {
-      this._handleCurrentReportData(current);
+      this._currentDates = null;
+      this._compareDates = null;
+      this._compareGeoData = null;
+      this._compareDevicesData = null;
+
+      const { geo, devices } = this._handleCurrentReportData(current);
+      this._geoData = geo;
+      this._devicesData = devices;
     }
   }
   
-  private _handleCurrentReportData(data: UserMiniHighlightsReportData): void {
+  private _handleCurrentReportData(data: UserMiniHighlightsReportData): { geo: UserMiniHighlightsGeoData, devices: UserMiniHighlightsDevicesData } {
+    let result = {
+      geo: null,
+      devices: null,
+    };
+
     if (data.geo.table.data) {
       const geoTable = this._reportService.parseTableData(data.geo.table, this._dataConfig.geoTable);
-      this._geoData = geoTable.tableData.length ? <any>geoTable.tableData[0] : null;
-    } else {
-      this._geoData = null;
+      result.geo = geoTable.tableData.length ? <any>geoTable.tableData[0] : null;
     }
     
     if (data.devices.table.data && data.devices.totals.data) {
@@ -158,7 +172,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       const devicesTotalData = devicesTotal.length ? parseInt(devicesTotal[0].value, 10) : null;
       
       if (devicesTotalData !== null) {
-        this._devicesData = devicesTable.tableData
+        result.devices = devicesTable.tableData
           .reduce((acc: Object, val: TableRow) => {
             const device = devicesWhitelist.includes(val['device']) ? val['device'] : 'OTHER';
             const plays = parseInt(val['count_plays'], 10);
@@ -194,13 +208,22 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
             return acc;
           }, {});
       }
-    } else {
-      this._devicesData = null;
     }
+  
+    return result;
   }
   
   private _handleCompareReportData(current: UserMiniHighlightsReportData, compare: UserMiniHighlightsReportData): void {
+    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
+    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
   
+    const { geo, devices } = this._handleCurrentReportData(current);
+    this._geoData = geo;
+    this._devicesData = devices;
+  
+    const { geo: compareGeo, devices: compareDevices } = this._handleCurrentReportData(compare);
+    this._compareGeoData = compareGeo;
+    this._compareDevicesData = compareDevices;
   }
   
   private _getReport(filter: KalturaEndUserReportInputFilter): Observable<UserMiniHighlightsReportData> {
