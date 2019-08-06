@@ -83,6 +83,13 @@
                                [refineFilter]="_refineFilter"></app-user-highlights>
         </div>
 
+        <div class="kReportContainer">
+          <app-impressions [title]="'app.user.viewingEngagementFunnel' | translate"
+                           [userId]="_user.id"
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"></app-impressions>
+        </div>
+
         <app-reports-divider
           [title]="'app.user.collaboration' | translate: {'0': _user.fullName}"></app-reports-divider>
 

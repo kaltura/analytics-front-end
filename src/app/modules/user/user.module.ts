@@ -25,6 +25,7 @@ import { UserMiniTopContentComponent } from './views/user-mini-top-content/user-
 import { TopContentTableComponent } from './views/user-top-content/top-content-table/top-content-table.component';
 import { TopContentComponent } from './views/user-top-content/top-content.component';
 import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-mini-highlights.component';
+import { UserImpressionsComponent } from './views/user-impressions/user-impressions.component';
 import { GeoComponent } from './views/user-mini-highlights/geo/geo.component';
 import { DevicesComponent } from './views/user-mini-highlights/devices/devices.component';
 
@@ -60,6 +61,7 @@ import { DevicesComponent } from './views/user-mini-highlights/devices/devices.c
     TopContentComponent,
     UserMiniTopContentComponent,
     UserMiniHighlightsComponent,
+    UserImpressionsComponent,
     GeoComponent,
     DevicesComponent,
   ],

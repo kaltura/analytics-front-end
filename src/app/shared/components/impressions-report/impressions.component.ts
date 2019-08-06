@@ -61,6 +61,8 @@ export class ImpressionsComponent implements OnInit {
   }
   
   @Input() entryId: string;
+  @Input() userId: string;
+  @Input() title: string = null;
   
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -165,8 +167,8 @@ export class ImpressionsComponent implements OnInit {
     this._blockerMessage = null;
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
-    if (this._dateFilter.compare.active) {
-    
+    if (this.userId) {
+      this.filter.userIds = this.userId;
     }
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     
@@ -178,7 +180,10 @@ export class ImpressionsComponent implements OnInit {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+  
+        if (this.userId) {
+          this.compareFilter.userIds = this.userId;
+        }
         const compareReportConfig: ReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
         if (this.entryId) {
           compareReportConfig.filter.entryIdIn = this.entryId;

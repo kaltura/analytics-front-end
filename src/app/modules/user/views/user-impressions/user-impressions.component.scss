@@ -1,0 +1,17 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kImpressions {
+  height: 100%;
+  margin-bottom: 0 !important;
+}
+
+.kChart {
+  height: 310px !important;
+  width: 100%;
+}
