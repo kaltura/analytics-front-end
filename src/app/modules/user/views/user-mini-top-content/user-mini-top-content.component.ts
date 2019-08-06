@@ -43,6 +43,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow[] = [];
+  public _compareTableData: TableRow[] = [];
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _currentDates: string;
@@ -156,11 +157,21 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
-    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
+    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
+  
+    if (current.table && current.table.data) {
+      const { columns, tableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
+      this._columns = columns;
+      this._tableData = tableData.map(this._extendTableRow.bind(this)).slice(0, 2);
+  
+      if (compare.table && compare.table.data) {
+        const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+        this._compareTableData = compareTableData.map(this._extendTableRow.bind(this)).slice(0, 2);
+      } else {
+        this._compareTableData = [];
+      }
+    }
   }
   
   public _drillDown(row: TableRow<string>): void {

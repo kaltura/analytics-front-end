@@ -3,20 +3,43 @@
     <span class="kTitle">{{'app.user.lastViewedEntries' | translate}}</span>
   </div>
   <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-    <div class="kReportContainer">
-      <div class="kCard" *ngFor="let card of _tableData">
-        <div class="kThumbnailHolder" #holder
-             (click)="_drillDown(card)">
-          <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('error')">
-        </div>
-        <span class="kLabel kTableColumn"
-              [kTooltip]="card.entry_name"
-              [showOnEllipsis]="true"
-              (click)="_drillDown(card)">
+    <div *ngIf="_isCompareMode" class="kReportWrapper" [class.kCompare]="_isCompareMode">
+      <span *ngIf="_compareDates" class="kPeriod">{{_compareDates}}</span>
+      <div class="kReportContainer">
+        <div class="kCard" *ngFor="let card of _compareTableData">
+          <div class="kThumbnailHolder" #holder
+               (click)="_drillDown(card)">
+            <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
+                 onError="this.onerror=null;this.style.display='none'"
+                 (error)="holder.classList.add('error')">
+          </div>
+          <span class="kLabel kTableColumn"
+                [kTooltip]="card.entry_name"
+                [showOnEllipsis]="true"
+                (click)="_drillDown(card)">
           {{card.entry_name}}
         </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kReportWrapper" [class.kCompare]="_isCompareMode">
+      <span *ngIf="_currentDates" class="kPeriod">{{_currentDates}}</span>
+      <div class="kReportContainer">
+        <div class="kCard" *ngFor="let card of _tableData">
+          <div class="kThumbnailHolder" #holder
+               (click)="_drillDown(card)">
+            <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
+                 onError="this.onerror=null;this.style.display='none'"
+                 (error)="holder.classList.add('error')">
+          </div>
+          <span class="kLabel kTableColumn"
+                [kTooltip]="card.entry_name"
+                [showOnEllipsis]="true"
+                (click)="_drillDown(card)">
+          {{card.entry_name}}
+        </span>
+        </div>
       </div>
     </div>
   </k-area-blocker>

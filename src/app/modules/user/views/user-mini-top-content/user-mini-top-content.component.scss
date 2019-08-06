@@ -17,13 +17,27 @@
   }
 }
 
+.kReportWrapper {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px 24px;
+
+  .kPeriod {
+    font-size: 15px;
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+}
+
 .kReportContainer {
   width: 100%;
   min-height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px 24px;
 
   .kThumbnailHolder {
     cursor: pointer;
@@ -62,6 +76,28 @@
   .kCard:nth-child(4) {
     display: none !important;
   }
+
+  .kCompare {
+    .kThumbnailHolder {
+      width: 160px !important;
+      height: 78px !important;
+      cursor: pointer;
+
+      img {
+        width: 160px !important;
+      }
+    }
+
+    .kCard {
+      width: 160px !important;
+    }
+
+    .kCard:nth-child(2),
+    .kCard:nth-child(3),
+    .kCard:nth-child(4) {
+      display: none !important;
+    }
+  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -76,5 +112,26 @@
 
   .kCard {
     width: 171px;
+  }
+
+  .kCompare {
+    .kThumbnailHolder {
+      width: 160px !important;
+      height: 78px !important;
+      cursor: pointer;
+
+      img {
+        width: 160px !important;
+      }
+    }
+
+    .kCard {
+      width: 160px !important;
+    }
+
+    .kCard:nth-child(3),
+    .kCard:nth-child(4) {
+      display: none !important;
+    }
   }
 }
