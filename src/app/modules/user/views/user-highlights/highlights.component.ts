@@ -205,7 +205,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
           this._totalCount = 0;
           this._tableData = [];
           
-          if (report.totals && !this._tabsData.length) {
+          if (report.totals && report.totals.data) {
             this._handleTotals(report.totals); // handle totals
           }
           
@@ -293,6 +293,17 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
     
     if (current.table && compare.table) {
       this._handleTable(current.table, compare);
+    }
+  
+    if (current.totals && compare.totals) {
+      this._tabsData = this._compareService.compareTotalsData(
+        currentPeriod,
+        comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig.totals,
+        this._selectedMetrics,
+      );
     }
   }
   
