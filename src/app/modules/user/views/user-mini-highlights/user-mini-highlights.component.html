@@ -1,3 +1,6 @@
-<p>
-  user-mini-highlights works!
-</p>
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kMiniHighlights" *ngIf="!_firstTimeLoading">
+    <app-user-mini-highlights-geo [data]="_geoData"></app-user-mini-highlights-geo>
+    <app-user-mini-highlights-devices [data]="_devicesData"></app-user-mini-highlights-devices>
+  </div>
+</k-area-blocker>

@@ -25,6 +25,8 @@ import { UserMiniTopContentComponent } from './views/user-mini-top-content/user-
 import { TopContentTableComponent } from './views/user-top-content/top-content-table/top-content-table.component';
 import { TopContentComponent } from './views/user-top-content/top-content.component';
 import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-mini-highlights.component';
+import { GeoComponent } from './views/user-mini-highlights/geo/geo.component';
+import { DevicesComponent } from './views/user-mini-highlights/devices/devices.component';
 
 
 @NgModule({
@@ -58,6 +60,8 @@ import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-m
     TopContentComponent,
     UserMiniTopContentComponent,
     UserMiniHighlightsComponent,
+    GeoComponent,
+    DevicesComponent,
   ],
   exports: [],
   providers: []

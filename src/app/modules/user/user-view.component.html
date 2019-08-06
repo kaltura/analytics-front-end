@@ -50,7 +50,9 @@
 
         <div class="kReportContainer">
           <div class="kLeftCol">
-            <app-user-mini-highlights></app-user-mini-highlights>
+            <app-user-mini-highlights [dateFilter]="_dateFilter"
+                                      [userId]="_user.id"
+                                      [refineFilter]="_refineFilter"></app-user-mini-highlights>
             <app-user-mini-top-content [dateFilter]="_dateFilter"
                                        [userId]="_user.id"
                                        [refineFilter]="_refineFilter"></app-user-mini-top-content>

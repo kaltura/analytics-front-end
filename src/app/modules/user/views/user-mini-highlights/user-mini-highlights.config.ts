@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-data-base.config';
 
 @Injectable()
 export class UserMiniHighlightsConfig extends ReportDataBaseConfig {
@@ -10,18 +10,39 @@ export class UserMiniHighlightsConfig extends ReportDataBaseConfig {
   
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.table]: {
+      geoTable: {
         fields: {
-          'object_id': {
+          'country_code': {
             format: value => value,
-            hidden: true,
           },
-          'entry_name': {
+          'country': {
             format: value => value,
-            sortOrder: 1,
           },
-        }
+          'region': {
+            format: value => value,
+          },
+          'city': {
+            format: value => value,
+          },
+        },
       },
+      devicesTable: {
+        fields: {
+          'device': {
+            format: value => value,
+          },
+          'count_plays': {
+            format: value => parseInt(value, 10),
+          },
+        },
+      },
+      devicesTotal: {
+        fields: {
+          'count_plays': {
+            format: value => parseInt(value, 10),
+          },
+        },
+      }
     };
   }
 }

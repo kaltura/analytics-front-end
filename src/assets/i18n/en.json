@@ -772,6 +772,8 @@
       "added_entries": "Added Entries",
       "votes": "Likes",
       "lastViewedEntries": "Last Viewed Entries",
+      "topLocation": "Top Location",
+      "topDevices": "Most Used Devices",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",
@@ -779,6 +781,12 @@
         "unique_known_users": "Unique Viewers",
         "avg_completion_rate": "Avg. Completion Rate",
         "score": "Score"
+      },
+      "playsTooltip": "{{0}}: {{1}} plays",
+      "devices": {
+        "Computer": "Desktop",
+        "Mobile": "Mobile",
+        "OTHER": "Other"
       }
     }
   }

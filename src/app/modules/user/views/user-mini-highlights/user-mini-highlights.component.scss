@@ -8,8 +8,23 @@
   background-color: #FFFFFF;
 }
 
+.kMiniHighlights {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
 @media screen and (max-width: 1280px) {
   :host {
     height: 286px;
+  }
+
+  .kMiniHighlights {
+    flex-direction: column;
+  }
+
+  app-user-mini-highlights-devices {
+    margin-top: 16px;
   }
 }

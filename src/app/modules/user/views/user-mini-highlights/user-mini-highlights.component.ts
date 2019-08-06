@@ -1,16 +1,36 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaClient,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaMultiRequest,
+  KalturaObjectBaseFactory,
+  KalturaReportInterval,
+  KalturaReportResponseOptions,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType,
+  ReportGetTableAction,
+  ReportGetTotalAction
+} from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { ActivatedRoute, Router } from '@angular/router';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ErrorsManagerService, ReportHelper, ReportService } from 'shared/services';
 import { UserBase } from '../user-base/user-base';
 import { UserMiniHighlightsConfig } from './user-mini-highlights.config';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable, of as ObservableOf } from 'rxjs';
+import { UserMiniHighlightsGeoData } from './geo/geo.component';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { UserMiniHighlightsDevicesData } from './devices/devices.component';
+
+export interface UserMiniHighlightsReportData {
+  geo: { table: KalturaReportTable };
+  devices: { table: KalturaReportTable, totals: KalturaReportTotal };
+}
 
 @Component({
   selector: 'app-user-mini-highlights',
@@ -21,14 +41,7 @@ import { UserMiniHighlightsConfig } from './user-mini-highlights.config';
 export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
   
-  private _order = '-count_plays';
-  private _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
-  private _reportType = KalturaReportType.topContentCreator; // TODO use topUserContent once it's on lbd
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
-  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
-    ? analyticsConfig.kalturaServer.uri
-    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   
   protected _componentId = 'mini-highlights';
   
@@ -36,17 +49,24 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   public _firstTimeLoading = true;
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _tableData: TableRow[] = [];
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _currentDates: string;
+  public _compareDates: string;
+  public _reportInterval = KalturaReportInterval.days;
+  public _geoData: UserMiniHighlightsGeoData = null;
+  public _devicesData: UserMiniHighlightsDevicesData = null;
+  
+  public get _isCompareMode(): boolean {
+    return this._compareFilter !== null;
+  }
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: UserMiniHighlightsConfig,
-              private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _browserService: BrowserService) {
+              private _kalturaClient: KalturaClient) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -60,15 +80,19 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     this._blockerMessage = null;
     
     this._filter.userIds = this.userId;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(cancelOnDestroy(this))
-      .subscribe(report => {
-          this._tableData = [];
-          
-          if (report.table && report.table.data && report.table.header) {
-            this._handleTable(report.table); // handle table
-          }
+    
+    this._getReport(this._filter)
+      .pipe(switchMap(current => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ current, compare: null });
+        }
+        
+        this._compareFilter.userIds = this.userId;
+        
+        return this._getReport(this._compareFilter).pipe(map(compare => ({ current, compare })));
+      }))
+      .subscribe(({ current, compare }) => {
+          this._handleReportData(current, compare);
           
           this._firstTimeLoading = false;
           this._isBusy = false;
@@ -92,20 +116,132 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
+    this._reportInterval = this._dateFilter.timeUnits;
+    if (this._dateFilter.compare.active) {
+      const compare = this._dateFilter.compare;
+      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
+      this._compareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = compare.endDate;
+    } else {
+      this._compareFilter = null;
+    }
   }
   
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
+    if (this._compareFilter) {
+      this._refineFilterToServerValue(this._compareFilter);
+    }
   }
   
-  private _extendTableRow(item: TableRow<string>): TableRow<string> {
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
-    return item;
+  private _handleReportData(current: UserMiniHighlightsReportData, compare?: UserMiniHighlightsReportData): void {
+    if (compare) {
+      this._handleCompareReportData(current, compare);
+    } else {
+      this._handleCurrentReportData(current);
+    }
   }
   
-  private _handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._columns = columns;
-    this._tableData = tableData.map(this._extendTableRow.bind(this));
+  private _handleCurrentReportData(data: UserMiniHighlightsReportData): void {
+    if (data.geo.table.data) {
+      const geoTable = this._reportService.parseTableData(data.geo.table, this._dataConfig.geoTable);
+      this._geoData = geoTable.tableData.length ? <any>geoTable.tableData[0] : null;
+    } else {
+      this._geoData = null;
+    }
+    
+    if (data.devices.table.data && data.devices.totals.data) {
+      const devicesTable = this._reportService.parseTableData(data.devices.table, this._dataConfig.devicesTable);
+      const devicesTotal = this._reportService.parseTotals(data.devices.totals, this._dataConfig.devicesTotal);
+      const devicesWhitelist = ['Computer', 'Mobile'];
+      const colors = { 'Computer': '#487adf', 'Mobile': '#88acf6', 'OTHER': '#dfe9ff' };
+      const devicesTotalData = devicesTotal.length ? parseInt(devicesTotal[0].value, 10) : null;
+      
+      if (devicesTotalData !== null) {
+        this._devicesData = devicesTable.tableData
+          .reduce((acc: Object, val: TableRow) => {
+            const device = devicesWhitelist.includes(val['device']) ? val['device'] : 'OTHER';
+            const plays = parseInt(val['count_plays'], 10);
+            const value = devicesTotalData ? plays / devicesTotalData : 0;
+            
+            if (acc[device]) {
+              const otherPlays = acc[device].rawPlays + plays;
+              const otherValue = devicesTotalData ? otherPlays / devicesTotalData : 0;
+              acc[device].rawPlays = otherPlays;
+              acc[device].rawValue = otherValue;
+              acc[device].plays = ReportHelper.numberOrZero(otherPlays);
+              acc[device].value = ReportHelper.percents(otherValue, false, false, false);
+              acc[device].tooltip = this._translate.instant('app.user.playsTooltip', [
+                this._translate.instant('app.user.devices.' + device),
+                acc[device].plays
+              ]);
+            } else {
+              acc[device] = {
+                value: ReportHelper.percents(value, false, false, false),
+                plays: ReportHelper.numberOrZero(plays),
+                tooltip: this._translate.instant('app.user.playsTooltip', [
+                  this._translate.instant('app.user.devices.' + device),
+                  ReportHelper.numberOrZero(plays)
+                ]),
+                rawPlays: plays,
+                label: this._translate.instant('app.user.devices.' + device),
+                color: colors[device],
+                rawValue: value * 100,
+                device,
+              };
+            }
+            
+            return acc;
+          }, {});
+      }
+    } else {
+      this._devicesData = null;
+    }
+  }
+  
+  private _handleCompareReportData(current: UserMiniHighlightsReportData, compare: UserMiniHighlightsReportData): void {
+  
+  }
+  
+  private _getReport(filter: KalturaEndUserReportInputFilter): Observable<UserMiniHighlightsReportData> {
+    const responseOptions: KalturaReportResponseOptions = new KalturaReportResponseOptions({
+      delimiter: analyticsConfig.valueSeparator,
+      skipEmptyDates: analyticsConfig.skipEmptyBuckets
+    });
+    
+    const geoTableReport = new ReportGetTableAction({
+      reportType: KalturaReportType.mapOverlayCity,
+      reportInputFilter: filter,
+      pager: new KalturaFilterPager({ pageSize: 1 }),
+      order: '-count_plays',
+      responseOptions,
+    });
+    
+    const devicesTableReport = new ReportGetTableAction({
+      reportType: KalturaReportType.platforms,
+      reportInputFilter: filter,
+      pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
+      responseOptions,
+    });
+    
+    const devicesTotalReport = new ReportGetTotalAction({
+      reportType: KalturaReportType.platforms,
+      reportInputFilter: filter,
+      responseOptions,
+    });
+    
+    const request = new KalturaMultiRequest(geoTableReport, devicesTableReport, devicesTotalReport);
+    
+    return this._kalturaClient.multiRequest(request)
+      .pipe(map(responses => {
+        if (responses.hasErrors()) {
+          throw responses.getFirstError();
+        }
+        
+        return {
+          geo: { table: responses[0].result },
+          devices: { table: responses[1].result, totals: responses[2].result },
+        };
+      }));
   }
 }
