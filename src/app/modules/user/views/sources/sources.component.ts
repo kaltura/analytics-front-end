@@ -58,7 +58,7 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
 
   @Input() set userId(value: string) {
     if (value) {
-      this._filter.userIds = value;
+      this._filter.ownerIdsIn = value;
     }
   }
 
@@ -99,7 +99,7 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
           return ObservableOf({ report, compare: null });
         }
   
-        this._compareFilter.userIds = this._filter.userIds;
+        this._compareFilter.ownerIdsIn = this._filter.ownerIdsIn;
         
         const compareReportConfig = {
           reportType: this._reportType,
