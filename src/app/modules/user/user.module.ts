@@ -29,6 +29,8 @@ import { UserImpressionsComponent } from './views/user-impressions/user-impressi
 import { GeoComponent } from './views/user-mini-highlights/geo/geo.component';
 import { DevicesComponent } from './views/user-mini-highlights/devices/devices.component';
 import { UserInsightSourceComponent } from './views/user-insight-source/user-insight-source.component';
+import { UserMediaUploadComponent } from './views/user-media-upload/user-media-upload.component';
+import { UserMediaUploadTableComponent } from './views/user-media-upload/table/table.component';
 
 
 @NgModule({
@@ -66,6 +68,8 @@ import { UserInsightSourceComponent } from './views/user-insight-source/user-ins
     GeoComponent,
     DevicesComponent,
     UserInsightSourceComponent,
+    UserMediaUploadComponent,
+    UserMediaUploadTableComponent,
   ],
   exports: [],
   providers: []

@@ -81,7 +81,6 @@
 
         <div class="kReportContainer">
           <app-user-highlights [userId]="_user.id"
-                               [userName]="_user.fullName"
                                [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-user-highlights>
@@ -96,6 +95,13 @@
 
         <app-reports-divider
           [title]="'app.user.collaboration' | translate: {'0': _user.fullName}"></app-reports-divider>
+
+        <div class="kReportContainer">
+          <app-user-media-upload [userId]="_user.id"
+                                 [dateFilterComponent]="dateFilter"
+                                 [dateFilter]="_dateFilter"
+                                 [refineFilter]="_refineFilter"></app-user-media-upload>
+        </div>
 
         <div class="kReportContainer">
           <app-user-top-content [userId]="_user.id"

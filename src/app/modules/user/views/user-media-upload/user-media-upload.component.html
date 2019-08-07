@@ -1,0 +1,77 @@
+<div data-aid="report-user-media-upload" class="kReport kContent kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.user.mediaUpload' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData"
+                       [compareMode]="_isCompareMode"
+                       (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units applyIn="user-media-upload"
+                        [dateFilter]="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTablesHolder" appEvenTableHeight
+             [updateListener]="_updateTableHeight$"
+             [class.kOpen]="_showTable"
+             [class.kClose]="!_showTable">
+          <app-user-media-upload-table *ngIf="_isCompareMode"
+                                       name="compare"
+                                       [entryDetails]="_entryDetails"
+                                       [isBusy]="_compareTableBusy"
+                                       [areaBlockerMessage]="_compareTableBlockerMessage"
+                                       [pager]="_comparePager"
+                                       [tableData]="_compareTableData"
+                                       [showDivider]="_isCompareMode"
+                                       [isCompareMode]="_isCompareMode"
+                                       [dates]="_compareDates"
+                                       [totalCount]="_compareTotalCount"
+                                       [firstTimeLoading]="_firstTimeLoading"
+                                       [columns]="_columns"
+                                       (drillDown)="_drillDown($event)"
+                                       (sortChanged)="_onSortChanged($event)"
+                                       (paginationChanged)="_onPaginationChanged(true, _comparePager, $event)"></app-user-media-upload-table>
+          <app-user-media-upload-table name="current"
+                                       [entryDetails]="_entryDetails"
+                                       [isBusy]="_currentTableBusy"
+                                       [areaBlockerMessage]="_currentTableBlockerMessage"
+                                       [pager]="_pager"
+                                       [tableData]="_tableData"
+                                       [showDivider]="_isCompareMode"
+                                       [isCompareMode]="_isCompareMode"
+                                       [dates]="_currentDates"
+                                       [totalCount]="_totalCount"
+                                       [firstTimeLoading]="_firstTimeLoading"
+                                       [columns]="_columns"
+                                       (drillDown)="_drillDown($event)"
+                                       (sortChanged)="_onSortChanged($event)"
+                                       (paginationChanged)="_onPaginationChanged(false, _pager, $event)"></app-user-media-upload-table>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+
