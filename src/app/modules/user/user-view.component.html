@@ -49,7 +49,7 @@
         </div>
 
         <div class="kReportContainer">
-          <div class="kLeftCol">
+          <div class="kLeftCol" [class.kCompare]="_isCompare">
             <app-user-mini-highlights [dateFilter]="_dateFilter"
                                       [userId]="_user.id"
                                       [refineFilter]="_refineFilter"></app-user-mini-highlights>
@@ -57,7 +57,7 @@
                                        [userId]="_user.id"
                                        [refineFilter]="_refineFilter"></app-user-mini-top-content>
           </div>
-          <div class="kRightCol">
+          <div class="kRightCol" [class.kCompare]="_isCompare">
             <ui-carousel height="100%"
                          [class.kCompare]="_isCompare"
                          [infinite]="false"

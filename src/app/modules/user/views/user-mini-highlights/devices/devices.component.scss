@@ -55,6 +55,8 @@
   margin-bottom: 11px;
 
   .kValuesItem {
+    display: flex;
+    align-items: center;
     margin-right: 24px;
   }
 
@@ -82,4 +84,43 @@
   margin-left: 24px;
   font-size: 24px;
   white-space: nowrap;
+}
+
+.kDevicesWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .kPeriod {
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    margin-left: 24px;
+    white-space: nowrap;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kHeader.kCompare {
+    padding: 16px 24px 20px;
+    margin-bottom: 0;
+  }
+}
+
+.kDeviceCard {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.kCompare {
+  .kIcon {
+    font-size: 20px;
+    margin-right: 9px;
+  }
+
+  .kValue {
+    font-size: 15px;
+  }
 }

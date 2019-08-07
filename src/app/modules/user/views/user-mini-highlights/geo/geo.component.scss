@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-right: 60px;
 }
 
 .kHeader {
@@ -18,6 +19,27 @@
 
 .kGeoWrapper {
   display: flex;
+}
+
+@media screen and (min-width: 1280px) {
+  .kGeoWrapper:not(.kCompare) {
+    flex-direction: row;
+  }
+
+  .kGeoWrapper.kCompare {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kHeader.kCompare {
+    padding: 24px 24px 20px;
+    margin-bottom: 0;
+  }
+}
+
+.kGeoCard {
+  display: flex;
   flex-direction: column;
   margin-bottom: 16px;
 
@@ -26,6 +48,7 @@
     font-weight: normal;
     margin-bottom: 8px;
     margin-left: 24px;
+    white-space: nowrap;
   }
 }
 

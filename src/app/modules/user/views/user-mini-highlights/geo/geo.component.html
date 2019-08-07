@@ -1,7 +1,7 @@
-<div class="kHeader">{{'app.user.topLocation' | translate}}</div>
+<div class="kHeader" [class.kCompare]="isCompare">{{'app.user.topLocation' | translate}}</div>
 
-<div [ngStyle]="{'display': 'flex', 'flex-direction': isCompare ? 'column' : 'row'}">
-  <div class="kGeoWrapper">
+<div class="kGeoWrapper" [class.kCompare]="isCompare">
+  <div class="kGeoCard">
     <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
     <div *ngIf="compare" class="kGeo" [class.kCompare]="isCompare">
       <i class="kFlag" [ngClass]="'kFlag-' + compare['country_code']"></i>
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div class="kGeoWrapper">
+  <div class="kGeoCard">
     <span *ngIf="currentDates" class="kPeriod">{{currentDates}}</span>
     <div *ngIf="data" class="kGeo" [class.kCompare]="isCompare">
       <i class="kFlag" [ngClass]="'kFlag-' + data['country_code']"></i>
