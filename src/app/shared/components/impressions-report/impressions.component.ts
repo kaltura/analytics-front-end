@@ -133,7 +133,7 @@ export class ImpressionsComponent implements OnInit {
   public updateFunnel(): void {
     const plays = this._funnelData.impressions === 0 ? '0' : (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
     const playThrough = this._funnelData.impressions === 0 ? '0' : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toFixed(1);
-    this.echartsIntance.setOption({
+    this._setEchartsOption({
       series: [{
         data: [
           {
@@ -151,7 +151,7 @@ export class ImpressionsComponent implements OnInit {
         ]
       }]
     }, false);
-    this.echartsIntance.setOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
+    this._setEchartsOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
   }
   
   public onPlaythroughChange(): void {
@@ -220,9 +220,9 @@ export class ImpressionsComponent implements OnInit {
   private handleCompare(current: Report, compare: Report): void {
     this.handleTotals(current.totals); // set original funnel data
     // resize funnels to fit window
-    this.echartsIntance.setOption({ series: [{ width: '100%' }] }, false);
+    this._setEchartsOption({ series: [{ width: '100%' }] }, false);
     this.compareEchartsIntance.setOption({ series: [{ width: '100%' }] }, false);
-    this.echartsIntance.setOption({ series: [{ left: '0%' }] }, false);
+    this._setEchartsOption({ series: [{ left: '0%' }] }, false);
     this.compareEchartsIntance.setOption({ series: [{ left: '0%' }] }, false);
     
     const data = compare.totals.data.split(analyticsConfig.valueSeparator);
@@ -264,8 +264,8 @@ export class ImpressionsComponent implements OnInit {
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
-    this.echartsIntance.setOption({ series: [{ width: '30%' }] }, false);
-    this.echartsIntance.setOption({ series: [{ left: '65%' }] }, false);
+    this._setEchartsOption({ series: [{ width: '30%' }] }, false);
+    this._setEchartsOption({ series: [{ left: '65%' }] }, false);
     const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
@@ -278,6 +278,14 @@ export class ImpressionsComponent implements OnInit {
       }
     };
     this.updateFunnel();
+  }
+  
+  private _setEchartsOption(option: EChartOption, opts?: any): void {
+    setTimeout(() => {
+      if (this.echartsIntance) {
+        this.echartsIntance.setOption(option, opts);
+      }
+    }, 0);
   }
   
   private getChartTooltip(params): string {
