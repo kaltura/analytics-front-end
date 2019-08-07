@@ -28,6 +28,7 @@ import { UserMiniHighlightsComponent } from './views/user-mini-highlights/user-m
 import { UserImpressionsComponent } from './views/user-impressions/user-impressions.component';
 import { GeoComponent } from './views/user-mini-highlights/geo/geo.component';
 import { DevicesComponent } from './views/user-mini-highlights/devices/devices.component';
+import { UserInsightSourceComponent } from './views/user-insight-source/user-insight-source.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { DevicesComponent } from './views/user-mini-highlights/devices/devices.c
     UserImpressionsComponent,
     GeoComponent,
     DevicesComponent,
+    UserInsightSourceComponent,
   ],
   exports: [],
   providers: []

@@ -6,7 +6,7 @@
          [style.background-color]="item.color"
          [style.width]="item.value+'%'"></div>
   </div>
-  <div class="kLegend">
+  <div class="kLegend" *ngIf="showLegend">
     <div class="kLegendItem" *ngFor="let item of _values">
       <div class="kCircle" [style.background-color]="item.color"></div>
       <span>{{item.label}}</span>

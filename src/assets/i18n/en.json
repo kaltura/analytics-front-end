@@ -790,6 +790,9 @@
       "lastViewedEntries": "Last Viewed Entries",
       "topLocation": "Top Location",
       "topDevices": "Most Used Devices",
+      "popularContentSource": "Most Popular Content Source",
+      "topContentSource": "Top Content Source",
+      "otherSources": "Other Sources",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

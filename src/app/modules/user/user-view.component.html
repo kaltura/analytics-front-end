@@ -67,7 +67,10 @@
                          [fade]="false"
                          [speed]="200">
               <ui-carousel-item>
-                <div style="background: #FFFFFF; width: 100%; height: 100%;">&nbsp;</div>
+                <app-user-insight-source [isCompare]="_isCompare"
+                                         [dateFilter]="_dateFilter"
+                                         [topSources$]="topSources.topSources$"
+                                         [refineFilter]="_refineFilter"></app-user-insight-source>
               </ui-carousel-item>
             </ui-carousel>
           </div>
@@ -101,7 +104,8 @@
         </div>
 
         <div class="kReportContainer">
-          <app-user-sources [userId]="_user.id"
+          <app-user-sources #topSources
+                            [userId]="_user.id"
                             [userName]="_user.fullName"
                             [dateFilter]="_dateFilter"
                             [refineFilter]="_refineFilter"></app-user-sources>
