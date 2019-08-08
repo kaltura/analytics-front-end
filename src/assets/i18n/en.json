@@ -792,6 +792,7 @@
       "topLocation": "Top Location",
       "topDevices": "Most Used Devices",
       "popularContentSource": "Most Popular Content Source",
+      "popularDomain": "Most Viewed Domain",
       "topContentSource": "Top Content Source",
       "otherSources": "Other Sources",
       "topContentReport": {

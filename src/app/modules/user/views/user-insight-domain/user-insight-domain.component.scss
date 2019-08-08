@@ -41,14 +41,42 @@
     padding: 0 24px;
     margin-bottom: 20px;
 
-    &.kSource {
+    &.kDomain {
       margin-bottom: 16px !important;
     }
 
-    .topSource {
-      color: $kGrayscale1;
-      font-size: 24px;
-      font-weight: bold;
+    .kDomainIcon {
+      overflow: hidden;
+      position: relative;
+      width: 24px;
+      height: 24px;
+      background-color: transparent;
+      white-space: nowrap;
+      text-align: center;
+      border-radius: 3px;
+      margin-right: 10px;
+
+      &.error {
+        border: 1px solid $kGrayscale4;
+      }
+
+      img {
+        position: absolute;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        width: 24px;
+        height: auto;
+        border-radius: 3px;
+      }
+    }
+
+    .topDomain {
+      font-size: 15px;
+      font-weight: normal;
+      text-decoration: none;
     }
 
     .kLabel {

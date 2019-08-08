@@ -14,7 +14,7 @@ import { UserInsightSourceConfig } from './user-insight-source.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { getColorPalette, getColorsBetween, getPrimaryColor } from 'shared/utils/colors';
+import { getColorPalette, getColorsBetween } from 'shared/utils/colors';
 
 @Component({
   selector: 'app-user-insight-source',
@@ -124,14 +124,14 @@ export class UserInsightSourceComponent extends UserBase implements OnInit, OnDe
       if (compare) {
         this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
         this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-  
+        
         const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
         const {
           totalEntries: compareTotalEntries,
           topEntries: compareTopEntries,
           label: compareLabel
         } = this._getTopSource(compareTableData);
-
+        
         this._compareTopSourceLabel = compareLabel;
         this._compareBulletValues = [
           { value: compareTotalEntries, label: this._compareTopSourceLabel },

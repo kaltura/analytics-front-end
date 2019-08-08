@@ -31,6 +31,7 @@ import { DevicesComponent } from './views/user-mini-highlights/devices/devices.c
 import { UserInsightSourceComponent } from './views/user-insight-source/user-insight-source.component';
 import { UserMediaUploadComponent } from './views/user-media-upload/user-media-upload.component';
 import { UserMediaUploadTableComponent } from './views/user-media-upload/table/table.component';
+import { UserInsightDomainComponent } from './views/user-insight-domain/user-insight-domain.component';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { UserMediaUploadTableComponent } from './views/user-media-upload/table/t
     UserInsightSourceComponent,
     UserMediaUploadComponent,
     UserMediaUploadTableComponent,
+    UserInsightDomainComponent,
   ],
   exports: [],
   providers: []

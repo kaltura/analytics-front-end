@@ -60,8 +60,8 @@
           <div class="kRightCol" [class.kCompare]="_isCompare">
             <ui-carousel height="100%"
                          [class.kCompare]="_isCompare"
-                         [infinite]="false"
-                         [autoPlay]="false"
+                         [infinite]="true"
+                         [autoPlay]="true"
                          [autoPlaySpeed]="5000"
                          [arrows]="false"
                          [fade]="false"
@@ -71,6 +71,11 @@
                                          [dateFilter]="_dateFilter"
                                          [topSources$]="topSources.topSources$"
                                          [refineFilter]="_refineFilter"></app-user-insight-source>
+              </ui-carousel-item>
+              <ui-carousel-item>
+                <app-user-insight-domain [userId]="_userId"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter"></app-user-insight-domain>
               </ui-carousel-item>
             </ui-carousel>
           </div>
