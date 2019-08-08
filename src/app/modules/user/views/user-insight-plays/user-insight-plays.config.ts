@@ -8,7 +8,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
 
 @Injectable()
-export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
+export class UserInsightPlaysConfig extends ReportDataBaseConfig {
   private _trendIcon = new TrendPipe();
   constructor(_translate: TranslateService,
               private _trendService: TrendService) {

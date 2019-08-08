@@ -33,6 +33,7 @@ import { UserMediaUploadComponent } from './views/user-media-upload/user-media-u
 import { UserMediaUploadTableComponent } from './views/user-media-upload/table/table.component';
 import { UserInsightDomainComponent } from './views/user-insight-domain/user-insight-domain.component';
 import { UserInsightMinutesViewedComponent } from './views/user-insight-minutes-viewed/user-insight-minutes-viewed.component';
+import { UserInsightPlaysComponent } from './views/user-insight-plays/user-insight-plays.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { UserInsightMinutesViewedComponent } from './views/user-insight-minutes-
     UserMediaUploadTableComponent,
     UserInsightDomainComponent,
     UserInsightMinutesViewedComponent,
+    UserInsightPlaysComponent,
   ],
   exports: [],
   providers: []

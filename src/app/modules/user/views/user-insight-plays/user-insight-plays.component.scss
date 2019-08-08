@@ -1,0 +1,88 @@
+@import '../../../../../styles/variables';
+
+.kFilters {
+  height: 93px !important;
+}
+
+.kPlaysContent {
+  width: 100%;
+  padding: 0 24px;
+
+  .kTitle {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 28px;
+  }
+
+  .kPlaysColumns {
+    display: flex;
+    flex-direction: row;
+
+    .kDateRow {
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      font-weight: normal;
+      width: 100%;
+      margin-bottom: 24px;
+
+      &:first-child {
+        margin-right: 30px;
+      }
+
+      .kDates {
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+    }
+
+    .kPlaysRow {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 19px;
+
+      &:first-child {
+        margin-right: 30px;
+      }
+
+      .kValue {
+        font-size: 24px;
+        font-weight: bold;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+.kMiniIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-right: 13px;
+  flex: 0 0 auto;
+
+  &.blue {
+    color: #487ADF;
+  }
+
+  &.violet {
+    color: #9B64E6;
+  }
+
+  &.orange {
+    color: #E1962E;
+  }
+
+  .icon-upload {
+    transform: rotate(180deg);
+  }
+}
+
+.kMini {
+  height: 100%;
+}

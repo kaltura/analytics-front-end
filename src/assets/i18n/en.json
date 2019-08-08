@@ -799,6 +799,8 @@
       "dailyAvgViews": "{{0}} Minutes Daily Avg.",
       "mostViewedDay": "Most Minutes Viewed Day",
       "minutesViewed": "Minutes Viewed  {{0}}",
+      "mostPlaysDay": "Day With Most Plays",
+      "lastPlaysDay": "Last Day With Plays",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",
