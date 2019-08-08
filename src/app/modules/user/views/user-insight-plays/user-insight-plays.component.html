@@ -63,6 +63,9 @@
           </div>
         </div>
       </ng-container>
+      <div class="kNoData" *ngIf="!_isBusy && !_tableData.length">
+        {{'app.common.noResults' | translate}}
+      </div>
     </div>
   </k-area-blocker>
 </div>
