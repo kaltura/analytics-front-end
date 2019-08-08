@@ -795,6 +795,10 @@
       "popularDomain": "Most Viewed Domain",
       "topContentSource": "Top Content Source",
       "otherSources": "Other Sources",
+      "weeklyAvgViews": "weekly Avg. Minutes Viewed",
+      "dailyAvgViews": "{{0}} Minutes Daily Avg.",
+      "mostViewedDay": "Most Minutes Viewed Day",
+      "minutesViewed": "Minutes Viewed  {{0}}",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

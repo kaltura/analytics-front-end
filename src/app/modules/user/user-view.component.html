@@ -60,23 +60,28 @@
           <div class="kRightCol" [class.kCompare]="_isCompare">
             <ui-carousel height="100%"
                          [class.kCompare]="_isCompare"
-                         [infinite]="true"
-                         [autoPlay]="true"
+                         [infinite]="false"
+                         [autoPlay]="false"
                          [autoPlaySpeed]="5000"
                          [arrows]="false"
                          [fade]="false"
                          [speed]="200">
               <ui-carousel-item>
-                <app-user-insight-source [isCompare]="_isCompare"
+                <app-user-insight-minutes-viewed [userId]="_userId"
                                          [dateFilter]="_dateFilter"
-                                         [topSources$]="topSources.topSources$"
-                                         [refineFilter]="_refineFilter"></app-user-insight-source>
+                                         [refineFilter]="_refineFilter"></app-user-insight-minutes-viewed>
               </ui-carousel-item>
-              <ui-carousel-item>
-                <app-user-insight-domain [userId]="_userId"
-                                         [dateFilter]="_dateFilter"
-                                         [refineFilter]="_refineFilter"></app-user-insight-domain>
-              </ui-carousel-item>
+<!--              <ui-carousel-item>-->
+<!--                <app-user-insight-domain [userId]="_userId"-->
+<!--                                         [dateFilter]="_dateFilter"-->
+<!--                                         [refineFilter]="_refineFilter"></app-user-insight-domain>-->
+<!--              </ui-carousel-item>-->
+<!--              <ui-carousel-item>-->
+<!--                <app-user-insight-source [isCompare]="_isCompare"-->
+<!--                                         [dateFilter]="_dateFilter"-->
+<!--                                         [topSources$]="topSources.topSources$"-->
+<!--                                         [refineFilter]="_refineFilter"></app-user-insight-source>-->
+<!--              </ui-carousel-item>-->
             </ui-carousel>
           </div>
         </div>
