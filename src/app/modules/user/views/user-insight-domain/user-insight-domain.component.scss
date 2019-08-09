@@ -56,6 +56,11 @@
       border-radius: 3px;
       margin-right: 10px;
 
+      &.kIconfile-small {
+        width: auto !important;
+        height: auto !important;
+      }
+
       &.error {
         border: 1px solid $kGrayscale4;
       }
