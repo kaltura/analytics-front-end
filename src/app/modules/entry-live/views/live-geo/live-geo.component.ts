@@ -23,6 +23,7 @@ import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-live-geo',
@@ -190,7 +191,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
-    const reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    const reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
     this.onDrillDown.emit({reportType: reportType, drillDown: this._drillDown});
   }
   

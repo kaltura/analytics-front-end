@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-interactions',
@@ -37,7 +38,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')

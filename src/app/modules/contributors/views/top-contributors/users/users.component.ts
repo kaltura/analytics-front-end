@@ -13,6 +13,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TrendService } from 'shared/services/trend.service';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-users',
@@ -42,7 +43,7 @@ export class ContributorsUsersComponent extends TopContributorsBaseReportCompone
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _reportType = KalturaReportType.uniqueUsersPlay;
+  public _reportType = reportTypeMap(KalturaReportType.uniqueUsersPlay);
   public _barChartData: any = {};
   public _totalUsers = null;
   public _totalUsersCompare: {

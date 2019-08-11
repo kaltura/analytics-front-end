@@ -17,6 +17,7 @@ import {map, switchMap} from "rxjs/operators";
 import {of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {environment} from "../../../../../environments/environment";
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entry-preview',
@@ -31,7 +32,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private playerInstance: any = null;
   private playerInitialized = false;
-  private _reportType = KalturaReportType.percentiles;
+  private _reportType = reportTypeMap(KalturaReportType.percentiles);
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';

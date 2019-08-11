@@ -26,6 +26,7 @@ import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { GeoExportConfig } from './geo-export.config';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export enum GeoTableModes {
   countries = 'countries',
@@ -52,7 +53,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private _echartsIntance: any; // echart instance
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _trendFilter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  private _reportType: KalturaReportType = KalturaReportType.mapOverlayCountry;
+  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
   private _mapCenter = [0, 10];
   private _canMapDrillDown = true;
   private order = '-count_plays';
@@ -121,13 +122,13 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let reportType: KalturaReportType;
     switch (mode) {
       case GeoTableModes.cities:
-        reportType = KalturaReportType.mapOverlayCity;
+        reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
         break;
       case GeoTableModes.regions:
-        reportType = KalturaReportType.mapOverlayRegion;
+        reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
         break;
       case GeoTableModes.countries:
-        reportType = KalturaReportType.mapOverlayCountry;
+        reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
         break;
       default:
         reportType = null;
@@ -225,32 +226,32 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         if (drillDown === '') {
           this._drillDown = [];
           this._currentTableLevel = GeoTableModes.countries;
-          this._reportType = KalturaReportType.mapOverlayCountry;
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
         } else if (this._drillDown.length === 0 || goBack) {
           this._currentTableLevel = GeoTableModes.regions;
           this._drillDown = [getCountryName(drillDown, true)];
-          this._reportType = KalturaReportType.mapOverlayRegion;
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
         } else if (this._drillDown.length === 1) {
           this._currentTableLevel = GeoTableModes.cities;
           this._drillDown.push(getCountryName(drillDown, true));
-          this._reportType = KalturaReportType.mapOverlayCity;
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
         }
         break;
       case GeoTableModes.regions:
         if (drillDown === '') {
           this._drillDown = [];
           this._currentTableLevel = GeoTableModes.regions;
-          this._reportType = KalturaReportType.mapOverlayRegion;
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
         } else if (this._drillDown.length === 0) {
           this._currentTableLevel = GeoTableModes.cities;
           this._drillDown = [getCountryName(drillDown, true)];
-          this._reportType = KalturaReportType.mapOverlayCity;
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
         }
         break;
       case GeoTableModes.cities:
         this._drillDown = [];
         this._currentTableLevel = GeoTableModes.cities;
-        this._reportType = KalturaReportType.mapOverlayCity;
+        this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
         break;
     }
     

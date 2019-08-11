@@ -15,6 +15,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -57,7 +58,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator;
+  public _reportType = reportTypeMap(KalturaReportType.topContentCreator);
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,

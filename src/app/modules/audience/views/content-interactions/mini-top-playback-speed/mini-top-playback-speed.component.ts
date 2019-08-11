@@ -9,6 +9,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-bullet.component';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-top-playback-speed',
@@ -24,7 +25,7 @@ export class MiniTopPlaybackSpeedComponent extends InteractionsBaseReportCompone
   protected _componentId = 'mini-top-speed';
   
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.playbackRate;
+  private _reportType = reportTypeMap(KalturaReportType.playbackRate);
   
   public _firstTimeLoading = true;
   public _isBusy: boolean;

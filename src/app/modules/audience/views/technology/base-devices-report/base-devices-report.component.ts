@@ -16,6 +16,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -302,11 +303,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _getDrillDownFilterPropByReportType(): string {
-    if ([KalturaReportType.browsers, KalturaReportType.browsersFamilies].indexOf(this._reportType) > -1) {
+    if ([KalturaReportType.browsers, reportTypeMap(KalturaReportType.browsersFamilies)].indexOf(this._reportType) > -1) {
       return 'browserFamilyIn';
     }
 
-    if ([KalturaReportType.operatingSystem, KalturaReportType.operatingSystemFamilies].indexOf(this._reportType) > -1) {
+    if ([KalturaReportType.operatingSystem, reportTypeMap(KalturaReportType.operatingSystemFamilies)].indexOf(this._reportType) > -1) {
       return 'operatingSystemFamilyIn';
     }
   }

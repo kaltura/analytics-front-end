@@ -13,6 +13,7 @@ import { SortEvent } from 'primeng/api';
 import { EntriesTableConfig } from './entries-table.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entries-table',
@@ -28,7 +29,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   
-  private _reportType = KalturaReportType.topContentCreator;
+  private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   

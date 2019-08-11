@@ -15,6 +15,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-sources',
@@ -47,7 +48,7 @@ export class ContributorsSourcesComponent extends TopContributorsBaseReportCompo
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _reportType = KalturaReportType.topSources;
+  public _reportType = reportTypeMap(KalturaReportType.topSources);
   public _barChartData: { [key: string]: BarChartRow[] } = {};
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];

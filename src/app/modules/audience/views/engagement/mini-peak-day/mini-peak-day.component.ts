@@ -12,6 +12,7 @@ import { MiniPeakDayConfig } from './mini-peak-day.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
 
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-peak-day';

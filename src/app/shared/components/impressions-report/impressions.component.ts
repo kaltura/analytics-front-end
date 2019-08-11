@@ -18,6 +18,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export type funnelData = {
   impressions: number;
@@ -79,7 +80,7 @@ export class ImpressionsComponent implements OnInit {
   
   private echartsIntance: any;
   private compareEchartsIntance: any;
-  private reportType: KalturaReportType = KalturaReportType.contentDropoff;
+  private reportType: KalturaReportType = reportTypeMap(KalturaReportType.contentDropoff);
   private pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   private order = 'count_plays';
   private filter = new KalturaEndUserReportInputFilter(
