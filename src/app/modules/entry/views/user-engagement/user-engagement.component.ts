@@ -15,6 +15,7 @@ import { EntryBase } from '../entry-base/entry-base';
 import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-engagement',
@@ -31,7 +32,7 @@ export class UserEngagementComponent extends EntryBase {
   @Input() duration = 0;
   
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;

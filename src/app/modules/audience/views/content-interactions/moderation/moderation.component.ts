@@ -17,6 +17,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { BarRowTooltip, BarRowValue } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-moderation-report',
@@ -29,7 +30,7 @@ import { BarRowTooltip, BarRowValue } from 'shared/components/horizontal-bar-row
   ],
 })
 export class ModerationComponent extends InteractionsBaseReportComponent {
-  private _reportType = KalturaReportType.contentReportReasons;
+  private _reportType = reportTypeMap(KalturaReportType.contentReportReasons);
   private _filter = new KalturaReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _compareFilter: KalturaReportInputFilter = null;
   private _reportInterval = KalturaReportInterval.months;

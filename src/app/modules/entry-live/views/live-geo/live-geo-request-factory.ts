@@ -3,6 +3,7 @@ import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaR
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -11,7 +12,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   });
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.mapOverlayCountryRealtime,
+    reportType: reportTypeMap(KalturaReportType.mapOverlayCountryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       toDate: moment().unix(),
       fromDate: this._getFromDate(),
@@ -22,7 +23,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   };
 
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
-    reportType: KalturaReportType.mapOverlayCountryRealtime,
+    reportType: reportTypeMap(KalturaReportType.mapOverlayCountryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       toDate: moment().unix(),
       fromDate: this._getFromDate(),
@@ -35,7 +36,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   }
   
   public set drillDown(value: string[]) {
-    this.reportType = value.length === 2 ? KalturaReportType.mapOverlayCityRealtime : value.length === 1 ? KalturaReportType.mapOverlayRegionRealtime : KalturaReportType.mapOverlayCountryRealtime;
+    this.reportType = value.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCityRealtime) : value.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegionRealtime) : reportTypeMap(KalturaReportType.mapOverlayCountryRealtime);
     if (value.length === 1) {
       this._getTableActionArgs.reportInputFilter.countryIn = value[0];
       this._getTotalsActionArgs.reportInputFilter.countryIn = value[0];

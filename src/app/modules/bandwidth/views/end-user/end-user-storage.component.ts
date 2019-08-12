@@ -20,6 +20,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export.config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -60,7 +61,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _paginationChanged$ = this._paginationChanged.asObservable();
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
-  public reportType: KalturaReportType = KalturaReportType.userUsage;
+  public reportType: KalturaReportType = reportTypeMap(KalturaReportType.userUsage);
   public compareFilter: KalturaEndUserReportInputFilter = null;
   public _exportConfig: ExportItem[] = [];
   public _dateFilter: DateChangeEvent;
@@ -130,7 +131,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _onDrillDown(user: string): void {
     this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', { user });
     this._drillDown = user.length ? user : '';
-    this.reportType = user.length ? KalturaReportType.specificUserUsage : KalturaReportType.userUsage;
+    this.reportType = user.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
     this.pager.pageIndex = 1;
 
     this.order = user.length ? '+month_id' : '-total_storage_mb';

@@ -17,6 +17,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-mini-top-shared',
@@ -34,7 +35,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   protected _componentId = 'mini-top-shared';
   
   private readonly _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
