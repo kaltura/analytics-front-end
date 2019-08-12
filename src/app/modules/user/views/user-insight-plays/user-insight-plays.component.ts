@@ -12,6 +12,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-insight-plays',
@@ -27,7 +28,7 @@ export class UserInsightPlaysComponent extends UserBase implements OnDestroy {
   
   protected _componentId = 'insight-plays';
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.topSyndication;
+  private _reportType = reportTypeMap(KalturaReportType.topSyndication);
   private _order = '-avg_time_viewed';
   
   public _compareFilter: KalturaEndUserReportInputFilter = null;

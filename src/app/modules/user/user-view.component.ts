@@ -15,6 +15,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { UserExportConfig } from './user-export.config';
 import { Unsubscribable } from 'rxjs';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user',
@@ -36,7 +37,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;
-  public _reportType: KalturaReportType = KalturaReportType.userUsage;
+  public _reportType: KalturaReportType = reportTypeMap(KalturaReportType.userUsage);
   public _selectedMetrics: string;
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = null;

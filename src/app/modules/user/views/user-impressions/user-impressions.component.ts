@@ -15,6 +15,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { UserBase } from '../user-base/user-base';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-impressions',
@@ -29,7 +30,7 @@ import { UserBase } from '../user-base/user-base';
 export class UserImpressionsComponent extends UserBase implements OnInit {
   @Input() userId: string;
   
-  private _reportType = KalturaReportType.contentDropoff;
+  private _reportType = reportTypeMap(KalturaReportType.contentDropoff);
   private _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   private _order = 'count_plays';
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });

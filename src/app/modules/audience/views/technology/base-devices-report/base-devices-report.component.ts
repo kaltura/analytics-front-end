@@ -303,11 +303,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
   
   private _getDrillDownFilterPropByReportType(): string {
-    if ([KalturaReportType.browsers, reportTypeMap(KalturaReportType.browsersFamilies)].indexOf(this._reportType) > -1) {
+    if ([reportTypeMap(KalturaReportType.browsers), reportTypeMap(KalturaReportType.browsersFamilies)].indexOf(this._reportType) > -1) {
       return 'browserFamilyIn';
     }
 
-    if ([KalturaReportType.operatingSystem, reportTypeMap(KalturaReportType.operatingSystemFamilies)].indexOf(this._reportType) > -1) {
+    if ([reportTypeMap(KalturaReportType.operatingSystem), reportTypeMap(KalturaReportType.operatingSystemFamilies)].indexOf(this._reportType) > -1) {
       return 'operatingSystemFamilyIn';
     }
   }

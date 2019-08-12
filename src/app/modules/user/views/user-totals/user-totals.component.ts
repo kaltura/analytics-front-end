@@ -12,6 +12,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { UserBase } from '../user-base/user-base';
 import { map, switchMap } from 'rxjs/operators';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-totals',
@@ -23,7 +24,7 @@ export class UserTotalsComponent extends UserBase {
   @Input() userId: string;
   
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';

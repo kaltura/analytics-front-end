@@ -16,6 +16,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { UserBase } from "../user-base/user-base";
 import {RefineFilter} from "shared/components/filter/filter.component";
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-sources',
@@ -48,7 +49,7 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
   public _isCompareMode: boolean;
   public _columns: string[] = [];
   public _compareFirstTimeLoading = true;
-  public _reportType = KalturaReportType.topSources;
+  public _reportType = reportTypeMap(KalturaReportType.topSources);
   public _barChartData: { [key: string]: BarChartRow[] } = {};
   public _selectedMetrics: string;
   public _tabsData: Tab[] = [];

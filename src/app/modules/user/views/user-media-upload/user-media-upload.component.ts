@@ -20,6 +20,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { SortEvent } from 'primeng/api';
 import { UserBase } from '../user-base/user-base';
 import { UserMediaUploadConfig } from './user-media-upload.config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-media-upload',
@@ -36,7 +37,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   
   private _updateTableHeight = new Subject<void>();
   private _order = '-created_at';
-  private _reportType = KalturaReportType.topContentContributors;
+  private _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
@@ -102,7 +103,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   }
   
   private _loadTableData(): void {
-    const reportType = KalturaReportType.topUserContent;
+    const reportType = reportTypeMap(KalturaReportType.topUserContent);
     const reportConfig = { reportType: reportType, filter: this._filter, order: this._order, pager: this._pager };
     
     this._filter.ownerIdsIn = this.userId;

@@ -24,6 +24,7 @@ import { UserBase } from '../user-base/user-base';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-highlights',
@@ -43,7 +44,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _entryDetails: TableRow[] = [];
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.topUserContent;
+  private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')

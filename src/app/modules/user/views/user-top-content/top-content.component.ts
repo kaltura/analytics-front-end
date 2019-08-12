@@ -15,6 +15,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 import { UserBase } from '../user-base/user-base';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-top-content',
@@ -59,7 +60,7 @@ export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator;
+  public _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,

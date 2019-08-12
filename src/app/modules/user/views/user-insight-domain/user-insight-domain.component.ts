@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { getColorPalette, getColorsBetween } from 'shared/utils/colors';
 import { map, switchMap } from 'rxjs/operators';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-insight-domain',
@@ -29,7 +30,7 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
   
   protected _componentId = 'insight-top-domains';
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.topSyndication;
+  private _reportType = reportTypeMap(KalturaReportType.topSyndication);
   private _order = '-count_plays';
   
   public _compareFilter: KalturaEndUserReportInputFilter = null;

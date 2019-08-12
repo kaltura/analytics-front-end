@@ -14,6 +14,7 @@ import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-user-insight-minutes-viewed',
@@ -29,7 +30,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   
   protected _componentId = 'insight-minutes-viewed';
   private _dataConfig: ReportDataConfig;
-  private _reportType = KalturaReportType.topSyndication;
+  private _reportType = reportTypeMap(KalturaReportType.topSyndication);
   private _order = '-avg_time_viewed';
   
   public _compareFilter: KalturaEndUserReportInputFilter = null;

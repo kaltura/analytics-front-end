@@ -28,6 +28,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { UserMiniHighlightsDevicesData } from './devices/devices.component';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export interface UserMiniHighlightsReportData {
   geo: { table: KalturaReportTable };
@@ -233,7 +234,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     });
     
     const geoTableReport = new ReportGetTableAction({
-      reportType: KalturaReportType.mapOverlayCity,
+      reportType: reportTypeMap(KalturaReportType.mapOverlayCity),
       reportInputFilter: filter,
       pager: new KalturaFilterPager({ pageSize: 1 }),
       order: '-count_plays',
@@ -241,14 +242,14 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     });
     
     const devicesTableReport = new ReportGetTableAction({
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       reportInputFilter: filter,
       pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
       responseOptions,
     });
     
     const devicesTotalReport = new ReportGetTotalAction({
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       reportInputFilter: filter,
       responseOptions,
     });
