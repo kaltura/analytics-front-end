@@ -26,6 +26,13 @@ export class UserInsightDomainConfig extends ReportDataBaseConfig {
             format: value => value,
           },
         }
+      },
+      [ReportDataSection.totals]: {
+        fields: {
+          'count_plays': {
+            format: value => value,
+          },
+        }
       }
     };
   }

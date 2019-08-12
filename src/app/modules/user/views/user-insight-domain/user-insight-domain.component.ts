@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { of as ObservableOf } from 'rxjs';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-bullet.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -38,13 +38,15 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
   public _topSourceLabel = '';
   public _compareTopSourceLabel = '';
   public _reportInterval = KalturaReportInterval.days;
-  public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _bulletValues: InsightsBulletValue[] = [];
   public _compareBulletValues: InsightsBulletValue[] = [];
   public _currentDates: string;
   public _compareDates: string;
   public _colors = getColorsBetween(getColorPalette()[0], getColorPalette()[7], 2);
+  public _currentTotalPlays = 0;
+  public _compareTotalPlays = 0;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -81,10 +83,14 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table, compare ? compare.table : null); // handle table
+          if (report.totals) {
+            this._handleTotals(report.totals, compare ? compare.totals : null);
+            
+            if (report.table && report.table.header && report.table.data) {
+              this._handleTable(report.table, compare ? compare.table : null); // handle table
+            }
           }
-          
+
           this._isBusy = false;
         },
         error => {
@@ -126,35 +132,33 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
     }
   }
   
-  private _getTopDomain(tableData: TableRow[]): { totalPlays: number, topPlays: number, label: string } {
-    let totalCountPlays = 0;
-    let topCountPlays = 0;
-    let topLabel = '';
+  private _handleTotals(current: KalturaReportTotal, compare?: KalturaReportTotal): void {
+    const currentData = this._reportService.parseTotals(current, this._dataConfig[ReportDataSection.totals]);
+    if (currentData.length) {
+      this._currentTotalPlays = parseInt(currentData[0].value, 10);
+    }
     
-    tableData.forEach(data => {
-      const countPlays = parseInt(data['count_plays'], 10);
-      totalCountPlays += countPlays;
-      if (countPlays > topCountPlays) {
-        topCountPlays = countPlays;
-        topLabel = data['domain_name'];
+    if (compare) {
+      const compareData = this._reportService.parseTotals(compare, this._dataConfig[ReportDataSection.totals]);
+      
+      if (compareData) {
+        this._compareTotalPlays = parseInt(compareData[0].value, 10);
       }
-    });
+    }
     
-    return {
-      totalPlays: totalCountPlays,
-      topPlays: topCountPlays,
-      label: topLabel,
-    };
   }
   
   private _handleTable(table: KalturaReportTable, compare?: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    if (tableData) {
-      const { totalPlays, topPlays, label } = this._getTopDomain(tableData);
-      this._topSourceLabel = label;
+    if (tableData && tableData.length) {
+      const currentTop = tableData[0];
+      const topPlays = parseInt(currentTop['count_plays'], 10);
+      const othersPlays = this._currentTotalPlays - topPlays;
+      
+      this._topSourceLabel = currentTop['domain_name'];
       this._bulletValues = [
-        { value: totalPlays, label: this._topSourceLabel },
-        { value: totalPlays - topPlays, label: this._translate.instant('app.contributors.others') },
+        { value: topPlays, label: this._topSourceLabel },
+        { value: othersPlays, label: this._translate.instant('app.contributors.others') },
       ];
       
       if (compare && compare.data && compare.header) {
@@ -162,16 +166,13 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
         this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
         
         const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
-        const {
-          totalPlays: compareTotalEntries,
-          topPlays: compareTopEntries,
-          label: compareLabel
-        } = this._getTopDomain(compareTableData);
-        
-        this._compareTopSourceLabel = compareLabel;
+        const compareTop = compareTableData[0];
+        const compareTopPlays = parseInt(compareTop['count_plays'], 10);
+        const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
+        this._compareTopSourceLabel = compareTop['domain_name'];
         this._compareBulletValues = [
-          { value: compareTotalEntries, label: this._compareTopSourceLabel },
-          { value: compareTotalEntries - compareTopEntries, label: this._translate.instant('app.contributors.others') },
+          { value: compareTopPlays, label: this._compareTopSourceLabel },
+          { value: compareOthersPlays, label: this._translate.instant('app.contributors.others') },
         ];
         
       } else {
