@@ -14,6 +14,7 @@ import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 import { SortEvent } from 'primeng/api';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
@@ -58,7 +59,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator;
+  public _reportType = reportTypeMap(KalturaReportType.topContentCreator);
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -185,7 +186,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this.topVideos$.complete();
     this.totalCount$.complete();
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;

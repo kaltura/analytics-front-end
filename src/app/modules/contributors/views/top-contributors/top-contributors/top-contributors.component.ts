@@ -12,6 +12,7 @@ import { TopContributorsDataConfig } from './top-contributors-data.config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-top-contributors',
@@ -46,7 +47,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentContributors;
+  public _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   
   public topContributors$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
   

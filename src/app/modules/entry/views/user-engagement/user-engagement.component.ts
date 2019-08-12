@@ -14,6 +14,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { EntryBase } from '../entry-base/entry-base';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
@@ -33,7 +34,7 @@ export class UserEngagementComponent extends EntryBase {
   @Input() duration = 0;
   
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;

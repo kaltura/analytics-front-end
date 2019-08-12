@@ -4,6 +4,7 @@ import { KalturaReportType } from 'kaltura-ngx-client';
 import { TopOsConfig } from './top-os.config';
 import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-devices-report/base-devices-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-top-os',
@@ -16,8 +17,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
   ]
 })
 export class TopOsComponent extends BaseDevicesReportComponent {
-  protected _defaultReportType = KalturaReportType.operatingSystemFamilies;
-  protected _drillDownReportType = KalturaReportType.operatingSystem;
+  protected _defaultReportType = reportTypeMap(KalturaReportType.operatingSystemFamilies);
+  protected _drillDownReportType = reportTypeMap(KalturaReportType.operatingSystem);
   public _name = 'top-os';
   
   public _title = 'app.audience.technology.topOS';

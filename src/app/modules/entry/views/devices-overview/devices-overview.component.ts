@@ -19,6 +19,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export interface SummaryItem {
   key: string;
@@ -54,7 +55,7 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
   
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
-  private _reportType = KalturaReportType.platforms;
+  private _reportType = reportTypeMap(KalturaReportType.platforms);
   private _tabsData: Tab[] = [];
   private _compareTabsData: Tab[] = [];
   

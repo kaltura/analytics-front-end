@@ -11,6 +11,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,7 +29,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   

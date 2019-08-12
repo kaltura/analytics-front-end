@@ -19,6 +19,7 @@ import { PublisherExportConfig } from './publisher-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-publisher-storage',
@@ -56,7 +57,7 @@ export class PublisherStorageComponent implements OnInit {
   public _accumulativeStorage: any[] = [];
   
   public _pageSize = analyticsConfig.defaultPageSize;
-  public reportType: KalturaReportType = KalturaReportType.partnerUsage;
+  public reportType: KalturaReportType = reportTypeMap(KalturaReportType.partnerUsage);
   public _exportConfig: ExportItem[] = [];
   public _dateFilter: DateChangeEvent;
   public compareFilter: KalturaReportInputFilter = null;

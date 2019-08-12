@@ -18,6 +18,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-video-performance',
@@ -30,7 +31,7 @@ export class VideoPerformanceComponent extends EntryBase {
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-date_id';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _rawGraphData: KalturaReportGraph[] = [];
   private _ignoreFirstSortEvent = false;

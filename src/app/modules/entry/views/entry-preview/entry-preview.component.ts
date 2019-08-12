@@ -17,6 +17,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entry-preview',
@@ -26,16 +27,16 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 })
 export class EntryPreviewComponent extends EntryBase implements OnInit {
   @Input() entryId = '';
-  
+
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private playerInstance: any = null;
   private playerInitialized = false;
-  private _reportType = KalturaReportType.percentiles;
-  
+  private _reportType = reportTypeMap(KalturaReportType.percentiles);
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -53,11 +54,11 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _currentTime = 0;
   public _currentDatePeriodLabel: string = null;
   public _compareDatePeriodLabel: string = null;
-  
+
   public _chartOptions = {};
-  
+
   @ViewChild('player') player: KalturaPlayerComponent;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -73,7 +74,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnInit() {
     this.initPlayer();
   }
@@ -116,7 +117,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
             const compareValue1 = params[2].value;
             const compareValue2 = params[3].value;
-            
+
             tooltip = `
               <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
               <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0; margin-bottom: 12px">
@@ -240,24 +241,24 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
-    
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
@@ -269,18 +270,18 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-          
+
           if (this._isCompareMode) {
             const dateFormat = 'MMM DD YYYY';
             this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
             this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
           }
-          
+
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
             const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
-            
+
             if (compare && compare.table) {
               let compareYAxisData1 = [];
               let compareYAxisData2 = [];
@@ -302,7 +303,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
               ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
               : this._getGraphData(emptyLine, emptyLine);
           }
-          
+
         },
         error => {
           this._isBusy = false;
@@ -322,12 +323,12 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     const result = tableData
       .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
       .map(item => Number(item[key]));
-    
+
     result[0] = result[1];
-    
+
     return result;
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
@@ -350,14 +351,14 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       this._compareFilter = null;
     }
   }
-  
+
   public onChartClick(event): void {
     const percent = event.offsetX / event.currentTarget.clientWidth;
     this.seekTo(percent, true);
   }
-  
+
   /* ------------------------ start of player logic --------------------------*/
-  
+
   private initPlayer(): void {
     if (!this.playerInitialized) {
       this.playerInitialized = true;
@@ -422,13 +423,13 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       }, 0);
     }
   }
-  
+
   public onPlayerReady(player): void {
     this.playerInstance = player;
     setTimeout(() => {
       this._duration = parseFloat(this.playerInstance.evaluate('{duration}')) * 1000;
     }, 0);
-    
+
     // register to playhead update event to update our scrubber
     this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
@@ -452,14 +453,14 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         this._currentTime = parseFloat(event) * 1000;
       });
     });
-    
+
     // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
     try {
       let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName('head')[0];
       if (head) {
         let css = document.createElement('style');
         css['type'] = 'text/css';
-        
+
         let styles = `
         .scrubber .playHead {
           border-bottom-left-radius: 0 !important;
@@ -476,7 +477,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         .controlsContainer{
           border-top: none !important;
         }`;
-        
+
         if (css['styleSheet']) {
           css['styleSheet'].cssText = styles;
         } else {
@@ -487,19 +488,19 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     } catch (e) {
       console.log('Failed to inject custom CSS to player');
     }
-    
+
   }
-  
+
   private seekTo(percent: number, forcePlay = false): void {
     this.playerInstance.sendNotification('doSeek', this._duration / 1000 * percent);
     if (forcePlay) {
       this.playerInstance.sendNotification('doPlay');
     }
   }
-  
+
   /* -------------------------- end of player logic --------------------------*/
-  
-  
+
+
 }
 
 

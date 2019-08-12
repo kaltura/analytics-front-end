@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportType } from 'kaltura-ngx-client';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export type HeatMapPoints = number[];
 
@@ -42,7 +43,7 @@ export class HeatMapStoreService {
       userFilter.userIds = userId;
       const reportConfig: ReportConfig = {
         filter: userFilter,
-        reportType: KalturaReportType.percentiles,
+        reportType: reportTypeMap(KalturaReportType.percentiles),
         pager: this._pager,
         objectIds: entryId,
         order: null,

@@ -4,6 +4,7 @@ import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter,
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export interface LocationFilterItem {
   value: { id: string, name: string };
@@ -81,7 +82,7 @@ export class LocationsFilterService implements OnDestroy {
     this._currentlyLoading.push('country');
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.mapOverlayCountry,
+      reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),
       filter: this._filter,
       pager: this._pager,
       order: null,
@@ -107,7 +108,7 @@ export class LocationsFilterService implements OnDestroy {
     this._currentlyLoading.push('region');
     
     let reportConfig: ReportConfig = {
-      reportType: KalturaReportType.mapOverlayRegion,
+      reportType: reportTypeMap(KalturaReportType.mapOverlayRegion),
       filter: this._filter,
       pager: this._pager,
       order: null
@@ -138,7 +139,7 @@ export class LocationsFilterService implements OnDestroy {
     filter.regionIn = region;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.mapOverlayCity,
+      reportType: reportTypeMap(KalturaReportType.mapOverlayCity),
       filter: filter,
       pager: this._pager,
       order: null,
