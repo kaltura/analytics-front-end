@@ -51,8 +51,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _playProgress = 0;
   public _duration = 0;
   public _currentTime = 0;
-  public _currentDatePeriodLabel: string;
-  public _compareDatePeriodLabel: string;
+  public _currentDatePeriodLabel: string = null;
+  public _compareDatePeriodLabel: string = null;
   
   public _chartOptions = {};
   
@@ -114,8 +114,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
-            const compareValue1 = params[2].value;
-            const compareValue2 = params[3].value;
+            const compareValue1 = params[0].value;
+            const compareValue2 = params[1].value;
             
             tooltip = `
               <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
@@ -270,6 +270,12 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           this._isBusy = false;
           this._chartOptions = {};
           
+          if (this._isCompareMode) {
+            const dateFormat = 'MMM DD YYYY';
+            this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
+            this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
+          }
+          
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
@@ -286,12 +292,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
                 compareYAxisData1 = Array.from({ length: 100 }, () => 0);
                 compareYAxisData2 = Array.from({ length: 100 }, () => 0);
               }
-              
               this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
-  
-              const dateFormat = 'MMM DD YYYY';
-              this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
-              this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
             } else {
               this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
             }
