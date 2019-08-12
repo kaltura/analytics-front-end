@@ -4,6 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 
 @Injectable()
 export class UserMediaUploadConfig extends ReportDataBaseConfig {
@@ -33,15 +34,13 @@ export class UserMediaUploadConfig extends ReportDataBaseConfig {
         fields: {
           'added_entries': {
             format: value => value,
-            colors: ['entries'],
+            colors: [getPrimaryColor('entries'), getSecondaryColor('entries')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>`,
-            nonDateGraphLabel: true,
           },
           'added_msecs': {
-            format: value => value,
-            colors: ['time'],
+            format: value => ReportHelper.minutes(value),
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;Min`,
-            nonDateGraphLabel: true,
           }
         }
       },
