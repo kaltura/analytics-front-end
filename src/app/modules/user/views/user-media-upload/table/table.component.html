@@ -13,7 +13,7 @@
                (sortFunction)="sortChanged.emit($event)">
         <ng-template pTemplate="header">
           <tr [ngStyle]="{'width': '100%'}">
-            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px'}">
+            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '110px'}">
               {{'app.user.entries' | translate}}
             </th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
@@ -28,7 +28,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-data>
           <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
-            <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px'}">
+            <td *ngIf="!isCompareMode" [ngStyle]="{'width': '110px'}">
               <div class="kThumbnailHolder" #holder
                    (mouseleave)="_hideOverlay()"
                    (mouseenter)="_showOverlay($event, data['object_id'])"
