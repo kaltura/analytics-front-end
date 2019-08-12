@@ -2,13 +2,15 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { BrowserService } from 'shared/services';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private _logger: KalturaLogger,
               private _router: Router,
               private _browserService: BrowserService,
+              private _permissionsService: AnalyticsPermissionsService,
               private _kalturaServerClient: KalturaClient) {
     if (window['analyticsConfig']) { // standalone
       this._initApp(window['analyticsConfig']);
@@ -128,11 +131,13 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     // load localization
-    this._logger.info('Loading localization...');
+    this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang(analyticsConfig.locale);
-    this._translate.use(analyticsConfig.locale).subscribe(
-      () => {
-        this._logger.info(`Localization loaded successfully for locale: ${analyticsConfig.locale}`);
+    this._loadPermissions()
+      .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
+      .subscribe(
+        () => {
+        this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
         if (this.hosted) {
           this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
         }
@@ -185,7 +190,43 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     return analyticsRoute;
   }
-
-
+  
+  private _loadPermissions(): Observable<void> {
+    const getUserAction = new UserGetAction().setRequestOptions(
+      new KalturaRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'roleIds'
+        })
+      })
+    );
+    const getRoleAction = new UserRoleGetAction({ userRoleId: 0 }).setDependency(['userRoleId', 0, 'roleIds']);
+    const getPermissionsAction = new PermissionListAction({
+      filter: new KalturaPermissionFilter({ statusEqual: KalturaPermissionStatus.active, typeIn: '2,3' }),
+      pager: new KalturaFilterPager({ pageSize: 500 }),
+    })
+      .setRequestOptions(
+        new KalturaRequestOptions({
+          responseProfile: new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'name'
+          })
+        })
+      );
+    
+    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction))
+      .pipe(map(responses => {
+        if (responses.hasErrors()) {
+          throw responses.getFirstError();
+        }
+        
+        const [userResponse, roleResponse, permissionsResponse] = responses;
+        const permissionList = permissionsResponse.result;
+        const userRole = roleResponse.result;
+        const partnerPermissionList = permissionList.objects.map(item => item.name);
+        const userRolePermissionList = userRole.permissionNames.split(',');
+        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+      }));
+  }
 
 }
