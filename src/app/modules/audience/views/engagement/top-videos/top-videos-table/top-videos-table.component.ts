@@ -8,6 +8,7 @@ import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { BrowserService } from 'shared/services';
 import { Subject } from 'rxjs';
+import { SortEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -31,13 +32,31 @@ export class TopVideosTableComponent implements OnDestroy {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
+  @Input() set order(value: string) {
+    if (value) {
+      const sortOrder = value[0] === '-' ? -1 : 1;
+      if (sortOrder !== this._sortOrder) {
+        this._sortOrder = sortOrder;
+      }
+  
+      const sortField = value.slice(1);
+      if (sortField !== this._sortField) {
+        this._sortField = sortField;
+      }
+    }
+  }
+  
+  @Output() sortChanged = new EventEmitter<SortEvent>();
+
   @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
-  private timeoutId = null;
+  private _timeoutId = null;
   
+  public _sortField = 'engagement_ranking';
+  public _sortOrder = -1;
   public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
@@ -66,11 +85,11 @@ export class TopVideosTableComponent implements OnDestroy {
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
       this._entryData = this.entryDetails.find(({object_id}) => entryId === object_id);
-      if (this.timeoutId === null) {
-        this.timeoutId = setTimeout(() => {
+      if (this._timeoutId === null) {
+        this._timeoutId = setTimeout(() => {
           if (this._entryData.status === KalturaEntryStatus.ready) {
             this._overlay.show(event);
-            this.timeoutId = null;
+            this._timeoutId = null;
           }
         }, 1000);
       }
@@ -81,9 +100,9 @@ export class TopVideosTableComponent implements OnDestroy {
     if (this._overlay) {
       this._entryData = null;
       this._overlay.hide();
-      if (this.timeoutId) {
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
+      if (this._timeoutId) {
+        clearTimeout(this._timeoutId);
+        this._timeoutId = null;
       }
     }
   }
