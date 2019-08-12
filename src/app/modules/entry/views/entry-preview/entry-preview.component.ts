@@ -114,8 +114,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
-            const compareValue1 = params[0].value;
-            const compareValue2 = params[1].value;
+            const compareValue1 = params[2].value;
+            const compareValue2 = params[3].value;
             
             tooltip = `
               <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
@@ -297,10 +297,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
               this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
             }
           } else {
-            this._chartOptions = this._getGraphData(
-              Array.from({ length: 100 }, () => 0),
-              Array.from({ length: 100 }, () => 0),
-            );
+            const emptyLine = Array.from({ length: 100 }, () => 0);
+            this._chartOptions = this._isCompareMode
+              ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
+              : this._getGraphData(emptyLine, emptyLine);
           }
           
         },
