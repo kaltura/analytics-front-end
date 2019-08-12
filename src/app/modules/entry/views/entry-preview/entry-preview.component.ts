@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,11 +12,11 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaPlayerComponent } from 'shared/player';
 import { EntryBase } from '../entry-base/entry-base';
-import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
-import {map, switchMap} from "rxjs/operators";
-import {of as ObservableOf} from "rxjs";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {environment} from "../../../../../environments/environment";
+import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
+import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
@@ -52,6 +52,8 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   public _playProgress = 0;
   public _duration = 0;
   public _currentTime = 0;
+  public _currentDatePeriodLabel: string = null;
+  public _compareDatePeriodLabel: string = null;
 
   public _chartOptions = {};
 
@@ -77,7 +79,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     this.initPlayer();
   }
   
-  private _getGraphData(yData: number[], compareYData: number[] = null) {
+  private _getGraphData(yData1: number[], yData2: number[], compareYData1: number[] = null, compareYData2: number[] = null) {
     let graphData = {
       color: [getPrimaryColor(), getSecondaryColor()],
       backgroundColor: '#333333',
@@ -89,40 +91,56 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       },
       xAxis: {
         show: false,
-        boundaryGap : false,
+        boundaryGap: false,
         type: 'category',
         data: Array.from({ length: 100 }, (_, i) => i + 1),
       },
-      tooltip : {
+      tooltip: {
+        confine: true,
         formatter: params => {
-          const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
+          const { value: value1, dataIndex } = params[0];
+          const value2 = params[1].value;
           const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
-          let tooltip =  `
+          let tooltip = `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+                ${this._translate.instant('app.entry.views')}:&nbsp;${value1}
+              </div>
+              <div class="kValue">
+                <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
+                ${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}
               </div>
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
-            const compareValue = params[1].value;
-            const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYY' : 'DD/MM/YYYY';
-            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
-            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
+            const compareValue1 = params[2].value;
+            const compareValue2 = params[3].value;
 
             tooltip = `
-              <div style="font-weight: normal; color: #999999">${progressValue}</div>
-              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0px">
-                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                <span>${currentDatePeriod}</span>
-                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
+              <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
+              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0; margin-bottom: 12px">
+                <span class="kPeriodLabel">${this._compareDatePeriodLabel}</span>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${compareValue1}</span>
+                </div>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getSecondaryColor('viewers')}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${compareValue2}</span>
+                </div>
               </div>
-              <div class="kEntryCompareGraphTooltip" style="padding-top: 0px">
-                <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
-                <span>${compareDatePeriod}</span>
-                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
+              <div class="kEntryCompareGraphTooltip" style="padding-top: 0">
+                <span class="kPeriodLabel">${this._currentDatePeriodLabel}</span>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${value1}</span>
+                </div>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}</span>
+                </div>
               </div>
            `;
           }
@@ -169,27 +187,50 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           color: '#FFFFFF'
         }
       },
-      series: [{
-        data: yData,
-        symbol: 'circle',
-        symbolSize: 4,
-        showSymbol: false,
-        type: 'line',
-        lineStyle: {
-          color: '#487adf',
-          width: 2
-        }
-      }]
+      series: [
+        {
+          data: yData1,
+          symbol: 'circle',
+          symbolSize: 4,
+          showSymbol: false,
+          type: 'line',
+          lineStyle: {
+            color: '#487adf',
+            width: 2
+          }
+        },
+        {
+          data: yData2,
+          symbol: 'circle',
+          symbolSize: 4,
+          showSymbol: false,
+          type: 'line',
+          lineStyle: {
+            color: '#1b8271',
+            width: 2
+          }
+        }]
     };
-    if (compareYData !== null) {
+    if (compareYData1 !== null && compareYData2 !== null) {
       graphData.series.push({
-        data: compareYData,
+        data: compareYData1,
         symbol: 'circle',
         symbolSize: 4,
         showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#88acf6',
+          width: 2
+        }
+      });
+      graphData.series.push({
+        data: compareYData2,
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
+        type: 'line',
+        lineStyle: {
+          color: '#60e4cc',
           width: 2
         }
       });
@@ -200,11 +241,11 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-  
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
-  
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
@@ -230,33 +271,37 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
           this._isBusy = false;
           this._chartOptions = {};
 
+          if (this._isCompareMode) {
+            const dateFormat = 'MMM DD YYYY';
+            this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
+            this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
+          }
+
           if (report.table && report.table.header && report.table.data) {
-            const {tableData} = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
-            const yAxisData = tableData
-              .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-              .map(item => Number(item['count_viewers']));
-  
-            yAxisData[0] = yAxisData[1]; // fake first item because of limitation when first item always is 0
+            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
+            const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
 
             if (compare && compare.table) {
-              let compareYAxisData = [];
+              let compareYAxisData1 = [];
+              let compareYAxisData2 = [];
               if (compare.table.header && compare.table.data) {
-                const compareTableData = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]).tableData;
-                compareYAxisData = compareTableData
-                  .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-                  .map(item => Number(item['count_viewers']));
+                const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]);
+                compareYAxisData1 = this._getAxisData(compareTableData, 'count_viewers');
+                compareYAxisData2 = this._getAxisData(compareTableData, 'unique_known_users');
               } else {
-                compareYAxisData = Array.from({ length: 100 }, () => 0);
+                compareYAxisData1 = Array.from({ length: 100 }, () => 0);
+                compareYAxisData2 = Array.from({ length: 100 }, () => 0);
               }
-  
-              compareYAxisData[0] = compareYAxisData[1]; // fake first item because of limitation when first item always is 0
-
-              this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
+              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
             } else {
-              this._chartOptions = this._getGraphData(yAxisData);
+              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
             }
           } else {
-            this._chartOptions = this._getGraphData(Array.from({ length: 100 }, () => 0));
+            const emptyLine = Array.from({ length: 100 }, () => 0);
+            this._chartOptions = this._isCompareMode
+              ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
+              : this._getGraphData(emptyLine, emptyLine);
           }
 
         },
@@ -274,6 +319,16 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         });
   }
   
+  private _getAxisData(tableData: TableRow[], key: string): number[] {
+    const result = tableData
+      .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+      .map(item => Number(item[key]));
+
+    result[0] = result[1];
+
+    return result;
+  }
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
@@ -313,53 +368,53 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         entryid: this.entryId,
         flashvars: {
           'ks': analyticsConfig.ks,
-          "EmbedPlayer.LiveCuepoints": true,
+          'EmbedPlayer.LiveCuepoints': true,
           // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
-          "controlBarContainer": {
-            "plugin": true,
-            "hover": false
+          'controlBarContainer': {
+            'plugin': true,
+            'hover': false
           },
-          "durationLabel": {
-            "plugin": false
+          'durationLabel': {
+            'plugin': false
           },
-          "currentTimeLabel": {
-            "plugin": false
+          'currentTimeLabel': {
+            'plugin': false
           },
-          "fullScreenBtn": {
-            "plugin": false
+          'fullScreenBtn': {
+            'plugin': false
           },
-          "theme": {
-            "applyToLargePlayButton": true,
-            "buttonsSize": 12,
-            "buttonsColor": "rgb(51, 51, 51)",
-            "buttonsIconColor": "rgb(204, 204, 204)",
-            "sliderColor": "rgb(91, 91, 91)",
-            "scrubberColor": "rgb(1, 172, 205)",
-            "controlsBkgColor": "rgb(51, 51, 51)",
-            "watchedSliderColor": "rgb(1, 172, 205)",
-            "bufferedSliderColor": "#AFAFAF",
-            "timeLabelColor": "rgb(204, 204, 204)",
-            "buttonsIconColorDropShadow": true,
-            "plugin": true
+          'theme': {
+            'applyToLargePlayButton': true,
+            'buttonsSize': 12,
+            'buttonsColor': 'rgb(51, 51, 51)',
+            'buttonsIconColor': 'rgb(204, 204, 204)',
+            'sliderColor': 'rgb(91, 91, 91)',
+            'scrubberColor': 'rgb(1, 172, 205)',
+            'controlsBkgColor': 'rgb(51, 51, 51)',
+            'watchedSliderColor': 'rgb(1, 172, 205)',
+            'bufferedSliderColor': '#AFAFAF',
+            'timeLabelColor': 'rgb(204, 204, 204)',
+            'buttonsIconColorDropShadow': true,
+            'plugin': true
           },
-          "scrubber": {
-            "plugin": true,
+          'scrubber': {
+            'plugin': true,
             'insertMode': 'lastChild',
             'sliderPreview': false
           },
-          "dualScreen": {
-            "plugin": true,
-            "defaultDualScreenViewId": "pip-parent-in-small",
-            "showFirstSlideOnLoad": true
+          'dualScreen': {
+            'plugin': true,
+            'defaultDualScreenViewId': 'pip-parent-in-small',
+            'showFirstSlideOnLoad': true
           },
-          "chapters": {
-            "plugin": true
+          'chapters': {
+            'plugin': true
           },
-          "sideBarContainer": {
-            "plugin": true
+          'sideBarContainer': {
+            'plugin': true
           },
-          "quiz": {
-            "plugin": true
+          'quiz': {
+            'plugin': true
           }
         }
       };
@@ -378,7 +433,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     // register to playhead update event to update our scrubber
     this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress = parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
@@ -394,14 +449,14 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     });
     this.playerInstance.kBind('seeked', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress = parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
 
     // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
     try {
-      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName("head")[0];
+      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName('head')[0];
       if (head) {
         let css = document.createElement('style');
         css['type'] = 'text/css';
@@ -431,15 +486,15 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         head.appendChild(css);
       }
     } catch (e) {
-      console.log("Failed to inject custom CSS to player");
+      console.log('Failed to inject custom CSS to player');
     }
 
   }
 
   private seekTo(percent: number, forcePlay = false): void {
-    this.playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+    this.playerInstance.sendNotification('doSeek', this._duration / 1000 * percent);
     if (forcePlay) {
-      this.playerInstance.sendNotification("doPlay");
+      this.playerInstance.sendNotification('doPlay');
     }
   }
 
