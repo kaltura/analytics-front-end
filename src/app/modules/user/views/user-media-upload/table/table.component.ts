@@ -14,7 +14,7 @@ import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay
 })
 export class UserMediaUploadTableComponent {
   @Input() entryDetails: EntryDetailsOverlayData[] = [];
-  @Input() tableData: TableRow<string>[] = [];
+  @Input() tableData: TableRow[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
   @Input() isCompareMode: boolean;

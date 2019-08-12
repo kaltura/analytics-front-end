@@ -755,6 +755,8 @@
       "count_plays": "Plays",
       "count_viral": "Shares",
       "count_download": "Downloads",
+      "created_at": "Created Date",
+      "added_msecs": "Added Minutes",
       "sum_time_viewed": "Minutes Viewed",
       "avg_time_viewed": "Avg. View Time",
       "count_loads": "Player Impressions",
@@ -801,6 +803,7 @@
       "minutesViewed": "Minutes Viewed  {{0}}",
       "mostPlaysDay": "Day With Most Plays",
       "lastPlaysDay": "Last Day With Plays",
+      "content_source": "Content Source",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

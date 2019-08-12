@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
-import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { of as ObservableOf, Subject } from 'rxjs';
+import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -13,7 +13,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ActivatedRoute, Router } from '@angular/router';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
@@ -36,8 +35,8 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _updateTableHeight = new Subject<void>();
-  private _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _order = '-created_at';
+  private _reportType = KalturaReportType.topContentContributors;
   private _dataConfig: ReportDataConfig;
   private _partnerId = analyticsConfig.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
@@ -46,7 +45,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   
   protected _componentId = 'user-media-upload';
   
-  public interactions$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
   public _updateTableHeight$ = this._updateTableHeight.asObservable();
   
   public _entryDetails: TableRow[] = [];
@@ -61,7 +59,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   public _selectedMetrics: string;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
-  public _lineChartData = {};
+  public _lineChartData = null;
   public _showTable = false;
   public _totalCount = 0;
   public _compareTotalCount = 0;
@@ -101,31 +99,27 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   
   ngOnDestroy() {
     this._updateTableHeight.complete();
-    this.interactions$.complete();
   }
   
-  private _loadTableData(isCompare = false): void {
-    let reportConfig: ReportConfig;
-    if (isCompare) {
-      this._compareFilter.ownerIdsIn = this.userId;
-      reportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._comparePager };
-      this._compareTableBusy = true;
-      this._compareTableBlockerMessage = null;
-    } else {
-      this._filter.ownerIdsIn = this.userId;
-      reportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
-      this._currentTableBusy = true;
-      this._currentTableBlockerMessage = null;
-    }
+  private _loadTableData(): void {
+    const reportType = KalturaReportType.topUserContent;
+    const reportConfig = { reportType: reportType, filter: this._filter, order: this._order, pager: this._pager };
     
-    const getTableData = (report, pager) => {
+    this._filter.ownerIdsIn = this.userId;
+    this._currentTableBusy = true;
+    this._compareTableBusy = true;
+    this._currentTableBlockerMessage = null;
+    this._compareTableBlockerMessage = null;
+    
+    const getTableData = report => {
       if (report.table && report.table.data && report.table.header) {
-        const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
+        const { tableData, columns } = this._reportService.parseTableData(report.table, this._dataConfig.table);
         const totalCount = report.table.totalCount;
         const { tableData: entryDetails } = this._reportService.parseTableData(report.table, this._dataConfig.entryDetails);
         
         return {
           totalCount,
+          columns,
           tableData: tableData.map(this._extendTableRow.bind(this)),
           entryDetails: entryDetails.map(this._extendTableRow.bind(this)),
         };
@@ -137,29 +131,52 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       };
     };
     
-    this._reportService.getReport(reportConfig, { table: this._dataConfig.table }, false)
-      .pipe(cancelOnDestroy(this))
+    this._reportService.getReport(reportConfig, { table: this._dataConfig[ReportDataSection.table] }, false)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        this._compareFilter.ownerIdsIn = this.userId;
+        const compareReportConfig = { reportType: reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
+        
+        return this._reportService.getReport(compareReportConfig, { table: this._dataConfig[ReportDataSection.table] })
+          .pipe(map(compare => ({ report, compare })));
+      }))
       .subscribe(
-        report => {
-          if (isCompare) {
-            const compare = getTableData(report, this._comparePager);
-            this._compareTotalCount = compare.totalCount;
-            this._compareTableData = compare.tableData;
-            this._compareTableBusy = false;
-            this._entryDetails = [...this._entryDetails, compare.entryDetails];
-          } else {
-            const current = getTableData(report, this._pager);
+        ({ report, compare }) => {
+          if (report) {
+            const current = getTableData(report);
+            this._columns = current.columns;
             this._totalCount = current.totalCount;
             this._tableData = current.tableData;
             this._entryDetails = current.entryDetails;
-            this._currentTableBusy = false;
+            
+            if (compare) {
+              const compareData = getTableData(compare);
+              this._compareTotalCount = compareData.totalCount;
+              this._compareTableData = compareData.tableData;
+              this._entryDetails = [...this._entryDetails, compareData.entryDetails];
+            } else {
+              this._compareTotalCount = 0;
+              this._compareTableData = [];
+            }
+          } else {
+            this._tableData = [];
+            this._compareTableData = [];
+            this._totalCount = 0;
+            this._compareTotalCount = 0;
           }
+          
+          this._currentTableBusy = false;
+          this._compareTableBusy = false;
           this._updateTableHeight.next();
+          this._updateLayout();
         },
         error => {
           const actions = {
             'close': () => {
-              if (isCompare) {
+              if (this._isCompareMode) {
                 this._compareTableBlockerMessage = null;
               } else {
                 this._currentTableBlockerMessage = null;
@@ -167,11 +184,11 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
               
             },
             'retry': () => {
-              this._loadTableData(isCompare);
+              this._loadTableData();
             },
           };
           const message = this._errorsManager.getErrorMessage(error, actions);
-          if (isCompare) {
+          if (this._isCompareMode) {
             this._compareTableBusy = false;
             this._compareTableBlockerMessage = message;
           } else {
@@ -183,34 +200,30 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       );
   }
   
-  protected _loadReport(sections = this._dataConfig): void {
-    if (sections[ReportDataSection.totals]) {
-      this.interactions$.next({ current: null, compare: null, busy: true, error: null });
-    }
+  protected _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     this._filter.ownerIdsIn = this.userId;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
+    const sections = {
+      totals: this._dataConfig[ReportDataSection.totals],
+      graph: this._dataConfig[ReportDataSection.graph],
+    };
+    
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: null, order: null };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-  
+        
         this._compareFilter.ownerIdsIn = this.userId;
-        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: null, order: null };
         
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          this._totalCount = 0;
-          this._tableData = [];
-          if (sections[ReportDataSection.totals]) {
-            this.interactions$.next({ current: report, compare: compare, busy: false, error: null });
-          }
-          
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
           }
@@ -221,9 +234,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
             this._currentDates = null;
             this._compareDates = null;
             
-            if (report.table && report.table.data && report.table.header) {
-              this._handleTable(report.table); // handle table
-            }
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
             }
@@ -231,7 +241,10 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
           this._compareFirstTimeLoading = false;
           this._firstTimeLoading = false;
           this._isBusy = false;
-          this._updateTableHeight.next();
+          
+          if (this._showTable) {
+            this._loadTableData();
+          }
         },
         error => {
           this._isBusy = false;
@@ -244,9 +257,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-          if (sections[ReportDataSection.totals]) {
-            this.interactions$.next({ current: null, compare: null, busy: false, error: error });
-          }
           this._updateTableHeight.next();
         });
   }
@@ -269,6 +279,10 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       this._compareFilter = null;
       this._compareFirstTimeLoading = true;
     }
+    
+    if (!this._showTable) {
+      this._tableData = [];
+    }
   }
   
   protected _updateRefineFilter(): void {
@@ -278,6 +292,10 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
+    }
+  
+    if (!this._showTable) {
+      this._tableData = [];
     }
   }
   
@@ -299,36 +317,11 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
-    
-    if (current.table && compare.table) {
-      this._handleTable(current.table, compare);
-    }
   }
   
   private _extendTableRow(item: TableRow<string>): TableRow<string> {
     item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
     return item;
-  }
-  
-  private _handleTable(table: KalturaReportTable, compare?: Report): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
-    this._columns = columns;
-    this._tableData = tableData.map(this._extendTableRow.bind(this));
-  
-    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
-    this._entryDetails = entryDetails.map(this._extendTableRow.bind(this));
-    
-    if (compare && compare.table && compare.table.header && compare.table.data) {
-      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      this._compareTotalCount = compare.table.totalCount;
-      this._compareTableData = compareTableData.map(this._extendTableRow.bind(this));
-      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
-      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-  
-      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
-      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(this._extendTableRow.bind(this))];
-    }
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
@@ -346,16 +339,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   
-  public _onTabChange(tab: Tab): void {
-    this._logger.trace('Handle tab change action by user', { tab });
-    this._selectedMetrics = tab.key;
-  }
-  
-  public _toggleTable(): void {
-    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
-    this._showTable = !this._showTable;
-    this._updateTableHeight.next();
-    
+  private _updateLayout(): void {
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
@@ -365,11 +349,27 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     }
   }
   
-  public _onPaginationChanged(isCompareTable: boolean, pager: KalturaPager, event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
+  public _onTabChange(tab: Tab): void {
+    this._logger.trace('Handle tab change action by user', { tab });
+    this._selectedMetrics = tab.key;
+  }
+  
+  public _toggleTable(): void {
+    this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
+    this._showTable = !this._showTable;
+    this._updateTableHeight.next();
+    this._updateLayout();
+    
+    if (this._showTable && !this._tableData.length) {
+      this._loadTableData();
+    }
+  }
+  
+  public _onPaginationChanged(pager: KalturaPager, event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
     if (event.page !== (pager.pageIndex - 1)) {
       this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
       pager.pageIndex = event.page + 1;
-      this._loadTableData(isCompareTable);
+      this._loadTableData();
     }
   }
   

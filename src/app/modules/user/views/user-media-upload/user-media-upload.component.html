@@ -52,7 +52,7 @@
                                        [columns]="_columns"
                                        (drillDown)="_drillDown($event)"
                                        (sortChanged)="_onSortChanged($event)"
-                                       (paginationChanged)="_onPaginationChanged(true, _comparePager, $event)"></app-user-media-upload-table>
+                                       (paginationChanged)="_onPaginationChanged(_comparePager, $event)"></app-user-media-upload-table>
           <app-user-media-upload-table name="current"
                                        [entryDetails]="_entryDetails"
                                        [isBusy]="_currentTableBusy"
@@ -67,7 +67,7 @@
                                        [columns]="_columns"
                                        (drillDown)="_drillDown($event)"
                                        (sortChanged)="_onSortChanged($event)"
-                                       (paginationChanged)="_onPaginationChanged(false, _pager, $event)"></app-user-media-upload-table>
+                                       (paginationChanged)="_onPaginationChanged(_pager, $event)"></app-user-media-upload-table>
         </div>
       </div>
     </div>

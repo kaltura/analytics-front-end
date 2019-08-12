@@ -1,10 +1,10 @@
-<div [attr.data-aid]="'table-content-interactions' + name" class="kTableContainer">
+<div [attr.data-aid]="'table-user-media-upload' + name" class="kTableContainer">
   <span class="kDates" *ngIf="dates">{{dates}}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
     <k-area-blocker [showLoader]="isBusy" [message]="areaBlockerMessage">
       <p-table appScrollTopOnPaging
-               sortField="count_viral"
+               sortField="created_at"
                [customPaginationEvent]="_paginationChanged$"
                [value]="tableData"
                [customSort]="true"
@@ -18,9 +18,9 @@
             </th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
-                [kTooltip]="'app.contentInteractions.' + col | translate"
+                [kTooltip]="'app.user.' + col | translate"
                 [showOnEllipsis]="true">
-              {{'app.contentInteractions.' + col | translate}}
+              {{'app.user.' + col | translate}}
               <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
             </th>
 
@@ -66,5 +66,5 @@
 </div>
 
 <k-overlayPanel #overlay appendTo="body">
-  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+  <app-user-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-user-entry-details-overlay>
 </k-overlayPanel>
