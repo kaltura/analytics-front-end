@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <div class="kTotalContainer">
+      <div class="kTotalContainer" *ngIf="_canShowLikes">
         <div class="kMiniIcon blue"><i class="icon-small-like"></i></div>
         <div class="kTotal"
              [kTooltip]="_tabsData[2]?.tooltip"

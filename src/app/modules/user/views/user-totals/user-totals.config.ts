@@ -27,12 +27,12 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
           'votes': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.votes`),
-            sortOrder: 4,
+            sortOrder: 3,
           },
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.added_entries`),
-            sortOrder: 5,
+            sortOrder: 4,
           },
         }
       }
