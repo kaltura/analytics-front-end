@@ -14,6 +14,7 @@ import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { SortEvent } from 'primeng/api';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
@@ -31,7 +32,6 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-engagement_ranking';
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
@@ -45,6 +45,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   public totalCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   
+  public _order = '-engagement_ranking';
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: TableRow<string>[] = [];
@@ -183,5 +184,15 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   ngOnDestroy() {
     this.topVideos$.complete();
     this.totalCount$.complete();
+  }
+  
+  public _onSortChanged(event: SortEvent): void {
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        this._loadReport();
+      }
+    }
   }
 }

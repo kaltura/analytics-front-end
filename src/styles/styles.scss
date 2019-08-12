@@ -268,12 +268,31 @@ body{
 }
 .kEntryCompareGraphTooltip {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 5px;
   font-weight: bold;
-  .kBullet {
-    font-size: 48px;
-    margin-right: 5px;
+
+  .kPeriodLabel {
+    color: $kGrayscale3;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .kValue {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .kBullet {
+      font-size: 48px;
+      margin-right: 5px;
+    }
   }
 }
 

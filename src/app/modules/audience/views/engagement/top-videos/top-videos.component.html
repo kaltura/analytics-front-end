@@ -9,20 +9,24 @@
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-engagement-top-videos-table *ngIf="_isCompareMode"
                                        name="compare"
+                                       [order]="_order"
                                        [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
                                        [firstTimeLoading]="_compareFirstTimeLoading"
-                                       [columns]="_columns"></app-engagement-top-videos-table>
+                                       [columns]="_columns"
+                                       (sortChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
       <app-engagement-top-videos-table name="current"
+                                       [order]="_order"
                                        [tableData]="_tableData"
                                        [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
                                        [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"></app-engagement-top-videos-table>
+                                       [columns]="_columns"
+                                       (sortChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
     </k-area-blocker>
   </div>
 </div>
