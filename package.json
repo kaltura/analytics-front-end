@@ -26,6 +26,7 @@
     "@kaltura-ng/kaltura-primeng-ui": "^3.0.9",
     "@kaltura-ng/kaltura-ui": "^7.0.3",
     "@kaltura-ng/mc-theme": "^3.0.9",
+    "@kaltura-ng/mc-shared": "^3.0.9",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^2.5.4",
@@ -42,7 +43,8 @@
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.2.2",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.27"
+    "zone.js": "~0.8.27",
+    "seamless-immutable": "~7.1.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.4",

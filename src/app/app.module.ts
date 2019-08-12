@@ -19,6 +19,7 @@ import { FrameEventManagerModule } from 'shared/modules/frame-event-manager/fram
 import { KalturaLogger, KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
 import { environment } from '../environments/environment';
 import { PageScrollService } from 'ngx-page-scroll';
+import { AnalyticsPermissionsModule } from 'shared/analytics-permissions/analytics-permissions.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
@@ -38,6 +39,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     BrowserAnimationsModule,
     KalturaClientModule.forRoot(),
+    AnalyticsPermissionsModule.forRoot(),
     FrameEventManagerModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
