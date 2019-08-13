@@ -367,7 +367,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         pid: analyticsConfig.pid,
         entryid: this.entryId,
         flashvars: {
-          'ks': analyticsConfig.ks,
+          'ks': this._authService.ks,
           'EmbedPlayer.LiveCuepoints': true,
           // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           'controlBarContainer': {
