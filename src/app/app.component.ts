@@ -4,7 +4,7 @@ import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-co
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
-import { BrowserService } from 'shared/services';
+import { AuthService, BrowserService } from 'shared/services';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
               private _router: Router,
+              private _authService: AuthService,
               private _browserService: BrowserService,
               private _permissionsService: AnalyticsPermissionsService,
               private _kalturaServerClient: KalturaClient) {
@@ -107,8 +108,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.hosted = hosted; // hosted;
-    
-    analyticsConfig.ks = config.ks;
+    this._authService.ks = config.ks;
+
     analyticsConfig.pid = config.pid;
     analyticsConfig.locale = config.locale;
     analyticsConfig.kalturaServer = config.kalturaServer;
@@ -121,13 +122,13 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
 
     // set ks in ngx-client
-    this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
+    this._logger.info(`Setting ks in ngx-client: ${this._authService.ks}`);
     this._kalturaServerClient.setOptions({
       endpointUrl: getKalturaServerUri(),
       clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
     });
     this._kalturaServerClient.setDefaultRequestOptions({
-      ks: analyticsConfig.ks
+      ks: this._authService.ks
     });
 
     // load localization

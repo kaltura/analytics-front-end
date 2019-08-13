@@ -5,6 +5,16 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 @Injectable()
 export class AuthService {
 
+    public set ks(value: string) {
+      this._ks = value;
+    }
+
+    public get ks(): string {
+      return this._ks;
+    }
+
+    private _ks: string = null;
+
     constructor(private _frameEventManager: FrameEventManagerService,
                 private _logger: KalturaLogger) {
       this._logger = _logger.subLogger('AuthService');
