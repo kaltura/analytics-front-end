@@ -11,28 +11,27 @@ export function reportTypeMap(reportType: KalturaReportType): KalturaReportType 
 
 function mapMultiAccount(reportType: KalturaReportType): KalturaReportType {
   const reportsMap = {
-    "2": KalturaReportType.contentDropoffVpaas,
-    "6": KalturaReportType.topSyndicationVpaas,
-    "13": KalturaReportType.userTopContentVpaas,
-    "17": KalturaReportType.userUsageVpaas,
-    "21": KalturaReportType.platformsVpaas,
-    "22": KalturaReportType.operatingSystemVpaas,
-    "23": KalturaReportType.browsersVpaas,
-    "30": KalturaReportType.mapOverlayCityVpaas,
-    "32": KalturaReportType.operatingSystemFamiliesVpaas,
-    "33": KalturaReportType.browsersFamiliesVpaas,
-    "34": KalturaReportType.userEngagementTimelineVpaas,
-    "35": KalturaReportType.uniqueUsersPlayVpaas,
-    "36": KalturaReportType.mapOverlayCountryVpaas,
-    "37": KalturaReportType.mapOverlayRegionVpaas,
-    "38": KalturaReportType.topContentCreatorVpaas,
-    "39": KalturaReportType.topContentContributorsVpaas,
-    "41": KalturaReportType.topSourcesVpaas,
-    "44": KalturaReportType.contentReportReasonsVpaas,
-    "45": KalturaReportType.playerRelatedInteractionsVpaas,
-    "46": KalturaReportType.playbackRateVpaas,
-    "201": KalturaReportType.partnerUsageVpaas
+    [KalturaReportType.contentDropoff]:             KalturaReportType.contentDropoffVpaas,
+    [KalturaReportType.topSyndication]:             KalturaReportType.topSyndicationVpaas,
+    [KalturaReportType.userTopContent]:             KalturaReportType.userTopContentVpaas,
+    [KalturaReportType.userUsage]:                  KalturaReportType.userUsageVpaas,
+    [KalturaReportType.platforms]:                  KalturaReportType.platformsVpaas,
+    [KalturaReportType.operatingSystem]:            KalturaReportType.operatingSystemVpaas,
+    [KalturaReportType.browsers]:                   KalturaReportType.browsersVpaas,
+    [KalturaReportType.mapOverlayCity]:             KalturaReportType.mapOverlayCityVpaas,
+    [KalturaReportType.operatingSystemFamilies]:    KalturaReportType.operatingSystemFamiliesVpaas,
+    [KalturaReportType.browsersFamilies]:           KalturaReportType.browsersFamiliesVpaas,
+    [KalturaReportType.userEngagementTimeline]:     KalturaReportType.userEngagementTimelineVpaas,
+    [KalturaReportType.uniqueUsersPlay]:            KalturaReportType.uniqueUsersPlayVpaas,
+    [KalturaReportType.mapOverlayCountry]:          KalturaReportType.mapOverlayCountryVpaas,
+    [KalturaReportType.mapOverlayRegion]:           KalturaReportType.mapOverlayRegionVpaas,
+    [KalturaReportType.topContentCreator]:          KalturaReportType.topContentCreatorVpaas,
+    [KalturaReportType.topContentContributors]:     KalturaReportType.topContentContributorsVpaas,
+    [KalturaReportType.topSources]:                 KalturaReportType.topSourcesVpaas,
+    [KalturaReportType.contentReportReasons]:       KalturaReportType.contentReportReasonsVpaas,
+    [KalturaReportType.playerRelatedInteractions]:  KalturaReportType.playerRelatedInteractionsVpaas,
+    [KalturaReportType.playbackRate]:               KalturaReportType.playbackRateVpaas,
+    [KalturaReportType.partnerUsage]:               KalturaReportType.partnerUsageVpaas
   };
-  console.log("---> calling report type: " + reportsMap[reportType]);
   return reportsMap[reportType] || reportType;
 }

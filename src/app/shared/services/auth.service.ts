@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaClient } from "kaltura-ngx-client";
+import { KalturaAPIException, KalturaClient, KalturaMultiResponse, KalturaSessionType, PartnerGetAction, PartnerGetInfoAction, SessionImpersonateAction } from "kaltura-ngx-client";
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { Observable } from "rxjs";
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnDestroy {
 
     public set ks(value: string) {
       this._ks = value;
@@ -36,7 +39,7 @@ export class AuthService {
       this._frameEventManager.publish(FrameEvents.Logout);
     }
 
-    public restoreParentIfNeeded(): void {
+    public restoreParentIfNeeded(): boolean {
       if (this._parentPid) {
         this._pid = this._parentPid;
         this._parentPid = null;
@@ -51,8 +54,64 @@ export class AuthService {
           ks: this._ks
         });
       }
+
+      return true;
     }
 
+    public switchPartner(newPartnerId: number): Observable<boolean> {
+      return Observable.create(
+        observer => {
+          this._getAdminSession(newPartnerId)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(
+              ks => {
+                this._logger.info(`handle successful switchPartner request by user`);
+                // TODO: update KS and PID
+                observer.next(true);
+                observer.complete();
+              },
+              (error: KalturaAPIException) => {
+                this._logger.warn(`handle failed switchPartner request by user, show confirmation`, { errorMessage: error.message });
+                observer.error(error);
+              }
+            );
 
+        });
+    }
+
+    private _getAdminSession(impersonatedPartnerId: number): Observable<string> {
+      const loggedInUserId = this._pid;
+      const requests = [
+        new PartnerGetInfoAction({})
+          .setRequestOptions({
+            ks: this._ks
+          }),
+        new PartnerGetAction({ id: impersonatedPartnerId })
+          .setRequestOptions({
+            ks: this._ks
+          })];
+
+      return this._kalturaServerClient.multiRequest(requests).pipe(switchMap(
+        (responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            throw new Error(`Error occur during session creation for partner ${impersonatedPartnerId}`);
+          }
+          return this._kalturaServerClient.request(new SessionImpersonateAction({
+            secret: responses[0].result.adminSecret,
+            userId: responses[1].result.adminUserId,
+            impersonatedPartnerId,
+            type: KalturaSessionType.admin,
+            partnerId: this._pid,
+            privileges: loggedInUserId !== responses[1].result.adminUserId ? `disableentitlement,enablechangeaccount:${impersonatedPartnerId}` : 'disableentitlement'
+
+          })).map(response => {
+            const ks: string = response;
+            return ks;
+          });
+        }
+      ));
+    }
+
+    ngOnDestroy(): void {}
 }
 
