@@ -212,8 +212,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     };
   
     const filter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    filter.entryCreatedAtGreaterThanOrEqual = DateFilterUtils.getMomentDate(this._filter.fromDate).toDate();
-    filter.entryCreatedAtLessThanOrEqual = DateFilterUtils.getMomentDate(this._filter.toDate).toDate();
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter, pager: null, order: null };
     this._reportService.getReport(reportConfig, sections)
@@ -224,8 +222,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
         
         this._compareFilter.ownerIdsIn = this.userId;
         const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._compareFilter), this._filter);
-        compareFilter.entryCreatedAtGreaterThanOrEqual = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).toDate();
-        compareFilter.entryCreatedAtLessThanOrEqual = DateFilterUtils.getMomentDate(this._compareFilter.toDate).toDate();
 
         const compareReportConfig = { reportType: this._reportType, filter: compareFilter, pager: null, order: null };
         
