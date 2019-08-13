@@ -29,7 +29,7 @@ import { SortEvent } from 'primeng/api';
   ]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit, OnDestroy {
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;

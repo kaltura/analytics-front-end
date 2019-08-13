@@ -3,7 +3,7 @@ import { EngagementBaseReportComponent } from '../engagement-base-report/engagem
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -36,7 +36,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   
   protected _componentId = 'mini-top-videos';
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
@@ -68,6 +68,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
               private _dataConfigService: MiniTopVideosConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger,
+              private _authService: AuthService,
               private _browserService: BrowserService,
               private _router: Router,
               private _activatedRoute: ActivatedRoute) {

@@ -109,8 +109,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.hosted = hosted; // hosted;
     this._authService.ks = config.ks;
+    this._authService.pid = config.pid;
 
-    analyticsConfig.pid = config.pid;
     analyticsConfig.locale = config.locale;
     analyticsConfig.kalturaServer = config.kalturaServer;
     analyticsConfig.cdnServers = config.cdnServers;

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -37,7 +37,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   private readonly _order = '-count_viral';
   private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
@@ -69,6 +69,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
               private _pageScrollService: PageScrollService,
               private _errorsManager: ErrorsManagerService,
               private _logger: KalturaLogger,
+              private _authService: AuthService,
               private _browserService: BrowserService,
               private _router: Router,
               private _activatedRoute: ActivatedRoute) {

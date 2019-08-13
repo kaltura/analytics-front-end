@@ -18,7 +18,6 @@ export interface AnalyticsConfig {
     serverUri?: string,
     securedServerUri?: string
   };
-  pid?: string;
   locale?: string;
   dateFormat?: string;
   showNavBar?: boolean;
