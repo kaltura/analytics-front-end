@@ -117,6 +117,10 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
+
+    // TODO: check the user has permissions for multi account before updating the config
+    analyticsConfig.multiAccount = config.multiAccount;
+
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
