@@ -4,7 +4,7 @@ import { analyticsConfig } from "configuration/analytics-config";
 import { BrowserService } from 'shared/services/browser.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { AuthService } from "shared/services/auth.service";
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { cancelOnDestroy, tag } from "@kaltura-ng/kaltura-common";
 import { KalturaAPIException } from "kaltura-ngx-client";
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,6 +26,7 @@ export class NavigationDrillDownService implements OnDestroy {
       this._partnerSwitchInProgress = true;
       this._authService.switchPartner(parseInt(partnerId))
         .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(
           (success: boolean) => {
             if (success) {

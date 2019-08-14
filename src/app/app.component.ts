@@ -7,9 +7,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService, BrowserService } from 'shared/services';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy, OperationTagManagerService } from '@kaltura-ng/kaltura-common';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { observeOn } from 'rxjs/operators';
+import { async } from 'rxjs/scheduler/async';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Component({
@@ -23,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
 
+  public _isBusy: boolean = false;
   public _confirmDialogAlignLeft = false;
   public _confirmationLabels = {
     yes: 'Yes',
@@ -39,6 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _authService: AuthService,
               private _browserService: BrowserService,
+              private _oprationsTagManager: OperationTagManagerService,
               private _permissionsService: AnalyticsPermissionsService,
               private _kalturaServerClient: KalturaClient) {
     if (window['analyticsConfig']) { // standalone
@@ -102,6 +106,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
       this._confirmationService.confirm(formattedMessage);
     });
+
+    // handle app status: busy and error messages. Allow closing error window using the 'OK' button
+    this._oprationsTagManager.tagStatus$
+      .pipe(observeOn(async))
+      .subscribe((tags: {[key: string]: number}) => {
+        this._isBusy = tags['block-shell'] > 0;
+      });
 
     this._frameEventManager.publish(FrameEvents.AnalyticsInit);
   }
