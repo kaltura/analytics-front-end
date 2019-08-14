@@ -2,7 +2,14 @@ import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {
+  AuthService,
+  BrowserService,
+  ErrorsManagerService,
+  NavigationDrillDownService,
+  ReportConfig,
+  ReportService
+} from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -71,6 +78,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
               private _logger: KalturaLogger,
               private _authService: AuthService,
               private _browserService: BrowserService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _router: Router,
               private _activatedRoute: ActivatedRoute) {
     super();
@@ -178,15 +186,10 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id, status } = row;
-
+    const { object_id, status, partner_id } = row;
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
-      } else {
-        this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', object_id, true, partner_id);
     }
   }
+
 }

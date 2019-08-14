@@ -2,7 +2,15 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import {
+  AuthService,
+  BrowserService,
+  ErrorsManagerService,
+  NavigationDrillDownService,
+  Report,
+  ReportConfig,
+  ReportService
+} from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -89,6 +97,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _dataConfigService: InteractionsConfig,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _logger: KalturaLogger,
               private _router: Router,
               private _activatedRoute: ActivatedRoute,
@@ -373,15 +382,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status } = row;
+    const { object_id: entryId, status, partner_id } = row;
 
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partner_id);
     }
   }
 }
