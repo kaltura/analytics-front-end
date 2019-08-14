@@ -3,7 +3,7 @@ import { EngagementBaseReportComponent } from '../engagement-base-report/engagem
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -11,13 +11,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniTopVideosConfig } from './mini-top-videos.config';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-engagement-mini-top-videos',
@@ -71,7 +70,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
               private _authService: AuthService,
               private _browserService: BrowserService,
               private _router: Router,
-              private _activatedRoute: ActivatedRoute) {
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -159,14 +158,9 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   ngOnDestroy() {
   }
   
-  public _drillDown({ object_id, status }: { object_id: string, status: KalturaEntryStatus }): void {
+  public _drillDown({ object_id, status, partner_id }: { object_id: string, status: KalturaEntryStatus, partner_id: string }): void {
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
-      } else {
-        this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', object_id, true, partner_id);
     }
   }
 }

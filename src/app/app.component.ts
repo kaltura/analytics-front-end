@@ -23,7 +23,6 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
   @ViewChild('alert') private _alertDialog: ConfirmDialog;
 
-  public _windowEventListener = null;
   public _confirmDialogAlignLeft = false;
   public _confirmationLabels = {
     yes: 'Yes',
@@ -52,7 +51,16 @@ export class AppComponent implements OnInit, OnDestroy {
     
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(({ url }) => this._router.navigateByUrl(this.mapRoutes(url)));
+      .subscribe(({ url }) => {
+
+        // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
+        const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1);
+        if (needToRestoreParent) {
+          this._authService.restoreParentIfNeeded();
+        }
+
+        this._router.navigateByUrl(this.mapRoutes(url));
+      });
   
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
@@ -131,6 +139,7 @@ export class AppComponent implements OnInit, OnDestroy {
       endpointUrl: getKalturaServerUri(),
       clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
     });
+
     this._kalturaServerClient.setDefaultRequestOptions({
       ks: this._authService.ks
     });

@@ -23,6 +23,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerModule, InputHelperModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
+import { NavigationDrillDownService } from 'shared/services/navigation-drilldown.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { NumberFormatPipe } from 'shared/pipes/number-formatter';
@@ -178,6 +179,7 @@ export class SharedModule {
         ReportService,
         CompareService,
         TrendService,
+        NavigationDrillDownService,
         CategoriesSearchService,
       ]
     };

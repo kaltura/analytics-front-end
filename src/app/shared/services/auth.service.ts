@@ -39,7 +39,7 @@ export class AuthService implements OnDestroy {
       this._frameEventManager.publish(FrameEvents.Logout);
     }
 
-    public restoreParentIfNeeded(): boolean {
+    public restoreParentIfNeeded(): void {
       if (this._parentPid) {
         this._pid = this._parentPid;
         this._parentPid = null;
@@ -51,11 +51,10 @@ export class AuthService implements OnDestroy {
 
         // update Kaltura client lib ks
         this._kalturaServerClient.setDefaultRequestOptions({
-          ks: this._ks
+          ks: this._ks,
+          partnerId: this._pid
         });
       }
-
-      return true;
     }
 
     public switchPartner(newPartnerId: number): Observable<boolean> {
@@ -65,8 +64,19 @@ export class AuthService implements OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(
               ks => {
+
                 this._logger.info(`handle successful switchPartner request by user`);
-                // TODO: update KS and PID
+                this._parentKs = this._ks;            // save parent KS
+                this._parentPid = this._pid;          // save parent pid
+                this._ks = ks;                        // update ks to the child partner ks
+                this._pid = newPartnerId.toString();  // update pid to the child partner id
+
+                // update Kaltura client lib ks
+                this._kalturaServerClient.setDefaultRequestOptions({
+                  ks: this._ks,
+                  partnerId: this._pid
+                });
+
                 observer.next(true);
                 observer.complete();
               },
