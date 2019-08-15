@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private _confirmationService: ConfirmationService,
               private _logger: KalturaLogger,
               private _router: Router,
+              private _location: Location,
               private _authService: AuthService,
               private _browserService: BrowserService,
               private _oprationsTagManager: OperationTagManagerService,
@@ -71,6 +73,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => _logger.setOptions({ level }));
+
+    this._frameEventManager.listen(FrameEvents.UpdateMultiAccount)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(({ multiAccount }) => {
+        this._updateMultiAccount(multiAccount, true);
+      });
   }
 
   ngOnInit() {
@@ -254,12 +262,21 @@ export class AppComponent implements OnInit, OnDestroy {
       }));
   }
 
-  private _updateMultiAccount(showMultiAccount: boolean): void {
+  private _updateMultiAccount(showMultiAccount: boolean, reload = false): void {
+    const needToReload = reload && showMultiAccount !== analyticsConfig.multiAccount;
+
     // TODO: update to the relevant permission once developed by backend
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_VAR_CONSOLE_LOGIN)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
+    }
+
+    if (needToReload) {
+      // refresh current route to invoke data reloading using the new multi account settings
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([decodeURI(this._location.path())]);
+      });
     }
   }
 
