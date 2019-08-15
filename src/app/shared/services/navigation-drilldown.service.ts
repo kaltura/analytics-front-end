@@ -54,7 +54,7 @@ export class NavigationDrillDownService implements OnDestroy {
       const params = includeQueryParams ? this._browserService.getCurrentQueryParams('string') : '';
       this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/${route}?id=${id}&${params}`);
     } else {
-      this._router.navigate([route, id], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : null));
+      this._router.navigate([route, id], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : {}));
     }
   }
 
@@ -63,7 +63,7 @@ export class NavigationDrillDownService implements OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateBack);
     } else {
-      this._router.navigate([route], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : null));
+      this._router.navigate([route], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : {}));
     }
   }
 
