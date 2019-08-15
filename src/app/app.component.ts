@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
 import { async } from 'rxjs/scheduler/async';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     ok: 'OK'
   };
 
+  public _permissionsLoaded = false;
   private hosted = false;
 
   constructor(private _frameEventManager: FrameEventManagerService,
@@ -136,10 +138,6 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
-
-    // TODO: check the user has permissions for multi account before updating the config
-    analyticsConfig.multiAccount = config.multiAccount;
-
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
@@ -163,6 +161,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
         this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
+        this._updateMultiAccount(config.multiAccount || false);
         if (this.hosted) {
           this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
         }
@@ -251,7 +250,17 @@ export class AppComponent implements OnInit, OnDestroy {
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+        this._permissionsLoaded = true;
       }));
+  }
+
+  private _updateMultiAccount(showMultiAccount: boolean): void {
+    // TODO: update to the relevant permission once developed by backend
+    if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_VAR_CONSOLE_LOGIN)) {
+      analyticsConfig.multiAccount = showMultiAccount;
+    } else {
+      analyticsConfig.multiAccount = false;
+    }
   }
 
 }

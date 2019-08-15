@@ -71,6 +71,6 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  multiAccount: true,
+  multiAccount: false,
   permissions: {},
 };

@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_isBusy" [bodyScroll]="true" [classes]="'kAreaBlockerCoverAll'">
+<k-area-blocker [showLoader]="_isBusy" [bodyScroll]="true" [classes]="'kAreaBlockerCoverAll'" *ngIf="_permissionsLoaded">
   <router-outlet></router-outlet>
 </k-area-blocker>
 
