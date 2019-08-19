@@ -265,8 +265,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _updateMultiAccount(showMultiAccount: boolean, reload = false): void {
     const needToReload = reload && showMultiAccount !== analyticsConfig.multiAccount;
 
-    // TODO: update to the relevant permission once developed by backend
-    if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_VAR_CONSOLE_LOGIN)) {
+    if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
