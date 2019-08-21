@@ -145,7 +145,7 @@
         border: 1px solid $kGrayscale4;
       }
 
-      img {
+      ::ng-deep img {
         position: absolute;
         left: -100%;
         right: -100%;

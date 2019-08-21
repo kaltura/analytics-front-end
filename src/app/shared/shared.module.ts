@@ -9,6 +9,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
+import { ThumbnailLoaderComponent } from './components/thumbnail-loader/thumbnail-loader.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
@@ -85,6 +86,7 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
   ],
   declarations: [
     DateFilterComponent,
+    ThumbnailLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,
@@ -126,6 +128,7 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
   ],
   exports: [
     DateFilterComponent,
+    ThumbnailLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -43,7 +43,6 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private subscription: ISubscription = null;
 
-  public _ks = '';
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow<string>[] = [];
@@ -72,11 +71,9 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
               private _logger: KalturaLogger,
               private _browserService: BrowserService,
               private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              _authService: AuthService) {
+              private _activatedRoute: ActivatedRoute) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
-    this._ks = _authService.ks;
   }
   
   protected _loadReport(sections = this._dataConfig): void {

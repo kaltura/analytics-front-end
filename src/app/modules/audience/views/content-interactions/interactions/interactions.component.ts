@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -64,7 +64,6 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
-  public _ks = '';
   public _compareTotalCount = 0;
   public _currentDates: string;
   public _compareDates: string;
@@ -88,7 +87,6 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
               private _dataConfigService: InteractionsConfig,
               private _logger: KalturaLogger,
               private _router: Router,
@@ -98,7 +96,6 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
-    this._ks = this._authService.ks;
   }
   
   ngOnDestroy() {

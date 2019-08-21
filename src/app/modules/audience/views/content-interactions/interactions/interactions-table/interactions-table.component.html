@@ -31,8 +31,7 @@
             <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
             <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
               <div class="kThumbnailHolder" #holder (click)="drillDown.emit(data)">
-                <img *ngIf="data.thumbnailUrl" [src]="data.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=data.thumbnailUrl+'/ks/'+ks">
-                <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
               </div>
             </td>
             <td *ngFor="let col of columns; let i = index"
