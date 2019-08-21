@@ -6,17 +6,14 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { UserBase } from '../user-base/user-base';
 import { UserMiniTopContentConfig } from './user-mini-top-content.config';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
-import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { CompareService } from 'shared/services/compare.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
@@ -32,7 +29,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   private _pager = new KalturaFilterPager({ pageSize: 4, pageIndex: 1 });
   private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
@@ -63,7 +60,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
               private _router: Router,
               private _activatedRoute: ActivatedRoute,
               private _browserService: BrowserService,
-              private _compareService: CompareService) {
+              private _authService: AuthService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();

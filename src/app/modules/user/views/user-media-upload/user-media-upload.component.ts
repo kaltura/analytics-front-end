@@ -39,7 +39,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   private _order = '-created_at';
   private _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;

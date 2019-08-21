@@ -30,7 +30,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
   @Input() userId: string;
   
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;

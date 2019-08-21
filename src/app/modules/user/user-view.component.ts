@@ -135,7 +135,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   
   public _back(): void {
     if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
+      this._frameEventManager.publish(FrameEvents.NavigateBack);
     } else {
       this._router.navigate(['contributors'], { queryParams: this._route.snapshot.queryParams });
     }
