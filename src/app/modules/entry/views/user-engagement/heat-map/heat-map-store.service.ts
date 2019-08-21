@@ -56,7 +56,12 @@ export class HeatMapStoreService {
             }
   
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
-            
+
+            // if we get 101 data points, remove the first data point as it always contains 0
+            if (report.table.totalCount === 101 && tableData.length) {
+              tableData.shift();
+            }
+
             return tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
               .map(item => Number(item['count_viewers']));
