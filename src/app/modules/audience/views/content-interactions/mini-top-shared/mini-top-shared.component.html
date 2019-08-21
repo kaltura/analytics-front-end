@@ -16,9 +16,7 @@
         </div>
         <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
         <div class="kReportRowThumbnail" #holder (click)="_drillDown(item)">
-          <img [src]="item.thumbnailUrl"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('error')">
+          <app-thumbnail-loader [thumbnailUrl]="item.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
         </div>
         <div class="kReportRowDetails">
           <span class="kTitle" [kTooltip]="item.entry_name" [showOnEllipsis]="true" (click)="_drillDown(item)">

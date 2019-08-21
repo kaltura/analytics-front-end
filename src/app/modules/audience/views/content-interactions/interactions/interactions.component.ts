@@ -3,8 +3,8 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
-  AuthService,
   BrowserService,
+  AuthService,
   ErrorsManagerService,
   NavigationDrillDownService,
   Report,
@@ -95,8 +95,8 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
               private _dataConfigService: InteractionsConfig,
+              private _authService: AuthService,
               private _navigationDrillDownService: NavigationDrillDownService,
               private _logger: KalturaLogger,
               private _router: Router,
@@ -308,7 +308,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
     item['index'] = String(pager.pageSize * (pager.pageIndex - 1) + (index + 1));
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     return item;
   }
   
