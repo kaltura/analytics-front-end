@@ -26,50 +26,50 @@
         </div>
       </div>
 
-      <div class="kTable">
-        <div class="kToggle">
-          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-          <a (click)="_toggleTable()">
-            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
-          </a>
-        </div>
-        <div class="kTablesHolder" appEvenTableHeight
-             [updateListener]="_updateTableHeight$"
-             [class.kOpen]="_showTable"
-             [class.kClose]="!_showTable">
-          <app-user-media-upload-table *ngIf="_isCompareMode"
-                                       name="compare"
-                                       [entryDetails]="_entryDetails"
-                                       [isBusy]="_compareTableBusy"
-                                       [areaBlockerMessage]="_compareTableBlockerMessage"
-                                       [pager]="_comparePager"
-                                       [tableData]="_compareTableData"
-                                       [showDivider]="_isCompareMode"
-                                       [isCompareMode]="_isCompareMode"
-                                       [dates]="_compareDates"
-                                       [totalCount]="_compareTotalCount"
-                                       [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"
-                                       (drillDown)="_drillDown($event)"
-                                       (sortChanged)="_onSortChanged($event)"
-                                       (paginationChanged)="_onPaginationChanged(_comparePager, $event)"></app-user-media-upload-table>
-          <app-user-media-upload-table name="current"
-                                       [entryDetails]="_entryDetails"
-                                       [isBusy]="_currentTableBusy"
-                                       [areaBlockerMessage]="_currentTableBlockerMessage"
-                                       [pager]="_pager"
-                                       [tableData]="_tableData"
-                                       [showDivider]="_isCompareMode"
-                                       [isCompareMode]="_isCompareMode"
-                                       [dates]="_currentDates"
-                                       [totalCount]="_totalCount"
-                                       [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"
-                                       (drillDown)="_drillDown($event)"
-                                       (sortChanged)="_onSortChanged($event)"
-                                       (paginationChanged)="_onPaginationChanged(_pager, $event)"></app-user-media-upload-table>
-        </div>
-      </div>
+<!--      <div class="kTable">-->
+<!--        <div class="kToggle">-->
+<!--          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>-->
+<!--          <a (click)="_toggleTable()">-->
+<!--            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--        <div class="kTablesHolder" appEvenTableHeight-->
+<!--             [updateListener]="_updateTableHeight$"-->
+<!--             [class.kOpen]="_showTable"-->
+<!--             [class.kClose]="!_showTable">-->
+<!--          <app-user-media-upload-table *ngIf="_isCompareMode"-->
+<!--                                       name="compare"-->
+<!--                                       [entryDetails]="_entryDetails"-->
+<!--                                       [isBusy]="_compareTableBusy"-->
+<!--                                       [areaBlockerMessage]="_compareTableBlockerMessage"-->
+<!--                                       [pager]="_comparePager"-->
+<!--                                       [tableData]="_compareTableData"-->
+<!--                                       [showDivider]="_isCompareMode"-->
+<!--                                       [isCompareMode]="_isCompareMode"-->
+<!--                                       [dates]="_compareDates"-->
+<!--                                       [totalCount]="_compareTotalCount"-->
+<!--                                       [firstTimeLoading]="_firstTimeLoading"-->
+<!--                                       [columns]="_columns"-->
+<!--                                       (drillDown)="_drillDown($event)"-->
+<!--                                       (sortChanged)="_onSortChanged($event)"-->
+<!--                                       (paginationChanged)="_onPaginationChanged(_comparePager, $event)"></app-user-media-upload-table>-->
+<!--          <app-user-media-upload-table name="current"-->
+<!--                                       [entryDetails]="_entryDetails"-->
+<!--                                       [isBusy]="_currentTableBusy"-->
+<!--                                       [areaBlockerMessage]="_currentTableBlockerMessage"-->
+<!--                                       [pager]="_pager"-->
+<!--                                       [tableData]="_tableData"-->
+<!--                                       [showDivider]="_isCompareMode"-->
+<!--                                       [isCompareMode]="_isCompareMode"-->
+<!--                                       [dates]="_currentDates"-->
+<!--                                       [totalCount]="_totalCount"-->
+<!--                                       [firstTimeLoading]="_firstTimeLoading"-->
+<!--                                       [columns]="_columns"-->
+<!--                                       (drillDown)="_drillDown($event)"-->
+<!--                                       (sortChanged)="_onSortChanged($event)"-->
+<!--                                       (paginationChanged)="_onPaginationChanged(_pager, $event)"></app-user-media-upload-table>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
   </k-area-blocker>

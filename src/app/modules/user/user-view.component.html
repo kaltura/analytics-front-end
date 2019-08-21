@@ -92,9 +92,6 @@
           </div>
         </div>
 
-        <app-reports-divider
-          [title]="'app.user.viewingEngagement' | translate: {'0': _user.fullName}"></app-reports-divider>
-
         <div class="kReportContainer">
           <app-user-highlights [userId]="_user.id"
                                [dateFilterComponent]="dateFilter"
@@ -108,9 +105,6 @@
                            [dateFilter]="_dateFilter"
                            [refineFilter]="_refineFilter"></app-impressions>
         </div>
-
-        <app-reports-divider
-          [title]="'app.user.collaboration' | translate: {'0': _user.fullName}"></app-reports-divider>
 
         <div class="kReportContainer">
           <app-user-media-upload [userId]="_user.id"
