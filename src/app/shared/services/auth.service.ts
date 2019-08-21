@@ -114,10 +114,7 @@ export class AuthService implements OnDestroy {
             partnerId: this._pid,
             privileges: loggedInUserId !== responses[1].result.adminUserId ? `disableentitlement,enablechangeaccount:${impersonatedPartnerId}` : 'disableentitlement'
 
-          })).map(response => {
-            const ks: string = response;
-            return ks;
-          });
+          }));
         }
       ));
     }
