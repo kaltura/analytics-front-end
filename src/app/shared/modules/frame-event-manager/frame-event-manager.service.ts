@@ -12,10 +12,11 @@ export enum FrameEvents {
   NavigateTo = 'navigateTo',
   UpdateFilters = 'updateFilters',
   ScrollTo = 'scrollTo',
-  EntryNavigateBack = 'entryNavigateBack',
+  NavigateBack = 'navigateBack',
   ModalOpened = 'modalOpened',
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
+  UpdateMultiAccount = 'updateMultiAccount'
 }
 
 @Injectable()

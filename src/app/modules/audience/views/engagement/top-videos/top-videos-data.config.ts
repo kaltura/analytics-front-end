@@ -25,6 +25,10 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'partner_id': {
+            format: value => value,
+            hidden: true,
+          },
           'status': {
             format: value => value !== KalturaEntryStatus.ready ? value === KalturaEntryStatus.deleted ? this.translate.instant('app.engagement.topVideosReport.entryStatus.deleted') : this.translate.instant('app.engagement.topVideosReport.entryStatus.unavailable') : '',
             sortOrder: 8,

@@ -28,7 +28,7 @@ export class LivePlayerComponent implements AfterViewInit {
 
     const entryId = this.entryId;
     const UIConfID = analyticsConfig.kalturaServer.previewUIConf;
-    const partnerID = analyticsConfig.pid;
+    const partnerID = this._authService.pid;
     const ks = this._authService.ks || '';
     const serverUri = getKalturaServerUri();
 

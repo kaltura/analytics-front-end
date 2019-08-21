@@ -25,7 +25,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import {ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
@@ -78,6 +78,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _exportConfigService: EntryExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
@@ -198,11 +199,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
-    } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
   public _navigateToEntry(): void {
