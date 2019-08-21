@@ -364,10 +364,10 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       this.playerInitialized = true;
       this._playerConfig = {
         uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
-        pid: analyticsConfig.pid,
+        pid: this._authService.pid,
         entryid: this.entryId,
         flashvars: {
-          'ks': analyticsConfig.ks,
+          'ks': this._authService.ks,
           'EmbedPlayer.LiveCuepoints': true,
           // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
           'controlBarContainer': {

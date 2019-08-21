@@ -18,8 +18,6 @@ export interface AnalyticsConfig {
     serverUri?: string,
     securedServerUri?: string
   };
-  ks?: string;
-  pid?: string;
   locale?: string;
   dateFormat?: string;
   showNavBar?: boolean;
@@ -73,6 +71,6 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  multiAccount: true,
+  multiAccount: false,
   permissions: {},
 };

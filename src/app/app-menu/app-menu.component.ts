@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import {AuthService} from "shared/services";
 
 @Component({
   selector: 'app-menu',
@@ -16,7 +17,8 @@ export class AppMenuComponent implements OnDestroy {
     return analyticsConfig.showNavBar;
   }
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router,
+              private _authService: AuthService) {
     _router.events
       .pipe(cancelOnDestroy(this))
       .subscribe((event) => {
@@ -36,6 +38,7 @@ export class AppMenuComponent implements OnDestroy {
   }
   public navigateToView(route: string): void {
     // TODO add smart navigation according to permissions
+    this._authService.restoreParentIfNeeded();
     this._router.navigate([route]);
   }
 

@@ -87,7 +87,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => Math.min(value * 100, 100),
             title: this._translate.instant(`app.entry.avg_view_drop_off`),
             sortOrder: 5,
-            colors: [getColorPalette('dropoff')[7], getPrimaryColor('dropoff')],
+            colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_view_drop_off`)}:&nbsp;${ReportHelper.percents(value / 100, false)}</span>`
           },
         }

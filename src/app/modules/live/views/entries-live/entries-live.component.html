@@ -40,7 +40,7 @@
               {{'app.entriesLive.' + col | translate}}
               <p-sortIcon [field]="col"></p-sortIcon>
             </th>
-            <th [ngStyle]="{'width': '100px'}"></th>
+            <th *ngIf="_displayLiveStatus" [ngStyle]="{'width': '100px'}"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
@@ -63,7 +63,7 @@
                     (mouseenter)="_showOverlay($event, data['entry_id'])">{{data[col]}}</span>
             </td>
             <td [ngStyle]="{'width': '100px'}">
-              <span class="kStatus" *ngIf="data['liveStatus']">
+              <span class="kStatus" *ngIf="_displayLiveStatus && data['liveStatus']">
                 <span class="kCircle"></span>
                 <span class="kStatusName">{{'app.entriesLive.live' | translate}}</span>
               </span>

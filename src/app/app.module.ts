@@ -20,7 +20,8 @@ import { KalturaLogger, KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
 import { environment } from '../environments/environment';
 import { PageScrollService } from 'ngx-page-scroll';
 import { AnalyticsPermissionsModule } from 'shared/analytics-permissions/analytics-permissions.module';
-
+import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { OperationTagModule } from '@kaltura-ng/kaltura-common';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
 }
@@ -33,6 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppMenuComponent
   ],
   imports: [
+    AreaBlockerModule,
+    OperationTagModule.forRoot(),
     BrowserModule,
     SharedModule.forRoot(),
     AppRoutingModule,

@@ -5,7 +5,7 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { BrowserService } from 'shared/services';
+import {BrowserService, NavigationDrillDownService} from 'shared/services';
 import { Subject } from 'rxjs';
 import { SortEvent } from 'primeng/api';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
@@ -66,6 +66,7 @@ export class TopVideosTableComponent implements OnDestroy {
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
               private _frameEventManager: FrameEventManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _browserService: BrowserService) {
 
   }
@@ -107,14 +108,10 @@ export class TopVideosTableComponent implements OnDestroy {
     }
   }
 
-  public _drillDown({ object_id: entryId, status }: { object_id: string, status: string }): void {
+  public _drillDown({ object_id: entryId, status, partner_id }: { object_id: string, status: string, partner_id: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partner_id);
     }
   }
+
 }
