@@ -21,6 +21,10 @@ export class MiniTopVideosConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
+          'partner_id': {
+            format: value => value,
+            hidden: true,
+          },
           'entry_name': {
             format: value => value,
             sortOrder: 1,

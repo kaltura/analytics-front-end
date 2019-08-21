@@ -21,7 +21,7 @@ export class LiveReportsComponent implements OnInit, OnDestroy {
     window['kmc'] = {
       'vars': {
         'ks': this._authService.ks,
-        'partner_id': analyticsConfig.pid,
+        'partner_id': this._authService.pid,
         'cdn_host': cdn_host,
         'service_url': getKalturaServerUri(),
         'liveanalytics': {

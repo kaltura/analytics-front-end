@@ -364,7 +364,7 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
       this.playerInitialized = true;
       this._playerConfig = {
         uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
-        pid: analyticsConfig.pid,
+        pid: this._authService.pid,
         entryid: this.entryId,
         flashvars: {
           'ks': this._authService.ks,

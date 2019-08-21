@@ -694,7 +694,8 @@
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",
         "syndication": "Syndication"
-      }
+      },
+      "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
     "contentInteractions": {
       "title": "Content Interactions",
