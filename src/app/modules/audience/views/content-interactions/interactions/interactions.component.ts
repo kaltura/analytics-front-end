@@ -64,6 +64,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   public _lineChartData = {};
   public _showTable = false;
   public _totalCount = 0;
+  public _ks = '';
   public _compareTotalCount = 0;
   public _currentDates: string;
   public _compareDates: string;
@@ -97,6 +98,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
     
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._ks = this._authService.ks;
   }
   
   ngOnDestroy() {
@@ -299,7 +301,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
     item['index'] = String(pager.pageSize * (pager.pageIndex - 1) + (index + 1));
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     return item;
   }
   

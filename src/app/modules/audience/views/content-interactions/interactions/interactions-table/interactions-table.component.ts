@@ -14,6 +14,7 @@ export class InteractionsTableComponent {
   @Input() tableData: TableRow<string>[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
+  @Input() ks: string;
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
