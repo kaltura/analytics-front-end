@@ -3,7 +3,7 @@ import { EngagementBaseReportComponent } from '../engagement-base-report/engagem
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, ReportService} from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -43,6 +43,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   private subscription: ISubscription = null;
   
   public _isBusy: boolean;
+  public _ks = '';
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow<string>[] = [];
   public _compareTableData: TableRow<string>[] = [];
@@ -68,6 +69,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
               private _dataConfigService: MiniTopVideosConfig,
               private pageScrollService: PageScrollService,
               private _logger: KalturaLogger,
+              private _authService: AuthService,
               private _browserService: BrowserService,
               private _router: Router,
               private _activatedRoute: ActivatedRoute) {
@@ -76,6 +78,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
   }
   
   ngOnInit() {
+    this._ks = this._authService.ks;
     if (this.topVideos$) {
       this.topVideos$
         .pipe(cancelOnDestroy(this))
@@ -124,7 +127,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96?rnd=${Math.random()}`;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96}`;
       return item;
     };
     this._tableData = tableData.map(extendTableRow).splice(0, 3);

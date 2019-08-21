@@ -56,9 +56,9 @@
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
             <div class="kThumbnailHolder" #holder
                  (click)="_drillDown(data)">
-              <img [src]="data.thumbnailUrl"
-                   onError="this.onerror=null;this.style.display='none'"
-                   (error)="holder.classList.add('error')">
+              <img *ngIf="data.thumbnailUrl" [src]="data.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=data.thumbnailUrl+'/ks/'+_ks">
+              <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+
             </div>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">

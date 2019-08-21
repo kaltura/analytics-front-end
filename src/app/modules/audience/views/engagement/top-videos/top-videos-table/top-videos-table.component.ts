@@ -6,7 +6,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { EntryDetailsOverlayData } from '../entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { BrowserService } from 'shared/services';
+import { AuthService, BrowserService } from 'shared/services';
 import { Subject } from 'rxjs';
 import { SortEvent } from 'primeng/api';
 
@@ -54,7 +54,8 @@ export class TopVideosTableComponent implements OnDestroy {
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   private _timeoutId = null;
-  
+
+  public _ks = '';
   public _sortField = 'engagement_ranking';
   public _sortOrder = -1;
   public _entryData: EntryDetailsOverlayData;
@@ -65,9 +66,10 @@ export class TopVideosTableComponent implements OnDestroy {
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
+              _authService: AuthService,
               private _frameEventManager: FrameEventManagerService,
               private _browserService: BrowserService) {
-
+    this._ks = _authService.ks;
   }
   
   ngOnDestroy(): void {
