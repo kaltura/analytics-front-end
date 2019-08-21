@@ -166,3 +166,44 @@
     height: 495px !important;
   }
 }
+
+.kReportTabs {
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid $kGrayscale4;
+
+  .kReportTabsItem {
+    width: 160px;
+    height: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $kGrayscale1;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+    &:last-child {
+      margin-left: 40px;
+    }
+
+    &.kViewerActive {
+      color: #487adf;
+      border-bottom: 4px solid #487adf;
+    }
+
+    &.kContributorActive {
+      color: #9b64e6;
+      border-bottom: 4px solid #9b64e6;
+    }
+
+    .kIcon {
+      margin-right: 9px;
+      font-size: 15px;
+    }
+  }
+}

@@ -42,7 +42,6 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
   private _comparePeriodLabel: string;
   
   protected _componentId = 'sources';
-  public topSources$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = true;
@@ -92,7 +91,6 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
     this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
     this._isBusy = true;
     this._blockerMessage = null;
-    this.topSources$.next({ table: null, compare: null, busy: true, error: null });
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     this._reportService.getReport(reportConfig)
       .pipe(switchMap(report => {
@@ -124,9 +122,6 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
           
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
-            this.topSources$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
-          } else {
-            this.topSources$.next({ table: null, compare: null, busy: false, error: null });
           }
           
           this._isBusy = false;
@@ -141,7 +136,6 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
               this._loadReport();
             },
           };
-          this.topSources$.next({ table: null, compare: null, busy: false, error: error });
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
@@ -260,6 +254,5 @@ export class UserSourcesComponent extends UserBase implements OnDestroy {
   }
   
   ngOnDestroy() {
-    this.topSources$.complete();
   }
 }

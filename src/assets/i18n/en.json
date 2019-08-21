@@ -806,6 +806,8 @@
       "mostPlaysDay": "Day With Most Plays",
       "lastPlaysDay": "Last Day With Plays",
       "content_source": "Content Source",
+      "viewer": "Viewer",
+      "contributor": "Contributor",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

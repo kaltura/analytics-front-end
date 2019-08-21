@@ -83,49 +83,66 @@
                                          [refineFilter]="_refineFilter"></app-user-insight-domain>
               </ui-carousel-item>
               <ui-carousel-item>
-                <app-user-insight-source [isCompare]="_isCompare"
+                <app-user-insight-source [userId]="_userId"
                                          [dateFilter]="_dateFilter"
-                                         [topSources$]="topSources.topSources$"
                                          [refineFilter]="_refineFilter"></app-user-insight-source>
               </ui-carousel-item>
             </ui-carousel>
           </div>
         </div>
 
-        <div class="kReportContainer">
-          <app-user-highlights [userId]="_user.id"
-                               [dateFilterComponent]="dateFilter"
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-user-highlights>
+        <div class="kReportTabs">
+          <a class="kReportTabsItem"
+             [class.kViewerActive]="_currentTab === _reportTabs.viewer"
+             (click)="_currentTab = _reportTabs.viewer">
+            <i class="kIcon icon-small-impressions"></i>
+            {{'app.user.viewer' | translate}}
+          </a>
+          <a class="kReportTabsItem"
+             [class.kContributorActive]="_currentTab === _reportTabs.contributor"
+             (click)="_currentTab = _reportTabs.contributor">
+            <i class="kIcon icon-small-contribution"></i>
+            {{'app.user.contributor' | translate}}
+          </a>
         </div>
 
-        <div class="kReportContainer">
-          <app-impressions [title]="'app.user.viewingEngagementFunnel' | translate"
-                           [userId]="_user.id"
-                           [dateFilter]="_dateFilter"
-                           [refineFilter]="_refineFilter"></app-impressions>
-        </div>
-
-        <div class="kReportContainer">
-          <app-user-media-upload [userId]="_user.id"
+        <ng-container *ngIf="_currentTab === _reportTabs.viewer">
+          <div class="kReportContainer">
+            <app-user-highlights [userId]="_user.id"
                                  [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
-                                 [refineFilter]="_refineFilter"></app-user-media-upload>
-        </div>
+                                 [refineFilter]="_refineFilter"></app-user-highlights>
+          </div>
 
-        <div class="kReportContainer">
-          <app-user-top-content [userId]="_user.id"
-                                [dateFilter]="_dateFilter"
-                                [refineFilter]="_refineFilter"></app-user-top-content>
-        </div>
+          <div class="kReportContainer">
+            <app-impressions [title]="'app.user.viewingEngagementFunnel' | translate"
+                             [userId]="_user.id"
+                             [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-impressions>
+          </div>
+        </ng-container>
 
-        <div class="kReportContainer">
-          <app-user-sources #topSources
-                            [userId]="_user.id"
-                            [userName]="_user.fullName"
-                            [dateFilter]="_dateFilter"
-                            [refineFilter]="_refineFilter"></app-user-sources>
-        </div>
+        <ng-container *ngIf="_currentTab === _reportTabs.contributor">
+          <div class="kReportContainer">
+            <app-user-media-upload [userId]="_user.id"
+                                   [dateFilterComponent]="dateFilter"
+                                   [dateFilter]="_dateFilter"
+                                   [refineFilter]="_refineFilter"></app-user-media-upload>
+          </div>
+
+          <div class="kReportContainer">
+            <app-user-top-content [userId]="_user.id"
+                                  [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-user-top-content>
+          </div>
+
+          <div class="kReportContainer">
+            <app-user-sources [userId]="_user.id"
+                              [userName]="_user.fullName"
+                              [dateFilter]="_dateFilter"
+                              [refineFilter]="_refineFilter"></app-user-sources>
+          </div>
+        </ng-container>
       </div>
     </div>
   </k-area-blocker>

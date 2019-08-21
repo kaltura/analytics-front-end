@@ -17,6 +17,11 @@ import { Unsubscribable } from 'rxjs';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
+export enum UserReportTabs {
+  viewer = 'viewer',
+  contributor = 'contributor',
+}
+
 @Component({
   selector: 'app-user',
   templateUrl: './user-view.component.html',
@@ -48,6 +53,8 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _userId = '';
   public _userName = '';
   public _isCompare = false;
+  public _reportTabs = UserReportTabs;
+  public _currentTab = UserReportTabs.viewer;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,

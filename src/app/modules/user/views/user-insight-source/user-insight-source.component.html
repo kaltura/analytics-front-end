@@ -4,7 +4,7 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div *ngIf="!isCompare" class="kReportContent">
+    <div *ngIf="!_isCompareMode" class="kReportContent">
       <div class="kReportRow">
         <span class="topSource">{{_topSourceLabel}}</span>
       </div>
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div *ngIf="isCompare && _bulletValues[0]" class="kReportContent kCompare">
+    <div *ngIf="_isCompareMode && _bulletValues[0]" class="kReportContent kCompare">
       <!-- Compare -->
       <div class="kReportRow">
         <span class="kLabel">{{'app.user.popularContentSource' | translate}}</span>
