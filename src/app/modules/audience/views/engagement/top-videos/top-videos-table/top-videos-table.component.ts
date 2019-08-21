@@ -54,7 +54,7 @@ export class TopVideosTableComponent implements OnDestroy {
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   private _timeoutId = null;
-  
+
   public _sortField = 'engagement_ranking';
   public _sortOrder = -1;
   public _entryData: EntryDetailsOverlayData;
@@ -68,7 +68,6 @@ export class TopVideosTableComponent implements OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService,
               private _browserService: BrowserService) {
-
   }
   
   ngOnDestroy(): void {
