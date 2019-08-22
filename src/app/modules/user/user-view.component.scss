@@ -234,11 +234,17 @@
     &.kViewerActive {
       color: #487adf;
       border-bottom: 4px solid #487adf;
+      i, span {
+        margin-top: 4px;
+      }
     }
 
     &.kContributorActive {
       color: #1d4694;
       border-bottom: 4px solid #1d4694;
+      i, span {
+        margin-top: 4px;
+      }
     }
 
     .kIcon {
