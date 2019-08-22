@@ -27,7 +27,7 @@ export class UserTotalsComponent extends UserBase {
   @Input() userId: string;
   
   private _dataConfig: ReportDataConfig;
-  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
+  private _reportType = reportTypeMap(KalturaReportType.userHighlights);
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';

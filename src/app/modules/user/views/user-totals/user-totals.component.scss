@@ -20,6 +20,7 @@
   display: flex;
   margin-right: 24px;
   background-color: #ffffff;
+  border-radius: 3px;
 
   .kTotalContainer {
     width: 50%;
@@ -121,6 +122,7 @@
   padding: 24px;
   background-color: #ffffff;
   color: $kGrayscale1;
+  border-radius: 3px;
 
   .kTitle {
     font-size: 20px;
