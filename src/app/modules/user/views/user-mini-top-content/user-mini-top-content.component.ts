@@ -4,10 +4,8 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { UserBase } from '../user-base/user-base';
 import { UserMiniTopContentConfig } from './user-mini-top-content.config';
 import { map, switchMap } from 'rxjs/operators';
@@ -52,15 +50,12 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     return this._compareFilter !== null;
   }
   
-  constructor(private _frameEventManager: FrameEventManagerService,
-              private _translate: TranslateService,
+  constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: UserMiniTopContentConfig,
-              private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _browserService: BrowserService,
-              private _authService: AuthService) {
+              private _authService: AuthService,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -80,22 +75,22 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-    
+        
         this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
-    
+        
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-    
+          
           if (compare) {
             this._handleCompare(report, compare);
           } else {
             this._currentDates = null;
             this._compareDates = null;
-      
+            
             if (report.table && report.table.data && report.table.header) {
               this._handleTable(report.table); // handle table
             }
@@ -157,12 +152,12 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   private _handleCompare(current: Report, compare: Report): void {
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-  
+    
     if (current.table && current.table.data) {
       const { columns, tableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
       this._columns = columns;
       this._tableData = tableData.map(this._extendTableRow.bind(this)).slice(0, 2);
-  
+      
       if (compare.table && compare.table.data) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
         this._compareTableData = compareTableData.map(this._extendTableRow.bind(this)).slice(0, 2);
@@ -173,15 +168,10 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status } = row;
+    const { object_id: entryId, status, partner_id: partnerId } = row;
     
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
     }
   }
   

@@ -4,7 +4,7 @@ import { of as ObservableOf, Subject } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -12,7 +12,6 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { TranslateService } from '@ngx-translate/core';
 import { CompareService } from 'shared/services/compare.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { ActivatedRoute, Router } from '@angular/router';
 import { map, switchMap } from 'rxjs/operators';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
@@ -89,9 +88,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
               private _authService: AuthService,
               private _dataConfigService: UserMediaUploadConfig,
               private _logger: KalturaLogger,
-              private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _browserService: BrowserService) {
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -137,7 +134,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-
+        
         this._compareFilter.ownerIdsIn = this.userId;
         const compareReportConfig = { reportType: reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
@@ -210,7 +207,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       totals: this._dataConfig[ReportDataSection.totals],
       graph: this._dataConfig[ReportDataSection.graph],
     };
-  
+    
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: null, order: null };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -230,7 +227,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
           } else {
             this._currentDates = null;
             this._compareDates = null;
-  
+            
             if (report.totals && !this._tabsData.length) {
               this._handleTotals(report.totals); // handle totals
             }
@@ -294,7 +291,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
-  
+    
     if (!this._showTable) {
       this._tableData = [];
     }
@@ -307,8 +304,6 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
     
-    console.warn(current.totals);
-    console.warn(compare.totals);
     if (current.totals.data && compare.totals.data) {
       this._tabsData = this._compareService.compareTotalsData(
         currentPeriod,
@@ -400,15 +395,10 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status } = row;
+    const { object_id: entryId, status, partner_id: partnerId } = row;
     
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
     }
   }
 }

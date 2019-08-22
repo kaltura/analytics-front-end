@@ -1,29 +1,26 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
+import { of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { HighlightsConfig } from './highlights.config';
 import { SortEvent } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { UserBase } from '../user-base/user-base';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
-import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
@@ -91,9 +88,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
               private _authService: AuthService,
               private _dataConfigService: HighlightsConfig,
               private _logger: KalturaLogger,
-              private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _browserService: BrowserService) {
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -186,7 +181,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
@@ -194,7 +189,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-  
+        
         this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
@@ -294,7 +289,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
     if (current.table && compare.table) {
       this._handleTable(current.table, compare);
     }
-  
+    
     if (current.totals && compare.totals) {
       this._tabsData = this._compareService.compareTotalsData(
         currentPeriod,
@@ -318,7 +313,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((item, index) => this._extendTableRow(item, index, this._pager));
-  
+    
     const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
     this._entryDetails = entryDetails.map((item, index) => this._extendTableRow(item, index, this._pager));
     
@@ -328,7 +323,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
       this._compareTableData = compareTableData.map((item, index) => this._extendTableRow(item, index, this._comparePager));
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-  
+      
       const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
       this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map((item, index) => this._extendTableRow(item, index, this._pager))];
     }
@@ -375,15 +370,9 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status } = row;
-    
-    if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+    const { object_id: entryId, status, partner_id: partnerId } = row;
+    if (status === '') {
+      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
     }
   }
 }

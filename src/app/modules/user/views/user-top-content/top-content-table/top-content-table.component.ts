@@ -1,11 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { KalturaEntryStatus, KalturaFilterPager } from 'kaltura-ngx-client';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { BrowserService } from 'shared/services';
+import { NavigationDrillDownService } from 'shared/services';
 import { Subject } from 'rxjs';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
@@ -43,12 +40,9 @@ export class TopContentTableComponent implements OnDestroy {
   public _tableData: TableRow<string>[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
   public _paginationChanged$ = this._paginationChanged.asObservable();
-
-  constructor(private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _frameEventManager: FrameEventManagerService,
-              private _browserService: BrowserService) {
-
+  
+  constructor(private _navigationDrillDownService: NavigationDrillDownService) {
+  
   }
   
   ngOnDestroy(): void {
@@ -65,7 +59,7 @@ export class TopContentTableComponent implements OnDestroy {
   
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
-      this._entryData = this.entryDetails.find(({object_id}) => entryId === object_id);
+      this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
       if (this.timeoutId === null) {
         this.timeoutId = setTimeout(() => {
           if (this._entryData.status === KalturaEntryStatus.ready) {
@@ -87,15 +81,10 @@ export class TopContentTableComponent implements OnDestroy {
       }
     }
   }
-
-  public _drillDown({ object_id: entryId, status }: { object_id: string, status: string }): void {
+  
+  public _drillDown({ object_id: entryId, status, partner_id: partnerId }: { object_id: string, status: string, partner_id: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
     }
   }
 }
