@@ -92,13 +92,13 @@
         </div>
 
         <div class="kReportTabs">
-          <a class="kReportTabsItem"
+          <a class="kReportTabsItem kViewer"
              [class.kViewerActive]="_currentTab === _reportTabs.viewer"
              (click)="_currentTab = _reportTabs.viewer">
             <i class="kIcon icon-small-impressions"></i>
             {{'app.user.viewer' | translate}}
           </a>
-          <a class="kReportTabsItem"
+          <a class="kReportTabsItem kContributor"
              [class.kContributorActive]="_currentTab === _reportTabs.contributor"
              (click)="_currentTab = _reportTabs.contributor">
             <i class="kIcon icon-small-contribution"></i>

@@ -191,14 +191,22 @@
       margin-left: 40px;
     }
 
+    &.kViewer:hover {
+      color: #487adf;
+    }
+
+    &.kContributor:hover {
+      color: #1d4694;
+    }
+
     &.kViewerActive {
       color: #487adf;
       border-bottom: 4px solid #487adf;
     }
 
     &.kContributorActive {
-      color: #9b64e6;
-      border-bottom: 4px solid #9b64e6;
+      color: #1d4694;
+      border-bottom: 4px solid #1d4694;
     }
 
     .kIcon {
