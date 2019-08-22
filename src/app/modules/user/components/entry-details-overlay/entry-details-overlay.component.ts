@@ -6,9 +6,10 @@ export interface EntryDetailsOverlayData {
   entry_name: string;
   media_type: KalturaMediaType;
   duration_msecs: string;
-  content_source: any;
+  entry_source: any;
   thumbnailUrl: string;
   status: KalturaEntryStatus;
+  created_at: string;
 }
 
 @Component({

@@ -66,7 +66,7 @@ export class TopContentDataConfig extends ReportDataBaseConfig {
           'status': {
             format: value => value,
           },
-          'creator_name': {
+          'entry_source': {
             format: value => value,
           },
           'created_at': {

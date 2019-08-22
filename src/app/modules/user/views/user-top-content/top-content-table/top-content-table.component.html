@@ -42,7 +42,9 @@
           </td>
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
             <div class="kThumbnailHolder" #holder
-                 (click)="_drillDown(data)">
+                 (click)="_drillDown(data)"
+                 (mouseleave)="_hideOverlay()"
+                 (mouseenter)="_showOverlay($event, data['object_id'])">
               <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
             </div>
           </td>
@@ -81,5 +83,5 @@
 </div>
 
 <k-overlayPanel #overlay appendTo="body">
-  <app-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-entry-details-overlay>
+  <app-user-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-user-entry-details-overlay>
 </k-overlayPanel>

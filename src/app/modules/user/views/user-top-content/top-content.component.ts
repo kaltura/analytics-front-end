@@ -67,8 +67,7 @@ export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopContentDataConfig,
-              private _logger: KalturaLogger) {
+              private _dataConfigService: TopContentDataConfig) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -83,7 +82,7 @@ export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
     this.totalCount$.next(0);
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     this._filter.ownerIdsIn = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._reportService.getReport(reportConfig, this._dataConfig)
@@ -91,7 +90,7 @@ export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-  
+        
         this._compareFilter.ownerIdsIn = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         return this._reportService.getReport(compareReportConfig, this._dataConfig)

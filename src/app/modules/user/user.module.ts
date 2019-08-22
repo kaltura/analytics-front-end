@@ -33,7 +33,7 @@ import { UserMediaUploadTableComponent } from './views/user-media-upload/table/t
 import { UserInsightDomainComponent } from './views/user-insight-domain/user-insight-domain.component';
 import { UserInsightMinutesViewedComponent } from './views/user-insight-minutes-viewed/user-insight-minutes-viewed.component';
 import { UserInsightPlaysComponent } from './views/user-insight-plays/user-insight-plays.component';
-import { UserEntryDetailsOverlayComponent } from './views/user-media-upload/entry-details-overlay/entry-details-overlay.component';
+import { UserEntryDetailsOverlayComponent } from './components/entry-details-overlay/entry-details-overlay.component';
 
 
 @NgModule({
