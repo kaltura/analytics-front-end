@@ -54,6 +54,20 @@
         color: $kGrayscale1;
         white-space: nowrap;
       }
+
+      .kTrend ::ng-deep {
+        .kValue {
+          font-size: 24px;
+          font-weight: bold;
+          color: $kGrayscale1;
+        }
+
+        .kUnits {
+          font-size: 13px;
+          font-weight: bold;
+          line-height: 20px;
+        }
+      }
     }
 
     .kMiniIcon {
