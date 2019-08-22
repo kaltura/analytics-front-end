@@ -5,6 +5,14 @@
         <div class="kReportHeader">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
+          <div class="kAvatar">
+            <div *ngIf="_user?.thumbnailUrl" class="kThumbnailHolder">
+              <img [src]="_user?.thumbnailUrl">
+            </div>
+            <div *ngIf="!_user?.thumbnailUrl" class="kStub">
+              <i class="icon-viewer-contributor"></i>
+            </div>
+          </div>
           <span class="kTitle">{{_userName}}</span>
           <app-export-csv name="user"
                           [reports]="_exportConfig"
