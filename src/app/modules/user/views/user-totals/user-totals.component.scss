@@ -23,7 +23,7 @@
   border-radius: 3px;
 
   .kTotalContainer {
-    width: 50%;
+    width: 20%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -34,7 +34,7 @@
 
     &:not(:last-child) {
       border-right: 1px solid $kGrayscale6;
-      width: 50%;
+      width: 20%;
     }
 
     .kTotal {
@@ -151,6 +151,17 @@
     .kIcon {
       color: #487ADF;
       margin-right: 9px;
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kTotalContainer {
+    padding-left: 15px !important;
+    padding-top: 15px !important;
+
+    .kLabel {
+      white-space: normal !important;
     }
   }
 }

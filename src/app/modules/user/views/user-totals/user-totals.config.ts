@@ -36,7 +36,7 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
             iconColor: 'orange',
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => ReportHelper.percents(value / 100, false),
             title: this._translate.instant(`app.user.avg_completion_rate`),
             sortOrder: 4,
             icon: 'icon-progress',
