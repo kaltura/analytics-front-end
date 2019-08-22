@@ -91,16 +91,16 @@ export class HighlightsConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.count_plays`),
-            sortOrder: 1,
-          },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.count_loads`),
+            sortOrder: 1,
+          },
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.count_plays`),
             sortOrder: 2,
           },
           'avg_time_viewed': {
