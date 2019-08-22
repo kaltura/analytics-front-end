@@ -9,9 +9,7 @@
         <div class="kCard" *ngFor="let card of _compareTableData">
           <div class="kThumbnailHolder" #holder
                (click)="_drillDown(card)">
-            <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
-                 onError="this.onerror=null;this.style.display='none'"
-                 (error)="holder.classList.add('error')">
+            <app-thumbnail-loader [thumbnailUrl]="card.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
           </div>
           <span class="kLabel kTableColumn"
                 [kTooltip]="card.entry_name"
@@ -29,9 +27,7 @@
         <div class="kCard" *ngFor="let card of _tableData">
           <div class="kThumbnailHolder" #holder
                (click)="_drillDown(card)">
-            <img [src]="card.thumbnailUrl" [alt]="card.entry_name"
-                 onError="this.onerror=null;this.style.display='none'"
-                 (error)="holder.classList.add('error')">
+            <app-thumbnail-loader [thumbnailUrl]="card.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
           </div>
           <span class="kLabel kTableColumn"
                 [kTooltip]="card.entry_name"

@@ -33,9 +33,7 @@
                    (mouseleave)="_hideOverlay()"
                    (mouseenter)="_showOverlay($event, data['object_id'])"
                    (click)="drillDown.emit(data)">
-                <img [src]="data.thumbnailUrl"
-                     onError="this.onerror=null;this.style.display='none'"
-                     (error)="holder.classList.add('error')">
+                <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
               </div>
             </td>
             <td *ngFor="let col of columns; let i = index"
