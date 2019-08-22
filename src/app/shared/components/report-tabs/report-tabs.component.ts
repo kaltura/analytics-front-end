@@ -11,6 +11,8 @@ export type Tab = {
   trend?: string;
   sortOrder?: number;
   hidden?: boolean;
+  icon?: string;
+  iconColor?: string;
 };
 
 @Component({

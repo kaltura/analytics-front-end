@@ -808,6 +808,7 @@
       "content_source": "Content Source",
       "viewer": "Viewer",
       "contributor": "Contributor",
+      "socialHighlights": "Social Highlights",
       "topContentReport": {
         "name": "Name",
         "entries": "Entries",

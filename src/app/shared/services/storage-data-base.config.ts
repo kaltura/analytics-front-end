@@ -26,6 +26,8 @@ export interface ReportDataItemField {
   colors?: string[];
   nonDateGraphLabel?: boolean;
   graphType?: GraphType;
+  icon?: string;
+  iconColor?: string;
 }
 
 export interface ReportDataFields {

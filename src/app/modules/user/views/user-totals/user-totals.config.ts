@@ -12,27 +12,47 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
+          'count_loads': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.user.count_loads`),
+            sortOrder: 1,
+            icon: 'icon-small-impressions',
+            iconColor: 'aqua',
+          },
           'count_plays': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.user.count_plays`),
-            sortOrder: 1,
+            sortOrder: 2,
+            icon: 'icon-small-play',
+            iconColor: 'blue',
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.sum_time_viewed`),
-            sortOrder: 2,
-          },
-          'votes': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.votes`),
             sortOrder: 3,
+            icon: 'icon-small-time',
+            iconColor: 'orange',
+          },
+          'avg_completion_rate': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.avg_completion_rate`),
+            sortOrder: 4,
+            icon: 'icon-progress',
+            iconColor: 'green',
           },
           'added_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.added_entries`),
-            sortOrder: 4,
+            sortOrder: 5,
+            icon: 'icon-small-contribution',
+            iconColor: 'violet',
+          },
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.count_viral`),
+            hidden: true,
           },
         }
       }
