@@ -54,6 +54,11 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.user.count_viral`),
             hidden: true,
           },
+          'votes': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.votes`),
+            hidden: true,
+          },
         }
       }
     };

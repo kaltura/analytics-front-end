@@ -15,6 +15,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TrendService } from 'shared/services/trend.service';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-user-totals',
@@ -130,28 +131,50 @@ export class UserTotalsComponent extends UserBase {
   private _handleCompare(current: Report, compare: Report, likes: number[]): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+  
+    if (likes !== null) {
+      current.totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
+      current.totals.header += `${analyticsConfig.valueSeparator}votes`;
+    
+      compare.totals.data += `${analyticsConfig.valueSeparator}${likes[1]}`;
+      compare.totals.header += `${analyticsConfig.valueSeparator}votes`;
+    }
     
     if (current.totals && compare.totals && current.totals.data && compare.totals.data) {
-      this._tabsData = this._compareService.compareTotalsData(
+      const tabsData = this._compareService.compareTotalsData(
         currentPeriod,
         comparePeriod,
         current.totals,
         compare.totals,
         this._dataConfig.totals
-      ).filter(({ hidden }) => !hidden);
+      );
+  
+      const shares = tabsData.find(({ key }) => key === 'count_viral');
+      const like = tabsData.find(({ key }) => key === 'votes');
+      
+      this._socialHighlights = {
+        likes: like,
+        shares: shares,
+      };
+  
+      this._tabsData = tabsData.filter(({ hidden }) => !hidden);
     }
   }
   
   private _handleTotals(totals: KalturaReportTotal, likes: number[]): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    const shares = tabsData.find(({ key }) => key === 'count_viral');
-    if (shares) {
-      this._socialHighlights = {
-        likes: { value: likes[0] },
-        shares: { value: shares.value },
-      };
-    }
   
+    if (likes !== null) {
+      totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
+      totals.header += `${analyticsConfig.valueSeparator}votes`;
+    }
+
+    const shares = tabsData.find(({ key }) => key === 'count_viral');
+    const like = tabsData.find(({ key }) => key === 'votes');
+    this._socialHighlights = {
+      likes: { value: like ? like.value : 0 },
+      shares: { value: shares ? shares.value : 0 },
+    };
     this._tabsData = tabsData.filter(({ hidden }) => !hidden);
   }
   
