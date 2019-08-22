@@ -211,9 +211,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
       graph: this._dataConfig[ReportDataSection.graph],
     };
   
-    const filter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-    
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter, pager: null, order: null };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: null, order: null };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -221,23 +219,21 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
         }
         
         this._compareFilter.ownerIdsIn = this.userId;
-        const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._compareFilter), this._filter);
-
-        const compareReportConfig = { reportType: this._reportType, filter: compareFilter, pager: null, order: null };
+        const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: null, order: null };
         
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          if (report.totals && !this._tabsData.length) {
-            this._handleTotals(report.totals); // handle totals
-          }
-          
           if (compare) {
             this._handleCompare(report, compare);
           } else {
             this._currentDates = null;
             this._compareDates = null;
+  
+            if (report.totals && !this._tabsData.length) {
+              this._handleTotals(report.totals); // handle totals
+            }
             
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
@@ -310,6 +306,19 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+    
+    console.warn(current.totals);
+    console.warn(compare.totals);
+    if (current.totals.data && compare.totals.data) {
+      this._tabsData = this._compareService.compareTotalsData(
+        currentPeriod,
+        comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig[ReportDataSection.totals],
+        this._selectedMetrics,
+      );
+    }
     
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
