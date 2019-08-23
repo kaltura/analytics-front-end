@@ -6,10 +6,12 @@ import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { ReportHelper } from 'shared/services';
 import { TrendService } from 'shared/services/trend.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Injectable()
 export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
   private _trendIcon = new TrendPipe();
+  
   constructor(_translate: TranslateService,
               private _trendService: TrendService) {
     super(_translate);
@@ -19,24 +21,18 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
-            format: value => value,
+          'date_id': {
+            format: value => DateFilterUtils.parseDateString(value),
           },
-          'domain_name': {
-            format: value => value,
-          },
-          'referrer': {
-            format: value => value,
-          },
-          'count_plays': {
-            format: value => value,
+          'sum_time_viewed': {
+            format: value => parseFloat(value),
           },
         }
-      }
+      },
     };
   }
   
-  public getGraphConfig(isCompare): EChartOption {
+  public getGraphConfig(current: number[], compare: number[] = null): EChartOption {
     return {
       color: [getPrimaryColor('time'), getSecondaryColor('time')],
       textStyle: { fontFamily: 'Lato' },
@@ -50,15 +46,20 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
         borderWidth: 1,
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
         textStyle: { color: '#999999' },
-        axisPointer: { animation: false },
+        axisPointer: {
+          type: 'shadow',
+          shadowStyle: {
+            color: 'rgba(150,150,150,0.1)'
+          }
+        },
         formatter: params => {
           if (params.length > 1) {
             const { value, direction } = this._trendService.calculateTrend(params[0].data, params[1].data);
             const icon = this._trendIcon.transform(direction);
-  
-            return `<div class="kGraphTooltip" style="display: flex; align-items: center"><div><span class="kBullet" style="color: ${getPrimaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[0].data])}</span><br><span class="kBullet" style="color: ${getSecondaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[1].data])}</span></div><span class="kTrend" style="margin-left: 8px"><i class="${icon}"></i><span>${value}%</span></span></div>`;
+            
+            return `<div class="kGraphTooltip" style="display: flex; align-items: center"><div><span class="kBullet" style="color: ${getPrimaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[0].data])}</span><br><span class="kBullet" style="color: ${getSecondaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[1].data])}</span></div><span class="kTrend" style="margin-left: 8px"><i class="${icon}"></i><span>${value !== null ? value + '%' : '–'}</span></span></div>`;
           }
-
+          
           return `<div class="kGraphTooltip"><span class="kBullet" style="color: ${getPrimaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[0].data])}</span></div>`;
         }
       },
@@ -82,14 +83,14 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
       },
       series: [
         {
-          data: [120, 200, 150, 80, 70, 110, 130],
+          data: current,
           type: 'bar',
           barMaxWidth: '34px',
           barMinWidth: '16px',
           itemStyle: {
             barBorderRadius: 2
           },
-          markLine: {
+          markLine: !compare ? {
             animation: false,
             symbol: false,
             lineStyle: {
@@ -102,10 +103,10 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
               formatter: params => this._translate.instant('app.user.dailyAvgViews', [ReportHelper.numberOrZero(params.value)]),
             },
             data: [{ type: 'average' }]
-          },
+          } : null,
         },
-        isCompare ? {
-          data: [220, 100, 150, 81, 20, 10, 230],
+        compare ? {
+          data: compare,
           type: 'bar',
           barMaxWidth: '34px',
           barMinWidth: '16px',

@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { UserBase } from '../user-base/user-base';
 import { UserInsightMinutesViewedConfig } from './user-insight-minutes-viewed.config';
 import { map, switchMap } from 'rxjs/operators';
@@ -15,6 +15,9 @@ import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { groupBy } from 'shared/utils/group-by';
+import { TrendService } from 'shared/services/trend.service';
 
 @Component({
   selector: 'app-user-insight-minutes-viewed',
@@ -30,20 +33,19 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   
   protected _componentId = 'insight-minutes-viewed';
   private _dataConfig: ReportDataConfig;
-  private _reportType = reportTypeMap(KalturaReportType.topSyndication);
-  private _order = '-avg_time_viewed';
+  private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
+  private _order = '+date_id';
   
-  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _reportInterval = KalturaReportInterval.days;
-  public _pager = new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize, pageIndex: 1 });
-  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
+  public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
+  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false, interval: KalturaReportInterval.days });
+  public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _currentDates: string;
   public _compareDates: string;
   public _chartData: EChartOption;
   public _compareWeeklyMinutes: { trend: number; value: string; units: string; tooltip: string; } = null;
-  public _weeklyMinutes: number;
+  public _weeklyMinutes: string;
   public _mostViewedDay: string;
   public _mostViewedDayFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'dddd MM/DD/YY' : 'dddd DD/MM/YYYY';
   public _colors = [getPrimaryColor('time'), getSecondaryColor('time')];
@@ -55,6 +57,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
+              private _trendService: TrendService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: UserInsightMinutesViewedConfig) {
     super();
@@ -62,6 +65,65 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _parseTableData(table: KalturaReportTable): { maxViewsRow: TableRow<any>, graphData: number[], weeklyAvg: number } {
+    const avg = arr => arr.reduce((prev, curr) => prev + curr) / arr.length;
+    
+    const tableData = this._reportService
+      .parseTableData(table, this._dataConfig[ReportDataSection.table]).tableData
+      .map((item: TableRow<any>) => {
+        item['day'] = item['date_id'].get('day');
+        item['week'] = item['date_id'].get('week');
+        return item;
+      });
+    
+    const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_time_viewed'] > current['sum_time_viewed']) ? prev : current);
+    
+    const graphData = Object
+      .values(groupBy(tableData, 'day'))
+      .map(group => parseFloat(ReportHelper.numberOrZero(group.reduce((acc, val) => acc + val['sum_time_viewed'], 0))));
+    
+    const weeklyData = Object
+      .values(groupBy(tableData, 'week'))
+      .map(group => group.reduce((acc, val) => acc + val['sum_time_viewed'], 0));
+    
+    const weeklyAvg = avg(weeklyData);
+    
+    return { maxViewsRow, graphData, weeklyAvg };
+  }
+  
+  private _handleTable(table: KalturaReportTable): void {
+    const { maxViewsRow, graphData, weeklyAvg } = this._parseTableData(table);
+    this._chartData = this._dataConfigService.getGraphConfig(graphData);
+    
+    this._weeklyMinutes = ReportHelper.numberOrZero(weeklyAvg);
+    this._mostViewedDay = maxViewsRow['date_id'].format(this._mostViewedDayFormat);
+  }
+  
+  private _handleCompare(current: KalturaReportTable, compare: KalturaReportTable): void {
+    const getTooltipRowString = (time, value) => `<div class="kTotalsCompareTooltip"><span class="kTimePeriod">${time}</span><span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;</span></div>`;
+    const { graphData, weeklyAvg } = this._parseTableData(current);
+    let compareGraphData = [];
+    let compareWeeklyAvg = 0;
+    
+    if (compare.data) {
+      const compareParsedData = this._parseTableData(compare);
+      compareGraphData = compareParsedData.graphData;
+      compareWeeklyAvg = compareParsedData.weeklyAvg;
+    }
+    
+    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
+    this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
+    
+    this._chartData = this._dataConfigService.getGraphConfig(graphData, compareGraphData);
+    const { value, direction } = this._trendService.calculateTrend(weeklyAvg, compareWeeklyAvg);
+    this._compareWeeklyMinutes = {
+      value: value,
+      trend: direction,
+      units: '%',
+      tooltip: `${getTooltipRowString(this._currentDates, ReportHelper.numberOrZero(weeklyAvg))}${getTooltipRowString(this._compareDates, ReportHelper.numberOrZero(compareWeeklyAvg))}`,
+    };
   }
   
   protected _loadReport(sections = this._dataConfig): void {
@@ -83,23 +145,14 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
-          // MOCKED DATA
-          this._chartData = this._dataConfigService.getGraphConfig(this._isCompareMode);
-          this._weeklyMinutes = 230;
-          this._mostViewedDay = moment().format(this._mostViewedDayFormat);
-          
-          if (this._isCompareMode) {
-            this._compareWeeklyMinutes = {
-              value: '21',
-              trend: 1,
-              units: '%',
-              tooltip: null,
-            };
-            
-            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
-            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
+          if (compare) {
+            this._handleCompare(report.table, compare.table);
+          } else {
+            if (report.table && report.table.data) {
+              this._handleTable(report.table);
+            }
           }
-
+          
           this._isBusy = false;
         },
         error => {
@@ -120,8 +173,6 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
-    this._filter.interval = this._dateFilter.timeUnits;
-    this._reportInterval = this._dateFilter.timeUnits;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
@@ -139,9 +190,5 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
-  }
-  
-  private _handleTable(table: KalturaReportTable): void {
-  
   }
 }
