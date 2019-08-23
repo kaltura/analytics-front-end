@@ -21,6 +21,17 @@
       <ng-container *ngIf="_tableData.length">
         <div class="kPlaysColumns">
           <div class="kPlaysRow">
+            <div class="kMiniIcon aqua"><i class="icon-small-impressions"></i></div>
+            <span class="kValue">{{_tableData[0]['count_loads']}}</span>
+            {{'app.user.impressions' | translate}}
+          </div>
+          <div class="kPlaysRow">
+            <span class="kValue">{{_tableData[1]['count_loads']}}</span>
+          </div>
+        </div>
+
+        <div class="kPlaysColumns">
+          <div class="kPlaysRow">
             <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
             <span class="kValue">{{_tableData[0]['count_plays']}}</span>
             {{'app.user.count_plays' | translate}}
@@ -38,17 +49,6 @@
           </div>
           <div class="kPlaysRow">
             <span class="kValue">{{_tableData[1]['sum_time_viewed']}}</span>
-          </div>
-        </div>
-
-        <div class="kPlaysColumns">
-          <div class="kPlaysRow">
-            <div class="kMiniIcon blue"><i class="icon-small-like"></i></div>
-            <span class="kValue">{{_tableData[0]['votes']}}</span>
-            {{'app.user.votes' | translate}}
-          </div>
-          <div class="kPlaysRow">
-            <span class="kValue">{{_tableData[1]['votes']}}</span>
           </div>
         </div>
 
