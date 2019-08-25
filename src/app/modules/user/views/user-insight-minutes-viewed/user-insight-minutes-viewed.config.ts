@@ -37,7 +37,7 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
       color: [getPrimaryColor('time'), getSecondaryColor('time')],
       textStyle: { fontFamily: 'Lato' },
       grid: {
-        top: 24, left: 10, bottom: 30, right: 10, containLabel: true
+        top: 24, left: 10, bottom: 30, right: 12, containLabel: true
       },
       tooltip: {
         trigger: 'axis',
