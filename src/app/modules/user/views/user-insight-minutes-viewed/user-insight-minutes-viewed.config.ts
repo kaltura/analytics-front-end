@@ -47,7 +47,7 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
         textStyle: { color: '#999999' },
         axisPointer: {
-          type: 'shadow',
+          type: compare ? 'shadow' : 'none',
           shadowStyle: {
             color: 'rgba(150,150,150,0.1)'
           }
@@ -95,11 +95,15 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
             symbol: false,
             lineStyle: {
               color: '#ce5e19',
-              width: 2,
+              width: 1,
+              emphasis: {
+                width: 1
+              }
             },
             label: {
               show: true,
               position: 'middle',
+              color: '#333333',
               formatter: params => this._translate.instant('app.user.dailyAvgViews', [ReportHelper.numberOrZero(params.value)]),
             },
             data: [{ type: 'average' }]
