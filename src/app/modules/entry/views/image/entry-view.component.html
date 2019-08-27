@@ -52,12 +52,6 @@
 
     <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
       <app-image-entry-preview *ngIf="_viewConfig.entryPreview" [entry]="entry"></app-image-entry-preview>
-      <app-image-entry-user-engagement *ngIf="_viewConfig.userEngagement"
-                                       [viewConfig]="_viewConfig.userEngagement"
-                                       [dateFilter]="_dateFilter"
-                                       [duration]="_duration"
-                                       [refineFilter]="_refineFilter"
-                                       [entryId]="_entryId"></app-image-entry-user-engagement>
     </div>
 
     <div *ngIf="_viewConfig.performance" class="kReportContainer">
