@@ -9,7 +9,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { UserExportConfig } from './user-export.config';
@@ -58,6 +58,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: UserExportConfig) {
   }
@@ -130,10 +131,6 @@ export class UserViewComponent implements OnInit, OnDestroy {
   }
   
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.NavigateBack);
-    } else {
-      this._router.navigate(['contributors'], { queryParams: this._route.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.navigateBack('contributors', true);
   }
 }

@@ -12,7 +12,6 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
 
   public getConfig(): ReportDataConfig {
     return {
-      // TODO update config according to the server headers
       [ReportDataSection.table]: {
         fields: {
           'user_id': {
@@ -20,6 +19,9 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
             sortOrder: 1,
             nonComparable: true,
             hidden: true,
+          },
+          'partner_id': {
+            format: value => value,
           },
           'creator_name': {
             format: value => value,

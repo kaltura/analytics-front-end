@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
-import { KalturaAPIException, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaReportTable } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -16,7 +16,6 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-contributors-mini-top-contributors',
@@ -31,7 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class MiniTopContributorsComponent extends TopContributorsBaseReportComponent implements OnInit, OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
   @Input() topContributors$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
-
+  
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-top-contributors';
@@ -46,9 +45,7 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   public _isCompareMode = false;
   
   constructor(private _frameEventManager: FrameEventManagerService,
-              private _browserService: BrowserService,
-              private _activatedRoute: ActivatedRoute,
-              private _router: Router,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -109,13 +106,13 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     this._tableData = tableData.map(extendTableRow).splice(0, 3);
     this._currentDates = null;
     this._compareDates = null;
-    this.setAnonymousContributors(this._tableData); // fix for anonymous users
+    this._setAnonymousContributors(this._tableData); // fix for anonymous users
     
     if (compareTable && compareTable.header && compareTable.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compareTable, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
+      this._setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
   
@@ -133,10 +130,10 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       this._pageScrollService.start(pageScrollInstance);
     }
   }
-
-  private setAnonymousContributors(contributors: TableRow<string>[]): void {
-    contributors.forEach( contributor => {
-      if ( !contributor['creator_name'].length ) {
+  
+  private _setAnonymousContributors(contributors: TableRow<string>[]): void {
+    contributors.forEach(contributor => {
+      if (!contributor['creator_name'].length) {
         contributor['creator_name'] = 'anonymous';
         contributor['created_at'] = '';
       }
@@ -147,12 +144,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
     if (row['user_id'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
-    // status is already being transformed by formatter function
-    if (analyticsConfig.isHosted) {
-      const params = this._browserService.getCurrentQueryParams('string');
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['user_id']}&${params}`);
-    } else {
-      this._router.navigate(['user', row['user_id']], { queryParams: this._activatedRoute.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.drilldown('user', row['user_id'], true, row['partner_id']);
   }
 }
