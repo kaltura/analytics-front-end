@@ -82,6 +82,10 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(ReportHelper.minutes(value), false),
             sortOrder: 7,
           },
+          'partner_id': {
+            format: value => value,
+            nonComparable: true,
+          }
         }
       },
       [ReportDataSection.totals]: {
