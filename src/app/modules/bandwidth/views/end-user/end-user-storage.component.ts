@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
@@ -84,6 +84,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
+              private _browserService: BrowserService,
               private _compareService: CompareService,
               private _dataConfigService: EndUserStorageDataConfig,
               private _logger: KalturaLogger,
@@ -128,23 +129,30 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
     this.updateChartType();
   }
 
-  public _onDrillDown(user: string): void {
-    this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', { user });
-    this._drillDown = user.length ? user : '';
-    this.reportType = user.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
-    this.pager.pageIndex = 1;
-
-    this.order = user.length ? '+month_id' : '-total_storage_mb';
-  
-    if (this._drillDown) {
-      this.filter.userIds = this._drillDown;
+  public _onDrillDown(user: string, selection?: TableRow): void {
+    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid) {
+      this._browserService.alert({
+        header: this._translate.instant('app.common.attention'),
+        message: this._translate.instant('app.bandwidth.userError'),
+      });
     } else {
-      delete this.filter.userIds;
-    }
-  
-    this._updateExportConfig();
+      this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', {user});
+      this._drillDown = user.length ? user : '';
+      this.reportType = user.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
+      this.pager.pageIndex = 1;
 
-    this.loadReport();
+      this.order = user.length ? '+month_id' : '-total_storage_mb';
+
+      if (this._drillDown) {
+        this.filter.userIds = this._drillDown;
+      } else {
+        delete this.filter.userIds;
+      }
+
+      this._updateExportConfig();
+
+      this.loadReport();
+    }
   }
   
   private _updateExportConfig(): void {
@@ -254,6 +262,9 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
         this._reportInterval,
         dataKey
       );
+      if (columns.indexOf('partner_id') > -1) {
+        columns.splice(columns.indexOf('partner_id'), 1);
+      }
       this._columns = columns;
       this._totalCount = compare.table.totalCount;
       this._tableData = tableData;
@@ -288,6 +299,9 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   private handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
+    if (columns.indexOf('partner_id') > -1) {
+      columns.splice(columns.indexOf('partner_id'), 1);
+    }
     this._columns = columns;
     this._tableData = tableData;
   }

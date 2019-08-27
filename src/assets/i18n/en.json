@@ -236,6 +236,7 @@
         "deleted_msecs": "Deleted Minutes",
         "total_msecs": "Total Minutes"
       },
+      "userError": "The selected user belongs to a child account and cannot be viewed",
       "added_entries_tt": "Added Entries Tooltip",
       "deleted_entries_tt": "Deleted Entries Tooltip",
       "total_entries_tt": "The total number of entries at the end of the selected timeframe",
