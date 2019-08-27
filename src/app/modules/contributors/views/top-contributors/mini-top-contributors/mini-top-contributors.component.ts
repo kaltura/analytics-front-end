@@ -73,6 +73,10 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
           if (data.table && data.table.header && data.table.data) {
             this._handleTable(data.table, data.compare); // handle table
           }
+          if (this._isCompareMode) {
+            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
+            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
+          }
           this._isBusy = data.busy;
         });
     }
@@ -107,8 +111,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       const { tableData: compareTableData } = this._reportService.parseTableData(compareTable, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
-      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
       this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
