@@ -1,5 +1,9 @@
 <div data-aid="report-entry-totals" class="kReport kTotals kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kPreview">
+      <ng-content></ng-content>
+    </div>
+
     <div class="kTotalsContainer">
       <div *ngIf="_viewConfig.plays" class="kTotalContainer">
         <div class="kMiniIcon aqua"><i class="icon-small-impressions"></i></div>
@@ -35,28 +39,20 @@
           </span>
         </div>
       </div>
-      <ng-container *ngIf="_canShowKmsTotals">
-        <div *ngIf="_viewConfig.likes && likes !== null" class="kTotalContainer">
-          <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
-          <div class="kTotal"
-               [kTooltip]="'app.entry.likes_tt' | translate"
-               [maxWidth]="500"
-               [escape]="false">
-            <span class="kLable">{{'app.entry.likes' | translate}}</span>
-            <span class="kValue">{{likes}}</span>
-          </div>
-        </div>
-        <div *ngIf="_viewConfig.comments && comments !== null" class="kTotalContainer">
-          <div class="kMiniIcon darkgreen"><i class="kIconcomplete"></i></div>
-          <div class="kTotal"
-               [kTooltip]="'app.entry.comments_tt' | translate"
-               [maxWidth]="500"
-               [escape]="false">
-            <span class="kLable">{{'app.entry.comments' | translate}}</span>
-            <span class="kValue">{{comments}}</span>
-          </div>
-        </div>
-      </ng-container>
+    </div>
+
+    <div class="kSocialHighlights">
+      <span class="kTitle">{{'app.user.socialHighlights' | translate}}</span>
+      <div class="kSocialHighlightsItem">
+        <i class="kIcon icon-small-like"></i>
+        <span class="kValue">{{likes}}</span>
+        {{'app.entry.likes' | translate}}
+      </div>
+      <div class="kSocialHighlightsItem">
+        <i class="kIcon icon-small-comments"></i>
+        <span class="kValue">{{comments}}</span>
+        {{'app.entry.comments' | translate}}
+      </div>
     </div>
   </k-area-blocker>
 </div>

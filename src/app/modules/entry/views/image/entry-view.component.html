@@ -48,11 +48,9 @@
                             [comments]="comments"
                             [dateFilter]="_dateFilter"
                             [entryId]="_entryId"
-                            [refineFilter]="_refineFilter"></app-image-entry-totals>
-
-    <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
+                            [refineFilter]="_refineFilter">
       <app-image-entry-preview *ngIf="_viewConfig.entryPreview" [entry]="entry"></app-image-entry-preview>
-    </div>
+    </app-image-entry-totals>
 
     <div *ngIf="_viewConfig.performance" class="kReportContainer">
       <app-image-entry-performance [dateFilterComponent]="dateFilter"
