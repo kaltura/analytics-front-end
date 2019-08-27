@@ -129,4 +129,31 @@ export const viewsConfig = {
     devices: {},
     discovery: {},
   },
+  user: {
+    export: {},
+    refineFilter: {
+      mediaType: {},
+      entrySource: {},
+      tags: {},
+      categories: {},
+    },
+    totals: {},
+    geoDevices: {},
+    lastViewedEntries: {},
+    insights: {
+      minutesViewed: {},
+      plays: {},
+      domains: {},
+      sources: {},
+    },
+    viewer: {
+      viewedEntries: {},
+      engagement: {},
+    },
+    contributor: {
+      mediaUpload: {},
+      topContent: {},
+      sources: {},
+    },
+  },
 };
