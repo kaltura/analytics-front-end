@@ -42,7 +42,7 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '105px', 'padding-left': '10px'}">
-            <div class="kUser">
+            <div class="kUser" (click)="_drillDown(data)">
               <i class="icon-small-viewer-contributor"></i>
             </div>
           </td>
@@ -50,7 +50,7 @@
             <div class="kTopVideoEntryColumn"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['user_id'])">
-              <span class="kTableColumn kEntryName">{{data['creator_name']}}</span>
+              <span class="kTableColumn kEntryName" (click)="_drillDown(data)">{{data['creator_name']}}</span>
               <div class="kEntryDetails">
               <span class="kTableColumn" *ngIf="data['created_at'].length">{{'app.contributors.created' | translate}}</span>
               <span class="kTableColumn kCreated">{{data['created_at']}}</span>

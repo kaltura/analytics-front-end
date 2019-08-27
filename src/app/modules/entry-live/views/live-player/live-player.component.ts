@@ -1,5 +1,6 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri } from "configuration/analytics-config";
+import { AuthService } from "shared/services";
 
 @Component({
   selector: 'app-live-player',
@@ -8,8 +9,9 @@ import { analyticsConfig, getKalturaServerUri } from "configuration/analytics-co
 })
 export class LivePlayerComponent implements AfterViewInit {
   @Input() entryId = '';
-
   public _frameSrc = '';
+
+  constructor(private _authService: AuthService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -26,8 +28,8 @@ export class LivePlayerComponent implements AfterViewInit {
 
     const entryId = this.entryId;
     const UIConfID = analyticsConfig.kalturaServer.previewUIConf;
-    const partnerID = analyticsConfig.pid;
-    const ks = analyticsConfig.ks || '';
+    const partnerID = this._authService.pid;
+    const ks = this._authService.ks || '';
     const serverUri = getKalturaServerUri();
 
     let flashVars = `flashvars[autoPlay]=true&flashvars[autoMute]=true&flashvars[kAnalony.plugin]=false&flashvars[ks]=${ks}&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false`;

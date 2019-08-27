@@ -5,6 +5,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TopContributorsExportConfig } from './top-contributors-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
@@ -29,7 +30,7 @@ export class TopContributorsComponent {
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;
-  public _reportType: KalturaReportType = KalturaReportType.userUsage;
+  public _reportType: KalturaReportType = reportTypeMap(KalturaReportType.userUsage);
   public _selectedMetrics: string;
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = null;

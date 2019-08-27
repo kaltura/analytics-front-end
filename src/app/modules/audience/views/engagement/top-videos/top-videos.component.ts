@@ -13,8 +13,10 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
+import { SortEvent } from 'primeng/api';
+import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos',
@@ -27,11 +29,10 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
   ]
 })
 export class EngagementTopVideosComponent extends EngagementBaseReportComponent implements OnInit, OnDestroy {
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-engagement_ranking';
   private _compareFilter: KalturaEndUserReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
@@ -45,6 +46,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   public totalCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   
+  public _order = '-engagement_ranking';
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: TableRow<string>[] = [];
@@ -57,7 +59,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator;
+  public _reportType = reportTypeMap(KalturaReportType.topContentCreator);
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -157,7 +159,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144}`;
       return item;
     };
     this._columns = columns;
@@ -183,5 +185,15 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
   ngOnDestroy() {
     this.topVideos$.complete();
     this.totalCount$.complete();
+  }
+
+  public _onSortChanged(event: SortEvent): void {
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      if (order !== this._order) {
+        this._order = order;
+        this._loadReport();
+      }
+    }
   }
 }

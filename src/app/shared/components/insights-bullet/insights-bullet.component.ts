@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { getColorsBetween, getColorPalette } from 'shared/utils/colors';
 
 export interface InsightsBulletValue {
@@ -14,6 +14,7 @@ export interface InsightsBulletValue {
   styleUrls: ['./insights-bullet.component.scss']
 })
 export class InsightsBulletComponent {
+  @Input() showLegend = true;
   @Input() set values(value: InsightsBulletValue[]) {
     this._values = [];
 
@@ -32,10 +33,13 @@ export class InsightsBulletComponent {
             tooltip,
           };
         });
+  
+      this.appliedColors.emit(colors);
     }
   }
   
   @Input() colorScheme = 'default';
+  @Output() appliedColors = new EventEmitter<string[]>();
   
   public _values: InsightsBulletValue[] = [];
 }

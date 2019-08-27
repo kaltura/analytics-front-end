@@ -4,11 +4,9 @@ import { KalturaEntryStatus, KalturaFilterPager } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesLiveService } from './entries-live.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { BrowserService, ErrorsManagerService } from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import { SortEvent } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { skip } from 'rxjs/operators';
@@ -34,20 +32,20 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   public _firstTimeLoading = true;
   public _periodTooltip: string;
   public _entryData: TableRow;
+  public _displayLiveStatus = true;
   private timeoutId = null;
   
   constructor(private _entriesLiveService: EntriesLiveService,
               private _errorsManager: ErrorsManagerService,
-              private _router: Router,
-              private _activatedRoute: ActivatedRoute,
-              private _frameEventManager: FrameEventManagerService,
-              private _browserService: BrowserService) {
+              private _navigationDrillDownService: NavigationDrillDownService) {
   }
   
   ngOnInit(): void {
     this._entriesLiveService.startPolling();
     
     this._periodTooltip = this._getPeriodTooltip();
+
+    this._displayLiveStatus = !analyticsConfig.multiAccount; // hide live status column in multi account view
     
     this._entriesLiveService.data$
       .pipe(cancelOnDestroy(this), skip(1))
@@ -94,11 +92,8 @@ export class EntriesLiveComponent implements OnInit, OnDestroy {
   
   public _drillDown(entry: TableRow): void {
     const entryId = entry['entry_id'];
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry-live?id=${entryId}`);
-    } else {
-      this._router.navigate(['entry-live', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-    }
+    const partnerId = entry['partner_id'];
+    this._navigationDrillDownService.drilldown('entry-live', entryId, false, partnerId);
   }
   
   public _onPaginationChange(event: { page: number, rows: number }): void {

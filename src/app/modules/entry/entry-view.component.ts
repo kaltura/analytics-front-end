@@ -21,8 +21,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorsManagerService } from 'shared/services';
 
 @Component({
   selector: 'app-entry',
@@ -45,7 +45,8 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
-              private _frameEventManager: FrameEventManagerService) {
+              private _frameEventManager: FrameEventManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService) {
   }
   
   ngOnInit() {
@@ -148,7 +149,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           this._entry = entry;
           this._owner = user.fullName;
           this._likes = entry.votes;
-
+          
           if (metadataItem) {
             const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
             this._comments = metadataObj.metadata && metadataObj.metadata.CommentsCount && metadataObj.metadata.CommentsCount.text
@@ -173,11 +174,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
   
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
-    } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
   
   public _navigateToEntry(): void {

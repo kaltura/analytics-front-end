@@ -14,6 +14,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export interface SummaryItem {
   key: string;
@@ -101,7 +102,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._blockerMessage = null;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       filter: this._filter,
       pager: this._pager,
       order: null
@@ -161,7 +162,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     compareFilter.toDate = endDate;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       filter: compareFilter,
       pager: this._pager,
       order: null

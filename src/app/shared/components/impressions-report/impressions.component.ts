@@ -18,6 +18,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export type funnelData = {
   impressions: number;
@@ -61,6 +62,8 @@ export class ImpressionsComponent implements OnInit {
   }
   
   @Input() entryId: string;
+  @Input() userId: string;
+  @Input() title: string = null;
   
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -79,7 +82,7 @@ export class ImpressionsComponent implements OnInit {
   
   private echartsIntance: any;
   private compareEchartsIntance: any;
-  private reportType: KalturaReportType = KalturaReportType.contentDropoff;
+  private reportType: KalturaReportType = reportTypeMap(KalturaReportType.contentDropoff);
   private pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   private order = 'count_plays';
   private filter = new KalturaEndUserReportInputFilter(
@@ -131,7 +134,7 @@ export class ImpressionsComponent implements OnInit {
   public updateFunnel(): void {
     const plays = this._funnelData.impressions === 0 ? '0' : (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
     const playThrough = this._funnelData.impressions === 0 ? '0' : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toFixed(1);
-    this.echartsIntance.setOption({
+    this._setEchartsOption({
       series: [{
         data: [
           {
@@ -149,7 +152,7 @@ export class ImpressionsComponent implements OnInit {
         ]
       }]
     }, false);
-    this.echartsIntance.setOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
+    this._setEchartsOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
   }
   
   public onPlaythroughChange(): void {
@@ -165,8 +168,8 @@ export class ImpressionsComponent implements OnInit {
     this._blockerMessage = null;
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
-    if (this._dateFilter.compare.active) {
-    
+    if (this.userId) {
+      this.filter.userIds = this.userId;
     }
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     
@@ -178,7 +181,10 @@ export class ImpressionsComponent implements OnInit {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+  
+        if (this.userId) {
+          this.compareFilter.userIds = this.userId;
+        }
         const compareReportConfig: ReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
         if (this.entryId) {
           compareReportConfig.filter.entryIdIn = this.entryId;
@@ -215,9 +221,9 @@ export class ImpressionsComponent implements OnInit {
   private handleCompare(current: Report, compare: Report): void {
     this.handleTotals(current.totals); // set original funnel data
     // resize funnels to fit window
-    this.echartsIntance.setOption({ series: [{ width: '100%' }] }, false);
+    this._setEchartsOption({ series: [{ width: '100%' }] }, false);
     this.compareEchartsIntance.setOption({ series: [{ width: '100%' }] }, false);
-    this.echartsIntance.setOption({ series: [{ left: '0%' }] }, false);
+    this._setEchartsOption({ series: [{ left: '0%' }] }, false);
     this.compareEchartsIntance.setOption({ series: [{ left: '0%' }] }, false);
     
     const data = compare.totals.data.split(analyticsConfig.valueSeparator);
@@ -259,8 +265,8 @@ export class ImpressionsComponent implements OnInit {
   }
   
   private handleTotals(totals: KalturaReportTotal): void {
-    this.echartsIntance.setOption({ series: [{ width: '30%' }] }, false);
-    this.echartsIntance.setOption({ series: [{ left: '65%' }] }, false);
+    this._setEchartsOption({ series: [{ width: '30%' }] }, false);
+    this._setEchartsOption({ series: [{ left: '65%' }] }, false);
     const data = totals.data.split(analyticsConfig.valueSeparator);
     this._funnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
@@ -273,6 +279,14 @@ export class ImpressionsComponent implements OnInit {
       }
     };
     this.updateFunnel();
+  }
+  
+  private _setEchartsOption(option: EChartOption, opts?: any): void {
+    setTimeout(() => {
+      if (this.echartsIntance) {
+        this.echartsIntance.setOption(option, opts);
+      }
+    }, 0);
   }
   
   private getChartTooltip(params): string {

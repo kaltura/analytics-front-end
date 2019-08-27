@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { AuthService } from 'shared/services';
 
 @Component({
   selector: 'app-image-entry-preview',
@@ -10,20 +11,18 @@ import { analyticsConfig } from 'configuration/analytics-config';
 export class ImageEntryPreviewComponent {
   @Input() set entry(value: KalturaMediaEntry) {
     if (value) {
-      this._imgAlt = value.name;
-      this._imgUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${value.id}/width/864/height/480?rnd=${Math.random()}`;
+      this._imgUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${value.id}/width/864/height/480`;
     }
   }
   
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   
   public _imgUrl: string;
-  public _imgAlt: string;
   
-  constructor() {
+  constructor(private _authService: AuthService) {
   }
 }
 

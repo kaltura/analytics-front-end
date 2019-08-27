@@ -24,6 +24,10 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'partner_id': {
+            format: value => value,
+            hidden: true,
+          },
           'view_unique_audience': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,

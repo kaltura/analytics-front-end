@@ -9,6 +9,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
+import { ThumbnailLoaderComponent } from './components/thumbnail-loader/thumbnail-loader.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
@@ -23,6 +24,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerModule, InputHelperModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TimeUnitsComponent } from './components/date-filter/time-units.component';
 import { CompareService } from 'shared/services/compare.service';
+import { NavigationDrillDownService } from 'shared/services/navigation-drilldown.service';
 import { TrendPipe } from 'shared/pipes/trend.pipe';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { NumberFormatPipe } from 'shared/pipes/number-formatter';
@@ -59,6 +61,9 @@ import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
 import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
 import { UserEngagementFilterComponent } from 'shared/components/user-engagement-filter/user-engagement-filter.component';
 import { UserEngagementUsersFilterComponent } from 'shared/components/user-engagement-filter/users-filter/users-filter.component';
+import { EvenTableHeightDirective } from 'shared/directives/even-table-height.directive';
+import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component';
+import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @NgModule({
   imports: [
@@ -85,6 +90,7 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
   ],
   declarations: [
     DateFilterComponent,
+    ThumbnailLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,
@@ -120,12 +126,16 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
     StreamDurationPipe,
+    EvenTableHeightDirective,
     ...FilterComponentsList,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
+    HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   exports: [
     DateFilterComponent,
+    ThumbnailLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,
@@ -161,9 +171,12 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
     StreamDurationPipe,
+    EvenTableHeightDirective,
     ...FilterComponentsList,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
+    HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   providers: [
   ]
@@ -178,6 +191,7 @@ export class SharedModule {
         ReportService,
         CompareService,
         TrendService,
+        NavigationDrillDownService,
         CategoriesSearchService,
       ]
     };

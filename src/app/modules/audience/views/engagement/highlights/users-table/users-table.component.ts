@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
@@ -11,6 +11,9 @@ import { CompareService } from 'shared/services/compare.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { reportTypeMap } from 'shared/utils/report-type-map';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-table',
@@ -26,7 +29,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   
@@ -39,6 +42,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   
   constructor(private _reportService: ReportService,
+              private _browserService: BrowserService,
+              private _frameEventManager: FrameEventManagerService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: UsersTableConfig) {
@@ -142,6 +149,19 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         this._order = order;
         this._loadReport();
       }
+    }
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['name'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    // status is already being transformed by formatter function
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string');
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['name']}&${params}`);
+    } else {
+      this._router.navigate(['user', row['name']], { queryParams: this._activatedRoute.snapshot.queryParams });
     }
   }
 }

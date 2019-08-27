@@ -33,14 +33,14 @@ export class ImageEntryTotalsComponent extends EntryBase {
       this._viewConfig = { ...viewsConfig.entry.totals };
     }
   }
-
+  
   private _order = '-month_id';
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
-
+  
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -49,7 +49,7 @@ export class ImageEntryTotalsComponent extends EntryBase {
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _viewConfig: ViewConfig = { ...viewsConfig.entry.totals };
-
+  
   public get _canShowKmsTotals(): boolean {
     return !!analyticsConfig.customData.metadataProfileId
       && (this.comments !== null || this.likes !== null)
@@ -68,7 +68,7 @@ export class ImageEntryTotalsComponent extends EntryBase {
               private _authService: AuthService,
               private _dataConfigService: EntryTotalsConfig) {
     super();
-
+    
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -81,7 +81,7 @@ export class ImageEntryTotalsComponent extends EntryBase {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
-
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -158,9 +158,9 @@ export class ImageEntryTotalsComponent extends EntryBase {
       );
     }
   }
-
+  
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
   }
-
+  
 }

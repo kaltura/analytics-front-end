@@ -18,6 +18,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -33,7 +34,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-date_id';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
   private _filterChange = new Subject();
   

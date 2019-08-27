@@ -4,6 +4,7 @@ import { KalturaReportType } from 'kaltura-ngx-client';
 import { TopBrowsersConfig } from './top-browsers.config';
 import { BaseDevicesReportComponent, BaseDevicesReportConfig } from '../base-devices-report/base-devices-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-top-browsers',
@@ -16,8 +17,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
   ]
 })
 export class TopBrowsersComponent extends BaseDevicesReportComponent {
-  protected _defaultReportType = KalturaReportType.browsersFamilies;
-  protected _drillDownReportType = KalturaReportType.browsers;
+  protected _defaultReportType = reportTypeMap(KalturaReportType.browsersFamilies);
+  protected _drillDownReportType = reportTypeMap(KalturaReportType.browsers);
   protected _iconType = 'browser';
   public _name = 'top-browsers';
 

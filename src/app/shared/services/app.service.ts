@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
@@ -12,9 +12,15 @@ import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { mapRoutes } from 'configuration/host-routing-mapping';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
+import { AuthService } from 'shared/services/auth.service';
+import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class AppService implements OnDestroy {
+  private _permissionsLoaded = new BehaviorSubject<boolean>(false);
+  
+  public readonly permissionsLoaded$ = this._permissionsLoaded.asObservable();
   public confirmDialogAlignLeft = false;
   public confirmationLabels = {
     yes: 'Yes',
@@ -28,15 +34,24 @@ export class AppService implements OnDestroy {
               private _browserService: BrowserService,
               private _confirmationService: ConfirmationService,
               private _router: Router,
+              private _location: Location,
+              private _authService: AuthService,
               private _permissionsService: AnalyticsPermissionsService,
               private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
   }
   
   ngOnDestroy(): void {
+    this._permissionsLoaded.complete();
   }
   
   public init(): void {
+    this._authService.ks = analyticsConfig.ks;
+    this._authService.pid = analyticsConfig.pid;
+    
+    delete analyticsConfig.ks;
+    delete analyticsConfig.pid;
+
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
@@ -44,7 +59,7 @@ export class AppService implements OnDestroy {
       clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
     });
     this._kalturaServerClient.setDefaultRequestOptions({
-      ks: analyticsConfig.ks
+      ks: this._authService.ks
     });
     
     this._browserService.registerOnShowConfirmation((confirmationMessage) => {
@@ -85,14 +100,29 @@ export class AppService implements OnDestroy {
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(config => setConfig(config, true));
-    
+  
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(({ url }) => this._router.navigateByUrl(mapRoutes(url)));
+      .subscribe(({ url }) => {
+      
+        // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
+        const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1 && url.indexOf('/analytics/entry-live') === -1);
+        if (needToRestoreParent) {
+          this._authService.restoreParentIfNeeded();
+        }
+      
+        this._router.navigateByUrl(mapRoutes(url));
+      });
     
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
+  
+    this._frameEventManager.listen(FrameEvents.UpdateMultiAccount)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(({ multiAccount }) => {
+        this._updateMultiAccount(multiAccount, true);
+      });
     
     // load localization
     this._logger.info('Loading permissions and localization...');
@@ -151,9 +181,25 @@ export class AppService implements OnDestroy {
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+        this._permissionsLoaded.next(true);
       }));
   }
   
-  
+  private _updateMultiAccount(showMultiAccount: boolean, reload = false): void {
+    const needToReload = reload && showMultiAccount !== analyticsConfig.multiAccount;
+    
+    if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
+      analyticsConfig.multiAccount = showMultiAccount;
+    } else {
+      analyticsConfig.multiAccount = false;
+    }
+    
+    if (needToReload) {
+      // refresh current route to invoke data reloading using the new multi account settings
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([decodeURI(this._location.path())]);
+      });
+    }
+  }
 }
 

@@ -1,6 +1,6 @@
 {
-  "app":{
-    "modules":{
+  "app": {
+    "modules": {
       "audience": "Audience",
       "bandwidth": "Usage",
       "contributors": "Contributors",
@@ -66,7 +66,7 @@
       "loadingError": "Failed to load children.",
       "maxChildrenExceeded": "Number of categories exceeds {{childrenCount}}\nand cannot be displayed.\nPlease use the Search Category control."
     },
-    "common":{
+    "common": {
       "ok": "OK",
       "apply": "Apply",
       "close": "Close",
@@ -93,7 +93,7 @@
       "none": "None",
       "all": "All"
     },
-    "errors":{
+    "errors": {
       "errorHeader": "Error",
       "general": "An error occurred",
       "invalidKS": "Your session has expired. Please log-in again.",
@@ -134,7 +134,7 @@
       "comparespecific": "Same period starting at:",
       "exit": "Exit Compare Mode"
     },
-    "usersFilter":{
+    "usersFilter": {
       "prompt": "Search Users",
       "userTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier."
     },
@@ -177,7 +177,7 @@
         "errorLoadingUser": "Failed to load user data"
       }
     },
-    "bandwidth":{
+    "bandwidth": {
       "highlights": "Highlights",
       "allUsers": "All Users",
       "title": "Publisher Bandwidth & Storage Report",
@@ -236,6 +236,7 @@
         "deleted_msecs": "Deleted Minutes",
         "total_msecs": "Total Minutes"
       },
+      "userError": "The selected user belongs to a child account and cannot be viewed",
       "added_entries_tt": "Added Entries Tooltip",
       "deleted_entries_tt": "Deleted Entries Tooltip",
       "total_entries_tt": "The total number of entries at the end of the selected timeframe",
@@ -276,6 +277,7 @@
         "countriesSelected": "{0} Countries Selected",
         "findCountry": "Find Country",
         "selectCountry": "Filter Country",
+        "top": "Top Countries",
         "exportLabels": {
           "geo": "Geo Location"
         },
@@ -673,6 +675,7 @@
       "avg_completion_rate": "Avg. Completion Rate",
       "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
       "unique_known_users": "Unique Viewers",
+      "unique_auth_known_users": "Unique Authenticated  Views",
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "likes": "Likes",
       "likes_tt": "Likes",
@@ -706,7 +709,8 @@
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",
         "syndication": "Syndication"
-      }
+      },
+      "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
     "contentInteractions": {
       "title": "Content Interactions",
@@ -759,6 +763,91 @@
         "creator": "Creator",
         "creationDate": "Creation Date",
         "elapsedTime": "Elapsed Time"
+      }
+    },
+    "user": {
+      "index": "#",
+      "entry_name": "Name",
+      "count_plays": "Plays",
+      "count_viral": "Shares",
+      "count_download": "Downloads",
+      "created_at": "Created Date",
+      "added_msecs": "Added Minutes",
+      "sum_time_viewed": "Minutes Viewed",
+      "avg_time_viewed": "Avg. View Time",
+      "count_loads": "Player Impressions",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "user_role": "User Role:",
+      "email": "Email:",
+      "impressions": "Impressions",
+      "created": "Registration Date:",
+      "sources": "Which sources does {{0}} use most to add content?",
+      "userSources_tt": "Which method does the user use to add content into the platform",
+      "viewingEngagementFunnel": "Viewing Engagement Funnel",
+      "playerImpressions": "Player Impressions",
+      "played": "Played",
+      "notPlayed": "Not Played",
+      "completionRate100": "Completion Rate 100%",
+      "completionRate75_100": "Completion Rate Between 75% to 100%",
+      "completionRate50_75": "Completion Rate Between 50% to 75%",
+      "completionRate25_50": "Completion Rate Between 25% to 50%",
+      "completionRate0_25": "Completion Rate Under 25%",
+      "playedToCompletion": "Played to Completion Rate",
+      "completed": "Completed",
+      "between75to100": "Between 75% to 100%",
+      "between50to75": "Between 50% to 75%",
+      "between25to50": "Between 25% to 50%",
+      "under25": "Under 25%",
+      "fromAllImpressions": "from all Player Impressions",
+      "viewingEngagement": "{{0}} Viewing Engagement",
+      "collaboration": "{{0}} Collaboration",
+      "highlights": "Viewed Entries",
+      "mediaUpload": "Media Upload",
+      "entries": "Entries",
+      "topContent": "Top Content",
+      "added_entries": "Added Entries",
+      "votes": "Likes",
+      "lastViewedEntries": "Last Viewed Entries",
+      "topLocation": "Top Location",
+      "topDevices": "Most Used Devices",
+      "popularContentSource": "Most Popular Content Source",
+      "popularDomain": "Most Viewed Domain",
+      "topContentSource": "Top Content Source",
+      "otherSources": "Other Sources",
+      "weeklyAvgViews": "weekly Avg. Minutes Viewed",
+      "dailyAvgViews": "{{0}} Minutes Daily Avg.",
+      "mostViewedDay": "Most Minutes Viewed Day",
+      "minutesViewed": "Minutes Viewed  {{0}}",
+      "mostPlaysDay": "Day With Most Plays",
+      "lastPlaysDay": "Last Day With Plays",
+      "content_source": "Content Source",
+      "viewer": "Viewer",
+      "contributor": "Contributor",
+      "socialHighlights": "Social Highlights",
+      "topContentReport": {
+        "name": "Name",
+        "entries": "Entries",
+        "count_plays": "Plays",
+        "unique_known_users": "Unique Viewers",
+        "avg_completion_rate": "Avg. Completion Rate",
+        "score": "Score"
+      },
+      "playsTooltip": "{{0}}: {{1}} plays",
+      "devices": {
+        "Computer": "Desktop",
+        "Mobile": "Mobile",
+        "OTHER": "Other"
+      },
+      "exportLabels": {
+        "highlights": "Highlights",
+        "topLocation": "Top Location",
+        "devices": "Devices Overview",
+        "metricsOverTime": "Metrics over time",
+        "engagement": "Engagement Funnel",
+        "topContent": "Top Content",
+        "sources": "Contribution Sources",
+        "viewingEngagement": "Viewing Engagement",
+        "contribution": "Contribution"
       }
     }
   }

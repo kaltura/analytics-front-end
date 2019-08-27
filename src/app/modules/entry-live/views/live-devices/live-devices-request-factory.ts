@@ -3,6 +3,7 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiReques
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -11,7 +12,7 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   });
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.platformsRealtime,
+    reportType: reportTypeMap(KalturaReportType.platformsRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       toDate: moment().unix(),
       fromDate: this._getFromDate(),

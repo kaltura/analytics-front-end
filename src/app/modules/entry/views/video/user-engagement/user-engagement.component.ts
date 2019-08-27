@@ -12,11 +12,11 @@ import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../../shared/entry-base/entry-base';
-import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 
 @Component({
   selector: 'app-video-entry-user-engagement',

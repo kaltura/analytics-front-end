@@ -1,0 +1,23 @@
+<div data-aid="report-contributors-sources" class="kReport kSources kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.user.sources' | translate: {'0': userName} }}</span>
+    <kInputHelper>
+      <span>{{'app.user.userSources_tt' | translate}}</span>
+    </kInputHelper>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kReport">
+        <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+        <app-horizontal-bar-chart [data]="_barChartData[_selectedMetrics]"
+                                  [colorScheme]="_colorScheme"
+                                  [currentPeriod]="_currentPeriod"
+                                  [comparePeriod]="_comparePeriod"
+                                  [isCompareMode]="_isCompareMode"></app-horizontal-bar-chart>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

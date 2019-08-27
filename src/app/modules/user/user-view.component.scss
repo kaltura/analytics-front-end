@@ -1,0 +1,255 @@
+@import '../../../styles/variables';
+
+.kReport {
+  background-color: $appBkgColor !important;
+
+  .kAvatar {
+    margin-right: 12px;
+
+    .kThumbnailHolder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+
+      ::ng-deep img {
+        width: 40px;
+        border-radius: 50%;
+      }
+    }
+
+    .kStub {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #aef4e9;
+      overflow: hidden;
+      position: relative;
+
+      .icon-viewer-contributor {
+        position: absolute;
+        bottom: -6px;
+        right: 0;
+        color: #31bea6;
+        font-size: 40px;
+      }
+    }
+  }
+
+  .kBackBtn {
+    margin-top: 4px;
+    margin-left: -40px;
+    margin-right: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $kGrayscale3;
+    height: 20px;
+    width: 18px;
+    font-size: 24px;
+
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+  }
+
+  .kReportHeader {
+    height: 80px;
+  }
+
+  .kUserDetails {
+    display: flex;
+    font-size: 14px;
+    color: $kGrayscale2;
+    height: 36px;
+
+    .kLabel {
+      margin-left: 8px;
+    }
+
+    .kSeparator {
+      width: 1px;
+      height: 12px;
+      margin-top: 2px;
+      background-color: $kGrayscale4;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+  }
+}
+
+.kFilter {
+  display: flex;
+  align-items: center;
+
+  .kDropDown {
+    background-color: white;
+    width: 100px;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
+}
+
+.kReportContainer {
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+
+  .kLeftCol {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    margin-right: 24px;
+  }
+
+  .kRightCol {
+    width: 391px;
+
+    ui-carousel {
+      border-radius: 3px;
+    }
+  }
+}
+
+:host /deep/ .kErrorMessageContainer {
+  top: 200px !important;
+  position: absolute;
+}
+
+:host /deep/ {
+  ktags {
+    margin: 0 !important;
+  }
+}
+
+:host /deep/ .kReport {
+  margin-bottom: 0 !important;
+}
+
+@media screen and (max-width: 1280px) {
+  .kLeftCol:not(.kCompare) {
+    flex: 1;
+    height: 543px;
+  }
+
+  .kRightCol:not(.kCompare) {
+    flex: 1;
+    width: auto;
+    height: 543px;
+
+    ui-carousel {
+      height: 543px !important;
+    }
+  }
+
+
+  .kLeftCol.kCompare {
+    height: 622px;
+  }
+
+  .kRightCol.kCompare {
+    height: 622px;
+
+    ui-carousel {
+      height: 622px !important;
+    }
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  ui-carousel:not(.kCompare) {
+    height: 391px !important;
+  }
+
+  ui-carousel.kCompare {
+    height: 495px !important;
+  }
+}
+
+.kReportTabs {
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid $kGrayscale4;
+
+  .kReportTabsItem {
+    width: 160px;
+    height: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $kGrayscale1;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+    &:last-child {
+      margin-left: 40px;
+    }
+
+    &.kViewer:hover {
+      color: #487adf;
+    }
+
+    &.kContributor:hover {
+      color: #1d4694;
+    }
+
+    &.kViewerActive {
+      color: #487adf;
+      border-bottom: 4px solid #487adf;
+      i, span {
+        margin-top: 4px;
+      }
+    }
+
+    &.kContributorActive {
+      color: #1d4694;
+      border-bottom: 4px solid #1d4694;
+      i, span {
+        margin-top: 4px;
+      }
+    }
+
+    .kIcon {
+      margin-right: 9px;
+      font-size: 15px;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import '../../../../../styles/variables';
+
+.kMiniHighlightsWrapper {
+  display: block;
+  width: 100%;
+  height: 148px;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+}
+
+.kMiniHighlights {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+@media screen and (min-width: 1280px) {
+  .kCompare {
+    height: 238px !important;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kMiniHighlightsWrapper:not(.kCompare) {
+    height: 286px;
+  }
+
+  .kMiniHighlightsWrapper.kCompare {
+    height: 365px;
+  }
+
+  .kMiniHighlights {
+    flex-direction: column;
+  }
+}

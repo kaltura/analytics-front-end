@@ -1,0 +1,137 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 233px;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+}
+
+.kHeader {
+  padding: 24px;
+
+  .kTitle {
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.kReportWrapper {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px 24px;
+
+  .kPeriod {
+    font-size: 15px;
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+}
+
+.kReportContainer {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .kThumbnailHolder {
+    cursor: pointer;
+  }
+
+  .kCard {
+    display: flex;
+    flex-direction: column;
+
+    .kLabel {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kThumbnailHolder {
+    width: 202px;
+    height: 101px;
+    cursor: pointer;
+
+    ::ng-deep img {
+      width: 202px;
+    }
+  }
+
+  .kCard {
+    width: 202px;
+  }
+
+  .kCard:nth-child(3),
+  .kCard:nth-child(4) {
+    display: none !important;
+  }
+
+  .kCompare {
+    .kThumbnailHolder {
+      width: 160px !important;
+      height: 78px !important;
+      cursor: pointer;
+
+      ::ng-deep img {
+        width: 160px !important;
+      }
+    }
+
+    .kCard {
+      width: 160px !important;
+    }
+
+    .kCard:nth-child(2),
+    .kCard:nth-child(3),
+    .kCard:nth-child(4) {
+      display: none !important;
+    }
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .kThumbnailHolder {
+    width: 171px;
+    height: 101px;
+
+    ::ng-deep img {
+      width: 171px;
+    }
+  }
+
+  .kCard {
+    width: 171px;
+  }
+
+  .kCompare {
+    .kThumbnailHolder {
+      width: 160px !important;
+      height: 78px !important;
+      cursor: pointer;
+
+      ::ng-deep img {
+        width: 160px !important;
+      }
+    }
+
+    .kCard {
+      width: 160px !important;
+    }
+
+    .kCard:nth-child(3),
+    .kCard:nth-child(4) {
+      display: none !important;
+    }
+  }
+}

@@ -3,27 +3,39 @@
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
     <p-table appScrollTopOnPaging
+             dataKey="object_id"
              [customPaginationEvent]="_paginationChanged$"
              [class.kCompareMode]="isCompareMode"
-             [value]="_tableData">
+             [value]="_tableData"
+             [defaultSortOrder]="-1"
+             [sortOrder]="_sortOrder"
+             [customSort]="true"
+             [sortField]="_sortField"
+             (sortFunction)="sortChanged.emit($event)">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
           <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
           <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
-          <th [ngStyle]="{'width': '100%', 'padding-left': 0}">
+          <th [ngStyle]="{'width': '100%', 'padding-left': '0'}">
             {{'app.engagement.topVideosReport.viewDetails' | translate}}
           </th>
           <ng-container *ngIf="!isCompareMode">
-            <th [ngStyle]="{'width': '170px'}">
+            <th [ngStyle]="{'width': '170px'}" pSortableColumn="count_plays">
               {{'app.engagement.topVideosReport.count_plays' | translate}}
+              <p-sortIcon field="count_plays"></p-sortIcon>
             </th>
-            <th [ngStyle]="{'width': '220px'}">
+            <th [ngStyle]="{'width': '220px'}" pSortableColumn="unique_known_users">
               {{'app.engagement.topVideosReport.unique_known_users' | translate}}
+              <p-sortIcon field="unique_known_users"></p-sortIcon>
             </th>
-            <th [ngStyle]="{'width': '220px'}">{{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}</th>
+            <th [ngStyle]="{'width': '220px'}" pSortableColumn="avg_view_drop_off">
+              {{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}
+              <p-sortIcon field="avg_view_drop_off"></p-sortIcon>
+            </th>
           </ng-container>
-          <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}">
+          <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}" pSortableColumn="engagement_ranking">
             {{'app.engagement.topVideosReport.score' | translate}}
+            <p-sortIcon field="engagement_ranking"></p-sortIcon>
             <!--<kInputHelper>-->
               <!--<span>Scoring formula</span>-->
             <!--</kInputHelper>-->
@@ -44,9 +56,7 @@
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
             <div class="kThumbnailHolder" #holder
                  (click)="_drillDown(data)">
-              <img [src]="data.thumbnailUrl"
-                   onError="this.onerror=null;this.style.display='none'"
-                   (error)="holder.classList.add('error')">
+              <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
             </div>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">

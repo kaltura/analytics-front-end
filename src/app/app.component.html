@@ -1,4 +1,9 @@
-<router-outlet></router-outlet>
+<k-area-blocker *ngIf="_appService.permissionsLoaded$ | async"
+                [showLoader]="_isBusy"
+                [bodyScroll]="true"
+                [classes]="'kAreaBlockerCoverAll'">
+  <router-outlet></router-outlet>
+</k-area-blocker>
 
 <p-confirmDialog #confirm
                  header="Confirmation"

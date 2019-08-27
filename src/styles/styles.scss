@@ -268,12 +268,31 @@ body{
 }
 .kEntryCompareGraphTooltip {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 5px;
   font-weight: bold;
-  .kBullet {
-    font-size: 48px;
-    margin-right: 5px;
+
+  .kPeriodLabel {
+    color: $kGrayscale3;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .kValue {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .kBullet {
+      font-size: 48px;
+      margin-right: 5px;
+    }
   }
 }
 
@@ -343,7 +362,7 @@ p-multiselect /deep/ {
   &.error{
     border: 1px solid $kGrayscale4;
   }
-  img {
+  ::ng-deep img {
     position: absolute;
     left: -100%;
     right: -100%;
@@ -542,6 +561,34 @@ k-area-blocker {
     font-size: 22px;
     line-height: 15px;
     margin-right: 6px;
+  }
+}
+
+.kSankeyTooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .kTitle {
+    color: #999999;
+    font-weight: bold;
+  }
+
+  .kItem {
+    color: #333333;
+    margin-top: 12px;
+
+    .kBullet {
+      font-weight: bold;
+      font-size: 22px;
+      line-height: 15px;
+      margin-right: 6px;
+    }
+
+    .kValue {
+      font-weight: bold;
+      margin-right: 8px;
+    }
   }
 }
 

@@ -1,0 +1,19 @@
+<div class="kReport kOverrideFAIcons kImpressions">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.user.viewingEngagementFunnel' | translate}}</span>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kChart">
+        <div echarts *ngIf="_chartData" class="kChart" [options]="_chartData"></div>
+
+        <div *ngIf="!_isBusy && !_chartData"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

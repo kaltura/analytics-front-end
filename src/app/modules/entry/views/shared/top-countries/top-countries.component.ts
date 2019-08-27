@@ -21,6 +21,7 @@ import { GeoComponent } from './geo/geo.component';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-top-countries',
@@ -55,7 +56,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
-  public _reportType = KalturaReportType.mapOverlayCountry;
+  public _reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
@@ -301,7 +302,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _onDrillDown(event: { drillDown: string[], reload: boolean }): void {
     const { drillDown, reload } = event;
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this._reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
 
     this.onDrillDown.emit({reportType: this._reportType, drillDown: this._drillDown});
 

@@ -25,6 +25,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-syndication',
@@ -83,7 +84,7 @@ export class SyndicationComponent {
   public _selectedMetrics: string;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
-  public _reportType = KalturaReportType.topSyndication;
+  public _reportType = reportTypeMap(KalturaReportType.topSyndication);
   public _lineChartData: any = {};
   public _totalUsers = null;
   public _tableData: any[] = [];

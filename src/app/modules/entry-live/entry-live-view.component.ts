@@ -6,7 +6,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ErrorsManagerService } from 'shared/services';
+import {ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveWidget } from './entry-live.widget';
 import { WidgetsManager } from './widgets/widgets-manager';
@@ -67,6 +67,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveUsers: LiveUsersWidget,
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _liveGeo: LiveGeoWidget,
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
@@ -184,11 +185,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
   
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
-    } else {
-      this._router.navigate(['live/entries-live']);
-    }
+    this._navigationDrillDownService.navigateBack('live/entries-live', false);
   }
   
   public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {

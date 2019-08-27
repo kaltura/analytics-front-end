@@ -664,6 +664,8 @@ export class CompareService implements OnDestroy {
           trend: direction,
           sortOrder: field.sortOrder || 0,
           hidden: !!field.hidden,
+          icon: field.icon,
+          iconColor: field.iconColor,
         });
       }
     });

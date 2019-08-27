@@ -1,0 +1,16 @@
+<div class="kMiniHighlightsWrapper" [class.kCompare]="_isCompareMode">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kMiniHighlights" *ngIf="!_firstTimeLoading && !_isBusy">
+      <app-user-mini-highlights-geo [isCompare]="_isCompareMode"
+                                    [data]="_geoData"
+                                    [compare]="_compareGeoData"
+                                    [currentDates]="_currentDates"
+                                    [compareDates]="_compareDates"></app-user-mini-highlights-geo>
+      <app-user-mini-highlights-devices [isCompare]="_isCompareMode"
+                                        [data]="_devicesData"
+                                        [compare]="_compareDevicesData"
+                                        [currentDates]="_currentDates"
+                                        [compareDates]="_compareDates"></app-user-mini-highlights-devices>
+    </div>
+  </k-area-blocker>
+</div>

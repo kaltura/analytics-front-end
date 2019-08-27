@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaAPIException, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
 import { BehaviorSubject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -16,6 +16,7 @@ import { TopContributorsBaseReportComponent } from '../top-contributors-base-rep
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-contributors-mini-top-contributors',
@@ -45,6 +46,9 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
   public _isCompareMode = false;
   
   constructor(private _frameEventManager: FrameEventManagerService,
+              private _browserService: BrowserService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -72,6 +76,10 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
           this._compareTableData = [];
           if (data.table && data.table.header && data.table.data) {
             this._handleTable(data.table, data.compare); // handle table
+          }
+          if (this._isCompareMode) {
+            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
+            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
           }
           this._isBusy = data.busy;
         });
@@ -107,8 +115,6 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
       const { tableData: compareTableData } = this._reportService.parseTableData(compareTable, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._compareFirstTimeLoading = false;
-      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
-      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
       this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
@@ -135,5 +141,18 @@ export class MiniTopContributorsComponent extends TopContributorsBaseReportCompo
         contributor['created_at'] = '';
       }
     });
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['user_id'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    // status is already being transformed by formatter function
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string');
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['user_id']}&${params}`);
+    } else {
+      this._router.navigate(['user', row['user_id']], { queryParams: this._activatedRoute.snapshot.queryParams });
+    }
   }
 }

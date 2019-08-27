@@ -14,6 +14,7 @@ export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   skipEmptyBuckets: boolean;
+  multiAccount: boolean;
   defaultPageSize: number;
   originTarget: string;
   kalturaServer?: {
@@ -85,11 +86,12 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.3.3',
+  appVersion: '1.4.0',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   originTarget: window.location.origin,
+  multiAccount: false,
 };
 
 export function setConfig(config: AnalyticsConfig, hosted = false): void {
