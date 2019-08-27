@@ -11,7 +11,7 @@ import { AuthService } from 'shared/services';
 export class ImageEntryPreviewComponent {
   @Input() set entry(value: KalturaMediaEntry) {
     if (value) {
-      this._imgUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${value.id}`;
+      this._imgUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${value.id}/width/288/height/161`;
     }
   }
   
