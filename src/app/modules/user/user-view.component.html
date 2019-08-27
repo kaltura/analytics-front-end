@@ -15,6 +15,7 @@
           </div>
           <span class="kTitle">{{_userName}}</span>
           <app-export-csv name="user"
+                          [userId]="_userId"
                           [reports]="_exportConfig"
                           [refineFilter]="_refineFilter"
                           [dateFilter]="_dateFilter"></app-export-csv>

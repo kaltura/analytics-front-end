@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { UserExportConfig } from './user-export.config';
 import { Unsubscribable } from 'rxjs';
-import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export enum UserReportTabs {
@@ -31,9 +31,6 @@ export enum UserReportTabs {
   ]
 })
 export class UserViewComponent implements OnInit, OnDestroy {
-  private _requestSubscription: Unsubscribable;
-  private _subscription: Unsubscribable;
-  
   public _user: KalturaUser;
   public _loadingUser = false;
   public _creationDate: moment.Moment = null;
@@ -63,7 +60,6 @@ export class UserViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: UserExportConfig) {
-    this._exportConfig = _exportConfigService.getConfig();
   }
   
   ngOnInit() {
@@ -75,29 +71,24 @@ export class UserViewComponent implements OnInit, OnDestroy {
           this._userId = queryParams['id'];
           if (this._userId) {
             this.loadUserDetails();
+            this._exportConfig = this._exportConfigService.getConfig(this._userId);
           }
         });
     } else {
-      this._subscription = this._route.params.subscribe(params => {
-        this._userId = params['id'];
-        if (this._userId) {
-          this.loadUserDetails();
-        }
-      });
+      this._route.params
+        .pipe(cancelOnDestroy(this))
+        .subscribe(params => {
+          this._userId = params['id'];
+          if (this._userId) {
+            this.loadUserDetails();
+            this._exportConfig = this._exportConfigService.getConfig(this._userId);
+          }
+        });
     }
     
   }
   
   ngOnDestroy() {
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-      this._subscription = null;
-    }
-    
-    if (this._requestSubscription) {
-      this._requestSubscription.unsubscribe();
-      this._requestSubscription = null;
-    }
   }
   
   public _onDateFilterChange(event: DateChangeEvent): void {
@@ -113,7 +104,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
     this._loadingUser = true;
     this._blockerMessage = null;
     
-    this._requestSubscription = this._kalturaClient
+    this._kalturaClient
       .request(new UserGetAction({ userId: this._userId }))
       .pipe(cancelOnDestroy(this))
       .subscribe(
@@ -122,11 +113,9 @@ export class UserViewComponent implements OnInit, OnDestroy {
           this._userName = user.fullName;
           const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
           this._registrationDate = DateFilterUtils.getMomentDate(user.createdAt).format(dateFormat);
-          this._requestSubscription = null;
           this._loadingUser = false;
         },
         error => {
-          this._requestSubscription = null;
           this._loadingUser = false;
           const actions = {
             'close': () => {

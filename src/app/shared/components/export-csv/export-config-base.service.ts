@@ -10,6 +10,7 @@ export interface ExportItem {
   startDate?: number | Function;
   endDate?: number | Function;
   additionalFilters?: Partial<KalturaEndUserReportInputFilter>;
+  ownerId?: string;
   items?: ExportItem[];
 }
 
