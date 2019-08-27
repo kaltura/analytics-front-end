@@ -15,6 +15,7 @@ import { EntryBase } from '../../shared/entry-base/entry-base';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-image-entry-totals',
@@ -35,7 +36,7 @@ export class ImageEntryTotalsComponent extends EntryBase {
   }
   
   private _order = '-month_id';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;

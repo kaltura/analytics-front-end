@@ -5,12 +5,12 @@
         <app-k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
                       [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
                       [flashvars]="_playerConfig.flashvars" [lazy]="true"
-                      (kalturaPlayerReady)="onPlayerReady($event)"></app-k-player>
+                      (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player>
 
       </div>
 
       <div class="chartContainer">
-        <div echarts class="kChart" [options]="_chartOptions" (click)="onChartClick($event)"></div>
+        <div echarts class="kChart" [options]="_chartOptions" (click)="_onChartClick($event)"></div>
         <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
           <div class="kLine"></div>
           <span class="kCurrentTime">{{_currentTime | appDuration}}</span>

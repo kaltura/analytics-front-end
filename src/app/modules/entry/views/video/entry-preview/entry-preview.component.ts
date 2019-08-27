@@ -16,6 +16,8 @@ import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import {map, switchMap} from "rxjs/operators";
 import {of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-video-entry-preview',
@@ -28,13 +30,15 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
 
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  private playerInstance: any = null;
-  private playerInitialized = false;
-  private _reportType = KalturaReportType.percentiles;
+  private _playerInstance: any = null;
+  private _playerInitialized = false;
+  private _reportType = reportTypeMap(KalturaReportType.percentiles);
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
-
+  
+  public _currentDatePeriodLabel: string = null;
+  public _compareDatePeriodLabel: string = null;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -72,10 +76,10 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
   }
 
   ngOnInit() {
-    this.initPlayer();
+    this._initPlayer();
   }
   
-  private _getGraphData(yData: number[], compareYData: number[] = null) {
+  private _getGraphData(yData1: number[], yData2: number[], compareYData1: number[] = null, compareYData2: number[] = null) {
     let graphData = {
       color: [getPrimaryColor(), getSecondaryColor()],
       backgroundColor: '#333333',
@@ -87,40 +91,56 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       },
       xAxis: {
         show: false,
-        boundaryGap : false,
+        boundaryGap: false,
         type: 'category',
         data: Array.from({ length: 100 }, (_, i) => i + 1),
       },
-      tooltip : {
+      tooltip: {
+        confine: true,
         formatter: params => {
-          const { value, dataIndex } = Array.isArray(params) ? params[0] : params;
+          const { value: value1, dataIndex } = params[0];
+          const value2 = params[1].value;
           const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
-          let tooltip =  `
+          let tooltip = `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                ${this._translate.instant('app.entry.views')}:&nbsp;${value}
+                ${this._translate.instant('app.entry.views')}:&nbsp;${value1}
+              </div>
+              <div class="kValue">
+                <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
+                ${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}
               </div>
             </div>
           `;
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
-            const compareValue = params[1].value;
-            const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYY' : 'DD/MM/YYYY';
-            const currentDatePeriod = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
-            const compareDatePeriod = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
-
+            const compareValue1 = params[2].value;
+            const compareValue2 = params[3].value;
+            
             tooltip = `
-              <div style="font-weight: normal; color: #999999">${progressValue}</div>
-              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0px">
-                <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                <span>${currentDatePeriod}</span>
-                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${value}</span>
+              <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
+              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0; margin-bottom: 12px">
+                <span class="kPeriodLabel">${this._compareDatePeriodLabel}</span>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${compareValue1}</span>
+                </div>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getSecondaryColor('viewers')}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${compareValue2}</span>
+                </div>
               </div>
-              <div class="kEntryCompareGraphTooltip" style="padding-top: 0px">
-                <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
-                <span>${compareDatePeriod}</span>
-                <span style="margin-left: 24px">${this._translate.instant('app.entry.views')}:&nbsp;${compareValue}</span>
+              <div class="kEntryCompareGraphTooltip" style="padding-top: 0">
+                <span class="kPeriodLabel">${this._currentDatePeriodLabel}</span>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${value1}</span>
+                </div>
+                <div class="kValue">
+                  <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
+                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}</span>
+                </div>
               </div>
            `;
           }
@@ -167,27 +187,50 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
           color: '#FFFFFF'
         }
       },
-      series: [{
-        data: yData,
-        symbol: 'circle',
-        symbolSize: 4,
-        showSymbol: false,
-        type: 'line',
-        lineStyle: {
-          color: '#487adf',
-          width: 2
-        }
-      }]
+      series: [
+        {
+          data: yData1,
+          symbol: 'circle',
+          symbolSize: 4,
+          showSymbol: false,
+          type: 'line',
+          lineStyle: {
+            color: '#487adf',
+            width: 2
+          }
+        },
+        {
+          data: yData2,
+          symbol: 'circle',
+          symbolSize: 4,
+          showSymbol: false,
+          type: 'line',
+          lineStyle: {
+            color: '#1b8271',
+            width: 2
+          }
+        }]
     };
-    if (compareYData !== null) {
+    if (compareYData1 !== null && compareYData2 !== null) {
       graphData.series.push({
-        data: compareYData,
+        data: compareYData1,
         symbol: 'circle',
         symbolSize: 4,
         showSymbol: false,
         type: 'line',
         lineStyle: {
           color: '#88acf6',
+          width: 2
+        }
+      });
+      graphData.series.push({
+        data: compareYData2,
+        symbol: 'circle',
+        symbolSize: 4,
+        showSymbol: false,
+        type: 'line',
+        lineStyle: {
+          color: '#60e4cc',
           width: 2
         }
       });
@@ -227,36 +270,39 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-
+    
+          if (this._isCompareMode) {
+            const dateFormat = 'MMM DD YYYY';
+            this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
+            this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
+          }
+    
           if (report.table && report.table.header && report.table.data) {
-            const {tableData} = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
-            const yAxisData = tableData
-              .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-              .map(item => Number(item['count_viewers']));
-  
-            yAxisData[0] = yAxisData[1]; // fake first item because of limitation when first item always is 0
-
+            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
+            const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
+            
             if (compare && compare.table) {
-              let compareYAxisData = [];
+              let compareYAxisData1 = [];
+              let compareYAxisData2 = [];
               if (compare.table.header && compare.table.data) {
-                const compareTableData = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]).tableData;
-                compareYAxisData = compareTableData
-                  .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-                  .map(item => Number(item['count_viewers']));
+                const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]);
+                compareYAxisData1 = this._getAxisData(compareTableData, 'count_viewers');
+                compareYAxisData2 = this._getAxisData(compareTableData, 'unique_known_users');
               } else {
-                compareYAxisData = Array.from({ length: 100 }, () => 0);
+                compareYAxisData1 = Array.from({ length: 100 }, () => 0);
+                compareYAxisData2 = Array.from({ length: 100 }, () => 0);
               }
-  
-              compareYAxisData[0] = compareYAxisData[1]; // fake first item because of limitation when first item always is 0
-
-              this._chartOptions = this._getGraphData(yAxisData, compareYAxisData);
+              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
             } else {
-              this._chartOptions = this._getGraphData(yAxisData);
+              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
             }
           } else {
-            this._chartOptions = this._getGraphData(Array.from({ length: 100 }, () => 0));
+            const emptyLine = Array.from({ length: 100 }, () => 0);
+            this._chartOptions = this._isCompareMode
+              ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
+              : this._getGraphData(emptyLine, emptyLine);
           }
-
         },
         error => {
           this._isBusy = false;
@@ -295,16 +341,26 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
     }
   }
 
-  public onChartClick(event): void {
+  public _onChartClick(event): void {
     const percent = event.offsetX / event.currentTarget.clientWidth;
-    this.seekTo(percent, true);
+    this._seekTo(percent, true);
+  }
+  
+  private _getAxisData(tableData: TableRow[], key: string): number[] {
+    const result = tableData
+      .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
+      .map(item => Number(item[key] || 0));
+    
+    result[0] = result[1];
+    
+    return result;
   }
 
   /* ------------------------ start of player logic --------------------------*/
 
-  private initPlayer(): void {
-    if (!this.playerInitialized) {
-      this.playerInitialized = true;
+  private _initPlayer(): void {
+    if (!this._playerInitialized) {
+      this._playerInitialized = true;
       this._playerConfig = {
         uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
         pid: this._authService.pid,
@@ -366,33 +422,40 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       }, 0);
     }
   }
+  
+  private _seekTo(percent: number, forcePlay = false): void {
+    this._playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+    if (forcePlay) {
+      this._playerInstance.sendNotification("doPlay");
+    }
+  }
 
-  public onPlayerReady(player): void {
-    this.playerInstance = player;
+  public _onPlayerReady(player): void {
+    this._playerInstance = player;
     setTimeout(() => {
-      this._duration = parseFloat(this.playerInstance.evaluate('{duration}')) * 1000;
+      this._duration = parseFloat(this._playerInstance.evaluate('{duration}')) * 1000;
     }, 0);
 
     // register to playhead update event to update our scrubber
-    this.playerInstance.kBind('playerUpdatePlayhead', (event) => {
+    this._playerInstance.kBind('playerUpdatePlayhead', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress =  parseFloat((event / this._playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
-    this.playerInstance.kBind('playerPlayEnd', (event) => {
+    this._playerInstance.kBind('playerPlayEnd', (event) => {
       this.zone.run(() => {
         this._playProgress = 100;
       });
     });
-    this.playerInstance.kBind('firstPlay', (event) => {
+    this._playerInstance.kBind('firstPlay', (event) => {
       this.zone.run(() => {
         this._playerPlayed = true;
       });
     });
-    this.playerInstance.kBind('seeked', (event) => {
+    this._playerInstance.kBind('seeked', (event) => {
       this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this.playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
+        this._playProgress =  parseFloat((event / this._playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
         this._currentTime = parseFloat(event) * 1000;
       });
     });
@@ -432,13 +495,6 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
       console.log("Failed to inject custom CSS to player");
     }
 
-  }
-
-  private seekTo(percent: number, forcePlay = false): void {
-    this.playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
-    if (forcePlay) {
-      this.playerInstance.sendNotification("doPlay");
-    }
   }
 
   /* -------------------------- end of player logic --------------------------*/

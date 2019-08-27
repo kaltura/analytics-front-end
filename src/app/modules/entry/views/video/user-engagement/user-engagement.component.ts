@@ -17,6 +17,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-video-entry-user-engagement',
@@ -43,7 +44,7 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   }
   
   private _order = '-count_plays';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;
