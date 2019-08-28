@@ -65,7 +65,7 @@
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
-              <div class="kEntryDetails">
+              <div class="kEntryDetails" *ngIf="data['creator_name'] && data['creator_name'].length">
                 <span class="kTableColumn">
                   {{'app.engagement.topVideosReport.by' | translate}} {{data['creator_name']}}
                 </span>
