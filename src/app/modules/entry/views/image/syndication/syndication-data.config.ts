@@ -21,7 +21,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
           },
           'count_loads': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
+            colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
         }

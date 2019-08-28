@@ -47,7 +47,7 @@ export class ImagePerformanceConfig extends ReportDataBaseConfig {
             format: value => value,
             title: this._translate.instant(`app.entry.count_loads`),
             sortOrder: 1,
-            colors: [getPrimaryColor(), getSecondaryColor()],
+            colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'unique_known_users': {
