@@ -71,11 +71,11 @@
     </div>
 
     <div *ngIf="_viewConfig.syndication" class="kReportContainer">
-      <app-syndication [entryId]="_entryId"
+      <app-image-syndication [entryId]="_entryId"
                        [dateFilterComponent]="dateFilter"
                        [dateFilter]="_dateFilter"
                        [refineFilter]="_refineFilter"
-                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-syndication>
+                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-image-syndication>
     </div>
   </div>
 </div>

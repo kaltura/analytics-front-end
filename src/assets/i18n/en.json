@@ -413,6 +413,7 @@
         "avg_view_drop_off": "Avg. Drop Off Rate",
         "count_plays_tt": "Plays",
         "plays_distribution": "Plays Distribution",
+        "loads_distribution": "Player Impressions Distribution",
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
