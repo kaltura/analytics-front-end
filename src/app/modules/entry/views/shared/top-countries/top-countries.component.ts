@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Inject, InjectionToken, Input, OnDestroy, OnInit, Output, Self, ViewChild } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { TopCountriesConfig } from './top-countries.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -63,6 +63,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _mapData: any;
   public _currentPeriodTitle: string;
   public _comparePeriodTitle: string;
+  public _distributionKey = 'plays_distribution';
+  public _distributionCalculationKey = 'count_plays';
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -235,18 +237,15 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
     
-    return tableData.map((row, index) => {
+    return tableData.map(row => {
       const calculateDistribution = (key: string): number => {
         const tab = tabsData.find(item => item.key === key);
         const total = tab ? parseFormattedValue(tab.rawValue) : 0;
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const playsDistribution = calculateDistribution('count_plays');
-      const usersDistribution = calculateDistribution('unique_known_users');
-      
-      row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-      row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+      const playsDistribution = calculateDistribution(this._distributionCalculationKey);
+      row[this._distributionKey] = ReportHelper.numberWithCommas(playsDistribution);
       
       return row;
     });

@@ -2,10 +2,12 @@ import { ImageEntryPreviewComponent } from './entry-preview/entry-preview.compon
 import { ImageEntryViewComponent } from './entry-view.component';
 import { ImageEntryPerformanceComponent } from './image-performance/image-performance.component';
 import { ImageEntryTotalsComponent } from './entry-totals/entry-totals.component';
+import { ImageTopCountriesComponent } from './top-countries/top-countries.component';
 
 export const declarations = [
   ImageEntryPreviewComponent,
   ImageEntryTotalsComponent,
   ImageEntryPerformanceComponent,
   ImageEntryViewComponent,
+  ImageTopCountriesComponent,
 ];

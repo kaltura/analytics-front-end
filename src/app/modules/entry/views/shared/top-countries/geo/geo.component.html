@@ -17,15 +17,15 @@
             </th>
             <th [ngStyle]="{'width': '20%'}">
               <div class="kColumnHeader">
-                <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
-                  {{'app.audience.geo.count_plays' | translate}}
+                <span [kTooltip]="('app.entry.' + distributionCalculationKey) | translate" [showOnEllipsis]="true">
+                  {{('app.entry.' + distributionCalculationKey) | translate}}
                 </span>
               </div>
             </th>
             <th>
               <div class="kColumnHeader">
-                <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
-                  {{'app.audience.geo.distribution' | translate}}
+                <span [kTooltip]="('app.entry.' + distributionKey) | translate" [showOnEllipsis]="true">
+                  {{('app.entry.' + distributionKey) | translate}}
                 </span>
               </div>
             </th>
@@ -46,11 +46,11 @@
               <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
             </td>
             <td>
-              <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+              <span *ngIf="!data[distributionCalculationKey]?.value">{{data[distributionCalculationKey]}}</span>
             </td>
-            <td *ngIf="!data['count_plays']?.value">
+            <td *ngIf="!data[distributionCalculationKey]?.value">
               <div>
-                <app-bullet [value]="data['plays_distribution']"></app-bullet>
+                <app-bullet [value]="data[distributionKey]"></app-bullet>
               </div>
             </td>
             <td *ngIf="showTrend">

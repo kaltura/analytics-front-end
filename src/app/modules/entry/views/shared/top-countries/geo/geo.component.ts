@@ -25,6 +25,8 @@ export class GeoComponent {
   @Input() periodTitle: string;
   @Input() drillDownItems: string[] = [];
   @Input() name = 'default';
+  @Input() distributionCalculationKey = 'count_plays';
+  @Input() distributionKey = 'plays_distribution';
   
   @Input() set mapData(value) {
     if (value) {
