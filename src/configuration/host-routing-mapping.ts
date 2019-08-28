@@ -41,6 +41,10 @@ export function mapRoutes(kmcRoute: string): string {
     case '/analytics/entry-live':
       analyticsRoute = '/entry-live';
       break;
+    case 'user':
+    case '/analytics/user':
+      analyticsRoute = '/user';
+      break;
     default:
       break;
   }
