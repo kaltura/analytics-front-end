@@ -25,7 +25,6 @@ export class ImageEntryViewComponent implements OnInit, OnDestroy {
   @Input() entry: KalturaMediaEntry;
   @Input() owner: string;
   @Input() comments: number = null;
-  @Input() likes: number = null;
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;

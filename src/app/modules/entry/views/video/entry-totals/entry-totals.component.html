@@ -1,96 +1,57 @@
 <div data-aid="report-entry-totals" class="kReport kTotals kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kTotalsContainer">
-      <div *ngIf="_viewConfig.plays" class="kTotalContainer">
-        <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+      <div class="kTotalContainer" *ngFor="let tab of _tabsData">
+        <div class="kMiniIcon" [ngClass]="tab.iconColor"><i [class]="tab.icon"></i></div>
         <div class="kTotal">
-          <span class="kLable">{{_tabsData[0]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[0]?.value}}</span>
+          <span *ngIf="!_isCompareMode" class="kValue">{{tab.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"
-                [kTooltip]="_tabsData[0]?.tooltip"
+                [kTooltip]="tab.tooltip"
                 [maxWidth]="500"
                 [escape]="false">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[0]?.value"
-                             [units]="_tabsData[0]?.units"
-                             [trend]="_tabsData[0]?.trend"></app-trend-value>
+                             [value]="tab.value"
+                             [units]="tab.units"
+                             [trend]="tab.trend"></app-trend-value>
           </span>
+          <span class="kLabel">{{'app.entry.' + tab.key | translate}}</span>
         </div>
       </div>
-      <div *ngIf="_viewConfig.uniqueViewers" class="kTotalContainer">
-        <div class="kMiniIcon green"><i class="icon-small-viewer-contributor"></i></div>
-        <div class="kTotal"
-             [kTooltip]="_tabsData[1]?.tooltip"
-             [maxWidth]="500"
-             [escape]="false">
-          <span class="kLable">{{_tabsData[1]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[1]?.value}}</span>
-          <span *ngIf="_isCompareMode" class="kTrend">
+    </div>
+
+    <div class="kSocialHighlights">
+      <span class="kTitle">{{'app.user.socialHighlights' | translate}}</span>
+      <div class="kSocialHighlightsItem">
+        <i class="kIcon icon-small-like"></i>
+        <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['likes']?.value}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend"
+              [kTooltip]="_socialHighlights['likes']?.tooltip"
+              [maxWidth]="500"
+              [escape]="false">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[1]?.value"
-                             [units]="_tabsData[1]?.units"
-                             [trend]="_tabsData[1]?.trend"></app-trend-value>
-          </span>
-        </div>
+                             [value]="_socialHighlights['likes']?.value"
+                             [units]="_socialHighlights['likes']?.units"
+                             [trend]="_socialHighlights['likes']?.trend"></app-trend-value>
+        </span>
+        {{'app.user.votes' | translate}}
       </div>
-      <div *ngIf="_viewConfig.minutesViewed" class="kTotalContainer">
-        <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
-        <div class="kTotal"
-             [kTooltip]="_tabsData[2]?.tooltip"
-             [maxWidth]="500"
-             [escape]="false">
-          <span class="kLable">{{_tabsData[2]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[2]?.value}}</span>
-          <span *ngIf="_isCompareMode" class="kTrend">
+      <div class="kSocialHighlightsItem">
+        <i class="kIcon icon-share"></i>
+        <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['shares']?.value}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend"
+              [kTooltip]="_socialHighlights['shares']?.tooltip"
+              [maxWidth]="500"
+              [escape]="false">
             <app-trend-value valueStyleClass="kValue"
                              unitsStyleClass="kUnits"
-                             [value]="_tabsData[2]?.value"
-                             [units]="_tabsData[2]?.units"
-                             [trend]="_tabsData[2]?.trend"></app-trend-value>
-          </span>
-        </div>
+                             [value]="_socialHighlights['shares']?.value"
+                             [units]="_socialHighlights['shares']?.units"
+                             [trend]="_socialHighlights['shares']?.trend"></app-trend-value>
+        </span>
+        {{'app.user.count_viral' | translate}}
       </div>
-      <div *ngIf="_viewConfig.completionRate" class="kTotalContainer">
-        <div class="kMiniIcon darkgreen"><i class="kIconcomplete"></i></div>
-        <div class="kTotal"
-             [kTooltip]="_tabsData[3]?.tooltip"
-             [maxWidth]="500"
-             [escape]="false">
-          <span class="kLable">{{_tabsData[3]?.title}}</span>
-          <span *ngIf="!_isCompareMode" class="kValue">{{_tabsData[3]?.value}}</span>
-          <span *ngIf="_isCompareMode" class="kTrend">
-            <app-trend-value valueStyleClass="kValue"
-                             unitsStyleClass="kUnits"
-                             [value]="_tabsData[3]?.value"
-                             [units]="_tabsData[3]?.units"
-                             [trend]="_tabsData[3]?.trend"></app-trend-value>
-          </span>
-        </div>
-      </div>
-      <ng-container *ngIf="_canShowKmsTotals">
-        <div *ngIf="likes !== null" class="kTotalContainer">
-          <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
-          <div class="kTotal"
-               [kTooltip]="'app.entry.likes_tt' | translate"
-               [maxWidth]="500"
-               [escape]="false">
-            <span class="kLable">{{'app.entry.likes' | translate}}</span>
-            <span class="kValue">{{likes}}</span>
-          </div>
-        </div>
-        <div *ngIf="comments !== null" class="kTotalContainer">
-          <div class="kMiniIcon darkgreen"><i class="kIconcomplete"></i></div>
-          <div class="kTotal"
-               [kTooltip]="'app.entry.comments_tt' | translate"
-               [maxWidth]="500"
-               [escape]="false">
-            <span class="kLable">{{'app.entry.comments' | translate}}</span>
-            <span class="kValue">{{comments}}</span>
-          </div>
-        </div>
-      </ng-container>
     </div>
   </k-area-blocker>
 </div>

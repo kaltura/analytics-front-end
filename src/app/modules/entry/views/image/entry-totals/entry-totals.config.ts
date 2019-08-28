@@ -17,12 +17,26 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.entry.count_loads`),
             sortOrder: 1,
+            icon: 'icon-small-impressions',
+            iconColor: 'aqua',
           },
           'unique_known_users': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entry.viewers`),
             tooltip: this._translate.instant('app.entry.viewers_tt'),
             sortOrder: 2,
+            icon: 'icon-small-viewer-contributor',
+            iconColor: 'green',
+          },
+          'count_viral': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.entry.count_viral`),
+            hidden: true,
+          },
+          'votes': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.entry.votes`),
+            hidden: true,
           },
         }
       }

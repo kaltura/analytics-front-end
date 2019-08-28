@@ -39,7 +39,6 @@ export class VideoEntryViewComponent implements OnDestroy {
     }
   }
   @Input() comments: number = null;
-  @Input() likes: number = null;
 
   @Output() back = new EventEmitter<void>();
   @Output() navigateToEntry = new EventEmitter<void>();

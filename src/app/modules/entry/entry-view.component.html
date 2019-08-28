@@ -3,7 +3,6 @@
     <ng-container [ngSwitch]="_entry?.mediaType">
       <app-image-entry *ngSwitchCase="_mediaTypes.image"
                        [viewConfig]="_entryViewConfig"
-                       [likes]="_likes"
                        [comments]="_comments"
                        [entry]="_entry"
                        [owner]="_owner"
@@ -12,7 +11,6 @@
 
       <app-video-entry *ngSwitchDefault
                        [viewConfig]="_entryViewConfig"
-                       [likes]="_likes"
                        [comments]="_comments"
                        [entry]="_entry"
                        [owner]="_owner"

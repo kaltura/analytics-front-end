@@ -98,14 +98,7 @@ export const viewsConfig = {
       categories: {},
     },
     details: {},
-    totals: {
-      plays: {},
-      uniqueViewers: {},
-      minutesViewed: {},
-      completionRate: {},
-      likes: null,
-      comments: null,
-    },
+    totals: {},
     entryPreview: {},
     userEngagement: {
       userFilter: {},

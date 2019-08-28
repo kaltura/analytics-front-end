@@ -1,7 +1,14 @@
 @import '../../../../../../styles/variables';
+
 .kTotals {
+  margin-bottom: 24px !important;
   background-color: transparent !important;
-  margin-bottom: 0 !important;
+}
+
+.kPreview {
+  width: 50%;
+  height: 100%;
+  margin-right: 24px;
 }
 
 .kTotalsContainer {
@@ -13,7 +20,7 @@
   border-radius: 3px;
 
   .kTotalContainer {
-    width: 20%;
+    width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -70,35 +77,6 @@
       font-size: 16px;
       margin-right: 20px;
       flex: 0 0 auto;
-
-      &.aqua {
-        background-color: rgba(22, 168, 215, 0.2);
-        color: #16a8d7;
-      }
-
-      &.blue {
-        background-color: rgba(72, 122, 223, 0.2);
-        color: #487ADF;
-      }
-
-      &.violet {
-        background-color: rgba(155, 100, 230, 0.2);
-        color: #9B64E6;
-      }
-
-      &.orange {
-        background-color: rgba(225, 150, 46, 0.2);
-        color: #E1962E;
-      }
-
-      &.green {
-        background-color: rgba(129, 204, 111, 0.2);
-        color: #81cc6f;
-      }
-
-      .icon-upload {
-        transform: rotate(180deg);
-      }
     }
   }
 }
@@ -106,7 +84,7 @@
 .kSocialHighlights {
   display: flex;
   flex-direction: column;
-  width: 25%;
+  width: 50%;
   height: 88px;
   padding: 24px 0;
   background-color: #ffffff;
@@ -138,17 +116,6 @@
     .kIcon {
       color: #487ADF;
       margin-right: 9px;
-    }
-  }
-}
-
-@media screen and (max-width: 1280px) {
-  .kTotalContainer {
-    padding-left: 15px !important;
-    padding-top: 15px !important;
-
-    .kLabel {
-      white-space: normal !important;
     }
   }
 }

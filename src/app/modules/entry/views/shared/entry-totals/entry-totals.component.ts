@@ -1,33 +1,37 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, InjectionToken, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLikeFilter, KalturaMultiRequest, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType, LikeListAction } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
-import { UserTotalsConfig } from './user-totals.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { UserBase } from '../user-base/user-base';
-import { map, switchMap } from 'rxjs/operators';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { TrendService } from 'shared/services/trend.service';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { EntryBase } from '../entry-base/entry-base';
+
+export const TotalsConfig = new InjectionToken<string>('TotalsConfig');
 
 @Component({
-  selector: 'app-user-totals',
-  templateUrl: './user-totals.component.html',
-  styleUrls: ['./user-totals.component.scss'],
-  providers: [UserTotalsConfig, ReportService]
+  selector: 'app-base-entry-totals',
+  template: '',
+  styleUrls: ['./entry-totals.component.scss'],
 })
-export class UserTotalsComponent extends UserBase {
-  @Input() userId: string;
+export class BaseEntryTotalsComponent extends EntryBase {
+  @Input() entryId = '';
+  @Input() comments: number = null;
+  @Input() likes: number = null;
   
+  private _order = '-month_id';
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
-  private _reportType = reportTypeMap(KalturaReportType.userHighlights);
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
@@ -39,7 +43,10 @@ export class UserTotalsComponent extends UserBase {
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  public _socialHighlights = null;
+  public _socialHighlights = {
+    likes: null,
+    shares: null,
+  };
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -52,8 +59,7 @@ export class UserTotalsComponent extends UserBase {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _kalturaClient: KalturaClient,
-              private _trendService: TrendService,
-              private _dataConfigService: UserTotalsConfig) {
+              @Inject(TotalsConfig) private _dataConfigService: ReportDataBaseConfig) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -63,9 +69,12 @@ export class UserTotalsComponent extends UserBase {
     this._isBusy = true;
     this._blockerMessage = null;
     
-    this._filter.userIds = this.userId;
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    if (reportConfig['objectIds__null']) {
+      delete reportConfig['objectIds__null'];
+    }
+    reportConfig.objectIds = this.entryId;
     
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     this._reportService.getReport(reportConfig, sections)
       .pipe(
         switchMap(report => {
@@ -73,12 +82,15 @@ export class UserTotalsComponent extends UserBase {
             return ObservableOf({ report, compare: null });
           }
           
-          this._compareFilter.userIds = this.userId;
-          const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
+          const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+          if (compareReportConfig['objectIds__null']) {
+            delete compareReportConfig['objectIds__null'];
+          }
+          compareReportConfig.objectIds = this.entryId;
           return this._reportService.getReport(compareReportConfig, sections)
             .pipe(map(compare => ({ report, compare })));
         }),
-        switchMap(({ report, compare }) => this._getLikes().pipe(map(likes => ({ report, compare, likes })))),
+        switchMap(({ report, compare }) => this._getLikes().pipe(map(likes => ({ report, compare, likes }))))
       )
       .subscribe(({ report, compare, likes }) => {
           if (compare) {
@@ -139,7 +151,7 @@ export class UserTotalsComponent extends UserBase {
       compare.totals.data += `${analyticsConfig.valueSeparator}${likes[1]}`;
       compare.totals.header += `${analyticsConfig.valueSeparator}votes`;
     }
-    
+  
     if (current.totals && compare.totals && current.totals.data && compare.totals.data) {
       const tabsData = this._compareService.compareTotalsData(
         currentPeriod,
@@ -148,15 +160,15 @@ export class UserTotalsComponent extends UserBase {
         compare.totals,
         this._dataConfig.totals
       );
-  
+    
       const shares = tabsData.find(({ key }) => key === 'count_viral');
       const like = tabsData.find(({ key }) => key === 'votes');
-      
+    
       this._socialHighlights = {
         likes: like,
         shares: shares,
       };
-  
+    
       this._tabsData = tabsData.filter(({ hidden }) => !hidden);
     }
   }
@@ -168,7 +180,7 @@ export class UserTotalsComponent extends UserBase {
     }
 
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-
+  
     const shares = tabsData.find(({ key }) => key === 'count_viral');
     const like = tabsData.find(({ key }) => key === 'votes');
     this._socialHighlights = {
@@ -181,7 +193,7 @@ export class UserTotalsComponent extends UserBase {
   private _getLikes(): Observable<number[]> {
     const getAction = filter => new LikeListAction({
       filter: new KalturaLikeFilter({
-        userIdEqual: this.userId,
+        entryIdEqual: this.entryId,
         createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
         createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
       }),
@@ -202,5 +214,4 @@ export class UserTotalsComponent extends UserBase {
         return responses.map(response => response.result.totalCount);
       }));
   }
-  
 }

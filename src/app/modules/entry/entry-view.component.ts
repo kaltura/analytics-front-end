@@ -38,7 +38,6 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _entryId = '';
   public _owner = '';
   public _comments = 0;
-  public _likes = 0;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -87,7 +86,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,votes'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl'
           })
         }),
       new UserGetAction({ userId: null })
@@ -148,8 +147,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         ([entry, user, metadataItem]) => {
           this._entry = entry;
           this._owner = user.fullName;
-          this._likes = entry.votes;
-          
+
           if (metadataItem) {
             const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
             this._comments = metadataObj.metadata && metadataObj.metadata.CommentsCount && metadataObj.metadata.CommentsCount.text
