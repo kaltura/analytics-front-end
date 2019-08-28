@@ -23,6 +23,9 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
             format: value => DateFilterUtils.formatFullDateString(value),
             nonComparable: true,
           },
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
           },

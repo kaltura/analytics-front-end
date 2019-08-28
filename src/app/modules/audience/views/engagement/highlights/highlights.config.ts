@@ -14,6 +14,11 @@ export class HighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
+          'count_loads': {
+            format: value => value,
+            colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+          },
           'count_plays': {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
@@ -40,6 +45,11 @@ export class HighlightsConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         preSelected: 'count_plays',
         fields: {
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
+            sortOrder: 0,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
