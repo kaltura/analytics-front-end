@@ -130,7 +130,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   }
 
   public _onDrillDown(user: string, selection?: TableRow): void {
-    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid) {
+    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid.toString()) {
       this._browserService.alert({
         header: this._translate.instant('app.common.attention'),
         message: this._translate.instant('app.bandwidth.userError'),
