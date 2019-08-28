@@ -22,6 +22,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   ]
 })
 export class ImageEntryViewComponent implements OnInit, OnDestroy {
+  @Input() isChildAccount: boolean;
   @Input() entry: KalturaMediaEntry;
   @Input() owner: string;
   @Input() comments: number = null;

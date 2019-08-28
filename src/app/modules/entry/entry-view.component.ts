@@ -21,7 +21,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -37,18 +37,21 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _mediaTypes = KalturaMediaType;
   public _entryId = '';
   public _owner = '';
+  public _isChildAccount = false;
   public _comments = 0;
-  
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
-              private _navigationDrillDownService: NavigationDrillDownService) {
+              private _navigationDrillDownService: NavigationDrillDownService,
+              private _authService: AuthService) {
   }
   
   ngOnInit() {
+    this._isChildAccount = this._authService.isChildAccount;
     if (analyticsConfig.isHosted) {
       this._frameEventManager
         .listen(FrameEvents.UpdateFilters)

@@ -21,6 +21,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
   ]
 })
 export class VideoEntryViewComponent implements OnDestroy {
+  @Input() isChildAccount: boolean;
   @Input() set entry(value: KalturaMediaEntry) {
     if (value) {
       this._entryId = value.id;
