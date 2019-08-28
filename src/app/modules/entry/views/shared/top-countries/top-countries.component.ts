@@ -37,12 +37,15 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   
+  public _distributionKey = 'plays_distribution';
+  public _distributionCalculationKey = 'count_plays';
+  
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
-  private _order = '-count_plays';
+  private _order = `-${this._distributionCalculationKey}`;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
 
-  protected _componentId = 'top-videos';
+  protected _componentId = 'top-geo';
   
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
@@ -63,8 +66,6 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _mapData: any;
   public _currentPeriodTitle: string;
   public _comparePeriodTitle: string;
-  public _distributionKey = 'plays_distribution';
-  public _distributionCalculationKey = 'count_plays';
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -182,12 +183,12 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
                   
                   return sameCountry && sameRegion && sameCity;
                 });
-                const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
-                this._setPlaysTrend(row, 'count_plays', compareValue, this._currentPeriodTitle, this._comparePeriodTitle);
+                const compareValue = relevantCompareRow ? relevantCompareRow[this._distributionCalculationKey] : 0;
+                this._setPlaysTrend(row, this._distributionCalculationKey, compareValue, this._currentPeriodTitle, this._comparePeriodTitle);
               });
             } else {
               this._tableData.forEach(row => {
-                this._setPlaysTrend(row, 'count_plays', 0, this._currentPeriodTitle, this._comparePeriodTitle);
+                this._setPlaysTrend(row, this._distributionCalculationKey, 0, this._currentPeriodTitle, this._comparePeriodTitle);
               });
             }
           }
