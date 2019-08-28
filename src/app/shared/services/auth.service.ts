@@ -23,6 +23,8 @@ export class AuthService implements OnDestroy {
       return this._pid;
     }
 
+    public isChildAccount = false;
+
     private _ks: string = null; // current ks
     private _parentKs = null;   // parent ks for multi account
     private _pid = null;        // current partner id
@@ -40,6 +42,8 @@ export class AuthService implements OnDestroy {
     }
 
     public restoreParentIfNeeded(): void {
+      this.isChildAccount = false;
+
       if (this._parentPid) {
         this._pid = this._parentPid;
         this._parentPid = null;
@@ -76,6 +80,8 @@ export class AuthService implements OnDestroy {
                   ks: this._ks,
                   partnerId: this._pid
                 });
+
+                this.isChildAccount = true;
 
                 observer.next(true);
                 observer.complete();
