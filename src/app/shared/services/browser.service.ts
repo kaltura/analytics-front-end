@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { Params } from '@angular/router';
+import { analyticsConfig } from "configuration/analytics-config";
 
 export enum HeaderTypes {
     error = 1,
@@ -116,6 +117,9 @@ export class BrowserService {
     }
 
     public alert(confirmation: Confirmation) {
+        if (analyticsConfig.isHosted) {
+          this._frameEventManager.publish(FrameEvents.ScrollTo, '0');
+        }
         confirmation.key = 'alert';
         this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);

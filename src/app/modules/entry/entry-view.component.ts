@@ -25,7 +25,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
@@ -71,6 +71,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
   public _owner = '';
+  public _isChildAccount = false;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -79,11 +80,13 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService,
+              private _authService: AuthService,
               private _exportConfigService: EntryExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
 
   ngOnInit() {
+    this._isChildAccount = this._authService.isChildAccount;
     if (analyticsConfig.isHosted) {
       this._frameEventManager
         .listen(FrameEvents.UpdateFilters)

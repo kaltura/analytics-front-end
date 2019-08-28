@@ -268,6 +268,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
       this._columns = columns;
       this._totalCount = compare.table.totalCount;
       this._tableData = tableData;
+      this.setAnonymousUsers(this._tableData); // fix for anonymous users
     }
 
     if (current.totals && compare.totals) {
@@ -304,6 +305,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
     }
     this._columns = columns;
     this._tableData = tableData;
+    this.setAnonymousUsers(this._tableData); // fix for anonymous users
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
@@ -324,6 +326,16 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
+  }
+
+  private setAnonymousUsers(users: TableRow<string>[]): void {
+    if ( !this._drillDown.length ) {
+      users.forEach(user => {
+        if (!user['name'].length) {
+          user['name'] = 'anonymous';
+        }
+      });
+    }
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {
