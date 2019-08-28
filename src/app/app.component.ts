@@ -214,6 +214,9 @@ export class AppComponent implements OnInit, OnDestroy {
       case '/analytics/entry':
         analyticsRoute = '/entry';
         break;
+      case '/analytics/user':
+        analyticsRoute = '/user';
+        break;
       case '/analytics/entry-live':
         analyticsRoute = '/entry-live';
         break;
