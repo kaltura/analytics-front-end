@@ -58,7 +58,7 @@
                              [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
 
             <ng-container *ngSwitchCase="_tableModes.users">
-              <app-user-engagement-filter
+              <app-user-engagement-filter *ngIf="!_isMultiAccount"
                 [totalCount]="usersTableComponent.totalCount"
                 [dateFilter]="_dateFilter"
                 (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>

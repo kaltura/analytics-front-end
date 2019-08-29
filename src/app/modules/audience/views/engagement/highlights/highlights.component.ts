@@ -48,6 +48,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _firstTimeLoading = true;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _isMultiAccount = false;
   public _tabsData: Tab[] = [];
   public _tableData: TableRow[] = [];
   public _selectedMetrics: string;
@@ -85,7 +86,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
               private _dataConfigService: HighlightsConfig,
               private _logger: KalturaLogger) {
     super();
-    
+
+    this._isMultiAccount = analyticsConfig.multiAccount;
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
