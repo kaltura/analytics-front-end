@@ -145,6 +145,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
       if (this._drillDown) {
         this.filter.userIds = this._drillDown;
+        this.compareFilter.userIds = this._drillDown;
       } else {
         this._onRefineFilterChange(this._refineFilter);
       }
