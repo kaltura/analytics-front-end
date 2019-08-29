@@ -145,9 +145,19 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
       if (this._drillDown) {
         this.filter.userIds = this._drillDown;
-        this.compareFilter.userIds = this._drillDown;
+        if (this.compareFilter) {
+          this.compareFilter.userIds = this._drillDown;
+        }
       } else {
-        this._onRefineFilterChange(this._refineFilter);
+        if (this._refineFilter) {
+          this._onRefineFilterChange(this._refineFilter);
+        } else {
+          delete this.filter.userIds;
+          if (this.compareFilter) {
+            delete this.compareFilter.userIds;
+          }
+        }
+        
       }
 
       this._updateExportConfig();
