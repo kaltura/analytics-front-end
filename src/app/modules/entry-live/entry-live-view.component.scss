@@ -63,6 +63,14 @@
   }
 }
 
+.kLiveFilters {
+  border-bottom: 1px solid $kGrayscale4;
+  margin-bottom: 24px;
+  .kTitle {
+    padding: 0 !important;
+  }
+}
+
 :host /deep/ .kExport .kDropDown {
-  margin-right: 0px !important;
+  margin-right: 0 !important;
 }

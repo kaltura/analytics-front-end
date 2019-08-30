@@ -4,7 +4,7 @@ import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveGeoRequestFactory } from './live-geo-request-factory';
 import { EntryLiveGeoDevicesPollsService } from '../../providers/entry-live-geo-devices-polls.service';
-import { KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaResponse } from 'kaltura-ngx-client';
+import { KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { ReportHelper, ReportService } from 'shared/services';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -12,6 +12,8 @@ import { LiveGeoConfig } from './live-geo.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
+import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
@@ -21,14 +23,25 @@ export interface LiveGeoWidgetData {
 
 @Injectable()
 export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
+  private _dateFilter: DateFiltersChangedEvent;
+
   protected _widgetId = 'geo';
   protected _pollsFactory: LiveGeoRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _selectedMetrics: string;
   
+  private get _dateRange(): DateRange {
+    return this._dateFilter ? this._dateFilter.dateRange : null;
+  }
+  
+  private get _isPresetMode(): boolean {
+    return this._dateFilter ? this._dateFilter.isPresetMode : true;
+  }
+  
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
+              protected _filterService: FiltersService,
               private _dataConfigService: LiveGeoConfig) {
     super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
@@ -42,6 +55,15 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
   
   protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+
     const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
     const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
     let tabsData = [];
@@ -94,5 +116,22 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     if (restart) {
       this.restartPolling();
     }
+  }
+  
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+    
+    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+    
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+    
+    this.restartPolling(!this._isPresetMode);
   }
 }

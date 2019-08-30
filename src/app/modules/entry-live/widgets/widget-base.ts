@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OnDestroy } from '@angular/core';
 
 export interface WidgetState {
+  isBusy?: boolean;
   polling?: boolean;
   activated?: boolean;
   error?: KalturaAPIException;
@@ -55,7 +56,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   }
   
   public stopPolling(error = null): void {
-    this._updateState({ polling: false, error });
+    this._updateState({ polling: false, error, isBusy: false });
     
     if (this._pollingSubscription) {
       this._pollingSubscription.unsubscribe();
@@ -77,7 +78,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   
   public startPolling(pollOnce = false): void {
     if (!this._currentState.polling && this._pollsFactory && this._canStartPolling()) {
-      this._updateState({ polling: true });
+      this._updateState({ polling: true, isBusy: true });
   
       const poll$ = this._serverPolls.register<T>(analyticsConfig.live.pollInterval, this._pollsFactory);
       
@@ -96,6 +97,8 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
           if (typeof this._pollsFactory.onPollTickSuccess === 'function') {
             this._pollsFactory.onPollTickSuccess();
           }
+  
+          this._updateState({ isBusy: false });
           
           if (pollOnce) {
             this.stopPolling();
@@ -125,7 +128,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
             this.startPolling();
           }
         }, error => {
-          this._updateState({ activated: false, error });
+          this._updateState({ activated: false, error, isBusy: false });
         });
   }
   
