@@ -1,5 +1,11 @@
 @import '../../../styles/variables';
 
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+
 .kReport {
   background-color: $appBkgColor !important;
 
