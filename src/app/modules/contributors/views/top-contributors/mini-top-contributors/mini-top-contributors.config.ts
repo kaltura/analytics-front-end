@@ -21,6 +21,10 @@ export class MiniTopContributorsConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'partner_id': {
+            format: value => value,
+            hidden: true,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
