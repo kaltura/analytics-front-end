@@ -25,6 +25,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: calc(100% - 375px);
+    &.noCreator{
+      margin-top: -12px;
+    }
   }
 
   .kEntryDetails {

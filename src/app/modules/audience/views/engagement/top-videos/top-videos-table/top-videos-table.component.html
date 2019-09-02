@@ -64,8 +64,8 @@
                  (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
-              <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
-              <div class="kEntryDetails" *ngIf="data['creator_name'] && data['creator_name'].length">
+              <span class="kTableColumn kEntryName" [class.noCreator]="!data['creator_name']">{{data['entry_name']}}</span>
+              <div class="kEntryDetails" *ngIf="data['creator_name']">
                 <span class="kTableColumn">
                   {{'app.engagement.topVideosReport.by' | translate}} {{data['creator_name']}}
                 </span>
