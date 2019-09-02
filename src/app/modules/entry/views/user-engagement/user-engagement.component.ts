@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -72,7 +72,8 @@ export class UserEngagementComponent extends EntryBase {
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UserEngagementConfig) {
+              private _dataConfigService: UserEngagementConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -235,15 +236,10 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   public _drillDown(row: TableRow): void {
-    if (row['name'] === 'Unknown') {
+    if (row['user_id'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
-    // status is already being transformed by formatter function
-    if (analyticsConfig.isHosted) {
-      const params = this._browserService.getCurrentQueryParams('string');
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['name']}&${params}`);
-    } else {
-      this._router.navigate(['user', row['name']], { queryParams: this._activatedRoute.snapshot.queryParams });
-    }
+  
+    this._navigationDrillDownService.drilldown('user', row['user_id'], true, row['partner_id']);
   }
 }

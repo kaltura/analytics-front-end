@@ -5,7 +5,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
@@ -47,7 +47,8 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
               private _activatedRoute: ActivatedRoute,
               private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: EntriesTableConfig) {
+              private _dataConfigService: EntriesTableConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -152,12 +153,6 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   }
   
   public _drillDown(row: TableRow): void {
-    // status is already being transformed by formatter function
-    if (analyticsConfig.isHosted) {
-      const params = this._browserService.getCurrentQueryParams('string');
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${row['object_id']}&${params}`);
-    } else {
-      this._router.navigate(['entry', row['object_id']], { queryParams: this._activatedRoute.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
   }
 }
