@@ -236,10 +236,10 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   public _drillDown(row: TableRow): void {
-    if (row['user_id'] === 'Unknown') {
+    if (row['name'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
   
-    this._navigationDrillDownService.drilldown('user', row['user_id'], true, row['partner_id']);
+    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
   }
 }
