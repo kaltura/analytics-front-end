@@ -6,6 +6,12 @@
   height: 100%;
 }
 
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+
 .kEntryPreview {
   background-color: #FFFFFF;
 }

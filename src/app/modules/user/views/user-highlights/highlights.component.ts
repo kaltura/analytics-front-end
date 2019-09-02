@@ -286,7 +286,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
     
-    if (current.table && compare.table) {
+    if (current.table && current.table.data && compare.table) {
       this._handleTable(current.table, compare);
     }
     

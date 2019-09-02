@@ -15,7 +15,7 @@
         <div class="kValue">{{entryData.media_type | mediaType: true}}</div>
       </div>
 
-      <div class="kDetailsRow">
+      <div class="kDetailsRow" *ngIf="entryData.creator_name">
         <div class="kLabel">{{'app.engagement.topVideosReport.creator' | translate}}</div>
         <div class="kValue">{{entryData.creator_name}}</div>
       </div>

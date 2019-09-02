@@ -131,7 +131,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   }
 
   public _onDrillDown(user: string, selection?: TableRow): void {
-    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid) {
+    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid.toString()) {
       this._browserService.alert({
         header: this._translate.instant('app.common.attention'),
         message: this._translate.instant('app.bandwidth.userError'),
@@ -146,8 +146,19 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
 
       if (this._drillDown) {
         this.filter.userIds = this._drillDown;
+        if (this.compareFilter) {
+          this.compareFilter.userIds = this._drillDown;
+        }
       } else {
-        delete this.filter.userIds;
+        if (this._refineFilter) {
+          this._onRefineFilterChange(this._refineFilter);
+        } else {
+          delete this.filter.userIds;
+          if (this.compareFilter) {
+            delete this.compareFilter.userIds;
+          }
+        }
+        
       }
 
       this._updateExportConfig();
