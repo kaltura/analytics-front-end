@@ -8,6 +8,12 @@
   width: 100%;
   padding: 0 24px;
 
+  .kNoData {
+    color: $kGrayscale4;
+    font-size: 32px;
+    margin-top: 40px;
+  }
+
   .kTitle {
     display: inline-block;
     font-size: 15px;

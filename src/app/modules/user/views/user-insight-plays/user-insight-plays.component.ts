@@ -80,6 +80,9 @@ export class UserInsightPlaysComponent extends UserBase implements OnDestroy {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._tableData = [];
+          this._compareDates = null;
+          this._currentDates = null;
           if (compare) {
             this._handleCompare(report.graphs, compare.graphs);
           } else {
@@ -134,25 +137,36 @@ export class UserInsightPlaysComponent extends UserBase implements OnDestroy {
   }
   
   private _handleCompare(current: KalturaReportGraph[], compare: KalturaReportGraph[]): void {
-    const { tableData } = this._reportService.tableFromGraph(
-      current,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
-    const { tableData: compareTableData } = this._reportService.tableFromGraph(
-      compare,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
-
-    const currentMaxPlays = this._maxPlaysRow(tableData);
-    const compareMaxPlays = this._maxPlaysRow(compareTableData);
-    currentMaxPlays['count_plays'] = ReportHelper.numberOrZero(currentMaxPlays['count_plays']);
-    compareMaxPlays['count_plays'] = ReportHelper.numberOrZero(compareMaxPlays['count_plays']);
+    let currentMaxPlays = null;
+    let compareMaxPlays = null;
+    
+    if (current && current.length) {
+      const { tableData } = this._reportService.tableFromGraph(
+        current,
+        this._dataConfig.table,
+        this._reportInterval,
+      );
   
-    this._tableData = [currentMaxPlays, compareMaxPlays];
-    this._currentDates = currentMaxPlays['date_id'];
-    this._compareDates = compareMaxPlays['date_id'];
+      currentMaxPlays = this._maxPlaysRow(tableData);
+      currentMaxPlays['count_plays'] = ReportHelper.numberOrZero(currentMaxPlays['count_plays']);
+    }
+    
+    if (compare && compare.length) {
+      const { tableData: compareTableData } = this._reportService.tableFromGraph(
+        compare,
+        this._dataConfig.table,
+        this._reportInterval,
+      );
+  
+      compareMaxPlays = this._maxPlaysRow(compareTableData);
+      compareMaxPlays['count_plays'] = ReportHelper.numberOrZero(compareMaxPlays['count_plays']);
+    }
+  
+    if (currentMaxPlays && compareMaxPlays) {
+      this._tableData = [currentMaxPlays, compareMaxPlays];
+      this._currentDates = currentMaxPlays['date_id'];
+      this._compareDates = compareMaxPlays['date_id'];
+    }
   }
   
   private _handleTable(graphs: KalturaReportGraph[]): void {
@@ -172,11 +186,13 @@ export class UserInsightPlaysComponent extends UserBase implements OnDestroy {
       }
     }
   
-    lastPlaysDay['count_plays'] = ReportHelper.numberOrZero(lastPlaysDay['count_plays']);
-    maxPlaysRow['count_plays'] = ReportHelper.numberOrZero(maxPlaysRow['count_plays']);
-
-    this._tableData = [ lastPlaysDay, maxPlaysRow];
-    this._currentDates = lastPlaysDay['date_id'];
-    this._compareDates = maxPlaysRow['date_id'];
+    if (lastPlaysDay && maxPlaysRow) {
+      lastPlaysDay['count_plays'] = ReportHelper.numberOrZero(lastPlaysDay['count_plays']);
+      maxPlaysRow['count_plays'] = ReportHelper.numberOrZero(maxPlaysRow['count_plays']);
+  
+      this._tableData = [lastPlaysDay, maxPlaysRow];
+      this._currentDates = lastPlaysDay['date_id'];
+      this._compareDates = maxPlaysRow['date_id'];
+    }
   }
 }
