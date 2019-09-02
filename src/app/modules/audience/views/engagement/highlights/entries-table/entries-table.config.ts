@@ -13,6 +13,10 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
+          'partner_id': {
+            format: value => value,
+            hidden: true,
+          },
           'object_id': {
             format: value => value,
             nonComparable: true,
