@@ -5,6 +5,7 @@ const palettes = {
   dropoff: ['#D8F5D2', '#C3F1B6', '#ACEA9D', '#97DE85', '#81CC6F', '#6DB35B', '#569247', '#3D6E34'],
   entries: ['#E8D7FF', '#D2B3FD', '#BD93F8', '#AB78F1', '#9B64E6', '#8A54D7', '#7B47C3', '#6C3DAD'],
   moderation: ['#FAD9DC', '#F8A4A9', '#F3737B', '#EB4D56', '#E0313A', '#CE2026', '#BA1519', '#A31011'],
+  impressions: ['#DFF8FF', '#B4EAFB', '#8ADCF6', '#45C2EA', '#16A8D7', '#0192BF', '#00789D', '#005A75'],
 };
 
 export function getColorPalette(type: string = 'default'): string[] {
