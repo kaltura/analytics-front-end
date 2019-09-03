@@ -51,8 +51,8 @@ export class NavigationDrillDownService implements OnDestroy {
 
   private _doDrillDown(route: string, id: string, includeQueryParams: boolean): void {
     if (analyticsConfig.isHosted) {
-      const params = includeQueryParams ? this._browserService.getCurrentQueryParams('string') : '';
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/${route}?id=${id}&${params}`);
+      const params = includeQueryParams ? this._browserService.getCurrentQueryParams('string', { id }) : `id=${id}`;
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/${route}?${params}`);
     } else {
       this._router.navigate([route, id], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : {}));
     }
