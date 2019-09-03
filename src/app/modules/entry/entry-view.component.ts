@@ -158,19 +158,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            const err =  Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
-            this.requestSubscription = null;
-
-            this._blockerMessage = new AreaBlockerMessage({
-              title: this._translate.instant('app.common.error'),
-              message: err.message,
-              buttons: [{
-                label: this._translate.instant('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loadingEntry = false;
-                }}]
-            });
+            throw responses.getFirstError();
           }
   
           return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
