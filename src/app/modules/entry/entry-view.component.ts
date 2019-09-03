@@ -87,25 +87,12 @@ export class EntryViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(({ queryParams }) => {
-          this._entryId = queryParams['id'];
-          if (this._entryId) {
-            this.loadEntryDetails();
-          }
-        });
-    } else {
-      this.subscription = this._route.params.subscribe(params => {
-        this._entryId = params['id'];
-        if (this._entryId) {
-          this.loadEntryDetails();
-        }
-      });
-    }
-
+    this.subscription = this._route.params.subscribe(params => {
+      this._entryId = params['id'];
+      if (this._entryId) {
+        this.loadEntryDetails();
+      }
+    });
   }
 
   ngOnDestroy() {

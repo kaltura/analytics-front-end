@@ -64,29 +64,15 @@ export class UserViewComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(({ queryParams }) => {
-          this._userId = queryParams['id'];
-          if (this._userId) {
-            this.loadUserDetails();
-            this._exportConfig = this._exportConfigService.getConfig(this._userId);
-          }
-        });
-    } else {
-      this._route.params
-        .pipe(cancelOnDestroy(this))
-        .subscribe(params => {
-          this._userId = params['id'];
-          if (this._userId) {
-            this.loadUserDetails();
-            this._exportConfig = this._exportConfigService.getConfig(this._userId);
-          }
-        });
-    }
-    
+    this._route.params
+      .pipe(cancelOnDestroy(this))
+      .subscribe(params => {
+        this._userId = params['id'];
+        if (this._userId) {
+          this.loadUserDetails();
+          this._exportConfig = this._exportConfigService.getConfig(this._userId);
+        }
+      });
   }
   
   ngOnDestroy() {
