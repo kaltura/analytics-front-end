@@ -34,7 +34,7 @@
       margin-bottom: 24px;
 
       &:first-child {
-        margin-right: 30px;
+        margin-right: 24px;
       }
 
       .kDates {
@@ -53,12 +53,15 @@
       font-size: 15px;
 
       &:first-child {
-        margin-right: 30px;
+        margin-right: 24px;
       }
 
       .kValue {
         font-weight: bold;
         margin-right: 16px;
+      }
+      .kLabel{
+        white-space: nowrap;
       }
     }
   }
