@@ -18,7 +18,7 @@ export class LiveDevicesComponent implements OnInit, OnDestroy {
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _summaryData: BarChartRow[] = [];
-  public _isBusy = false;
+  public _isBusy = true;
   public _totalCount = 0;
   
   constructor(private _errorsManager: ErrorsManagerService,
@@ -26,18 +26,16 @@ export class LiveDevicesComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    this._isBusy = true;
-    
     this._liveDevicesWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isBusy = state.isBusy;
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._liveDevicesWidget.retry();
             },
           };
@@ -48,7 +46,6 @@ export class LiveDevicesComponent implements OnInit, OnDestroy {
     this._liveDevicesWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDevicesData) => {
-        this._isBusy = false;
         this._summaryData = data.data;
         this._totalCount = data.totalCount;
       });

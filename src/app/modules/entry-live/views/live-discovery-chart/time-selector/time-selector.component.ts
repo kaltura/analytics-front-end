@@ -115,14 +115,16 @@ export class TimeSelectorComponent implements OnDestroy {
     const startDate = moment(this._startDate);
     const endDate = moment(this._endDate);
     const daysCount = !isPresetMode ? endDate.diff(startDate, 'days') + 1 : null;
-    this.filterChange.emit({
+    const payload = {
       isPresetMode,
       daysCount,
       startDate: startDate.unix(),
       endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
       rangeLabel: this._dateRangeLabel,
-    });
+    };
+    this.filterChange.emit(payload);
+    this._dateFilterService.onFilterChange(payload);
   }
   
   private updateLayout(): void {
@@ -140,6 +142,10 @@ export class TimeSelectorComponent implements OnDestroy {
     momentDate.set({ hour: momentTime.hour(), minute: momentTime.minute(), second: 0 });
     
     return momentDate.toDate();
+  }
+  
+  private _formPresetDateRangeLabel(preset: DateRange, label: string, from: Date, to: Date): string {
+    return `<b>${label}</b>&nbsp;&nbsp;&nbsp;${this._formatDateRangeLabel(from, to)}`;
   }
   
   private _formatDateRangeLabel(from: Date, to: Date): string {
@@ -165,7 +171,7 @@ export class TimeSelectorComponent implements OnDestroy {
       const dates = this._dateFilterService.getDateRangeDetails(this._selectedDateRange);
       this._startDate = dates.startDate;
       this._endDate = dates.endDate;
-      this._dateRangeLabel = dates.label;
+      this._dateRangeLabel = this._formPresetDateRangeLabel(this._selectedDateRange, dates.label, this._startDate, this._endDate);
     } else {
       this._startDate = this._getDate(this._specificDateRange[0], this._fromTime);
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);

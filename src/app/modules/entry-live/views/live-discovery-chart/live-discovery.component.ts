@@ -13,6 +13,8 @@ import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery
 import { KalturaReportType } from 'kaltura-ngx-client';
 import { DateRange } from './filters/filters.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LiveGeoWidget } from '../live-geo/live-geo.widget';
+import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
 
 @Component({
   selector: 'app-live-discovery',
@@ -36,6 +38,8 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
+              private _liveGeoWidget: LiveGeoWidget,
+              private _liveDevicesWidget: LiveDevicesWidget,
               private _errorsManager: ErrorsManagerService,
               private _translate: TranslateService,
               protected _dataConfigService: LiveDiscoveryConfig) {
@@ -48,10 +52,9 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
         this._isPolling = state.polling;
+        this._isBusy = state.isBusy;
         
         if (state.error) {
-          this._isBusy = false;
-
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -62,7 +65,6 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
             state.error.message = this._translate.instant('app.entryLive.generalErrorMessage');
           } else {
             actions['retry'] = () => {
-              this._isBusy = true;
               this._liveExploreWidget.retry();
             };
           }
@@ -73,7 +75,6 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._liveExploreWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryData) => {
-        this._isBusy = false;
         this._data = data;
       });
   }
@@ -87,10 +88,11 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._rangeLabel = event.rangeLabel;
     
     if (!event.initialRun) {
-      this._isBusy = true;
       this._discoveryChart.resetDataZoom();
       this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
+      this._liveDevicesWidget.updateFilters(event);
+      this._liveGeoWidget.updateFilters(event);
     }
     
     this.dateFilterChange.emit(event);
@@ -110,7 +112,6 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     } else {
       this._liveExploreWidget.startPolling();
       this._liveDiscoveryTable.startPolling();
-      this._isBusy = true;
     }
     
   }

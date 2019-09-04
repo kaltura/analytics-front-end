@@ -31,6 +31,7 @@ k-area-blocker {
 .kTopCountries {
   display: flex;
   height: 100%;
+  border-radius: 3px;
 
   &.kDefaultMode {
     flex-direction: row !important;
