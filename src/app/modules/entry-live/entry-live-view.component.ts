@@ -75,31 +75,15 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   
   ngOnInit() {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(
-          cancelOnDestroy(this),
-          filter(Boolean),
-          map(({ queryParams }) => queryParams['id'] || null),
-        )
-        .subscribe(entryId => {
-          if (entryId) {
-            this._entryId = entryId;
-            this._entryLiveWidget.activate({ entryId });
-          }
-        });
-    } else {
-      this._route.params
-        .pipe(
-          cancelOnDestroy(this),
-          map(({ id }) => id || null)
-        )
-        .subscribe(entryId => {
-          this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId });
-        });
-    }
+    this._route.params
+      .pipe(
+        cancelOnDestroy(this),
+        map(({ id }) => id || null)
+      )
+      .subscribe(entryId => {
+        this._entryId = entryId;
+        this._entryLiveWidget.activate({ entryId });
+      });
     
     this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))

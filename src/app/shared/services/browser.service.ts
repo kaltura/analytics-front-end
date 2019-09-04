@@ -65,14 +65,18 @@ export class BrowserService {
       this._currentQueryParams = params;
     }
   
-  public getCurrentQueryParams(format: 'string' = null): Params | string {
+  public getCurrentQueryParams(format: 'string' = null, params?: { [key: string]: string }): Params | string {
+    let currentQueryParams = { ...this._currentQueryParams };
+    if (params) {
+      currentQueryParams = { ...currentQueryParams, ...params };
+    }
     if (format === 'string') {
-      return Object.keys(this._currentQueryParams)
-        .map(key => `${key}=${this._currentQueryParams[key]}`)
+      return Object.keys(currentQueryParams)
+        .map(key => `${key}=${currentQueryParams[key]}`)
         .join('&');
     }
     
-    return this._currentQueryParams;
+    return currentQueryParams;
   }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
