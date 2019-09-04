@@ -59,10 +59,10 @@ export class NavigationDrillDownService implements OnDestroy {
   }
 
   public navigateBack(route: string, includeQueryParams: boolean): void {
-    this._authService.restoreParentIfNeeded();
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateBack);
     } else {
+      this._authService.restoreParentIfNeeded();
       this._router.navigate([route], (includeQueryParams ? { queryParams: this._activatedRoute.snapshot.queryParams } : {}));
     }
   }
