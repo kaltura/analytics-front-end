@@ -61,7 +61,7 @@ export class TopContentComponent extends UserBase implements OnInit, OnDestroy {
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = KalturaReportType.topContentCreator; // don't use mapper function to be able to get content source
-                                                             // I'll work fine since we already might switched ks at this point
+                                                             // It'll work fine since we already might switched ks at this point
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
