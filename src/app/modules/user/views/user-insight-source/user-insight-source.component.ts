@@ -84,6 +84,7 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._bulletValues = [];
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare ? compare.table : null); // handle table
           }
