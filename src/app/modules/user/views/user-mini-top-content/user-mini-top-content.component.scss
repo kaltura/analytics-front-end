@@ -151,3 +151,38 @@
     }
   }
 }
+
+@media screen and (min-width: 1609px)  {
+  .kThumbnailHolder {
+    width: 171px;
+    height: 101px;
+
+    ::ng-deep img {
+      width: 171px;
+    }
+  }
+
+  .kCard {
+    width: 171px;
+  }
+
+  .kCompare {
+    .kThumbnailHolder {
+      width: 128px !important;
+      height: 72px !important;
+      cursor: pointer;
+
+      ::ng-deep img {
+        width: 128px !important;
+      }
+    }
+
+    .kCard {
+      width: 128px !important;
+    }
+    .kCard:nth-child(4),
+    .kCard:nth-child(5) {
+      display: none !important;
+    }
+  }
+}
