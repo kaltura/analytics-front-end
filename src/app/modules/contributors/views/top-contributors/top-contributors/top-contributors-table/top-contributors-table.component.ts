@@ -72,7 +72,7 @@ export class TopContributorsTableComponent implements OnDestroy {
   }
   
   public _drillDown(row: TableRow): void {
-    if (row['user_id'] === 'Unknown') {
+    if (!row['user_id'] || row['user_id'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
     
