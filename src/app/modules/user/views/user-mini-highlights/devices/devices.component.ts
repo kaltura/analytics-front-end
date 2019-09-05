@@ -19,8 +19,8 @@ export interface UserMiniHighlightsDevicesData {
   styleUrls: ['./devices.component.scss']
 })
 export class DevicesComponent {
-  @Input() data: UserMiniHighlightsDevicesData;
-  @Input() compare: UserMiniHighlightsDevicesData = null;
+  @Input() data: UserMiniHighlightsDevicesData[] = [];
+  @Input() compare: UserMiniHighlightsDevicesData[] = [];
   @Input() isCompare = false;
   @Input() currentDates: string = null;
   @Input() compareDates: string = null;

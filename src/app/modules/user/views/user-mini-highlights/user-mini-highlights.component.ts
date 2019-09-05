@@ -59,8 +59,8 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   public _reportInterval = KalturaReportInterval.days;
   public _geoData: UserMiniHighlightsGeoData = null;
   public _compareGeoData: UserMiniHighlightsGeoData = null;
-  public _devicesData: UserMiniHighlightsDevicesData = null;
-  public _compareDevicesData: UserMiniHighlightsDevicesData = null;
+  public _devicesData: UserMiniHighlightsDevicesData[] = [];
+  public _compareDevicesData: UserMiniHighlightsDevicesData[] = [];
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -154,7 +154,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     }
   }
   
-  private _handleCurrentReportData(data: UserMiniHighlightsReportData): { geo: UserMiniHighlightsGeoData, devices: UserMiniHighlightsDevicesData } {
+  private _handleCurrentReportData(data: UserMiniHighlightsReportData): { geo: UserMiniHighlightsGeoData, devices: UserMiniHighlightsDevicesData[] } {
     let result = {
       geo: null,
       devices: null,
@@ -168,46 +168,38 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
     if (data.devices.table.data && data.devices.totals.data) {
       const devicesTable = this._reportService.parseTableData(data.devices.table, this._dataConfig.devicesTable);
       const devicesTotal = this._reportService.parseTotals(data.devices.totals, this._dataConfig.devicesTotal);
-      const devicesWhitelist = ['Computer', 'Mobile'];
-      const colors = { 'Computer': '#487adf', 'Mobile': '#88acf6', 'OTHER': '#dfe9ff' };
+      const colors = ['#487adf', '#88acf6', '#dfe9ff'];
       const devicesTotalData = devicesTotal.length ? parseInt(devicesTotal[0].value, 10) : null;
+      const getDeviceItem = (plays, device, index) => {
+        const share = devicesTotalData ? plays / devicesTotalData : 0;
+        return {
+          value: ReportHelper.percents(share, false, false, false),
+          plays: ReportHelper.numberOrZero(plays),
+          tooltip: this._translate.instant('app.user.playsTooltip', [
+            this._translate.instant('app.user.devices.' + device),
+            ReportHelper.numberOrZero(share)
+          ]),
+          rawPlays: share,
+          label: this._translate.instant('app.user.devices.' + device),
+          color: colors[index],
+          rawValue: plays * 100,
+          device,
+        };
+      };
       
       if (devicesTotalData !== null) {
-        result.devices = devicesTable.tableData
-          .reduce((acc: Object, val: TableRow) => {
-            const device = devicesWhitelist.includes(val['device']) ? val['device'] : 'OTHER';
-            const plays = parseInt(val['count_plays'], 10);
-            const value = devicesTotalData ? plays / devicesTotalData : 0;
-            
-            if (acc[device]) {
-              const otherPlays = acc[device].rawPlays + plays;
-              const otherValue = devicesTotalData ? otherPlays / devicesTotalData : 0;
-              acc[device].rawPlays = otherPlays;
-              acc[device].rawValue = otherValue;
-              acc[device].plays = ReportHelper.numberOrZero(otherPlays);
-              acc[device].value = ReportHelper.percents(otherValue, false, false, false);
-              acc[device].tooltip = this._translate.instant('app.user.playsTooltip', [
-                this._translate.instant('app.user.devices.' + device),
-                acc[device].plays
-              ]);
-            } else {
-              acc[device] = {
-                value: ReportHelper.percents(value, false, false, false),
-                plays: ReportHelper.numberOrZero(plays),
-                tooltip: this._translate.instant('app.user.playsTooltip', [
-                  this._translate.instant('app.user.devices.' + device),
-                  ReportHelper.numberOrZero(plays)
-                ]),
-                rawPlays: plays,
-                label: this._translate.instant('app.user.devices.' + device),
-                color: colors[device],
-                rawValue: value * 100,
-                device,
-              };
-            }
-            
-            return acc;
-          }, {});
+        const topTableData = devicesTable.tableData.sort((a, b) => parseInt(a['count_plays'], 10) - parseInt(b['count_plays'], 10));
+        if (topTableData.length > 2) {
+          const [first, second, ...rest] = topTableData;
+          const other = rest.reduce((acc, val) => acc + parseInt(val['count_plays'], 10), 0);
+          result.devices = [
+            getDeviceItem(parseInt(first['count_plays'], 10), first['device'], 0),
+            getDeviceItem(parseInt(second['count_plays'], 10), second['device'], 1),
+            getDeviceItem(other, 'other', 2),
+          ];
+        } else {
+          result.devices = topTableData.map((item, index) => getDeviceItem(parseInt(item['count_plays'], 10), item['device'], index));
+        }
       }
     }
   
