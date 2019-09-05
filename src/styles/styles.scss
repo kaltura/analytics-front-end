@@ -485,9 +485,15 @@ p-multiselect /deep/ {
   }
 }
 
-div, span, tr, td, li {
-  outline: none !important;
+button, a, tr, td, li {
+  &:focus {
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
 }
+
+//*:focus {
+//  outline: solid !important;
+//}
 
 .ui-datepicker-trigger {
   position: absolute;
