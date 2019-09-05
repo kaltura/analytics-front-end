@@ -172,23 +172,26 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       const devicesTotalData = devicesTotal.length ? parseInt(devicesTotal[0].value, 10) : null;
       const getDeviceItem = (plays, device, index) => {
         const share = devicesTotalData ? plays / devicesTotalData : 0;
+        const label = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'].includes(device)
+          ? this._translate.instant('app.user.devices.' + device)
+          : device;
         return {
           value: ReportHelper.percents(share, false, false, false),
           plays: ReportHelper.numberOrZero(plays),
           tooltip: this._translate.instant('app.user.playsTooltip', [
-            this._translate.instant('app.user.devices.' + device),
-            ReportHelper.numberOrZero(share)
+            label,
+            ReportHelper.numberOrZero(plays)
           ]),
-          rawPlays: share,
-          label: this._translate.instant('app.user.devices.' + device),
+          rawPlays: plays,
           color: colors[index],
           rawValue: plays * 100,
+          label,
           device,
         };
       };
       
       if (devicesTotalData !== null) {
-        const topTableData = devicesTable.tableData.sort((a, b) => parseInt(a['count_plays'], 10) - parseInt(b['count_plays'], 10));
+        const topTableData = devicesTable.tableData.sort((a, b) => parseInt(b['count_plays'], 10) - parseInt(a['count_plays'], 10));
         if (topTableData.length > 2) {
           const [first, second, ...rest] = topTableData;
           const other = rest.reduce((acc, val) => acc + parseInt(val['count_plays'], 10), 0);

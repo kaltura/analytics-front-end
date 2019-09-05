@@ -1,16 +1,14 @@
 import { Component, Input } from '@angular/core';
 
 export interface UserMiniHighlightsDevicesData {
-  [key: string]: {
-    value: string
-    plays: string;
-    rawValue: number;
-    rawPlays: number;
-    label: string;
-    color: string;
-    device: string;
-    tooltip: string;
-  };
+  value: string;
+  plays: string;
+  rawValue: number;
+  rawPlays: number;
+  label: string;
+  color: string;
+  device: string;
+  tooltip: string;
 }
 
 @Component({
