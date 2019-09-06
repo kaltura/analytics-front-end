@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObject, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -55,10 +55,24 @@ export class ExportCsvComponent implements OnDestroy {
   public _showComponent = false;
   public _exportingCsv = false;
   
+  @HostListener('document:keydown.enter', ['$event'])
+  toggleDropdown(event: KeyboardEvent) {
+    if (this._popup && (event.target as HTMLElement).localName === 'app-export-csv') {
+      this._popup.toggle();
+      setTimeout(() => {
+        const nodes = this._renderer.selectRootElement('.ui-treenode-content');
+        if (nodes.length) {
+          
+        }
+      });
+    }
+  }
+  
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
-              private _kalturaClient: KalturaClient) {
+              private _kalturaClient: KalturaClient,
+              private _renderer: Renderer2) {
   }
   
   ngOnDestroy(): void {
@@ -127,7 +141,7 @@ export class ExportCsvComponent implements OnDestroy {
     const selection: ExportItem[] = this._selected
       .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
       .map(({ data }) => data);
-  
+    
     const mapReportItem = (item, label = null) => {
       const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
       if (item.startDate && item.endDate) {
@@ -146,21 +160,21 @@ export class ExportCsvComponent implements OnDestroy {
           filter: itemFilter,
           responseOptions,
         });
-    
+        
         if (item.order) {
           reportItem.order = item.order;
         }
-    
+        
         if (item.objectIds) {
           reportItem.objectIds = item.objectIds;
         }
-    
+        
         if (item.additionalFilters) {
           Object.keys(item.additionalFilters).forEach(key => {
             reportItem.filter[key] = item.additionalFilters[key];
           });
         }
-    
+        
         reportItems.push(reportItem);
       });
     };
@@ -182,7 +196,7 @@ export class ExportCsvComponent implements OnDestroy {
         cancelOnDestroy(this),
         finalize(() => {
           this._exportingCsv = false;
-
+          
           if (this._popup) {
             this._popup.close();
           }

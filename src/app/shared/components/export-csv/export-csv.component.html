@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="!_singleMode">
     <div class="kExport" #toggle>
-      <div class="kDropDown">
+      <div role="button" [attr.tabindex]="_opened ? 0 : -1" class="kDropDown">
         <span>{{'app.common.exportCsv' | translate}}</span>
         <i *ngIf="!_opened" class="kIcondropdown_arrow_bottom"></i>
         <i *ngIf="_opened" class="kIcondropdown_arrow_top"></i>
@@ -20,11 +20,13 @@
       <ng-template>
         <div class="kExportPanel">
           <p-tree selectionMode="checkbox"
+                  [attr.tabindex]="_opened ? 0 : -1"
                   [value]="_options"
                   [(selection)]="_selected"></p-tree>
 
           <button pButton
                   class="kButtonBranded kExportBtn"
+                  [attr.tabindex]="_opened ? 0 : -1"
                   [class.kButtonProcess]="_exportingCsv"
                   [disabled]="_exportingCsv || !_selected.length"
                   [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
