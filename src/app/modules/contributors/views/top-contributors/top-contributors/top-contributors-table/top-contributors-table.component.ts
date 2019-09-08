@@ -4,6 +4,7 @@ import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
+import { analyticsConfig } from "configuration/analytics-config";
 
 @Component({
   selector: 'app-contributors-top-contributors-table',
@@ -56,14 +57,14 @@ export class TopContributorsTableComponent implements OnDestroy {
   }
   
   public _showOverlay(event: any, userId: string): void {
-    if (this._overlay) {
+    if (this._overlay && !analyticsConfig.multiAccount) {
       this._userId = userId;
       this._overlay.show(event);
     }
   }
   
   public _hideOverlay(): void {
-    if (this._overlay) {
+    if (this._overlay && !analyticsConfig.multiAccount) {
       this._userId = null;
       this._overlay.hide();
     }
