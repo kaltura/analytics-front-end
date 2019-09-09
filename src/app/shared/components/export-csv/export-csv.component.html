@@ -15,18 +15,17 @@
                   [closeBtn]="false"
                   [targetRef]="toggle"
                   [targetOffset]="{'x': width * -1 + 100, 'y': 42}"
-                  (onOpen)="_opened = true"
+                  (onOpen)="_onPopupOpen()"
                   (onClose)="_onPopupClose()">
       <ng-template>
         <div class="kExportPanel">
           <p-tree selectionMode="checkbox"
-                  [attr.tabindex]="_opened ? 0 : -1"
                   [value]="_options"
                   [(selection)]="_selected"></p-tree>
 
           <button pButton
+                  tabindex="1"
                   class="kButtonBranded kExportBtn"
-                  [attr.tabindex]="_opened ? 0 : -1"
                   [class.kButtonProcess]="_exportingCsv"
                   [disabled]="_exportingCsv || !_selected.length"
                   [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"

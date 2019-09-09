@@ -1,12 +1,13 @@
 @import './variables';
-$mc-theme-font-path : '~@kaltura-ng/mc-theme/themes/default/fonts';
+
+$mc-theme-font-path: '~@kaltura-ng/mc-theme/themes/default/fonts';
 @import '~@kaltura-ng/mc-theme/themes/default/scss/index.scss';
 @import './icons/icons.scss';
 @import './mini-loader';
 @import './flags';
 
 $appBkgColor: #f2f2f2;
-body{
+body {
   background-color: $appBkgColor;
   overflow-y: hidden;
 }
@@ -14,22 +15,28 @@ body{
 // Spinner positioning for area-blocker
 .loading-backdrop {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(255,255,255,0.3);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+
   .spinner-container {
     display: block;
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate3d(-50px, -50px, 0);
   }
 }
 
 .kMain {
   width: 100%;
-  .kReportView{
+
+  .kReportView {
     width: 100%;
     min-height: 600px;
+
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -38,52 +45,62 @@ body{
       border-radius: 3px;
       display: flex;
       flex-direction: column;
-      .kReportHeader{
+
+      .kReportHeader {
         height: 80px;
         display: flex;
         align-items: center;
         background-color: $appBkgColor;
+
         .kTitle {
           font-size: 24px;
           color: $kGrayscale1;
           font-weight: bold;
         }
-        app-export-csv{
+
+        app-export-csv {
           margin-left: auto;
           white-space: nowrap;
         }
       }
-      .kBreadcrumbs{
+
+      .kBreadcrumbs {
         height: 24px;
         width: 100%;
         display: flex;
         padding-left: 24px;
         align-items: center;
-        a{
-          font-size:20px;
+
+        a {
+          font-size: 20px;
           font-weight: 700;
           color: $kGrayscale3;
           text-decoration: none;
-          &:hover{
+
+          &:hover {
             color: $kGrayscale1;
           }
         }
-        span{
-          font-size:20px;
+
+        span {
+          font-size: 20px;
           font-weight: 700;
           color: $kGrayscale1;
-          &.separator{
+
+          &.separator {
             color: $kGrayscale3;
             margin-left: 8px;
             margin-right: 8px;
           }
         }
       }
-      .kFilters{
+
+      .kFilters {
         height: 70px;
         display: flex;
         width: 100%;
         align-items: center;
+
         .kTitle {
           width: 100%;
           padding: 0 24px;
@@ -92,89 +109,106 @@ body{
           font-weight: bold;
         }
       }
-      .kReportContent{
+
+      .kReportContent {
         display: flex;
         flex-direction: column;
         width: 100%;
         background-color: white;
         min-width: 0;
-        .kDimensions{
+
+        .kDimensions {
           width: 100%;
           margin-top: 16px;
           display: flex;
           align-items: center;
           justify-content: flex-end;
-          app-time-units{
+
+          app-time-units {
             margin-right: 24px;
           }
         }
       }
-      ktags{
+
+      ktags {
         margin-left: 16px;
         width: auto;
+
         /deep/ .kTags {
           border-top: none !important;
         }
       }
-      .kChart{
+
+      .kChart {
         width: 100%;
         height: 280px;
         margin-bottom: 24px;
       }
-      .kTable{
+
+      .kTable {
         display: flex;
         flex-direction: column;
-        .kToggle{
+
+        .kToggle {
           display: flex;
           align-items: center;
           margin-bottom: 24px;
-          i{
+          padding-left: 24px;
+
+          i {
             width: 20px;
             color: $kTertiary;
             font-size: 12px;
-            margin-left: 24px;
             margin-right: 8px;
           }
+
           span {
             cursor: pointer;
           }
         }
+
         .kTableContainer {
           width: 100%;
           overflow-y: hidden;
+
           &.kOpen {
             height: auto;
           }
+
           &.kClose {
             height: 0px;
           }
         }
       }
 
-      .kHighlight{
+      .kHighlight {
         font-weight: bold;
         color: $kGrayscale1;
       }
     }
   }
 }
+
 .kHidden {
   visibility: hidden;
   width: 0px !important;
   height: 0px !important;
   margin: 0px !important;
 }
+
 .ng-tooltip {
   background-color: white;
   color: $kGrayscale1;
   border: 1px solid $kGrayscale4;
-  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.30);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.30);
   display: flex;
   flex-direction: column;
   transition: none !important;
+
   .kTotalsCompareTooltip {
     line-height: 24px;
     display: flex;
+
     strong {
       color: $kGrayscale1;
     }
@@ -183,12 +217,14 @@ body{
       min-width: 120px;
       text-align: left;
     }
+
     .kTotalsCompareTooltipValue {
       display: flex;
       margin-left: 24px;
     }
   }
-  &:after{
+
+  &:after {
     content: none;
   }
 }
@@ -213,6 +249,7 @@ body{
     color: $kDandger !important;
   }
 }
+
 /* main content width according to screen resolution */
 @media screen and (max-width: 991px) {
   .kContent {
@@ -221,6 +258,7 @@ body{
     display: flex;
   }
 }
+
 @media screen and (min-width: 992px) {
   .kContent {
     width: 970px !important;
@@ -228,13 +266,15 @@ body{
     display: flex;
   }
 }
+
 @media screen and (min-width: 1280px) {
   .kContent {
-    width: 1200px!important;
+    width: 1200px !important;
     margin: auto !important;
     display: flex;
   }
 }
+
 @media screen and (min-width: 1610px) {
   .kContent {
     width: 1500px !important;
@@ -268,6 +308,7 @@ body{
   }
 
 }
+
 .kEntryCompareGraphTooltip {
   display: flex;
   flex-direction: column;
@@ -320,8 +361,8 @@ body{
   }
 }
 
-kpopupwidget{
-  .kPopupWidget{
+kpopupwidget {
+  .kPopupWidget {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24) !important;
   }
 }
@@ -363,9 +404,10 @@ p-multiselect /deep/ {
   text-align: center;
   border-radius: 3px;
 
-  &.error{
+  &.error {
     border: 1px solid $kGrayscale4;
   }
+
   ::ng-deep img {
     position: absolute;
     left: -100%;
@@ -403,14 +445,16 @@ p-multiselect /deep/ {
   }
 }
 
-.ui-paginator{
+.ui-paginator {
   margin-top: 4px;
   margin-bottom: 2px;
 }
-.ui-paginator .ui-paginator-pages{
+
+.ui-paginator .ui-paginator-pages {
   margin-top: 1px;
 }
-.ui-paginator .ui-paginator-page{
+
+.ui-paginator .ui-paginator-page {
   width: 32px;
 }
 
@@ -489,15 +533,11 @@ p-multiselect /deep/ {
   }
 }
 
-button, a, tr, td, li {
+button, a, tr, td, th, li {
   &:focus {
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 }
-
-//*:focus {
-//  outline: solid !important;
-//}
 
 .ui-datepicker-trigger {
   position: absolute;
@@ -508,16 +548,19 @@ button, a, tr, td, li {
 }
 
 k-area-blocker {
-  .kErrorMessageContainer{
+  .kErrorMessageContainer {
     width: 100%;
-    .kErrorMessage{
+
+    .kErrorMessage {
       max-width: 586px;
       width: 80% !important;
       padding: 12px 12px 18px 12px !important;
-      .kErrorButtons{
+
+      .kErrorButtons {
         margin-top: 24px !important;
       }
-      .kErrorMessageText{
+
+      .kErrorMessageText {
         overflow-x: hidden;
       }
     }

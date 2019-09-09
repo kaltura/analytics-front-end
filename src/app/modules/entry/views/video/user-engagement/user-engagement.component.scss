@@ -22,3 +22,7 @@
   padding: 0 !important;
   text-align: center;
 }
+
+:host ::ng-deep .ui-autocomplete-input-token input:focus {
+  outline: 5px auto rgba(0, 150, 255, 1) !important;
+}

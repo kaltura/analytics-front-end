@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
@@ -59,23 +59,26 @@ export class ExportCsvComponent implements OnDestroy {
   toggleDropdown(event: KeyboardEvent) {
     if (this._popup && (event.target as HTMLElement).localName === 'app-export-csv') {
       this._popup.toggle();
-      setTimeout(() => {
-        const nodes = this._renderer.selectRootElement('.ui-treenode-content');
-        if (nodes.length) {
-          
-        }
-      });
+      this._focusSelectAll();
     }
   }
   
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
-              private _kalturaClient: KalturaClient,
-              private _renderer: Renderer2) {
+              private _kalturaClient: KalturaClient) {
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _focusSelectAll(): void {
+    setTimeout(() => {
+      const nodes = document.getElementsByClassName('ui-treenode-content') as HTMLCollectionOf<HTMLElement>;
+      if (nodes.length) {
+        nodes[0].focus();
+      }
+    });
   }
   
   private _getFilter(): KalturaEndUserReportInputFilter {
@@ -115,6 +118,11 @@ export class ExportCsvComponent implements OnDestroy {
         selectable: report.id !== 'groupNode',
       })),
     }];
+  }
+  
+  public _onPopupOpen(): void {
+    this._opened = true;
+    this._focusSelectAll();
   }
   
   public _onPopupClose(): void {
