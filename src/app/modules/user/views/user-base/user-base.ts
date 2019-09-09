@@ -11,7 +11,10 @@ export abstract class UserBase {
       
       if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
         this._updateFilter();
-        this._loadReport();
+        // load report in the next run cycle to be sure all properties are updated
+        setTimeout(() => {
+          this._loadReport();
+        });
       }
     }
   }
@@ -20,7 +23,10 @@ export abstract class UserBase {
     if (value) {
       this._refineFilter = value;
       this._updateRefineFilter();
-      this._loadReport();
+      // load report in the next run cycle to be sure all properties are updated
+      setTimeout(() => {
+        this._loadReport();
+      });
     }
   }
 

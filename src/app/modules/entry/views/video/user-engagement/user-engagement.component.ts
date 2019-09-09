@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -18,6 +18,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
 
 @Component({
   selector: 'app-video-entry-user-engagement',
@@ -82,7 +83,8 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UserEngagementConfig) {
+              private _dataConfigService: UserEngagementConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -242,5 +244,12 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     }
   
     this._loadReport();
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (!row['user_id'] || row['user_id'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    this._navigationDrillDownService.drilldown('user', row['user_id'], true, row['partner_id']);
   }
 }

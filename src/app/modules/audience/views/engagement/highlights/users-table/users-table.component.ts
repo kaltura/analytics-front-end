@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
@@ -48,7 +48,8 @@ export class UsersTableComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UsersTableConfig) {
+              private _dataConfigService: UsersTableConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -156,12 +157,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     if (row['name'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
-    // status is already being transformed by formatter function
-    if (analyticsConfig.isHosted) {
-      const params = this._browserService.getCurrentQueryParams('string');
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/user?id=${row['name']}&${params}`);
-    } else {
-      this._router.navigate(['user', row['name']], { queryParams: this._activatedRoute.snapshot.queryParams });
-    }
+  
+    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
   }
 }

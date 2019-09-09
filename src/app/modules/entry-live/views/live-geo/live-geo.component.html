@@ -9,7 +9,6 @@
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
-    <div class="kTimePeriodLabel">{{'app.entryLive.last3Hours' | translate}}</div>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kMap">

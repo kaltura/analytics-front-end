@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -20,8 +20,9 @@ import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
-import { TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
-import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
+import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
+import { DateFiltersChangedEvent, FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
+import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
@@ -45,6 +46,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
+  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
   
   public _isBusy = true;
@@ -53,6 +55,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
   public _canShowToggleLive = false;
+  public _selectedDateRange = DateRange.LastMin;
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
   
   constructor(private _frameEventManager: FrameEventManagerService,
@@ -79,31 +82,15 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   
   ngOnInit() {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(
-          cancelOnDestroy(this),
-          filter(Boolean),
-          map(({ queryParams }) => queryParams['id'] || null),
-        )
-        .subscribe(entryId => {
-          if (entryId) {
-            this._entryId = entryId;
-            this._entryLiveWidget.activate({ entryId });
-          }
-        });
-    } else {
-      this._route.params
-        .pipe(
-          cancelOnDestroy(this),
-          map(({ id }) => id || null)
-        )
-        .subscribe(entryId => {
-          this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId });
-        });
-    }
+    this._route.params
+      .pipe(
+        cancelOnDestroy(this),
+        map(({ id }) => id || null)
+      )
+      .subscribe(entryId => {
+        this._entryId = entryId;
+        this._entryLiveWidget.activate({ entryId });
+      });
     
     this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))
@@ -131,6 +118,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
           && this._entry.explicitLive
           && this._permissions.hasPermission(AnalyticsPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
         this._registerWidgets();
+        
+        if (this._timeSelector) {
+          this._timeSelector.updateDataRanges(false);
+        }
       });
   }
   
@@ -234,5 +225,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   public _liveToggled(): void {
     this._entryLiveWidget.restartPolling();
+  }
+  
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    this._selectedDateRange = event.dateRange;
   }
 }

@@ -24,7 +24,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
   
   private _order = '-count_plays';
-  private _pager = new KalturaFilterPager({ pageSize: 4, pageIndex: 1 });
+  private _pager = new KalturaFilterPager({ pageSize: 5, pageIndex: 1 });
   private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
   private _partnerId = this._authService.pid;
@@ -156,11 +156,11 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     if (current.table && current.table.data) {
       const { columns, tableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
       this._columns = columns;
-      this._tableData = tableData.map(this._extendTableRow.bind(this)).slice(0, 2);
+      this._tableData = tableData.map(this._extendTableRow.bind(this)).slice(0, 3);
       
       if (compare.table && compare.table.data) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-        this._compareTableData = compareTableData.map(this._extendTableRow.bind(this)).slice(0, 2);
+        this._compareTableData = compareTableData.map(this._extendTableRow.bind(this)).slice(0, 3);
       } else {
         this._compareTableData = [];
       }

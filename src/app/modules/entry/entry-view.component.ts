@@ -19,7 +19,7 @@ import {
 import { cancelOnDestroy, XmlParser } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
@@ -52,27 +52,14 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(({ queryParams }) => {
-          this._entryId = queryParams['id'];
-          if (this._entryId) {
-            this._loadEntryDetails();
-          }
-        });
-    } else {
-      this._route.params
-        .pipe(cancelOnDestroy(this))
-        .subscribe(params => {
-          this._entryId = params['id'];
-          if (this._entryId) {
-            this._loadEntryDetails();
-          }
-        });
-    }
-    
+    this._route.params
+      .pipe(cancelOnDestroy(this))
+      .subscribe(params => {
+        this._entryId = params['id'];
+        if (this._entryId) {
+          this._loadEntryDetails();
+        }
+      });
   }
   
   ngOnDestroy() {
@@ -119,19 +106,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            const err = responses.getFirstError();
-            
-            this._blockerMessage = new AreaBlockerMessage({
-              title: this._translate.instant('app.common.error'),
-              message: err.message,
-              buttons: [{
-                label: this._translate.instant('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loadingEntry = false;
-                }
-              }]
-            });
+            throw responses.getFirstError();
           }
           
           const metadataList = responses.length === 3 ? responses[2].result : null;
