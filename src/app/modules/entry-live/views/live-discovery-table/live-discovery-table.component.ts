@@ -39,7 +39,11 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   constructor(private _errorsManager: ErrorsManagerService,
               private _timeSelector: TimeSelectorService,
               public _widget: LiveDiscoveryTableWidget) {
-    
+    _timeSelector.filterLabelChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(label => {
+        this.rangeLabel = label;
+      });
   }
   
   ngOnInit() {

@@ -22,6 +22,7 @@ import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-disc
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 import { DateFiltersChangedEvent, FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
+import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 
 @Component({
   selector: 'app-entry-live',
@@ -43,6 +44,7 @@ import { DateFiltersChangedEvent, FiltersComponent } from './views/live-discover
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
+  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
   
   public _isBusy = true;
@@ -110,6 +112,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         this._entry = data;
         this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
         this._registerWidgets();
+        
+        if (this._timeSelector) {
+          this._timeSelector.updateDataRanges(false);
+        }
       });
   }
   

@@ -18,7 +18,7 @@ export interface WidgetState {
 export abstract class WidgetBase<T = any> implements OnDestroy {
   protected _pollingSubscription: Unsubscribable;
   protected _data = new BehaviorSubject<T>(null);
-  protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false });
+  protected _state = new BehaviorSubject<WidgetState>({ polling: false, activated: false, isBusy: false });
   protected _activationArgs: WidgetsActivationArgs;
   
   protected get _currentData(): T {

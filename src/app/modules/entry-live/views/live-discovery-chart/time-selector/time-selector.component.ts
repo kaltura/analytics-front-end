@@ -76,7 +76,7 @@ export class TimeSelectorComponent implements OnDestroy {
     this._leftDateRangeItems = this._dateFilterService.getDateRange('left');
     this._rightDateRangeItems = this._dateFilterService.getDateRange('right');
     setTimeout(() => {
-      this._updateDataRanges(); // use a timeout to allow data binding to complete
+      this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
   
     this._dateFilterService.popupOpened$
@@ -127,7 +127,7 @@ export class TimeSelectorComponent implements OnDestroy {
     this._dateFilterService.onFilterChange(payload);
   }
   
-  private updateLayout(): void {
+  private _updateLayout(): void {
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
@@ -154,7 +154,7 @@ export class TimeSelectorComponent implements OnDestroy {
     const getDate = date => date.format(analyticsConfig.dateFormat === 'month-day-year' ? 'MM/D/YYYY' : 'D/MM/YYYY');
     const getTime = date => date.format('HH:mm');
   
-    return `${getDate(startDate)}, <b>${getTime(startDate)}</b> – ${getDate(endDate)}, <b>${getTime(endDate)}</b>`;
+    return `${getDate(startDate)}, ${getTime(startDate)} – ${getDate(endDate)}, ${getTime(endDate)}`;
   }
   
   public _validateTimeInputs(): void {
@@ -165,7 +165,7 @@ export class TimeSelectorComponent implements OnDestroy {
     }, 0);
   }
   
-  public _updateDataRanges(): void {
+  public updateDataRanges(fireUpdateEvent = true): void {
     this._lastSelectedDateRange = this._selectedDateRange;
     if (this._selectedView === 'preset') {
       const dates = this._dateFilterService.getDateRangeDetails(this._selectedDateRange);
@@ -177,13 +177,17 @@ export class TimeSelectorComponent implements OnDestroy {
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);
       this._dateRangeLabel = this._formatDateRangeLabel(this._startDate, this._endDate);
     }
+  
+    this._dateFilterService.onFilterLabelChange(this._dateRangeLabel);
     
-    this._triggerChangeEvent();
+    if (fireUpdateEvent) {
+      this._triggerChangeEvent();
+    }
   }
   
   public _togglePopup(): void {
     this._popupOpened = !this._popupOpened;
-    this.updateLayout();
+    this._updateLayout();
     
     if (this._popupOpened) {
       this._selectedDateRange = this._lastSelectedDateRange;
