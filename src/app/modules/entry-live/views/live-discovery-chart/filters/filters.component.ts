@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { DateRange, DateRangeServerValue, FiltersService, TimeInterval } from './filters.service';
 import { SelectItem } from 'primeng/api';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
-import { DateChangeEvent } from '../time-selector/time-selector.service';
+import { DateChangeEvent, TimeSelectorService } from '../time-selector/time-selector.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export interface DateFiltersChangedEvent {
   dateRange: DateRange;
@@ -21,7 +22,7 @@ export interface DateFiltersChangedEvent {
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss']
 })
-export class FiltersComponent {
+export class FiltersComponent implements OnDestroy {
   @Output() filtersChanged = new EventEmitter<DateFiltersChangedEvent>();
   
   private _initialRun = true;
@@ -35,7 +36,26 @@ export class FiltersComponent {
   public _selectedTimeInterval: TimeInterval;
   public _selectedDateRange = DateRange.LastMin;
   
-  constructor(private _filterService: FiltersService) {
+  constructor(private _filterService: FiltersService,
+              private _timeSelectorService: TimeSelectorService) {
+    _timeSelectorService.filterChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(event => this._onDateFilterChange(event));
+  }
+  
+  ngOnDestroy(): void {
+  }
+  
+  private _onDateFilterChange(event: DateChangeEvent): void {
+    this._isPresetMode = event.isPresetMode;
+    this._startDate = event.startDate;
+    this._endDate = event.endDate;
+    this._selectedDateRange = event.dateRange;
+    this._daysCount = event.daysCount;
+    this._rangeLabel = event.rangeLabel;
+    
+    this._onFilterChange(this._initialRun, null);
+    this._initialRun = false;
   }
   
   private _updateInterval(selected = null): void {
@@ -60,17 +80,5 @@ export class FiltersComponent {
       endDate: this._endDate,
       rangeLabel: this._rangeLabel,
     });
-  }
-  
-  public _onDateFilterChange(event: DateChangeEvent): void {
-    this._isPresetMode = event.isPresetMode;
-    this._startDate = event.startDate;
-    this._endDate = event.endDate;
-    this._selectedDateRange = event.dateRange;
-    this._daysCount = event.daysCount;
-    this._rangeLabel = event.rangeLabel;
-    
-    this._onFilterChange(this._initialRun, null);
-    this._initialRun = false;
   }
 }

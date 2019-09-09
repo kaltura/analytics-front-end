@@ -16,9 +16,13 @@ export interface DateChangeEvent {
 
 @Injectable()
 export class TimeSelectorService implements OnDestroy {
-  private _popupOpened = new Subject();
+  private _filterLabelChange = new Subject<string>();
+  private _filterChange = new Subject<DateChangeEvent>();
+  private _popupOpened = new Subject<void>();
   
   public readonly popupOpened$ = this._popupOpened.asObservable();
+  public readonly filterChange$ = this._filterChange.asObservable();
+  public readonly filterLabelChange$ = this._filterLabelChange.asObservable();
   
   constructor(private _translate: TranslateService,
               private _filterService: FiltersService) {
@@ -26,6 +30,8 @@ export class TimeSelectorService implements OnDestroy {
   
   ngOnDestroy(): void {
     this._popupOpened.complete();
+    this._filterChange.complete();
+    this._filterLabelChange.complete();
   }
   
   public openPopup(): void {
@@ -87,6 +93,14 @@ export class TimeSelectorService implements OnDestroy {
     const label = this._filterService.getDateRangeList().find(({ value }) => value === selectedDateRange).label;
     
     return { startDate: moment.unix(fromDate).toDate(), endDate: moment.unix(toDate).toDate(), label };
+  }
+  
+  public onFilterChange(event: DateChangeEvent): void {
+    this._filterChange.next(event);
+  }
+  
+  public onFilterLabelChange(label: string): void {
+    this._filterLabelChange.next(label);
   }
 }
 

@@ -1,9 +1,10 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { DateRangeServerValue } from '../live-discovery-chart/filters/filters.service';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -11,11 +12,19 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
   
+  private _interval = KalturaReportInterval.tenSeconds;
+  
+  private _dateRange: DateRangeServerValue = {
+    toDate: moment().unix(),
+    fromDate: moment().subtract(1, 'minute').unix(),
+  };
+  
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: reportTypeMap(KalturaReportType.mapOverlayCountryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: moment().unix(),
-      fromDate: this._getFromDate(),
+      toDate: this._dateRange.toDate,
+      fromDate: this._dateRange.fromDate,
+      interval: this._interval,
     }),
     pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
     order: '-count_plays',
@@ -25,14 +34,30 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   private _getTotalsActionArgs: ReportGetTotalActionArgs = {
     reportType: reportTypeMap(KalturaReportType.mapOverlayCountryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
-      toDate: moment().unix(),
-      fromDate: this._getFromDate(),
+      toDate: this._dateRange.toDate,
+      fromDate: this._dateRange.fromDate,
+      interval: this._interval,
     }),
     responseOptions: this._responseOptions,
   };
   
   public set reportType(value: KalturaReportType) {
     this._getTableActionArgs.reportType = this._getTotalsActionArgs.reportType = value;
+  }
+  
+  public set dateRange(range: DateRangeServerValue) {
+    if (range.hasOwnProperty('toDate') && range.hasOwnProperty('fromDate')) {
+      this._dateRange = range;
+      this.onPollTickSuccess();
+    }
+  }
+  
+  public set interval(interval: KalturaReportInterval) {
+    if (KalturaReportInterval[interval] !== null) {
+      this._interval = interval;
+      this._getTableActionArgs.reportInputFilter.interval = interval;
+      this._getTotalsActionArgs.reportInputFilter.interval = interval;
+    }
   }
   
   public set drillDown(value: string[]) {
@@ -60,15 +85,11 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     this._getTotalsActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
-  private _getFromDate(): number {
-    return moment().subtract(3, 'hours').unix();
-  }
-  
   public onPollTickSuccess(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
-    this._getTotalsActionArgs.reportInputFilter.toDate = moment().unix();
-    this._getTotalsActionArgs.reportInputFilter.fromDate = this._getFromDate();
+    this._getTableActionArgs.reportInputFilter.toDate = this._dateRange.toDate;
+    this._getTableActionArgs.reportInputFilter.fromDate = this._dateRange.fromDate;
+    this._getTotalsActionArgs.reportInputFilter.toDate = this._dateRange.toDate;
+    this._getTotalsActionArgs.reportInputFilter.fromDate = this._dateRange.fromDate;
   }
   
   public create(): KalturaMultiRequest {

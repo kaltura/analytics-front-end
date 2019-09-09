@@ -102,6 +102,8 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
             },
             label: {
               show: true,
+              textBorderColor: '#ffffff',
+              textBorderWidth: 1,
               position: 'middle',
               color: '#333333',
               formatter: params => this._translate.instant('app.user.dailyAvgViews', [ReportHelper.numberOrZero(params.value)]),

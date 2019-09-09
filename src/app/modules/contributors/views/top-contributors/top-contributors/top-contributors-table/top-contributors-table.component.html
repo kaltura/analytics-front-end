@@ -9,8 +9,8 @@
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
           <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
-          <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
-          <th [ngStyle]="{'width': '100%', 'padding-left': 0}">
+          <th [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
+          <th [ngStyle]="{'width': '100%', 'padding-left': '0'}">
             {{'app.contributors.viewDetails' | translate}}
           </th>
           <ng-container *ngIf="!isCompareMode">
@@ -41,7 +41,7 @@
               <span>{{data.index}}</span>
             </div>
           </td>
-          <td [ngStyle]="{'width': '105px', 'padding-left': '10px'}">
+          <td [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
             <div class="kUser" (click)="_drillDown(data)">
               <i class="icon-small-viewer-contributor"></i>
             </div>

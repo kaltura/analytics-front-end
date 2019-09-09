@@ -23,7 +23,7 @@
           <div class="kPlaysRow">
             <div class="kMiniIcon aqua"><i class="icon-small-impressions"></i></div>
             <span class="kValue">{{_tableData[0]['count_loads']}}</span>
-            {{'app.user.impressions' | translate}}
+            <span class="kLabel">{{'app.user.impressions' | translate}}</span>
           </div>
           <div class="kPlaysRow">
             <span class="kValue">{{_tableData[1]['count_loads']}}</span>
@@ -34,7 +34,7 @@
           <div class="kPlaysRow">
             <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
             <span class="kValue">{{_tableData[0]['count_plays']}}</span>
-            {{'app.user.count_plays' | translate}}
+            <span class="kLabel">{{'app.user.count_plays' | translate}}</span>
           </div>
           <div class="kPlaysRow">
             <span class="kValue">{{_tableData[1]['count_plays']}}</span>
@@ -45,7 +45,7 @@
           <div class="kPlaysRow">
             <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
             <span class="kValue">{{_tableData[0]['sum_time_viewed']}}</span>
-            {{'app.user.sum_time_viewed' | translate}}
+            <span class="kLabel">{{'app.user.sum_time_viewed' | translate}}</span>
           </div>
           <div class="kPlaysRow">
             <span class="kValue">{{_tableData[1]['sum_time_viewed']}}</span>
@@ -56,7 +56,7 @@
           <div class="kPlaysRow">
             <div class="kMiniIcon violet"><i class="icon-download icon-upload"></i></div>
             <span class="kValue">{{_tableData[0]['added_entries']}}</span>
-            {{'app.user.added_entries' | translate}}
+            <span class="kLabel">{{'app.user.added_entries' | translate}}</span>
           </div>
           <div class="kPlaysRow">
             <span class="kValue">{{_tableData[1]['added_entries']}}</span>
@@ -64,7 +64,7 @@
         </div>
       </ng-container>
       <div class="kNoData" *ngIf="!_isBusy && !_tableData.length">
-        {{'app.common.noResults' | translate}}
+        <span class="kLabel">{{'app.common.noResults' | translate}}</span>
       </div>
     </div>
   </k-area-blocker>

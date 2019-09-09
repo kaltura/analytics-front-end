@@ -4,15 +4,16 @@ import { WidgetBase } from '../../widgets/widget-base';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveDevicesRequestFactory } from './live-devices-request-factory';
 import { EntryLiveGeoDevicesPollsService } from '../../providers/entry-live-geo-devices-polls.service';
-import { KalturaReportTable, KalturaReportTotal, KalturaResponse } from 'kaltura-ngx-client';
+import { KalturaReportTable } from 'kaltura-ngx-client';
 import { ReportHelper, ReportService } from 'shared/services';
 import { LiveDevicesConfig } from './live-devices.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
+import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -21,6 +22,8 @@ export interface LiveDevicesData {
 
 @Injectable()
 export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
+  private _dateFilter: DateFiltersChangedEvent;
+  
   protected readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   protected _widgetId = 'devices';
   protected _pollsFactory: LiveDevicesRequestFactory = null;
@@ -29,10 +32,19 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   protected _deviceIconPipe = new DeviceIconPipe();
   protected _fractions = 1;
   
+  private get _dateRange(): DateRange {
+    return this._dateFilter ? this._dateFilter.dateRange : null;
+  }
+  
+  private get _isPresetMode(): boolean {
+    return this._dateFilter ? this._dateFilter.isPresetMode : true;
+  }
+  
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _translate: TranslateService,
               protected _frameEventManager: FrameEventManagerService,
+              protected _filterService: FiltersService,
               protected _dataConfigService: LiveDevicesConfig) {
     super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
@@ -46,6 +58,15 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   }
   
   protected _responseMapping(table: KalturaReportTable): LiveDevicesData {
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+    
     let result = {
       data: [],
       totalCount: 0
@@ -96,7 +117,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       }
       return value;
     };
-
+    
     const totalValue = data.reduce((acc, item) => acc + parseFloat(item[key]), 0);
     return data.map(item => {
       const rawValue = parseFloat(item[key]);
@@ -108,6 +129,22 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
         icon: this._deviceIconPipe.transform(item.device),
       };
     });
-    return [];
+  }
+  
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+    
+    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+    
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+    
+    this.restartPolling(!this._isPresetMode);
   }
 }

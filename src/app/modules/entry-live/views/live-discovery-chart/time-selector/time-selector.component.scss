@@ -55,7 +55,7 @@
 
 .kPopup {
   display: block;
-  width: 352px;
+  width: 378px;
   max-height: 504px;
   height: auto;
   background-color: #ffffff;
@@ -228,8 +228,14 @@
     padding-bottom: 24px;
     justify-content: center;
 
-    /deep/ p-selectbutton .ui-button {
-      min-width: 147px;
+    /deep/ p-selectbutton {
+      width: 100%;
+      margin-left: 24px;
+      margin-right: 24px;
+      .ui-button {
+        min-width: 147px;
+        width: 100%;
+      }
     }
   }
 

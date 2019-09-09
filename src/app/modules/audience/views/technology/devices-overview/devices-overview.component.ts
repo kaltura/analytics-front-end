@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { BarRowTooltip } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 
 export interface SummaryItem {
   key: string;
@@ -23,6 +24,10 @@ export interface SummaryItem {
   rawValue: number;
   units: string;
   compareUnits: string;
+  valueTooltip?: BarRowTooltip | BarRowTooltip[];
+  tooltip?: string;
+  trend?: string;
+  trendDirection?: number;
 }
 
 export interface Summary {
