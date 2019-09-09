@@ -28,11 +28,11 @@
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'entry_name'">
             <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
-            <span class="kEntryLink kTableColumn"
+            <a class="kEntryLink kTableColumn"
                   *ngIf="col === 'entry_name'"
                   [kTooltip]="data[col]"
                   [showOnEllipsis]="true"
-                  (click)="_drillDown(data)">{{data[col]}}</span>
+                  (click)="_drillDown(data)">{{data[col]}}</a>
           </ng-container>
         </td>
       </tr>
