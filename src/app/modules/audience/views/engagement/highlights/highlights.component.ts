@@ -267,6 +267,8 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   }
   
   public _onChangeMode(): void {
+    this._firstTimeLoading = true;
+
     // clean up users filters
     delete this._filter.userIds;
     
