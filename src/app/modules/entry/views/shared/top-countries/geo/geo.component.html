@@ -41,8 +41,16 @@
               <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
             </td>
             <td class="kHighlight">
-              <a *ngIf="drillDownItems.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
-              <a *ngIf="drillDownItems.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
+              <a tabindex="0" *ngIf="drillDownItems.length === 0"
+                 (click)="drillDown(data['country'])"
+                 (keydown.enter)="drillDown(data['country'])">
+                {{data['country']}}
+              </a>
+              <a tabindex="0" *ngIf="drillDownItems.length === 1"
+                 (click)="drillDown(data['region'])"
+                 (keydown.enter)="drillDown(data['region'])">
+                {{data['region']}}
+              </a>
               <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
             </td>
             <td>
@@ -83,8 +91,12 @@
          (chartClick)="_onChartClick($event)"
          (chartInit)="_onChartInit($event)"></div>
     <div class="kZoomWidget">
-      <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
-      <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+      <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus"
+              (click)="_zoom('out')"
+              (keydown.enter)="_zoom('out')"></button>
+      <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus"
+              (click)="_zoom('in')"
+              (keydown.enter)="_zoom('in')"></button>
     </div>
   </div>
 </div>

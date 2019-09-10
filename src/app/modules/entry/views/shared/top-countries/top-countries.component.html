@@ -2,10 +2,16 @@
   <div class="kFilters">
     <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entry.topCountries' | translate}}</span>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-      <a (click)="_drillDownTop()">{{'app.audience.geo.top' | translate}}</a>
+      <a  tabindex="0" (click)="_drillDownTop()" (keydown.enter)="_drillDownTop()">
+        {{'app.audience.geo.top' | translate}}
+      </a>
       <span class="separator">/</span>
       <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
-      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown({ drillDown: _drillDown[0], reload: true })">{{_drillDown[0]}}</a>
+      <a  tabindex="0" *ngIf="_drillDown.length === 2"
+          (click)="_onDrillDown({ drillDown: _drillDown[0], reload: true })"
+          (keydown.enter)="_onDrillDown({ drillDown: _drillDown[0], reload: true })">
+        {{_drillDown[0]}}
+      </a>
       <span *ngIf="_drillDown.length === 2" class="separator">/</span>
       <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
     </div>
