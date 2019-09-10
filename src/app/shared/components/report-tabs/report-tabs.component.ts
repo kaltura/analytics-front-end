@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { ElementFocusDirective } from 'shared/directives/element-focus.directive';
 
 export type Tab = {
   title: string;
@@ -21,12 +22,15 @@ export type Tab = {
   styleUrls: ['./report-tabs.component.scss']
 })
 export class ReportTabsComponent implements OnInit {
-
-  @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
-
   @Input() tabs: Tab[] = [];
   @Input() compareMode = false;
   @Input() showValue = true;
+
+  @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
+  
+  @ViewChildren(ElementFocusDirective) _tabs: QueryList<ElementFocusDirective>;
+  
+  private _tabFocus = 0;
 
   constructor() {
   }
@@ -41,6 +45,23 @@ export class ReportTabsComponent implements OnInit {
     tab.selected = true;
     this.tabChange.emit(tab);
   }
-
-
+  
+  public _moveFocus(direction: 'right' | 'left'): void {
+    const tabs = this._tabs.toArray();
+    tabs[this._tabFocus].removeFocus();
+    
+    if (direction === 'right') {
+      this._tabFocus++;
+      if (this._tabFocus >= tabs.length) {
+        this._tabFocus = 0;
+      }
+    } else {
+      this._tabFocus--;
+      if (this._tabFocus < 0) {
+        this._tabFocus = tabs.length - 1;
+      }
+    }
+    
+    tabs[this._tabFocus].setFocus();
+  }
 }
