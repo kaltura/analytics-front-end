@@ -1,21 +1,31 @@
-import { Directive, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
   selector: '[appElementFocus]'
 })
 export class ElementFocusDirective {
-  
-  constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer2) {
+  @HostListener('focus')
+  setInputFocus(): void {
+    this._elementRef.nativeElement.classList.add('has-focus');
   }
   
-  public setFocus(): void {
-    this._renderer.setAttribute(this._elementRef.nativeElement, 'tabindex', '0');
+  @HostListener('blur')
+  setInputFocusOut(): void {
+    this._elementRef.nativeElement.classList.remove('has-focus');
+  }
+  
+  public get isFocused(): boolean {
+    return this._elementRef.nativeElement.classList.contains('has-focus');
+  }
+  
+  constructor(private _elementRef: ElementRef) {
+  }
+  
+  public focus(): void {
     this._elementRef.nativeElement.focus();
   }
   
-  public removeFocus(): void {
-    this._renderer.setAttribute(this._elementRef.nativeElement, 'tabindex', '-1');
+  public blur(): void {
     this._elementRef.nativeElement.blur();
   }
 }

@@ -29,26 +29,27 @@
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
             <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[1]"></div>
-            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
+            <span class="kLegendItem">{{'app.entry.' + _metricsCompareTo | translate}}</span>
           </div>
           <div class="kLegendItemContainer">
             <span class="kPeriod">{{_currentDatePeriod}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[0]"></div>
             <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[0]"></div>
-            <span class="kLegendItem">{{'app.entry.'+_metricsCompareTo | translate}}</span>
+            <span class="kLegendItem">{{'app.entry.' + _metricsCompareTo | translate}}</span>
           </div>
         </div>
       </div>
 
       <div class="kTable">
         <div class="kToggle">
-          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-          <a (click)="_toggleTable()">
-            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
-          </a>
+          <span role="button" tabindex="0" (keydown.enter)="_toggleTable()"
+                (click)="_toggleTable()">
+            <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+            <a>{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+          </span>
         </div>
-        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+        <div class="kTableContainer" *ngIf="_showTable">
           <div class="kTableModeSelector">
             <p-dropdown [style]="{'width': '172px'}"
                         [options]="_tableModes"
@@ -81,7 +82,8 @@
                    (onPage)="_onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col" [ngStyle]="{'width': '100%'}">
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
+                    [ngStyle]="{'width': '100%'}">
                   {{'app.entry.' + col | translate}}
                   <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                 </th>
@@ -91,8 +93,9 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'name'"
-                        class="kTrend">
+                  <span
+                    *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'name'"
+                    class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
                                        [units]="data[col].units"
@@ -116,7 +119,7 @@
                        [rows]="_pager.pageSize"
                        [first]="(_pager.pageIndex -1) * _pager.pageSize"
                        [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
+                       (onPageChange)="_onPaginationChange($event)"></p-paginator>
         </div>
       </div>
     </div>

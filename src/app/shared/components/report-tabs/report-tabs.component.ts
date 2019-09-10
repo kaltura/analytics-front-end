@@ -30,8 +30,6 @@ export class ReportTabsComponent implements OnInit {
   
   @ViewChildren(ElementFocusDirective) _tabs: QueryList<ElementFocusDirective>;
   
-  private _tabFocus = 0;
-
   constructor() {
   }
 
@@ -48,20 +46,23 @@ export class ReportTabsComponent implements OnInit {
   
   public _moveFocus(direction: 'right' | 'left'): void {
     const tabs = this._tabs.toArray();
-    tabs[this._tabFocus].removeFocus();
+    let tabFocus = tabs.findIndex(({ isFocused }) => isFocused);
+    tabFocus = tabFocus === -1 ? 0 : tabFocus;
+
+    tabs[tabFocus].blur();
     
     if (direction === 'right') {
-      this._tabFocus++;
-      if (this._tabFocus >= tabs.length) {
-        this._tabFocus = 0;
+      tabFocus++;
+      if (tabFocus >= tabs.length) {
+        tabFocus = 0;
       }
     } else {
-      this._tabFocus--;
-      if (this._tabFocus < 0) {
-        this._tabFocus = tabs.length - 1;
+      tabFocus--;
+      if (tabFocus < 0) {
+        tabFocus = tabs.length - 1;
       }
     }
     
-    tabs[this._tabFocus].setFocus();
+    tabs[tabFocus].focus();
   }
 }

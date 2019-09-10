@@ -5,7 +5,7 @@
        *ngFor="let tab of tabs"
        appElementFocus
        [attr.aria-selected]="tab.selected"
-       [class.kNarrow]="tabs.length<4"
+       [class.kNarrow]="tabs.length < 4"
        [class.noContent]="!showValue"
        [class.active]="tab.selected"
        [kTooltip]="compareMode ? tab.tooltip : null"

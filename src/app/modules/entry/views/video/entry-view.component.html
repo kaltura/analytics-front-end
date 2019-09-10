@@ -70,31 +70,31 @@
                                    [refineFilter]="_refineFilter"></app-video-entry-performance>
     </div>
 
-<!--    <div *ngIf="_viewConfig.impressions" class="kReportContainer">-->
-<!--      <app-impressions [dateFilter]="_dateFilter"-->
-<!--                       [entryId]="_entryId"-->
-<!--                       [refineFilter]="_refineFilter"></app-impressions>-->
-<!--    </div>-->
+    <div *ngIf="_viewConfig.impressions" class="kReportContainer">
+      <app-impressions [dateFilter]="_dateFilter"
+                       [entryId]="_entryId"
+                       [refineFilter]="_refineFilter"></app-impressions>
+    </div>
 
-<!--    <div *ngIf="_viewConfig.geo" class="kReportContainer">-->
-<!--      <app-top-countries [dateFilter]="_dateFilter"-->
-<!--                         [refineFilter]="_refineFilter"-->
-<!--                         [entryId]="_entryId"-->
-<!--                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>-->
-<!--    </div>-->
+    <div *ngIf="_viewConfig.geo" class="kReportContainer">
+      <app-top-countries [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"
+                         [entryId]="_entryId"
+                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
+    </div>
 
-<!--    <div *ngIf="_viewConfig.devices" class="kReportContainer">-->
-<!--      <app-entry-devices-overview [dateFilter]="_dateFilter"-->
-<!--                                  [refineFilter]="_refineFilter"-->
-<!--                                  [entryId]="_entryId"></app-entry-devices-overview>-->
-<!--    </div>-->
+    <div *ngIf="_viewConfig.devices" class="kReportContainer">
+      <app-entry-devices-overview [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"
+                                  [entryId]="_entryId"></app-entry-devices-overview>
+    </div>
 
-<!--    <div *ngIf="_viewConfig.syndication" class="kReportContainer">-->
-<!--      <app-syndication [entryId]="_entryId"-->
-<!--                       [dateFilterComponent]="dateFilter"-->
-<!--                       [dateFilter]="_dateFilter"-->
-<!--                       [refineFilter]="_refineFilter"-->
-<!--                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-syndication>-->
-<!--    </div>-->
+    <div *ngIf="_viewConfig.syndication" class="kReportContainer">
+      <app-syndication [entryId]="_entryId"
+                       [dateFilterComponent]="dateFilter"
+                       [dateFilter]="_dateFilter"
+                       [refineFilter]="_refineFilter"
+                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-syndication>
+    </div>
   </div>
 </div>
