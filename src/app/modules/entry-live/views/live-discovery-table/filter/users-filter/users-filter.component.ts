@@ -11,7 +11,7 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
     <kAutoComplete #searchUsers
                    suggestionItemField="item"
                    suggestionLabelField="name"
-                   field="screenName"
+                   field="fullName"
                    [placeholder]="'app.filters.filterUsers' | translate"
                    [minLength]="3"
                    [suggestionsProvider]="_usersProvider"
@@ -59,7 +59,7 @@ export class UsersFilterComponent implements OnDestroy {
             isSelectable = !(this._selectedUsers || []).find(user => user.id === suggestedUser.id);
           }
           suggestions.push({
-            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+            name: `${suggestedUser.fullName} (${suggestedUser.id})`,
             item: suggestedUser,
             isSelectable: isSelectable
           });
@@ -88,7 +88,7 @@ export class UsersFilterComponent implements OnDestroy {
       .request(
         new UserListAction({
           filter: new KalturaUserFilter({
-            idOrScreenNameStartsWith: text
+            firstNameOrLastNameStartsWith: text
           }),
           pager: new KalturaFilterPager({
             pageIndex: 0,
