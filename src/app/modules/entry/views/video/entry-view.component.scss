@@ -167,5 +167,23 @@
       padding-top: 16px !important;
     }
   }
+
+  ::ng-deep .kReport .kPlayer{
+    height: 370px !important;
+  }
+
+  ::ng-deep .kReport .chartContainer {
+    min-height: 220px !important;
+    .kFooter{
+      height: 22px !important;
+      padding-top: 4px !important;
+    }
+    .kChart{
+      height: 140px !important;
+    }
+  }
+  ::ng-deep .kReportTabs .kTab{
+    padding: 6px !important;
+  }
 }
 
