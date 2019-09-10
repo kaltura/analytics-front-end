@@ -134,3 +134,38 @@
 :host /deep/ .kReport {
   margin-bottom: 0px !important;
 }
+
+/* responsive design */
+.kHeaderRight{
+  display: flex;
+  margin-left: auto;
+}
+::ng-deep .kTotalsRow{
+  display: flex;
+  width: 100%;
+}
+@media screen and (max-width: 991px) {
+  .kHeaderRight{
+    position: absolute;
+    top: 110px;
+  }
+  .kReport .kEntryDetails{
+    height: 86px;
+  }
+  ::ng-deep .kTotalsRow{
+    display: block;
+    .kTotalsContainer{
+      margin-right: 0px;
+      margin-bottom: 24px;
+    }
+    .kSocialHighlights{
+      width: 100% !important;
+      height: 56px !important;
+      flex-direction: row !important;
+      align-items: baseline !important;
+      box-sizing: border-box !important;
+      padding-top: 16px !important;
+    }
+  }
+}
+
