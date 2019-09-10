@@ -8,7 +8,7 @@ export type Tab = {
   units: string;
   key: string;
   rawValue: number | string;
-  trend?: string;
+  trend?: number;
   sortOrder?: number;
   hidden?: boolean;
   icon?: string;

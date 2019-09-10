@@ -24,10 +24,9 @@
                   [(selection)]="_selected"></p-tree>
 
           <button pButton
-                  tabindex="1"
+                  tabindex="0"
                   class="kButtonBranded kExportBtn"
                   [class.kButtonProcess]="_exportingCsv"
-                  [disabled]="_exportingCsv || !_selected.length"
                   [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
                   (click)="_export()"></button>
         </div>
