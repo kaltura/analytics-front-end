@@ -80,6 +80,10 @@
 	}
 }
 
+:host ::ng-deep .ui-state-focus {
+  margin-bottom: 4px;
+  outline: 5px auto rgba(0, 150, 255, 1) !important;
+}
 
 :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
 	width: 100%;
