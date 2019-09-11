@@ -1,5 +1,9 @@
 @import '../../../../styles/variables';
 
+:host {
+  margin-right: 16px;
+}
+
 .kExport {
   .kExportBtn {
     font-weight: normal;

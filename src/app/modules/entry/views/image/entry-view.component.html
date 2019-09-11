@@ -1,23 +1,26 @@
 <div class="kReportView">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader">
-      <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+      <button tabindex="0" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
       <span class="kTitle">{{_entryName}}</span>
       <app-export-csv *ngIf="_viewConfig.export"
+                      tabindex="0"
+                      role="button"
                       name="entry"
                       [reports]="_exportConfig"
                       [refineFilter]="_refineFilter"
                       [dateFilter]="_dateFilter"
                       [entryId]="_entryId"></app-export-csv>
       <div *ngIf="_viewConfig.refineFilter" class="kFilter kOverrideFAIcons">
-        <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <div role="button" tabindex="0" class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
           <span>{{'app.filters.filter' | translate}}</span>
           <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
           <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
         </div>
       </div>
       <app-date-filter #dateFilter
+                       role="button" tabindex="0"
                        name="entry"
                        [dateRange]="_dateRange"
                        [selectedTimeUnit]="_timeUnit"
@@ -32,7 +35,11 @@
       <span>{{'app.entry.owner' | translate}}</span>
       <span class="kOwner">{{owner}}</span>
       <div *ngIf="!isChildAccount" class="kSeparator"></div>
-      <span *ngIf="!isChildAccount" class="link" (click)="navigateToEntry.emit()">{{'app.entry.seeAll' | translate}}</span>
+      <a tabindex="0" *ngIf="!isChildAccount" class="link"
+         (click)="navigateToEntry.emit()"
+         (keydown.enter)="navigateToEntry.emit()">
+        {{'app.entry.seeAll' | translate}}
+      </a>
     </div>
 
     <app-entry-filter [viewConfig]="_viewConfig.refineFilter"

@@ -347,6 +347,7 @@ export class VideoEntryPerformanceComponent extends EntryBase {
   }
   
   public _toggleTable(): void {
+    this._ignoreFirstSortEvent = true;
     this._showTable = !this._showTable;
     this.updateLayout();
   }

@@ -5,12 +5,19 @@
       <span>{{'app.engagement.topDomainsReport.topDomains_tt' | translate}}</span>
     </kInputHelper>
     <div class="kBreadcrumbs" *ngIf="_drillDown">
-      <a (click)="_onDrillDown(null)">{{'app.engagement.topDomainsReport.topDomains' | translate}}</a>
+      <a tabindex="0"
+         (click)="_onDrillDown(null)"
+         (keydown.enter)="_onDrillDown(null)">
+        {{'app.engagement.topDomainsReport.topDomains' | translate}}
+      </a>
       <span class="separator">/</span>
       <span>{{_drillDown}}</span>
-      <i class="kIconexternal_link kOpenLink"
-         [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"
-         (click)="_openLink({ referrer: _drillDown })"></i>
+      <a tabindex="0"
+         (click)="_openLink({ referrer: _drillDown })"
+         (keydown.enter)="_openLink({ referrer: _drillDown })">
+        <i class="kIconexternal_link kOpenLink"
+           [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"></i>
+      </a>
     </div>
   </div>
 
@@ -48,7 +55,8 @@
                   <span *ngIf="_tableData?.length">{{'app.engagement.topDomainsReport.index' | translate}}</span>
                 </th>
                 <th [ngStyle]="{'width': '30px'}"></th>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'loads_distribution'  || col === 'domain_name' ? null : col"
+                <th *ngFor="let col of _columns"
+                    [pSortableColumn]="_isCompareMode || col === 'loads_distribution'  || col === 'domain_name' ? null : col"
                     [ngStyle]="{ 'width': '20%' }">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
@@ -68,7 +76,12 @@
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('kIconfile-small')">
                   </div>
-                  <i *ngIf="_drillDown" class="kIconexternal_link kOpenLink" (click)="_openLink(data)" [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"></i>
+                  <a *ngIf="_drillDown" tabindex="0"
+                     (click)="_openLink(data)"
+                     (keydown.enter)="_openLink(data)">
+                    <i *ngIf="_drillDown" class="kIconexternal_link kOpenLink"
+                       [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"></i>
+                  </a>
                 </td>
                 <td *ngFor="let col of _columns; let i = index"
                     [class.kHighlight]="i===0"
@@ -93,7 +106,9 @@
 
                     <span *ngIf="col === 'referrer'" [appMiddleEllipsis]="data[col]"></span>
 
-                    <a *ngIf="col === 'domain_name'" class="nameLink" (click)="_onDrillDown(data[col])">
+                    <a *ngIf="col === 'domain_name'" class="nameLink" tabindex="0"
+                       (click)="_onDrillDown(data[col])"
+                       (keydown.enter)="_onDrillDown(data[col])">
                       {{data[col]}}
                     </a>
 
