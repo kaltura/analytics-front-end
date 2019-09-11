@@ -32,7 +32,7 @@
         <p-table #table [value]="_tableData" [paginator]="true" [rows]="5">
           <ng-template pTemplate="header">
             <tr>
-              <th [ngStyle]="{'width': '42px'}">
+              <th [ngStyle]="{'width': '50px'}">
                 <span *ngIf="_tableData?.length">{{'app.entryLive.geo.index' | translate}}</span>
               </th>
               <th *ngIf="!_drillDown.length" [ngStyle]="{'width': '42px'}"></th>
