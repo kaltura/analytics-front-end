@@ -46,7 +46,11 @@
     flex: 1;
   }
 }
-
+@media screen and (max-width: 991px) {
+  .kTopCountries.kDefaultMode {
+    flex-direction: column-reverse !important;
+  }
+}
 .kMap{
   position: relative;
   .kChart{
