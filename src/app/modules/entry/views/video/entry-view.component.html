@@ -1,27 +1,29 @@
-<div class="kReportView">
+<div class="kReportView kVideoMedia">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader">
       <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
       <span class="kTitle">{{_entryName}}</span>
-      <app-export-csv *ngIf="_viewConfig.export" name="entry"
-                      [reports]="_exportConfig"
-                      [refineFilter]="_refineFilter"
-                      [dateFilter]="_dateFilter"
-                      [entryId]="_entryId"></app-export-csv>
-      <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
-        <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
-          <span>{{'app.filters.filter' | translate}}</span>
-          <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
-          <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      <div class="kHeaderRight">
+        <app-export-csv *ngIf="_viewConfig.export" name="entry"
+                        [reports]="_exportConfig"
+                        [refineFilter]="_refineFilter"
+                        [dateFilter]="_dateFilter"
+                        [entryId]="_entryId"></app-export-csv>
+        <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
+          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+            <span>{{'app.filters.filter' | translate}}</span>
+            <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+            <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+          </div>
         </div>
+        <app-date-filter #dateFilter
+                         name="entry"
+                         [dateRange]="_dateRange"
+                         [selectedTimeUnit]="_timeUnit"
+                         [creationDate]="_creationDate"
+                         (filterChange)="_onDateFilterChange($event)"></app-date-filter>
       </div>
-      <app-date-filter #dateFilter
-                       name="entry"
-                       [dateRange]="_dateRange"
-                       [selectedTimeUnit]="_timeUnit"
-                       [creationDate]="_creationDate"
-                       (filterChange)="_onDateFilterChange($event)"></app-date-filter>
     </div>
 
     <div *ngIf="_viewConfig.details" class="kEntryDetails">

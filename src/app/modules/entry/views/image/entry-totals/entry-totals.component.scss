@@ -1,11 +1,17 @@
 @import '../../../../../../styles/variables';
-
+.kTotalsRow{
+  display: flex;
+  width: 100%;
+}
 .kPreview {
   width: 50%;
   height: 100%;
   margin-right: 24px;
 }
 
+k-area-blocker{
+  flex-direction: row;
+}
 
 .kTotalContainer {
   width: 50%;
@@ -24,6 +30,32 @@
     &.green {
       background-color: rgba(129, 204, 111, 0.2);
       color: #81cc6f;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .kTotalsRow {
+    display: flex;
+    height: 137px;
+    .kTotalsContainer {
+      margin-bottom: 24px;
+      height: 137px;
+      .kTotalContainer{
+        padding-left: 16px;
+      }
+    }
+    .kSocialHighlights {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      height: 100%;
+      padding: 24px 0;
+      align-items: flex-start;
+      box-sizing: border-box;
+      .kTitle {
+        font-size: 18px;
+      }
     }
   }
 }
