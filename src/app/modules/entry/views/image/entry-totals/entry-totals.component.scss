@@ -6,6 +6,9 @@
   margin-right: 24px;
 }
 
+k-area-blocker{
+  flex-direction: row;
+}
 
 .kTotalContainer {
   width: 50%;
@@ -24,6 +27,29 @@
     &.green {
       background-color: rgba(129, 204, 111, 0.2);
       color: #81cc6f;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .kTotalsRow {
+    display: flex;
+    height: 137px;
+    .kTotalsContainer {
+      margin-right: 0px;
+      margin-bottom: 24px;
+      height: 137px !important;
+    }
+    .kSocialHighlights {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 50% !important;
+      height: 100% !important;
+      padding: 24px 0 !important;
+      align-items: flex-start !important;
+      .kTitle {
+        font-size: 18px !important;
+      }
     }
   }
 }
