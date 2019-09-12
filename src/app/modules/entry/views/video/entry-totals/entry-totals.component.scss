@@ -3,7 +3,10 @@
   background-color: transparent !important;
   margin-bottom: 0 !important;
 }
-
+.kTotalsRow{
+  display: flex;
+  width: 100%;
+}
 .kTotalsContainer {
   width: 100%;
   height: 136px;
@@ -150,5 +153,22 @@
     .kLabel {
       white-space: normal !important;
     }
+  }
+}
+@media screen and (max-width: 991px) {
+  .kTotalsRow {
+    display: block;
+    .kTotalsContainer {
+      margin-right: 0px;
+      margin-bottom: 24px;
+    }
+  }
+  .kSocialHighlights{
+    width: 100% !important;
+    height: 56px !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    box-sizing: border-box !important;
+    padding-top: 16px !important;
   }
 }

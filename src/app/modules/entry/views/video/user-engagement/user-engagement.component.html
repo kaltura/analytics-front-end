@@ -23,7 +23,7 @@
                  [sortOrder]="-1"
                  (sortFunction)="_onSortChanged($event)">
           <ng-template pTemplate="header">
-            <tr>
+            <tr>kFilters
               <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
               <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
                 {{'app.entry.' + col | translate}}

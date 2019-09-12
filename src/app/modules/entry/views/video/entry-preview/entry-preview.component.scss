@@ -163,7 +163,21 @@
 
 }
 
-
+@media screen and (max-width: 991px) {
+  .kReport .kPlayer{
+    height: 370px;
+  }
+  .kReport .chartContainer {
+    min-height: 220px !important;
+    .kFooter{
+      height: 22px !important;
+      padding-top: 4px !important;
+    }
+    .kChart{
+      height: 140px !important;
+    }
+  }
+}
 :host {
   margin-top: 28px;
 }

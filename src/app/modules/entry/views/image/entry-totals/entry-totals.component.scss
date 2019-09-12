@@ -1,5 +1,8 @@
 @import '../../../../../../styles/variables';
-
+.kTotalsRow{
+  display: flex;
+  width: 100%;
+}
 .kPreview {
   width: 50%;
   height: 100%;
@@ -36,19 +39,22 @@ k-area-blocker{
     display: flex;
     height: 137px;
     .kTotalsContainer {
-      margin-right: 0px;
       margin-bottom: 24px;
-      height: 137px !important;
+      height: 137px;
+      .kTotalContainer{
+        padding-left: 16px;
+      }
     }
     .kSocialHighlights {
-      display: flex !important;
-      flex-direction: column !important;
-      width: 50% !important;
-      height: 100% !important;
-      padding: 24px 0 !important;
-      align-items: flex-start !important;
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      height: 100%;
+      padding: 24px 0;
+      align-items: flex-start;
+      box-sizing: border-box;
       .kTitle {
-        font-size: 18px !important;
+        font-size: 18px;
       }
     }
   }
