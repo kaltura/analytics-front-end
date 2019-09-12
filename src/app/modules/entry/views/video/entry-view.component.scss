@@ -140,7 +140,7 @@
   display: flex;
   margin-left: auto;
 }
-@media screen and (max-width: 991px) {
+@media (max-width: 991px) {
   .kHeaderRight{
     position: absolute;
     top: 110px;

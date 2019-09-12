@@ -123,7 +123,7 @@ kScrollToTopContainer {
   right: 20px;
 }
 /* player height according to screen resolution */
-@media screen and (max-width: 991px) {
+@media (max-width: 991px) {
   :host {
     height: 349px;
   }
