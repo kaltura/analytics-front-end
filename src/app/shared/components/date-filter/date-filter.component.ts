@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
@@ -246,6 +246,13 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   public openPopup(): void {
     this.selectedDateRange = this.lastSelectedDateRange;
+
+    setTimeout(() => {
+      const btn = document.querySelector('.kDateFilterPopup .ui-selectbutton .ui-button') as HTMLElement;
+      if (btn) {
+        btn.focus();
+      }
+    });
   }
   
   public resetCompare(): void {

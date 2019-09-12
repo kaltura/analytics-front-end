@@ -74,9 +74,9 @@ export class ExportCsvComponent implements OnDestroy {
   
   private _focusSelectAll(): void {
     setTimeout(() => {
-      const nodes = document.getElementsByClassName('ui-treenode-content') as HTMLCollectionOf<HTMLElement>;
-      if (nodes.length) {
-        nodes[0].focus();
+      const node = document.querySelector('.kExportPanel .ui-treenode-content') as HTMLElement;
+      if (node) {
+        node.focus();
       }
     });
   }

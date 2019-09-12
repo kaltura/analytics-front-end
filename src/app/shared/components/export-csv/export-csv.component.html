@@ -28,7 +28,8 @@
                   class="kButtonBranded kExportBtn"
                   [class.kButtonProcess]="_exportingCsv"
                   [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
-                  (click)="_export()"></button>
+                  (click)="_export()"
+                  (keydown.enter)="_export()"></button>
         </div>
       </ng-template>
     </kPopupWidget>
@@ -36,10 +37,12 @@
 
   <ng-container *ngIf="_singleMode">
     <div class="kExport">
-      <button pButton class="kButtonDefault kExportBtn" icon="icon-export" (click)="_export()"
+      <button pButton class="kButtonDefault kExportBtn" icon="icon-export"
               [class.kButtonProcess]="_exportingCsv"
               [disabled]="_exportingCsv"
-              [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"></button>
+              [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"
+              (click)="_export()"
+              (keydown.enter)="_export()"></button>
     </div>
   </ng-container>
 

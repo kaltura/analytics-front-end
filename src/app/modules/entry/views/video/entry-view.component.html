@@ -21,7 +21,7 @@
           <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
         </div>
       </div>
-      <app-date-filter role="button" tabindex="0"  #dateFilter
+      <app-date-filter #dateFilter
                        name="entry"
                        [dateRange]="_dateRange"
                        [selectedTimeUnit]="_timeUnit"
