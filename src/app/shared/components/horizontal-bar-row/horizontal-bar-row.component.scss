@@ -78,3 +78,10 @@
     }
   }
 }
+@media (max-width: 991px) {
+  .kBarContainer .kBarWrapper .kBarWrapperRow .kTrend {
+    app-trend-value, .kTrendStub {
+      margin-left: 4px;
+    }
+  }
+}
