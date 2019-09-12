@@ -37,6 +37,7 @@ export class EntryLiveExportConfig extends ExportConfigService {
         endDate: () => moment().unix()
       },
       {
+        id: 'devices',
         label: this._translate.instant('app.entryLive.exportLabels.devices'),
         reportType: reportTypeMap(KalturaReportType.platformsRealtime),
         sections: [KalturaReportExportItemType.table],
