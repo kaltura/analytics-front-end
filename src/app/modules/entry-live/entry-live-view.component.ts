@@ -6,7 +6,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import {ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveWidget } from './entry-live.widget';
 import { WidgetsManager } from './widgets/widgets-manager';
@@ -21,7 +21,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
-import { DateFiltersChangedEvent, FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
+import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 
 @Component({
@@ -199,21 +199,38 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
   
   public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
-    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
-    const items = currentValue.items.map(item => {
-      if (event.isPresetMode) {
-        item.startDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate;
-        item.endDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate;
-      } else {
-        item.startDate = () => event.startDate;
-        item.endDate = () => event.endDate;
-      }
-      return item;
-    });
-    
-    const update = { items };
-    
-    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+    this._exportConfig
+      .filter(({ id }) => ['discovery', 'geo', 'devices'].includes(id))
+      .forEach(currentValue => {
+        let update;
+        if (currentValue.items) {
+          const items = currentValue.items.map(item => {
+            if (event.isPresetMode) {
+              item.startDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate;
+              item.endDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate;
+            } else {
+              item.startDate = () => event.startDate;
+              item.endDate = () => event.endDate;
+            }
+            return item;
+          });
+          update = { items };
+        } else {
+          if (event.isPresetMode) {
+            update = {
+              startDate: () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate,
+              endDate: () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate,
+            };
+          } else {
+            update = {
+              startDate: () => event.startDate,
+              endDate: () => event.endDate,
+            };
+          }
+        }
+        
+        this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, currentValue.id, update);
+      });
   }
   
   public _liveToggled(): void {
