@@ -19,6 +19,7 @@ export enum FrameEvents {
   SetLogsLevel = 'setLogsLevel',
   UpdateMultiAccount = 'updateMultiAccount',
   UpdateConfig = 'updateConfig',
+  ToggleContrastTheme = 'toggleContrastTheme'
 }
 
 @Injectable()

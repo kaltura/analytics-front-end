@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -37,7 +37,8 @@ export class AppService implements OnDestroy {
               private _location: Location,
               private _authService: AuthService,
               private _permissionsService: AnalyticsPermissionsService,
-              private _frameEventManager: FrameEventManagerService) {
+              private _frameEventManager: FrameEventManagerService,
+              private _renderer: Renderer2) {
     this._logger = _logger.subLogger('AppService');
   }
   
@@ -123,6 +124,12 @@ export class AppService implements OnDestroy {
       .subscribe(({ multiAccount }) => {
         this._updateMultiAccount(multiAccount, true);
       });
+  
+    this._frameEventManager.listen(FrameEvents.ToggleContrastTheme)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(() => {
+        this._toggleContrastTheme();
+      });
     
     // load localization
     this._logger.info('Loading permissions and localization...');
@@ -199,6 +206,16 @@ export class AppService implements OnDestroy {
       this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this._router.navigate([decodeURI(this._location.path())]);
       });
+    }
+  }
+  
+  private _toggleContrastTheme(): void {
+    const themeClass = 'kHighContrast';
+    const body = document.querySelector('body') as HTMLElement;
+    if (body.classList.contains(themeClass)) {
+      this._renderer.removeClass(body, themeClass);
+    } else {
+      this._renderer.addClass(body, themeClass);
     }
   }
 }
