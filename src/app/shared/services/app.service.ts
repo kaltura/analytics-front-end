@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { Inject, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -6,7 +6,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, skip, switchMap } from 'rxjs/operators';
 import { BrowserService } from 'shared/services/browser.service';
 import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
@@ -14,11 +14,12 @@ import { mapRoutes } from 'configuration/host-routing-mapping';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 import { AuthService } from 'shared/services/auth.service';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 
 @Injectable()
 export class AppService implements OnDestroy {
   private _permissionsLoaded = new BehaviorSubject<boolean>(false);
+  private _renderer: Renderer2;
   
   public readonly permissionsLoaded$ = this._permissionsLoaded.asObservable();
   public confirmDialogAlignLeft = false;
@@ -38,8 +39,10 @@ export class AppService implements OnDestroy {
               private _authService: AuthService,
               private _permissionsService: AnalyticsPermissionsService,
               private _frameEventManager: FrameEventManagerService,
-              private _renderer: Renderer2) {
+              private _rendererFactory: RendererFactory2,
+              @Inject(DOCUMENT) private _document) {
     this._logger = _logger.subLogger('AppService');
+    this._renderer = _rendererFactory.createRenderer(null, null);
   }
   
   ngOnDestroy(): void {
@@ -126,7 +129,7 @@ export class AppService implements OnDestroy {
       });
   
     this._frameEventManager.listen(FrameEvents.ToggleContrastTheme)
-      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .pipe(cancelOnDestroy(this), skip(1))
       .subscribe(() => {
         this._toggleContrastTheme();
       });
@@ -211,7 +214,7 @@ export class AppService implements OnDestroy {
   
   private _toggleContrastTheme(): void {
     const themeClass = 'kHighContrast';
-    const body = document.querySelector('body') as HTMLElement;
+    const body = this._document.body;
     if (body.classList.contains(themeClass)) {
       this._renderer.removeClass(body, themeClass);
     } else {
