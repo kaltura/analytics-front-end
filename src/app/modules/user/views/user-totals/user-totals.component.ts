@@ -162,12 +162,12 @@ export class UserTotalsComponent extends UserBase {
   }
   
   private _handleTotals(totals: KalturaReportTotal, likes: number[]): void {
-    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-  
     if (likes !== null) {
       totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
       totals.header += `${analyticsConfig.valueSeparator}votes`;
     }
+    
+    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
 
     const shares = tabsData.find(({ key }) => key === 'count_viral');
     const like = tabsData.find(({ key }) => key === 'votes');
@@ -197,6 +197,10 @@ export class UserTotalsComponent extends UserBase {
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(map(responses => {
         if (responses.hasErrors()) {
+          const error = responses.getFirstError();
+          if (error.code === 'SERVICE_FORBIDDEN') {
+            return new Array(responses.length).fill(-1);
+          }
           throw responses.getFirstError();
         }
         return responses.map(response => response.result.totalCount);

@@ -55,7 +55,7 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'votes': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value === '-1' ? 'N/A' : ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.user.votes`),
             hidden: true,
           },
