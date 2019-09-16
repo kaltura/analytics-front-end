@@ -1,11 +1,12 @@
 <div class="kReportView kImageEntry kImageMedia">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader">
-      <button tabindex="0" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+      <button tabindex="0" aria-label="Back"  pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
       <span class="kTitle">{{_entryName}}</span>
       <div class="kHeaderRight">
         <app-export-csv *ngIf="_viewConfig.export"
+                        aria-label="Export"
                         tabindex="0"
                         role="button"
                         name="entry"
@@ -14,7 +15,7 @@
                         [dateFilter]="_dateFilter"
                         [entryId]="_entryId"></app-export-csv>
         <div *ngIf="_viewConfig.refineFilter" class="kFilter kOverrideFAIcons">
-          <div role="button" class="kDropDown" tabindex="0"
+          <div role="button" aria-label="Refine Filter" class="kDropDown" tabindex="0"
                (click)="_refineFilterOpened = !_refineFilterOpened"
                (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
             <span>{{'app.filters.filter' | translate}}</span>
@@ -38,7 +39,7 @@
       <span>{{'app.entry.owner' | translate}}</span>
       <span class="kOwner">{{owner}}</span>
       <div *ngIf="!isChildAccount" class="kSeparator"></div>
-      <a tabindex="0" *ngIf="!isChildAccount" class="link"
+      <a tabindex="0" *ngIf="!isChildAccount" class="link" role="link" aria-label="See All Details"
          (click)="navigateToEntry.emit()"
          (keydown.enter)="navigateToEntry.emit()">
         {{'app.entry.seeAll' | translate}}

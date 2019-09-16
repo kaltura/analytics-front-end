@@ -55,6 +55,7 @@
                   <span *ngIf="col !== 'avg_completion_rate' && col !== 'name'">{{data[col]}}</span>
                   <a class="kTableColumn"
                      tabindex="0"
+                     role="link"
                      *ngIf="col === 'name'"
                      [kTooltip]="data[col]"
                      [showOnEllipsis]="true"

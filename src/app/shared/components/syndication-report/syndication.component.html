@@ -110,7 +110,7 @@
 
                     <span *ngIf="col === 'referrer'" [appMiddleEllipsis]="data[col]"></span>
 
-                    <a *ngIf="col === 'domain_name'" tabindex="0" class="nameLink"
+                    <a *ngIf="col === 'domain_name'" tabindex="0" class="nameLink" role="link"
                        (click)="_onDrillDown(data[col])"
                        (keydown.enter)="_onDrillDown(data[col])">
                       {{data[col]}}
