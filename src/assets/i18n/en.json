@@ -823,6 +823,9 @@
       "devices": {
         "Computer": "Desktop",
         "Mobile": "Mobile",
+        "Tablet": "Tablet",
+        "Game console": "Game Console",
+        "Digital media receiver": "Media Receiver",
         "OTHER": "Other"
       },
       "exportLabels": {

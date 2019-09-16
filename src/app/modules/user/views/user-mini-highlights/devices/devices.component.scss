@@ -63,12 +63,9 @@
   .kIcon {
     font-size: 24px;
     margin-right: 16px;
+    color: #487adf;
 
-    &.icon-desktop {
-      color: #487adf;
-    }
-
-    &.icon-phone {
+    &.kSecond {
       color: #88acf6;
     }
   }
