@@ -251,9 +251,9 @@ body {
 }
 
 /* main content width according to screen resolution */
-@media screen and (max-width: 991px) {
+@media (max-width: 991px) {
   .kContent {
-    width: 970px !important;
+    width: 724px !important;
     margin: auto !important;
     display: flex;
   }

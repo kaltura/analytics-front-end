@@ -23,6 +23,7 @@ export class MiniTopVideosConfig extends ReportDataBaseConfig {
           },
           'partner_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'entry_name': {

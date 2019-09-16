@@ -8,3 +8,8 @@
 .kCompare {
   height: 760px;
 }
+@media (max-width: 991px) {
+  .kCompare {
+    height: auto;
+  }
+}

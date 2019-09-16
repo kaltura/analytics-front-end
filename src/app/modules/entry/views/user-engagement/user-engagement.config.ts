@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EntriesTableConfig extends ReportDataBaseConfig {
+export class UserEngagementConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
@@ -18,34 +18,25 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
-          'object_id': {
-            format: value => value,
-            nonComparable: true,
-            hidden: true,
-          },
-          'entry_name': {
+          'name': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
             sortOrder: 4,
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 5,
-          },
+          }
         }
-      }
+      },
     };
   }
 }

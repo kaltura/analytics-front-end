@@ -58,11 +58,11 @@
 
       .kValue {
         font-weight: bold;
-        margin-right: 16px;
-        width: 24%;
+        margin-right: 8px;
+        min-width: 24px;
       }
       .kLabel{
-        white-space: nowrap;
+        width: 100%;
       }
     }
   }

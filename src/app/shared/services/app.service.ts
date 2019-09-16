@@ -107,7 +107,7 @@ export class AppService implements OnDestroy {
   
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(({ url, queryParams }) => {
+      .subscribe(({ url, queryParams, prevRoute }) => {
       
         // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
         const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1 && url.indexOf('/analytics/entry-live') === -1);
@@ -115,7 +115,7 @@ export class AppService implements OnDestroy {
           this._authService.restoreParentIfNeeded();
         }
       
-        this._router.navigateByUrl(mapRoutes(url, queryParams));
+        this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute));
       });
     
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)

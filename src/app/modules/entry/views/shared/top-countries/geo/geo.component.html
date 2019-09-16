@@ -4,7 +4,7 @@
       <p-table #table [value]="tableData" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
           <tr>
-            <th [ngStyle]="{'width': '42px'}">
+            <th [ngStyle]="{'width': '50px'}">
               <span *ngIf="tableData?.length">{{'app.audience.geo.index' | translate}}</span>
             </th>
             <th *ngIf="!drillDownItems.length" [ngStyle]="{'width': '42px'}"></th>

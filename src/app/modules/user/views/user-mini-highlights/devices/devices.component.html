@@ -4,33 +4,18 @@
   <div *ngIf="compare" class="kDeviceCard">
     <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
     <div *ngIf="compare" class="kBulletContainer">
-      <div class="kValues">
-        <div class="kValuesItem" *ngIf="compare['Computer']">
-          <i class="kIcon icon-desktop"></i>
-          <span class="kValue">{{compare['Computer'].value}}%</span>
-          {{compare['Computer'].label}}
-        </div>
-        <div class="kValuesItem" *ngIf="compare['Mobile']">
-          <i class="kIcon icon-phone"></i>
-          <span class="kValue">{{compare['Mobile'].value}}%</span>
-          {{compare['Mobile'].label}}
+      <div class="kValues" *ngFor="let compareItem of compare | slice:0:2; let i = index">
+        <div class="kValuesItem">
+          <i class="kIcon" [ngClass]="compareItem.device | appDeviceIcon" [class.kSecond]="i === 1"></i>
+          <span class="kValue">{{compareItem.value}}%</span>
+          {{compareItem.label}}
         </div>
       </div>
       <div class="kBullet">
-        <div *ngIf="compare['Computer']" class="kBar"
-             [kTooltip]="compare['Computer'].tooltip" [escape]="false"
-             [style.background-color]="compare['Computer'].color"
-             [style.width]="compare['Computer'].rawValue + '%'"></div>
-
-        <div *ngIf="compare['Mobile']" class="kBar"
-             [kTooltip]="compare['Mobile'].tooltip" [escape]="false"
-             [style.background-color]="compare['Mobile'].color"
-             [style.width]="compare['Mobile'].rawValue + '%'"></div>
-
-        <div *ngIf="compare['OTHER']" class="kBar"
-             [kTooltip]="compare['OTHER'].tooltip" [escape]="false"
-             [style.background-color]="compare['OTHER'].color"
-             [style.width]="compare['OTHER'].rawValue + '%'"></div>
+        <div *ngFor="let compareItem of compare" class="kBar"
+             [kTooltip]="compareItem.tooltip" [escape]="false"
+             [style.background-color]="compareItem.color"
+             [style.width]="compareItem.rawValue + '%'"></div>
       </div>
     </div>
   </div>
@@ -39,32 +24,17 @@
     <span *ngIf="currentDates" class="kPeriod">{{currentDates}}</span>
     <div *ngIf="data" class="kBulletContainer">
       <div class="kValues">
-        <div class="kValuesItem" *ngIf="data['Computer']">
-          <i class="kIcon icon-desktop"></i>
-          <span class="kValue">{{data['Computer'].value}}%</span>
-          {{data['Computer'].label}}
-        </div>
-        <div class="kValuesItem" *ngIf="data['Mobile']">
-          <i class="kIcon icon-phone"></i>
-          <span class="kValue">{{data['Mobile'].value}}%</span>
-          {{data['Mobile'].label}}
+        <div class="kValuesItem" *ngFor="let item of data | slice:0:2; let i = index">
+          <i class="kIcon" [ngClass]="item.device | appDeviceIcon" [class.kSecond]="i === 1"></i>
+          <span class="kValue">{{item.value}}%</span>
+          {{item.label}}
         </div>
       </div>
       <div class="kBullet">
-        <div *ngIf="data['Computer']" class="kBar"
-             [kTooltip]="data['Computer'].tooltip" [escape]="false"
-             [style.background-color]="data['Computer'].color"
-             [style.width]="data['Computer'].rawValue + '%'"></div>
-
-        <div *ngIf="data['Mobile']" class="kBar"
-             [kTooltip]="data['Mobile'].tooltip" [escape]="false"
-             [style.background-color]="data['Mobile'].color"
-             [style.width]="data['Mobile'].rawValue + '%'"></div>
-
-        <div *ngIf="data['OTHER']" class="kBar"
-             [kTooltip]="data['OTHER'].tooltip" [escape]="false"
-             [style.background-color]="data['OTHER'].color"
-             [style.width]="data['OTHER'].rawValue + '%'"></div>
+        <div *ngFor="let item of data" class="kBar"
+             [kTooltip]="item.tooltip" [escape]="false"
+             [style.background-color]="item.color"
+             [style.width]="item.rawValue + '%'"></div>
       </div>
     </div>
   </div>

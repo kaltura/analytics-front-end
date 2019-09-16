@@ -41,7 +41,7 @@ export class TrendService {
       return { value: '100', direction: -1 };
     }
   
-    if (compare === 0) {
+    if (compare === 0 || (current === -1 && compare === -1)) {
       return { value: null, direction: 0 };
     }
 
