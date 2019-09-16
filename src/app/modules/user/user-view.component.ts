@@ -69,6 +69,8 @@ export class UserViewComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         this._userId = params['id'];
         if (this._userId) {
+          const showContributions = !!this._route.snapshot.queryParams.showContributions;
+          this._currentTab = showContributions ? UserReportTabs.contributor : UserReportTabs.viewer;
           this.loadUserDetails();
           this._exportConfig = this._exportConfigService.getConfig(this._userId);
         }
