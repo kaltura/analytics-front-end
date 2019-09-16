@@ -49,20 +49,19 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _compareDates: string;
   public _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   
-  public topContributors$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
-
+  public topContributors$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
+  
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopContributorsDataConfig,
-              private _logger: KalturaLogger) {
+              private _dataConfigService: TopContributorsDataConfig) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
   }
-
+  
   ngOnDestroy(): void {
     this.topContributors$.complete();
   }
@@ -162,7 +161,7 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     this._currentDates = null;
     this._compareDates = null;
     this.setAnonymousContributors(this._tableData); // fix for anonymous users
-
+    
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
@@ -170,10 +169,10 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
       this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
-
+  
   private setAnonymousContributors(contributors: TableRow<string>[]): void {
-    contributors.forEach( contributor => {
-      if ( !contributor['creator_name'].length ) {
+    contributors.forEach(contributor => {
+      if (!contributor['creator_name'].length) {
         contributor['creator_name'] = 'anonymous';
         contributor['created_at'] = '';
       }

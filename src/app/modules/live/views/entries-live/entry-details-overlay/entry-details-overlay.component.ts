@@ -7,7 +7,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-entry-details-overlay',
+  selector: 'app-entry-live-details-overlay',
   templateUrl: './entry-details-overlay.component.html',
   styleUrls: ['./entry-details-overlay.component.scss'],
 })

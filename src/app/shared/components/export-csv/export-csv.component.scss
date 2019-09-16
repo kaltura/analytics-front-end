@@ -67,6 +67,13 @@
     .ui-treenode-children {
       padding-left: 1.5em;
     }
+
+    .groupNode .ui-treenode-label {
+      color: $kGrayscale3;
+      font-size: 13px;
+      text-transform: uppercase;
+      padding-left: 0;
+    }
   }
 }
 

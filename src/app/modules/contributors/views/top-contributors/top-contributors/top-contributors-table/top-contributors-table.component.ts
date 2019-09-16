@@ -5,6 +5,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
 import { analyticsConfig } from "configuration/analytics-config";
+import { NavigationDrillDownService } from 'shared/services';
 
 @Component({
   selector: 'app-contributors-top-contributors-table',
@@ -40,7 +41,8 @@ export class TopContributorsTableComponent implements OnDestroy {
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
   public _paginationChanged$ = this._paginationChanged.asObservable();
   
-  constructor(private _logger: KalturaLogger) {
+  constructor(private _logger: KalturaLogger,
+              private _navigationDrillDownService: NavigationDrillDownService) {
   }
   
   ngOnDestroy(): void {
@@ -68,5 +70,13 @@ export class TopContributorsTableComponent implements OnDestroy {
       this._userId = null;
       this._overlay.hide();
     }
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (!row['user_id'] || row['user_id'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+    
+    this._navigationDrillDownService.drilldown('user', row['user_id'], true, row['partner_id']);
   }
 }

@@ -1,0 +1,32 @@
+@import '../../../../../styles/variables';
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+
+.kReport .kReportContent .kChart {
+  margin-bottom: 0;
+}
+
+.kTablesHolder {
+  display: flex;
+  flex-direction: row;
+
+  &.kOpen {
+    height: auto;
+  }
+
+  &.kClose {
+    height: 0;
+    display: none;
+  }
+}

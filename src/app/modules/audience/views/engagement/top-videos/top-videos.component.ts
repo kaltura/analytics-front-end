@@ -13,10 +13,10 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { TopVideosDataConfig } from './top-videos-data.config';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { EntryDetailsOverlayData } from './entry-details-overlay/entry-details-overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { SortEvent } from 'primeng/api';
+import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-engagement-top-videos',

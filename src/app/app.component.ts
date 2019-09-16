@@ -59,15 +59,14 @@ export class AppComponent implements OnInit, OnDestroy {
     
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(({ url }) => {
-
+      .subscribe(({ url, queryParams, prevRoute }) => {
         // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
         const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1 && url.indexOf('/analytics/entry-live') === -1);
         if (needToRestoreParent) {
           this._authService.restoreParentIfNeeded();
         }
 
-        this._router.navigateByUrl(this.mapRoutes(url));
+        this._router.navigateByUrl(this.mapRoutes(url, queryParams, prevRoute));
       });
   
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
@@ -184,7 +183,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this._logger.error(errorMsg);
   }
 
-  private mapRoutes(kmcRoute: string): string {
+  private mapRoutes(kmcRoute: string, queryParams: { [key: string]: string }, prevRoute: string): string {
+    const idPostfix = queryParams && queryParams['id'] ? `/${queryParams['id']}` : '';
     let analyticsRoute = kmcRoute;
     switch (kmcRoute) {
       case '/analytics/contributors':
@@ -212,10 +212,15 @@ export class AppComponent implements OnInit, OnDestroy {
         analyticsRoute = '/live/live-reports';
         break;
       case '/analytics/entry':
-        analyticsRoute = '/entry';
+        analyticsRoute = `/entry${idPostfix}`;
+        break;
+      case '/analytics/user':
+        const showContributions = prevRoute && prevRoute.indexOf('contributor') !== -1;
+        const params = showContributions ? '?showContributions=true' : '';
+        analyticsRoute = `/user${idPostfix}${params}`;
         break;
       case '/analytics/entry-live':
-        analyticsRoute = '/entry-live';
+        analyticsRoute = `/entry-live${idPostfix}`;
         break;
       default:
         break;

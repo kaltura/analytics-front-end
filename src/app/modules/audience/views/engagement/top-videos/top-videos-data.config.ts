@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import * as moment from 'moment';
 import {KalturaEntryStatus} from "kaltura-ngx-client";
 
 @Injectable()
@@ -27,6 +26,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           },
           'partner_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'status': {

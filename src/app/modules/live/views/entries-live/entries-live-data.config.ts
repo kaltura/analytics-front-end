@@ -26,6 +26,7 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
           },
           'partner_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'view_unique_audience': {

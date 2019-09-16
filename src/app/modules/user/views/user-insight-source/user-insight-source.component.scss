@@ -1,0 +1,103 @@
+@import '../../../../../styles/variables';
+
+:host /deep/ .kValue {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host /deep/ .kUnits {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kReportContent {
+  overflow: hidden;
+  position: relative;
+}
+
+.kFilters {
+  height: 93px !important;
+}
+
+.kMini {
+  height: 100%;
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+
+  .kPeriod {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 24px;
+    margin-bottom: 11px;
+  }
+
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 20px;
+
+    &.kSource {
+      margin-bottom: 16px !important;
+    }
+
+    .topSource {
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .kLabel {
+      font-size: 15px;
+      font-weight: normal;
+    }
+
+    &.kNoResults {
+      height: 100%;
+      font-size: 28px;
+      color: $kGrayscale3;
+      position: absolute;
+      background-color: white;
+      width: 100%;
+      top: 0;
+    }
+  }
+}
+
+.kLegend {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  position: absolute;
+  font-size: 12px;
+  color: $kGrayscale1;
+  font-weight: bold;
+
+  .kLegendItem {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    margin-top: 4px;
+
+    .kCircle {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.kCompare {
+  .topSource {
+    font-size: 15px !important;
+  }
+}
+
+:host /deep/ .kBullet {
+  height: 8px !important;
+}

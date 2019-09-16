@@ -248,6 +248,7 @@ body{
   flex-direction: column;
   justify-content: center;
   padding: 5px;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   .kCurrentTime {
     color: $kGrayscale3;
@@ -260,8 +261,9 @@ body{
     font-weight: bold;
 
     .kBullet {
-      font-size: 48px;
+      font-size: 24px;
       margin-right: 5px;
+      line-height: 24px;
     }
   }
 
@@ -271,6 +273,7 @@ body{
   flex-direction: column;
   padding: 5px;
   font-weight: bold;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   .kPeriodLabel {
     color: $kGrayscale3;
@@ -290,7 +293,8 @@ body{
     }
 
     .kBullet {
-      font-size: 48px;
+      font-size: 24px;
+      line-height: 24px;
       margin-right: 5px;
     }
   }
@@ -561,6 +565,34 @@ k-area-blocker {
     font-size: 22px;
     line-height: 15px;
     margin-right: 6px;
+  }
+}
+
+.kSankeyTooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .kTitle {
+    color: #999999;
+    font-weight: bold;
+  }
+
+  .kItem {
+    color: #333333;
+    margin-top: 12px;
+
+    .kBullet {
+      font-weight: bold;
+      font-size: 22px;
+      line-height: 15px;
+      margin-right: 6px;
+    }
+
+    .kValue {
+      font-weight: bold;
+      margin-right: 8px;
+    }
   }
 }
 

@@ -1,0 +1,158 @@
+<div data-aid="report-group-user" class="kMain">
+  <k-area-blocker [showLoader]="_loadingUser" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div *ngIf="_user" class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader">
+          <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entry.back' | translate"></button>
+          <div class="kAvatar">
+            <div *ngIf="_user?.thumbnailUrl" class="kThumbnailHolder">
+              <img [src]="_user?.thumbnailUrl">
+            </div>
+            <div *ngIf="!_user?.thumbnailUrl" class="kStub">
+              <i class="icon-viewer-contributor"></i>
+            </div>
+          </div>
+          <span class="kTitle">{{_userName}}</span>
+          <app-export-csv name="user"
+                          [userId]="_userId"
+                          [reports]="_exportConfig"
+                          [refineFilter]="_refineFilter"
+                          [dateFilter]="_dateFilter"></app-export-csv>
+          <div class="kFilter kOverrideFAIcons">
+            <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+              <span>{{'app.filters.filter' | translate}}</span>
+              <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+              <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+            </div>
+          </div>
+          <app-date-filter #dateFilter
+                           name="user"
+                           [dateRange]="_dateRange"
+                           [selectedTimeUnit]="_timeUnit"
+                           [creationDate]="_creationDate"
+                           (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+        </div>
+
+        <div class="kUserDetails">
+          <span>{{'app.user.user_role' | translate}}</span>
+          <span class="kLabel">{{_user?.roleNames}}</span>
+          <div class="kSeparator"></div>
+          <span>{{'app.user.email' | translate}}</span>
+          <span class="kLabel">{{_user?.email}}</span>
+          <div class="kSeparator"></div>
+          <span>{{'app.user.created' | translate}}</span>
+          <span class="kLabel">{{_registrationDate}}</span>
+        </div>
+
+        <app-user-filter [opened]="_refineFilterOpened"
+                         [dateFilter]="_dateFilter"
+                         [selectedFilters]="_selectedRefineFilters"
+                         (closeFilters)="_refineFilterOpened = false"
+                         (filterChange)="_onRefineFilterChange($event)"></app-user-filter>
+
+        <div class="kReportContainer">
+          <app-user-totals [dateFilter]="_dateFilter"
+                           [userId]="_user.id"
+                           [refineFilter]="_refineFilter"></app-user-totals>
+        </div>
+
+        <div class="kReportContainer">
+          <div class="kLeftCol" [class.kCompare]="_isCompare">
+            <app-user-mini-highlights [dateFilter]="_dateFilter"
+                                      [userId]="_user.id"
+                                      [refineFilter]="_refineFilter"></app-user-mini-highlights>
+            <app-user-mini-top-content [dateFilter]="_dateFilter"
+                                       [userId]="_user.id"
+                                       [refineFilter]="_refineFilter"></app-user-mini-top-content>
+          </div>
+          <div class="kRightCol" [class.kCompare]="_isCompare">
+            <ui-carousel height="100%"
+                         [class.kCompare]="_isCompare"
+                         [infinite]="true"
+                         [autoPlay]="true"
+                         [autoPlaySpeed]="5000"
+                         [arrows]="false"
+                         [fade]="false"
+                         [speed]="200">
+              <ui-carousel-item>
+                <app-user-insight-minutes-viewed [userId]="_userId"
+                                                 [dateFilter]="_dateFilter"
+                                                 [refineFilter]="_refineFilter"></app-user-insight-minutes-viewed>
+              </ui-carousel-item>
+              <ui-carousel-item>
+                <app-user-insight-plays [userId]="_userId"
+                                        [dateFilter]="_dateFilter"
+                                        [refineFilter]="_refineFilter"></app-user-insight-plays>
+              </ui-carousel-item>
+
+              <ui-carousel-item>
+                <app-user-insight-domain [userId]="_userId"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter"></app-user-insight-domain>
+              </ui-carousel-item>
+              <ui-carousel-item>
+                <app-user-insight-source [userId]="_userId"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter"></app-user-insight-source>
+              </ui-carousel-item>
+            </ui-carousel>
+          </div>
+        </div>
+
+        <div class="kReportTabs">
+          <a class="kReportTabsItem kViewer"
+             [class.kViewerActive]="_currentTab === _reportTabs.viewer"
+             (click)="_currentTab = _reportTabs.viewer">
+            <i class="kIcon icon-small-impressions"></i>
+            <span>{{'app.user.viewer' | translate}}</span>
+          </a>
+          <a class="kReportTabsItem kContributor"
+             [class.kContributorActive]="_currentTab === _reportTabs.contributor"
+             (click)="_currentTab = _reportTabs.contributor">
+            <i class="kIcon icon-small-contribution"></i>
+            <span>{{'app.user.contributor' | translate}}</span>
+          </a>
+        </div>
+
+        <ng-container *ngIf="_currentTab === _reportTabs.viewer">
+          <div class="kReportContainer">
+            <app-user-highlights [userId]="_user.id"
+                                 [dateFilterComponent]="dateFilter"
+                                 [dateFilter]="_dateFilter"
+                                 [refineFilter]="_refineFilter"></app-user-highlights>
+          </div>
+
+          <div class="kReportContainer">
+            <app-impressions [title]="'app.user.viewingEngagementFunnel' | translate"
+                             [userId]="_user.id"
+                             [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-impressions>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="_currentTab === _reportTabs.contributor">
+          <div class="kReportContainer">
+            <app-user-media-upload [userId]="_user.id"
+                                   [dateFilterComponent]="dateFilter"
+                                   [dateFilter]="_dateFilter"
+                                   [refineFilter]="_refineFilter"></app-user-media-upload>
+          </div>
+
+          <div class="kReportContainer">
+            <app-user-top-content [userId]="_user.id"
+                                  [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-user-top-content>
+          </div>
+
+          <div class="kReportContainer">
+            <app-user-sources [userId]="_user.id"
+                              [userName]="_user.fullName"
+                              [dateFilter]="_dateFilter"
+                              [refineFilter]="_refineFilter"></app-user-sources>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>

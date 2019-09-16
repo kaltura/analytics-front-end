@@ -61,6 +61,9 @@ import { TableModeIconPipe } from 'shared/pipes/table-mode-icon.pipe';
 import { StreamDurationPipe } from 'shared/pipes/stream-duration.pipe';
 import { UserEngagementFilterComponent } from 'shared/components/user-engagement-filter/user-engagement-filter.component';
 import { UserEngagementUsersFilterComponent } from 'shared/components/user-engagement-filter/users-filter/users-filter.component';
+import { EvenTableHeightDirective } from 'shared/directives/even-table-height.directive';
+import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component';
+import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @NgModule({
   imports: [
@@ -123,9 +126,12 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
     StreamDurationPipe,
+    EvenTableHeightDirective,
     ...FilterComponentsList,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
+    HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -165,9 +171,12 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
     ScrollTopOnPagingDirective,
     TableModeIconPipe,
     StreamDurationPipe,
+    EvenTableHeightDirective,
     ...FilterComponentsList,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
+    HeatMapComponent,
+    EntryDetailsOverlayComponent,
   ],
   providers: [
   ]

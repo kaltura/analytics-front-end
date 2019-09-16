@@ -13,6 +13,11 @@ export class UsersTableConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
+          'partner_id': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
+          },
           'name': {
             format: value => value,
             nonComparable: true,

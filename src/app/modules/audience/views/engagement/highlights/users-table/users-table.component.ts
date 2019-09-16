@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
@@ -12,6 +12,8 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-table',
@@ -40,9 +42,14 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   
   constructor(private _reportService: ReportService,
+              private _browserService: BrowserService,
+              private _frameEventManager: FrameEventManagerService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UsersTableConfig) {
+              private _dataConfigService: UsersTableConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -144,5 +151,13 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         this._loadReport();
       }
     }
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['name'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+  
+    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
   }
 }

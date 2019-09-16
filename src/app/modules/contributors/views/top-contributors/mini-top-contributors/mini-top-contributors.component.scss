@@ -119,6 +119,7 @@
     }
 
     .kUser {
+      cursor: pointer;
       width: 48px;
       height: 48px;
       border-radius: 3px;
@@ -145,6 +146,7 @@
       flex: 1;
 
       .kTitle {
+        cursor: pointer;
         color: $kGrayscale1;
         font-weight: bold;
         margin-bottom: 8px;

@@ -87,25 +87,12 @@ export class EntryViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(({ queryParams }) => {
-          this._entryId = queryParams['id'];
-          if (this._entryId) {
-            this.loadEntryDetails();
-          }
-        });
-    } else {
-      this.subscription = this._route.params.subscribe(params => {
-        this._entryId = params['id'];
-        if (this._entryId) {
-          this.loadEntryDetails();
-        }
-      });
-    }
-
+    this.subscription = this._route.params.subscribe(params => {
+      this._entryId = params['id'];
+      if (this._entryId) {
+        this.loadEntryDetails();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -158,19 +145,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            const err =  Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
-            this.requestSubscription = null;
-
-            this._blockerMessage = new AreaBlockerMessage({
-              title: this._translate.instant('app.common.error'),
-              message: err.message,
-              buttons: [{
-                label: this._translate.instant('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loadingEntry = false;
-                }}]
-            });
+            throw responses.getFirstError();
           }
   
           return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -12,10 +12,12 @@ import { UserEngagementConfig } from './user-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
-import { HeatMapStoreService } from './heat-map/heat-map-store.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 
 @Component({
   selector: 'app-user-engagement',
@@ -62,12 +64,16 @@ export class UserEngagementComponent extends EntryBase {
   }
   
   constructor(private _frameEventManager: FrameEventManagerService,
+              private _browserService: BrowserService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router,
               private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UserEngagementConfig) {
+              private _dataConfigService: UserEngagementConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -227,5 +233,13 @@ export class UserEngagementComponent extends EntryBase {
     }
   
     this._loadReport();
+  }
+  
+  public _drillDown(row: TableRow): void {
+    if (row['name'] === 'Unknown') {
+      return; // ignore unknown user drill-down
+    }
+  
+    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
   }
 }
