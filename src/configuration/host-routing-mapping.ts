@@ -1,4 +1,4 @@
-export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string }): string {
+export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string }, prevRoute: string): string {
   const idPostfix = queryParams && queryParams['id'] ? `/${queryParams['id']}` : '';
   let analyticsRoute = kmcRoute;
   switch (kmcRoute) {
@@ -44,7 +44,9 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
       break;
     case 'user':
     case '/analytics/user':
-      analyticsRoute = `/user${idPostfix}`;
+      const showContributions = prevRoute && prevRoute.indexOf('contributor') !== -1;
+      const params = showContributions ? '?showContributions=true' : '';
+      analyticsRoute = `/user${idPostfix}${params}`;
       break;
     default:
       break;

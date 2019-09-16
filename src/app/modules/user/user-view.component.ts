@@ -7,11 +7,13 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
+import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { UserExportConfig } from './user-export.config';
+import { Unsubscribable } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
@@ -31,6 +33,7 @@ export enum UserReportTabs {
 export class UserViewComponent implements OnInit, OnDestroy {
   public _user: KalturaUser;
   public _loadingUser = false;
+  public _creationDate: moment.Moment = null;
   public _registrationDate: string;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
@@ -67,6 +70,8 @@ export class UserViewComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         this._userId = params['id'];
         if (this._userId) {
+          const showContributions = !!this._route.snapshot.queryParams.showContributions;
+          this._currentTab = showContributions ? UserReportTabs.contributor : UserReportTabs.viewer;
           this.loadUserDetails();
           this._exportConfig = this._exportConfigService.getConfig(this._userId);
         }
