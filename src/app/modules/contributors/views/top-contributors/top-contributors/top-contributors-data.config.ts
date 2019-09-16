@@ -22,6 +22,7 @@ export class TopContributorsDataConfig extends ReportDataBaseConfig {
           },
           'partner_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'creator_name': {
