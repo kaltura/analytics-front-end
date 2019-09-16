@@ -26,6 +26,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           },
           'partner_id': {
             format: value => value,
+            nonComparable: true,
             hidden: true,
           },
           'status': {
