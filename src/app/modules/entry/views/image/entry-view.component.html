@@ -3,7 +3,7 @@
     <div class="kReportHeader">
       <button tabindex="0" aria-label="Back"  pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
-      <span class="kTitle">{{_entryName}}</span>
+      <h1 class="kTitle">{{_entryName}}</h1>
       <div class="kHeaderRight">
         <app-export-csv *ngIf="_viewConfig.export"
                         aria-label="Export"
