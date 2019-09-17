@@ -3,24 +3,26 @@
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
-        <app-compare-metric [metric]="_selectedMetricsLabel"
+        <app-compare-metric aria-label="Compare metrics dropdown"
+                            [metric]="_selectedMetricsLabel"
                             [colors]="_metricsColors"
                             [options]="_metricsOptions"
                             (compareTo)="_onCompareTo($event)"></app-compare-metric>
-        <app-time-units *ngIf="dateFilterComponent"
+        <app-time-units aria-label="Time units selector"
+                        *ngIf="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"
                         [dateFilter]="dateFilterComponent"
                         [applyIn]="'image-performance'"></app-time-units>
       </div>
       <div class="kChart">
-        <div *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>
-        <div *ngIf="!_metricsLineChartData" echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
+        <div aria-label="Image Performance Chart" *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>
+        <div aria-label="Image Performance Chart" *ngIf="!_metricsLineChartData" echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
         <div
           *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
           class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
-        <div *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
+        <div aria-label="Legend" *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
           <div class="kLegendItemContainer">
             <span class="kPeriod">{{_compareDatePeriod}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
@@ -49,7 +51,8 @@
         </div>
         <div class="kTableContainer" *ngIf="_showTable">
           <div class="kTableModeSelector">
-            <p-dropdown [style]="{'width': '172px'}"
+            <p-dropdown aria-label="Table Modes Selector"
+                        [style]="{'width': '172px'}"
                         [options]="_tableModes"
                         (onChange)="_onTableModeChange($event.value)"
                         [(ngModel)]="_tableMode">
@@ -68,7 +71,8 @@
             </p-dropdown>
           </div>
 
-          <p-table appScrollTopOnPaging
+          <p-table aria-label="Image Performance Table"
+                   appScrollTopOnPaging
                    [sortField]="_customPaginator ? 'name' : _columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
@@ -111,7 +115,8 @@
               </div>
             </ng-template>
           </p-table>
-          <p-paginator *ngIf="_customPaginator"
+          <p-paginator aria-label="Pagination"
+                       *ngIf="_customPaginator"
                        [rows]="_pager.pageSize"
                        [first]="(_pager.pageIndex -1) * _pager.pageSize"
                        [totalRecords]="_totalCount"

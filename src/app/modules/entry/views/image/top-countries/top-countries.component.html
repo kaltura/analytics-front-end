@@ -1,6 +1,6 @@
 <div data-aid="report-entry-top-countries" class="kReport kNoMargin kOverrideFAIcons" [class.kCompare]="_isCompareMode">
   <div class="kFilters">
-    <span *ngIf="!_drillDown.length" class="kTitle">{{'app.entry.topCountries' | translate}}</span>
+    <h2 *ngIf="!_drillDown.length" class="kTitle">{{'app.entry.topCountries' | translate}}</h2>
     <div class="kBreadcrumbs" *ngIf="_drillDown.length">
       <a (click)="_drillDownTop()">{{'app.audience.geo.top' | translate}}</a>
       <span class="separator">/</span>

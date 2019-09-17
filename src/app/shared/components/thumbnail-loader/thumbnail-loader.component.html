@@ -1,2 +1,2 @@
-<img *ngIf="thumbnailUrl" [src]="thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=thumbnailUrl+'/ks/'+ _ks">
+<img *ngIf="thumbnailUrl" [src]="thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=thumbnailUrl+'/ks/'+ _ks" alt="Image entry">
 <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="_onError()">

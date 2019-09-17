@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <div *ngIf="_viewConfig.details" class="kEntryDetails">
+    <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Image Entry Details">
       <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
       <span>{{_entryType | mediaType: true}}</span>
       <div class="kSeparator"></div>

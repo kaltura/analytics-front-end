@@ -18,6 +18,7 @@
                                     (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
         <p-table dataKey="name"
+                 aria-label="Engagement Per User Table"
                  [sortField]="'count_plays'"
                  [value]="_tableData"
                  [customSort]="true"
@@ -37,7 +38,7 @@
           <ng-template pTemplate="body" let-data let-expanded="expanded">
             <tr>
               <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
-                <a tabindex="0" href="#" [pRowToggler]="data">
+                <a tabindex="0" href="#" [pRowToggler]="data" aria-role="button" aria-label="Expand Row">
                   <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
                      style="font-size: 1.25em"></i>
                 </a>
@@ -87,7 +88,8 @@
           </ng-template>
         </p-table>
 
-        <p-paginator [rows]="_pager.pageSize"
+        <p-paginator aria-label="Pagination"
+                     [rows]="_pager.pageSize"
                      [first]="(_pager.pageIndex -1) * _pager.pageSize"
                      [totalRecords]="_totalCount"
                      (onPageChange)="_onPaginationChanged($event)"></p-paginator>

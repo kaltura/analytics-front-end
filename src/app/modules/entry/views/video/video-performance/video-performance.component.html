@@ -1,6 +1,6 @@
 <div data-aid="report-entry-video-performance" class="kReport kNoMargin kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.entry.videoPerformance' | translate}}</span>
+    <h2 class="kTitle">{{'app.entry.videoPerformance' | translate}}</h2>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
@@ -16,14 +16,14 @@
                         [applyIn]="'video-performance'"></app-time-units>
       </div>
       <div class="kChart">
-        <div *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>
-        <div *ngIf="!_metricsLineChartData" echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
+        <div aria-label="Video Performance Chart" *ngIf="_metricsLineChartData" echarts class="kChart" [options]="_metricsLineChartData"></div>
+        <div aria-label="Video Performance Chart" *ngIf="!_metricsLineChartData" echarts class="kChart" [options]="_lineChartData[_selectedMetrics]"></div>
         <div
           *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
           class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
-        <div *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
+        <div aria-label="Legend" *ngIf="_metricsLineChartData && _isCompareMode" class="kCustomLegend">
           <div class="kLegendItemContainer">
             <span class="kPeriod">{{_compareDatePeriod}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
@@ -52,7 +52,8 @@
         </div>
         <div class="kTableContainer" *ngIf="_showTable">
           <div class="kTableModeSelector">
-            <p-dropdown [style]="{'width': '172px'}"
+            <p-dropdown aria-label="Table Modes Selector"
+                        [style]="{'width': '172px'}"
                         [options]="_tableModes"
                         (onChange)="_onTableModeChange($event.value)"
                         [(ngModel)]="_tableMode">
@@ -72,6 +73,7 @@
           </div>
 
           <p-table appScrollTopOnPaging
+                   aria-label="Video Performance Table"
                    [sortField]="_customPaginator ? 'name' : _columns[0]"
                    [value]="_tableData"
                    [customSort]="true"
@@ -116,6 +118,7 @@
             </ng-template>
           </p-table>
           <p-paginator *ngIf="_customPaginator"
+                       aria-label="Pagination"
                        [rows]="_pager.pageSize"
                        [first]="(_pager.pageIndex -1) * _pager.pageSize"
                        [totalRecords]="_totalCount"

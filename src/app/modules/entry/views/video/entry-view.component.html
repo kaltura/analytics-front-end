@@ -3,7 +3,7 @@
     <div class="kReportHeader">
       <button tabindex="0" aria-label="Back" role="button" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
-      <span class="kTitle">{{_entryName}}</span>
+      <h1 class="kTitle">{{_entryName}}</h1>
       <div class="kHeaderRight">
         <app-export-csv aria-label="Export"
                         role="button" tabindex="0"
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div *ngIf="_viewConfig.details" class="kEntryDetails">
+    <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Video Entry Details">
       <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
       <span>{{_entryType | mediaType: true}}</span>
       <div class="kSeparator"></div>
