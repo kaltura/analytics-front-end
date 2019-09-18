@@ -172,7 +172,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       const devicesTotalData = devicesTotal.length ? parseInt(devicesTotal[0].value, 10) : null;
       const getDeviceItem = (plays, device, index) => {
         const share = devicesTotalData ? plays / devicesTotalData : 0;
-        const label = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'].includes(device)
+        const label = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'].indexOf(device) !== -1
           ? this._translate.instant('app.user.devices.' + device)
           : device;
         return {

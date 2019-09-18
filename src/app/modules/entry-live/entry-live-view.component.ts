@@ -184,7 +184,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
     this._exportConfig
-      .filter(({ id }) => ['discovery', 'geo', 'devices'].includes(id))
+      .filter(({ id }) => ['discovery', 'geo', 'devices'].indexOf(id) !== -1)
       .forEach(currentValue => {
         let update;
         if (currentValue.items) {
