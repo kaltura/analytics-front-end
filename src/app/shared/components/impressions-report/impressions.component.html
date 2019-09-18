@@ -1,9 +1,9 @@
 <div class="kReport kOverrideFAIcons kImpressions">
   <div class="kFilters">
-    <h2 class="kTitle">{{title || ('app.engagement.impressions' | translate)}}</h2>
+    <h2 class="kTitle" id="kImpressions">{{title || ('app.engagement.impressions' | translate)}}</h2>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
+    <div class="kReportContent" aria-labelledby="kImpressions">
       <div class="kCompareDates" *ngIf="isCompareMode && _chartLoaded">
         <div style="width: 30%"></div>
         <div>{{_compareDates}}</div>

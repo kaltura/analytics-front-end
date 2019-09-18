@@ -1,6 +1,6 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
-    <h2 class="kTitle" *ngIf="!_drillDown">{{'app.engagement.topDomainsReport.topDomains' | translate}}</h2>
+    <h2 class="kTitle" id="kSyndication" *ngIf="!_drillDown">{{'app.engagement.topDomainsReport.topDomains' | translate}}</h2>
     <kInputHelper *ngIf="!_drillDown">
       <span>{{'app.engagement.topDomainsReport.topDomains_tt' | translate}}</span>
     </kInputHelper>
@@ -22,7 +22,7 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
+    <div class="kReportContent" aria-labelledby="kSyndication">
       <ng-container *ngIf="_drillDown && !_isBusy">
         <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
                          (tabChange)="_onTabChange($event)"></app-report-tabs>

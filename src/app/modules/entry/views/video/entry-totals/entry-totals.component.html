@@ -22,8 +22,8 @@
       </div>
 
       <div class="kSocialHighlights">
-        <h2 class="kTitle">{{'app.user.socialHighlights' | translate}}</h2>
-        <div class="kSocialHighlightsItem">
+        <h2 class="kTitle" id="kSocialHighlights">{{'app.user.socialHighlights' | translate}}</h2>
+        <div aria-labelledby="kSocialHighlights" class="kSocialHighlightsItem">
           <i class="kIcon icon-small-like"></i>
           <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['likes']?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"
@@ -38,7 +38,7 @@
           </span>
           {{'app.user.votes' | translate}}
         </div>
-        <div class="kSocialHighlightsItem">
+        <div aria-labelledby="kSocialHighlights" class="kSocialHighlightsItem">
           <i class="kIcon icon-share"></i>
           <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['shares']?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"

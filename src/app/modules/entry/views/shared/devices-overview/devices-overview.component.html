@@ -1,11 +1,11 @@
 <div data-aid="report-entry-details-overview" class="kReport kOverrideFAIcons">
   <div class="kFilters">
-    <h2 class="kTitle">{{'app.audience.technology.devicesOverview' | translate}}</h2>
+    <h2 class="kTitle" id="kDevicesOverview">{{'app.audience.technology.devicesOverview' | translate}}</h2>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
-    <div class="kReportContent kDevicesOverview">
+    <div class="kReportContent kDevicesOverview" aria-labelledby="kDevicesOverview">
       <ng-container *ngIf="_summaryData.length">
         <app-horizontal-bar-chart [data]="_summaryData"
                                   [totalCount]="_totalCount"
