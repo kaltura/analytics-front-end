@@ -122,4 +122,12 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _back(): void {
     this._navigationDrillDownService.navigateBack('contributors', true);
   }
+  
+  public _selectTab(tab: UserReportTabs): void {
+    if (this._dateFilter) { // reset applyIn
+      delete this._dateFilter.applyIn;
+    }
+
+    this._currentTab = tab;
+  }
 }
