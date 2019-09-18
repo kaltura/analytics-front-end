@@ -9,12 +9,11 @@ import { AuthService, BrowserService } from 'shared/services';
 import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy, OperationTagManagerService } from '@kaltura-ng/kaltura-common';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, observeOn, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { observeOn } from 'rxjs/operators';
 import { async } from 'rxjs/scheduler/async';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
-import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
+import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 
 @Component({
   selector: 'app-root',
@@ -269,19 +268,40 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private _updateMultiAccount(showMultiAccount: boolean, reload = false): void {
     const needToReload = reload && showMultiAccount !== analyticsConfig.multiAccount;
-
+    const navigate = url => {
+      if (analyticsConfig.isHosted) {
+        this._frameEventManager.publish(FrameEvents.NavigateTo, url);
+      } else {
+        this._router.navigateByUrl(this.mapRoutes(url, null, null));
+      }
+    };
+    const refresh = () => {
+      // refresh current route to invoke data reloading using the new multi account settings
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([decodeURI(this._location.path())]);
+      });
+    };
+    
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
     }
-
+    
     if (needToReload) {
-      // refresh current route to invoke data reloading using the new multi account settings
-      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this._router.navigate([decodeURI(this._location.path())]);
-      });
+      if (showMultiAccount) {
+        refresh();
+      } else {
+        // go to the default page when switching to parent account
+        const currentUrl = this._router.routerState.snapshot.url;
+        if (currentUrl.includes('entry') && !currentUrl.includes('live')) {
+          navigate('/analytics/engagement');
+        } else if (currentUrl.includes('user')) {
+          navigate('/analytics/contributors');
+        } else {
+          refresh();
+        }
+      }
     }
   }
-
 }
