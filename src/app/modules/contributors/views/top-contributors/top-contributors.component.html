@@ -20,12 +20,12 @@
   </div>
 
   <div class="kReportContainer kNoPadding">
-    <app-refine-filter name="contributors"
+    <app-contributors-filter name="contributors"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
                        [selectedFilters]="_selectedRefineFilters"
                        (closeFilters)="_refineFilterOpened = false"
-                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+                       (filterChange)="_onRefineFilterChange($event)"></app-contributors-filter>
   </div>
 
   <div class="kReportContainer">
