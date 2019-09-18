@@ -275,30 +275,33 @@ export class AppComponent implements OnInit, OnDestroy {
         this._router.navigateByUrl(this.mapRoutes(url, null, null));
       }
     };
-
+    const refresh = () => {
+      // refresh current route to invoke data reloading using the new multi account settings
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([decodeURI(this._location.path())]);
+      });
+    };
+    
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
     }
-  
+    
     if (needToReload) {
-      const currentUrl = this._router.routerState.snapshot.url;
-      switch (true) {
-        case currentUrl.includes('entry'):
+      if (showMultiAccount) {
+        refresh();
+      } else {
+        // go to the default page when switching to parent account
+        const currentUrl = this._router.routerState.snapshot.url;
+        if (currentUrl.includes('entry') && !currentUrl.includes('live')) {
           navigate('/analytics/engagement');
-          break;
-        case currentUrl.includes('user'):
+        } else if (currentUrl.includes('user')) {
           navigate('/analytics/contributors');
-          break;
-        default:
-          // refresh current route to invoke data reloading using the new multi account settings
-          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate([decodeURI(this._location.path())]);
-          });
-          break;
+        } else {
+          refresh();
+        }
       }
     }
   }
-
 }
