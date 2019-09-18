@@ -84,12 +84,19 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
+          this._bulletValues = [];
+          this._compareBulletValues = [];
           if (report.totals) {
             this._handleTotals(report.totals, compare ? compare.totals : null);
             
             if (report.table && report.table.header && report.table.data) {
               this._handleTable(report.table, compare ? compare.table : null); // handle table
             }
+          }
+    
+          if (this._isCompareMode) {
+            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
+            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
           }
 
           this._isBusy = false;
@@ -163,19 +170,17 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
       ];
       
       if (compare && compare.data && compare.header) {
-        this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
-        this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-        
         const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
         const compareTop = compareTableData[0];
         const compareTopPlays = parseInt(compareTop['count_plays'], 10);
         const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
-        this._compareTopSourceLabel = compareTop['domain_name'];
-        this._compareBulletValues = [
-          { value: compareTopPlays, label: this._compareTopSourceLabel },
-          { value: compareOthersPlays, label: this._translate.instant('app.contributors.others') },
-        ];
-        
+        if (compareTopPlays || compareOthersPlays) {
+          this._compareTopSourceLabel = compareTop['domain_name'];
+          this._compareBulletValues = [
+            { value: compareTopPlays, label: this._compareTopSourceLabel },
+            { value: compareOthersPlays, label: this._translate.instant('app.contributors.others') },
+          ];
+        }
       } else {
         this._currentDates = null;
         this._compareDates = null;

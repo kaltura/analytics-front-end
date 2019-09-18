@@ -85,8 +85,13 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
       }))
       .subscribe(({ report, compare }) => {
           this._bulletValues = [];
+          this._compareBulletValues = [];
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare ? compare.table : null); // handle table
+          }
+          if (this._isCompareMode) {
+            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
+            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
           }
           this._isBusy = false;
         },
@@ -160,10 +165,7 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
         { value: totalEntries - topEntries, label: this._translate.instant('app.contributors.others') },
       ];
       
-      if (compare) {
-        this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
-        this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-        
+      if (compare && compare.data && compare.header) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
         const {
           totalEntries: compareTotalEntries,
