@@ -86,6 +86,9 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
       .subscribe(({ report, compare }) => {
           this._bulletValues = [];
           this._compareBulletValues = [];
+          this._topSourceLabel = null;
+          this._compareTopSourceLabel = null;
+
           if (report.totals) {
             this._handleTotals(report.totals, compare ? compare.totals : null);
             
@@ -163,27 +166,29 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
       const topPlays = parseInt(currentTop['count_plays'], 10);
       const othersPlays = this._currentTotalPlays - topPlays;
       
-      this._topSourceLabel = currentTop['domain_name'];
-      this._bulletValues = [
-        { value: topPlays, label: this._topSourceLabel },
-        { value: othersPlays, label: this._translate.instant('app.contributors.others') },
-      ];
-      
-      if (compare && compare.data && compare.header) {
-        const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
-        const compareTop = compareTableData[0];
-        const compareTopPlays = parseInt(compareTop['count_plays'], 10);
-        const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
-        if (compareTopPlays || compareOthersPlays) {
-          this._compareTopSourceLabel = compareTop['domain_name'];
-          this._compareBulletValues = [
-            { value: compareTopPlays, label: this._compareTopSourceLabel },
-            { value: compareOthersPlays, label: this._translate.instant('app.contributors.others') },
-          ];
+      if (topPlays || othersPlays) {
+        this._topSourceLabel = currentTop['domain_name'];
+        this._bulletValues = [
+          { value: topPlays, label: this._topSourceLabel },
+          { value: othersPlays, label: this._translate.instant('app.contributors.others') },
+        ];
+  
+        if (compare && compare.data && compare.header) {
+          const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
+          const compareTop = compareTableData[0];
+          const compareTopPlays = parseInt(compareTop['count_plays'], 10);
+          const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
+          if (compareTopPlays || compareOthersPlays) {
+            this._compareTopSourceLabel = compareTop['domain_name'];
+            this._compareBulletValues = [
+              { value: compareTopPlays, label: this._compareTopSourceLabel },
+              { value: compareOthersPlays, label: this._translate.instant('app.contributors.others') },
+            ];
+          }
+        } else {
+          this._currentDates = null;
+          this._compareDates = null;
         }
-      } else {
-        this._currentDates = null;
-        this._compareDates = null;
       }
     }
   }
