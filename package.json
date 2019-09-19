@@ -42,6 +42,7 @@
     "primeng": "8.0.0",
     "rxjs": "^6.5.3",
     "rxjs-compat": "^6.5.3",
+    "seamless-immutable": "~7.1.2",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
