@@ -50,8 +50,6 @@
               <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
               <span class="kEntryLink kTableColumn"
                     *ngIf="col === 'entry_name'"
-                    [kTooltip]="data[col]"
-                    [showOnEllipsis]="true"
                     (mouseleave)="_hideOverlay()"
                     (mouseenter)="_showOverlay($event, data['object_id'])"
                     (click)="drillDown.emit(data)">{{data[col]}}</span>
