@@ -1,0 +1,114 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  width: 100%;
+}
+
+.kDates {
+  font-size: 15px;
+  margin-left: 24px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.kEntryName {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  color: $kGrayscale1;
+}
+
+.kTopVideoRow {
+  .kReportRowIndex {
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    color: $kGrayscale3;
+
+    span {
+      position: absolute;
+      top: -11px;
+      left: 4px;
+    }
+
+    &.kFirst {
+      margin-right: 28px;
+
+      img {
+        z-index: 1;
+        position: absolute;
+        top: -24px;
+        left: -7px;
+      }
+
+      span {
+        z-index: 2;
+        position: absolute;
+        top: -11px;
+        left: 4px;
+        color: $kGrayscale1
+      }
+
+    }
+  }
+}
+
+.kScore {
+  text-align: right;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
+    align-items: flex-end;
+  }
+
+  .kTop {
+    font-size: 15px;
+    color: $kGrayscale3;
+  }
+
+  span {
+    color: $kGrayscale1;
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 24px;
+
+    &.kEntryStatus {
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: bold;
+      font-style: italic;
+      color: $kGrayscale3;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.kDividerWrapper {
+  display: flex;
+  height: 432px;
+
+  .kDivider {
+    border-left: 1px solid #d9d9d9;
+  }
+}
+
+.emptymessage {
+  height: 432px;
+
+  .kEmptyMessage {
+    top: 115px;
+    border-bottom: none;
+  }
+}
+
+.kThumbnailHolder {
+  cursor: pointer;
+  width: 86px;
+  height: 48px;
+
+  ::ng-deep img {
+    width: 86px;
+  }
+}

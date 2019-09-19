@@ -1,0 +1,45 @@
+<div class="kHeader" [class.kCompare]="isCompare">{{'app.user.topDevices' | translate}}</div>
+
+<div *ngIf="data" class="kDevicesWrapper" [class.kCompare]="isCompare">
+  <div *ngIf="compare" class="kDeviceCard">
+    <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
+    <div *ngIf="compare" class="kBulletContainer">
+      <div class="kValues" *ngFor="let compareItem of compare | slice:0:2; let i = index">
+        <div class="kValuesItem">
+          <i class="kIcon" [ngClass]="compareItem.device | appDeviceIcon" [class.kSecond]="i === 1"></i>
+          <span class="kValue">{{compareItem.value}}%</span>
+          {{compareItem.label}}
+        </div>
+      </div>
+      <div class="kBullet">
+        <div *ngFor="let compareItem of compare" class="kBar"
+             [kTooltip]="compareItem.tooltip" [escape]="false"
+             [style.background-color]="compareItem.color"
+             [style.width]="compareItem.rawValue + '%'"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kDeviceCard">
+    <span *ngIf="currentDates" class="kPeriod">{{currentDates}}</span>
+    <div *ngIf="data" class="kBulletContainer">
+      <div class="kValues">
+        <div class="kValuesItem" *ngFor="let item of data | slice:0:2; let i = index">
+          <i class="kIcon" [ngClass]="item.device | appDeviceIcon" [class.kSecond]="i === 1"></i>
+          <span class="kValue">{{item.value}}%</span>
+          {{item.label}}
+        </div>
+      </div>
+      <div class="kBullet">
+        <div *ngFor="let item of data" class="kBar"
+             [kTooltip]="item.tooltip" [escape]="false"
+             [style.background-color]="item.color"
+             [style.width]="item.rawValue + '%'"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!data" class="kNoData">
+  {{'app.common.noResults' | translate }}
+</div>

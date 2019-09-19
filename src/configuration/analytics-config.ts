@@ -4,6 +4,7 @@ export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   skipEmptyBuckets: boolean;
+  multiAccount: boolean;
   defaultPageSize: number;
   permissions: {
     lazyLoadCategories?: boolean;
@@ -17,9 +18,8 @@ export interface AnalyticsConfig {
     serverUri?: string,
     securedServerUri?: string
   };
-  ks?: string;
-  pid?: string;
   locale?: string;
+  dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
   live?: {
@@ -67,9 +67,10 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.3.1',
+  appVersion: '1.5.0',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
+  multiAccount: false,
   permissions: {},
 };

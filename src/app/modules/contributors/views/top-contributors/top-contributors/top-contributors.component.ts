@@ -12,6 +12,7 @@ import { TopContributorsDataConfig } from './top-contributors-data.config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-top-contributors',
@@ -46,22 +47,21 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentContributors;
+  public _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   
-  public topContributors$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
-
+  public topContributors$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
+  
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: TopContributorsDataConfig,
-              private _logger: KalturaLogger) {
+              private _dataConfigService: TopContributorsDataConfig) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
   }
-
+  
   ngOnDestroy(): void {
     this.topContributors$.complete();
   }
@@ -98,6 +98,11 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
             this._handleTable(report.table, compare); // handle table
           } else {
             this.topContributors$.next({ table: null, compare: null, busy: false, error: null });
+          }
+          
+          if (this._isCompareMode) {
+            this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
+            this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
           }
 
           this._isBusy = false;
@@ -156,20 +161,18 @@ export class ContributorsTopContributorsComponent extends TopContributorsBaseRep
     this._currentDates = null;
     this._compareDates = null;
     this.setAnonymousContributors(this._tableData); // fix for anonymous users
-
+    
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._columns = ['entry_name', 'count_plays'];
-      this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
-      this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
       this.setAnonymousContributors(this._compareTableData); // fix for anonymous users
     }
   }
-
+  
   private setAnonymousContributors(contributors: TableRow<string>[]): void {
-    contributors.forEach( contributor => {
-      if ( !contributor['creator_name'].length ) {
+    contributors.forEach(contributor => {
+      if (!contributor['creator_name'].length) {
         contributor['creator_name'] = 'anonymous';
         contributor['created_at'] = '';
       }

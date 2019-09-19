@@ -8,7 +8,15 @@
   font-weight: 700;
 }
 
-
+.kPlayedEntries {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 15px;
+  color: $kGrayscale3;
+}
+.kEntriesCountContainer{
+  height: 72px;
+}
 .kMini{
   height: 100%;
   .kFilters {

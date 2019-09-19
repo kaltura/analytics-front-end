@@ -12,10 +12,11 @@ export enum FrameEvents {
   NavigateTo = 'navigateTo',
   UpdateFilters = 'updateFilters',
   ScrollTo = 'scrollTo',
-  EntryNavigateBack = 'entryNavigateBack',
+  NavigateBack = 'navigateBack',
   ModalOpened = 'modalOpened',
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
+  UpdateMultiAccount = 'updateMultiAccount'
 }
 
 @Injectable()
@@ -31,7 +32,7 @@ export class FrameEventManagerService implements OnDestroy {
   
   ngOnDestroy(): void {
     window.removeEventListener('message', this._windowEventListener);
-    Object.values(this._parentEvents).forEach(event => event.complete());
+    Object.keys(this._parentEvents).forEach(key => this._parentEvents[key].complete());
   }
   
   private _windowEventListener(event: any): void {

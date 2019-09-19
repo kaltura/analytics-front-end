@@ -23,6 +23,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-mini-highlights',
@@ -38,7 +39,7 @@ export class ContributorsMiniHighlightsComponent extends TopContributorsBaseRepo
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-month_id';
-  private _reportType = KalturaReportType.topContentContributors;
+  private _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-highlights';

@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { EngagementBaseReportComponent } from '../engagement-base-report/engagement-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,8 +15,10 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { SortEvent } from 'primeng/api';
-import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { RefineFilter } from 'shared/components/filter/filter.component';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -32,17 +34,21 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-date_id';
-  private _reportType = KalturaReportType.userEngagementTimeline;
+  private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
+  private _filterChange = new Subject();
   
   protected _componentId = 'highlights';
   
   public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
-
+  
+  public _tableModes = TableModes;
+  public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _isMultiAccount = false;
   public _tabsData: Tab[] = [];
   public _tableData: TableRow[] = [];
   public _selectedMetrics: string;
@@ -52,10 +58,20 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _showTable = false;
   public _totalCount = 0;
   public _pageSize = analyticsConfig.defaultPageSize;
+  public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
+  public _datesTableData: { current: Report, compare?: Report } = { current: null };
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _tableModesOptions = [
+    { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates },
+    { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
+    { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
+  ];
+  public _currentPeriod: { from: number, to: number };
+  public _comparePeriod: { from: number, to: number };
+  public _filterChange$ = this._filterChange.asObservable();
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -70,12 +86,14 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
               private _dataConfigService: HighlightsConfig,
               private _logger: KalturaLogger) {
     super();
-    
+
+    this._isMultiAccount = analyticsConfig.multiAccount;
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   ngOnDestroy() {
+    this._filterChange.complete();
     this.highlights$.complete();
   }
   
@@ -83,37 +101,39 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
+    this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
-
-        return this._reportService.getReport(compareReportConfig, sections)
+        
+        return this._reportService.getReport(compareReportConfig, sections, false)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-    
+          
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
-    
+          
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
           }
-
+          
           if (compare) {
+            this._datesTableData = { current: report, compare: compare };
             this._handleCompare(report, compare);
           } else {
             if (report.graphs.length) {
-              this._handleTable(report.graphs); // handle table
               this._handleGraphs(report.graphs); // handle graphs
+              
+              this._datesTableData = { current: report };
             }
           }
           this._firstTimeLoading = false;
@@ -149,57 +169,44 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     } else {
       this._compareFilter = null;
     }
+    
+    this._filterChange.next();
   }
   
   protected _updateRefineFilter(): void {
+    const userIds = this._filter.userIds;
+
     this._refineFilterToServerValue(this._filter);
+    
+    if (userIds) {
+      this._filter.userIds = userIds;
+    }
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
+  
+      if (userIds) {
+        this._compareFilter.userIds = userIds;
+      }
     }
+    
+    this._filterChange.next();
   }
   
   private _handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
-    const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-
+    this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
+    this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
+    
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
-        currentPeriod,
-        comparePeriod,
+        this._currentPeriod,
+        this._comparePeriod,
         current.graphs,
         compare.graphs,
         this._dataConfig.graph,
         this._reportInterval,
       );
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
-  
-      const compareTableData = this._compareService.compareTableFromGraph(
-        currentPeriod,
-        comparePeriod,
-        current.graphs,
-        compare.graphs,
-        this._dataConfig.table,
-        this._reportInterval,
-      );
-  
-      if (compareTableData) {
-        const { columns, tableData, totalCount } = compareTableData;
-        this._totalCount = totalCount;
-        this._columns = columns;
-        this._tableData = tableData;
-      }
     }
-  }
-  
-  private _handleTable(graphs: KalturaReportGraph[]): void {
-    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
-      graphs,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
-    this._totalCount = totalCount;
-    this._columns = columns;
-    this._tableData = tableData;
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
@@ -213,7 +220,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-
+    
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
   
@@ -235,8 +242,38 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     }
   }
   
-  public _onSortChanged(event: SortEvent) {
-    this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
-    this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
+  public _onRefineFilterChange(event: RefineFilter): void {
+    const userIds = event.length
+      ? event
+        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator)
+      : null;
+    
+    if (userIds) {
+      this._filter.userIds = userIds;
+      
+      if (this._compareFilter) {
+        this._compareFilter.userIds = userIds;
+      }
+    } else {
+      delete this._filter.userIds;
+      
+      if (this._compareFilter) {
+        delete this._compareFilter.userIds;
+      }
+    }
+    
+    this._filterChange.next();
+  }
+  
+  public _onChangeMode(): void {
+    this._firstTimeLoading = true;
+
+    // clean up users filters
+    delete this._filter.userIds;
+    
+    if (this._compareFilter) {
+      delete this._compareFilter.userIds;
+    }
   }
 }

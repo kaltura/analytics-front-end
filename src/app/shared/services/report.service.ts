@@ -260,6 +260,8 @@ export class ReportService implements OnDestroy {
           key: header,
           sortOrder: field.sortOrder || 0,
           hidden: !!field.hidden,
+          icon: field.icon,
+          iconColor: field.iconColor,
         });
       }
     });

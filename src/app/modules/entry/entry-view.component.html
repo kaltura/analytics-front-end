@@ -32,8 +32,8 @@
           <div class="kSeparator"></div>
           <span>{{'app.entry.owner' | translate}}</span>
           <span class="kOwner">{{_owner}}</span>
-          <div class="kSeparator"></div>
-          <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
+          <div *ngIf="!_isChildAccount" class="kSeparator"></div>
+          <span *ngIf="!_isChildAccount" class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
         </div>
 
         <app-entry-filter [opened]="_refineFilterOpened"

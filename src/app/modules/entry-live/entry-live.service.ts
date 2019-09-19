@@ -24,6 +24,7 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   serverType: KalturaEntryServerNodeType;
   streamStatus: KalturaStreamStatus;
   owner: string;
+  displayCreatedAt: string;
 }
 
 @Injectable()

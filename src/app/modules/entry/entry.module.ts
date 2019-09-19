@@ -21,11 +21,7 @@ import { EntryDevicesOverviewComponent } from './views/devices-overview/devices-
 import { TopCountriesComponent } from './views/top-countries/top-countries.component';
 import { GeoComponent } from './views/top-countries/geo/geo.component';
 import { UserEngagementComponent } from './views/user-engagement/user-engagement.component';
-import { HeatMapComponent } from './views/user-engagement/heat-map/heat-map.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { UserEngagementFilterComponent } from './views/user-engagement/filter/filter.component';
-import { UsersFilterComponent } from './views/user-engagement/filter/users-filter/users-filter.component';
-
 
 @NgModule({
   imports: [
@@ -54,9 +50,6 @@ import { UsersFilterComponent } from './views/user-engagement/filter/users-filte
     TopCountriesComponent,
     GeoComponent,
     UserEngagementComponent,
-    HeatMapComponent,
-    UsersFilterComponent,
-    UserEngagementFilterComponent,
   ],
   exports: [],
   providers: []

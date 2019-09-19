@@ -22,6 +22,11 @@ export class MiniTopSharedConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'partner_id': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
+          },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
           },

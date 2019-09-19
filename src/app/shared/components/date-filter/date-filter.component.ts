@@ -48,6 +48,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public _defaultDateRange = DateRanges.CurrentYear;
   public _dateRangeType = this._defaultDateRageType;
   public _dateRange = this._defaultDateRange;
+  public _dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'mm/dd/yy' : 'dd/mm/yy';
 
   public lastDateRangeItems: SelectItem[] = [];
   public currDateRangeItems: SelectItem[] = [];
@@ -135,7 +136,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
     if (dateBy) {
       this.selectedView = 'preset';
-      this._dateRange = dateBy;
+      this._dateRange = dateBy === DateRanges.SinceCreation && !this.creationDate ? DateRanges.Last30D : dateBy;
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
       const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
       const dateTo = moment(params[DateFilterQueryParams.dateTo]);

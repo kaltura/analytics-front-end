@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Injectable()
 export class EngagementExportConfig extends ExportConfigService {
@@ -13,32 +14,32 @@ export class EngagementExportConfig extends ExportConfigService {
     return [
       {
         label: this._translate.instant('app.engagement.exportLabels.highlights'),
-        reportType: KalturaReportType.userEngagementTimeline,
+        reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
         sections: [KalturaReportExportItemType.total],
         order: '-count_plays',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.topVideos'),
-        reportType: KalturaReportType.topContentCreator,
+        reportType: reportTypeMap(KalturaReportType.topContentCreator),
         sections: [KalturaReportExportItemType.table],
         order: '-engagement_ranking',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.general'),
-        reportType: KalturaReportType.userEngagementTimeline,
+        reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
         sections: [KalturaReportExportItemType.table],
         order: '-date_id',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),
-        reportType: KalturaReportType.contentDropoff,
+        reportType: reportTypeMap(KalturaReportType.contentDropoff),
         sections: [KalturaReportExportItemType.total],
         order: '-count_plays',
       },
       {
         id: 'syndication',
         label: this._translate.instant('app.engagement.exportLabels.syndication'),
-        reportType: KalturaReportType.topSyndication,
+        reportType: reportTypeMap(KalturaReportType.topSyndication),
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
       },

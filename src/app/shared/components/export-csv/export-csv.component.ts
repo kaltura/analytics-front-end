@@ -24,6 +24,7 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() refineFilter: RefineFilter = [];
   @Input() pager: KalturaPager = null;
   @Input() entryId: string = null;
+  @Input() userId: string = null;
   @Input() width = 240;
   
   @Input() set reports(value: ExportItem[]) {
@@ -81,6 +82,10 @@ export class ExportCsvComponent implements OnDestroy {
       filter.entryIdIn = this.entryId;
     }
     
+    if (this.userId) {
+      filter.userIds = this.userId;
+    }
+    
     return filter;
   }
   
@@ -92,6 +97,8 @@ export class ExportCsvComponent implements OnDestroy {
       children: reports.map(report => ({
         label: report.label,
         data: report,
+        styleClass: report.id === 'groupNode' ? 'groupNode' : '',
+        selectable: report.id !== 'groupNode',
       })),
     }];
   }
@@ -118,7 +125,7 @@ export class ExportCsvComponent implements OnDestroy {
       skipEmptyDates: analyticsConfig.skipEmptyBuckets
     });
     const selection: ExportItem[] = this._selected
-      .filter(({ parent }) => !!parent)
+      .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
       .map(({ data }) => data);
   
     const mapReportItem = (item, label = null) => {
@@ -126,6 +133,10 @@ export class ExportCsvComponent implements OnDestroy {
       if (item.startDate && item.endDate) {
         itemFilter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
         itemFilter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
+      }
+      if (item.ownerId) {
+        itemFilter.ownerIdsIn = item.ownerId;
+        delete itemFilter.userIds;
       }
       item.sections.forEach(section => {
         const reportItem = new KalturaReportExportItem({

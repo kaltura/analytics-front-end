@@ -1,0 +1,121 @@
+@import '../../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 60px;
+}
+
+.kHeader {
+  padding: 24px;
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.kGeoWrapper {
+  display: flex;
+}
+
+@media screen and (min-width: 1280px) {
+  .kGeoWrapper:not(.kCompare) {
+    flex-direction: row;
+  }
+
+  .kGeoWrapper.kCompare {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kHeader.kCompare {
+    padding: 24px 24px 20px;
+    margin-bottom: 0;
+  }
+}
+
+.kGeoCard {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  .kPeriod {
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    margin-left: 24px;
+    white-space: nowrap;
+  }
+}
+
+.kGeo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+
+  .kFlag {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    margin-right: 16px;
+  }
+
+  .kValue {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 44px;
+
+    .kCity {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .kRegion {
+      font-weight: normal;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 365px;
+    }
+  }
+}
+
+.kCompare {
+  align-items: flex-start;
+
+  .kFlag {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-right: 16px;
+  }
+
+  .kValue {
+    height: 40px;
+    font-size: 15px;
+
+    .kCity {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .kRegion {
+      max-width: 140px;
+    }
+  }
+}
+
+
+.kNoData {
+  margin-left: 24px;
+  font-size: 24px;
+  white-space: nowrap;
+}

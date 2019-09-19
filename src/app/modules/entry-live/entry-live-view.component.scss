@@ -1,5 +1,11 @@
 @import '../../../styles/variables';
 
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+
 .kReport {
   background-color: $appBkgColor !important;
 
@@ -26,6 +32,16 @@
 
   .kReportHeader {
     height: 80px;
+
+    .kControls {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+
+      app-toggle-live-btn {
+        margin-right: 16px;
+      }
+    }
   }
 }
 
@@ -53,6 +69,14 @@
   }
 }
 
+.kLiveFilters {
+  border-bottom: 1px solid $kGrayscale4;
+  margin-bottom: 24px;
+  .kTitle {
+    padding: 0 !important;
+  }
+}
+
 :host ::ng-deep .kExport .kDropDown {
-  margin-right: 0px !important;
+  margin-right: 0 !important;
 }

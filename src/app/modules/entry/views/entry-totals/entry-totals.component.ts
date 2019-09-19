@@ -12,6 +12,7 @@ import { EntryTotalsConfig } from './entry-totals.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { EntryBase } from '../entry-base/entry-base';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entry-totals',
@@ -23,7 +24,7 @@ export class EntryTotalsComponent extends EntryBase {
   @Input() entryId = '';
 
   private _order = '-month_id';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   
   public _dateFilter: DateChangeEvent;

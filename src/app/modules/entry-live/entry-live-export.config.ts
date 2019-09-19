@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import * as moment from 'moment';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Injectable()
 export class EntryLiveExportConfig extends ExportConfigService {
@@ -14,30 +15,31 @@ export class EntryLiveExportConfig extends ExportConfigService {
     return [
       {
         label: this._translate.instant('app.entryLive.exportLabels.users'),
-        reportType: KalturaReportType.usersOverviewRealtime,
+        reportType: reportTypeMap(KalturaReportType.usersOverviewRealtime),
         sections: [KalturaReportExportItemType.graph],
-        startDate: () => this._getTime(200),
-        endDate: () => this._getTime(30)
+        startDate: () => this._getTime(170),
+        endDate: () => this._getTime(0)
       },
       {
         label: this._translate.instant('app.entryLive.exportLabels.bandwidth'),
-        reportType: KalturaReportType.qosOverviewRealtime,
+        reportType: reportTypeMap(KalturaReportType.qosOverviewRealtime),
         sections: [KalturaReportExportItemType.graph],
-        startDate: () => this._getTime(200),
-        endDate: () => this._getTime(30)
+        startDate: () => this._getTime(170),
+        endDate: () => this._getTime(0)
       },
       {
         id: 'geo',
         label: this._translate.instant('app.entryLive.exportLabels.geo'),
-        reportType: KalturaReportType.mapOverlayCountryRealtime,
+        reportType: reportTypeMap(KalturaReportType.mapOverlayCountryRealtime),
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
         startDate: () => this._getFromDate(),
         endDate: () => moment().unix()
       },
       {
+        id: 'devices',
         label: this._translate.instant('app.entryLive.exportLabels.devices'),
-        reportType: KalturaReportType.platformsRealtime,
+        reportType: reportTypeMap(KalturaReportType.platformsRealtime),
         sections: [KalturaReportExportItemType.table],
         order: null,
         startDate: () => this._getFromDate(),
@@ -49,7 +51,7 @@ export class EntryLiveExportConfig extends ExportConfigService {
         items: [
           {
             id: 'graph',
-            reportType: KalturaReportType.discoveryRealtime,
+            reportType: reportTypeMap(KalturaReportType.discoveryRealtime),
             sections: [KalturaReportExportItemType.graph],
             order: null,
             startDate: () => this._getTime(60),
@@ -57,7 +59,7 @@ export class EntryLiveExportConfig extends ExportConfigService {
           },
           {
             id: 'table',
-            reportType: KalturaReportType.entryLevelUsersDiscoveryRealtime,
+            reportType: reportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
             sections: [KalturaReportExportItemType.table],
             order: null,
             startDate: () => this._getTime(60),

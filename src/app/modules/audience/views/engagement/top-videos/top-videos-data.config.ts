@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import * as moment from 'moment';
 import {KalturaEntryStatus} from "kaltura-ngx-client";
 
 @Injectable()
@@ -24,6 +23,11 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           'entry_name': {
             format: value => value,
             sortOrder: 1,
+          },
+          'partner_id': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
           },
           'status': {
             format: value => value !== KalturaEntryStatus.ready ? value === KalturaEntryStatus.deleted ? this.translate.instant('app.engagement.topVideosReport.entryStatus.deleted') : this.translate.instant('app.engagement.topVideosReport.entryStatus.unavailable') : '',

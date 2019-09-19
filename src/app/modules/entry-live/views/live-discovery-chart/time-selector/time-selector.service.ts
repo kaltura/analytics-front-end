@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateRange, FiltersService } from '../filters/filters.service';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
 
 export interface DateChangeEvent {
   isPresetMode: boolean;
@@ -10,12 +11,31 @@ export interface DateChangeEvent {
   endDate: number;
   dateRange: DateRange;
   daysCount: number;
+  rangeLabel: string;
 }
 
 @Injectable()
-export class TimeSelectorService {
+export class TimeSelectorService implements OnDestroy {
+  private _filterLabelChange = new Subject<string>();
+  private _filterChange = new Subject<DateChangeEvent>();
+  private _popupOpened = new Subject<void>();
+  
+  public readonly popupOpened$ = this._popupOpened.asObservable();
+  public readonly filterChange$ = this._filterChange.asObservable();
+  public readonly filterLabelChange$ = this._filterLabelChange.asObservable();
+  
   constructor(private _translate: TranslateService,
               private _filterService: FiltersService) {
+  }
+  
+  ngOnDestroy(): void {
+    this._popupOpened.complete();
+    this._filterChange.complete();
+    this._filterLabelChange.complete();
+  }
+  
+  public openPopup(): void {
+    this._popupOpened.next();
   }
   
   public getDateRange(type: 'left' | 'right'): SelectItem[] {
@@ -73,6 +93,14 @@ export class TimeSelectorService {
     const label = this._filterService.getDateRangeList().find(({ value }) => value === selectedDateRange).label;
     
     return { startDate: moment.unix(fromDate).toDate(), endDate: moment.unix(toDate).toDate(), label };
+  }
+  
+  public onFilterChange(event: DateChangeEvent): void {
+    this._filterChange.next(event);
+  }
+  
+  public onFilterLabelChange(label: string): void {
+    this._filterLabelChange.next(label);
   }
 }
 

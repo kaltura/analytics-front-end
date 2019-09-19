@@ -4,6 +4,8 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -11,12 +13,17 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
   
+  private _dateRange: DateRangeServerValue = {
+    toDate: moment().unix(),
+    fromDate: moment().subtract(1, 'minute').unix(),
+  };
+  
   private _getTotalTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.playbackTypeRealtime,
+    reportType: reportTypeMap(KalturaReportType.playbackTypeRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-      toDate: moment().unix(),
-      fromDate: this._getFromDate(),
+      toDate: this._dateRange.toDate,
+      fromDate: this._dateRange.fromDate,
       interval: KalturaReportInterval.tenSeconds,
     }),
     pager: new KalturaFilterPager(),
@@ -24,7 +31,7 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
   };
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: KalturaReportType.entryLevelUsersStatusRealtime,
+    reportType: reportTypeMap(KalturaReportType.entryLevelUsersStatusRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: moment().unix(),
@@ -52,15 +59,21 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
       delete (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds;
       delete (<KalturaEndUserReportInputFilter>this._getTotalTableActionArgs.reportInputFilter).userIds;
     }
-    
+  }
+  
+  public set dateRange(range: DateRangeServerValue) {
+    if (range && range.hasOwnProperty('toDate') && range.hasOwnProperty('fromDate')) {
+      this._dateRange = range;
+      this.onPollTickSuccess();
+    }
   }
   
   public onPollTickSuccess(): void {
     this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
     this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
   
-    this._getTotalTableActionArgs.reportInputFilter.toDate = moment().unix();
-    this._getTotalTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
+    this._getTotalTableActionArgs.reportInputFilter.toDate = this._dateRange.toDate;
+    this._getTotalTableActionArgs.reportInputFilter.fromDate = this._dateRange.fromDate;
   }
   
   public create(): KalturaMultiRequest {

@@ -1,6 +1,11 @@
 /* Fix for IE11 not getting the style overwrite for p-table from styles.scss */
 @import './variables';
 
+:host ::ng-deep .kAreaBlockerCoverAll{
+  position: fixed;
+  z-index: 1200;
+}
+
 :host ::ng-deep p-table .ui-table .ui-table-tbody > tr{
   > td {
     height: 48px;

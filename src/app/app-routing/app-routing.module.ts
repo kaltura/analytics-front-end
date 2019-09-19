@@ -16,6 +16,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
+        path: 'user/:id',
+        loadChildren: '../modules/user/user.module#UserModule'
+      },
+      {
+        path: 'user',
+        loadChildren: '../modules/user/user.module#UserModule'
+      },
+      {
         path: 'entry-live/:id',
         loadChildren: () => import('../modules/entry-live/entry-live.module').then(m => m.EntryLiveModule)
       },

@@ -29,7 +29,6 @@ import { DevicesOverviewComponent } from './views/technology/devices-overview/de
 import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
-import { EntryDetailsOverlayComponent } from './views/engagement/top-videos/entry-details-overlay/entry-details-overlay.component';
 
 import { UICarouselModule } from 'ng-carousel-iuno';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
@@ -42,6 +41,9 @@ import { ModerationComponent } from './views/content-interactions/moderation/mod
 import { MiniTopPlaybackSpeedComponent } from './views/content-interactions/mini-top-playback-speed/mini-top-playback-speed.component';
 import { MiniTopStatsComponent } from './views/content-interactions/mini-top-stats/mini-top-stats.component';
 import { InteractionsTableComponent } from './views/content-interactions/interactions/interactions-table/interactions-table.component';
+import { DatesTableComponent } from './views/engagement/highlights/dates-table/dates-table.component';
+import { UsersTableComponent } from './views/engagement/highlights/users-table/users-table.component';
+import { EntriesTableComponent } from './views/engagement/highlights/entries-table/entries-table.component';
 import { EvenTableHeightDirective } from './views/content-interactions/interactions/even-table-height.directive';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -84,7 +86,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     TopBrowsersComponent,
     TopOsComponent,
     TopVideosTableComponent,
-    EntryDetailsOverlayComponent,
     MiniTopVideosComponent,
     MiniPeakDayComponent,
     GeoFilterComponent,
@@ -95,7 +96,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     MiniTopPlaybackSpeedComponent,
     MiniTopStatsComponent,
     InteractionsTableComponent,
-    EvenTableHeightDirective,
+    DatesTableComponent,
+    UsersTableComponent,
+    EntriesTableComponent,
   ],
   exports: [],
   providers: []

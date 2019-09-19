@@ -4,7 +4,7 @@
   <div class="kSeparator"></div>
   <span>{{'app.entryLive.owner' | translate: {'0': entry?.owner} }}</span>
   <div class="kSeparator"></div>
-  <span>{{'app.entryLive.createdOn' | translate: {'0': +entry?.createdAt | kDate:'dateOnly'} }}</span>
+  <span>{{'app.entryLive.createdOn' | translate: {'0': entry?.displayCreatedAt } }}</span>
   <div class="kSeparator"></div>
   <span>{{'app.entryLive.dvrStatus' | translate: {'0': ((entry?.dvr ? 'app.entryLive.on' : 'app.entryLive.off') | translate)} }}</span>
   <div class="kSeparator"></div>

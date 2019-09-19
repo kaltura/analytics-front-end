@@ -1,4 +1,6 @@
-<router-outlet></router-outlet>
+<k-area-blocker [showLoader]="_isBusy" [bodyScroll]="true" [classes]="'kAreaBlockerCoverAll'" *ngIf="_permissionsLoaded">
+  <router-outlet></router-outlet>
+</k-area-blocker>
 
 <p-confirmDialog #confirm header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440" [class.kAlignToLeft]="_confirmDialogAlignLeft" [acceptLabel]="_confirmationLabels.yes" [rejectLabel]="_confirmationLabels.no"></p-confirmDialog>
 

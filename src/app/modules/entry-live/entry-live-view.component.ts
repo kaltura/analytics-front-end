@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -6,7 +6,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ErrorsManagerService } from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveWidget } from './entry-live.widget';
 import { WidgetsManager } from './widgets/widgets-manager';
@@ -20,6 +20,9 @@ import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
 import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
+import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
+import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
+import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 
 @Component({
   selector: 'app-entry-live',
@@ -27,6 +30,7 @@ import { DateRange, FiltersService } from './views/live-discovery-chart/filters/
   styleUrls: ['./entry-live-view.component.scss'],
   providers: [
     EntryLiveExportConfig,
+    TimeSelectorService,
   
     // widgets
     EntryLiveWidget,
@@ -40,6 +44,7 @@ import { DateRange, FiltersService } from './views/live-discovery-chart/filters/
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
+  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
   
   public _isBusy = true;
@@ -47,6 +52,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entryId: string;
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
+  public _canShowToggleLive = false;
+  public _selectedDateRange = DateRange.LastMin;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -60,6 +67,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveUsers: LiveUsersWidget,
               private _liveBandwidth: LiveBandwidthWidget,
               private _liveStreamHealth: LiveStreamHealthWidget,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _liveGeo: LiveGeoWidget,
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
@@ -70,31 +78,15 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   
   ngOnInit() {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(
-          cancelOnDestroy(this),
-          filter(Boolean),
-          map(({ queryParams }) => queryParams['id'] || null),
-        )
-        .subscribe(entryId => {
-          if (entryId) {
-            this._entryId = entryId;
-            this._entryLiveWidget.activate({ entryId });
-          }
-        });
-    } else {
-      this._route.params
-        .pipe(
-          cancelOnDestroy(this),
-          map(({ id }) => id || null)
-        )
-        .subscribe(entryId => {
-          this._entryId = entryId;
-          this._entryLiveWidget.activate({ entryId });
-        });
-    }
+    this._route.params
+      .pipe(
+        cancelOnDestroy(this),
+        map(({ id }) => id || null)
+      )
+      .subscribe(entryId => {
+        this._entryId = entryId;
+        this._entryLiveWidget.activate({ entryId });
+      });
     
     this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))
@@ -118,8 +110,12 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        
+        this._canShowToggleLive = this._entry.explicitLive && analyticsConfig.permissions.enableLiveViews;
         this._registerWidgets();
+        
+        if (this._timeSelector) {
+          this._timeSelector.updateDataRanges(false);
+        }
       });
   }
   
@@ -157,11 +153,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
   
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
-    } else {
-      this._router.navigate(['live/entries-live']);
-    }
+    this._navigationDrillDownService.navigateBack('live/entries-live', false);
   }
   
   public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
@@ -190,16 +182,46 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
   
-  public _onDiscoveryDateFilterChange(dateRange: DateRange): void {
-    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
-    const items = currentValue.items.map(item => {
-      item.startDate = () => this._dateFilter.getDateRangeServerValue(dateRange).fromDate;
-      item.endDate = () => this._dateFilter.getDateRangeServerValue(dateRange).toDate;
-      return item;
-    });
-    
-    const update = { items };
-    
-    this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
+  public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
+    this._exportConfig
+      .filter(({ id }) => ['discovery', 'geo', 'devices'].indexOf(id) !== -1)
+      .forEach(currentValue => {
+        let update;
+        if (currentValue.items) {
+          const items = currentValue.items.map(item => {
+            if (event.isPresetMode) {
+              item.startDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate;
+              item.endDate = () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate;
+            } else {
+              item.startDate = () => event.startDate;
+              item.endDate = () => event.endDate;
+            }
+            return item;
+          });
+          update = { items };
+        } else {
+          if (event.isPresetMode) {
+            update = {
+              startDate: () => this._dateFilter.getDateRangeServerValue(event.dateRange).fromDate,
+              endDate: () => this._dateFilter.getDateRangeServerValue(event.dateRange).toDate,
+            };
+          } else {
+            update = {
+              startDate: () => event.startDate,
+              endDate: () => event.endDate,
+            };
+          }
+        }
+        
+        this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, currentValue.id, update);
+      });
+  }
+  
+  public _liveToggled(): void {
+    this._entryLiveWidget.restartPolling();
+  }
+  
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    this._selectedDateRange = event.dateRange;
   }
 }

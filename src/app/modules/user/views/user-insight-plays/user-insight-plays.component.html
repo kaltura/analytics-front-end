@@ -1,0 +1,72 @@
+<div data-aid="mini-top-sources" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kPlaysContent">
+      <span class="kTitle" *ngIf="_isCompareMode">{{'app.user.mostPlaysDay' | translate}}</span>
+
+      <div class="kPlaysColumns">
+        <div class="kDateRow">
+          <span class="kDates">{{_currentDates}}</span>
+          <span *ngIf="!_isCompareMode">{{'app.user.lastPlaysDay' | translate}}</span>
+        </div>
+        <div class="kDateRow">
+          <span class="kDates">{{_compareDates}}</span>
+          <span *ngIf="!_isCompareMode">{{'app.user.mostPlaysDay' | translate}}</span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="_tableData.length">
+        <div class="kPlaysColumns">
+          <div class="kPlaysRow">
+            <div class="kMiniIcon aqua"><i class="icon-small-impressions"></i></div>
+            <span class="kValue">{{_tableData[0]['count_loads']}}</span>
+            <span class="kLabel">{{'app.user.impressions' | translate}}</span>
+          </div>
+          <div class="kPlaysRow">
+            <span class="kValue">{{_tableData[1]['count_loads']}}</span>
+          </div>
+        </div>
+
+        <div class="kPlaysColumns">
+          <div class="kPlaysRow">
+            <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+            <span class="kValue">{{_tableData[0]['count_plays']}}</span>
+            <span class="kLabel">{{'app.user.count_plays' | translate}}</span>
+          </div>
+          <div class="kPlaysRow">
+            <span class="kValue">{{_tableData[1]['count_plays']}}</span>
+          </div>
+        </div>
+
+        <div class="kPlaysColumns">
+          <div class="kPlaysRow">
+            <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
+            <span class="kValue">{{_tableData[0]['sum_time_viewed']}}</span>
+            <span class="kLabel">{{'app.user.sum_time_viewed' | translate}}</span>
+          </div>
+          <div class="kPlaysRow">
+            <span class="kValue">{{_tableData[1]['sum_time_viewed']}}</span>
+          </div>
+        </div>
+
+        <div class="kPlaysColumns">
+          <div class="kPlaysRow">
+            <div class="kMiniIcon violet"><i class="icon-download icon-upload"></i></div>
+            <span class="kValue">{{_tableData[0]['added_entries']}}</span>
+            <span class="kLabel">{{'app.user.added_entries' | translate}}</span>
+          </div>
+          <div class="kPlaysRow">
+            <span class="kValue">{{_tableData[1]['added_entries']}}</span>
+          </div>
+        </div>
+      </ng-container>
+      <div class="kNoData" *ngIf="!_isBusy && !_tableData.length">
+        <span class="kLabel">{{'app.common.noResults' | translate}}</span>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

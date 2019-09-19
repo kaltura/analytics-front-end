@@ -3,9 +3,15 @@
   background-color: #FFFFFF;
 }
 
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+
 .kReport{
   background-color: $appBkgColor !important;
-  .kBackBtn{
+  .kBackBtn {
     margin-top: 4px;
     margin-left: -40px;
     margin-right: 22px;

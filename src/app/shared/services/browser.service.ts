@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { Params } from '@angular/router';
+import { analyticsConfig } from "configuration/analytics-config";
 
 export enum HeaderTypes {
     error = 1,
@@ -24,6 +25,7 @@ export interface Confirmation {
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
 	alignMessage?: 'left' | 'center' | 'byContent';
+  acceptLabel?: string;
 }
 
 export type OnShowConfirmationFn = (confirmation: Confirmation) => void;
@@ -63,14 +65,18 @@ export class BrowserService {
       this._currentQueryParams = params;
     }
   
-  public getCurrentQueryParams(format: 'string' = null): Params | string {
+  public getCurrentQueryParams(format: 'string' = null, params?: { [key: string]: string }): Params | string {
+    let currentQueryParams = { ...this._currentQueryParams };
+    if (params) {
+      currentQueryParams = { ...currentQueryParams, ...params };
+    }
     if (format === 'string') {
-      return Object.keys(this._currentQueryParams)
-        .map(key => `${key}=${this._currentQueryParams[key]}`)
+      return Object.keys(currentQueryParams)
+        .map(key => `${key}=${currentQueryParams[key]}`)
         .join('&');
     }
     
-    return this._currentQueryParams;
+    return currentQueryParams;
   }
 
     public registerOnShowConfirmation(fn: OnShowConfirmationFn) {
@@ -115,6 +121,9 @@ export class BrowserService {
     }
 
     public alert(confirmation: Confirmation) {
+        if (analyticsConfig.isHosted) {
+          this._frameEventManager.publish(FrameEvents.ScrollTo, '0');
+        }
         confirmation.key = 'alert';
         this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);

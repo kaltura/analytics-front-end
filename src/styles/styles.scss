@@ -248,6 +248,7 @@ body{
   flex-direction: column;
   justify-content: center;
   padding: 5px;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   .kCurrentTime {
     color: $kGrayscale3;
@@ -260,20 +261,42 @@ body{
     font-weight: bold;
 
     .kBullet {
-      font-size: 48px;
+      font-size: 24px;
       margin-right: 5px;
+      line-height: 24px;
     }
   }
 
 }
 .kEntryCompareGraphTooltip {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 5px;
   font-weight: bold;
-  .kBullet {
-    font-size: 48px;
-    margin-right: 5px;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  .kPeriodLabel {
+    color: $kGrayscale3;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .kValue {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .kBullet {
+      font-size: 24px;
+      line-height: 24px;
+      margin-right: 5px;
+    }
   }
 }
 
@@ -498,9 +521,9 @@ k-area-blocker {
 
 .kDevicesGraphTooltip {
   display: flex;
-  height: 48px;
-  min-width: 158px;
-  padding: 16px;
+  max-height: 48px;
+  padding: 8px;
+  text-align: left;
   flex-direction: column;
 
   .kTitle {
@@ -542,6 +565,34 @@ k-area-blocker {
     font-size: 22px;
     line-height: 15px;
     margin-right: 6px;
+  }
+}
+
+.kSankeyTooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .kTitle {
+    color: #999999;
+    font-weight: bold;
+  }
+
+  .kItem {
+    color: #333333;
+    margin-top: 12px;
+
+    .kBullet {
+      font-weight: bold;
+      font-size: 22px;
+      line-height: 15px;
+      margin-right: 6px;
+    }
+
+    .kValue {
+      font-weight: bold;
+      margin-right: 8px;
+    }
   }
 }
 
@@ -635,6 +686,7 @@ ui-carousel {
 }
 
 .kTimePeriodLabel {
+  max-height: 18px;
   font-size: 15px;
   white-space: nowrap;
   color: $kGrayscale1;
@@ -642,5 +694,9 @@ ui-carousel {
   background-color: $kGrayscale7;
   border-radius: 3px;
   padding: .25em .5em;
+
+  a {
+    margin-left: 5px;
+  }
 }
 

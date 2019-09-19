@@ -54,6 +54,7 @@ import { LiveDiscoveryUsersTableConfig } from './views/live-discovery-table/user
 import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/users-table/live-discovery-users-status.config';
 import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
+import { ToggleLiveComponent } from './components/toggle-live/toggle-live.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
@@ -108,6 +109,7 @@ import { CalendarModule } from 'primeng/calendar';
     UsersTableComponent,
     StatusBulletComponent,
     TimeSelectorComponent,
+    ToggleLiveComponent,
   ],
   providers: [
     CodeToSeverityPipe,

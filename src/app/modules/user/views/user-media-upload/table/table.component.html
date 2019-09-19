@@ -1,0 +1,68 @@
+<div [attr.data-aid]="'table-user-media-upload' + name" class="kTableContainer">
+  <span class="kDates" *ngIf="dates">{{dates}}</span>
+  <div class="kDividerWrapper">
+    <div class="kDivider" *ngIf="showDivider"></div>
+    <k-area-blocker [showLoader]="isBusy" [message]="areaBlockerMessage">
+      <p-table appScrollTopOnPaging
+               sortField="created_at"
+               [customPaginationEvent]="_paginationChanged$"
+               [value]="tableData"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               (sortFunction)="sortChanged.emit($event)">
+        <ng-template pTemplate="header">
+          <tr [ngStyle]="{'width': '100%'}">
+            <th *ngIf="!isCompareMode" [ngStyle]="{'width': '110px'}">
+              {{'app.user.entries' | translate}}
+            </th>
+            <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
+                [kTooltip]="'app.user.' + col | translate"
+                [showOnEllipsis]="true">
+              {{'app.user.' + col | translate}}
+              <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+            </th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
+            <td *ngIf="!isCompareMode" [ngStyle]="{'width': '110px'}">
+              <div class="kThumbnailHolder" #holder
+                   (mouseleave)="_hideOverlay()"
+                   (mouseenter)="_showOverlay($event, data['object_id'])"
+                   (click)="drillDown.emit(data)">
+                <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
+              </div>
+            </td>
+            <td *ngFor="let col of columns; let i = index"
+                [class.kHighlight]="i===0"
+                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}">
+              <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
+              <span class="kEntryLink kTableColumn"
+                    *ngIf="col === 'entry_name'"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['object_id'])"
+                    (click)="drillDown.emit(data)">{{data[col]}}</span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+    </k-area-blocker>
+  </div>
+  <p-paginator [rows]="pager?.pageSize"
+               [first]="(pager?.pageIndex - 1) * pager?.pageSize"
+               [totalRecords]="totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-user-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-user-entry-details-overlay>
+</k-overlayPanel>

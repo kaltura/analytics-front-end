@@ -6,10 +6,15 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
-          <app-export-csv name="entry"
-                          [width]="380"
-                          [reports]="_exportConfig"
-                          [entryId]="_entryId"></app-export-csv>
+          <div class="kControls">
+            <app-toggle-live-btn *ngIf="_canShowToggleLive"
+                                 [entry]="_entry"
+                                 (entryToggled)="_liveToggled()"></app-toggle-live-btn>
+            <app-export-csv name="entry"
+                            [width]="380"
+                            [reports]="_exportConfig"
+                            [entryId]="_entryId"></app-export-csv>
+          </div>
         </div>
 
         <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
@@ -17,15 +22,27 @@
           <div class="kWideColumn">
             <app-live-users [entry]="_entry"></app-live-users>
             <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
-            <div class="kReport kNoBottomMargin">
-              <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
-            </div>
           </div>
           <div class="kNarrowColumn">
             <app-live-status [entry]="_entry"></app-live-status>
             <app-live-player [entryId]="_entry?.id"></app-live-player>
             <app-live-stream-health></app-live-stream-health>
+          </div>
+        </div>
 
+        <div class="kFilters kLiveFilters kOverrideFAIcons">
+          <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
+
+          <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
+
+        </div>
+        <div class="kEntryWidgets">
+          <div class="kWideColumn">
+            <div class="kReport kNoBottomMargin">
+              <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
+            </div>
+          </div>
+          <div class="kNarrowColumn">
             <div class="kReport kNoBottomMargin">
               <app-live-devices></app-live-devices>
             </div>

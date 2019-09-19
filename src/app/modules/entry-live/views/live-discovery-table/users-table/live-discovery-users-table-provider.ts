@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { LiveDiscoveryUsersStatusRequestFactory } from './live-discovery-users-status-request-factory';
-import { FiltersService } from '../../live-discovery-chart/filters/filters.service';
+import { DateRangeServerValue, FiltersService } from '../../live-discovery-chart/filters/filters.service';
 import { LiveDiscoveryUsersStatusConfig, UserStatus } from './live-discovery-users-status.config';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -20,6 +20,8 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
   private readonly _dataConfig: ReportDataConfig;
   private readonly _statusDataConfig: ReportDataConfig;
   private _entryId: string;
+  
+  public dateRange: DateRangeServerValue;
   
   constructor(private _reportService: ReportService,
               private _filterService: FiltersService,
@@ -93,6 +95,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
         if (userIds) { // call for live status data if userIds is not empty
           const liveDataRequestFactory = new LiveDiscoveryUsersStatusRequestFactory(this._entryId);
           liveDataRequestFactory.userIds = userIds;
+          liveDataRequestFactory.dateRange = this.dateRange;
 
           return this._kalturaClient.multiRequest(liveDataRequestFactory.create())
             .pipe(map(liveDataResponse => {
@@ -136,7 +139,7 @@ export class LiveDiscoveryUsersTableProvider implements LiveDiscoveryTableWidget
                   const typeLabel = this._translate.instant(`app.entryLive.discovery.userStatus.${item['playback_type']}`);
                   const tooltip = this._translate.instant(
                     `app.entryLive.discovery.userStatusCount.${item['playback_type']}`,
-                    [totalViewTime ? ReportHelper.percents(parsedValue / totalViewTime) : '0%']
+                    [totalViewTime ? ReportHelper.percents(parsedValue / totalViewTime, false) : '0%']
                   );
                   return {
                     value: parsedValue,

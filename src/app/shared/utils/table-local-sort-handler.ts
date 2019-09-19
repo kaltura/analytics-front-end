@@ -1,5 +1,6 @@
 import { SortEvent } from 'primeng/api';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export type TableRow<T = any> = { [key: string]: T };
 
@@ -52,5 +53,19 @@ function getDate(date: string): Date {
     return new Date(`${('0' + monthIndex).slice(-2)}/01/${year}`);
   }
   
-  return new Date(date);
+  return parseDate(date);
+}
+
+// add custom date factory to avoid invalid date issue with day-month-year date format
+// since the default Date constructor accepts only month-day-year format
+function parseDate(input: string): Date {
+  const format = analyticsConfig.dateFormat === 'month-day-year' ? 'mm/dd/yyyy' : 'dd/mm/yyyy';
+  const parts = input.match(/(\d+)/g).map(item => Number(item));
+  const fmt: { [key: string]: number } = {};
+  let i = 0;
+
+  // extract date-part indexes from the format
+  format.replace(/(yyyy|dd|mm)/g, part => (fmt[part] = i++, null));
+  
+  return new Date(parts[fmt['yyyy']], parts[fmt['mm']] - 1, parts[fmt['dd']]);
 }

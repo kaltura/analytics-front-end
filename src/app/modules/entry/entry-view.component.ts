@@ -25,12 +25,13 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { EntryExportConfig } from './entry-export.config';
 import { EngagementExportConfig } from '../audience/views/engagement/engagement-export.config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entry',
@@ -47,7 +48,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;
-  public _reportType: KalturaReportType = KalturaReportType.userUsage;
+  public _reportType: KalturaReportType = reportTypeMap(KalturaReportType.userUsage);
   public _selectedMetrics: string;
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = null;
@@ -70,6 +71,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
   public _owner = '';
+  public _isChildAccount = false;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -77,30 +79,20 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
+              private _authService: AuthService,
               private _exportConfigService: EntryExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
 
   ngOnInit() {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager
-        .listen(FrameEvents.UpdateFilters)
-        .pipe(cancelOnDestroy(this), filter(Boolean))
-        .subscribe(({ queryParams }) => {
-          this._entryId = queryParams['id'];
-          if (this._entryId) {
-            this.loadEntryDetails();
-          }
-        });
-    } else {
-      this.subscription = this._route.params.subscribe(params => {
-        this._entryId = params['id'];
-        if (this._entryId) {
-          this.loadEntryDetails();
-        }
-      });
-    }
-
+    this._isChildAccount = this._authService.isChildAccount;
+    this.subscription = this._route.params.subscribe(params => {
+      this._entryId = params['id'];
+      if (this._entryId) {
+        this.loadEntryDetails();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -153,19 +145,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            const err =  Error(responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, ''));
-            this.requestSubscription = null;
-
-            this._blockerMessage = new AreaBlockerMessage({
-              title: this._translate.instant('app.common.error'),
-              message: err.message,
-              buttons: [{
-                label: this._translate.instant('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loadingEntry = false;
-                }}]
-            });
+            throw responses.getFirstError();
           }
   
           return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
@@ -197,11 +177,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
   }
 
   public _back(): void {
-    if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.EntryNavigateBack);
-    } else {
-      this._router.navigate(['audience/engagement'], { queryParams: this._route.snapshot.queryParams });
-    }
+    this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
   public _navigateToEntry(): void {

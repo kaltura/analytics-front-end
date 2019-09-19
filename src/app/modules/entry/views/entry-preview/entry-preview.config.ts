@@ -19,6 +19,9 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
           'count_viewers': {
             format: value => value,
           },
+          'unique_known_users': {
+            format: value => value,
+          },
         }
       }
     };

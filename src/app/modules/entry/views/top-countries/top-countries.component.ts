@@ -21,6 +21,7 @@ import { GeoComponent } from './geo/geo.component';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-top-countries',
@@ -55,7 +56,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _totalCount: number;
-  public _reportType = KalturaReportType.mapOverlayCountry;
+  public _reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
@@ -212,8 +213,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   private _setPlaysTrend(row: TableRow, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
-    const currentValue = parseFloat(row[field].replace(/,/g, '')) || 0;
-    compareValue = parseFloat(compareValue.toString().replace(/,/g, '')) || 0;
+    const currentValue = parseFormattedValue(row[field]);
+    compareValue = parseFormattedValue(compareValue.toString());
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}`;
     row[field + '_trend'] = {
@@ -301,7 +302,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   public _onDrillDown(event: { drillDown: string[], reload: boolean }): void {
     const { drillDown, reload } = event;
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
-    this._reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
+    this._reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
 
     this.onDrillDown.emit({reportType: this._reportType, drillDown: this._drillDown});
 

@@ -9,6 +9,8 @@ import { filter } from 'rxjs/operators';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from './table-config';
+import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-selector.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -17,6 +19,7 @@ import { liveDiscoveryTablePageSize } from './table-config';
 })
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
+  @Input() rangeLabel: string;
   
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   
@@ -34,8 +37,13 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _summaryData: LiveDiscoverySummaryData;
   
   constructor(private _errorsManager: ErrorsManagerService,
+              private _timeSelector: TimeSelectorService,
               public _widget: LiveDiscoveryTableWidget) {
-    
+    _timeSelector.filterLabelChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(label => {
+        this.rangeLabel = label;
+      });
   }
   
   ngOnInit() {
@@ -80,7 +88,11 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _onTableModeChange(event: TableModes): void {
     this._widget.setTableMode(event);
   
-    const reportType = event === TableModes.users ? KalturaReportType.entryLevelUsersDiscoveryRealtime : KalturaReportType.platformsDiscoveryRealtime;
+    const reportType = event === TableModes.users ? reportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime) : reportTypeMap(KalturaReportType.platformsDiscoveryRealtime);
     this.tableChange.emit(reportType);
+  }
+  
+  public _openTimeSelector(): void {
+    this._timeSelector.openPopup();
   }
 }

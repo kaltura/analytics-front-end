@@ -1,0 +1,39 @@
+<div data-aid="mini-top-sources" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kMinutesViewedContent">
+      <div class="kWeekly">
+        <span *ngIf="!_isCompareMode" class="kValue">{{_weeklyMinutes}}</span>
+        <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_compareWeeklyMinutes?.tooltip" [escape]="false">
+          <app-trend-value *ngIf="_compareWeeklyMinutes?.value"
+                           valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_compareWeeklyMinutes?.value"
+                           [units]="_compareWeeklyMinutes?.units"
+                           [trend]="_compareWeeklyMinutes?.trend"></app-trend-value>
+          <i *ngIf="!_compareWeeklyMinutes?.value" class="kNoTrend icon-minus"></i>
+        </span>
+        <span class="kLabel">{{'app.user.weeklyAvgViews' | translate}}</span>
+      </div>
+      <div echarts class="kChart" [options]="_chartData" [class.kCompare]="_isCompareMode"></div>
+      <div *ngIf="!_isCompareMode" class="kFooter">
+        <span class="kDay">{{_mostViewedDay}}</span>
+        {{'app.user.mostViewedDay' | translate}}
+      </div>
+      <div class="kLegend" *ngIf="_isCompareMode">
+        <div class="kLegendItem">
+          <div class="kCircle" [style.background-color]="_colors[0]"></div>
+          <span>{{_currentDates}}</span>
+        </div>
+        <div class="kLegendItem">
+          <div class="kCircle" [style.background-color]="_colors[1]"></div>
+          <span>{{_compareDates}}</span>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

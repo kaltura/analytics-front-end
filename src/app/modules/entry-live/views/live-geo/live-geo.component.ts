@@ -23,6 +23,7 @@ import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-live-geo',
@@ -52,7 +53,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _reportInterval = KalturaReportInterval.days;
   public _tableData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
-  public _isBusy: boolean;
+  public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
@@ -72,7 +73,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    this._isBusy = true;
     // load works map data
     this._http.get('assets/world.json')
       .subscribe(data => {
@@ -83,13 +83,13 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     this._liveGeoWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isBusy = state.isBusy;
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._liveGeoWidget.retry();
             },
           };
@@ -100,7 +100,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     this._liveGeoWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveGeoWidgetData) => {
-        this._isBusy = false;
         this._tableData = data.table;
         this._columns = data.columns;
         this._setMapCenter();
@@ -190,8 +189,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
-    const reportType = this._drillDown.length === 2 ? KalturaReportType.mapOverlayCity : this._drillDown.length === 1 ? KalturaReportType.mapOverlayRegion : KalturaReportType.mapOverlayCountry;
-    this.onDrillDown.emit({reportType: reportType, drillDown: this._drillDown});
+    const reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
+    this.onDrillDown.emit({ reportType: reportType, drillDown: this._drillDown });
   }
   
   public _onChartInit(ec) {

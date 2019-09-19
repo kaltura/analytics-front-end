@@ -48,6 +48,11 @@ export class InteractionsConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
+          'partner_id': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
+          },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,

@@ -4,6 +4,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -12,7 +13,7 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   });
   
   private _getGraphActionArgs: ReportGetGraphsActionArgs = {
-    reportType: KalturaReportType.qosOverviewRealtime,
+    reportType: reportTypeMap(KalturaReportType.qosOverviewRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._getTime(30),
@@ -32,8 +33,8 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
   
   
   public onPollTickSuccess(): void {
-    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(30);
-    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(200);
+    this._getGraphActionArgs.reportInputFilter.toDate = this._getTime(0);
+    this._getGraphActionArgs.reportInputFilter.fromDate = this._getTime(170);
   }
   
   public create(): KalturaMultiRequest {

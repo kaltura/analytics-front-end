@@ -14,6 +14,8 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { reportTypeMap } from 'shared/utils/report-type-map';
+import { BarRowTooltip } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 
 export interface SummaryItem {
   key: string;
@@ -22,6 +24,10 @@ export interface SummaryItem {
   rawValue: number;
   units: string;
   compareUnits: string;
+  valueTooltip?: BarRowTooltip | BarRowTooltip[];
+  tooltip?: string;
+  trend?: string;
+  trendDirection?: number;
 }
 
 export interface Summary {
@@ -101,7 +107,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     this._blockerMessage = null;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       filter: this._filter,
       pager: this._pager,
       order: null
@@ -161,7 +167,7 @@ export class DevicesOverviewComponent implements OnDestroy {
     compareFilter.toDate = endDate;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.platforms,
+      reportType: reportTypeMap(KalturaReportType.platforms),
       filter: compareFilter,
       pager: this._pager,
       order: null
@@ -350,11 +356,6 @@ export class DevicesOverviewComponent implements OnDestroy {
   }
   
   public _tooltipFormatter(value: string, label: string): string {
-    return `
-      <div class="kDevicesGraphTooltip">
-        <div class="kTitle">${label}</div>
-        <div class="kValue">${value}</div>
-      </div>
-    `;
+    return `<div class="kDevicesGraphTooltip"><div class="kTitle">${label}</div><div class="kValue">${value}</div></div>`;
   }
 }

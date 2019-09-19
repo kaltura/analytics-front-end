@@ -15,6 +15,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { TopContributorsBaseReportComponent } from '../top-contributors-base-report/top-contributors-base-report.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-contributors-highlights',
@@ -29,7 +30,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 export class ContributorsHighlightsComponent extends TopContributorsBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
   
-  private _reportType = KalturaReportType.topContentContributors;
+  private _reportType = reportTypeMap(KalturaReportType.topContentContributors);
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'highlights';

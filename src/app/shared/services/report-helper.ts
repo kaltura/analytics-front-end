@@ -3,7 +3,8 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 
 export class ReportHelper {
   static numberWithCommas(x: any): string {
-    return parseFloat(x).toLocaleString(navigator.language, { maximumSignificantDigits: 20 });
+    // use en-US format always to have consistent formatting
+    return parseFloat(x).toLocaleString('en-US', { maximumSignificantDigits: 20 });
   }
   
   static percents(x: any, round = true, maxHundred = false, addUnits = true): string {

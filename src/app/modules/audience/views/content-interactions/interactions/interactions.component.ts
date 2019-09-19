@@ -2,7 +2,15 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import {
+  BrowserService,
+  AuthService,
+  ErrorsManagerService,
+  NavigationDrillDownService,
+  Report,
+  ReportConfig,
+  ReportService
+} from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -21,6 +29,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-interactions',
@@ -37,9 +46,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   private _updateTableHeight = new Subject<void>();
   private _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
@@ -86,8 +95,9 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
               private _dataConfigService: InteractionsConfig,
+              private _authService: AuthService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _logger: KalturaLogger,
               private _router: Router,
               private _activatedRoute: ActivatedRoute,
@@ -298,7 +308,7 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
     item['index'] = String(pager.pageSize * (pager.pageIndex - 1) + (index + 1));
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     return item;
   }
   
@@ -372,15 +382,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status } = row;
+    const { object_id: entryId, status, partner_id } = row;
 
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${entryId}&${params}`);
-      } else {
-        this._router.navigate(['entry', entryId], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partner_id);
     }
   }
 }

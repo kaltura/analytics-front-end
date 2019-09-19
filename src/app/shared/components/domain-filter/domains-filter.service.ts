@@ -4,6 +4,7 @@ import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter,
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export interface DomainFilterItem {
   value: { id: string, name: string };
@@ -54,7 +55,7 @@ export class DomainsFilterService implements OnDestroy {
     this._isBusy = true;
     
     const reportConfig: ReportConfig = {
-      reportType: KalturaReportType.topSyndication,
+      reportType: reportTypeMap(KalturaReportType.topSyndication),
       filter: this._filter,
       pager: this._pager,
       order: null,

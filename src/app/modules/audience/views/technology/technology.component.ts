@@ -7,6 +7,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TechnologyExportConfig } from './technology-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { EngagementExportConfig } from '../engagement/engagement-export.config';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-technology',
@@ -28,7 +29,7 @@ export class TechnologyComponent implements OnInit {
   public _filterEvent: DateChangeEvent = null;
   public _devicesFilter: string[] = [];
   public _devicesList: { value: string, label: string; }[] = [];
-  public _reportType = KalturaReportType.platforms;
+  public _reportType = reportTypeMap(KalturaReportType.platforms);
   public _exportConfig: ExportItem[] = [];
   
   constructor(private _exportConfigService: TechnologyExportConfig) {
@@ -60,9 +61,9 @@ export class TechnologyComponent implements OnInit {
     const { drillDown, reportType, name } = event;
     let update: Partial<ExportItem> = { reportType: reportType };
 
-    if (reportType === KalturaReportType.browsers) {
+    if (reportType === reportTypeMap(KalturaReportType.browsers)) {
       update.additionalFilters = { browserFamilyIn: drillDown };
-    } else if (reportType === KalturaReportType.operatingSystem) {
+    } else if (reportType === reportTypeMap(KalturaReportType.operatingSystem)) {
       update.additionalFilters = { operatingSystemFamilyIn: drillDown };
     }
     this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), name, update);

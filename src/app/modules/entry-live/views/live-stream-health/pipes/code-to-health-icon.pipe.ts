@@ -32,9 +32,9 @@ export class CodeToHealthIconPipe implements PipeTransform {
     } else if (Array.isArray(value)) {
       const healthList = value.map(({ Code }) => getHealth(Code));
       switch (true) {
-        case healthList.includes(StreamHealthStatus.Poor):
+        case healthList.indexOf(StreamHealthStatus.Poor) !== -1:
           return 'poor';
-        case healthList.includes(StreamHealthStatus.Fair):
+        case healthList.indexOf(StreamHealthStatus.Fair) !== -1:
           return 'fair';
         default:
           return 'good';

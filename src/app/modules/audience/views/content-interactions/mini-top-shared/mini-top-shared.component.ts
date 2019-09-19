@@ -2,7 +2,14 @@ import { Component, Input } from '@angular/core';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import { KalturaEndUserReportInputFilter, KalturaEntryStatus, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {
+  AuthService,
+  BrowserService,
+  ErrorsManagerService,
+  NavigationDrillDownService,
+  ReportConfig,
+  ReportService
+} from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -17,6 +24,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { InteractionsBaseReportComponent } from '../interactions-base-report/interactions-base-report.component';
 import { map, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-mini-top-shared',
@@ -34,14 +42,14 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   protected _componentId = 'mini-top-shared';
   
   private readonly _order = '-count_viral';
-  private _reportType = KalturaReportType.playerRelatedInteractions;
+  private _reportType = reportTypeMap(KalturaReportType.playerRelatedInteractions);
   private _dataConfig: ReportDataConfig;
-  private _partnerId = analyticsConfig.pid;
+  private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private subscription: ISubscription = null;
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow<string>[] = [];
@@ -68,7 +76,9 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
               private _pageScrollService: PageScrollService,
               private _errorsManager: ErrorsManagerService,
               private _logger: KalturaLogger,
+              private _authService: AuthService,
               private _browserService: BrowserService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _router: Router,
               private _activatedRoute: ActivatedRoute) {
     super();
@@ -144,7 +154,7 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96?rnd=${Math.random()}`;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/172/height/96`;
       return item;
     };
     this._tableData = tableData.map(extendTableRow).splice(0, 3);
@@ -176,15 +186,10 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id, status } = row;
-
+    const { object_id, status, partner_id } = row;
     if (status === KalturaEntryStatus.ready) {
-      if (analyticsConfig.isHosted) {
-        const params = this._browserService.getCurrentQueryParams('string');
-        this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/entry?id=${object_id}&${params}`);
-      } else {
-        this._router.navigate(['entry', object_id], { queryParams: this._activatedRoute.snapshot.queryParams });
-      }
+      this._navigationDrillDownService.drilldown('entry', object_id, true, partner_id);
     }
   }
+
 }
