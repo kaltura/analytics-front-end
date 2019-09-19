@@ -44,7 +44,6 @@ import { InteractionsTableComponent } from './views/content-interactions/interac
 import { DatesTableComponent } from './views/engagement/highlights/dates-table/dates-table.component';
 import { UsersTableComponent } from './views/engagement/highlights/users-table/users-table.component';
 import { EntriesTableComponent } from './views/engagement/highlights/entries-table/entries-table.component';
-import { EvenTableHeightDirective } from './views/content-interactions/interactions/even-table-height.directive';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 

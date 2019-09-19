@@ -44,7 +44,7 @@ import { TimeSelectorComponent } from './views/live-discovery-chart/time-selecto
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
-  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
+  @ViewChild(TimeSelectorComponent, { static: false }) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
   
   public _isBusy = true;
