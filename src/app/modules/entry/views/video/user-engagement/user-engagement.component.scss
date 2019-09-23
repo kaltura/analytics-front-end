@@ -24,5 +24,7 @@
 }
 
 :host ::ng-deep .ui-autocomplete-input-token input:focus {
-  outline: 5px auto rgba(0, 150, 255, 1) !important;
+  border-radius: 3px;
+  box-shadow: 0 0 4px 1px #6ca2f9;
+  border: solid 1px #6ca2f9;
 }
