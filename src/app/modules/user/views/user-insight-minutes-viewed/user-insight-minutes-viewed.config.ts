@@ -46,6 +46,7 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
         borderWidth: 1,
         extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
         textStyle: { color: '#999999' },
+        confine: true,
         axisPointer: {
           type: compare ? 'shadow' : 'none',
           shadowStyle: {
