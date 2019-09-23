@@ -8,11 +8,13 @@
       <div class="kWeekly">
         <span *ngIf="!_isCompareMode" class="kValue">{{_weeklyMinutes}}</span>
         <span *ngIf="_isCompareMode" class="kTrend" [kTooltip]="_compareWeeklyMinutes?.tooltip" [escape]="false">
-          <app-trend-value valueStyleClass="kValue"
+          <app-trend-value *ngIf="_compareWeeklyMinutes?.value"
+                           valueStyleClass="kValue"
                            unitsStyleClass="kUnits"
                            [value]="_compareWeeklyMinutes?.value"
                            [units]="_compareWeeklyMinutes?.units"
                            [trend]="_compareWeeklyMinutes?.trend"></app-trend-value>
+          <i *ngIf="!_compareWeeklyMinutes?.value" class="kNoTrend icon-minus"></i>
         </span>
         <span class="kLabel">{{'app.user.weeklyAvgViews' | translate}}</span>
       </div>

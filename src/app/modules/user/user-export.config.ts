@@ -61,7 +61,7 @@ export class UserExportConfig extends ExportConfigService {
       {
         label: this._translate.instant('app.user.exportLabels.sources'),
         reportType: reportTypeMap(KalturaReportType.topSources),
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table, KalturaReportExportItemType.graph],
+        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.table],
         ownerId: userId,
       },
     ];
