@@ -91,6 +91,10 @@
 .kTrend {
   display: inline-block;
   margin-bottom: 4px;
+
+  .kNoTrend {
+    font-size: 24px;
+  }
 }
 
 :host /deep/ .kValue{

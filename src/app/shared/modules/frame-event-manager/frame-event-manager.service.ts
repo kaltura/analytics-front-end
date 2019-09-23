@@ -33,7 +33,7 @@ export class FrameEventManagerService implements OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('message', this._windowEventListener);
-    Object.values(this._parentEvents).forEach(event => event.complete());
+    Object.keys(this._parentEvents).forEach(key => this._parentEvents[key].complete());
   }
   
   private _windowEventListener(event: any): void {

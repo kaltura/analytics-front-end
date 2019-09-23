@@ -79,14 +79,16 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
       });
     
     const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_time_viewed'] > current['sum_time_viewed']) ? prev : current);
-    
+  
+    const dataByDay = groupBy(tableData, 'day');
     const graphData = Object
-      .values(groupBy(tableData, 'day'))
-      .map(group => parseFloat(ReportHelper.numberOrZero(group.reduce((acc, val) => acc + val['sum_time_viewed'], 0))));
-    
+      .keys(dataByDay)
+      .map(key => parseFloat(ReportHelper.numberOrZero(dataByDay[key].reduce((acc, val) => acc + val['sum_time_viewed'], 0))));
+  
+    const dataByWeek = groupBy(tableData, 'week');
     const weeklyData = Object
-      .values(groupBy(tableData, 'week'))
-      .map(group => group.reduce((acc, val) => acc + val['sum_time_viewed'], 0));
+      .keys(dataByWeek)
+      .map(key => dataByWeek[key].reduce((acc, val) => acc + val['sum_time_viewed'], 0));
     
     const weeklyAvg = avg(weeklyData);
     

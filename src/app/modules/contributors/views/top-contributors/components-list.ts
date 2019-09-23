@@ -8,6 +8,7 @@ import { ContributorsUsersComponent } from './users/users.component';
 import { TopContributorsComponent } from './top-contributors.component';
 import { ContributorsSourcesComponent } from './sources/sources.component';
 import { ContributorDetailsOverlayComponent } from './top-contributors/contributor-details-overlay/contributor-details-overlay.component';
+import { ContributorsFilterComponent } from './filter/filter.component';
 
 export const topContributorsComponentsList = [
   TopContributorsComponent,
@@ -20,4 +21,5 @@ export const topContributorsComponentsList = [
   ContributorsUsersComponent,
   ContributorsSourcesComponent,
   ContributorDetailsOverlayComponent,
+  ContributorsFilterComponent,
 ];
