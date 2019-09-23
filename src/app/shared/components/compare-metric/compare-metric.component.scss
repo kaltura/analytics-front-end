@@ -36,9 +36,7 @@
 
 :host ::ng-deep {
   .ui-state-focus {
-    border-radius: 3px;
-    box-shadow: 0 0 4px 1px #6ca2f9;
-    border: solid 1px #6ca2f9;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 
   .kCompareMetric {

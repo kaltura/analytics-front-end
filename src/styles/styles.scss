@@ -533,12 +533,9 @@ p-multiselect /deep/ {
   }
 }
 
-button, a, tr, td, th, li, [role=button], [role=link], [role=tab] {
+button, a, tr, td, th, li {
   &:focus {
-    border-radius: 3px;
-    box-shadow: 0 0 4px 1px #6ca2f9;
-    border: solid 1px #6ca2f9;
-    outline: none;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 }
 

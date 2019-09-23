@@ -82,9 +82,7 @@ app-owners-filter, app-category-filter, app-country-filter {
 :host /deep/ {
   .ui-state-focus {
     margin-top: 4px;
-    border-radius: 3px;
-    box-shadow: 0 0 4px 1px #6ca2f9;
-    border: solid 1px #6ca2f9;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 
   app-autocomplete-filter, app-dropdown-filter {
