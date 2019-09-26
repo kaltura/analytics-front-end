@@ -533,7 +533,7 @@ p-multiselect /deep/ {
   }
 }
 
-button, a, tr, td, th, li {
+button, a, tr, td, th, li, [role=button], [role=link], [role=tab] {
   &:focus {
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
