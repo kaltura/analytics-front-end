@@ -356,7 +356,8 @@
         "topVideos": "Top Videos",
         "impressions": "Engagement Funnel",
         "general": "Metrics over time",
-        "syndication": "Top Domains"
+        "syndication": "Top Domains",
+        "users": "User Engagement"
       },
       "highlightsReport": {
         "month_id": "Month",
