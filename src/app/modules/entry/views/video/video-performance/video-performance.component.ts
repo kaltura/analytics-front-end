@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -18,6 +18,8 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
 
 @Component({
   selector: 'app-video-entry-performance',
@@ -25,7 +27,7 @@ import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
   styleUrls: ['./video-performance.component.scss'],
   providers: [VideoPerformanceConfig, ReportService]
 })
-export class VideoEntryPerformanceComponent extends EntryBase {
+export class VideoEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
   
@@ -75,6 +77,8 @@ export class VideoEntryPerformanceComponent extends EntryBase {
 
   public _currentDatePeriod = '';
   public _compareDatePeriod = '';
+  
+  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -86,7 +90,8 @@ export class VideoEntryPerformanceComponent extends EntryBase {
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: VideoPerformanceConfig) {
+              private _dataConfigService: VideoPerformanceConfig,
+              private _browserService: BrowserService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -103,6 +108,24 @@ export class VideoEntryPerformanceComponent extends EntryBase {
       
       this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
     });
+  
+    this._browserService.contrastThemeChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isContrast => this._toggleChartTheme(isContrast));
+  }
+  
+  ngOnDestroy(): void {
+  
+  }
+  
+  private _toggleChartTheme(isContrast: boolean): void {
+    if (this._chart && this._chart.options) {
+      const color = isContrast ? '#333333' : '#999999';
+      this._chart.options.tooltip.textStyle.color = color;
+      this._chart.options.xAxis.axisLabel.color = color;
+      this._chart.options.yAxis.axisLabel.color = color;
+      this._chart.setOption(this._chart.options);
+    }
   }
   
   private _updateTableData(): void {

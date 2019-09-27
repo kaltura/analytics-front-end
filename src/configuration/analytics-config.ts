@@ -31,6 +31,7 @@ export interface AnalyticsConfig {
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  contrastTheme?: boolean;
   menuConfig?: {
     showMenu: boolean;
     items?: MenuItem[];
@@ -105,6 +106,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.kalturaServer = config.kalturaServer;
   analyticsConfig.cdnServers = config.cdnServers;
   analyticsConfig.liveAnalytics = config.liveAnalytics;
+  analyticsConfig.contrastTheme = config.contrastTheme || false;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
   analyticsConfig.isHosted = hosted;
   analyticsConfig.live = config.live || { pollInterval: 30 };

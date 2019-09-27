@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -19,6 +19,8 @@ import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-h
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-image-entry-performance',
@@ -26,9 +28,11 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   styleUrls: ['./image-performance.component.scss'],
   providers: [ImagePerformanceConfig, ReportService]
 })
-export class ImageEntryPerformanceComponent extends EntryBase {
+export class ImageEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
+  
+  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
   
   private _order = '-date_id';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
@@ -87,7 +91,8 @@ export class ImageEntryPerformanceComponent extends EntryBase {
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: ImagePerformanceConfig) {
+              private _dataConfigService: ImagePerformanceConfig,
+              private _browserService: BrowserService) {
     super();
     
     this._dataConfig = _dataConfigService.getConfig();
@@ -104,6 +109,25 @@ export class ImageEntryPerformanceComponent extends EntryBase {
       
       this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
     });
+  
+    this._browserService.contrastThemeChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isContrast => this._toggleChartTheme(isContrast));
+  }
+  
+  ngOnDestroy(): void {
+  
+  }
+  
+  private _toggleChartTheme(isContrast: boolean): void {
+    if (this._chart && this._chart.options) {
+      const color = isContrast ? '#333333' : '#999999';
+      
+      this._chart.options.tooltip.textStyle.color = color;
+      this._chart.options.xAxis.axisLabel.color = color;
+      this._chart.options.yAxis.axisLabel.color = color;
+      this._chart.setOption(this._chart.options);
+    }
   }
   
   private _updateTableData(): void {

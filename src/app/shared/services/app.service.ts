@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/analytics-config';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -14,12 +14,11 @@ import { mapRoutes } from 'configuration/host-routing-mapping';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 import { AuthService } from 'shared/services/auth.service';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class AppService implements OnDestroy {
   private _permissionsLoaded = new BehaviorSubject<boolean>(false);
-  private _renderer: Renderer2;
   
   public readonly permissionsLoaded$ = this._permissionsLoaded.asObservable();
   public confirmDialogAlignLeft = false;
@@ -38,11 +37,8 @@ export class AppService implements OnDestroy {
               private _location: Location,
               private _authService: AuthService,
               private _permissionsService: AnalyticsPermissionsService,
-              private _frameEventManager: FrameEventManagerService,
-              private _rendererFactory: RendererFactory2,
-              @Inject(DOCUMENT) private _document) {
+              private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
-    this._renderer = _rendererFactory.createRenderer(null, null);
   }
   
   ngOnDestroy(): void {
@@ -55,7 +51,7 @@ export class AppService implements OnDestroy {
     
     delete analyticsConfig.ks;
     delete analyticsConfig.pid;
-
+    
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
@@ -104,34 +100,34 @@ export class AppService implements OnDestroy {
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(config => setConfig(config, true));
-  
+    
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ url, queryParams, prevRoute }) => {
-      
+        
         // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
         const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1 && url.indexOf('/analytics/entry-live') === -1);
         if (needToRestoreParent) {
           this._authService.restoreParentIfNeeded();
         }
-      
+        
         this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute));
       });
     
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
-  
+    
     this._frameEventManager.listen(FrameEvents.UpdateMultiAccount)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ multiAccount }) => {
         this._updateMultiAccount(multiAccount, true);
       });
-  
+    
     this._frameEventManager.listen(FrameEvents.ToggleContrastTheme)
       .pipe(cancelOnDestroy(this), skip(1))
       .subscribe(() => {
-        this._toggleContrastTheme();
+        this._browserService.toggleContrastTheme();
       });
     
     // load localization
@@ -144,6 +140,9 @@ export class AppService implements OnDestroy {
           this._logger.info(`Permissions and localization loaded successfully for locale: ${analyticsConfig.locale}`);
           if (analyticsConfig.isHosted) {
             this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
+          }
+          if (analyticsConfig.contrastTheme) {
+            this._browserService.toggleContrastTheme();
           }
         },
         (error) => {
@@ -210,13 +209,13 @@ export class AppService implements OnDestroy {
         this._router.navigate([decodeURI(this._location.path())]);
       });
     };
-  
+    
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
     }
-  
+    
     if (needToReload) {
       if (showMultiAccount) {
         refresh();
@@ -231,16 +230,6 @@ export class AppService implements OnDestroy {
           refresh();
         }
       }
-    }
-  }
-  
-  private _toggleContrastTheme(): void {
-    const themeClass = 'kHighContrast';
-    const body = this._document.body;
-    if (body.classList.contains(themeClass)) {
-      this._renderer.removeClass(body, themeClass);
-    } else {
-      this._renderer.addClass(body, themeClass);
     }
   }
 }

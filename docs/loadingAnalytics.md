@@ -48,6 +48,7 @@ liveAnalytics?: { // configuration of the legacy live analytics app, is displaye
 ks: string, // partner's ks
 pid: number, // partner id
 multiAccount: boolean, // notifies the analytics app that current session is running under multi-accont mode, all report types will be switched to ones that support multiaccount
+contrastTheme: boolean, // toggle contrast theme (currently supported in the entry drill-down only)
 locale: string, // locale code, currently only "en" translation is supported by analytics app
 dateFormat?: 'month-day-year' | 'day-month-year', // style of date format, currently support only "mdy" and "dmy" formats
 live?: { // configuration of the live module

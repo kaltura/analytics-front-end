@@ -87,3 +87,8 @@
   }
 }
 
+.kHighContrast :host {
+  .kCompareDates {
+    color: $kGrayscale1 !important;
+  }
+}

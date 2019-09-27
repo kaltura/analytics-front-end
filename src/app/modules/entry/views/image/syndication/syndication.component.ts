@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -26,6 +26,8 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
 
 @Component({
   selector: 'app-image-syndication',
@@ -37,7 +39,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
     SyndicationDataConfig,
   ]
 })
-export class ImageSyndicationComponent {
+export class ImageSyndicationComponent implements OnDestroy {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
       this._dateFilter = value;
@@ -93,6 +95,8 @@ export class ImageSyndicationComponent {
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
   public _distributionColorScheme: string;
   
+  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
+  
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
@@ -100,11 +104,29 @@ export class ImageSyndicationComponent {
               private _authService: AuthService,
               private _compareService: CompareService,
               private _dataConfigService: SyndicationDataConfig,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _browserService: BrowserService) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._browserService.contrastThemeChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isContrast => this._toggleChartTheme(isContrast));
   }
   
+  ngOnDestroy(): void {
+  
+  }
+  
+  private _toggleChartTheme(isContrast: boolean): void {
+    if (this._chart && this._chart.options) {
+      const color = isContrast ? '#333333' : '#999999';
+      
+      this._chart.options.tooltip.textStyle.color = color;
+      this._chart.options.xAxis.axisLabel.color = color;
+      this._chart.options.yAxis.axisLabel.color = color;
+      this._chart.setOption(this._chart.options);
+    }
+  }
   
   private _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;

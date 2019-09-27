@@ -187,7 +187,7 @@
 }
 
 .kHighContrast :host {
-  .kEntryDetails {
+  .kEntryDetails, .kBackBtn {
     color: $kGrayscale1;
   }
 }
