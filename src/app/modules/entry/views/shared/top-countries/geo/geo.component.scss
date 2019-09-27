@@ -32,7 +32,7 @@
   height: 24px;
 }
 
-.kFlagColumn{
+.kFlagColumn {
   padding-left: 18px !important;
 }
 
@@ -52,11 +52,12 @@
     flex: 1;
   }
 }
+
 @media (max-width: 991px) {
   .kTopCountries.kDefaultMode {
     flex-direction: column-reverse !important;
   }
-  .kTopCountries.kCompareMode .kMap{
+  .kTopCountries.kCompareMode .kMap {
     display: none;
     width: 0px;
     height: 0px;
@@ -64,7 +65,7 @@
     top: -100px;
     left: -100px;
   }
-  ::ng-deep k-area-blocker{
+  ::ng-deep k-area-blocker {
     flex-direction: column;
   }
   ::ng-deep .ui-table thead {
@@ -77,27 +78,33 @@
     flex: 0 0 auto !important;
   }
 }
-.kMap{
+
+.kMap {
   position: relative;
-  .kChart{
+
+  .kChart {
     width: 100%;
     height: 268px;
     margin-bottom: 24px;
   }
-  .kZoomWidget{
+
+  .kZoomWidget {
     position: absolute;
     right: 24px;
     bottom: 12px;
-    button{
+
+    button {
       width: 42px;
       height: 34px;
     }
-    .kZoomInBtn{
+
+    .kZoomInBtn {
       border-left: none;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
-    .kZoomOutBtn{
+
+    .kZoomOutBtn {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
@@ -107,4 +114,24 @@
 .emptymessage, .kEmptyMessage {
   border: none;
   font-size: 15px;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .kEmptyMessage {
+    color: $kGrayscale1 !important;
+  }
+
+  ::ng-deep {
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
 }

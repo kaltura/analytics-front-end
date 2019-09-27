@@ -14,13 +14,15 @@
 }
 
 .kIconfile-small {
-  font-size: 24px;
+  overflow: visible !important;
+  margin-top: 8px;
 }
 
 .kOpenLink {
   color: $kGrayscale3;
   font-size: 24px;
   cursor: pointer;
+  text-decoration: none !important;
 }
 
 .kDomainIcon {
@@ -59,4 +61,41 @@ td span {
 .kTitle{
   width: auto !important;
   padding-right: 0px !important;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    &.ui-state-highlight span {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .kOpenLink, .kBreadcrumbsLink {
+    color: $kGrayscale1 !important;
+  }
+
+  ::ng-deep {
+    .kTabTitle {
+      color: $kGrayscale1 !important;
+    }
+
+    .kUnits {
+      color: $kGrayscale1 !important;
+    }
+
+    p-selectButton .ui-state-active {
+      background-color: #00866a !important;
+      border: 1px solid #00866a !important;
+    }
+
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
 }

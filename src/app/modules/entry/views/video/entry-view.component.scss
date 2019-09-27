@@ -186,3 +186,9 @@
   }
 }
 
+.kHighContrast :host {
+  .kEntryDetails {
+    color: $kGrayscale1;
+  }
+}
+

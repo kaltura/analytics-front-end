@@ -76,7 +76,7 @@
   }
 }
 
-:host /deep/ .kTableModeSelector {
+:host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 172px !important;
   }
@@ -93,6 +93,31 @@
       position: absolute;
       right: 3px;
       top: 9px;
+    }
+  }
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    &.ui-state-highlight span {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  ::ng-deep {
+    .kTabTitle {
+      color: $kGrayscale1 !important;
+    }
+
+    p-selectButton .ui-state-active {
+      background-color: #00866a !important;
+      border: 1px solid #00866a !important;
     }
   }
 }

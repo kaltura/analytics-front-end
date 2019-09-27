@@ -6,6 +6,7 @@
     </kInputHelper>
     <div class="kBreadcrumbs" *ngIf="_drillDown">
       <a tabindex="0"
+         class="kBreadcrumbsLink"
          (click)="_onDrillDown(null)"
          (keydown.enter)="_onDrillDown(null)">
         {{'app.engagement.topDomainsReport.topDomains' | translate}}
@@ -78,10 +79,10 @@
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('kIconfile-small')">
                   </div>
-                  <a *ngIf="_drillDown" tabindex="0"
+                  <a *ngIf="_drillDown" tabindex="0" class="kOpenLink"
                      (click)="_openLink(data)"
                      (keydown.enter)="_openLink(data)">
-                    <i *ngIf="_drillDown" class="kIconexternal_link kOpenLink"
+                    <i *ngIf="_drillDown" class="kIconexternal_link"
                        [kTooltip]="'app.engagement.topDomainsReport.openLink' | translate"></i>
                   </a>
                 </td>
