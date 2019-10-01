@@ -11,4 +11,12 @@
   /deep/ .expandWidth .ui-multiselect {
     width: 432px !important;
   }
+
+  .label-addition {
+    display: inline-flex;
+
+    ::ng-deep .kIconhelpLink {
+      z-index: 0 !important;
+    }
+  }
 }

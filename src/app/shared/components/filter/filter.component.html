@@ -50,6 +50,7 @@
           </div>
           <div class="kListFilters">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
+                                  [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"
                                   [selectedFilters]="_selectedValues['location']"
                                   (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
