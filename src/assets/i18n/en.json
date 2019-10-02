@@ -31,7 +31,8 @@
         "Upload": "Upload",
         "Webcasting": "Webcasting",
         "Kaltura Capture": "Capture",
-        "Classroom Capture": "Classroom"
+        "Classroom Capture": "Classroom",
+        "Kaltura Webcast": "Kaltura Webcast"
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",
