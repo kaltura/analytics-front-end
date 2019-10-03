@@ -29,18 +29,18 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class UserInsightSourceComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+
   protected _componentId = 'insight-top-sources';
   private _dataConfig: ReportDataConfig;
   private _reportType = reportTypeMap(KalturaReportType.topSources);
   private _order = '-count_plays';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _topSourceLabel = '';
   public _compareTopSourceLabel = '';
   public _reportInterval = KalturaReportInterval.days;
-  public _pager = new KalturaFilterPager({ pageSize: 3, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _bulletValues: InsightsBulletValue[] = [];
   public _compareBulletValues: InsightsBulletValue[] = [];
@@ -48,11 +48,11 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
   public _compareDates: string;
   public _colors = getColorsBetween(getColorPalette()[0], getColorPalette()[7], 2);
   public _compareFilter: KalturaEndUserReportInputFilter = null;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -61,14 +61,14 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-  
+
     this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
@@ -76,10 +76,10 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-      
+
         this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
-      
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -108,7 +108,7 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -124,21 +124,21 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-  
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _getTopSource(tableData: TableRow[]): { totalEntries: number, topEntries: number, label: string } {
     let totalEntriesCount = 0;
     let topEntriesCount = 0;
     let topLabel = '';
-    
+
     tableData.forEach(data => {
       const addedEntries = parseInt(data.added_entries);
       totalEntriesCount += addedEntries;
@@ -147,24 +147,24 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
         topLabel = data.source;
       }
     });
-    
+
     return {
       totalEntries: totalEntriesCount,
       topEntries: topEntriesCount,
       label: topLabel,
     };
   }
-  
+
   private _handleTable(table: KalturaReportTable, compare?: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     if (tableData) {
       const { totalEntries, topEntries, label } = this._getTopSource(tableData);
       this._topSourceLabel = label;
       this._bulletValues = [
-        { value: totalEntries, label: this._topSourceLabel },
+        { value: topEntries, label: this._topSourceLabel },
         { value: totalEntries - topEntries, label: this._translate.instant('app.contributors.others') },
       ];
-      
+
       if (compare && compare.data && compare.header) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
         const {
@@ -172,20 +172,20 @@ export class UserInsightSourceComponent extends UserBase implements OnDestroy {
           topEntries: compareTopEntries,
           label: compareLabel
         } = this._getTopSource(compareTableData);
-        
+
         this._compareTopSourceLabel = compareLabel;
         this._compareBulletValues = [
-          { value: compareTotalEntries, label: this._compareTopSourceLabel },
+          { value: compareTopEntries, label: this._compareTopSourceLabel },
           { value: compareTotalEntries - compareTopEntries, label: this._translate.instant('app.contributors.others') },
         ];
-        
+
       } else {
         this._currentDates = null;
         this._compareDates = null;
       }
     }
   }
-  
+
   public _updateColors(colors: string[]): void {
     this._colors = colors;
   }
