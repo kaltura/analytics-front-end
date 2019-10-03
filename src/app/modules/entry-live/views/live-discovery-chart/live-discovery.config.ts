@@ -17,6 +17,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
         return 'avg_view_dvr';
       case 'view_unique_engaged_users':
         return 'avg_view_engagement';
+      case 'none':
+        return null;
       default:
         return metric;
     }
