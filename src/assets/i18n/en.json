@@ -476,6 +476,7 @@
         "title": "Active Users Per Devices"
       },
       "discovery": {
+        "none": "None",
         "title": "Explore",
         "vs": "vs",
         "pauseUpdates": "Pause Updates",
