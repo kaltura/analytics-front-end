@@ -75,7 +75,7 @@
           &:hover{
             background-color: $kGrayscale6;
           }
-          /deep/ .ui-radiobutton{
+          ::ng-deep .ui-radiobutton{
             float: right;
             margin-right: 16px;
 
@@ -94,7 +94,7 @@
               }
             }
           }
-          /deep/ .ui-radiobutton-label{
+          ::ng-deep .ui-radiobutton-label{
             font-weight: normal;
             margin-left: 24px;
             display: block;
@@ -113,7 +113,7 @@
       display: flex;
       justify-content: center;
       p-calendar{
-        /deep/ .ui-calendar .ui-datepicker{
+        ::ng-deep .ui-calendar .ui-datepicker{
           width: 380px;
           .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
             background-color: $kPrimary;
@@ -128,12 +128,12 @@
     padding-top: 20px;
     padding-bottom: 20px;
     justify-content: center;
-    /deep/ p-selectbutton .ui-button{
+    ::ng-deep p-selectbutton .ui-button{
       min-width: 190px;
     }
   }
   .kCompare{
-    /deep/ .ui-chkbox-label{
+    ::ng-deep .ui-chkbox-label{
       font-weight: normal;
     }
     display: flex;
@@ -143,7 +143,7 @@
     p-radiobutton{
       margin-top: 12px;
       margin-left: 24px;
-      /deep/ .ui-radiobutton-label{
+      ::ng-deep .ui-radiobutton-label{
         font-weight: normal;
       }
     }

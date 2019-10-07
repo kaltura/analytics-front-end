@@ -6,14 +6,13 @@
 </k-area-blocker>
 
 <p-confirmDialog #confirm
-                 header="Confirmation"
-                 width="440"
-                 [key]="'confirm'"
-                 [closeOnEscape]="false"
-                 [responsive]="true"
-                 [class.kAlignToLeft]="_appService.confirmDialogAlignLeft"
-                 [acceptLabel]="_appService.confirmationLabels.yes"
-                 [rejectLabel]="_appService.confirmationLabels.no"></p-confirmDialog>
+                header="Confirmation"
+                width="440"
+                [key]="'confirm'"
+                [closeOnEscape]="false"
+                [class.kAlignToLeft]="_appService.confirmDialogAlignLeft"
+                [acceptLabel]="_appService.confirmationLabels.yes"
+                [rejectLabel]="_appService.confirmationLabels.no"></p-confirmDialog>
 
 <p-confirmDialog #alert
                  header="Alert"

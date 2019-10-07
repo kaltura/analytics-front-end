@@ -7,7 +7,7 @@ import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { getCountryName } from 'shared/utils/get-country-name';
 import { TopCountriesConfig } from '../top-countries.config';
-import { DataTable } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
@@ -37,7 +37,7 @@ export class GeoComponent {
   
   @Output() onDrillDown = new EventEmitter<{ drillDown: string[], reload: boolean }>();
   
-  @ViewChild('table') _table: DataTable;
+  @ViewChild('table', { static: false }) _table: Table;
   
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;

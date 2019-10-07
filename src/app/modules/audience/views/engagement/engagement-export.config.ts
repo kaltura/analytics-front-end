@@ -31,6 +31,12 @@ export class EngagementExportConfig extends ExportConfigService {
         order: '-date_id',
       },
       {
+        label: this._translate.instant('app.engagement.exportLabels.users'),
+        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
+      },
+      {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),
         reportType: reportTypeMap(KalturaReportType.contentDropoff),
         sections: [KalturaReportExportItemType.total],

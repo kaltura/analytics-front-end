@@ -53,6 +53,6 @@
   }
 }
 
-:host /deep/ .ui-table .ui-widget-header.ui-table-scrollable-header {
+:host ::ng-deep .ui-table .ui-widget-header.ui-table-scrollable-header {
   height: 64px;
 }

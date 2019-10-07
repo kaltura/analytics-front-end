@@ -9,11 +9,11 @@ const routes: Routes = [
     children: [
       {
         path: 'entry/:id',
-        loadChildren: '../modules/entry/entry.module#EntryModule'
+        loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
         path: 'entry',
-        loadChildren: '../modules/entry/entry.module#EntryModule'
+        loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
         path: 'user/:id',
@@ -25,27 +25,27 @@ const routes: Routes = [
       },
       {
         path: 'entry-live/:id',
-        loadChildren: '../modules/entry-live/entry-live.module#EntryLiveModule'
+        loadChildren: () => import('../modules/entry-live/entry-live.module').then(m => m.EntryLiveModule)
       },
       {
         path: 'entry-live',
-        loadChildren: '../modules/entry-live/entry-live.module#EntryLiveModule'
+        loadChildren: () => import('../modules/entry-live/entry-live.module').then(m => m.EntryLiveModule)
       },
       {
         path: 'audience',
-        loadChildren: '../modules/audience/audience.module#AudienceModule'
+        loadChildren: () => import('../modules/audience/audience.module').then(m => m.AudienceModule)
       },
       {
         path: 'contributors',
-        loadChildren: '../modules/contributors/contributors.module#ContributorsModule'
+        loadChildren: () => import('../modules/contributors/contributors.module').then(m => m.ContributorsModule)
       },
       {
         path: 'bandwidth',
-        loadChildren: '../modules/bandwidth/bandwidth.module#BandwidthModule'
+        loadChildren: () => import('../modules/bandwidth/bandwidth.module').then(m => m.BandwidthModule)
       },
       {
         path: 'live',
-        loadChildren: '../modules/live/live.module#LiveModule'
+        loadChildren: () => import('../modules/live/live.module').then(m => m.LiveModule)
       }
     ]
   }

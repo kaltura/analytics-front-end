@@ -24,8 +24,7 @@ import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   @Output() dateFilterChange = new EventEmitter<DateFiltersChangedEvent>();
-  @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
-  
+  @ViewChild(DiscoveryChartComponent, { static: false }) _discoveryChart: DiscoveryChartComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveDiscoveryData;
@@ -35,7 +34,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _isPolling: boolean;
   public _pollingBtnDisabled = false;
   public _rangeLabel: string;
-  
+
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _liveGeoWidget: LiveGeoWidget,
@@ -46,23 +45,23 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
     this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
   }
-  
+
   ngOnInit() {
     this._liveExploreWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
         this._isPolling = state.polling;
         this._isBusy = state.isBusy;
-        
+
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             }
           };
-          
+
           if (state.error.code === 'kmc-server_polls_global_error') {
-            state.error.message = this._translate.instant('app.entryLive.generalErrorMessage');
+            state.error.message = state.error.message && state.error.message.indexOf('result limit is') === 0 ? this._translate.instant('app.entryLive.generalErrorMessage') : state.error.message;
           } else {
             actions['retry'] = () => {
               this._liveExploreWidget.retry();
@@ -71,22 +70,22 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._liveExploreWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryData) => {
         this._data = data;
       });
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     this._pollingBtnDisabled = !event.isPresetMode;
     this._rangeLabel = event.rangeLabel;
-    
+
     if (!event.initialRun) {
       this._discoveryChart.resetDataZoom();
       this._liveExploreWidget.updateFilters(event);
@@ -94,17 +93,17 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveDevicesWidget.updateFilters(event);
       this._liveGeoWidget.updateFilters(event);
     }
-    
+
     this.dateFilterChange.emit(event);
   }
-  
+
   public _onMetricsSelectorChange(event: MetricsSelectorChangeEvent): void {
     this._selectedMetrics = event.selected;
     if (!event.initialRun && this._discoveryChart) {
       this._discoveryChart.displayMetrics(this._selectedMetrics);
     }
   }
-  
+
   public _onTogglePolling(): void {
     if (this._isPolling) {
       this._liveExploreWidget.stopPolling();
@@ -113,6 +112,6 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveExploreWidget.startPolling();
       this._liveDiscoveryTable.startPolling();
     }
-    
+
   }
 }

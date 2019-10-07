@@ -191,7 +191,9 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       };
       
       if (devicesTotalData !== null) {
-        const topTableData = devicesTable.tableData.sort((a, b) => parseInt(b['count_plays'], 10) - parseInt(a['count_plays'], 10));
+        const topTableData = devicesTable.tableData
+          .filter(item => parseInt(item['count_plays'], 10) > 0)
+          .sort((a, b) => parseInt(b['count_plays'], 10) - parseInt(a['count_plays'], 10));
         if (topTableData.length > 2) {
           const [first, second, ...rest] = topTableData;
           const other = rest.reduce((acc, val) => acc + parseInt(val['count_plays'], 10), 0);

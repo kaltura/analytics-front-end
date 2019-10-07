@@ -27,7 +27,7 @@ export class UsersFilterComponent implements OnDestroy {
   }
   @Output() itemSelected = new EventEmitter();
   
-  @ViewChild('searchUsers') _autoComplete: AutoComplete = null;
+  @ViewChild('searchUsers', { static: false }) _autoComplete: AutoComplete = null;
   
   private _selectedUsers: KalturaUser[] = [];
   private _searchUsersSubscription: Unsubscribable;

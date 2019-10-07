@@ -16,7 +16,7 @@ import { getCountryName } from 'shared/utils/get-country-name';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { canDrillDown } from 'shared/utils/can-drill-down-country';
-import { DataTable } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
@@ -36,7 +36,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       this._entry = value;
     }
   }
-  @ViewChild('table') _table: DataTable;
+  @ViewChild('table', { static: false }) _table: Table;
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   
   private _dataConfig: ReportDataConfig;

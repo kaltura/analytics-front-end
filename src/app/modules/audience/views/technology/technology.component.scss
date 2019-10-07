@@ -1,7 +1,7 @@
 :host {
   width: 100%;
 
-  /deep/ .kChart {
+  ::ng-deep .kChart {
     padding-top: 10px;
   }
 }

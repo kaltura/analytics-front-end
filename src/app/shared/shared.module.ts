@@ -43,7 +43,6 @@ import { CheckboxesListFilterComponent } from 'shared/components/checkboxes-list
 import { CategoryFilterComponent } from 'shared/components/category-filter/category-filter.component';
 import { CategoriesSelectorComponent } from 'shared/components/category-filter/category-selector/categories-selector.component';
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
-import { DropdownModule, MultiSelectModule, PaginatorModule } from 'primeng/primeng';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { components as FilterComponentsList } from 'shared/components/filter/components-list';
@@ -64,6 +63,9 @@ import { UserEngagementUsersFilterComponent } from 'shared/components/user-engag
 import { EvenTableHeightDirective } from 'shared/directives/even-table-height.directive';
 import { HeatMapComponent } from 'shared/components/heat-map/heat-map.component';
 import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   imports: [

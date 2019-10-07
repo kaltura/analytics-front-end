@@ -28,7 +28,7 @@ export class TopContentTableComponent implements OnDestroy {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
@@ -84,7 +84,7 @@ export class TopContentTableComponent implements OnDestroy {
   
   public _drillDown({ object_id: entryId, status, partner_id: partnerId }: { object_id: string, status: string, partner_id: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
     }
   }
 }

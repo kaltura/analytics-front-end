@@ -34,7 +34,6 @@ import { LiveDevicesComponent } from './views/live-devices/live-devices.componen
 import { LiveDevicesConfig } from './views/live-devices/live-devices.config';
 import { LiveDiscoveryComponent } from './views/live-discovery-chart/live-discovery.component';
 import { EntryLiveDiscoveryPollsService } from './providers/entry-live-discovery-polls.service';
-import { CalendarModule, RadioButtonModule, SelectButtonModule } from 'primeng/primeng';
 import { FiltersComponent } from './views/live-discovery-chart/filters/filters.component';
 import { FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { LiveDiscoveryConfig } from './views/live-discovery-chart/live-discovery.config';
@@ -56,6 +55,9 @@ import { LiveDiscoveryUsersStatusConfig } from './views/live-discovery-table/use
 import { StatusBulletComponent } from './views/live-discovery-table/users-table/status-bullet/status-bullet.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
 import { ToggleLiveComponent } from './components/toggle-live/toggle-live.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   imports: [

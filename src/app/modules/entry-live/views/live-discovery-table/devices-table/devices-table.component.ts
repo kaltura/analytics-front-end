@@ -4,7 +4,7 @@ import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableWidget } from '../live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from '../table-config';
-import { DataTable } from 'primeng/primeng';
+import { Table } from 'primeng/table';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -18,7 +18,7 @@ export class DevicesTableComponent implements OnDestroy {
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
   
-  @ViewChild('table') _table: DataTable;
+  @ViewChild('table', { static: false }) _table: Table;
   
   public _pageSize = liveDiscoveryTablePageSize;
   

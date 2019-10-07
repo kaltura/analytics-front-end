@@ -70,7 +70,7 @@
     width: 100%;
     margin-left: 0;
 
-    /deep/ .kTags {
+    ::ng-deep .kTags {
       width: auto;
       padding: 7px;
     }
@@ -83,7 +83,7 @@ app-tags-filter, app-category-filter, app-country-filter {
   padding-right: 24px;
 }
 
-:host /deep/ {
+:host ::ng-deep {
   app-autocomplete-filter, app-dropdown-filter {
     margin: 0;
   }
