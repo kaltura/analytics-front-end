@@ -2,6 +2,7 @@
   <div class="kColumnLabel">
     {{label}}&nbsp;
     <h5 class="mini-loader" *ngIf="isLoading"><span></span><span></span></h5>
+    <ng-content *ngIf="!isLoading" select=".label-addition"></ng-content>
   </div>
   <div class="kColumnContent">
     <p-multiSelect appendTo="body"

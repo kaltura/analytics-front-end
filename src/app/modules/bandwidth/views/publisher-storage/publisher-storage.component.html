@@ -20,6 +20,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="engagement"
+                       [locationFiltersWarning]="'app.bandwidth.locationFiltersWarning' | translate"
                        [showAutocompleteGroup]="false"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"

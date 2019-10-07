@@ -21,6 +21,7 @@ export interface LocationsFilterValue {
 })
 export class LocationFilterComponent implements OnDestroy {
   @Input() expandWidth = false;
+  @Input() filterWarning: string;
 
   @Input() set selectedFilters(value: LocationsFilterValue[]) {
     if (Array.isArray(value) && value.length) {

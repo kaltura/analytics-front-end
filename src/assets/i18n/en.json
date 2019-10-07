@@ -179,6 +179,7 @@
       }
     },
     "bandwidth": {
+      "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
       "allUsers": "All Users",
       "title": "Publisher Bandwidth & Storage Report",
