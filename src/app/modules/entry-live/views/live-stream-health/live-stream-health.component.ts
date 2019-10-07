@@ -44,7 +44,9 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._data = this._parseData(data);
-        this._listContainer.scrollToTop();
+        if (this._listContainer) {
+          this._listContainer.scrollToTop();
+        }
       });
   }
 
