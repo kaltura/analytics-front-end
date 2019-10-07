@@ -28,18 +28,18 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'view_unique_buffering_users': {
-            format: value => Math.round(value),
-            colors: ['#e1962e'],
-            graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.numberOrZero(value)}`,
-            sortOrder: 1,
-          },
           'view_unique_audience': {
             format: value => Math.round(value),
             colors: ['#31bea6'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
+            sortOrder: 1,
+          },
+          'view_unique_buffering_users': {
+            format: value => Math.round(value),
+            colors: ['#e1962e'],
+            graphType: GraphType.line,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 2,
           },
           'view_unique_audience_dvr': {
