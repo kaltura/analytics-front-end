@@ -3,7 +3,7 @@
   height: auto !important;
   padding: 24px;
 
-  /deep/ .ui-button .ui-button-text {
+  ::ng-deep .ui-button .ui-button-text {
     white-space: nowrap;
   }
 }

@@ -169,7 +169,7 @@
 }
 
 /* Player overrides start */
-:host /deep/ #kaltura_player_analytics {
+:host ::ng-deep #kaltura_player_analytics {
   width: 100% !important;
   height: 100% !important;
 }

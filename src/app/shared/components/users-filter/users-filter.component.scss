@@ -16,7 +16,7 @@
   }
 }
 .hideLabels{
-  kautocomplete /deep/ {
+  kautocomplete ::ng-deep {
     .ui-autocomplete-multiple-container {
       padding: 4px;
       padding-left: 8px;

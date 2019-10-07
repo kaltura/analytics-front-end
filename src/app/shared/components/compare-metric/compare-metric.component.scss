@@ -34,7 +34,7 @@
   }
 }
 
-:host /deep/ .kCompareMetric {
+:host ::ng-deep .kCompareMetric {
   .ui-dropdown {
     width: 200px !important;
   }

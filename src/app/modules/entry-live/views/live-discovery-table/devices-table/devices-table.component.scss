@@ -5,7 +5,7 @@
   color: $kGrayscale3;
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-table-wrapper {
     min-height: 224px;
   }
@@ -22,7 +22,7 @@
   }
 }
 
-.kNoData /deep/ thead {
+.kNoData ::ng-deep thead {
   border-top: none !important;
 }
 

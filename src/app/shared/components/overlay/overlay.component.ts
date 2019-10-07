@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
-import { DomHandler, OverlayPanel } from 'primeng/primeng';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { DomHandler } from 'primeng/components/dom/domhandler';
 
 @Component({
   selector: 'k-overlayPanel',

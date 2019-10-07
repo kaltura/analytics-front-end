@@ -19,7 +19,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   ]
 })
 export class TechnologyComponent implements OnInit {
-  @ViewChild('overview') _overview: DevicesOverviewComponent;
+  @ViewChild('overview', { static: false }) _overview: DevicesOverviewComponent;
 
   public _selectedMetric: string;
   public _dateRange = DateRanges.Last30D;

@@ -1,6 +1,6 @@
 @import '../../../../../../styles/variables';
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-table-wrapper {
     min-height: 224px;
   }

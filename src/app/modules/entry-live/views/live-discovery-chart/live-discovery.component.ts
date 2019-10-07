@@ -24,8 +24,7 @@ import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   @Output() dateFilterChange = new EventEmitter<DateFiltersChangedEvent>();
-  @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
-
+  @ViewChild(DiscoveryChartComponent, { static: false }) _discoveryChart: DiscoveryChartComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveDiscoveryData;

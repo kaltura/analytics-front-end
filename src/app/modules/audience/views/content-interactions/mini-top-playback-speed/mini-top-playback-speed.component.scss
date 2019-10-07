@@ -1,11 +1,11 @@
 @import '../../../../../../styles/variables';
 
-:host /deep/ .kValue {
+:host ::ng-deep .kValue {
   font-size: 24px;
   font-weight: 700;
 }
 
-:host /deep/ .kUnits {
+:host ::ng-deep .kUnits {
   font-size: 13px;
   font-weight: 700;
 }

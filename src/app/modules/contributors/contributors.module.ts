@@ -15,7 +15,9 @@ import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule, InputH
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { topContributorsComponentsList } from './views/top-contributors/components-list';
-import { CheckboxModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
+import { CheckboxModule } from 'primeng/checkbox';
+import { PaginatorModule } from 'primeng/paginator';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   imports: [

@@ -13,7 +13,7 @@
 .kDevicesOverview {
   margin-bottom: 10px;
 
-  /deep/ {
+  ::ng-deep {
     .kTable {
       min-height: auto !important;
     }

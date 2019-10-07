@@ -21,14 +21,14 @@
     width: 100%;
     margin-left: 0;
 
-    /deep/ .kTags {
+    ::ng-deep .kTags {
       width: auto;
       padding: 0 8px 0 16px;
     }
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-autocomplete-multiple-container {
     width: 200px !important;
     min-height: 34px;

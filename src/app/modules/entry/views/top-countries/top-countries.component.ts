@@ -32,8 +32,8 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class TopCountriesComponent extends EntryBase implements OnInit, OnDestroy {
   @Input() entryId = '';
   
-  @ViewChild('entryGeo') _entryGeo: GeoComponent;
-  @ViewChild('entryCompareGeo') _entryCompareGeo: GeoComponent;
+  @ViewChild('entryGeo', { static: false }) _entryGeo: GeoComponent;
+  @ViewChild('entryCompareGeo', { static: false }) _entryCompareGeo: GeoComponent;
 
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   

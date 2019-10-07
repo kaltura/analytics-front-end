@@ -16,12 +16,12 @@
     margin-bottom: 12px;
   }
 
-  /deep/ .ui-autocomplete {
+  ::ng-deep .ui-autocomplete {
     width: 100%;
   }
 }
 
-:host /deep/ kautocomplete {
+:host ::ng-deep kautocomplete {
   .ui-autocomplete-multiple-container {
     height: auto !important;
   }

@@ -22,7 +22,7 @@
   }
 }
 
-:host /deep/ .kMetricsSelector {
+:host ::ng-deep .kMetricsSelector {
   .ui-dropdown-panel {
     width: 240px !important;
   }
