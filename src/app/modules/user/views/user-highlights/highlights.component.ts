@@ -372,7 +372,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   public _drillDown(row: TableRow<string>): void {
     const { object_id: entryId, status, partner_id: partnerId } = row;
     if (status === '') {
-      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
     }
   }
 }

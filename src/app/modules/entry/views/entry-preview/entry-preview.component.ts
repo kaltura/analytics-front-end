@@ -247,10 +247,6 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
     }
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
 
     this._reportService.getReport(reportConfig, sections)
@@ -258,52 +254,52 @@ export class EntryPreviewComponent extends EntryBase implements OnInit {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
-        if (compareReportConfig['objectIds__null']) {
-          delete compareReportConfig['objectIds__null'];
+  
+        if (this.entryId) {
+          this._compareFilter.entryIdIn = this.entryId;
         }
-        compareReportConfig.objectIds = this.entryId;
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-
+          
           if (this._isCompareMode) {
             const dateFormat = 'MMM DD YYYY';
             this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
             this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
           }
-
+          
+          const emptyLine = Array.from({ length: 100 }, () => 0);
+          let yAxisData1 = [];
+          let yAxisData2 = [];
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
-            const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
-            const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
-
-            if (compare && compare.table) {
-              let compareYAxisData1 = [];
-              let compareYAxisData2 = [];
-              if (compare.table.header && compare.table.data) {
-                const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]);
-                compareYAxisData1 = this._getAxisData(compareTableData, 'count_viewers');
-                compareYAxisData2 = this._getAxisData(compareTableData, 'unique_known_users');
-              } else {
-                compareYAxisData1 = Array.from({ length: 100 }, () => 0);
-                compareYAxisData2 = Array.from({ length: 100 }, () => 0);
-              }
-              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
-            } else {
-              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
-            }
+            yAxisData1 = this._getAxisData(tableData, 'count_viewers');
+            yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
           } else {
-            const emptyLine = Array.from({ length: 100 }, () => 0);
-            this._chartOptions = this._isCompareMode
-              ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
-              : this._getGraphData(emptyLine, emptyLine);
+            yAxisData1 = emptyLine;
+            yAxisData2 = emptyLine;
           }
-
+          
+          let compareYAxisData1 = [];
+          let compareYAxisData2 = [];
+          if (compare && compare.table && compare.table.header && compare.table.data) {
+            const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]);
+            compareYAxisData1 = this._getAxisData(compareTableData, 'count_viewers');
+            compareYAxisData2 = this._getAxisData(compareTableData, 'unique_known_users');
+          } else {
+            compareYAxisData1 = emptyLine;
+            compareYAxisData2 = emptyLine;
+          }
+          
+          if (this._isCompareMode) {
+            this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
+          } else {
+            this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
+          }
         },
         error => {
           this._isBusy = false;

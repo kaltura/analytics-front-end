@@ -23,7 +23,7 @@
 
     <div class="kReportWrapper" [class.kCompare]="_isCompareMode">
       <span *ngIf="_currentDates" class="kPeriod">{{_currentDates}}</span>
-      <div class="kReportContainer">
+      <div class="kReportContainer" [class.kLessContent]="_tableData.length < 4">
         <div class="kCard" *ngFor="let card of _tableData">
           <div class="kThumbnailHolder" #holder
                (click)="_drillDown(card)">

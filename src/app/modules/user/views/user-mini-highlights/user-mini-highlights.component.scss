@@ -17,17 +17,23 @@
 
 @media screen and (min-width: 1280px) {
   .kCompare {
-    height: 238px !important;
+    height: auto !important;
+    margin-bottom: 24px;
+    min-height: 238px;
   }
 }
 
 @media screen and (max-width: 1280px) {
   .kMiniHighlightsWrapper:not(.kCompare) {
-    height: 286px;
+    height: auto;
+    margin-bottom: 24px;
+    min-height: 286px;
   }
 
   .kMiniHighlightsWrapper.kCompare {
-    height: 365px;
+    height: auto;
+    margin-bottom: 24px;
+    min-height: 365px;
   }
 
   .kMiniHighlights {

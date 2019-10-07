@@ -115,6 +115,16 @@
   }
 }
 
+@media screen and (min-width: 1280px) {
+  .kLessContent {
+    justify-content: flex-start !important;
+
+    .kCard:not(:last-child) {
+      margin-right: 10%;
+    }
+  }
+}
+
 @media screen and (min-width: 1280px) and (max-width: 1609px) {
   .kThumbnailHolder {
     width: 171px;

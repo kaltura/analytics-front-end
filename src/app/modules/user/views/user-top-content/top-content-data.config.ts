@@ -45,7 +45,7 @@ export class TopContentDataConfig extends ReportDataBaseConfig {
             sortOrder: 5,
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value, false, true),
+            format: value => ReportHelper.percents(value / 100, false, true),
             sortOrder: 6,
           },
           'engagement_ranking': {

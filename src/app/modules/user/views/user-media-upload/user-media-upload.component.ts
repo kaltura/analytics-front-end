@@ -398,7 +398,7 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
     const { object_id: entryId, status, partner_id: partnerId } = row;
 
     if (status === KalturaEntryStatus.ready) {
-      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
     }
   }
 }

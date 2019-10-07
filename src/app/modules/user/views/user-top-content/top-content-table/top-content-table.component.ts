@@ -84,7 +84,7 @@ export class TopContentTableComponent implements OnDestroy {
   
   public _drillDown({ object_id: entryId, status, partner_id: partnerId }: { object_id: string, status: string, partner_id: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      this._navigationDrillDownService.drilldown('entry', entryId, false, partnerId);
+      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
     }
   }
 }

@@ -249,7 +249,7 @@ export class DiscoveryChartComponent {
   }
   
   private shouldNormalize(metric: string): boolean {
-    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
+    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users', 'avg_view_live_latency'];
     return normalizedMetrics.indexOf(metric) > -1;
   }
   
