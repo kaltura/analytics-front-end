@@ -19,12 +19,6 @@ export class EngagementExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
       {
-        label: this._translate.instant('app.engagement.exportLabels.users'),
-        reportType: reportTypeMap(KalturaReportType.userTopContent),
-        sections: [KalturaReportExportItemType.total],
-        order: '-count_plays',
-      },
-      {
         label: this._translate.instant('app.engagement.exportLabels.topVideos'),
         reportType: reportTypeMap(KalturaReportType.topContentCreator),
         sections: [KalturaReportExportItemType.table],
@@ -35,6 +29,12 @@ export class EngagementExportConfig extends ExportConfigService {
         reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
         sections: [KalturaReportExportItemType.table],
         order: '-date_id',
+      },
+      {
+        label: this._translate.instant('app.engagement.exportLabels.users'),
+        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         label: this._translate.instant('app.engagement.exportLabels.impressions'),
