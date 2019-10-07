@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaMediaEntry, KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -162,6 +162,7 @@ export class FilterComponent {
       'users': [],
       'location': [],
       'countries': [],
+      'entries': [],
     };
   }
   
@@ -187,6 +188,11 @@ export class FilterComponent {
           const user = value as KalturaUser;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
+          return { value, type, label, tooltip };
+        case 'entries':
+          const entry = value as KalturaMediaEntry;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${entry.id}`;
+          label = entry.name;
           return { value, type, label, tooltip };
         case 'location':
           const location = value as LocationsFilterValue;

@@ -66,6 +66,8 @@ import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-ov
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
+import { EntriesEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entries-filter/entries-filter.component';
+import { EntryEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entry-engagement-filter.component';
 
 @NgModule({
   imports: [
@@ -134,6 +136,8 @@ import { PaginatorModule } from 'primeng/paginator';
     UserEngagementFilterComponent,
     HeatMapComponent,
     EntryDetailsOverlayComponent,
+    EntriesEngagementFilterComponent,
+    EntryEngagementFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -179,6 +183,7 @@ import { PaginatorModule } from 'primeng/paginator';
     UserEngagementFilterComponent,
     HeatMapComponent,
     EntryDetailsOverlayComponent,
+    EntryEngagementFilterComponent,
   ],
   providers: [
   ]
