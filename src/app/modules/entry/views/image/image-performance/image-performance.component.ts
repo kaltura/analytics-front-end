@@ -32,7 +32,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
   
-  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
+  @ViewChild(NgxEchartsDirective, { static: false }) _chart: NgxEchartsDirective;
   
   private _order = '-date_id';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);

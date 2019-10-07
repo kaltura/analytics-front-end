@@ -78,7 +78,7 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
   public _currentDatePeriod = '';
   public _compareDatePeriod = '';
   
-  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
+  @ViewChild(NgxEchartsDirective, { static: false }) _chart: NgxEchartsDirective;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
