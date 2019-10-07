@@ -31,7 +31,8 @@
         "Upload": "Upload",
         "Webcasting": "Webcasting",
         "Kaltura Capture": "Capture",
-        "Classroom Capture": "Classroom"
+        "Classroom Capture": "Classroom",
+        "Kaltura Webcast": "Kaltura Webcast"
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",
@@ -95,7 +96,7 @@
     },
     "errors": {
       "errorHeader": "Error",
-      "general": "An error occurred",
+      "general": "Uh oh! Something went wrong! Please refresh the page to try again.",
       "invalidKS": "Your session has expired. Please log-in again.",
       "searchTooGeneral": "Too many items found.\nPlease narrow down your search criteria.",
       "timeout": "Operation timed out"
@@ -178,6 +179,7 @@
       }
     },
     "bandwidth": {
+      "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
       "allUsers": "All Users",
       "title": "Publisher Bandwidth & Storage Report",
@@ -346,7 +348,7 @@
       "topVideos": "Top Videos",
       "topVideos_tt": "Top videos based on the Kaltura engagement formula",
       "duration": "Which video duration leads to better engagement?",
-      "impressions": "How player impressions are leading to engagement?",
+      "impressions": "How player impressions lead to engagement",
       "users": "How many users watched at least once?",
       "playerImpressions": "Player Impressions",
       "plays": "Plays",
@@ -362,7 +364,8 @@
         "topVideos": "Top Videos",
         "impressions": "Engagement Funnel",
         "general": "Metrics over time",
-        "syndication": "Top Domains"
+        "syndication": "Top Domains",
+        "users": "User Engagement"
       },
       "highlightsReport": {
         "month_id": "Month",
@@ -481,6 +484,7 @@
         "title": "Active Users Per Devices"
       },
       "discovery": {
+        "none": "None",
         "title": "Explore",
         "vs": "vs",
         "pauseUpdates": "Pause Updates",
@@ -809,7 +813,7 @@
       "topContent": "Top Content",
       "added_entries": "Added Entries",
       "votes": "Likes",
-      "lastViewedEntries": "Last Viewed Entries",
+      "lastViewedEntries": "Top Played Entries",
       "topLocation": "Top Location",
       "topDevices": "Most Used Devices",
       "popularContentSource": "Most Popular Content Source",

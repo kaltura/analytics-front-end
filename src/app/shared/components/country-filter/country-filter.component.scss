@@ -8,6 +8,6 @@ app-dropdown-filter {
   width: 100%;
 }
 
-:host /deep/ .ui-multiselect {
+:host ::ng-deep .ui-multiselect {
   width: 100% !important;
 }

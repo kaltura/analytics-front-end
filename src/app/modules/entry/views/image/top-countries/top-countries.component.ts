@@ -33,8 +33,8 @@ import { TopCountriesConfig } from '../../shared/top-countries/top-countries.con
 export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnDestroy {
   @Input() entryId = '';
   
-  @ViewChild('entryGeo') _entryGeo: GeoComponent;
-  @ViewChild('entryCompareGeo') _entryCompareGeo: GeoComponent;
+  @ViewChild('entryGeo', { static: false }) _entryGeo: GeoComponent;
+  @ViewChild('entryCompareGeo', { static: false }) _entryCompareGeo: GeoComponent;
   
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   

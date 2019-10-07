@@ -43,6 +43,8 @@ export class MetricsSelectorComponent implements OnInit {
     this._selectedSecondary = initial ? this._secondaryMetricsOptions[0].value : this._selectedSecondary;
     
     this._mainMetricsOptions = this._getOptions(this._metrics.filter(metric => metric !== this._selectedSecondary));
+    this._mainMetricsOptions.unshift(...this._getOptions(['none']));
+    this._secondaryMetricsOptions.unshift(...this._getOptions(['none']));
   }
   
   private _getOptions(metrics: string[]): SelectItem[] {

@@ -11,7 +11,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { KalturaClientModule } from 'kaltura-ngx-client';
 import { analyticsConfig } from '../configuration/analytics-config';
 import { BrowserService, ErrorsManagerService, AuthService } from './shared/services';
-import { ConfirmationService, ConfirmDialogModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { SharedModule } from './shared/shared.module';
@@ -22,7 +21,10 @@ import { PageScrollService } from 'ngx-page-scroll';
 import { AnalyticsPermissionsModule } from 'shared/analytics-permissions/analytics-permissions.module';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { OperationTagModule } from '@kaltura-ng/kaltura-common';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { AppService } from 'shared/services/app.service';
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
 }

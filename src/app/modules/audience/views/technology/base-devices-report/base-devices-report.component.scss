@@ -3,7 +3,7 @@
 .kDevicesFilter {
   margin-right: 24px;
 
-  /deep/ {
+  ::ng-deep {
     .ui-multiselect {
       width: 180px;
     }

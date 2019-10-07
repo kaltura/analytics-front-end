@@ -133,8 +133,7 @@ body {
       ktags {
         margin-left: 16px;
         width: auto;
-
-        /deep/ .kTags {
+        ::ng-deep .kTags {
           border-top: none !important;
         }
       }
@@ -367,7 +366,7 @@ kpopupwidget {
   }
 }
 
-p-multiselect /deep/ {
+p-multiselect ::ng-deep {
   .ui-multiselect-label {
     overflow: hidden;
     display: inline-block;

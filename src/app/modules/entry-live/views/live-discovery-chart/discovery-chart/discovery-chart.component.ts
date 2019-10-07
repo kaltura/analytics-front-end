@@ -66,16 +66,23 @@ export class DiscoveryChartComponent {
   }
   
   private _getTooltipFormatter(params: any[]): string {
-    // seriesName
-    const [main, secondary] = params;
+    if (!params.length) {
+      return null;
+    }
+
     const getFormatFn = (name, val) => typeof this.fields[name].graphTooltip === 'function'
       ? this.fields[name].graphTooltip(val)
       : val;
-    
-    const mainValue = getFormatFn(main.seriesName, main.value);
-    const secondaryValue = getFormatFn(secondary.seriesName, secondary.value);
-    
-    return `<div class="kGraphTooltip">${main.name}<br/><span class="kBullet" style="color: ${this.colorsMap[main.seriesName]}">&bull;</span>&nbsp;${mainValue}<br/><span class="kBullet" style="color: ${this.colorsMap[secondary.seriesName]}">&bull;</span>&nbsp;${secondaryValue}</div>`;
+
+    // seriesName
+    let result = `<div class="kGraphTooltip">${params[0].name}`;
+    params.forEach(metric => {
+      const value = getFormatFn(metric.seriesName, metric.value);
+      result += `<br/><span class="kBullet" style="color: ${this.colorsMap[metric.seriesName]}">&bull;</span>&nbsp;${value}`;
+    });
+    result += '</div>';
+  
+    return result;
   }
   
   private _getGraphConfig(metrics: string[], main: string[], secondary: string[], times: string[]): EChartOption {
@@ -137,7 +144,7 @@ export class DiscoveryChartComponent {
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: 24, bottom: 74, right: 24, containLabel: true
+        top: 24, left: main ? 24 : 48, bottom: 74, right: secondary ? 24 : 48, containLabel: true
       },
       tooltip: {
         formatter: this._getTooltipFormatter.bind(this),
@@ -249,7 +256,7 @@ export class DiscoveryChartComponent {
   }
   
   private shouldNormalize(metric: string): boolean {
-    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users'];
+    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users', 'avg_view_live_latency'];
     return normalizedMetrics.indexOf(metric) > -1;
   }
   

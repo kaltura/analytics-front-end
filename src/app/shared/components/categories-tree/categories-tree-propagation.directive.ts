@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, DoCheck, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit } from '@angular/core';
-import { Tree } from 'primeng/primeng';
+import { Tree } from 'primeng/tree';
 import { CategoriesTreeNode } from './categories-tree-node';
 
 @Directive({

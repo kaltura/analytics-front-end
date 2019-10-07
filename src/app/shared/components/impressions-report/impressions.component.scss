@@ -74,7 +74,7 @@
     top: 264px;
   }
 }
-:host /deep/ p-dropdown{
+:host ::ng-deep p-dropdown{
   .ui-dropdown {
     margin-left: 8px;
     margin-right: 8px;

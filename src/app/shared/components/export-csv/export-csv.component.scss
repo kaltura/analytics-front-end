@@ -52,7 +52,7 @@
     margin-top: 8px;
   }
 
-  /deep/ {
+  ::ng-deep {
     .ui-tree {
       width: 100%;
       height: 100%;
@@ -84,7 +84,7 @@
 }
 
 
-:host /deep/ button {
+:host ::ng-deep button {
   .ui-button-text {
     padding-left: 3.1em;
   }
@@ -107,7 +107,7 @@
     opacity: 1;
   }
 
-  /deep/ .ui-button-text {
+  ::ng-deep .ui-button-text {
     position: relative;
   }
 

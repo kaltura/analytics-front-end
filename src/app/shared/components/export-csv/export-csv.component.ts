@@ -46,7 +46,7 @@ export class ExportCsvComponent implements OnDestroy {
     }
   }
   
-  @ViewChild('popupWidgetComponent') _popup: PopupWidgetComponent;
+  @ViewChild('popupWidgetComponent', { static: false }) _popup: PopupWidgetComponent;
   
   public _opened = false;
   public _options: TreeNode[] = [];

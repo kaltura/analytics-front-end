@@ -65,6 +65,8 @@ export class FilterComponent {
   
   @Input() name = 'default';
   
+  @Input() locationFiltersWarning: string;
+  
   @Input() showAutocompleteGroup = true;
   
   @Input() set viewConfig(value: ViewConfig) {

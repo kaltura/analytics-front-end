@@ -5,14 +5,14 @@
             [(ngModel)]="selection">
   <ng-template let-option pTemplate="selectedItem">
     <div class="kOptionsLabelWrapper">
-      <i *ngIf="option.value" class="kCompareMetricBullet"
+      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
          [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
       <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
     </div>
   </ng-template>
   <ng-template let-option pTemplate="item">
     <div class="kOptionsLabelWrapper kItemLabel">
-      <i *ngIf="option.value" class="kCompareMetricBullet"
+      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
          [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
       <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
     </div>

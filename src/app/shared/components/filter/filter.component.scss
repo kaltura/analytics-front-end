@@ -67,7 +67,7 @@ app-checkboxes-list-filter {
   min-width: 206px;
 }
 
-:host /deep/ .ui-autocomplete-multiple-container {
+:host ::ng-deep .ui-autocomplete-multiple-container {
   min-height: 34px;
   padding: 3px 6px !important;
 }
@@ -77,7 +77,7 @@ app-checkboxes-list-filter {
     width: 100%;
     margin-left: 0;
 
-    /deep/ .kTags {
+    ::ng-deep .kTags {
       width: auto;
       padding: 7px;
     }

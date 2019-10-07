@@ -68,7 +68,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   }
   
   private _parseTableData(table: KalturaReportTable): { maxViewsRow: TableRow<any>, graphData: number[], weeklyAvg: number } {
-    const avg = arr => arr.reduce((prev, curr) => prev + curr) / arr.length;
+    const avg = arr => arr.reduce((prev, curr) => prev + curr, 0) / arr.length;
     
     const tableData = this._reportService
       .parseTableData(table, this._dataConfig[ReportDataSection.table]).tableData
@@ -78,7 +78,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
         return item;
       });
     
-    const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_time_viewed'] > current['sum_time_viewed']) ? prev : current);
+    const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_time_viewed'] > current['sum_time_viewed']) ? prev : current, {});
   
     const dataByDay = groupBy(tableData, 'day');
     const graphData = Object
