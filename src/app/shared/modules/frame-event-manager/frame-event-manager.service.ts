@@ -16,7 +16,8 @@ export enum FrameEvents {
   ModalOpened = 'modalOpened',
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
-  UpdateMultiAccount = 'updateMultiAccount'
+  UpdateMultiAccount = 'updateMultiAccount',
+  UpdateAuthLiveUsersReports = 'updateAuthLiveUsersReports'
 }
 
 @Injectable()

@@ -1,35 +1,35 @@
-<div data-aid="report-users-count" class="kReport kOverrideFAIcons kUsersBandwidth">
-  <div class="kHeader">
-    <div class="kTimePeriodLabel">{{'app.entryLive.now' | translate}}</div>
-    <div class="kMetrics">
-      <span class="kValue">{{_bufferCount}}</span>
-      <div class="kTitle">
-        <span class="kBullet kBuffering"></span>
-        {{'app.entryLive.usersBuffering' | translate}}
-        <kInputHelper>
-          <span>{{'app.entryLive.usersBufferingHelpTip' | translate}}</span>
-        </kInputHelper>
+<k-area-blocker [showLoader]="_isBusy">
+  <div data-aid="report-users-count" class="kReport kOverrideFAIcons kUsersBandwidth">
+    <div class="kHeader">
+      <div class="kTimePeriodLabel">{{'app.entryLive.now' | translate}}</div>
+      <div class="kMetrics">
+        <span class="kValue">{{_bufferCount}}</span>
+        <div class="kTitle">
+          <span class="kBullet kBuffering"></span>
+          {{'app.entryLive.usersBuffering' | translate}}
+          <kInputHelper>
+            <span>{{'app.entryLive.usersBufferingHelpTip' | translate}}</span>
+          </kInputHelper>
+        </div>
+      </div>
+
+      <div class="kUsers">
+        <span class="kValue">{{_bandwidthCount}}</span>
+        <div class="kTitle">
+          <span class="kBullet kBandwidth"></span>
+          {{'app.entryLive.downstreamBandwidth' | translate}}
+          <kInputHelper>
+            <span>{{'app.entryLive.downstreamBandwidthHelpTip' | translate}}</span>
+          </kInputHelper>
+        </div>
       </div>
     </div>
+    <div class="kChartHolder">
+      <div echarts class="kChart" [options]="_graphData" (chartInit)="_onChartInit($event)"></div>
 
-    <div class="kUsers">
-      <span class="kValue">{{_bandwidthCount}}</span>
-      <div class="kTitle">
-        <span class="kBullet kBandwidth"></span>
-        {{'app.entryLive.downstreamBandwidth' | translate}}
-        <kInputHelper>
-          <span>{{'app.entryLive.downstreamBandwidthHelpTip' | translate}}</span>
-        </kInputHelper>
+      <div *ngIf="false" class="kNoResults">
+        <span>{{'app.common.noResults' | translate}}</span>
       </div>
     </div>
   </div>
-  <div class="kChartHolder">
-    <div echarts class="kChart" [options]="_graphData" (chartInit)="_onChartInit($event)"></div>
-
-    <div *ngIf="false" class="kNoResults">
-      <span>{{'app.common.noResults' | translate}}</span>
-    </div>
-
-  </div>
-
-</div>
+</k-area-blocker>

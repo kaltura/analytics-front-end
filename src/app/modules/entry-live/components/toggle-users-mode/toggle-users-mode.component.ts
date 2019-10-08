@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { filter } from 'rxjs/operators';
 
 export enum EntryLiveUsersMode {
   Authenticated = 'authenticated',
@@ -12,8 +16,10 @@ export enum EntryLiveUsersMode {
   templateUrl: './toggle-users-mode.component.html',
   styleUrls: ['./toggle-users-mode.component.scss']
 })
-export class ToggleUsersModeComponent {
-  public _selected = EntryLiveUsersMode.All;
+export class ToggleUsersModeComponent implements OnDestroy {
+  @Output() modeChanges = new EventEmitter<void>();
+  
+  public _selected = analyticsConfig.authUsersLiveReports ? EntryLiveUsersMode.Authenticated : EntryLiveUsersMode.All;
   public _options: SelectItem[] = [
     {
       value: EntryLiveUsersMode.Authenticated,
@@ -25,12 +31,23 @@ export class ToggleUsersModeComponent {
     }
   ];
   
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService,
+              private _frameEventManager: FrameEventManagerService) {
+    this._frameEventManager.listen(FrameEvents.UpdateAuthLiveUsersReports)
+      .pipe(cancelOnDestroy(this), filter(Boolean))
+      .subscribe(() => this.modeChanges.emit());
+  }
   
+  ngOnDestroy(): void {
   }
   
   public _onModeChange(event: { originalEvent: MouseEvent, value: EntryLiveUsersMode }): void {
-    console.warn(event.value);
-    window.localStorage.set('kmc-analytics-users-mode', event.value);
+    analyticsConfig.authUsersLiveReports = event.value === EntryLiveUsersMode.Authenticated;
+
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.UpdateAuthLiveUsersReports, event.value);
+    } else {
+      this.modeChanges.emit();
+    }
   }
 }

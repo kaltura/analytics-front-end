@@ -7,7 +7,7 @@
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
-            <app-toggle-users-mode></app-toggle-users-mode>
+            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
             <app-export-csv name="entry"
                             [width]="380"
                             [reports]="_exportConfig"
