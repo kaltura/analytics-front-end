@@ -10,7 +10,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from './table-config';
 import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-selector.service';
-import { reportTypeMap } from 'shared/utils/report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -88,7 +88,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _onTableModeChange(event: TableModes): void {
     this._widget.setTableMode(event);
   
-    const reportType = event === TableModes.users ? reportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime) : reportTypeMap(KalturaReportType.platformsDiscoveryRealtime);
+    const reportType = event === TableModes.users ? liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime) : liveReportTypeMap(KalturaReportType.platformsDiscoveryRealtime);
     this.tableChange.emit(reportType);
   }
   
