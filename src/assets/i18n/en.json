@@ -642,6 +642,16 @@
         "geo": "Geo Location",
         "devices": "Active Users Per Devices",
         "discovery": "Discovery Graph"
+      },
+      "userModes": {
+        "authenticated": {
+          "title": "Authenticated Users",
+          "description": "Show data for login users only"
+        },
+        "all": {
+          "title": "All  Users",
+          "description": "Show data for anonymous users and login users"
+        }
       }
     },
     "entry": {

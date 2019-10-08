@@ -58,6 +58,7 @@ import { ToggleLiveComponent } from './components/toggle-live/toggle-live.compon
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
+import { ToggleUsersModeComponent } from './components/toggle-users-mode/toggle-users-mode.component';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import { CalendarModule } from 'primeng/calendar';
     StatusBulletComponent,
     TimeSelectorComponent,
     ToggleLiveComponent,
+    ToggleUsersModeComponent,
   ],
   providers: [
     CodeToSeverityPipe,
