@@ -5,7 +5,7 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
-  authUsersLiveReports: boolean;
+  liveEntryUsersReports: string;
   defaultPageSize: number;
   permissions: {
     lazyLoadCategories?: boolean;
@@ -73,6 +73,6 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   multiAccount: false,
-  authUsersLiveReports: false,
+  liveEntryUsersReports: 'all',
   permissions: {},
 };

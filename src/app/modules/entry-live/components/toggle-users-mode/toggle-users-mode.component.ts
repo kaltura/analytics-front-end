@@ -3,13 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
-
-export enum EntryLiveUsersMode {
-  Authenticated = 'authenticated',
-  All = 'all',
-}
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 @Component({
   selector: 'app-toggle-users-mode',
@@ -19,7 +13,7 @@ export enum EntryLiveUsersMode {
 export class ToggleUsersModeComponent implements OnDestroy {
   @Output() modeChanges = new EventEmitter<void>();
   
-  public _selected = analyticsConfig.authUsersLiveReports ? EntryLiveUsersMode.Authenticated : EntryLiveUsersMode.All;
+  public _selected = analyticsConfig.liveEntryUsersReports;
   public _options: SelectItem[] = [
     {
       value: EntryLiveUsersMode.Authenticated,
@@ -33,21 +27,18 @@ export class ToggleUsersModeComponent implements OnDestroy {
   
   constructor(private _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService) {
-    this._frameEventManager.listen(FrameEvents.UpdateAuthLiveUsersReports)
-      .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(() => this.modeChanges.emit());
   }
   
   ngOnDestroy(): void {
   }
   
   public _onModeChange(event: { originalEvent: MouseEvent, value: EntryLiveUsersMode }): void {
-    analyticsConfig.authUsersLiveReports = event.value === EntryLiveUsersMode.Authenticated;
+    analyticsConfig.liveEntryUsersReports = event.value;
 
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.UpdateAuthLiveUsersReports, event.value);
-    } else {
-      this.modeChanges.emit();
     }
+    
+    this.modeChanges.emit();
   }
 }

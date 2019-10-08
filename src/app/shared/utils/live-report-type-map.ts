@@ -1,8 +1,13 @@
 import { KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 
+export enum EntryLiveUsersMode {
+  Authenticated = 'authenticated',
+  All = 'all',
+}
+
 export function liveReportTypeMap(reportType: KalturaReportType): KalturaReportType {
-  if (analyticsConfig.authUsersLiveReports) {
+  if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.Authenticated) {
     return mapAuthUsersReport(reportType);
   } else {
     return reportType;
