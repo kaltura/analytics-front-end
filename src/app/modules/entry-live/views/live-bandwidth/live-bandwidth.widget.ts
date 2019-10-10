@@ -89,7 +89,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         .forEach((valueString, index, array) => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
       
-          const graphPoint = { value: Number(value) };
+          const graphPoint = { value: ReportHelper.percents(value, false, true, false) };
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';
             graphPoint['symbolSize'] = 8;
