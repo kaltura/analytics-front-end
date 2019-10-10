@@ -10,6 +10,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 export interface GraphPoint {
   value: number;
@@ -53,12 +54,13 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
       bandwidth: [],
       dates: [],
     };
-    
+  
+    const bufferingData = reports.find(({ id }) => id === 'avg_view_buffering');
     const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
     const bufferingUsersData = reports.find(({ id }) => id === 'view_unique_buffering_users');
     const bandwidthData = reports.find(({ id }) => id === 'avg_view_downstream_bandwidth');
     
-    if (activeUsersData && bufferingUsersData) {
+    if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.Authenticated && activeUsersData && bufferingUsersData) {
       const bufferingUsers = bufferingUsersData.data.split(';');
       activeUsersData.data.split(';')
         .filter(Boolean)
@@ -74,6 +76,24 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
             graphPoint['symbol'] = 'circle';
             graphPoint['symbolSize'] = 8;
             graphPoint['itemStyle'] = { color: '#d48d2b'};
+          }
+          result.buffering.push(graphPoint);
+  
+          result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
+        });
+    }
+    
+    if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All && bufferingData) {
+      bufferingData.data.split(';')
+        .filter(Boolean)
+        .forEach((valueString, index, array) => {
+          const [date, value] = valueString.split(analyticsConfig.valueSeparator);
+      
+          const graphPoint = { value: Number(value) };
+          if (index === array.length - 1) {
+            graphPoint['symbol'] = 'circle';
+            graphPoint['symbolSize'] = 8;
+            graphPoint['itemStyle'] = { color: '#e0313a'};
           }
           result.buffering.push(graphPoint);
   

@@ -7,7 +7,7 @@ export enum EntryLiveUsersMode {
 }
 
 export function liveReportTypeMap(reportType: KalturaReportType): KalturaReportType {
-  if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.Authenticated) {
+  if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All) {
     return mapAuthUsersReport(reportType);
   } else {
     return reportType;

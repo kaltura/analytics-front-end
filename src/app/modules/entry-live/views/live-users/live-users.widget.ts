@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 export interface GraphPoint {
   value: number;
@@ -55,8 +56,14 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
       dates: [],
     };
     
-    const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
-    const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
+    const activeUsersKey = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All
+      ? 'views'
+      : 'view_unique_audience';
+    const engagedUsersKey = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All
+      ? 'avg_view_engagement'
+      : 'view_unique_engaged_users';
+    const activeUsersData = reports.find(({ id }) => id === activeUsersKey);
+    const engagedUsersData = reports.find(({ id }) => id === engagedUsersKey);
     
     if (activeUsersData) {
       activeUsersData.data.split(';')
