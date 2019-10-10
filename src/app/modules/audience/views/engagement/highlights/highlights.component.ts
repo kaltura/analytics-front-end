@@ -245,7 +245,14 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _onRefineFilterChange(event: RefineFilter): void {
     const userIds = event.length
       ? event
+        .filter(filter => filter.type === 'users')
         .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator)
+      : null;
+    const entriesIds = event.length
+      ? event
+        .filter(filter => filter.type === 'entries')
+        .map(filter => filter.value.id)
         .join(analyticsConfig.valueSeparator)
       : null;
     
@@ -263,17 +270,33 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       }
     }
     
+    if (entriesIds) {
+      this._filter.entryIdIn = entriesIds;
+      
+      if (this._compareFilter) {
+        this._compareFilter.entryIdIn = entriesIds;
+      }
+    } else {
+      delete this._filter.entryIdIn;
+  
+      if (this._compareFilter) {
+        delete this._compareFilter.entryIdIn;
+      }
+    }
+    
     this._filterChange.next();
   }
   
   public _onChangeMode(): void {
     this._firstTimeLoading = true;
 
-    // clean up users filters
+    // clean up users and entries filters
     delete this._filter.userIds;
+    delete this._filter.entryIdIn;
     
     if (this._compareFilter) {
       delete this._compareFilter.userIds;
+      delete this._compareFilter.entryIdIn;
     }
   }
 }

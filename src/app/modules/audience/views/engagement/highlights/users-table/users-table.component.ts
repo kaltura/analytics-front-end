@@ -91,7 +91,8 @@ export class UsersTableComponent implements OnInit, OnDestroy {
           } else if (report.table && report.table.data && report.table.header) {
             this._handleTable(report.table); // handle graphs
           }
-
+    
+          this.firstTimeLoading = false;
           this._isBusy = false;
           this._blockerMessage = null;
         },

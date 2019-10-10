@@ -33,9 +33,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   
+  public totalCount = 0;
+  
   public _tableData: TableRow[] = [];
   public _columns: string[] = [];
-  public _totalCount = 0;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -90,7 +91,8 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
           } else if (report.table && report.table.data && report.table.header) {
             this._handleTable(report.table); // handle graphs
           }
-          
+    
+          this.firstTimeLoading = false;
           this._isBusy = false;
           this._blockerMessage = null;
         },
@@ -123,14 +125,14 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
         'object_id',
       );
       this._columns = columns;
-      this._totalCount = current.table.totalCount;
+      this.totalCount = current.table.totalCount;
       this._tableData = tableData;
     }
   }
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
+    this.totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }

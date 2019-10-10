@@ -38,6 +38,7 @@
       "tags": "Tags",
       "users": "Users",
       "owners": "Owners",
+      "entries": "Entries",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
       "region": "Region",
@@ -53,7 +54,8 @@
       "filterDomains": "Filter Domains",
       "domainPlaceholder": "Select Domain",
       "domainsSelected": "{0} Domains Selected",
-      "filterUsers": "Filter Users"
+      "filterUsers": "Filter Users",
+      "filterEntries": "Filter Entries"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -668,6 +670,7 @@
       "avg_view_drop_off": "Avg. Drop Off Rate",
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
       "totalViewersCount": "{{0}} Viewers",
+      "totalEntriesCount": "{{0}} Entries",
       "avg_completion_rate": "Avg. Completion Rate",
       "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
       "unique_known_users": "Unique Viewers",
