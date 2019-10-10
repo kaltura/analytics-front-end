@@ -5,6 +5,10 @@
   height: 100%;
 }
 
+.kTableContainer {
+  overflow: visible !important;
+}
+
 .kNoResults {
   display: flex;
   width: 100%;
