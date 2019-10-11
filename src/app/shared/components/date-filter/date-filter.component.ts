@@ -44,8 +44,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
-  @ViewChild('datesBtn', { static: false }) _datesBtn: ElementRef;
+  @ViewChild('datesBtn', { static: false }) set datesBtn(elRef: ElementRef) {
+    if (elRef && elRef.nativeElement) {
+      this._datesBtnElement = elRef.nativeElement;
+    }
+  }
   
+  private _datesBtnElement: HTMLElement;
+
   public _defaultDateRageType = DateRangeType.LongTerm;
   public _defaultDateRange = DateRanges.CurrentYear;
   public _dateRangeType = this._defaultDateRageType;
@@ -302,13 +308,16 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     });
     this._updateRouteParams();
   }
+  
+  public _focusSelectButton(): void {
+    // TODO figure out how to select area inside popup
+  }
 
   public setFocus(): void {
-    if (this._datesBtn && this._datesBtn.nativeElement) {
-      const btn = this._datesBtn.nativeElement;
-      this._renderer.setAttribute(btn, 'tabindex', '-1');
-      btn.focus();
-      this._renderer.setAttribute(btn, 'tabindex', '0');
+    if (this._datesBtnElement) {
+      this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '-1');
+      this._datesBtnElement.focus();
+      this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '0');
     }
   }
 }

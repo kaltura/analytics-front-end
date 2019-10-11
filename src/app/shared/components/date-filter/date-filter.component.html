@@ -17,7 +17,8 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-210, 'y': 42}">
+              [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-210, 'y': 42}"
+              (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
 
