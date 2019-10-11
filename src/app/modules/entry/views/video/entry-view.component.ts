@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { KalturaMediaEntry, KalturaMediaType, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -11,6 +11,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { EntryExportConfig } from './entry-export.config';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { DateFilterComponent } from 'shared/components/date-filter/date-filter.component';
 
 @Component({
   selector: 'app-video-entry',
@@ -43,6 +44,8 @@ export class VideoEntryViewComponent implements OnDestroy {
 
   @Output() back = new EventEmitter<void>();
   @Output() navigateToEntry = new EventEmitter<void>();
+  
+  @ViewChild(DateFilterComponent, { static: false }) _dateFilterComponent: DateFilterComponent;
   
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
@@ -103,4 +106,8 @@ export class VideoEntryViewComponent implements OnDestroy {
     this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
   
+  public _onCloseFilters(): void {
+    this._refineFilterOpened = false;
+    this._dateFilterComponent.setFocus();
+  }
 }

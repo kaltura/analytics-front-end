@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
@@ -44,6 +44,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
+  @ViewChild('datesBtn', { static: false }) _datesBtn: ElementRef;
+  
   public _defaultDateRageType = DateRangeType.LongTerm;
   public _defaultDateRange = DateRanges.CurrentYear;
   public _dateRangeType = this._defaultDateRageType;
@@ -86,7 +88,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
               private _route: ActivatedRoute,
               private _router: Router,
               private _dateFilterService: DateFilterService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _renderer: Renderer2) {
   }
 
   ngOnInit() {
@@ -300,4 +303,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this._updateRouteParams();
   }
 
+  public setFocus(): void {
+    if (this._datesBtn && this._datesBtn.nativeElement) {
+      const btn = this._datesBtn.nativeElement;
+      this._renderer.setAttribute(btn, 'tabindex', '-1');
+      btn.focus();
+      this._renderer.setAttribute(btn, 'tabindex', '0');
+    }
+  }
 }

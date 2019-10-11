@@ -48,7 +48,7 @@
                       [opened]="_refineFilterOpened"
                       [dateFilter]="_dateFilter"
                       [selectedFilters]="_selectedRefineFilters"
-                      (closeFilters)="_refineFilterOpened = false"
+                      (closeFilters)="_onCloseFilters()"
                       (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
     <app-video-entry-totals *ngIf="_viewConfig.totals"
