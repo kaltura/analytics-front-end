@@ -14,6 +14,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -45,7 +47,8 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
               protected _translate: TranslateService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
-              protected _dataConfigService: LiveDevicesConfig) {
+              protected _dataConfigService: LiveDevicesConfig,
+              protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
@@ -124,7 +127,9 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       const currentValue = getValue(rawValue, totalValue);
       return {
         value: currentValue,
-        tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) },
+        tooltip: this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated
+          ? { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entryLive.view_unique_audience`) }
+          : null,
         label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
         icon: this._deviceIconPipe.transform(item.device),
       };

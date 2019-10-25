@@ -47,7 +47,7 @@ export class HorizontalBarRowComponent {
         this._setTooltip(value);
       }, 200);
     } else {
-      this._setTooltip(value)
+      this._setTooltip(value);
     }
     
   }
@@ -99,7 +99,7 @@ export class HorizontalBarRowComponent {
     if (Array.isArray(value)) {
       this._tooltip = this.tooltipFormatter(value[0].value, value[0].label, value[0].color || this._colors[0]);
       this._compareTooltip = this.tooltipFormatter(value[1].value, value[1].label, value[1].color || this._colors[1]);
-    } else {
+    } else if (value) {
       this._tooltip = this.tooltipFormatter(value.value, value.label, value.color || this._colors[0]);
       this._compareTooltip = null;
     }
