@@ -12,6 +12,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
 import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface GraphPoint {
   value: number;
@@ -35,7 +36,8 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
-              protected _translate: TranslateService) {
+              protected _translate: TranslateService,
+              protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
   }
   
@@ -56,10 +58,10 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
       dates: [],
     };
     
-    const activeUsersKey = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All
+    const activeUsersKey = this._usersModeService.usersMode === EntryLiveUsersMode.All
       ? 'views'
       : 'view_unique_audience';
-    const engagedUsersKey = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All
+    const engagedUsersKey = this._usersModeService.usersMode === EntryLiveUsersMode.All
       ? 'avg_view_engagement'
       : 'view_unique_engaged_users';
     const activeUsersData = reports.find(({ id }) => id === activeUsersKey);

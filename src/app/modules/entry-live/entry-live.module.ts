@@ -59,6 +59,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
 import { ToggleUsersModeComponent } from './components/toggle-users-mode/toggle-users-mode.component';
+import { ToggleUsersModeService } from './components/toggle-users-mode/toggle-users-mode.service';
 
 @NgModule({
   imports: [
@@ -127,6 +128,7 @@ import { ToggleUsersModeComponent } from './components/toggle-users-mode/toggle-
     LiveDiscoveryDevicesTableProvider,
     LiveDiscoveryUsersTableProvider,
     LiveDiscoveryUsersStatusConfig,
+    ToggleUsersModeService,
     
     // polls services
     EntryLiveGeneralPollsService,

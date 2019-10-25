@@ -11,6 +11,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
 import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface GraphPoint {
   value: number;
@@ -34,7 +35,8 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
-              protected _translate: TranslateService) {
+              protected _translate: TranslateService,
+              protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
   }
   
@@ -60,7 +62,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
     const bufferingUsersData = reports.find(({ id }) => id === 'view_unique_buffering_users');
     const bandwidthData = reports.find(({ id }) => id === 'avg_view_downstream_bandwidth');
     
-    if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.Authenticated && activeUsersData && bufferingUsersData) {
+    if (this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated && activeUsersData && bufferingUsersData) {
       const bufferingUsers = bufferingUsersData.data.split(';');
       activeUsersData.data.split(';')
         .filter(Boolean)
@@ -83,7 +85,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
         });
     }
     
-    if (analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All && bufferingData) {
+    if (this._usersModeService.usersMode === EntryLiveUsersMode.All && bufferingData) {
       bufferingData.data.split(';')
         .filter(Boolean)
         .forEach((valueString, index, array) => {
