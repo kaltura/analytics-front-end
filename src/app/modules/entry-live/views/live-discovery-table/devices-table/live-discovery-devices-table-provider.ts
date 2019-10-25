@@ -38,9 +38,7 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
     
     const mapData = row => {
       const activeUsers = parseFormattedValue(row['view_unique_audience']);
-      const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
       const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
-      row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
       row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
       return row;
     };

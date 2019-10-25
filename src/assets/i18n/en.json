@@ -548,7 +548,7 @@
             "device": "Devices",
             "view_unique_audience": "Active Users",
             "view_unique_engaged_users": "User Engaged",
-            "view_unique_buffering_users": "User Buffering",
+            "view_buffer_time_ratio": "User Buffering",
             "sum_view_time": "Minutes Viewed",
             "known_flavor_params_view_count": "Top Served Flavor"
           },

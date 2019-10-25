@@ -61,7 +61,7 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'view_unique_buffering_users': {
-            format: value => value,
+            format: value => ReportHelper.percents(value),
             sortOrder: 4,
           },
           'sum_view_time': {
