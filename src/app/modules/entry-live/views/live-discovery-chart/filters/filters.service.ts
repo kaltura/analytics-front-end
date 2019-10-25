@@ -28,6 +28,8 @@ export interface DateRangeServerValue {
   toDate: number;
 }
 
+export const defaultDateRange = DateRange.Last5M;
+
 @Injectable()
 export class FiltersService {
   constructor(private _translate: TranslateService) {
