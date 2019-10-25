@@ -73,6 +73,6 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   multiAccount: false,
-  liveEntryUsersReports: 'all',
+  liveEntryUsersReports: 'All',
   permissions: {},
 };

@@ -13,7 +13,7 @@ export class TableSelectorComponent {
   @Output() tableModeChange = new EventEmitter<TableModes>();
   
   public _tableModes: SelectItem[] = [
-    { label: this._translate.instant('app.entryLive.discovery.users'), value: TableModes.users },
+    { label: this._translate.instant('app.entryLive.discovery.authUsers'), value: TableModes.users },
     { label: this._translate.instant('app.entryLive.discovery.devices'), value: TableModes.devices },
   ];
   

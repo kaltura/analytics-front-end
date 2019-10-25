@@ -145,7 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
-    analyticsConfig.liveEntryUsersReports = config.liveEntryUsersReports || 'all';
+    analyticsConfig.liveEntryUsersReports = config.liveEntryUsersReports || 'All';
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';

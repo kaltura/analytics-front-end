@@ -484,6 +484,7 @@
         "viewPresence": "View Presence",
         "hidePresence": "Hide Presence",
         "users": "Users",
+        "authUsers": "Active Logged-In Users",
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
         "totalDevices": "{{0}} Devices",
@@ -644,11 +645,11 @@
         "discovery": "Discovery Graph"
       },
       "userModes": {
-        "authenticated": {
+        "Authenticated": {
           "title": "Authenticated Users",
           "description": "Show data for login users only"
         },
-        "all": {
+        "All": {
           "title": "All  Users",
           "description": "Show data for anonymous users and login users"
         }

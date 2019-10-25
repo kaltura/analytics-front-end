@@ -2,8 +2,8 @@ import { KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 export enum EntryLiveUsersMode {
-  Authenticated = 'authenticated',
-  All = 'all',
+  Authenticated = 'Authenticated',
+  All = 'All',
 }
 
 export function liveReportTypeMap(reportType: KalturaReportType): KalturaReportType {
