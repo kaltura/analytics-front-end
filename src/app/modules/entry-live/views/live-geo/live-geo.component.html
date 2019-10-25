@@ -59,8 +59,8 @@
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.entryLive.geo.avg_view_buffering' | translate" [showOnEllipsis]="true">
-                  {{'app.entryLive.geo.avg_view_buffering' | translate}}
+                <span [kTooltip]="'app.entryLive.geo.view_buffer_time_ratio' | translate" [showOnEllipsis]="true">
+                  {{'app.entryLive.geo.view_buffer_time_ratio' | translate}}
                 </span>
                 </div>
               </th>
@@ -97,8 +97,8 @@
                 </div>
               </td>
               <td>
-                <span *ngIf="!data['avg_view_buffering']?.value">
-                  {{data['avg_view_buffering']}}
+                <span *ngIf="!data['view_buffer_time_ratio']?.value">
+                  {{data['view_buffer_time_ratio']}}
                 </span>
               </td>
               <td>
