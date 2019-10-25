@@ -555,7 +555,7 @@
           "users": {
             "user_name": "Username",
             "status": "Status",
-            "avg_view_buffering": "Avg. Buffer Rate",
+            "view_buffer_time_ratio": "Avg. Buffer Rate",
             "sum_view_time": "Minutes Viewed",
             "known_flavor_params_view_count": "Top Served Flavor",
             "avg_view_engagement": "Avg. Engagement"
