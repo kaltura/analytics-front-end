@@ -85,6 +85,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
+          this.totalCount = 0;
           
           if (compare) {
             this._handleCompare(report, compare);
