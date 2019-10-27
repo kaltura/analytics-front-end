@@ -471,7 +471,7 @@
         "index": "#",
         "view_unique_audience": "Active Users",
         "distribution": "Active Users Distribution",
-        "avg_view_buffering": "Avg. Buffer Rate",
+        "view_buffer_time_ratio": "Avg. Buffer Rate",
         "avg_view_engagement": "Avg. User Engagement"
       },
       "devices": {
