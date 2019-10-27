@@ -16,7 +16,7 @@ export function liveReportTypeMap(reportType: KalturaReportType): KalturaReportT
 
 function mapAuthUsersReport(reportType: KalturaReportType): KalturaReportType {
   const reportsMap = {
-    // TODO add report type mapping
+    [KalturaReportType.discoveryRealtime]:             KalturaReportType.discoveryViewRealtime,
   };
   return reportsMap[reportType] || reportType;
 }
