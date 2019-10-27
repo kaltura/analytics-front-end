@@ -486,6 +486,7 @@
         "viewPresence": "View Presence",
         "hidePresence": "Hide Presence",
         "users": "Users",
+        "authUsers": "Active Logged-In Users",
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
         "totalDevices": "{{0}} Devices",
@@ -644,6 +645,16 @@
         "geo": "Geo Location",
         "devices": "Active Users Per Devices",
         "discovery": "Discovery Graph"
+      },
+      "userModes": {
+        "Authenticated": {
+          "title": "Authenticated Users",
+          "description": "Show data for login users only"
+        },
+        "All": {
+          "title": "All  Users",
+          "description": "Show data for anonymous users and login users"
+        }
       }
     },
     "entry": {

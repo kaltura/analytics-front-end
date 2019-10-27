@@ -31,7 +31,7 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
   private _echartsIntance: any;
   private _isLive = false;
   
-  public _isBusy = true;
+  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage;
   public _data: any;
   public _graphData: { [key: string]: any } = {};
@@ -47,13 +47,13 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
     this._bandwidthWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isBusy = state.isBusy;
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._bandwidthWidget.retry();
             },
           };

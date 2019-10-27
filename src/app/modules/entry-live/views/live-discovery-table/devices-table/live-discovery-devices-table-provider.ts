@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { LiveDiscoveryDevicesTableRequestFactory } from './live-discovery-devices-table-request-factory';
 import { LiveDiscoveryDevicesTableConfig } from './live-discovery-devices-table.config';
 import { ReportHelper, ReportService } from 'shared/services';
@@ -11,19 +11,30 @@ import { LiveDiscoveryTableData, LiveDiscoveryTableWidgetPollFactory, LiveDiscov
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
+import { ToggleUsersModeService } from '../../../components/toggle-users-mode/toggle-users-mode.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 @Injectable()
-export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider {
-  private readonly _dataConfig: ReportDataConfig;
+export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider, OnDestroy {
+  private _dataConfig: ReportDataConfig;
   
   public dateRange: DateRangeServerValue;
   
   constructor(private _reportService: ReportService,
-              private _dataConfigService: LiveDiscoveryDevicesTableConfig) {
-    this._dataConfig = _dataConfigService.getConfig();
-    
+              private _dataConfigService: LiveDiscoveryDevicesTableConfig,
+              private _usersModeService: ToggleUsersModeService) {
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._dataConfig = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated);
+      });
   }
   
+  public ngOnDestroy(): void {
+  
+  }
+
   public getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
     return new LiveDiscoveryDevicesTableRequestFactory(widgetsArgs.entryId);
   }

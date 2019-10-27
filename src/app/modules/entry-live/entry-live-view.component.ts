@@ -224,4 +224,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._selectedDateRange = event.dateRange;
   }
+  
+  public _onUsersModeChange(): void {
+    this._widgetsManager.restartAll();
+  }
 }

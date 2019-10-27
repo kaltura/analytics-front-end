@@ -1,15 +1,13 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { ErrorsManagerService, ReportConfig } from 'shared/services';
+import { ErrorsManagerService } from 'shared/services';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { RefineFilter } from 'shared/components/filter/filter.component';
 import { HttpClient } from '@angular/common/http';
-import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { LiveGeoConfig } from './live-geo.config';
 import { getCountryName } from 'shared/utils/get-country-name';
@@ -20,10 +18,8 @@ import { Table } from 'primeng/table';
 import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
-import { reportTypeMap } from 'shared/utils/report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 @Component({
   selector: 'app-live-geo',
@@ -189,7 +185,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (reload) {
       this._isBusy = true;
     }
-    const reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
+    const reportType = this._drillDown.length === 2 ? liveReportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? liveReportTypeMap(KalturaReportType.mapOverlayRegion) : liveReportTypeMap(KalturaReportType.mapOverlayCountry);
     this.onDrillDown.emit({ reportType: reportType, drillDown: this._drillDown });
   }
   

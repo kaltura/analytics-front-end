@@ -7,13 +7,14 @@
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
-            <app-toggle-live-btn *ngIf="_canShowToggleLive"
-                                 [entry]="_entry"
-                                 (entryToggled)="_liveToggled()"></app-toggle-live-btn>
+            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
             <app-export-csv name="entry"
                             [width]="380"
                             [reports]="_exportConfig"
                             [entryId]="_entryId"></app-export-csv>
+            <app-toggle-live-btn *ngIf="_canShowToggleLive"
+                                 [entry]="_entry"
+                                 (entryToggled)="_liveToggled()"></app-toggle-live-btn>
           </div>
         </div>
 
