@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import {
   BaseEntryGetAction,
+  KalturaAPIException,
   KalturaClient,
   KalturaDetachedResponseProfile,
   KalturaMediaEntry,
@@ -100,7 +101,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
       this.subscription = null;
     }
-    
+
     if (this.requestSubscription) {
       this.requestSubscription.unsubscribe();
       this.requestSubscription = null;
@@ -145,9 +146,12 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            throw responses.getFirstError();
+            const err: KalturaAPIException = responses.getFirstError();
+            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data.
+            if (err.code !== "INVALID_USER_ID") {
+              throw err;
+            }
           }
-  
           return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
         })
       )
@@ -157,7 +161,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           this._entryType = entry.mediaType;
           this._duration = entry.msDuration || 0;
           this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
-          this._owner = user.fullName;
+          this._owner = user ? user.fullName : entry.userId; // fallback for deleted users
           this.requestSubscription = null;
           this._loadingEntry = false;
         },
@@ -185,13 +189,13 @@ export class EntryViewComponent implements OnInit, OnDestroy {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
   }
-  
+
   public _onSyndicationDrillDown(event: string): void {
     let update: Partial<ExportItem> = {};
     if (event) {
       update.objectIds = event;
     }
-    
+
     this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
   }
 
