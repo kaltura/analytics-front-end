@@ -524,6 +524,7 @@
         "sum_view_time": "Minutes Viewed",
         "avg_view_live_latency": "Avg. Latency Rate",
         "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
+        "view_buffer_time_ratio": "Avg Buffer Rate",
         "totals": {
           "view_unique_audience": "Total Active Users",
           "avg_view_engagement": "Avg. User Engagement",
@@ -533,7 +534,8 @@
           "avg_view_bitrate": "AVG Bitrate",
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_live_latency": "AVG Latency",
-          "avg_view_dropped_frames_ratio": "AVG Dropped Frames"
+          "avg_view_dropped_frames_ratio": "AVG Dropped Frames",
+          "view_buffer_time_ratio": "Avg Buffer Rate"
         },
         "userStatus": {
           "offline": "Offline",
