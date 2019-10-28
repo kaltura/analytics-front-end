@@ -40,7 +40,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 2,
           },
-          'view_buffer_time_ratio': {
+          'avg_view_buffering': {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 3,
           },
@@ -60,7 +60,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         fields: {
-          'view_buffer_time_ratio': {
+          'avg_view_buffering': {
             format: value => `${ReportHelper.percents(value, false)} Buffering Users`,
             sortOrder: 1,
           },
