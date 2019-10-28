@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
@@ -13,7 +13,7 @@ export interface MetricsSelectorChangeEvent {
   templateUrl: './metrics-selector.component.html',
   styleUrls: ['./metrics-selector.component.scss']
 })
-export class MetricsSelectorComponent implements OnInit {
+export class MetricsSelectorComponent implements OnChanges {
   @Input() fields: ReportDataFields;
   @Input() colorsMap: { [metric: string]: string } = {};
   
@@ -29,7 +29,7 @@ export class MetricsSelectorComponent implements OnInit {
   constructor(private _translate: TranslateService) {
   }
   
-  ngOnInit() {
+  ngOnChanges() {
     if (this.fields) {
       this._metrics = Object.keys(this.fields);
       this._onChange(true);

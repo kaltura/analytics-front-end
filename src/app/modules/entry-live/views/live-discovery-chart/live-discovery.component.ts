@@ -11,10 +11,11 @@ import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.compo
 import { filter } from 'rxjs/operators';
 import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
 import { KalturaReportType } from 'kaltura-ngx-client';
-import { DateRange } from './filters/filters.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LiveGeoWidget } from '../live-geo/live-geo.widget';
 import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 @Component({
   selector: 'app-live-discovery',
@@ -41,9 +42,14 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
               private _liveDevicesWidget: LiveDevicesWidget,
               private _errorsManager: ErrorsManagerService,
               private _translate: TranslateService,
+              private _usersModeService: ToggleUsersModeService,
               protected _dataConfigService: LiveDiscoveryConfig) {
-    this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
-    this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._fields = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated)[ReportDataSection.graph].fields;
+        this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
+      });
   }
 
   ngOnInit() {
