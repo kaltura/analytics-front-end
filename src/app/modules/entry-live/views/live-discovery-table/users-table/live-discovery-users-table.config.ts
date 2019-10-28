@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GraphType, ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 2,
           },
-          'avg_view_buffering': {
+          'view_buffer_time_ratio': {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 3,
           },
@@ -60,7 +60,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         fields: {
-          'avg_view_buffering': {
+          'view_buffer_time_ratio': {
             format: value => `${ReportHelper.percents(value, false)} Buffering Users`,
             sortOrder: 1,
           },
