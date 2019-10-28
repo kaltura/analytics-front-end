@@ -37,7 +37,7 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'view_buffer_time_ratio': {
-            format: value => value,
+            format: value => ReportHelper.percents(value),
             sortOrder: 3,
           },
           'sum_view_time': {
