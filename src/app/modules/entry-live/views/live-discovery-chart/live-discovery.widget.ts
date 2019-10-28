@@ -99,6 +99,10 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     }
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs.entryId);
     

@@ -48,6 +48,10 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
     

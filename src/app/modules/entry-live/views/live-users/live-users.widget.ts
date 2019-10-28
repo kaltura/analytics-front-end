@@ -41,6 +41,10 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
     super(_serverPolls, _frameEventManager);
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveUsersRequestFactory(this._activationArgs.entryId);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveUsersRequestFactory(widgetsArgs.entryId);
     

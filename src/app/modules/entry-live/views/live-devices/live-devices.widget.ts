@@ -54,6 +54,10 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs.entryId);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId);
     

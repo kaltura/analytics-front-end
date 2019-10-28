@@ -38,6 +38,8 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   
   protected abstract _onActivate(widgetsArgs: WidgetsActivationArgs, silent?: boolean): Observable<void>;
   
+  protected abstract _onRestart(): void;
+  
   protected constructor(protected _serverPolls: AnalyticsServerPollsBase,
                         protected _frameEventManager: FrameEventManagerService) {
   }
@@ -109,6 +111,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   
   public restartPolling(pollOnce = false): void {
     this.stopPolling();
+    this._onRestart();
     this.startPolling(pollOnce);
   }
   
