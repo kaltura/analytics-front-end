@@ -24,8 +24,8 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
     return topFlavors.length ? topFlavors[0].name : 'N/A';
   }
 
-  public getConfig(): ReportDataConfig {
-    return {
+  public getConfig(showUsersColumn = true): ReportDataConfig {
+    const config = {
       [ReportDataSection.table]: {
         fields: {
           'device': {
@@ -79,5 +79,12 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
         }
       }
     };
+    
+    if (!showUsersColumn) {
+      delete config[ReportDataSection.table].fields.view_unique_audience;
+      delete config[ReportDataSection.totals].fields.view_unique_audience;
+    }
+  
+    return config;
   }
 }

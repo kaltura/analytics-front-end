@@ -5,7 +5,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import * as moment from 'moment';
 import { DateRangeServerValue } from './filters/filters.service';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { reportTypeMap } from 'shared/utils/report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -21,7 +21,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
   private _interval = KalturaReportInterval.tenSeconds;
   
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.discoveryRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.discoveryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
@@ -32,7 +32,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
   };
 
   private _getGraphActionArgs: ReportGetGraphsActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.discoveryRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.discoveryRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
