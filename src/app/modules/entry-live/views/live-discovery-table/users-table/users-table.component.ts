@@ -20,7 +20,7 @@ export class UsersTableComponent implements OnDestroy {
   
   private _initialSortEvent = true;
   
-  public _order = '-avg_view_buffering';
+  public _order = '-view_buffer_time_ratio';
   public _pager = new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 });
   
   constructor(public _widget: LiveDiscoveryTableWidget) {
