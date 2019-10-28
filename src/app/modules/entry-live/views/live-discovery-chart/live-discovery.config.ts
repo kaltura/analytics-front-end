@@ -26,7 +26,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          [authUsers ? 'viewers' : 'view_unique_audience']: {
+          [authUsers ? 'view_unique_audience' : 'viewers']: {
             format: value => Math.round(value),
             colors: ['#31bea6'],
             graphType: GraphType.line,
@@ -35,7 +35,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
               : `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 1,
           },
-          [authUsers ? 'viewers_buffering' : 'view_unique_buffering_users']: {
+          [authUsers ? 'view_unique_buffering_users' : 'viewers_buffering']: {
             format: value => Math.round(value),
             colors: ['#e1962e'],
             graphType: GraphType.line,
@@ -44,7 +44,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
               : `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 2,
           },
-          [authUsers ? 'viewers_dvr' : 'view_unique_audience_dvr']: {
+          [authUsers ? 'view_unique_audience_dvr' : 'viewers_dvr']: {
             format: value => Math.round(value),
             colors: ['#60e4cc'],
             graphType: GraphType.line,
@@ -53,7 +53,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
               : `${this._translate.instant('app.entryLive.discovery.view_unique_audience_dvr')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 3,
           },
-          [authUsers ? 'viewers_engagement' : 'view_unique_engaged_users']: {
+          [authUsers ? 'view_unique_engaged_users' : 'viewers_engagement']: {
             format: value => Math.round(value),
             colors: ['#1b8271'],
             graphType: GraphType.line,

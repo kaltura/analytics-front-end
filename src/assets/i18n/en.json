@@ -535,6 +535,7 @@
           "viewers_buffering": "Buffering Users",
           "viewers_dvr": "DVR Users",
           "view_unique_audience": "Total Active Users",
+          "view_unique_buffering_users": "Total Buffering Users",
           "avg_view_engagement": "Avg. User Engagement",
           "avg_view_buffering": "Avg. Buffer Rate",
           "avg_view_downstream_bandwidth": "AVG Bandwidth",
