@@ -21,6 +21,10 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
     super(_serverPolls, _frameEventManager);
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new EntryLiveRequestFactory(this._activationArgs.entryId, this._entryLiveService);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new EntryLiveRequestFactory(widgetsArgs.entryId, this._entryLiveService);
     

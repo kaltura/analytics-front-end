@@ -153,6 +153,10 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     return this._showTable;
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = this._provider.getPollFactory(this._widgetArgs);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs, silent = false): Observable<void> {
     if (!silent) {
       this.isBusy = true;
