@@ -19,7 +19,7 @@ import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 import { liveDiscoveryTablePageSize } from '../table-config';
-import { reportTypeMap } from 'shared/utils/report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -35,7 +35,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   private _interval = KalturaReportInterval.tenSeconds;
   
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
@@ -46,7 +46,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   };
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,

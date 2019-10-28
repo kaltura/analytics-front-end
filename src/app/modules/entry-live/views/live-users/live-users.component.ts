@@ -31,7 +31,7 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   private _echartsIntance: any;
   private _isLive = false;
   
-  public _isBusy = true;
+  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveUsersData;
   public _graphData: { [key: string]: any } = {};
@@ -47,13 +47,13 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
     this._liveUsersWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isBusy = state.isBusy;
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._isBusy = true;
               this._liveUsersWidget.retry();
             },
           };
@@ -64,7 +64,6 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
     this._liveUsersWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveUsersData) => {
-        this._isBusy = false;
         this._data = data;
         
         if (this._isLive) {
