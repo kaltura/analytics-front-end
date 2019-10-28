@@ -4,7 +4,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { reportTypeMap } from 'shared/utils/report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -13,7 +13,7 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
   });
   
   private _getTableActionArgs: ReportGetGraphsActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.usersOverviewRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.usersOverviewRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._getTime(30),

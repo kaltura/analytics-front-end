@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { DateRange, DateRangeServerValue, FiltersService, TimeInterval } from './filters.service';
+import { DateRange, DateRangeServerValue, defaultDateRange, FiltersService, TimeInterval } from './filters.service';
 import { SelectItem } from 'primeng/api';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import { DateChangeEvent, TimeSelectorService } from '../time-selector/time-selector.service';
@@ -34,7 +34,7 @@ export class FiltersComponent implements OnDestroy {
   
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
-  public _selectedDateRange = DateRange.LastMin;
+  public _selectedDateRange = defaultDateRange;
   
   constructor(private _filterService: FiltersService,
               private _timeSelectorService: TimeSelectorService) {

@@ -16,7 +16,8 @@
                                 [rangeLabel]="rangeLabel"
                                 (openTimeSelector)="_openTimeSelector()"
                                 (filterChange)="_widget.usersFilterChange($event)">
-            <app-table-selector [tableMode]="_tableMode"
+            <app-table-selector *ngIf="(_usersModeService.usersMode$ | async) === _entryLiveUsersMode.Authenticated"
+                                [tableMode]="_tableMode"
                                 (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
           </app-discovery-filter>
           <app-users-table [tableData]="_tableData"
@@ -30,6 +31,7 @@
         <ng-container *ngSwitchCase="_tableModes.devices">
           <div class="kTableContent">
             <app-table-selector class="kDevicesModeTableSelector"
+                                *ngIf="(_usersModeService.usersMode$ | async) === _entryLiveUsersMode.Authenticated"
                                 [tableMode]="_tableMode"
                                 (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
             <span class="kTotalCount">
