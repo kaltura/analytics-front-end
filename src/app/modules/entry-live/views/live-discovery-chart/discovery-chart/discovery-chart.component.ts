@@ -14,6 +14,7 @@ export class DiscoveryChartComponent {
   @Input() fields: ReportDataFields;
 
   @Input() isBusy: boolean;
+  @Input() blockerMessage: boolean;
 
   @Input() colorsMap: { [metric: string]: string } = {};
 

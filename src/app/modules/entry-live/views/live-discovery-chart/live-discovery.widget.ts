@@ -24,6 +24,7 @@ export interface LiveDiscoveryData {
 @Injectable()
 export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   private _dateFilter: DateFiltersChangedEvent;
+  private _originalDateRange: { startDate: number, endDate: number, isPresetMode: boolean} = null;
 
   protected _widgetId = 'explore';
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
@@ -48,30 +49,39 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._dataConfig = this._dataConfigService.getConfig();
   }
 
-  public updateFilters(event: DateFiltersChangedEvent): void {
-    this._dateFilter = event;
-
-    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-
-    if (this._isPresetMode) {
-      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
-    } else {
-      this._pollsFactory.dateRange = {
-        fromDate: this._dateFilter.startDate,
-        toDate: this._dateFilter.endDate,
-      };
+  private _applyFilters(): void {
+    if (this._dateFilter) {
+      this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+      if (this._isPresetMode) {
+        this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+      } else {
+        this._pollsFactory.dateRange = {
+          fromDate: this._dateFilter.startDate,
+          toDate: this._dateFilter.endDate,
+        };
+      }
     }
+  }
 
-    this.restartPolling(!this._isPresetMode);
+  public restoreTimeRange(): void {
+    if (this._originalDateRange !== null) {
+      this._dateFilter.startDate = this._originalDateRange.startDate;
+      this._dateFilter.endDate = this._originalDateRange.endDate;
+      this._dateFilter.isPresetMode = this._originalDateRange.isPresetMode;
+      this._originalDateRange = null;
+      this._applyFilters();
+    }
   }
 
   public updateFiltersDateRange(dateRange: {startDate: number, endDate: number}): void {
-    this._pollsFactory.dateRange = {
-      fromDate: dateRange.startDate,
-      toDate: dateRange.endDate,
-    };
+    if (this._originalDateRange === null) {
+      this._originalDateRange = { startDate: dateRange.startDate, endDate: dateRange.endDate, isPresetMode: this._dateFilter.isPresetMode };
+    }
+    this._dateFilter.startDate = dateRange.startDate;
+    this._dateFilter.endDate = dateRange.endDate;
+    this._dateFilter.isPresetMode = false;
     // TODO: matbe call only the chart service and not the table, check why the selected days are not returned properly
-    this.restartPolling(true, false); // poll only once and pause polling
+    this.restartPolling(true); // poll only once and pause polling
   }
 
   private _getDaysCount(): any {
@@ -110,6 +120,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   protected _onRestart(): void {
     this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId);
+    this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -184,5 +195,13 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   public setCurrentInterval(interval: TimeInterval): void {
     this._timeInterval = interval;
+  }
+
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+
+    this._applyFilters();
+
+    this.restartPolling(!this._isPresetMode);
   }
 }

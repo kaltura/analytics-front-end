@@ -109,11 +109,9 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
     }
   }
 
-  public restartPolling(pollOnce = false, triggerHook = true): void {
+  public restartPolling(pollOnce = false): void {
     this.stopPolling();
-    if (triggerHook) {
-      this._onRestart();
-    }
+    this._onRestart();
     this.startPolling(pollOnce);
   }
 

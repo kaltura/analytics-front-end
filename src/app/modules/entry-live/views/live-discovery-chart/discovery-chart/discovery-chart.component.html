@@ -1,38 +1,40 @@
-<div class="kChart">
-  <div *ngIf="_chartData"
-       echarts class="kChart"
-       [options]="_chartData"
-       (chartInit)="_onChartInit($event)"></div>
+<k-area-blocker [message]="blockerMessage" [showLoader]="isBusy">
+  <div class="kChart">
+    <div *ngIf="_chartData"
+         echarts class="kChart"
+         [options]="_chartData"
+         (chartInit)="_onChartInit($event)"></div>
 
-  <div *ngIf="!isBusy && !_chartData" class="kNoResults">
-    <span>{{'app.common.noResults' | translate}}</span>
-  </div>
-
-  <div class="kSummaryRow">
-    <div class="kCustomLegend">
-      <div class="kLegendItemContainer" *ngFor="let metric of _selectedMetrics">
-        <div class="kCircle" [style.background-color]="colorsMap[metric]"></div>
-        <span class="kLegendItem">{{('app.entryLive.discovery.' + metric) | translate}}</span>
-      </div>
+    <div *ngIf="!isBusy && !_chartData" class="kNoResults">
+      <span>{{'app.common.noResults' | translate}}</span>
     </div>
 
-    <div class="kRightSide">
-      <div class="kSummary" *ngIf="_totalsData">
-        <span class="kSummaryItem" *ngFor="let metric of _selectedTotalsMetrics">
-          <span class="kSummaryItemValue">{{_totalsData[metric]}}</span>
-          {{('app.entryLive.discovery.totals.' + metric) | translate}}
-        </span>
+    <div class="kSummaryRow">
+      <div class="kCustomLegend">
+        <div class="kLegendItemContainer" *ngFor="let metric of _selectedMetrics">
+          <div class="kCircle" [style.background-color]="colorsMap[metric]"></div>
+          <span class="kLegendItem">{{('app.entryLive.discovery.' + metric) | translate}}</span>
+        </div>
       </div>
 
-      <div class="kControls">
-        <button pButton class="kTogglePolling"
-                [disabled]="togglePollingDisabled"
-                [ngClass]="isPolling ? 'kButtonDefault' : 'kButtonBranded'"
-                [icon]="isPolling ? 'icon-pause' : 'icon-resume'"
-                [label]="(isPolling ? 'app.entryLive.discovery.pauseUpdates' : 'app.entryLive.discovery.resumeUpdates') | translate"
-                (click)="resumePolling()"></button>
-      </div>
+      <div class="kRightSide">
+        <div class="kSummary" *ngIf="_totalsData">
+          <span class="kSummaryItem" *ngFor="let metric of _selectedTotalsMetrics">
+            <span class="kSummaryItemValue">{{_totalsData[metric]}}</span>
+            {{('app.entryLive.discovery.totals.' + metric) | translate}}
+          </span>
+        </div>
 
+        <div class="kControls">
+          <button pButton class="kTogglePolling"
+                  [disabled]="togglePollingDisabled"
+                  [ngClass]="isPolling ? 'kButtonDefault' : 'kButtonBranded'"
+                  [icon]="isPolling ? 'icon-pause' : 'icon-resume'"
+                  [label]="(isPolling ? 'app.entryLive.discovery.pauseUpdates' : 'app.entryLive.discovery.resumeUpdates') | translate"
+                  (click)="resumePolling()"></button>
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
+</k-area-blocker>

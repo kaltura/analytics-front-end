@@ -108,6 +108,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveExploreWidget.stopPolling();
       this._liveDiscoveryTable.stopPolling();
     } else {
+      this._liveExploreWidget.restoreTimeRange();
       this._liveExploreWidget.startPolling();
       this._liveDiscoveryTable.startPolling();
     }
