@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
@@ -10,7 +10,7 @@ import { LiveDiscoveryConfig } from '../live-discovery.config';
   templateUrl: './discovery-chart.component.html',
   styleUrls: ['./discovery-chart.component.scss']
 })
-export class DiscoveryChartComponent {
+export class DiscoveryChartComponent implements OnDestroy{
   @Input() fields: ReportDataFields;
 
   @Input() isBusy: boolean;
@@ -259,28 +259,30 @@ export class DiscoveryChartComponent {
       });
     }, 0);
 
-    chartInstance.on('datazoom', (event) => {
-      let startIndex = event.batch && event.batch.length ? event.batch[0].startValue : null;
-      let endIndex = event.batch && event.batch.length ? event.batch[0].endValue : null;
-      const epocs = this._data.graphs['epocs'];
-      if (startIndex !== null && endIndex !== null) { // user selected a period of less than 2 point
-        if (startIndex === endIndex) {
-          if ( startIndex > 0) {
-            startIndex--; // extend selected range to include point from the left
-          } else if (endIndex < epocs.length - 1) {
-            endIndex++; // extend selected range to include point from the right
-          } else {
-            return; // can't zoom any deeper - abort!
-          }
+    this._echartsIntance.on('datazoom', this.handleZoomEvent.bind(this));
+  }
+
+  private handleZoomEvent(event): void {
+    let startIndex = event.batch && event.batch.length ? event.batch[0].startValue : null;
+    let endIndex = event.batch && event.batch.length ? event.batch[0].endValue : null;
+    const epocs = this._data.graphs['epocs'];
+    if (startIndex !== null && endIndex !== null) { // user selected a period of less than 2 point
+      if (startIndex === endIndex) {
+        if ( startIndex > 0) {
+          startIndex--; // extend selected range to include point from the left
+        } else if (endIndex < epocs.length - 1) {
+          endIndex++; // extend selected range to include point from the right
+        } else {
+          return; // can't zoom any deeper - abort!
         }
-        const startDate = parseInt(epocs[startIndex]);
-        const endDate = parseInt(epocs[endIndex]);
-        if (this.isPolling) {
-          this.togglePolling.emit(); // pause polling when zoomed, TODO: update restore button label if needed by design
-        }
-        this.zoom.emit({startDate, endDate});
       }
-    });
+      const startDate = parseInt(epocs[startIndex]);
+      const endDate = parseInt(epocs[endIndex]);
+      if (this.isPolling) {
+        this.togglePolling.emit(); // pause polling when zoomed, TODO: update restore button label if needed by design
+      }
+      this.zoom.emit({startDate, endDate});
+    }
   }
 
   public displayMetrics(metrics: string[]): void {
@@ -297,5 +299,9 @@ export class DiscoveryChartComponent {
       type: 'restore'
     });
     this.togglePolling.emit();
+  }
+
+  ngOnDestroy(): void {
+    this._echartsIntance.off('datazoom', this.handleZoomEvent.bind(this));
   }
 }
