@@ -66,6 +66,8 @@ import { EntryDetailsOverlayComponent } from 'shared/components/entry-details-ov
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
+import { EntriesEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entries-filter/entries-filter.component';
+import { EntryEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entry-engagement-filter.component';
 import { ElementFocusDirective } from './directives/element-focus.directive';
 
 @NgModule({
@@ -135,6 +137,8 @@ import { ElementFocusDirective } from './directives/element-focus.directive';
     UserEngagementFilterComponent,
     HeatMapComponent,
     EntryDetailsOverlayComponent,
+    EntriesEngagementFilterComponent,
+    EntryEngagementFilterComponent,
     ElementFocusDirective,
   ],
   exports: [
@@ -181,6 +185,7 @@ import { ElementFocusDirective } from './directives/element-focus.directive';
     UserEngagementFilterComponent,
     HeatMapComponent,
     EntryDetailsOverlayComponent,
+    EntryEngagementFilterComponent,
   ],
   providers: [
   ]

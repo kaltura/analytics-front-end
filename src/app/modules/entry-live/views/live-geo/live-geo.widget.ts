@@ -48,6 +48,11 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId);
+    this._applyFilters();
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
     
@@ -109,6 +114,19 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
     return result ? result.result : null;
   }
+  
+  private _applyFilters(): void {
+    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+  
+    if (this._isPresetMode) {
+      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+    } else {
+      this._pollsFactory.dateRange = {
+        fromDate: this._dateFilter.startDate,
+        toDate: this._dateFilter.endDate,
+      };
+    }
+  }
 
   public updatePollsFilter(drillDown: string[], restart = false): void {
     this._pollsFactory.drillDown = drillDown;
@@ -120,18 +138,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
-    
-    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-    
-    if (this._isPresetMode) {
-      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
-    } else {
-      this._pollsFactory.dateRange = {
-        fromDate: this._dateFilter.startDate,
-        toDate: this._dateFilter.endDate,
-      };
-    }
-    
+    this._applyFilters();
     this.restartPolling(!this._isPresetMode);
   }
 }

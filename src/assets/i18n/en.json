@@ -38,6 +38,7 @@
       "tags": "Tags",
       "users": "Users",
       "owners": "Owners",
+      "entries": "Entries",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
       "region": "Region",
@@ -53,7 +54,8 @@
       "filterDomains": "Filter Domains",
       "domainPlaceholder": "Select Domain",
       "domainsSelected": "{0} Domains Selected",
-      "filterUsers": "Filter Users"
+      "filterUsers": "Filter Users",
+      "filterEntries": "Filter Entries"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -477,7 +479,7 @@
         "index": "#",
         "view_unique_audience": "Active Users",
         "distribution": "Active Users Distribution",
-        "avg_view_buffering": "Avg. Buffer Rate",
+        "view_buffer_time_ratio": "Avg. Buffer Rate",
         "avg_view_engagement": "Avg. User Engagement"
       },
       "devices": {
@@ -492,6 +494,7 @@
         "viewPresence": "View Presence",
         "hidePresence": "Hide Presence",
         "users": "Users",
+        "authUsers": "Active Logged-In Users",
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
         "totalDevices": "{{0}} Devices",
@@ -529,6 +532,7 @@
         "sum_view_time": "Minutes Viewed",
         "avg_view_live_latency": "Avg. Latency Rate",
         "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
+        "view_buffer_time_ratio": "Avg. Buffer Rate",
         "totals": {
           "view_unique_audience": "Total Active Users",
           "avg_view_engagement": "Avg. User Engagement",
@@ -538,7 +542,8 @@
           "avg_view_bitrate": "AVG Bitrate",
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_live_latency": "AVG Latency",
-          "avg_view_dropped_frames_ratio": "AVG Dropped Frames"
+          "avg_view_dropped_frames_ratio": "AVG Dropped Frames",
+          "view_buffer_time_ratio": "Avg. Buffer Rate"
         },
         "userStatus": {
           "offline": "Offline",
@@ -561,7 +566,7 @@
           "users": {
             "user_name": "Username",
             "status": "Status",
-            "avg_view_buffering": "Avg. Buffer Rate",
+            "view_buffer_time_ratio": "Avg. Buffer Rate",
             "sum_view_time": "Minutes Viewed",
             "known_flavor_params_view_count": "Top Served Flavor",
             "avg_view_engagement": "Avg. Engagement"
@@ -650,6 +655,16 @@
         "geo": "Geo Location",
         "devices": "Active Users Per Devices",
         "discovery": "Discovery Graph"
+      },
+      "userModes": {
+        "Authenticated": {
+          "title": "Authenticated Users",
+          "description": "Show data for login users only"
+        },
+        "All": {
+          "title": "All  Users",
+          "description": "Show data for anonymous users and login users"
+        }
       }
     },
     "entry": {
@@ -678,6 +693,7 @@
       "avg_view_drop_off": "Avg. Drop Off Rate",
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
       "totalViewersCount": "{{0}} Viewers",
+      "totalEntriesCount": "{{0}} Entries",
       "avg_completion_rate": "Avg. Completion Rate",
       "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
       "unique_known_users": "Unique Viewers",

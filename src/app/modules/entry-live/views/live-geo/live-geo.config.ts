@@ -36,7 +36,7 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
           'view_unique_audience': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'avg_view_buffering': {
+          'view_buffer_time_ratio': {
             format: value => ReportHelper.percents(value, false),
           },
           'avg_view_engagement': {

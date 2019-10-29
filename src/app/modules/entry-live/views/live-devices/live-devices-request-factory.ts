@@ -3,8 +3,8 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiReques
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateRangeServerValue } from '../live-discovery-chart/filters/filters.service';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -20,7 +20,7 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   };
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.platformsRealtime),
+    reportType: liveReportTypeMap(KalturaReportType.platformsRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,

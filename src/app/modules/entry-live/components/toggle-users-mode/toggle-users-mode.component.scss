@@ -1,0 +1,37 @@
+.kOptionsLabelWrapper {
+  display: flex;
+  flex-direction: column;
+
+  .kOptionTitle {
+    font-size: 15px;
+    font-weight: normal;
+    margin-bottom: 5px;
+
+    &.kSelected {
+      font-weight: bold;
+    }
+  }
+
+  .kOptionDescription {
+    font-size: 12px;
+    font-weight: normal !important;
+  }
+}
+
+:host ::ng-deep {
+  .ui-dropdown-item {
+    position: relative;
+  }
+
+  .ui-dropdown-item.ui-corner-all.ui-state-highlight:after {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-size: 10px;
+    font-weight: normal;
+  }
+
+  .ui-dropdown .ui-dropdown-panel {
+    width: 283px;
+  }
+}

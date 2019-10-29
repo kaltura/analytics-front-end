@@ -11,8 +11,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
   
   public static mapTotalsMetric(metric: string): string {
     switch (metric) {
-      case 'view_unique_buffering_users':
-        return 'avg_view_buffering';
       case 'view_unique_audience_dvr':
         return 'avg_view_dvr';
       case 'view_unique_engaged_users':
@@ -34,13 +32,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 1,
-          },
-          'view_unique_buffering_users': {
-            format: value => Math.round(value),
-            colors: ['#e1962e'],
-            graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.numberOrZero(value)}`,
-            sortOrder: 2,
           },
           'view_unique_audience_dvr': {
             format: value => Math.round(value),
@@ -64,14 +55,14 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             units: () => '%',
             sortOrder: 5,
           },
-          // 'avg_view_bitrate': {
-          //   format: value => Number(value).toFixed(1),
-          //   colors: ['#f7c25c'],
-          //   graphType: GraphType.line,
-          //   graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
-          //   units: () => 'Kbps',
-          //   sortOrder: 6,
-          // },
+          'avg_view_bitrate': {
+            format: value => Number(value).toFixed(1),
+            colors: ['#f7c25c'],
+            graphType: GraphType.line,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
+            units: () => 'Kbps',
+            sortOrder: 6,
+          },
           'avg_view_live_latency': {
             format: value => Math.round(value),
             colors: ['#f3737b'],
@@ -96,6 +87,14 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             units: () => 'Seconds',
             sortOrder: 9,
           },
+          'view_buffer_time_ratio': {
+            format: value => (value * 100).toFixed(1),
+            colors: ['#e1962e'],
+            graphType: GraphType.line,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_buffer_time_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
+            sortOrder: 10,
+          }
         }
       },
       [ReportDataSection.totals]: {
@@ -106,9 +105,9 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'avg_view_buffering': {
             format: value => ReportHelper.percents(value, false),
           },
-          // 'avg_view_bitrate': {
-          //   format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
-          // },
+          'avg_view_bitrate': {
+            format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
+          },
           'avg_view_live_latency': {
             format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
           },
@@ -127,6 +126,9 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'avg_view_engagement': {
             format: value => ReportHelper.percents(value, false),
           },
+          'view_buffer_time_ratio': {
+            format: value => ReportHelper.percents(value, false),
+          }
         }
       },
     };

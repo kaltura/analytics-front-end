@@ -17,6 +17,8 @@ import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-us
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { liveDiscoveryTablePageSize } from './table-config';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 export type LiveDiscoveryTableWidgetPollFactory = LiveDiscoveryDevicesTableRequestFactory | LiveDiscoveryUsersTableRequestFactory;
 
@@ -55,7 +57,7 @@ export interface LiveDiscoveryTableWidgetProvider {
 export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData> implements LiveDiscoveryTableWidget, OnDestroy {
   private _provider: LiveDiscoveryTableWidgetProvider;
   private _widgetArgs: WidgetsActivationArgs;
-  private _tableMode = TableModes.users;
+  private _tableMode = this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated ? TableModes.users : TableModes.devices;
   private _dateFilter: DateFiltersChangedEvent;
   private _usersFilter: UsersTableFilter;
   private _filtersChange = new Subject<void>();
@@ -80,6 +82,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
               private _kalturaClient: KalturaClient,
+              private _usersModeService: ToggleUsersModeService,
               private _devicesProvider: LiveDiscoveryDevicesTableProvider,
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
     super(_serverPolls, _frameEventManager);
@@ -148,6 +151,11 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   protected _canStartPolling(): boolean {
     return this._showTable;
+  }
+  
+  protected _onRestart(): void {
+    this._pollsFactory = this._provider.getPollFactory(this._widgetArgs);
+    this._applyFilters();
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs, silent = false): Observable<void> {

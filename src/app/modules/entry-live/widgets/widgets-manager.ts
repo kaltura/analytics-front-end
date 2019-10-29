@@ -27,4 +27,8 @@ export class WidgetsManager {
   public deactivateAll(): void {
     this._widgets.forEach(widget => widget.deactivate());
   }
+  
+  public restartAll(): void {
+    this._widgets.forEach(widget => widget.restartPolling());
+  }
 }

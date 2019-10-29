@@ -11,6 +11,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface GraphPoint {
   value: number;
@@ -34,8 +36,13 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
-              protected _translate: TranslateService) {
+              protected _translate: TranslateService,
+              protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
+  }
+  
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveUsersRequestFactory(this._activationArgs.entryId);
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -55,8 +62,14 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
       dates: [],
     };
     
-    const activeUsersData = reports.find(({ id }) => id === 'view_unique_audience');
-    const engagedUsersData = reports.find(({ id }) => id === 'view_unique_engaged_users');
+    const activeUsersKey = this._usersModeService.usersMode === EntryLiveUsersMode.All
+      ? 'views'
+      : 'view_unique_audience';
+    const engagedUsersKey = this._usersModeService.usersMode === EntryLiveUsersMode.All
+      ? 'avg_view_engagement'
+      : 'view_unique_engaged_users';
+    const activeUsersData = reports.find(({ id }) => id === activeUsersKey);
+    const engagedUsersData = reports.find(({ id }) => id === engagedUsersKey);
     
     if (activeUsersData) {
       activeUsersData.data.split(';')
