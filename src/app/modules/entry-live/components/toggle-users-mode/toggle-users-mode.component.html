@@ -1,0 +1,10 @@
+<p-dropdown [options]="_options" (onChange)="_onModeChange($event)" [(ngModel)]="_selected">
+  <ng-template let-option pTemplate="item">
+    <div class="kOptionsLabelWrapper">
+      <span class="kOptionTitle" [class.kSelected]="_selected === option.value">
+        {{('app.entryLive.userModes.' + option.value + '.title') | translate}}
+      </span>
+      <span class="kOptionDescription">{{('app.entryLive.userModes.' + option.value + '.description') | translate}}</span>
+    </div>
+  </ng-template>
+</p-dropdown>

@@ -19,7 +19,7 @@ import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery
 import { EntryLiveExportConfig } from './entry-live-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
-import { DateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
+import { defaultDateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
 import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
@@ -55,7 +55,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entry: KalturaExtendedLiveEntry;
   public _exportConfig: ExportItem[] = [];
   public _canShowToggleLive = false;
-  public _selectedDateRange = DateRange.LastMin;
+  public _selectedDateRange = defaultDateRange;
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
   
   constructor(private _frameEventManager: FrameEventManagerService,
@@ -246,5 +246,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._selectedDateRange = event.dateRange;
+  }
+  
+  public _onUsersModeChange(): void {
+    this._widgetsManager.restartAll();
   }
 }

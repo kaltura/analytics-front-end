@@ -15,6 +15,7 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
+  liveEntryUsersReports: string;
   defaultPageSize: number;
   originTarget: string;
   kalturaServer?: {
@@ -92,6 +93,7 @@ export const analyticsConfig: AnalyticsConfig = {
   defaultPageSize: 25,
   originTarget: window.location.origin,
   multiAccount: false,
+  liveEntryUsersReports: 'All',
 };
 
 export function setConfig(config: AnalyticsConfig, hosted = false): void {

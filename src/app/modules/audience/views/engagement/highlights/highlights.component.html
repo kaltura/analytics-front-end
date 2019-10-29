@@ -59,9 +59,9 @@
 
             <ng-container *ngSwitchCase="_tableModes.users">
               <app-user-engagement-filter *ngIf="!_isMultiAccount"
-                [totalCount]="usersTableComponent.totalCount"
-                [dateFilter]="_dateFilter"
-                (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+                                          [totalCount]="usersTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
               <app-users-table #usersTableComponent
                                [filterChange]="_filterChange$"
@@ -72,13 +72,20 @@
                                [firstTimeLoading]="_firstTimeLoading"></app-users-table>
             </ng-container>
 
-            <app-entries-table *ngSwitchCase="_tableModes.entries"
-                               [filterChange]="_filterChange$"
-                               [filter]="_filter"
-                               [compareFilter]="_compareFilter"
-                               [isCompareMode]="_isCompareMode"
-                               [reportInterval]="_reportInterval"
-                               [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+            <ng-container *ngSwitchCase="_tableModes.entries">
+              <app-entry-engagement-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="entriesTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>
+
+              <app-entries-table #entriesTableComponent
+                                 [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+            </ng-container>
           </ng-container>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BaseEntryGetAction,
+  KalturaAPIException,
   KalturaClient,
   KalturaDetachedResponseProfile,
   KalturaMediaEntry,
@@ -106,7 +107,11 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         cancelOnDestroy(this),
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
-            throw responses.getFirstError();
+            const err: KalturaAPIException = responses.getFirstError();
+            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data.
+            if (err.code !== "INVALID_USER_ID") {
+              throw err;
+            }
           }
           
           const metadataList = responses.length === 3 ? responses[2].result : null;

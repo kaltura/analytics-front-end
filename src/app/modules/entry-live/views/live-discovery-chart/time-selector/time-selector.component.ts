@@ -6,7 +6,7 @@ import { KalturaReportInterval } from 'kaltura-ngx-client';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { DateRange } from '../filters/filters.service';
+import { DateRange, defaultDateRange } from '../filters/filters.service';
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -24,7 +24,7 @@ export class TimeSelectorComponent implements OnDestroy {
     if (value) {
       this._selectedDateRange = value;
     } else {
-      this._selectedDateRange = DateRange.LastMin;
+      this._selectedDateRange = defaultDateRange;
     }
   }
   
@@ -46,7 +46,7 @@ export class TimeSelectorComponent implements OnDestroy {
   public _popupOpened = false;
   public _leftDateRangeItems: SelectItem[] = [];
   public _rightDateRangeItems: SelectItem[] = [];
-  public _selectedDateRange = DateRange.LastMin;
+  public _selectedDateRange = defaultDateRange;
   public _viewItems: SelectItem[] = [
     { label: this._translate.instant('app.dateFilter.preset'), value: 'preset' },
     { label: this._translate.instant('app.dateFilter.specific'), value: 'specific' },

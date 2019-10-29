@@ -18,6 +18,7 @@ export enum FrameEvents {
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
   UpdateMultiAccount = 'updateMultiAccount',
+  UpdateAuthLiveUsersReports = 'updateAuthLiveUsersReports',
   UpdateConfig = 'updateConfig',
 }
 

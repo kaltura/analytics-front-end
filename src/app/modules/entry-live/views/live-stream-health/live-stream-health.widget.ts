@@ -33,6 +33,10 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
     });
   }
   
+  protected _onRestart(): void {
+    this._pollsFactory = new LiveStreamHealthRequestFactory(this._activationArgs.entryId);
+  }
+  
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveStreamHealthRequestFactory(widgetsArgs.entryId);
     
