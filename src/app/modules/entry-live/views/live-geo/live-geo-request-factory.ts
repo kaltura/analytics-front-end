@@ -3,7 +3,7 @@ import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaR
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { DateRangeServerValue } from '../live-discovery-chart/filters/filters.service';
+import { DateRangeServerValue, defaultDateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
@@ -16,7 +16,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
   
   private _dateRange: DateRangeServerValue = {
     toDate: moment().unix(),
-    fromDate: moment().subtract(1, 'minute').unix(),
+    fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
   
   private _getTableActionArgs: ReportGetTableActionArgs = {
