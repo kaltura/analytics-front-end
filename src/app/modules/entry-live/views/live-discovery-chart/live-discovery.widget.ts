@@ -103,17 +103,17 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
 
   private _getFormatByInterval(): string {
-    switch (this._timeInterval) {
-      case TimeInterval.Days:
-        return 'MMM DD';
-
-      case TimeInterval.Minutes:
-      case TimeInterval.Hours:
-        return this._getDaysCount() > 1 ? 'MMM DD HH:mm' : 'HH:mm';
-
-      case TimeInterval.TenSeconds:
-      default:
+    if (this._dateFilter) {
+      const timeInterval = (this._dateFilter.endDate - this._dateFilter.startDate) / 60; // get time interval in minutes
+      if (timeInterval > 1440) {
+        return 'MMM DD HH:mm';
+      } else if (timeInterval > 720 ) {
+        return 'HH:mm';
+      } else {
         return 'HH:mm:ss';
+      }
+    } else {
+      return 'HH:mm:ss';
     }
   }
 
