@@ -80,7 +80,6 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._dateFilter.startDate = dateRange.startDate;
     this._dateFilter.endDate = dateRange.endDate;
     this._dateFilter.isPresetMode = false;
-    // TODO: matbe call only the chart service and not the table, check why the selected days are not returned properly
     this.restartPolling(true); // poll only once and pause polling
   }
 
