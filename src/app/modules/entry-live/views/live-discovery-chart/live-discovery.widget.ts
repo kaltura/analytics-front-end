@@ -105,9 +105,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   private _getFormatByInterval(): string {
     if (this._dateFilter) {
       const timeInterval = (this._dateFilter.endDate - this._dateFilter.startDate) / 60; // get time interval in minutes
-      if (timeInterval > 1440) {
+      if (timeInterval > 1440) { // more than 1 day, include Month and day
         return 'MMM DD HH:mm';
-      } else if (timeInterval > 720 ) {
+      } else if (timeInterval > 720 ) { // between 12 and 24 hours hours, show only hours and minutes
         return 'HH:mm';
       } else {
         return 'HH:mm:ss';
