@@ -24,6 +24,7 @@ import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 
 @Component({
   selector: 'app-entry',
@@ -129,7 +130,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ([entry, user, metadataItem]) => {
           this._entry = entry;
-          this._owner = user.fullName;
+          this._owner = user ? user.fullName : entry.userId; // fallback for deleted users
 
           if (metadataItem) {
             const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
