@@ -155,6 +155,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   
   protected _onRestart(): void {
     this._pollsFactory = this._provider.getPollFactory(this._widgetArgs);
+    this._applyFilters();
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs, silent = false): Observable<void> {

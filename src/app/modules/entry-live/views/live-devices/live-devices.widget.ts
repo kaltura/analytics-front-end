@@ -56,6 +56,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   
   protected _onRestart(): void {
     this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs.entryId);
+    this._applyFilters();
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -140,11 +141,9 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     });
   }
   
-  public updateFilters(event: DateFiltersChangedEvent): void {
-    this._dateFilter = event;
-    
+  private _applyFilters(): void {
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-    
+  
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
@@ -153,6 +152,12 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
         toDate: this._dateFilter.endDate,
       };
     }
+  }
+  
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+    
+    this._applyFilters();
     
     this.restartPolling(!this._isPresetMode);
   }

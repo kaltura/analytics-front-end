@@ -48,11 +48,9 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._dataConfig = this._dataConfigService.getConfig();
   }
   
-  public updateFilters(event: DateFiltersChangedEvent): void {
-    this._dateFilter = event;
-    
+  private _applyFilters(): void {
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-    
+  
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
@@ -61,8 +59,6 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         toDate: this._dateFilter.endDate,
       };
     }
-    
-    this.restartPolling(!this._isPresetMode);
   }
   
   private _getDaysCount(): any {
@@ -101,6 +97,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   
   protected _onRestart(): void {
     this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId);
+    this._applyFilters();
   }
   
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
@@ -170,5 +167,13 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   
   public setCurrentInterval(interval: TimeInterval): void {
     this._timeInterval = interval;
+  }
+  
+  public updateFilters(event: DateFiltersChangedEvent): void {
+    this._dateFilter = event;
+    
+    this._applyFilters();
+    
+    this.restartPolling(!this._isPresetMode);
   }
 }
