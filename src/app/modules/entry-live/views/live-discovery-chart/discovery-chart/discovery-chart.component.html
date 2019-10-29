@@ -1,15 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Analytics</title>
-  <base href="./">
+<div class="kChart">
+  <div *ngIf="_chartData"
+       echarts class="kChart"
+       [options]="_chartData"
+       (chartInit)="_onChartInit($event)"></div>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
-</head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
-<app-root></app-root>
-</body>
-</html>
+  <div *ngIf="!isBusy && !_chartData" class="kNoResults">
+    <span>{{'app.common.noResults' | translate}}</span>
+  </div>
+
+  <div class="kSummaryRow">
+    <div class="kCustomLegend">
+      <div class="kLegendItemContainer" *ngFor="let metric of _selectedMetrics">
+        <div class="kCircle" [style.background-color]="colorsMap[metric]"></div>
+        <span class="kLegendItem">{{('app.entryLive.discovery.' + metric) | translate}}</span>
+      </div>
+    </div>
+
+    <div class="kRightSide">
+      <div class="kSummary" *ngIf="_totalsData">
+        <span class="kSummaryItem" *ngFor="let metric of _selectedTotalsMetrics">
+          <span class="kSummaryItemValue">{{_totalsData[metric]}}</span>
+          {{('app.entryLive.discovery.totals.' + metric) | translate}}
+        </span>
+      </div>
+
+      <div class="kControls">
+        <button pButton class="kTogglePolling"
+                [disabled]="togglePollingDisabled"
+                [ngClass]="isPolling ? 'kButtonDefault' : 'kButtonBranded'"
+                [icon]="isPolling ? 'icon-pause' : 'icon-resume'"
+                [label]="(isPolling ? 'app.entryLive.discovery.pauseUpdates' : 'app.entryLive.discovery.resumeUpdates') | translate"
+                (click)="togglePolling.emit()"></button>
+      </div>
+
+    </div>
+  </div>
+</div>
