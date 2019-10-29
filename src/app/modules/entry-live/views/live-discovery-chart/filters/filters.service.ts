@@ -35,7 +35,7 @@ export class FiltersService {
   constructor(private _translate: TranslateService) {
   }
   
-  public getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
+  public static getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
     let from;
     
     switch (dateRange) {
@@ -75,6 +75,10 @@ export class FiltersService {
       toDate: moment().unix(),
       fromDate: from.unix(),
     };
+  }
+  
+  public getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
+    return FiltersService.getDateRangeServerValue(dateRange);
   }
   
   public getDateRangeList(): SelectItem[] {

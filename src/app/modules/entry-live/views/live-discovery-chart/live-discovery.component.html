@@ -5,19 +5,21 @@
                                          (selectorChange)="_onMetricsSelectorChange($event)"></app-live-discovery-metrics-selector>
   </app-live-discovery-filters>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent">
-      <app-discovery-chart [data]="_data"
-                           [fields]="_fields"
-                           [colorsMap]="_colorsMap"
-                           [isBusy]="_isBusy"
-                           [isPolling]="_isPolling"
-                           [togglePollingDisabled]="_pollingBtnDisabled"
-                           [selectedMetrics]="_selectedMetrics"
-                           (togglePolling)="_onTogglePolling()"></app-discovery-chart>
-      <app-live-discovery-table [isPolling]="_isPolling"
-                                [rangeLabel]="_rangeLabel"
-                                (tableChange)="tableChange.emit($event)"></app-live-discovery-table>
-    </div>
-  </k-area-blocker>
+
+  <div class="kReportContent">
+    <app-discovery-chart [data]="_data"
+                         [fields]="_fields"
+                         [colorsMap]="_colorsMap"
+                         [isBusy]="_isBusy"
+                         [blockerMessage]="_blockerMessage"
+                         [isPolling]="_isPolling"
+                         [togglePollingDisabled]="_pollingBtnDisabled"
+                         [selectedMetrics]="_selectedMetrics"
+                         (togglePolling)="_onTogglePolling()"
+                         (zoom)="onZoom($event)"></app-discovery-chart>
+    <app-live-discovery-table [isPolling]="_isPolling"
+                              [rangeLabel]="_rangeLabel"
+                              (tableChange)="tableChange.emit($event)"></app-live-discovery-table>
+  </div>
+
 </div>

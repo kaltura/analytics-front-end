@@ -6,7 +6,7 @@
       {{(_showTable ? 'app.entryLive.discovery.hidePresence' : 'app.entryLive.discovery.viewPresence') | translate}}
     </a>
   </div>
-  <k-area-blocker [showLoader]="_widget.isBusy" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
     <div class="kTableContainer" *ngIf="_showTable">
       <ng-container [ngSwitch]="_tableMode">
 

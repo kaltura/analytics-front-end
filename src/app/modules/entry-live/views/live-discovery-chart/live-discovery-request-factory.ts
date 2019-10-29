@@ -3,7 +3,7 @@ import { KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, Ka
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
-import { DateRangeServerValue } from './filters/filters.service';
+import { DateRangeServerValue, defaultDateRange, FiltersService } from './filters/filters.service';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 
@@ -15,7 +15,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
   
   private _dateRange: DateRangeServerValue = {
     toDate: moment().unix(),
-    fromDate: moment().subtract(1, 'minute').unix(),
+    fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
   
   private _interval = KalturaReportInterval.tenSeconds;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { EChartOption } from 'echarts';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
@@ -10,24 +10,25 @@ import { LiveDiscoveryConfig } from '../live-discovery.config';
   templateUrl: './discovery-chart.component.html',
   styleUrls: ['./discovery-chart.component.scss']
 })
-export class DiscoveryChartComponent {
+export class DiscoveryChartComponent implements OnDestroy{
   @Input() fields: ReportDataFields;
-  
+
   @Input() isBusy: boolean;
-  
+  @Input() blockerMessage: boolean;
+
   @Input() colorsMap: { [metric: string]: string } = {};
-  
+
   @Input() set selectedMetrics(value: string[]) {
     if (Array.isArray(value)) {
       this._selectedMetrics = value;
       this._selectedTotalsMetrics = value.map(LiveDiscoveryConfig.mapTotalsMetric);
     }
   }
-  
+
   @Input() isPolling = true;
-  
+
   @Input() togglePollingDisabled = false;
-  
+
   @Input() set data(value: LiveDiscoveryData) {
     if (value) {
       this._data = value;
@@ -38,20 +39,21 @@ export class DiscoveryChartComponent {
       this._data = null;
     }
   }
-  
+
   @Output() togglePolling = new EventEmitter<void>();
-  
+  @Output() zoom = new EventEmitter<{startDate: number, endDate: number}>();
+
   private _data: LiveDiscoveryData;
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'avg_view_buffering'];
   private _dataZoomStart = 0;
   private _dataZoomEnd = 100;
   private _echartsIntance: any;
-  
+
   public _chartData: EChartOption;
   public _totalsData: { [key: string]: string };
   public _selectedMetrics: string[];
   public _selectedTotalsMetrics: string[];
-  
+
   private _handleData(value: LiveDiscoveryData): void {
     const chartData = value.graphs;
     const metrics = this._selectedMetrics || this._defaultMetrics;
@@ -64,7 +66,7 @@ export class DiscoveryChartComponent {
       });
     }
   }
-  
+
   private _getTooltipFormatter(params: any[]): string {
     if (!params.length) {
       return null;
@@ -81,13 +83,13 @@ export class DiscoveryChartComponent {
       result += `<br/><span class="kBullet" style="color: ${this.colorsMap[metric.seriesName]}">&bull;</span>&nbsp;${value}`;
     });
     result += '</div>';
-  
+
     return result;
   }
-  
+
   private _getGraphConfig(metrics: string[], main: string[], secondary: string[], times: string[]): EChartOption {
     const [mainMetric, secondaryMetric] = metrics;
-    
+
     const seriesCommon = {
       type: 'line',
       lineStyle: {
@@ -97,7 +99,7 @@ export class DiscoveryChartComponent {
       symbolSize: 8,
       showSymbol: false
     };
-    
+
     const yAxisCommon = {
       type: 'value',
       axisTick: { show: false },
@@ -108,7 +110,7 @@ export class DiscoveryChartComponent {
         }
       },
     };
-    
+
     const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
@@ -134,10 +136,10 @@ export class DiscoveryChartComponent {
     // prevent having min equals max
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
-    
+
     const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
     const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
-    
+
     return {
       color: this._selectedMetrics.map(metric => getColor(metric)),
       textStyle: {
@@ -145,6 +147,14 @@ export class DiscoveryChartComponent {
       },
       grid: {
         top: 24, left: main ? 24 : 48, bottom: 74, right: secondary ? 24 : 48, containLabel: true
+      },
+      toolbox: {
+        top: 0,
+        left: -150,
+        feature: {
+          dataZoom: {yAxisIndex: 'none'},
+          restore: {}
+        }
       },
       tooltip: {
         formatter: this._getTooltipFormatter.bind(this),
@@ -228,57 +238,70 @@ export class DiscoveryChartComponent {
           yAxisIndex: 1,
           lineStyle: { width: 3, color: getColor(secondaryMetric) }
         },
-      ],
-      dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          start: this._dataZoomStart,
-          end: this._dataZoomEnd,
-          fillerColor: 'rgba(49, 190, 166, .5)',
-          handleSize: '125%',
-          backgroundColor: 'white',
-          showDetail: false,
-          handleIcon: 'image://data:image/png;base64,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',
-          dataBackground: {
-            areaStyle: {
-              color: '#cccccc',
-              opacity: 1,
-            },
-            lineStyle: {
-              color: '#cccccc',
-              opacity: 1,
-            }
-          }
-        }
-      ],
+      ]
     };
   }
-  
+
   private shouldNormalize(metric: string): boolean {
     const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users', 'avg_view_live_latency'];
     return normalizedMetrics.indexOf(metric) > -1;
   }
-  
+
   public _onChartInit(chartInstance): void {
     this._echartsIntance = chartInstance;
-    chartInstance.on('datazoom', ({ start, end }) => {
-      this._dataZoomStart = start;
-      this._dataZoomEnd = end;
-    });
+
+    // preselect zoom feature in toolbox to enable zooming without clicking the zoom icon
+    setTimeout(() => {
+      this._echartsIntance.dispatchAction({
+        type: 'takeGlobalCursor',
+        key: 'dataZoomSelect',
+        dataZoomSelectActive: true
+      });
+    }, 0);
+
+    this._echartsIntance.on('datazoom', this.handleZoomEvent.bind(this));
   }
-  
-  public resetDataZoom(): void {
-    this._dataZoomStart = 0;
-    this._dataZoomEnd = 100;
+
+  private handleZoomEvent(event): void {
+    let startIndex = event.batch && event.batch.length ? event.batch[0].startValue : null;
+    let endIndex = event.batch && event.batch.length ? event.batch[0].endValue : null;
+    const epocs = this._data.graphs['epocs'];
+    if (startIndex !== null && endIndex !== null) { // user selected a period of less than 2 point
+      if (startIndex === endIndex) {
+        if ( startIndex > 0) {
+          startIndex--; // extend selected range to include point from the left
+        } else if (endIndex < epocs.length - 1) {
+          endIndex++; // extend selected range to include point from the right
+        } else {
+          return; // can't zoom any deeper - abort!
+        }
+      }
+      const startDate = parseInt(epocs[startIndex]);
+      const endDate = parseInt(epocs[endIndex]);
+      if (this.isPolling) {
+        this.togglePolling.emit(); // pause polling when zoomed, TODO: update restore button label if needed by design
+      }
+      this.zoom.emit({startDate, endDate});
+    }
   }
-  
+
   public displayMetrics(metrics: string[]): void {
     this._selectedMetrics = metrics;
     this._selectedTotalsMetrics = metrics.map(LiveDiscoveryConfig.mapTotalsMetric);
-    
+
     if (this._data) {
       this._handleData(this._data);
     }
+  }
+
+  public resumePolling(): void {
+    this._echartsIntance.dispatchAction({
+      type: 'restore'
+    });
+    this.togglePolling.emit();
+  }
+
+  ngOnDestroy(): void {
+    this._echartsIntance.off('datazoom', this.handleZoomEvent.bind(this));
   }
 }
