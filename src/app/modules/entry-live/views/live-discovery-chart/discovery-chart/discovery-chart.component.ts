@@ -146,7 +146,7 @@ export class DiscoveryChartComponent implements OnDestroy{
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: main ? 24 : 48, bottom: 74, right: secondary ? 24 : 48, containLabel: true
+        top: 24, left: main ? 24 : 48, bottom: 24, right: secondary ? 24 : 48, containLabel: true
       },
       toolbox: {
         top: 0,
