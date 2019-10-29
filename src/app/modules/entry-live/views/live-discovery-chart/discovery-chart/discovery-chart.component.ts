@@ -40,7 +40,7 @@ export class DiscoveryChartComponent {
   }
 
   @Output() togglePolling = new EventEmitter<void>();
-  @Output() onZoom = new EventEmitter<{startDate: number, endDate: number}>();
+  @Output() zoom = new EventEmitter<{startDate: number, endDate: number}>();
 
   private _data: LiveDiscoveryData;
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'avg_view_buffering'];
@@ -262,7 +262,7 @@ export class DiscoveryChartComponent {
       let startIndex = event.batch && event.batch.length ? event.batch[0].startValue : null;
       let endIndex = event.batch && event.batch.length ? event.batch[0].endValue : null;
       const epocs = this._data.graphs['epocs'];
-      if (startIndex && endIndex) { // user selected a period of less than 2 point
+      if (startIndex !== null && endIndex !== null) { // user selected a period of less than 2 point
         if (startIndex === endIndex) {
           if ( startIndex > 0) {
             startIndex--; // extend selected range to include point from the left
@@ -277,7 +277,7 @@ export class DiscoveryChartComponent {
         if (this.isPolling) {
           this.togglePolling.emit(); // pause polling when zoomed, TODO: update restore button label if needed by design
         }
-        this.onZoom.emit({startDate, endDate});
+        this.zoom.emit({startDate, endDate});
       }
     });
   }
@@ -289,5 +289,12 @@ export class DiscoveryChartComponent {
     if (this._data) {
       this._handleData(this._data);
     }
+  }
+
+  public resumePolling(): void {
+    this._echartsIntance.dispatchAction({
+      type: 'restore'
+    });
+    this.togglePolling.emit();
   }
 }

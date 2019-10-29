@@ -71,7 +71,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       toDate: dateRange.endDate,
     };
     // TODO: matbe call only the chart service and not the table, check why the selected days are not returned properly
-    this.restartPolling(true); // poll only once and pause polling
+    this.restartPolling(true, false); // poll only once and pause polling
   }
 
   private _getDaysCount(): any {

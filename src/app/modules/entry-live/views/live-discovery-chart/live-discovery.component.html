@@ -15,7 +15,7 @@
                            [togglePollingDisabled]="_pollingBtnDisabled"
                            [selectedMetrics]="_selectedMetrics"
                            (togglePolling)="_onTogglePolling()"
-                           (onZoom)="onZoom($event)"></app-discovery-chart>
+                           (zoom)="onZoom($event)"></app-discovery-chart>
       <app-live-discovery-table [isPolling]="_isPolling"
                                 [rangeLabel]="_rangeLabel"
                                 (tableChange)="tableChange.emit($event)"></app-live-discovery-table>
