@@ -248,6 +248,8 @@ export class DiscoveryChartComponent {
 
   public _onChartInit(chartInstance): void {
     this._echartsIntance = chartInstance;
+
+    // preselect zoom feature in toolbox to enable zooming without clicking the zoom icon
     setTimeout(() => {
       this._echartsIntance.dispatchAction({
         type: 'takeGlobalCursor',
