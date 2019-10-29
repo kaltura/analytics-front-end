@@ -75,7 +75,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   public updateFiltersDateRange(dateRange: {startDate: number, endDate: number}): void {
     if (this._originalDateRange === null) {
-      this._originalDateRange = { startDate: dateRange.startDate, endDate: dateRange.endDate, isPresetMode: this._dateFilter.isPresetMode };
+      this._originalDateRange = { startDate: this._dateFilter.startDate, endDate: this._dateFilter.endDate, isPresetMode: this._dateFilter.isPresetMode };
     }
     this._dateFilter.startDate = dateRange.startDate;
     this._dateFilter.endDate = dateRange.endDate;
