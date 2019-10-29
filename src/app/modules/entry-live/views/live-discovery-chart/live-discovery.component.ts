@@ -87,7 +87,6 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._rangeLabel = event.rangeLabel;
 
     if (!event.initialRun) {
-      this._discoveryChart.resetDataZoom();
       this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
       this._liveDevicesWidget.updateFilters(event);
@@ -113,5 +112,9 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveDiscoveryTable.startPolling();
     }
 
+  }
+
+  public onZoom(event): void {
+    this._liveExploreWidget.updateFiltersDateRange(event);
   }
 }
