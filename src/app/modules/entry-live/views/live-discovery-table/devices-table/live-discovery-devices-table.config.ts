@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GraphType, ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
@@ -36,8 +36,8 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'view_unique_buffering_users': {
-            format: value => value,
+          'view_buffer_time_ratio': {
+            format: value => ReportHelper.percents(value),
             sortOrder: 3,
           },
           'sum_view_time': {
@@ -60,8 +60,8 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'view_unique_buffering_users': {
-            format: value => value,
+          'view_buffer_time_ratio': {
+            format: value => ReportHelper.percents(value),
             sortOrder: 4,
           },
           'sum_view_time': {
