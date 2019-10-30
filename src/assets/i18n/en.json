@@ -268,6 +268,7 @@
       "geo": {
         "title": "Geo Location",
         "count_plays": "Plays",
+        "count_loads": "Impressions",
         "unique_known_users": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
         "avg_view_drop_off": "Avg. Drop Off Rate",

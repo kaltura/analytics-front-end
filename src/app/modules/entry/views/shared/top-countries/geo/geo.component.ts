@@ -21,12 +21,12 @@ export class GeoComponent {
   @Input() isBusy = true;
   @Input() isCompareMode = false;
   @Input() showTrend = false;
-  @Input() selectedMetrics = 'count_plays';
+  @Input() selectedMetrics = 'count_loads';
   @Input() periodTitle: string;
   @Input() drillDownItems: string[] = [];
   @Input() name = 'default';
-  @Input() distributionCalculationKey = 'count_plays';
-  @Input() distributionKey = 'plays_distribution';
+  @Input() distributionCalculationKey = 'count_loads';
+  @Input() distributionKey = 'loads_distribution';
   
   @Input() set mapData(value) {
     if (value) {
