@@ -1,5 +1,5 @@
 <div class="kReportTabs kOverrideFAIcons">
-  <div class="kTab" [class.kNarrow]="tabs.length<4" *ngFor="let tab of tabs"
+  <div class="kTab" [class.kNarrow]="tabs.length < 4 || narrowTabs" *ngFor="let tab of tabs"
        [class.active]="tab.selected" [class.noContent]="!showValue"
        [kTooltip]="compareMode ? tab.tooltip : null" [maxWidth]="500" [escape]="false"
        (click)="tabClick(tab)" >
