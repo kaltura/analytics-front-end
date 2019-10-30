@@ -706,6 +706,8 @@
       "users": "Users",
       "dates": "Dates",
       "entry_name": "Name",
+      "votes": "Likes",
+      "count_viral": "Shares",
       "heatMap": {
         "duration": "Duration {{0}}",
         "tooltip": {
