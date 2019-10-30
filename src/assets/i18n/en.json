@@ -546,6 +546,7 @@
           "avg_view_dropped_frames_ratio": "Avg. Dropped Frames",
           "view_buffer_time_ratio": "Avg. Buffer Rate"
         },
+        "drag": "Drag to select a time frame",
         "userStatus": {
           "offline": "Offline",
           "dvr": "DVR",
