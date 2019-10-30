@@ -40,7 +40,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   
   public _entryDetails: TableRow[] = [];
   private _updateTableHeight = new Subject<void>();
-  private _order = '-count_plays';
+  private _order = '-count_loads';
   private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
   private _partnerId = this._authService.pid;
