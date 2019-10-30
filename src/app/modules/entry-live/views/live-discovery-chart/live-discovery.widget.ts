@@ -15,6 +15,9 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { DateFiltersChangedEvent } from './filters/filters.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface LiveDiscoveryData {
   graphs: { [key: string]: string[] };
@@ -43,10 +46,15 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
               protected _dataConfigService: LiveDiscoveryConfig,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
-              protected _filterService: FiltersService) {
+              protected _filterService: FiltersService,
+              protected _usersModeService: ToggleUsersModeService,) {
     super(_serverPolls, _frameEventManager);
-
-    this._dataConfig = this._dataConfigService.getConfig();
+  
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._dataConfig = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated);
+      });
   }
 
   private _applyFilters(): void {

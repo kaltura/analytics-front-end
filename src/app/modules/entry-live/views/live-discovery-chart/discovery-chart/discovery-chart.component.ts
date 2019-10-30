@@ -118,7 +118,7 @@ export class DiscoveryChartComponent implements OnDestroy{
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
     const getColor = metric => this.colorsMap[metric] ? this.colorsMap[metric] : getPrimaryColor();
     const yAxisLabelFormatter = (param, metric) => {
-      if (typeof this.fields[metric].units === 'function') {
+      if (this.fields[metric] && typeof this.fields[metric].units === 'function') {
         return `${param} ${this.fields[metric].units()}`;
       }
       return param;
