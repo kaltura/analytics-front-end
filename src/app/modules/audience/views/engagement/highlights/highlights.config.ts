@@ -43,16 +43,16 @@ export class HighlightsConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
-            sortOrder: 0,
-          },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
+            sortOrder: 0,
+          },
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             sortOrder: 1,
           },
           'unique_known_users': {

@@ -33,7 +33,7 @@ export class DatesTableComponent implements OnInit {
   
   @Input() compare;
   
-  private _order = '-count_plays';
+  private _order = '-count_loads';
   private _dataConfig: ReportDataConfig;
   
   public _pageSize = analyticsConfig.defaultPageSize;

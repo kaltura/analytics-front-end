@@ -23,11 +23,11 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
             format: value => DateFilterUtils.formatFullDateString(value),
             nonComparable: true,
           },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 1,
           },
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
