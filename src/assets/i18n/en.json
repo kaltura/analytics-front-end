@@ -486,7 +486,7 @@
         "viewPresence": "View Presence",
         "hidePresence": "Hide Presence",
         "users": "Users",
-        "authUsers": "Active Logged-In Users",
+        "authUsers": "Users",
         "devices": "Devices",
         "totalActiveUsers": "{{0}} Active Users",
         "totalDevices": "{{0}} Devices",

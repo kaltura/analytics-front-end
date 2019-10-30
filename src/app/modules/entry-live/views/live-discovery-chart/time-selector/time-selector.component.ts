@@ -53,6 +53,7 @@ export class TimeSelectorComponent implements OnDestroy {
   ];
   public _selectedView = 'preset';
   public _dateRangeLabel = '';
+  public _shortDateRangeLabel = '';
   public _specificDateRange: Date[] = [new Date(), new Date()];
   
   public get _applyDisabled(): boolean {
@@ -122,6 +123,7 @@ export class TimeSelectorComponent implements OnDestroy {
       endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
       rangeLabel: this._dateRangeLabel,
+      shortRangeLabel: this._shortDateRangeLabel,
     };
     this.filterChange.emit(payload);
     this._dateFilterService.onFilterChange(payload);
@@ -144,7 +146,10 @@ export class TimeSelectorComponent implements OnDestroy {
     return momentDate.toDate();
   }
   
-  private _formPresetDateRangeLabel(preset: DateRange, label: string, from: Date, to: Date): string {
+  private _formPresetDateRangeLabel(label: string, from: Date, to: Date, short = false): string {
+    if (short) {
+      return `<b>${label}</b>`;
+    }
     return `<b>${label}</b>&nbsp;&nbsp;&nbsp;${this._formatDateRangeLabel(from, to)}`;
   }
   
@@ -154,7 +159,7 @@ export class TimeSelectorComponent implements OnDestroy {
     const getDate = date => date.format(analyticsConfig.dateFormat === 'month-day-year' ? 'MM/D/YYYY' : 'D/MM/YYYY');
     const getTime = date => date.format('HH:mm');
   
-    return `${getDate(startDate)}, ${getTime(startDate)} – ${getDate(endDate)}, ${getTime(endDate)}`;
+    return `${getDate(startDate)} ${getTime(startDate)} – ${getDate(endDate)} ${getTime(endDate)}`;
   }
   
   public _validateTimeInputs(): void {
@@ -171,7 +176,8 @@ export class TimeSelectorComponent implements OnDestroy {
       const dates = this._dateFilterService.getDateRangeDetails(this._selectedDateRange);
       this._startDate = dates.startDate;
       this._endDate = dates.endDate;
-      this._dateRangeLabel = this._formPresetDateRangeLabel(this._selectedDateRange, dates.label, this._startDate, this._endDate);
+      this._dateRangeLabel = this._formPresetDateRangeLabel(dates.label, this._startDate, this._endDate);
+      this._shortDateRangeLabel = this._formPresetDateRangeLabel(dates.label, this._startDate, this._endDate, true);
     } else {
       this._startDate = this._getDate(this._specificDateRange[0], this._fromTime);
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);
