@@ -302,6 +302,8 @@ export class DiscoveryChartComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this._echartsIntance.off('datazoom', this.handleZoomEvent.bind(this));
+    if (this._echartsIntance) {
+      this._echartsIntance.off('datazoom', this.handleZoomEvent.bind(this));
+    }
   }
 }
