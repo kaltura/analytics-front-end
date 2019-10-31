@@ -48,11 +48,6 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
       .subscribe(label => {
         this.rangeLabel = label;
       });
-    _usersModeService.usersMode$
-      .pipe(cancelOnDestroy(this), filter(mode => mode === EntryLiveUsersMode.All))
-      .subscribe(() => {
-        this._tableMode = TableModes.devices;
-      });
   }
 
   ngOnInit() {

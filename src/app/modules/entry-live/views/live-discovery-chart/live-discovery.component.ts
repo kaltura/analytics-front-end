@@ -91,9 +91,10 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     this._pollingBtnDisabled = !event.isPresetMode;
     this._rangeLabel = event.shortRangeLabel;
+  
+    this._liveExploreWidget.updateFilters(event, !event.initialRun);
 
     if (!event.initialRun) {
-      this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
       this._liveDevicesWidget.updateFilters(event);
       this._liveGeoWidget.updateFilters(event);

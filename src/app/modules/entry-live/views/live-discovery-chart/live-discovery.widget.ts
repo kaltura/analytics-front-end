@@ -54,6 +54,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       .pipe(cancelOnDestroy(this))
       .subscribe(mode => {
         this._dataConfig = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated);
+        this.restoreTimeRange();
       });
   }
 
@@ -204,11 +205,13 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._timeInterval = interval;
   }
 
-  public updateFilters(event: DateFiltersChangedEvent): void {
+  public updateFilters(event: DateFiltersChangedEvent, restart = true): void {
     this._dateFilter = event;
 
     this._applyFilters();
 
-    this.restartPolling(!this._isPresetMode);
+    if (restart) {
+      this.restartPolling(!this._isPresetMode);
+    }
   }
 }
