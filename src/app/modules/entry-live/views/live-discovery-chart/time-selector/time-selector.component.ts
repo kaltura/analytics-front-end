@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, TimeSelectorService } from './time-selector.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'app-time-selector',
@@ -31,6 +32,8 @@ export class TimeSelectorComponent implements OnDestroy {
   @Input() showCompare = true;
   
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
+  
+  @ViewChild(PopupWidgetComponent, { static: false }) _popupWidget: PopupWidgetComponent;
   
   private _lastSelectedDateRange: DateRange; // used for revert selection
   private _startDate: Date;
@@ -191,20 +194,21 @@ export class TimeSelectorComponent implements OnDestroy {
     }
   }
   
-  public _togglePopup(): void {
-    this._popupOpened = !this._popupOpened;
+  public _onPopupOpen(): void {
     this._updateLayout();
-    
-    if (this._popupOpened) {
-      this._selectedDateRange = this._lastSelectedDateRange;
-    } else {
-      this._resetTime();
-    }
+    this._selectedDateRange = this._lastSelectedDateRange;
+  }
+  
+  public _onPopupClose(): void {
+    this._updateLayout();
+    this._resetTime();
   }
   
   public _closePopup(): void {
-    this._popupOpened = false;
-    this._resetTime();
+    this.updateDataRanges();
+    if (this._popupWidget) {
+      this._popupWidget.close();
+    }
   }
   
   public _timeChange(type: 'from' | 'to'): void {
