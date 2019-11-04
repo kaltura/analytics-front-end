@@ -45,13 +45,6 @@
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="('app.entryLive.geo.' + _selectedMetrics) | translate" [showOnEllipsis]="true">
-                  {{('app.entryLive.geo.' + _selectedMetrics) | translate}}
-                </span>
-                </div>
-              </th>
-              <th>
-                <div class="kColumnHeader">
                 <span [kTooltip]="'app.entryLive.geo.distribution' | translate" [showOnEllipsis]="true">
                   {{'app.entryLive.geo.distribution' | translate}}
                 </span>
@@ -85,11 +78,6 @@
                 <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
                 <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                 <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
-              </td>
-              <td>
-                <span *ngIf="!data[_selectedMetrics]?.value">
-                  {{data[_selectedMetrics]}}
-                </span>
               </td>
               <td *ngIf="!data[_selectedMetrics]?.value">
                 <div>
