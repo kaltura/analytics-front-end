@@ -89,6 +89,9 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
               private _usersProvider: LiveDiscoveryUsersTableProvider) {
     super(_serverPolls, _frameEventManager);
 
+    this._setProvider(this._tableMode);
+    this._resetUsersFilter();
+
     _usersModeService.usersMode$
       .pipe(cancelOnDestroy(this), filter(mode => mode === EntryLiveUsersMode.All))
       .subscribe(() => {
