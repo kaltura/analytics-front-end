@@ -86,8 +86,10 @@ export class TimeSelectorComponent implements OnDestroy {
     this._dateFilterService.popupOpened$
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {
-        this._popupOpened = true;
         this._scrollToPopup();
+        if (this._popupWidget) {
+          this._popupWidget.open();
+        }
       });
   }
   

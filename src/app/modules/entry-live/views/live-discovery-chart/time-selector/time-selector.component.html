@@ -7,9 +7,10 @@
 </div>
 
 <kPopupWidget [appendTo]="timeSelector"
-              [popupWidth]="378"
+              [popupWidth]="395"
               [targetRef]="toggle"
-              [targetOffset]="{x: 10, y: 48}"
+              [closeBtn]="false"
+              [targetOffset]="{x: 0, y: 40}"
               (onOpen)="_onPopupOpen()"
               (onClose)="_onPopupClose()">
   <ng-template>
