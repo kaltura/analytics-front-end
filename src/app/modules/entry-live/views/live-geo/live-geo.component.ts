@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ErrorsManagerService } from 'shared/services';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -35,7 +34,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   @ViewChild('table', { static: false }) _table: Table;
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   
-  private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;
@@ -61,8 +59,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
               private _http: HttpClient,
               private _liveGeoWidget: LiveGeoWidget,
               private _dataConfigService: LiveGeoConfig) {
-    this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
   
   ngOnDestroy() {
@@ -98,6 +94,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       .subscribe((data: LiveGeoWidgetData) => {
         this._tableData = data.table;
         this._columns = data.columns;
+        this._selectedMetrics = data.selectedMetric;
         this._setMapCenter();
         setTimeout(() => {
           this._updateMap(this._mapCenter);

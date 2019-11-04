@@ -47,7 +47,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
-              protected _usersModeService: ToggleUsersModeService,) {
+              protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
   
     _usersModeService.usersMode$

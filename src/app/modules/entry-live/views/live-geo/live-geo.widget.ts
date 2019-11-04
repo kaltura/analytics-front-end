@@ -14,16 +14,21 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
   columns: string[];
   totalCount: number;
+  selectedMetric: string;
 }
 
 @Injectable()
 export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   private _dateFilter: DateFiltersChangedEvent;
+  private _isAuthUsers = this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated;
 
   protected _widgetId = 'geo';
   protected _pollsFactory: LiveGeoRequestFactory = null;
@@ -42,10 +47,20 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
-              private _dataConfigService: LiveGeoConfig) {
+              private _dataConfigService: LiveGeoConfig,
+              private _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
-    this._dataConfig = _dataConfigService.getConfig();
+  
+    this._dataConfig = _dataConfigService.getConfig(this._isAuthUsers);
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._isAuthUsers = mode === EntryLiveUsersMode.Authenticated;
+        this._dataConfig = _dataConfigService.getConfig(this._isAuthUsers);
+        this._selectedMetrics = this._dataConfig.totals.preSelected;
+      });
   }
 
   protected _onRestart(): void {
@@ -76,6 +91,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
       table: [],
       columns: [],
       totalCount: 0,
+      selectedMetric: this._selectedMetrics,
     };
 
     if (totals && totals.data && totals.header) {
@@ -99,7 +115,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
           const rowValue = parseFormattedValue(row[key]);
           return significantDigits((rowValue / total) * 100);
         };
-        const usersDistribution = calculateDistribution('view_unique_audience');
+        const usersDistribution = calculateDistribution(this._selectedMetrics);
         row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
         return row;
