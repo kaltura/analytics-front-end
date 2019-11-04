@@ -188,11 +188,21 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       totals = columns
         .reduce((result, column, index) => {
           if (reportTotalFields.hasOwnProperty(column)) {
-            result[column] = reportTotalFields[column].format(values[index]);
+            let value = values[index];
+            result[column] = reportTotalFields[column].format(value);
           }
 
           return result;
         }, {});
+      
+      if (this._usersModeService.usersMode === EntryLiveUsersMode.All) {
+        ['viewers', 'viewers_engagement', 'viewers_dvr', 'viewers_buffering'].forEach(column => {
+          if (reportTotalFields.hasOwnProperty(column)) {
+            const value = String(Math.max(...graphs[column]));
+            totals[column] = reportTotalFields[column].format(value);
+          }
+        });
+      }
     }
 
     return {
