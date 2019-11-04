@@ -10,7 +10,7 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
     super(_translate);
   }
   
-  public getConfig(): ReportDataConfig {
+  public getConfig(isAuth = true): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
@@ -36,6 +36,9 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
           'view_unique_audience': {
             format: value => ReportHelper.numberOrZero(value),
           },
+          'views': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
           'view_buffer_time_ratio': {
             format: value => ReportHelper.percents(value, false),
           },
@@ -46,9 +49,12 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'view_unique_audience',
+        preSelected: isAuth ? 'view_unique_audience' : 'views',
         fields: {
           'view_unique_audience': {
+            format: value => value,
+          },
+          'views': {
             format: value => value,
           }
         }

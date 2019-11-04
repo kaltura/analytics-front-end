@@ -469,9 +469,10 @@
         "object_id": "Name",
         "index": "#",
         "view_unique_audience": "Active Users",
-        "distribution": "Active Users Distribution",
+        "distribution": "Users Distribution",
         "view_buffer_time_ratio": "Avg. Buffer Rate",
-        "avg_view_engagement": "Avg. User Engagement"
+        "avg_view_engagement": "Avg. User Engagement",
+        "views": "Users"
       },
       "devices": {
         "title": "Active Users Per Devices"

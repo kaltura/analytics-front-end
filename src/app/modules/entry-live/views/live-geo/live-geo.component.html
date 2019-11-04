@@ -45,8 +45,8 @@
               </th>
               <th>
                 <div class="kColumnHeader">
-                <span [kTooltip]="'app.entryLive.geo.view_unique_audience' | translate" [showOnEllipsis]="true">
-                  {{'app.entryLive.geo.view_unique_audience' | translate}}
+                <span [kTooltip]="('app.entryLive.geo.' + _selectedMetrics) | translate" [showOnEllipsis]="true">
+                  {{('app.entryLive.geo.' + _selectedMetrics) | translate}}
                 </span>
                 </div>
               </th>
@@ -87,11 +87,11 @@
                 <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
               </td>
               <td>
-                <span *ngIf="!data['view_unique_audience']?.value">
-                  {{data['view_unique_audience']}}
+                <span *ngIf="!data[_selectedMetrics]?.value">
+                  {{data[_selectedMetrics]}}
                 </span>
               </td>
-              <td *ngIf="!data['view_unique_audience']?.value">
+              <td *ngIf="!data[_selectedMetrics]?.value">
                 <div>
                   <app-bullet [value]="data['unique_users_distribution']" [animate]="false"></app-bullet>
                 </div>
