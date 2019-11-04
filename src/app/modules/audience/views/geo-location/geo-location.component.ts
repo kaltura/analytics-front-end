@@ -58,9 +58,9 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   private _canMapDrillDown = true;
   private order = '-count_plays';
   private _mapZoom = 1.2;
-  
+
   public _currentTableLevel = GeoTableModes.countries;
-  
+
   public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
@@ -85,11 +85,11 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     { value: GeoTableModes.regions, label: this._translate.instant('app.audience.geo.tableMode.regions') },
     { value: GeoTableModes.cities, label: this._translate.instant('app.audience.geo.tableMode.cities') },
   ];
-  
+
   private get _isScatter(): boolean {
     return this._currentTableLevel !== GeoTableModes.countries;
   }
-  
+
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -103,7 +103,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
-  
+
   ngOnInit() {
     this._isBusy = false;
     // load works map data
@@ -113,10 +113,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         echarts.registerMap('world', data);
       });
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   public _onTableModeChange(mode: GeoTableModes): void {
     this._logger.trace('Handle change table mode action by user', { mode });
     let reportType: KalturaReportType;
@@ -134,26 +134,26 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         reportType = null;
         break;
     }
-    
+
     this._currentTableLevel = mode;
     this._reportType = reportType;
     this._mapZoom = this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
     this._drillDown = [];
-    
+
     if (this._table) {
       this._table.reset();
     }
-    
+
     this._updateExportConfig();
-    
+
     this._loadReport();
   }
-  
+
   public _onChartInit(ec: any): void {
     this._echartsIntance = ec;
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', { event });
@@ -165,18 +165,18 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._pager.pageIndex = 1;
     this._loadReport();
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
-    
+
     refineFilterToServerValue(this._refineFilter, this._filter);
     refineFilterToServerValue(this._refineFilter, this._trendFilter);
-    
+
     this._currentTableLevel = this._tableMode = GeoTableModes.countries;
-    
+
     this._onDrillDown('');
   }
-  
+
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedTab = tab;
@@ -184,7 +184,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     this._updateMap();
     this._onSortChanged({ data: this._tableData, field: tab.key, order: -1 });
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (event.data.length && event.field && event.order) {
       this._logger.trace(
@@ -199,14 +199,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
+
   public _onChartClick(event): void {
     if (event.data && event.data.name && this._currentTableLevel !== GeoTableModes.cities) {
       this._logger.trace('Handle click on chart by user', { country: event.data.name });
       this._onDrillDown(event.data.name);
     }
   }
-  
+
   public _zoom(direction: string): void {
     this._logger.trace('Handle zoom action by user', { direction });
     this._mapZoom = direction === 'in' ? this._mapZoom * 2 : this._mapZoom / 2;
@@ -217,10 +217,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom, roam }] }, false);
     }
   }
-  
+
   public _onDrillDown(drillDown: string, goBack = false): void {
     this._logger.trace('Handle drill down to country action by user', { drillDown });
-    
+
     switch (this._tableMode) {
       case GeoTableModes.countries:
         if (drillDown === '') {
@@ -254,41 +254,41 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
         break;
     }
-    
+
     this._mapZoom = !this._isScatter || !this._canMapDrillDown ? 1.2 : this._mapZoom;
     this._pager.pageIndex = 1;
-    
+
     this._canMapDrillDown = canDrillDown(this._drillDown[0]);
-    
+
     if (this._table) {
       this._table.reset();
     }
-    
+
     this._updateExportConfig();
-    
+
     this._loadReport();
   }
-  
+
   private _updateExportConfig(): void {
     let update: Partial<ExportItem> = { reportType: this._reportType, additionalFilters: {} };
-    
+
     if (this._drillDown.length > 0) {
       update.additionalFilters.countryIn = this._drillDown[0];
     }
-    
+
     if (this._drillDown.length > 1) {
       update.additionalFilters.regionIn = this._drillDown[1];
     }
-    
+
     this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
   }
-  
+
   private _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
     this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
@@ -317,7 +317,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
@@ -327,7 +327,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let tmp = this._columns.pop();
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
-    
+
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = this._tabsData.find(item => item.key === key);
@@ -337,23 +337,23 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       };
       const playsDistribution = calculateDistribution('count_plays');
       const usersDistribution = calculateDistribution('unique_known_users');
-      
+
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
       row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
-      
+
       return row;
     });
-    
+
     setTimeout(() => {
       this._onSortChanged({ data: this._tableData, field: this._selectedMetrics, order: -1 });
     });
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     this._selectedTab = this._tabsData[0];
   }
-  
+
   private _getName(data: TableRow): string {
     switch (this._currentTableLevel) {
       case GeoTableModes.countries:
@@ -366,14 +366,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         return null;
     }
   }
-  
+
   private _updateMap(): void {
     const isScatter = this._canMapDrillDown && this._isScatter;
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(isScatter);
     mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
     mapConfig.series[0].data = [];
     let maxValue = 0;
-    
+
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
@@ -383,7 +383,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         maxValue = parseFormattedValue(data[this._selectedMetrics]);
       }
     });
-    
+
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
     const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.visualMap;
@@ -392,15 +392,15 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     map.roam = !this._isScatter || this._canMapDrillDown ? 'false' : 'move';
     this._mapChartData[this._selectedMetrics] = mapConfig;
   }
-  
+
   private _loadTrendData(): void {
     const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
-    
+
     this._trendFilter.fromDate = startDate;
     this._trendFilter.toDate = endDate;
-    
+
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: this._trendFilter,
@@ -418,7 +418,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
               const sameCountry = item.country === row.country;
               const sameRegion = item.region === row.region;
               const sameCity = item.city === row.city;
-              
+
               return sameCountry && sameRegion && sameCity;
             });
             let compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
@@ -458,7 +458,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
     const currentValue = parseFormattedValue(row[field]);
     compareValue = parseFormattedValue(compareValue.toString());
@@ -471,10 +471,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       units: value !== null ? '%' : '',
     };
   }
-  
+
   private _updateReportConfig(reportConfig: ReportConfig): void {
     const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
-    
+
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
     }
@@ -485,7 +485,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = '';
-    
+
     switch (this._tableMode) {
       case GeoTableModes.countries:
         if (this._drillDown.length > 0) {
@@ -511,16 +511,23 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         break;
     }
   }
-  
+
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
     if (this._isScatter && this._canMapDrillDown) {
-      const location = this._isScatter && this._tableMode === GeoTableModes.countries ? this._drillDown[1] : this._drillDown[0];
+      const location = this._isScatter && this._tableMode === GeoTableModes.countries ? this._drillDown[0] : this._drillDown[1];
       let found = false;
       this._tableData.forEach(data => {
-        if (location === this._getName(data)) {
-          found = true;
-          this._mapCenter = [data['coordinates'].split('/')[1], data['coordinates'].split('/')[0]];
+        if (this._tableMode === GeoTableModes.countries) {
+          if (data.country && data.country === location) {
+            found = true;
+            this._mapCenter = [data['coordinates'].split('/')[1], data['coordinates'].split('/')[0]];
+          }
+        } else {
+          if (data.region && data.region === location) {
+            found = true;
+            this._mapCenter = [data['coordinates'].split('/')[1], data['coordinates'].split('/')[0]];
+          }
         }
       });
       if (!found && this._tableData.length) {
