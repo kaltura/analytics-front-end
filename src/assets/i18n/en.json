@@ -557,7 +557,7 @@
           "devices": {
             "device": "Devices",
             "view_unique_audience": "Active Users",
-            "view_unique_engaged_users": "User Engaged",
+            "avg_view_engagement": "Avg. Engagement",
             "view_buffer_time_ratio": "Avg. Buffer Rate",
             "sum_view_time": "Minutes Viewed",
             "known_flavor_params_view_count": "Top Served Flavor"

@@ -37,7 +37,7 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'view_buffer_time_ratio': {
-            format: value => ReportHelper.percents(value),
+            format: value => ReportHelper.percents(value, false),
             sortOrder: 3,
           },
           'sum_view_time': {
@@ -48,8 +48,8 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             format: value => this._getFlavor(value),
             sortOrder: 5,
           },
-          'view_unique_engaged_users': {
-            format: value => value,
+          'avg_view_engagement': {
+            format: value => ReportHelper.percents(value),
             sortOrder: 6,
           },
         }
@@ -61,7 +61,7 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             sortOrder: 2,
           },
           'view_buffer_time_ratio': {
-            format: value => ReportHelper.percents(value),
+            format: value => ReportHelper.percents(value, false),
             sortOrder: 4,
           },
           'sum_view_time': {
@@ -72,8 +72,8 @@ export class LiveDiscoveryDevicesTableConfig extends ReportDataBaseConfig {
             format: value => this._getFlavor(value),
             sortOrder: 6,
           },
-          'view_unique_engaged_users': {
-            format: value => value,
+          'avg_view_engagement': {
+            format: value => ReportHelper.percents(value),
             sortOrder: 3,
           },
         }
