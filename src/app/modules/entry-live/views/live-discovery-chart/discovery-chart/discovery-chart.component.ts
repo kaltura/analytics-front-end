@@ -61,11 +61,11 @@ export class DiscoveryChartComponent implements OnDestroy{
     if (this._echartsIntance) {
       // hack to trigger redrawing of the chart to clear corrupted data lines (AN-1074)
       this._echartsIntance.resize({
-        width: this._echartsIntance.getWidth() + 0.1
+        height: this._echartsIntance.getHeight() + 0.1
       });
       setTimeout(() => {
         this._echartsIntance.resize({
-          width: this._echartsIntance.getWidth() - 0.1
+          height: this._echartsIntance.getHeight() - 0.1
         });
       }, 0);
     }
