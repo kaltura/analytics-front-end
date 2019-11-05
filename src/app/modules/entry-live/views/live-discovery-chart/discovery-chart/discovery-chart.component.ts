@@ -247,7 +247,7 @@ export class DiscoveryChartComponent implements OnDestroy{
   }
 
   private shouldNormalize(metric: string): boolean {
-    const normalizedMetrics = ['view_unique_buffering_users', 'view_unique_audience', 'view_unique_audience_dvr', 'view_unique_engaged_users', 'avg_view_live_latency'];
+    const normalizedMetrics = ['view_unique_audience', 'viewers', 'view_unique_audience_dvr', 'viewers_dvr', 'view_unique_engaged_users', 'viewers_engagement', 'avg_view_live_latency'];
     return normalizedMetrics.indexOf(metric) > -1;
   }
 
