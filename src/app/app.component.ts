@@ -15,6 +15,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 @Component({
   selector: 'app-root',
@@ -145,10 +146,10 @@ export class AppComponent implements OnInit, OnDestroy {
     analyticsConfig.liveAnalytics = config.liveAnalytics;
     analyticsConfig.showNavBar = !this.hosted;
     analyticsConfig.isHosted = this.hosted;
-    analyticsConfig.liveEntryUsersReports = config.liveEntryUsersReports || 'All';
     analyticsConfig.permissions = config.permissions || {};
     analyticsConfig.live = config.live || { pollInterval: 30 };
     analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
+    this._setLiveEntryUsersReports(config.liveEntryUsersReports);
 
     // set ks in ngx-client
     this._logger.info(`Setting ks in ngx-client: ${this._authService.ks}`);
@@ -178,6 +179,16 @@ export class AppComponent implements OnInit, OnDestroy {
         this._initAppError(error.message);
       }
     );
+  }
+  
+  private _setLiveEntryUsersReports(str: string): void {
+    if (typeof str === 'string') {
+      const allowedValues = Object.keys(EntryLiveUsersMode);
+      const value = str.charAt(0).toUpperCase() + str.slice(1); // uppercase string
+      analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
+    } else {
+      analyticsConfig.liveEntryUsersReports = EntryLiveUsersMode.All;
+    }
   }
 
   private _initAppError(errorMsg: string): void{
