@@ -79,9 +79,9 @@
                 <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                 <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
               </td>
-              <td *ngIf="!data[_selectedMetrics]?.value">
+              <td *ngIf="!data['distribution']?.value">
                 <div>
-                  <app-bullet [value]="data['unique_users_distribution']" [animate]="false"></app-bullet>
+                  <app-bullet [value]="data['distribution']" [animate]="false"></app-bullet>
                 </div>
               </td>
               <td>
