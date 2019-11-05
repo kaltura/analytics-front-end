@@ -15,8 +15,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
         return 'avg_view_dvr';
       case 'view_unique_engaged_users':
         return 'avg_view_engagement';
-      case 'view_unique_buffering_users':
-        return 'avg_view_engagement';
       case 'none':
         return null;
       default:
@@ -36,15 +34,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
               ? `${this._translate.instant('app.entryLive.discovery.viewers')}: ${ReportHelper.numberOrZero(value)}`
               : `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 1,
-          },
-          [authUsers ? 'view_unique_buffering_users' : 'viewers_buffering']: {
-            format: value => Math.round(value),
-            colors: ['#e1962e'],
-            graphType: GraphType.line,
-            graphTooltip: value => authUsers
-              ? `${this._translate.instant('app.entryLive.discovery.viewers_buffering')}: ${ReportHelper.numberOrZero(value)}`
-              : `${this._translate.instant('app.entryLive.discovery.view_unique_buffering_users')}: ${ReportHelper.numberOrZero(value)}`,
-            sortOrder: 2,
           },
           [authUsers ? 'view_unique_audience_dvr' : 'viewers_dvr']: {
             format: value => Math.round(value),
@@ -118,12 +107,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
         fields: {
           'avg_view_dropped_frames_ratio': {
             format: value => ReportHelper.percents(value, false),
-          },
-          'avg_view_buffering': {
-            format: value => ReportHelper.percents(value, false),
-          },
-          'viewers_buffering': {
-            format: value => ReportHelper.numberOrZero(value, false),
           },
           'avg_view_bitrate': {
             format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
