@@ -45,8 +45,6 @@ export class DiscoveryChartComponent implements OnDestroy{
 
   private _data: LiveDiscoveryData;
   private _defaultMetrics = ['avg_view_dropped_frames_ratio', 'avg_view_buffering'];
-  private _dataZoomStart = 0;
-  private _dataZoomEnd = 100;
   private _echartsIntance: any;
 
   public _chartData: EChartOption;
@@ -61,9 +59,15 @@ export class DiscoveryChartComponent implements OnDestroy{
     this._totalsData = value.totals;
     this._chartData = this._getGraphConfig(metrics, chartData[mainMetric], chartData[secondaryMetric], chartData['times']);
     if (this._echartsIntance) {
-      this._echartsIntance.setOption({
-        dataZoom: [{ start: this._dataZoomStart, end: this._dataZoomEnd }]
+      // hack to trigger redrawing of the chart to clear corrupted data lines (AN-1074)
+      this._echartsIntance.resize({
+        width: this._echartsIntance.getWidth() + 0.1
       });
+      setTimeout(() => {
+        this._echartsIntance.resize({
+          width: this._echartsIntance.getWidth() - 0.1
+        });
+      }, 0);
     }
   }
 
