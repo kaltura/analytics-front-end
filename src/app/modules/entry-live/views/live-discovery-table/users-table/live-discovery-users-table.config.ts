@@ -33,7 +33,9 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'user_name': {
-            format: value => value,
+            format: value => value === 'Unknown'
+              ? this._translate.instant('app.entryLive.discovery.tables.users.unknown')
+              : value,
             sortOrder: 1,
           },
           'status': {
