@@ -181,20 +181,14 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
   
-  private _setLiveEntryUsersReports(str: string): void {
-    if (typeof str === 'string') {
-      const allowedValues = Object.keys(EntryLiveUsersMode);
-      const value = str.charAt(0).toUpperCase() + str.slice(1); // uppercase string
-      analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
-    } else {
-      analyticsConfig.liveEntryUsersReports = EntryLiveUsersMode.All;
-    }
+  private _setLiveEntryUsersReports(value: string): void {
+    const allowedValues = Object.keys(EntryLiveUsersMode);
+    analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
   }
 
-  private _initAppError(errorMsg: string): void{
+  private _initAppError(errorMsg: string): void {
     this._logger.error(errorMsg);
   }
-
   private mapRoutes(kmcRoute: string, queryParams: { [key: string]: string }, prevRoute: string): string {
     const idPostfix = queryParams && queryParams['id'] ? `/${queryParams['id']}` : '';
     let analyticsRoute = kmcRoute;
