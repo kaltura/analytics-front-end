@@ -71,7 +71,7 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';
             graphPoint['symbolSize'] = 8;
-            graphPoint['itemStyle'] = { color: '#e0313a' };
+            graphPoint['itemStyle'] = { color: '#d48d2b' };
           }
           result.buffering.push(graphPoint);
 
