@@ -5,12 +5,12 @@ export interface AnalyticsConfig {
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
-  liveEntryUsersReports: string;
   defaultPageSize: number;
   permissions: {
     lazyLoadCategories?: boolean;
     enableLiveViews?: boolean;
   };
+  liveEntryUsersReports?: string;
   kalturaServer?: {
       uri?: string,
       previewUIConf?: number,
@@ -73,6 +73,5 @@ export const analyticsConfig: AnalyticsConfig = {
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   multiAccount: false,
-  liveEntryUsersReports: 'All',
   permissions: {},
 };
