@@ -28,6 +28,7 @@ export interface LiveGeoWidgetData {
 @Injectable()
 export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   private _dateFilter: DateFiltersChangedEvent;
+  private _drillDown: string[] = [];
   private _isAuthUsers = this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated;
 
   protected _widgetId = 'geo';
@@ -144,10 +145,11 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
         };
       }
     }
+    this._pollsFactory.drillDown = this._drillDown;
   }
 
   public updatePollsFilter(drillDown: string[], restart = false): void {
-    this._pollsFactory.drillDown = drillDown;
+    this._drillDown = this._pollsFactory.drillDown = drillDown;
 
     if (restart) {
       this.restartPolling();
