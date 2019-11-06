@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -16,8 +17,8 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     reportType: liveReportTypeMap(KalturaReportType.usersOverviewRealtime),
     reportInputFilter: new KalturaReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-      toDate: this._getTime(30),
-      fromDate: this._getTime(200),
+      toDate: getFixedEpoch(this._getTime(30)),
+      fromDate: this._getTime(200).unix(),
       interval: KalturaReportInterval.tenSeconds,
     }),
     responseOptions: this._responseOptions
@@ -27,14 +28,14 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
-  private _getTime(seconds: number): number {
-    return moment().subtract(seconds, 'seconds').unix();
+  private _getTime(seconds: number): moment.Moment {
+    return moment().subtract(seconds, 'seconds');
   }
   
   
   public onPollTickSuccess(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = this._getTime(0);
-    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(170);
+    this._getTableActionArgs.reportInputFilter.toDate = getFixedEpoch(this._getTime(0));
+    this._getTableActionArgs.reportInputFilter.fromDate = this._getTime(170).unix();
   }
   
   public create(): KalturaMultiRequest {

@@ -20,6 +20,7 @@ import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue, defaultDateRange, FiltersService } from '../../live-discovery-chart/filters/filters.service';
 import { liveDiscoveryTablePageSize } from '../table-config';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -28,7 +29,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   });
   
   private _dateRange: DateRangeServerValue = {
-    toDate: moment().unix(),
+    toDate: getFixedEpoch(moment()),
     fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
   
@@ -67,10 +68,6 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   constructor(private _entryId: string) {
     this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
     this._getTotalActionArgs.reportInputFilter.entryIdIn = this._entryId;
-  }
-  
-  private _getTime(seconds: number): number {
-    return moment().subtract(seconds, 'seconds').unix();
   }
   
   public set interval(interval: KalturaReportInterval) {
