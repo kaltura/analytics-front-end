@@ -104,13 +104,13 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   
   private _updateMap(mapCenter: number[]): void {
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
-    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.view_unique_audience');
+    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.distribution');
     mapConfig.series[0].data = [];
     let maxValue = 0;
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFormattedValue(data[this._selectedMetrics]));
+      value.push(parseFormattedValue(data['distribution']));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -119,8 +119,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
             : data.city,
         value
       });
-      if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseFormattedValue(data[this._selectedMetrics]);
+      if (parseInt(data['distribution']) > maxValue) {
+        maxValue = parseFormattedValue(data['distribution']);
       }
     });
     

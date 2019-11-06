@@ -117,7 +117,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
           return significantDigits((rowValue / total) * 100);
         };
         const usersDistribution = calculateDistribution(this._selectedMetrics);
-        row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+        row['distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
         return row;
       });
