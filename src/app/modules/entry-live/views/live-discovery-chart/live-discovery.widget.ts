@@ -27,7 +27,7 @@ export interface LiveDiscoveryData {
 @Injectable()
 export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   private _dateFilter: DateFiltersChangedEvent;
-  private _originalDateRange: { startDate: number, endDate: number, isPresetMode: boolean} = null;
+  private _originalDateRange: { dateRange: DateRange, startDate: number, endDate: number, isPresetMode: boolean} = null;
 
   protected _widgetId = 'explore';
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
@@ -74,9 +74,16 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   public restoreTimeRange(): void {
     if (this._originalDateRange !== null) {
-      this._dateFilter.startDate = this._originalDateRange.startDate;
-      this._dateFilter.endDate = this._originalDateRange.endDate;
       this._dateFilter.isPresetMode = this._originalDateRange.isPresetMode;
+      if (this._dateFilter.isPresetMode && this._originalDateRange.dateRange) {
+        this._dateFilter.dateRange = this._originalDateRange.dateRange;
+        this._dateFilter.dateRangeServerValue = this._filterService.getDateRangeServerValue(this._originalDateRange.dateRange);
+        console.warn(this._dateFilter.dateRangeServerValue);
+      } else {
+        this._dateFilter.startDate = this._originalDateRange.startDate;
+        this._dateFilter.endDate = this._originalDateRange.endDate;
+      }
+      
       this._originalDateRange = null;
       this._applyFilters();
     }
@@ -84,31 +91,17 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   public updateFiltersDateRange(dateRange: {startDate: number, endDate: number}): void {
     if (this._originalDateRange === null) {
-      this._originalDateRange = { startDate: this._dateFilter.startDate, endDate: this._dateFilter.endDate, isPresetMode: this._dateFilter.isPresetMode };
+      this._originalDateRange = {
+        dateRange: this._dateFilter.dateRange,
+        startDate: this._dateFilter.startDate,
+        endDate: this._dateFilter.endDate,
+        isPresetMode: this._dateFilter.isPresetMode,
+      };
     }
     this._dateFilter.startDate = dateRange.startDate;
     this._dateFilter.endDate = dateRange.endDate;
     this._dateFilter.isPresetMode = false;
     this.restartPolling(true); // poll only once and pause polling
-  }
-
-  private _getDaysCount(): any {
-    let startDate;
-    let endDate;
-
-    if (this._isPresetMode) {
-      startDate = this._dateFilter.dateRangeServerValue.fromDate;
-      endDate = this._dateFilter.dateRangeServerValue.toDate;
-    } else {
-      startDate = this._dateFilter.startDate;
-      endDate = this._dateFilter.endDate;
-    }
-
-    startDate = moment.unix(startDate);
-    endDate = moment.unix(endDate);
-
-    // add one day when not in preset mode since time is part of calculation
-    return endDate.diff(startDate, 'days') + (this._isPresetMode ? 0 : 1);
   }
 
   private _getFormatByInterval(): string {
