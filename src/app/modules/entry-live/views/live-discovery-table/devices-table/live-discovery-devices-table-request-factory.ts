@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { DateRangeServerValue, defaultDateRange, FiltersService } from '../../live-discovery-chart/filters/filters.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export class LiveDiscoveryDevicesTableRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -14,7 +15,7 @@ export class LiveDiscoveryDevicesTableRequestFactory implements RequestFactory<K
   });
   
   private _dateRange: DateRangeServerValue = {
-    toDate: moment().unix(),
+    toDate: getFixedEpoch(moment()),
     fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
   
