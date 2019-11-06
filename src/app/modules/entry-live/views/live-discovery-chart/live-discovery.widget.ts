@@ -78,7 +78,6 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
       if (this._dateFilter.isPresetMode && this._originalDateRange.dateRange) {
         this._dateFilter.dateRange = this._originalDateRange.dateRange;
         this._dateFilter.dateRangeServerValue = this._filterService.getDateRangeServerValue(this._originalDateRange.dateRange);
-        console.warn(this._dateFilter.dateRangeServerValue);
       } else {
         this._dateFilter.startDate = this._originalDateRange.startDate;
         this._dateFilter.endDate = this._originalDateRange.endDate;
