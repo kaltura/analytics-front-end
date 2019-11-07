@@ -49,17 +49,20 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'views',
+        preSelected: isAuth ? 'view_unique_audience' : 'views',
         fields: {
           'views': {
             format: value => value,
-          }
+          },
+          'view_unique_audience': {
+            format: value => value,
+          },
         }
       }
     };
   }
   
-  public getMapConfig(scatter: boolean): EChartOption {
+  public getMapConfig(scatter: boolean, isAuthUsers: boolean): EChartOption {
     let config = {
       textStyle: {
         fontFamily: 'Lato',
@@ -80,7 +83,8 @@ export class LiveGeoConfig extends ReportDataBaseConfig {
         },
         formatter: (params) => {
           if (params.name && params.data && params.data.value && params.data.value.length === 3) {
-            return '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2] + '%';
+            const units = !isAuthUsers ? '%' : '';
+            return '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2] + units;
           } else {
             return this._translate.instant('app.common.na');
           }
