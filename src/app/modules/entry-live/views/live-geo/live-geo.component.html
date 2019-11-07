@@ -43,6 +43,13 @@
                 </span>
                 </div>
               </th>
+              <th *ngIf="_isAuthUsersMode">
+                <div class="kColumnHeader">
+                  <span [kTooltip]="'app.entryLive.geo.view_unique_audience' | translate" [showOnEllipsis]="true">
+                    {{'app.entryLive.geo.view_unique_audience' | translate}}
+                  </span>
+                </div>
+              </th>
               <th>
                 <div class="kColumnHeader">
                 <span [kTooltip]="'app.entryLive.geo.distribution' | translate" [showOnEllipsis]="true">
@@ -78,6 +85,11 @@
                 <a *ngIf="_drillDown.length === 0" (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
                 <a *ngIf="_drillDown.length === 1" (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                 <span *ngIf="_drillDown.length === 2">{{data['city']}}</span>
+              </td>
+              <td *ngIf="_isAuthUsersMode">
+                <span *ngIf="!data['view_unique_audience']?.value">
+                  {{data['view_unique_audience']}}
+                </span>
               </td>
               <td *ngIf="!data['distribution']?.value">
                 <div>

@@ -18,7 +18,8 @@ import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
-import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode, liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 @Component({
   selector: 'app-live-geo',
@@ -53,12 +54,19 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
   public _showTable = false;
+  public _isAuthUsersMode: boolean;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
               private _liveGeoWidget: LiveGeoWidget,
-              private _dataConfigService: LiveGeoConfig) {
+              private _dataConfigService: LiveGeoConfig,
+              private _userModeService: ToggleUsersModeService) {
+    _userModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._isAuthUsersMode = mode === EntryLiveUsersMode.Authenticated;
+      });
   }
   
   ngOnDestroy() {
@@ -103,14 +111,16 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   }
   
   private _updateMap(mapCenter: number[]): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
-    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.distribution');
+    const isAuthUsersMode = this._userModeService.usersMode === EntryLiveUsersMode.Authenticated;
+    const key = isAuthUsersMode ? 'view_unique_audience' : 'distribution';
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown, isAuthUsersMode);
+    mapConfig.series[0].name = this._translate.instant(`app.entryLive.geo.${key}`);
     mapConfig.series[0].data = [];
     let maxValue = 0;
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFormattedValue(data['distribution']));
+      value.push(parseFormattedValue(data[key]));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -119,8 +129,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
             : data.city,
         value
       });
-      if (parseInt(data['distribution']) > maxValue) {
-        maxValue = parseFormattedValue(data['distribution']);
+      if (parseInt(data[key]) > maxValue) {
+        maxValue = parseFormattedValue(data[key]);
       }
     });
     

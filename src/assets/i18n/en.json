@@ -468,6 +468,7 @@
         "title": "Geo Location",
         "object_id": "Name",
         "index": "#",
+        "view_unique_audience": "Active Users",
         "distribution": "Users Distribution",
         "view_buffer_time_ratio": "Avg. Buffer Rate",
         "avg_view_engagement": "Avg. User Engagement",

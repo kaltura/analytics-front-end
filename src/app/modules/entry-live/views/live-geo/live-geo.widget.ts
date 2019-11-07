@@ -75,7 +75,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     return ObservableOf(null);
   }
 
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
+  protected _responseMapping(table: KalturaReportTable): LiveGeoWidgetData {
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     } else {
@@ -85,19 +85,12 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
       };
     }
 
-    const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
-    const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
-    let tabsData = [];
     let result = {
       table: [],
       columns: [],
       totalCount: 0,
       selectedMetric: this._selectedMetrics,
     };
-
-    if (totals && totals.data && totals.header) {
-      tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-    }
 
     if (table && table.data && table.header) {
       const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
@@ -109,14 +102,13 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
 
       result.totalCount = table.totalCount;
       result.columns = columns;
-      result.table = tableData.map((row) => {
-        const calculateDistribution = (key: string): number => {
-          const tab = tabsData.find(item => item.key === key);
-          const total = tab ? parseFormattedValue(tab.rawValue) : 0;
-          const rowValue = parseFormattedValue(row[key]);
-          return significantDigits((rowValue / total) * 100);
-        };
-        const usersDistribution = calculateDistribution(this._selectedMetrics);
+      const total = tableData.reduce((acc, val) => acc + parseFormattedValue(val[this._selectedMetrics]), 0);
+      const calculateDistribution = (row: TableRow): number => {
+        const rowValue = parseFormattedValue(row[this._selectedMetrics]);
+        return significantDigits((rowValue / total) * 100);
+      };
+      result.table = tableData.map(row => {
+        const usersDistribution = calculateDistribution(row);
         row['distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
         return row;
@@ -124,12 +116,6 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
     }
 
     return result;
-  }
-
-  protected _getResponseByType(responses: KalturaResponse<any>[], type: any): any {
-    const isType = t => r => r.result instanceof t || Array.isArray(r.result) && r.result.length && r.result[0] instanceof t;
-    const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
-    return result ? result.result : null;
   }
 
   private _applyFilters(): void {
