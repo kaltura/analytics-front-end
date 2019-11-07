@@ -25,7 +25,7 @@ export interface LiveDevicesData {
 @Injectable()
 export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   private _dateFilter: DateFiltersChangedEvent;
-  
+
   protected readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   protected _widgetId = 'devices';
   protected _pollsFactory: LiveDevicesRequestFactory = null;
@@ -33,15 +33,15 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   protected _selectedMetric: string;
   protected _deviceIconPipe = new DeviceIconPipe();
   protected _fractions = 1;
-  
+
   private get _dateRange(): DateRange {
     return this._dateFilter ? this._dateFilter.dateRange : null;
   }
-  
+
   private get _isPresetMode(): boolean {
     return this._dateFilter ? this._dateFilter.isPresetMode : true;
   }
-  
+
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _translate: TranslateService,
@@ -53,18 +53,18 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig.totals.preSelected;
   }
-  
+
   protected _onRestart(): void {
     this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs.entryId);
     this._applyFilters();
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId);
-    
+
     return ObservableOf(null);
   }
-  
+
   protected _responseMapping(table: KalturaReportTable): LiveDevicesData {
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
@@ -74,23 +74,23 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
         toDate: this._dateFilter.endDate,
       };
     }
-    
+
     let result = {
       data: [],
       totalCount: 0
     };
-    
+
     if (table && table.header && table.data) {
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data } = this._getOverviewData(table, relevantFields);
-      
+
       result.totalCount = table.totalCount;
       result.data = this._getSummaryData(data);
     }
-    
+
     return result;
   }
-  
+
   protected _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
@@ -109,10 +109,10 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       }
       return data;
     }, []);
-    
+
     return { data, columns };
   }
-  
+
   protected _getSummaryData(data: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
     const getValue = (itemValue, totalValue) => {
@@ -125,7 +125,7 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       }
       return value;
     };
-    
+
     const totalValue = data.reduce((acc, item) => acc + parseFloat(item[key]), 0);
     return data.map(item => {
       const rawValue = parseFloat(item[key]);
@@ -140,25 +140,27 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
       };
     });
   }
-  
+
   private _applyFilters(): void {
-    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-  
-    if (this._isPresetMode) {
-      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
-    } else {
-      this._pollsFactory.dateRange = {
-        fromDate: this._dateFilter.startDate,
-        toDate: this._dateFilter.endDate,
-      };
+    if (this._dateFilter) {
+      this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+
+      if (this._isPresetMode) {
+        this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+      } else {
+        this._pollsFactory.dateRange = {
+          fromDate: this._dateFilter.startDate,
+          toDate: this._dateFilter.endDate,
+        };
+      }
     }
   }
-  
+
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
-    
+
     this._applyFilters();
-    
+
     this.restartPolling(!this._isPresetMode);
   }
 }

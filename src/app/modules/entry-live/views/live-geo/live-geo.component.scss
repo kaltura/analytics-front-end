@@ -41,6 +41,10 @@ k-area-blocker {
     flex-direction: column-reverse !important;
   }
 
+  .kFilters {
+    flex: 0 0 auto;
+  }
+
   .kTable, .kMap {
     flex: 1;
   }

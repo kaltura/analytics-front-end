@@ -68,7 +68,7 @@ export class SyndicationComponent {
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
-  private _order = '-count_plays';
+  private _order = '-count_loads';
   private _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,

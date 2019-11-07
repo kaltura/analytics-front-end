@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { ErrorsManagerService } from 'shared/services';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -19,7 +18,8 @@ import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
-import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode, liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 @Component({
   selector: 'app-live-geo',
@@ -35,7 +35,6 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   @ViewChild('table', { static: false }) _table: Table;
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
   
-  private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;
@@ -55,14 +54,19 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _drillDown: string[] = [];
   public _showTable = false;
+  public _isAuthUsersMode: boolean;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
               private _liveGeoWidget: LiveGeoWidget,
-              private _dataConfigService: LiveGeoConfig) {
-    this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetrics = this._dataConfig.totals.preSelected;
+              private _dataConfigService: LiveGeoConfig,
+              private _userModeService: ToggleUsersModeService) {
+    _userModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._isAuthUsersMode = mode === EntryLiveUsersMode.Authenticated;
+      });
   }
   
   ngOnDestroy() {
@@ -98,6 +102,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       .subscribe((data: LiveGeoWidgetData) => {
         this._tableData = data.table;
         this._columns = data.columns;
+        this._selectedMetrics = data.selectedMetric;
         this._setMapCenter();
         setTimeout(() => {
           this._updateMap(this._mapCenter);
@@ -106,14 +111,16 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   }
   
   private _updateMap(mapCenter: number[]): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown);
-    mapConfig.series[0].name = this._translate.instant('app.entryLive.geo.view_unique_audience');
+    const isAuthUsersMode = this._userModeService.usersMode === EntryLiveUsersMode.Authenticated;
+    const key = isAuthUsersMode ? 'view_unique_audience' : 'distribution';
+    let mapConfig: EChartOption = this._dataConfigService.getMapConfig(this._drillDown.length > 0 && this._canMapDrillDown, isAuthUsersMode);
+    mapConfig.series[0].name = this._translate.instant(`app.entryLive.geo.${key}`);
     mapConfig.series[0].data = [];
     let maxValue = 0;
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      value.push(parseFormattedValue(data[this._selectedMetrics]));
+      value.push(parseFormattedValue(data[key]));
       mapConfig.series[0].data.push({
         name: this._drillDown.length === 0
           ? getCountryName(data.country, false)
@@ -122,8 +129,8 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
             : data.city,
         value
       });
-      if (parseInt(data[this._selectedMetrics]) > maxValue) {
-        maxValue = parseFormattedValue(data[this._selectedMetrics]);
+      if (parseInt(data[key]) > maxValue) {
+        maxValue = parseFormattedValue(data[key]);
       }
     });
     

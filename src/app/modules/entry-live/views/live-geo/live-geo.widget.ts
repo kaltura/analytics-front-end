@@ -14,52 +14,68 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];
   columns: string[];
   totalCount: number;
+  selectedMetric: string;
 }
 
 @Injectable()
 export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   private _dateFilter: DateFiltersChangedEvent;
+  private _drillDown: string[] = [];
+  private _isAuthUsers = this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated;
 
   protected _widgetId = 'geo';
   protected _pollsFactory: LiveGeoRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _selectedMetrics: string;
-  
+
   private get _dateRange(): DateRange {
     return this._dateFilter ? this._dateFilter.dateRange : null;
   }
-  
+
   private get _isPresetMode(): boolean {
     return this._dateFilter ? this._dateFilter.isPresetMode : true;
   }
-  
+
   constructor(protected _serverPolls: EntryLiveGeoDevicesPollsService,
               protected _reportService: ReportService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
-              private _dataConfigService: LiveGeoConfig) {
+              private _dataConfigService: LiveGeoConfig,
+              private _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
-    this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetrics = this._dataConfig.totals.preSelected;
-  }
   
+    this._dataConfig = _dataConfigService.getConfig(this._isAuthUsers);
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
+
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._isAuthUsers = mode === EntryLiveUsersMode.Authenticated;
+        this._dataConfig = _dataConfigService.getConfig(this._isAuthUsers);
+        this._selectedMetrics = this._dataConfig.totals.preSelected;
+      });
+  }
+
   protected _onRestart(): void {
     this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId);
     this._applyFilters();
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
-    
+
     return ObservableOf(null);
   }
-  
-  protected _responseMapping(responses: KalturaResponse<KalturaReportTotal | KalturaReportTable>[]): LiveGeoWidgetData {
+
+  protected _responseMapping(table: KalturaReportTable): LiveGeoWidgetData {
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
     } else {
@@ -69,19 +85,13 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
       };
     }
 
-    const table = this._getResponseByType(responses, KalturaReportTable) as KalturaReportTable;
-    const totals = this._getResponseByType(responses, KalturaReportTotal) as KalturaReportTotal;
-    let tabsData = [];
     let result = {
       table: [],
       columns: [],
       totalCount: 0,
+      selectedMetric: this._selectedMetrics,
     };
-    
-    if (totals && totals.data && totals.header) {
-      tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-    }
-    
+
     if (table && table.data && table.header) {
       const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
       columns[0] = columns.splice(1, 1, columns[0])[0]; // switch places between the first 2 columns
@@ -89,53 +99,49 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
       let tmp = columns.pop();
       columns.push('distribution'); // add distribution column at the end
       columns.push(tmp);
-      
+
       result.totalCount = table.totalCount;
       result.columns = columns;
-      result.table = tableData.map((row) => {
-        const calculateDistribution = (key: string): number => {
-          const tab = tabsData.find(item => item.key === key);
-          const total = tab ? parseFormattedValue(tab.rawValue) : 0;
-          const rowValue = parseFormattedValue(row[key]);
-          return significantDigits((rowValue / total) * 100);
-        };
-        const usersDistribution = calculateDistribution('view_unique_audience');
-        row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
-        
+      const total = tableData.reduce((acc, val) => acc + parseFormattedValue(val[this._selectedMetrics]), 0);
+      const calculateDistribution = (row: TableRow): number => {
+        const rowValue = parseFormattedValue(row[this._selectedMetrics]);
+        return significantDigits((rowValue / total) * 100);
+      };
+      result.table = tableData.map(row => {
+        const usersDistribution = calculateDistribution(row);
+        row['distribution'] = ReportHelper.numberWithCommas(usersDistribution);
+
         return row;
       });
     }
-    
+
     return result;
   }
-  
-  protected _getResponseByType(responses: KalturaResponse<any>[], type: any): any {
-    const isType = t => r => r.result instanceof t || Array.isArray(r.result) && r.result.length && r.result[0] instanceof t;
-    const result = Array.isArray(responses) ? responses.find(response => isType(type)(response)) : null;
-    return result ? result.result : null;
-  }
-  
+
   private _applyFilters(): void {
-    this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-  
-    if (this._isPresetMode) {
-      this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
-    } else {
-      this._pollsFactory.dateRange = {
-        fromDate: this._dateFilter.startDate,
-        toDate: this._dateFilter.endDate,
-      };
+    if (this._dateFilter) {
+      this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+
+      if (this._isPresetMode) {
+        this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
+      } else {
+        this._pollsFactory.dateRange = {
+          fromDate: this._dateFilter.startDate,
+          toDate: this._dateFilter.endDate,
+        };
+      }
     }
+    this._pollsFactory.drillDown = this._drillDown;
   }
 
   public updatePollsFilter(drillDown: string[], restart = false): void {
-    this._pollsFactory.drillDown = drillDown;
-    
+    this._drillDown = this._pollsFactory.drillDown = drillDown;
+
     if (restart) {
       this.restartPolling();
     }
   }
-  
+
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._dateFilter = event;
     this._applyFilters();

@@ -33,35 +33,35 @@ export interface LiveUsersData {
 export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   protected _widgetId = 'users';
   protected _pollsFactory: LiveUsersRequestFactory = null;
-  
+
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _translate: TranslateService,
               protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
   }
-  
+
   protected _onRestart(): void {
     this._pollsFactory = new LiveUsersRequestFactory(this._activationArgs.entryId);
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveUsersRequestFactory(widgetsArgs.entryId);
-    
+
     return ObservableOf(null);
   }
-  
+
   protected _responseMapping(reports: KalturaReportGraph[]): LiveUsersData {
     if (!reports.length) {
       return null;
     }
-    
+
     let result = {
       activeUsers: [],
       engagedUsers: [],
       dates: [],
     };
-    
+
     const activeUsersKey = this._usersModeService.usersMode === EntryLiveUsersMode.All
       ? 'views'
       : 'view_unique_audience';
@@ -70,14 +70,14 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
       : 'view_unique_engaged_users';
     const activeUsersData = reports.find(({ id }) => id === activeUsersKey);
     const engagedUsersData = reports.find(({ id }) => id === engagedUsersKey);
-    
+
     if (activeUsersData) {
       activeUsersData.data.split(';')
         .filter(Boolean)
         .forEach((valueString, index, array) => {
           const [date, value] = valueString.split(analyticsConfig.valueSeparator);
           result.dates.push(DateFilterUtils.getTimeStringFromEpoch(date));
-          
+
           const graphPoint = { value: Number(value) };
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';
@@ -87,7 +87,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           result.activeUsers.push(graphPoint);
         });
     }
-    
+
     if (engagedUsersData) {
       engagedUsersData.data.split(';')
         .filter(Boolean)
@@ -95,7 +95,9 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const relevantActiveUser = result.activeUsers[index] ? result.activeUsers[index].value || 0 : 0;
           
-          const value = relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
+          const value = this._usersModeService.usersMode === EntryLiveUsersMode.All
+            ? Number(rawValue) * 100
+            : relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
           
           const graphPoint = { value };
           if (index === array.length - 1) {
@@ -106,14 +108,14 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
           result.engagedUsers.push(graphPoint);
         });
     }
-    
+
     return {
       ...result,
       currentActiveUsers: result.activeUsers.length ? ReportHelper.numberOrZero([...result.activeUsers].pop().value) : '0',
       currentEngagedUsers: result.engagedUsers.length ? ReportHelper.percents([...result.engagedUsers].pop().value / 100, false, false) : '0%',
     };
   }
-  
+
   public getGraphConfig(activeUsers: GraphPoint[], engagedUsers: GraphPoint[]): EChartOption {
     return {
       color: ['#60BBA7', '#EDF8F6', '#367064', '#D9EBE8'],
@@ -121,7 +123,7 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         fontFamily: 'Lato',
       },
       grid: {
-        top: 24, left: 0, bottom: 30, right: 0, containLabel: false
+        top: 24, left: 0, bottom: 30, right: 12, containLabel: false
       },
       tooltip: {
         trigger: 'axis',

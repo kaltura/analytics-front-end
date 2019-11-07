@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GraphType, ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
@@ -33,7 +33,9 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'user_name': {
-            format: value => value,
+            format: value => value === 'Unknown'
+              ? this._translate.instant('app.entryLive.discovery.tables.users.unknown')
+              : value,
             sortOrder: 1,
           },
           'status': {
