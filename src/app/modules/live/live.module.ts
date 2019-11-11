@@ -3,11 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './live.routes';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import { LiveComponent } from './live.component';
 import { EntriesLiveComponent } from './views/entries-live/entries-live.component';
-import { LiveReportsComponent } from './views/live-reports/live-reports.component';
-import { EntriesLiveGuard } from './views/entries-live/entries-live.guard';
-import { LiveReportsGuard } from './views/live-reports/live-reports.guard';
 import { EntriesLivePollsService } from './views/entries-live/entries-live-polls.service';
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
@@ -32,15 +28,11 @@ import { InputTextModule } from 'primeng/inputtext';
     TooltipModule,
   ],
   declarations: [
-    LiveComponent,
     EntriesLiveComponent,
-    LiveReportsComponent,
     EntryDetailsOverlayComponent,
     EntriesLiveNoDataIconComponent,
   ],
   providers: [
-    EntriesLiveGuard,
-    LiveReportsGuard,
     EntriesLivePollsService,
     EntriesLiveDataConfig,
   ]
