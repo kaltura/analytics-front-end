@@ -207,7 +207,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     
     this._setProvider(tableMode);
     
-    this.activate(this._widgetArgs);
+    this.activate(this._widgetArgs, false, !this._dateFilter.isPresetMode);
   }
   
   public updateFilters(event: DateFiltersChangedEvent): void {
