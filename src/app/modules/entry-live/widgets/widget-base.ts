@@ -144,7 +144,12 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   }
 
   public retry(): void {
-    this.activate(this._activationArgs);
+    if (this._currentState.activated) {
+      const pollOnce = !this._currentState.polling && !this._currentState.error;
+      this.restartPolling(pollOnce);
+    } else {
+      this.activate(this._activationArgs);
+    }
   }
 
   public updateLayout(): void {

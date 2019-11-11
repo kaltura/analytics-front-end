@@ -32,6 +32,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
             },
             'retry': () => {
               this._isBusy = true;
+              this._blockerMessage = null;
               this._liveStreamHealth.retry();
             },
           };

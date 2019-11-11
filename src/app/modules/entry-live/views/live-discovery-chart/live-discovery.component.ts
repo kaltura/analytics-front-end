@@ -70,6 +70,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
             state.error.message = state.error.message && state.error.message.indexOf('result limit is') === 0 ? this._translate.instant('app.entryLive.generalErrorMessage') : state.error.message;
           } else {
             actions['retry'] = () => {
+              this._blockerMessage = null;
               this._liveExploreWidget.retry();
             };
           }

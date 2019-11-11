@@ -36,6 +36,7 @@ export class LiveDevicesComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
+              this._blockerMessage = null;
               this._liveDevicesWidget.retry();
             },
           };
