@@ -98,6 +98,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             },
             'retry': () => {
               this._isBusy = true;
+              this._blockerMessage = null;
               this._entryLiveWidget.retry();
             },
           };
