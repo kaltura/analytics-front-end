@@ -7,12 +7,11 @@ import { analyticsConfig } from 'configuration/analytics-config';
   template: '<router-outlet></router-outlet>'
 })
 export class LiveComponent implements OnInit {
-  
+
   constructor(private _router: Router) {
   }
-  
+
   ngOnInit() {
-    const url = analyticsConfig.permissions.enableLiveViews ? 'live/entries-live' : 'live/live-reports';
-    this._router.navigate([url]);
+    this._router.navigate(['live/entries-live']);
   }
 }

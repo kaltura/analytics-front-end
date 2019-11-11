@@ -5,14 +5,11 @@ import { analyticsConfig } from 'configuration/analytics-config';
 @Injectable()
 export class LiveReportsGuard implements CanActivate {
   constructor(private _router: Router) {
-  
+
   }
-  
+
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (analyticsConfig.permissions.enableLiveViews) {
-      this._router.navigate(['live/entries-live']);
-      return;
-    }
-    return true;
+    this._router.navigate(['live/entries-live']);
+    return;
   }
 }
