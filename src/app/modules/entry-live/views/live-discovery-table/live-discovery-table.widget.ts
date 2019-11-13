@@ -15,10 +15,9 @@ import { LiveDiscoveryDevicesTableRequestFactory } from './devices-table/live-di
 import { LiveDiscoveryUsersTableRequestFactory } from './users-table/live-discovery-users-table-request-factory';
 import { LiveDiscoveryUsersTableProvider } from './users-table/live-discovery-users-table-provider';
 import { LiveDiscoveryDevicesTableProvider } from './devices-table/live-discovery-devices-table-provider';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, EntryLiveUsersMode } from 'configuration/analytics-config';
 import { liveDiscoveryTablePageSize } from './table-config';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 

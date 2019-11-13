@@ -18,8 +18,9 @@ import { filter } from 'rxjs/operators';
 import { LiveGeoWidget, LiveGeoWidgetData } from './live-geo.widget';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
-import { EntryLiveUsersMode, liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-live-geo',

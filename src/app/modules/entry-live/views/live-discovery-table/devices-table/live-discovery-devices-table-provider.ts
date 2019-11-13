@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 import { ToggleUsersModeService } from '../../../components/toggle-users-mode/toggle-users-mode.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Injectable()
 export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider, OnDestroy {

@@ -2,13 +2,17 @@ import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { Observable } from 'rxjs';
 import { menu } from '../app/app-menu/app-menu.config';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 
 export interface MenuItem {
   id: string;
   link: string;
   label: string;
   items?: MenuItem[];
+}
+
+export enum EntryLiveUsersMode {
+  Authenticated = 'Authenticated',
+  All = 'All',
 }
 
 export interface AnalyticsConfig {

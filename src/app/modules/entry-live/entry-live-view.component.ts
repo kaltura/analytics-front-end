@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaNullableBoolean, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -114,8 +114,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive
-          && this._entry.explicitLive;
+        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive === KalturaNullableBoolean.trueValue;
         this._registerWidgets();
 
         if (this._timeSelector) {

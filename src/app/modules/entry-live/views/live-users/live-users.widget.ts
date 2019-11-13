@@ -5,13 +5,12 @@ import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 import { LiveUsersRequestFactory } from './live-users-request-factory';
 import { EntryLiveGeneralPollsService } from '../../providers/entry-live-general-polls.service';
 import { KalturaReportGraph } from 'kaltura-ngx-client';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, EntryLiveUsersMode } from 'configuration/analytics-config';
 import { EChartOption } from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { ReportHelper } from 'shared/services';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface GraphPoint {

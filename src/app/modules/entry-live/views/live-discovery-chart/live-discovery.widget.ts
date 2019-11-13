@@ -10,13 +10,12 @@ import { ReportService } from 'shared/services';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { DateRange, FiltersService, TimeInterval } from './filters/filters.service';
 import { getResponseByType } from 'shared/utils/get-response-by-type';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, EntryLiveUsersMode } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { DateFiltersChangedEvent } from './filters/filters.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 
 export interface LiveDiscoveryData {
