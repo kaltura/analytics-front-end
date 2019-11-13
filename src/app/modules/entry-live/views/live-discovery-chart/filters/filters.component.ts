@@ -15,6 +15,7 @@ export interface DateFiltersChangedEvent {
   startDate: number;
   endDate: number;
   rangeLabel: string;
+  shortRangeLabel: string;
 }
 
 @Component({
@@ -31,6 +32,7 @@ export class FiltersComponent implements OnDestroy {
   private _endDate: number;
   private _daysCount: number = null;
   private _rangeLabel: string;
+  private _shortRangeLabel: string;
   
   public _timeIntervalOptions: SelectItem[];
   public _selectedTimeInterval: TimeInterval;
@@ -53,6 +55,7 @@ export class FiltersComponent implements OnDestroy {
     this._selectedDateRange = event.dateRange;
     this._daysCount = event.daysCount;
     this._rangeLabel = event.rangeLabel;
+    this._shortRangeLabel = event.shortRangeLabel;
     
     this._onFilterChange(this._initialRun, null);
     this._initialRun = false;
@@ -79,6 +82,7 @@ export class FiltersComponent implements OnDestroy {
       startDate: this._startDate,
       endDate: this._endDate,
       rangeLabel: this._rangeLabel,
+      shortRangeLabel: this._shortRangeLabel,
     });
   }
 }

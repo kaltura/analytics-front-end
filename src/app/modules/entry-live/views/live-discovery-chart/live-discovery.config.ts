@@ -21,30 +21,36 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
         return metric;
     }
   }
-
-  public getConfig(): ReportDataConfig {
+  
+  public getConfig(authUsers = false): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'view_unique_audience': {
+          [authUsers ? 'view_unique_audience' : 'viewers']: {
             format: value => Math.round(value),
             colors: ['#31bea6'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
+            graphTooltip: value => authUsers
+              ? `${this._translate.instant('app.entryLive.discovery.viewers')}: ${ReportHelper.numberOrZero(value)}`
+              : `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 1,
           },
-          'view_unique_audience_dvr': {
+          [authUsers ? 'view_unique_audience_dvr' : 'viewers_dvr']: {
             format: value => Math.round(value),
             colors: ['#60e4cc'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_audience_dvr')}: ${ReportHelper.numberOrZero(value)}`,
+            graphTooltip: value => authUsers
+              ? `${this._translate.instant('app.entryLive.discovery.viewers_dvr')}: ${ReportHelper.numberOrZero(value)}`
+              : `${this._translate.instant('app.entryLive.discovery.view_unique_audience_dvr')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 3,
           },
-          'view_unique_engaged_users': {
+          [authUsers ? 'view_unique_engaged_users' : 'viewers_engagement']: {
             format: value => Math.round(value),
             colors: ['#1b8271'],
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_unique_engaged_users')}: ${ReportHelper.numberOrZero(value)}`,
+            graphTooltip: value => authUsers
+              ? `${this._translate.instant('app.entryLive.discovery.viewers_engagement')}: ${ReportHelper.numberOrZero(value)}`
+              : `${this._translate.instant('app.entryLive.discovery.view_unique_engaged_users')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 4,
           },
           'avg_view_dropped_frames_ratio': {
@@ -102,9 +108,6 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'avg_view_dropped_frames_ratio': {
             format: value => ReportHelper.percents(value, false),
           },
-          'avg_view_buffering': {
-            format: value => ReportHelper.percents(value, false),
-          },
           'avg_view_bitrate': {
             format: value => `${ReportHelper.numberOrZero(value, false)} Kbps`,
           },
@@ -120,11 +123,20 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           'view_unique_audience': {
             format: value => ReportHelper.numberOrZero(value),
           },
+          'viewers': {
+            format: value => ReportHelper.numberOrZero(value),
+          },
           'avg_view_dvr': {
-            format: value => ReportHelper.percents(value, false),
+            format: value => ReportHelper.numberOrZero(value, false),
+          },
+          'viewers_dvr': {
+            format: value => ReportHelper.numberOrZero(value, false),
           },
           'avg_view_engagement': {
             format: value => ReportHelper.percents(value, false),
+          },
+          'viewers_engagement': {
+            format: value => ReportHelper.numberOrZero(value, false),
           },
           'view_buffer_time_ratio': {
             format: value => ReportHelper.percents(value, false),

@@ -378,9 +378,8 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
   }
   
   public _onSortChanged(event: SortEvent): void {
-    this._pager.pageIndex = 1;
-
     if (this._tableMode === TableModes.dates) {
+      this._pager.pageIndex = 1;
       this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
     } else if (event.data.length && event.field && event.order && !this._isCompareMode) {
       // prevent handling first sort event after mode switching to users to prevent redundant loadReport call
@@ -393,6 +392,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       setTimeout(() => {
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this._order) {
+          this._pager.pageIndex = 1;
           this._order = order;
           this._loadReport({ table: this._dataConfig.table });
         }

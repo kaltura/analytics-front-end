@@ -10,13 +10,18 @@ export interface MenuItem {
   items?: MenuItem[];
 }
 
+export enum EntryLiveUsersMode {
+  Authenticated = 'Authenticated',
+  All = 'All',
+}
+
 export interface AnalyticsConfig {
   appVersion: string;
   valueSeparator: string;
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
-  liveEntryUsersReports: string;
   defaultPageSize: number;
+  liveEntryUsersReports?: string;
   originTarget: string;
   kalturaServer?: {
     uri?: string,
@@ -88,13 +93,12 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.6.0',
+  appVersion: '1.7.1',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   originTarget: window.location.origin,
   multiAccount: false,
-  liveEntryUsersReports: 'All',
 };
 
 export function setConfig(config: AnalyticsConfig, hosted = false): void {
@@ -116,6 +120,12 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.menuConfig = config.menuConfig;
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
   analyticsConfig.customData = config.customData || { };
+  setLiveEntryUsersReports(config.liveEntryUsersReports);
+}
+
+function setLiveEntryUsersReports(value: string): void {
+  const allowedValues = Object.keys(EntryLiveUsersMode);
+  analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
 }
 
 export function initConfig(): Observable<void> {

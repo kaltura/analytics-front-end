@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
 import { ToggleUsersModeService } from '../../../components/toggle-users-mode/toggle-users-mode.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Injectable()
 export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider, OnDestroy {
@@ -49,9 +49,7 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
     
     const mapData = row => {
       const activeUsers = parseFormattedValue(row['view_unique_audience']);
-      const bufferingUsers = parseFormattedValue(row['view_unique_buffering_users']);
       const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
-      row['view_unique_buffering_users'] = activeUsers ? ReportHelper.percents(bufferingUsers / activeUsers, false) : '0%';
       row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
       return row;
     };

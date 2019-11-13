@@ -10,8 +10,9 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from './table-config';
 import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-selector.service';
-import { EntryLiveUsersMode, liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -21,9 +22,10 @@ import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggl
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
   @Input() rangeLabel: string;
-  
+
   @Output() tableChange = new EventEmitter<KalturaReportType>();
-  
+
+  public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _tableMode: TableModes;
   public _tableModes = TableModes;
@@ -37,7 +39,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   public _showTable = false;
   public _summaryData: LiveDiscoverySummaryData;
   public _entryLiveUsersMode = EntryLiveUsersMode;
-  
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _timeSelector: TimeSelectorService,
               public _usersModeService: ToggleUsersModeService,
@@ -47,30 +49,27 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
       .subscribe(label => {
         this.rangeLabel = label;
       });
-    _usersModeService.usersMode$
-      .pipe(cancelOnDestroy(this), filter(mode => mode === EntryLiveUsersMode.All))
-      .subscribe(() => {
-        this._tableMode = TableModes.devices;
-      });
   }
-  
+
   ngOnInit() {
     this._widget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
+        this._isBusy = state.isBusy;
         if (state.error) {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
+              this._blockerMessage = null;
               this._widget.retry();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._widget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveDiscoveryTableData) => {
@@ -81,25 +80,25 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
         this._summaryData = data.summary;
         this._firstTimeLoading = false;
       });
-  
+
     this._toggleTable();
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   public _toggleTable(): void {
     this._showTable = !this._showTable;
     this._widget.toggleTable(this._showTable, this.isPolling);
   }
-  
+
   public _onTableModeChange(event: TableModes): void {
     this._widget.setTableMode(event);
-  
+
     const reportType = event === TableModes.users ? liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime) : liveReportTypeMap(KalturaReportType.platformsDiscoveryRealtime);
     this.tableChange.emit(reportType);
   }
-  
+
   public _openTimeSelector(): void {
     this._timeSelector.openPopup();
   }

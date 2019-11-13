@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
+import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export enum TimeInterval {
   TenSeconds = 'TenSeconds',
@@ -35,7 +36,7 @@ export class FiltersService {
   constructor(private _translate: TranslateService) {
   }
   
-  public getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
+  public static getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
     let from;
     
     switch (dateRange) {
@@ -70,11 +71,14 @@ export class FiltersService {
         from = moment().subtract(1, 'minute');
         break;
     }
-    
     return {
-      toDate: moment().unix(),
+      toDate: getFixedEpoch(moment()),
       fromDate: from.unix(),
     };
+  }
+  
+  public getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
+    return FiltersService.getDateRangeServerValue(dateRange);
   }
   
   public getDateRangeList(): SelectItem[] {

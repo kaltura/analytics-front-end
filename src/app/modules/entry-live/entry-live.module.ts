@@ -11,7 +11,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './entry-live.routes';
 import { EntryLiveViewComponent } from './entry-live-view.component';
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, InputHelperModule, KalturaUIModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, InputHelperModule, KalturaUIModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { EntryDetailsComponent } from './views/entry-details/entry-details.component';
 import { LivePlayerComponent } from './views/live-player/live-player.component';
@@ -82,6 +82,7 @@ import { ToggleUsersModeService } from './components/toggle-users-mode/toggle-us
     AutoCompleteModule,
     RadioButtonModule,
     CalendarModule,
+    PopupWidgetModule,
   ],
   declarations: [
     EntryLiveViewComponent,

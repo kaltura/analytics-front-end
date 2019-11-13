@@ -31,11 +31,11 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
@@ -104,16 +104,16 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
-          'count_plays': {
-            format: value => value,
-            title: this._translate.instant(`app.entry.count_plays`),
-            sortOrder: 1,
-          },
           'count_loads': {
             format: value => value,
             title: this._translate.instant(`app.entry.count_loads`),
+            sortOrder: 1,
+          },
+          'count_plays': {
+            format: value => value,
+            title: this._translate.instant(`app.entry.count_plays`),
             sortOrder: 2,
           },
           'unique_known_users': {

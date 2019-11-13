@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaNullableBoolean, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -23,7 +23,6 @@ import { defaultDateRange, FiltersService } from './views/live-discovery-chart/f
 import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
-import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Component({
@@ -33,7 +32,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
   providers: [
     EntryLiveExportConfig,
     TimeSelectorService,
-  
+
     // widgets
     EntryLiveWidget,
     LiveUsersWidget,
@@ -48,7 +47,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
   @ViewChild(TimeSelectorComponent, { static: false }) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
-  
+
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _entryId: string;
@@ -79,8 +78,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _permissions: AnalyticsPermissionsService) {
     this._exportConfig = _exportConfigService.getConfig();
   }
-  
-  
+
+
   ngOnInit() {
     this._route.params
       .pipe(
@@ -91,7 +90,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         this._entryId = entryId;
         this._entryLiveWidget.activate({ entryId });
       });
-    
+
     this._entryLiveWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
@@ -102,40 +101,39 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             },
             'retry': () => {
               this._isBusy = true;
+              this._blockerMessage = null;
               this._entryLiveWidget.retry();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._entryLiveWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive
-          && this._entry.explicitLive
-          && this._permissions.hasPermission(AnalyticsPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
+        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive === KalturaNullableBoolean.trueValue;
         this._registerWidgets();
-        
+
         if (this._timeSelector) {
           this._timeSelector.updateDataRanges(false);
         }
       });
   }
-  
+
   ngOnDestroy() {
     this._entryLiveWidget.deactivate();
     this._widgetsManager.deactivateAll();
   }
-  
+
   // DO NOT register to entry data widget here!
   // register to all other widgets only once after entry data is received
   private _registerWidgets(): void {
     if (!this._widgetsRegistered) {
       this._widgetsRegistered = true;
-      
+
       const widgetArgs = { entryId: this._entryId };
       const widgets = [];
       const silentWidgets = [];
@@ -168,43 +166,43 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._widgetsManager.register(widgets, widgetArgs, silentWidgets);
     }
   }
-  
+
   public _navigateToEntry(): void {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
   }
-  
+
   public _back(): void {
     this._navigationDrillDownService.navigateBack('live/entries-live', false);
   }
-  
+
   public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
     let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
-    
+
     if (event.drillDown && event.drillDown.length > 0) {
       update.additionalFilters.countryIn = event.drillDown[0];
     }
-    
+
     if (event.drillDown && event.drillDown.length > 1) {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
-    
+
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'geo', update);
   }
-  
+
   public _onTableModeChange(reportType: KalturaReportType): void {
     const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
     const table = currentValue.items.find(({ id }) => id === 'table');
     const tableIndex = currentValue.items.indexOf(table);
-    
+
     table.reportType = reportType;
-    
+
     const update = { items: [...currentValue.items.slice(0, tableIndex), table, ...currentValue.items.slice(tableIndex + 1)] };
-    
+
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
-  
+
   public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
     this._exportConfig
       .filter(({ id }) => ['discovery', 'geo', 'devices'].indexOf(id) !== -1)
@@ -235,19 +233,19 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             };
           }
         }
-        
+
         this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, currentValue.id, update);
       });
   }
-  
+
   public _liveToggled(): void {
     this._entryLiveWidget.restartPolling();
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._selectedDateRange = event.dateRange;
   }
-  
+
   public _onUsersModeChange(): void {
     this._widgetsManager.restartAll();
   }

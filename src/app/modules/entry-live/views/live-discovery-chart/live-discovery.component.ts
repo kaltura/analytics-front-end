@@ -11,10 +11,11 @@ import { DiscoveryChartComponent } from './discovery-chart/discovery-chart.compo
 import { filter } from 'rxjs/operators';
 import { LiveDiscoveryTableWidget } from '../live-discovery-table/live-discovery-table.widget';
 import { KalturaReportType } from 'kaltura-ngx-client';
-import { DateRange } from './filters/filters.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LiveGeoWidget } from '../live-geo/live-geo.widget';
 import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
+import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-live-discovery',
@@ -41,9 +42,14 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
               private _liveDevicesWidget: LiveDevicesWidget,
               private _errorsManager: ErrorsManagerService,
               private _translate: TranslateService,
+              private _usersModeService: ToggleUsersModeService,
               protected _dataConfigService: LiveDiscoveryConfig) {
-    this._fields = _dataConfigService.getConfig()[ReportDataSection.graph].fields;
-    this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
+    _usersModeService.usersMode$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(mode => {
+        this._fields = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated)[ReportDataSection.graph].fields;
+        this._colorsMap = Object.keys(this._fields).reduce((acc, val) => (acc[val] = this._fields[val].colors[0], acc), {});
+      });
   }
 
   ngOnInit() {
@@ -64,6 +70,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
             state.error.message = state.error.message && state.error.message.indexOf('result limit is') === 0 ? this._translate.instant('app.entryLive.generalErrorMessage') : state.error.message;
           } else {
             actions['retry'] = () => {
+              this._blockerMessage = null;
               this._liveExploreWidget.retry();
             };
           }
@@ -84,11 +91,11 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _onFiltersChanged(event: DateFiltersChangedEvent): void {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     this._pollingBtnDisabled = !event.isPresetMode;
-    this._rangeLabel = event.rangeLabel;
+    this._rangeLabel = event.shortRangeLabel;
+  
+    this._liveExploreWidget.updateFilters(event, !event.initialRun);
 
     if (!event.initialRun) {
-      this._discoveryChart.resetDataZoom();
-      this._liveExploreWidget.updateFilters(event);
       this._liveDiscoveryTable.updateFilters(event);
       this._liveDevicesWidget.updateFilters(event);
       this._liveGeoWidget.updateFilters(event);
@@ -109,9 +116,14 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
       this._liveExploreWidget.stopPolling();
       this._liveDiscoveryTable.stopPolling();
     } else {
+      this._liveExploreWidget.restoreTimeRange();
       this._liveExploreWidget.startPolling();
       this._liveDiscoveryTable.startPolling();
     }
 
+  }
+
+  public onZoom(event): void {
+    this._liveExploreWidget.updateFiltersDateRange(event);
   }
 }

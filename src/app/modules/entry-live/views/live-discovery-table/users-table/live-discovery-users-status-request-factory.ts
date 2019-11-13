@@ -4,8 +4,9 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
-import { DateRangeServerValue } from '../../live-discovery-chart/filters/filters.service';
+import { DateRangeServerValue, defaultDateRange, FiltersService } from '../../live-discovery-chart/filters/filters.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -14,8 +15,8 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
   });
   
   private _dateRange: DateRangeServerValue = {
-    toDate: moment().unix(),
-    fromDate: moment().subtract(1, 'minute').unix(),
+    toDate: getFixedEpoch(moment()),
+    fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
   
   private _getTotalTableActionArgs: ReportGetTableActionArgs = {
@@ -34,7 +35,7 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
     reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersStatusRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-      toDate: moment().unix(),
+      toDate: getFixedEpoch(moment()),
       fromDate: this._getFromDate(),
       interval: KalturaReportInterval.tenSeconds,
     }),
@@ -69,7 +70,7 @@ export class LiveDiscoveryUsersStatusRequestFactory implements RequestFactory<Ka
   }
   
   public onPollTickSuccess(): void {
-    this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
+    this._getTableActionArgs.reportInputFilter.toDate = getFixedEpoch(moment());
     this._getTableActionArgs.reportInputFilter.fromDate = this._getFromDate();
   
     this._getTotalTableActionArgs.reportInputFilter.toDate = this._dateRange.toDate;

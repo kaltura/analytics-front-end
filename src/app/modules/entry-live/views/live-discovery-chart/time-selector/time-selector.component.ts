@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, TimeSelectorService } from './time-selector.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'app-time-selector',
@@ -31,6 +32,8 @@ export class TimeSelectorComponent implements OnDestroy {
   @Input() showCompare = true;
   
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
+  
+  @ViewChild(PopupWidgetComponent, { static: false }) _popupWidget: PopupWidgetComponent;
   
   private _lastSelectedDateRange: DateRange; // used for revert selection
   private _startDate: Date;
@@ -53,6 +56,7 @@ export class TimeSelectorComponent implements OnDestroy {
   ];
   public _selectedView = 'preset';
   public _dateRangeLabel = '';
+  public _shortDateRangeLabel = '';
   public _specificDateRange: Date[] = [new Date(), new Date()];
   
   public get _applyDisabled(): boolean {
@@ -82,8 +86,10 @@ export class TimeSelectorComponent implements OnDestroy {
     this._dateFilterService.popupOpened$
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {
-        this._popupOpened = true;
         this._scrollToPopup();
+        if (this._popupWidget) {
+          this._popupWidget.open();
+        }
       });
   }
   
@@ -122,6 +128,7 @@ export class TimeSelectorComponent implements OnDestroy {
       endDate: endDate.unix(),
       dateRange: this._selectedDateRange,
       rangeLabel: this._dateRangeLabel,
+      shortRangeLabel: this._shortDateRangeLabel,
     };
     this.filterChange.emit(payload);
     this._dateFilterService.onFilterChange(payload);
@@ -144,7 +151,10 @@ export class TimeSelectorComponent implements OnDestroy {
     return momentDate.toDate();
   }
   
-  private _formPresetDateRangeLabel(preset: DateRange, label: string, from: Date, to: Date): string {
+  private _formPresetDateRangeLabel(label: string, from: Date, to: Date, short = false): string {
+    if (short) {
+      return `<b>${label}</b>`;
+    }
     return `<b>${label}</b>&nbsp;&nbsp;&nbsp;${this._formatDateRangeLabel(from, to)}`;
   }
   
@@ -154,7 +164,7 @@ export class TimeSelectorComponent implements OnDestroy {
     const getDate = date => date.format(analyticsConfig.dateFormat === 'month-day-year' ? 'MM/D/YYYY' : 'D/MM/YYYY');
     const getTime = date => date.format('HH:mm');
   
-    return `${getDate(startDate)}, ${getTime(startDate)} – ${getDate(endDate)}, ${getTime(endDate)}`;
+    return `${getDate(startDate)} ${getTime(startDate)} – ${getDate(endDate)} ${getTime(endDate)}`;
   }
   
   public _validateTimeInputs(): void {
@@ -171,7 +181,8 @@ export class TimeSelectorComponent implements OnDestroy {
       const dates = this._dateFilterService.getDateRangeDetails(this._selectedDateRange);
       this._startDate = dates.startDate;
       this._endDate = dates.endDate;
-      this._dateRangeLabel = this._formPresetDateRangeLabel(this._selectedDateRange, dates.label, this._startDate, this._endDate);
+      this._dateRangeLabel = this._formPresetDateRangeLabel(dates.label, this._startDate, this._endDate);
+      this._shortDateRangeLabel = this._formPresetDateRangeLabel(dates.label, this._startDate, this._endDate, true);
     } else {
       this._startDate = this._getDate(this._specificDateRange[0], this._fromTime);
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);
@@ -185,20 +196,21 @@ export class TimeSelectorComponent implements OnDestroy {
     }
   }
   
-  public _togglePopup(): void {
-    this._popupOpened = !this._popupOpened;
+  public _onPopupOpen(): void {
     this._updateLayout();
-    
-    if (this._popupOpened) {
-      this._selectedDateRange = this._lastSelectedDateRange;
-    } else {
-      this._resetTime();
-    }
+    this._selectedDateRange = this._lastSelectedDateRange;
+  }
+  
+  public _onPopupClose(): void {
+    this._updateLayout();
+    this._resetTime();
   }
   
   public _closePopup(): void {
-    this._popupOpened = false;
-    this._resetTime();
+    this.updateDataRanges();
+    if (this._popupWidget) {
+      this._popupWidget.close();
+    }
   }
   
   public _timeChange(type: 'from' | 'to'): void {

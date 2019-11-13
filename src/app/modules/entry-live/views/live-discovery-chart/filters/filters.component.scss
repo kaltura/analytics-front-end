@@ -1,3 +1,5 @@
+@import '../../../../../../styles/variables';
+
 .kFilters {
   width: auto !important;
   height: auto !important;
@@ -5,5 +7,15 @@
 
   ::ng-deep .ui-button .ui-button-text {
     white-space: nowrap;
+  }
+  .drag {
+    white-space: nowrap;
+    font-size: 14px;
+    color: $kBlack;
+    background-color: $kGrayscale6;
+    line-height: 24px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 3px;
   }
 }

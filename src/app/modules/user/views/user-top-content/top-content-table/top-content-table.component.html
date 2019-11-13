@@ -9,9 +9,7 @@
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
           <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
-          <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-            {{'app.user.topContentReport.entries' | translate}}
-          </th>
+          <th [ngStyle]="{'width': '111px', 'padding-left': '10px'}"></th>
           <th [ngStyle]="{'width': '60%', 'padding-left': '0'}">
             {{'app.user.topContentReport.name' | translate}}
           </th>
@@ -40,7 +38,7 @@
               <span>{{data.index}}</span>
             </div>
           </td>
-          <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
+          <td [ngStyle]="{'width': '111px', 'padding-left': '10px'}">
             <div class="kThumbnailHolder" #holder
                  (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"

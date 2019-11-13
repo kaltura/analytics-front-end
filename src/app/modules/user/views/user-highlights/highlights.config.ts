@@ -68,11 +68,11 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },

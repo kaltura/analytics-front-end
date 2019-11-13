@@ -12,6 +12,7 @@ export interface DateChangeEvent {
   dateRange: DateRange;
   daysCount: number;
   rangeLabel: string;
+  shortRangeLabel: string;
 }
 
 @Injectable()

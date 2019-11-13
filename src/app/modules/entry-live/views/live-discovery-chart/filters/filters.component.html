@@ -2,7 +2,8 @@
   <div style="width: 100%">
     <ng-content></ng-content>
   </div>
-  <p-selectButton [options]="_timeIntervalOptions"
+  <span class="drag">{{'app.entryLive.discovery.drag' | translate}}</span>
+  <p-selectButton [options]="_timeIntervalOptions" class="kHidden"
                   [(ngModel)]="_selectedTimeInterval"
                   (onChange)="_onFilterChange()"></p-selectButton>
 </div>

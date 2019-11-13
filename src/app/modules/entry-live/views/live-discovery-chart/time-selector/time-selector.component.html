@@ -1,75 +1,84 @@
-<div id="discovery-time-selector" class="kDateFilter kOverrideFAIcons">
-  <div class="datesRangeDropDown" (click)="_togglePopup()">
+<div #timeSelector id="discovery-time-selector" class="kDateFilter kOverrideFAIcons">
+  <div class="datesRangeDropDown" #toggle>
     <span [innerHTML]="_dateRangeLabel"></span>
-    <i class="kIcondropdown_arrow_bottom"></i>
+    <i *ngIf="!_popupOpened" class="kIcondropdown_arrow_bottom"></i>
+    <i *ngIf="_popupOpened" class="kIcondropdown_arrow_top"></i>
   </div>
 </div>
 
-<div class="kPopup" *ngIf="_popupOpened">
-  <div class="kDateFilterPopup kOverrideFAIcons">
-    <div class="kViews">
-      <p-selectButton [options]="_viewItems" [(ngModel)]="_selectedView"></p-selectButton>
-    </div>
-    <div class="kFilters kPreset" *ngIf="_selectedView === 'preset'">
-      <div class="col">
-        <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
-        <p-radioButton *ngFor="let _dateRangeLast of _leftDateRangeItems"
-                       name="dates"
-                       [label]="_dateRangeLast.label"
-                       [value]="_dateRangeLast.value"
-                       [kTooltip]="_dateRangeLast.value.tooltip"
-                       [placement]="'left'"
-                       [(ngModel)]="_selectedDateRange"></p-radioButton>
+<kPopupWidget [appendTo]="timeSelector"
+              [popupWidth]="415"
+              [targetRef]="toggle"
+              [closeBtn]="false"
+              [targetOffset]="{x: 0, y: 40}"
+              (onOpen)="_onPopupOpen()"
+              (onClose)="_onPopupClose()">
+  <ng-template>
+    <div class="kDateFilterPopup kOverrideFAIcons">
+      <div class="kViews">
+        <p-selectButton [options]="_viewItems" [(ngModel)]="_selectedView"></p-selectButton>
       </div>
-      <div class="col">
-        <span class="kTitle">&nbsp;</span>
-        <p-radioButton *ngFor="let _dateRangeCurrent of _rightDateRangeItems"
-                       name="dates"
-                       [label]="_dateRangeCurrent.label"
-                       [value]="_dateRangeCurrent.value"
-                       [kTooltip]="_dateRangeCurrent.value.tooltip"
-                       [placement]="'right'"
-                       [(ngModel)]="_selectedDateRange"></p-radioButton>
+      <div class="kFilters kPreset" *ngIf="_selectedView === 'preset'">
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let _dateRangeLast of _leftDateRangeItems"
+                         name="dates"
+                         [label]="_dateRangeLast.label"
+                         [value]="_dateRangeLast.value"
+                         [kTooltip]="_dateRangeLast.value.tooltip"
+                         [placement]="'left'"
+                         [(ngModel)]="_selectedDateRange"></p-radioButton>
+        </div>
+        <div class="col">
+          <span class="kTitle">&nbsp;</span>
+          <p-radioButton *ngFor="let _dateRangeCurrent of _rightDateRangeItems"
+                         name="dates"
+                         [label]="_dateRangeCurrent.label"
+                         [value]="_dateRangeCurrent.value"
+                         [kTooltip]="_dateRangeCurrent.value.tooltip"
+                         [placement]="'right'"
+                         [(ngModel)]="_selectedDateRange"></p-radioButton>
+        </div>
       </div>
-    </div>
 
-    <div class="kFilters kSpecific" *ngIf="_selectedView === 'specific'">
-      <p-calendar class="kMainCalendar"
-                  selectionMode="range"
-                  [inline]="true"
-                  [showTime]="false"
-                  [maxDate]="_maxDate"
-                  [minDate]="_minDate"
-                  [yearRange]="'2010:2050'"
-                  (ngModelChange)="_validateTimeInputs()"
-                  [(ngModel)]="_specificDateRange"></p-calendar>
-      <div class="kTimeSelectorsGroup">
-        <div class="kTimeSelectorWrapper">
-          <div class="kTimeSelector kLeft" [class.kInvalid]="_invalidFrom">
-            <span class="kLabel">{{'app.entryLive.from' | translate}}</span>
-            <p-calendar [inline]="true"
-                        [timeOnly]="true"
-                        [(ngModel)]="_fromTime"
-                        (ngModelChange)="_timeChange('from')"></p-calendar>
+      <div class="kFilters kSpecific" *ngIf="_selectedView === 'specific'">
+        <p-calendar class="kMainCalendar"
+                    selectionMode="range"
+                    [inline]="true"
+                    [showTime]="false"
+                    [maxDate]="_maxDate"
+                    [minDate]="_minDate"
+                    [yearRange]="'2010:2050'"
+                    (ngModelChange)="_validateTimeInputs()"
+                    [(ngModel)]="_specificDateRange"></p-calendar>
+        <div class="kTimeSelectorsGroup">
+          <div class="kTimeSelectorWrapper">
+            <div class="kTimeSelector kLeft" [class.kInvalid]="_invalidFrom">
+              <span class="kLabel">{{'app.entryLive.from' | translate}}</span>
+              <p-calendar [inline]="true"
+                          [timeOnly]="true"
+                          [(ngModel)]="_fromTime"
+                          (ngModelChange)="_timeChange('from')"></p-calendar>
+            </div>
+            <span class="kError" *ngIf="_invalidFrom">{{'app.entryLive.invalidFromTime' | translate}}</span>
           </div>
-          <span class="kError" *ngIf="_invalidFrom">{{'app.entryLive.invalidFromTime' | translate}}</span>
-        </div>
-        <div class="kTimeSelectorWrapper">
-          <div class="kTimeSelector kRight" [class.kInvalid]="_invalidTo">
-            <span class="kLabel">{{'app.entryLive.to' | translate}}</span>
-            <p-calendar [inline]="true"
-                        [timeOnly]="true"
-                        [(ngModel)]="_toTime"
-                        (ngModelChange)="_timeChange('to')"></p-calendar>
+          <div class="kTimeSelectorWrapper">
+            <div class="kTimeSelector kRight" [class.kInvalid]="_invalidTo">
+              <span class="kLabel">{{'app.entryLive.to' | translate}}</span>
+              <p-calendar [inline]="true"
+                          [timeOnly]="true"
+                          [(ngModel)]="_toTime"
+                          (ngModelChange)="_timeChange('to')"></p-calendar>
+            </div>
+            <span class="kError" *ngIf="_invalidTo">{{'app.entryLive.invalidToTime' | translate}}</span>
           </div>
-          <span class="kError" *ngIf="_invalidTo">{{'app.entryLive.invalidToTime' | translate}}</span>
         </div>
       </div>
+      <hr>
+      <button pButton class="kButtonBranded"
+              [disabled]="_applyDisabled"
+              [label]="'app.common.apply' | translate"
+              (click)="_closePopup()"></button>
     </div>
-    <hr>
-    <button pButton class="kButtonBranded"
-            [disabled]="_applyDisabled"
-            [label]="'app.common.apply' | translate"
-            (click)="updateDataRanges();_closePopup()"></button>
-  </div>
-</div>
+  </ng-template>
+</kPopupWidget>

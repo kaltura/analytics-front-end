@@ -60,25 +60,25 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_plays': {
-            format: value => value,
-            sortOrder: 2,
-          },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 4,
+            sortOrder: 2,
           },
           'load_play_ratio': {
             format: value => ReportHelper.numberOrZero(Math.round(value * 100)) + '%',
-            sortOrder: 5,
+            sortOrder: 3,
+          },
+          'count_plays': {
+            format: value => value,
+            sortOrder: 4,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 6,
+            sortOrder: 5,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false),
-            sortOrder: 7,
+            sortOrder: 6,
           },
         }
       },

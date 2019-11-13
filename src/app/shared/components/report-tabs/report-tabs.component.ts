@@ -25,6 +25,7 @@ export class ReportTabsComponent implements OnInit {
   @Input() tabs: Tab[] = [];
   @Input() compareMode = false;
   @Input() showValue = true;
+  @Input() narrowTabs = false;
 
   @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
   
