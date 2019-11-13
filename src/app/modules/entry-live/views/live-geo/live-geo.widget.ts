@@ -112,6 +112,10 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
         row['distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
         return row;
+      }).sort((a, b) => {
+        const aVal = parseFormattedValue(this._isAuthUsers ? a['view_unique_audience'] : a['views']);
+        const bVal = parseFormattedValue(this._isAuthUsers ? b['view_unique_audience'] : b['views']);
+        return bVal - aVal;
       });
     }
 

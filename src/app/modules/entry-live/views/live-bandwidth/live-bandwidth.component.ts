@@ -54,6 +54,7 @@ export class LiveBandwidthComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
+              this._blockerMessage = null;
               this._bandwidthWidget.retry();
             },
           };

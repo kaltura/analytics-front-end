@@ -17,10 +17,6 @@ export interface AnalyticsConfig {
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
   defaultPageSize: number;
-  permissions: {
-    lazyLoadCategories?: boolean;
-    enableLiveViews?: boolean;
-  };
   liveEntryUsersReports?: string;
   originTarget: string;
   kalturaServer?: {
@@ -92,13 +88,12 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.7.0',
+  appVersion: '1.7.1',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
   originTarget: window.location.origin,
   multiAccount: false,
-  permissions: {},
 };
 
 export function setConfig(config: AnalyticsConfig, hosted = false): void {

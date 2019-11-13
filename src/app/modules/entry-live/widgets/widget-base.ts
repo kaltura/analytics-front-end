@@ -115,7 +115,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
     this.startPolling(pollOnce);
   }
 
-  public activate(widgetsArgs: WidgetsActivationArgs, silent = false): void {
+  public activate(widgetsArgs: WidgetsActivationArgs, silent = false, pollOnce = false): void {
     if (this._currentState.activated) {
       return;
     }
@@ -128,7 +128,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
           this._updateState({ activated: true, error: null });
 
           if (!silent) {
-            this.startPolling();
+            this.startPolling(pollOnce);
           }
         }, error => {
           this._updateState({ activated: false, error, isBusy: false });
@@ -144,7 +144,12 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
   }
 
   public retry(): void {
-    this.activate(this._activationArgs);
+    if (this._currentState.activated) {
+      const pollOnce = !this._currentState.polling && !this._currentState.error;
+      this.restartPolling(pollOnce);
+    } else {
+      this.activate(this._activationArgs);
+    }
   }
 
   public updateLayout(): void {

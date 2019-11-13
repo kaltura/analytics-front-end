@@ -47,7 +47,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     KalturaClientModule.forRoot(),
     AnalyticsPermissionsModule.forRoot(),
     FrameEventManagerModule.forRoot(),
-    AnalyticsPermissionsModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

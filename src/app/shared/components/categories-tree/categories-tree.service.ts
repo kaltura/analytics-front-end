@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoriesSearchService, CategoryData } from 'shared/services/categories-search.service';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 
