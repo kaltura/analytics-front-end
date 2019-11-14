@@ -48,12 +48,6 @@ export interface AnalyticsConfig {
     pollInterval?: PollInterval;
     healthNotificationsCount?: number;
   };
-  liveAnalytics?: {
-    uri?: string;
-    uiConfId?: string;
-    mapUrls?: string[];
-    mapZoomLevels?: string;
-  };
   customData?: {
     [key: string]: any;
   };
@@ -110,7 +104,6 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.locale = config.locale;
   analyticsConfig.kalturaServer = config.kalturaServer;
   analyticsConfig.cdnServers = config.cdnServers;
-  analyticsConfig.liveAnalytics = config.liveAnalytics;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
   analyticsConfig.isHosted = hosted;
   analyticsConfig.live = config.live || { pollInterval: 30 };
