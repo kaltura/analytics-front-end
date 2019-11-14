@@ -44,6 +44,11 @@
     height: 80px;
   }
 
+  .kFloatingDetails{
+    position: absolute;
+    margin-top: 32px;
+  }
+
   .kEntryDetails {
     display: flex;
     font-size: 14px;
@@ -149,6 +154,18 @@
     height: 86px;
   }
 
+  .kReport .kReportHeader.noTitle{
+    height: 32px;
+  }
+
+  .kHeaderRight.noTitle{
+    top: 64px;
+  }
+
+  .kReport .kFloatingDetails{
+    position: relative;
+    margin-top: 0px;
+  }
 
   .kVideoMedia {
     ::ng-deep .kReportTabs .kTab {

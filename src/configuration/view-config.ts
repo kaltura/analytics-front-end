@@ -91,6 +91,7 @@ export const viewsConfig = {
     sources: {},
   },
   entry: {
+    title: {},
     export: {},
     refineFilter: {
       geo: {},
