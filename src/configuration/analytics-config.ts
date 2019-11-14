@@ -1,4 +1,19 @@
 import { PollInterval } from '@kaltura-ng/kaltura-common';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
+import { Observable } from 'rxjs';
+import { menu } from '../app/app-menu/app-menu.config';
+
+export interface MenuItem {
+  id: string;
+  link: string;
+  label: string;
+  items?: MenuItem[];
+}
+
+export enum EntryLiveUsersMode {
+  Authenticated = 'Authenticated',
+  All = 'All',
+}
 
 export interface AnalyticsConfig {
   appVersion: string;
@@ -6,22 +21,29 @@ export interface AnalyticsConfig {
   skipEmptyBuckets: boolean;
   multiAccount: boolean;
   defaultPageSize: number;
-  permissions: {
-    lazyLoadCategories?: boolean;
-  };
   liveEntryUsersReports?: string;
+  originTarget: string;
   kalturaServer?: {
-      uri?: string,
-      previewUIConf?: number,
+    uri?: string,
+    previewUIConf?: number,
   };
   cdnServers?: {
     serverUri?: string,
     securedServerUri?: string
   };
+  ks?: string;
+  pid?: string;
   locale?: string;
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  menuConfig?: {
+    showMenu: boolean;
+    items?: MenuItem[];
+  };
+  viewsConfig?: {
+    [key: string]: ViewConfig;
+  };
   live?: {
     pollInterval?: PollInterval;
     healthNotificationsCount?: number;
@@ -32,12 +54,15 @@ export interface AnalyticsConfig {
     mapUrls?: string[];
     mapZoomLevels?: string;
   };
+  customData?: {
+    [key: string]: any;
+  };
 }
 
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
-  let protocol =  (location.protocol || '').toLowerCase();
+  let protocol = (location.protocol || '').toLowerCase();
   if (protocol[protocol.length - 1] === ':') {
-    protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    protocol = location.protocol.substring(0, location.protocol.length - 1);
   }
   return `${protocol}://${urlWithoutProtocol}`;
 }
@@ -52,9 +77,9 @@ export function getKalturaServerUri(suffix: string = ''): string {
 }
 
 export function buildCDNUrl(suffix: string): string {
-  let protocol =  (location.protocol || '').toLowerCase();
+  let protocol = (location.protocol || '').toLowerCase();
   if (protocol[protocol.length - 1] === ':') {
-    protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    protocol = location.protocol.substring(0, location.protocol.length - 1);
   }
   let baseUrl = '';
   if (protocol === 'https') {
@@ -62,7 +87,7 @@ export function buildCDNUrl(suffix: string): string {
   } else {
     baseUrl = analyticsConfig.cdnServers.serverUri;
   }
-
+  
   return `${baseUrl}${suffix}`;
 }
 
@@ -71,6 +96,64 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
+  originTarget: window.location.origin,
   multiAccount: false,
-  permissions: {},
 };
+
+export function setConfig(config: AnalyticsConfig, hosted = false): void {
+  if (!config) {
+    throw Error('No configuration provided!');
+  }
+  
+  analyticsConfig.ks = config.ks;
+  analyticsConfig.pid = config.pid;
+  analyticsConfig.locale = config.locale;
+  analyticsConfig.kalturaServer = config.kalturaServer;
+  analyticsConfig.cdnServers = config.cdnServers;
+  analyticsConfig.liveAnalytics = config.liveAnalytics;
+  analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
+  analyticsConfig.isHosted = hosted;
+  analyticsConfig.live = config.live || { pollInterval: 30 };
+  analyticsConfig.dateFormat = config.dateFormat || 'month-day-year';
+  analyticsConfig.menuConfig = config.menuConfig;
+  analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
+  analyticsConfig.customData = config.customData || { };
+  setLiveEntryUsersReports(config.liveEntryUsersReports);
+}
+
+function setLiveEntryUsersReports(value: string): void {
+  const allowedValues = Object.keys(EntryLiveUsersMode);
+  analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
+}
+
+export function initConfig(): Observable<void> {
+  return new Observable(observer => {
+    if (window['analyticsConfig']) { // standalone
+      setConfig(window['analyticsConfig']);
+      observer.next();
+      observer.complete();
+      return () => {
+      };
+    }
+    
+    // hosted
+    window.parent.postMessage(
+      { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
+      analyticsConfig.originTarget,
+    );
+    
+    const initEventHandler = event => {
+      if (event.data && event.data.messageType === 'init') {
+        setConfig(event.data.payload, true);
+        observer.next();
+        observer.complete();
+      }
+    };
+    
+    window.addEventListener('message', initEventHandler);
+    
+    return () => {
+      window.removeEventListener('message', initEventHandler);
+    };
+  });
+}

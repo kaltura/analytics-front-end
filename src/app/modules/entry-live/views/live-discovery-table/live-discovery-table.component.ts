@@ -10,8 +10,9 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { LiveDiscoverySummaryData, LiveDiscoveryTableData, LiveDiscoveryTableWidget } from './live-discovery-table.widget';
 import { liveDiscoveryTablePageSize } from './table-config';
 import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-selector.service';
-import { EntryLiveUsersMode, liveReportTypeMap } from 'shared/utils/live-report-type-map';
+import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-live-discovery-table',

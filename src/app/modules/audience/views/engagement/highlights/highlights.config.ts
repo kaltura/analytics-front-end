@@ -19,6 +19,11 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
+          'count_loads': {
+            format: value => value,
+            colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+          },
           'sum_time_viewed': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
@@ -38,24 +43,29 @@ export class HighlightsConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
+          'count_loads': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
+            sortOrder: 0,
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             sortOrder: 1,
-          },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            units: value => 'min',
-            sortOrder: 3,
           },
           'unique_known_users': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 2,
+          },
+          'sum_time_viewed': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
+            units: value => 'min',
+            sortOrder: 3,
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),

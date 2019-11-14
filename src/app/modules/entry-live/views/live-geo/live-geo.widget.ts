@@ -15,8 +15,8 @@ import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 export interface LiveGeoWidgetData {
   table: TableRow[];

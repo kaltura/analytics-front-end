@@ -9,6 +9,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 * Run ng serve for a dev server.
 * Navigate to http://localhost:4200
 
+## Example
+
+Follow this [link](https://github.com/kaltura/analytics-front-end/tree/master/docs/loadingAnalytics.md) to see the docs
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

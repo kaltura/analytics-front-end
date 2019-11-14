@@ -51,7 +51,8 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _userName = '';
   public _isCompare = false;
   public _reportTabs = UserReportTabs;
-  public _currentTab = UserReportTabs.viewer;
+  public _userViewConfig = analyticsConfig.viewsConfig.user;
+  public _currentTab = !this._userViewConfig.viewer && this._userViewConfig.contributor ? UserReportTabs.contributor : UserReportTabs.viewer;
   
   constructor(private _router: Router,
               private _route: ActivatedRoute,

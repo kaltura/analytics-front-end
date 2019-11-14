@@ -14,12 +14,13 @@
             </div>
           </div>
           <span class="kTitle">{{_userName}}</span>
-          <app-export-csv name="user"
+          <app-export-csv *ngIf="_userViewConfig.export"
+                          name="user"
                           [userId]="_userId"
                           [reports]="_exportConfig"
                           [refineFilter]="_refineFilter"
                           [dateFilter]="_dateFilter"></app-export-csv>
-          <div class="kFilter kOverrideFAIcons">
+          <div *ngIf="_userViewConfig.refineFilter" class="kFilter kOverrideFAIcons">
             <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
               <span>{{'app.filters.filter' | translate}}</span>
               <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
@@ -30,7 +31,6 @@
                            name="user"
                            [dateRange]="_dateRange"
                            [selectedTimeUnit]="_timeUnit"
-                           [creationDate]="_creationDate"
                            (filterChange)="_onDateFilterChange($event)"></app-date-filter>
         </div>
 
@@ -45,28 +45,33 @@
           <span class="kLabel">{{_registrationDate}}</span>
         </div>
 
-        <app-user-filter [opened]="_refineFilterOpened"
+        <app-user-filter [viewConfig]="_userViewConfig.refineFilter"
+                         [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-user-filter>
 
         <div class="kReportContainer">
-          <app-user-totals [dateFilter]="_dateFilter"
+          <app-user-totals *ngIf="_userViewConfig.totals"
+                           [dateFilter]="_dateFilter"
                            [userId]="_user.id"
                            [refineFilter]="_refineFilter"></app-user-totals>
         </div>
 
         <div class="kReportContainer">
-          <div class="kLeftCol" [class.kCompare]="_isCompare">
-            <app-user-mini-highlights [dateFilter]="_dateFilter"
+          <div class="kLeftCol" *ngIf="_userViewConfig.geoDevices || _userViewConfig.lastViewedEntries"
+               [class.kCompare]="_isCompare">
+            <app-user-mini-highlights *ngIf="_userViewConfig.geoDevices"
+                                      [dateFilter]="_dateFilter"
                                       [userId]="_user.id"
                                       [refineFilter]="_refineFilter"></app-user-mini-highlights>
-            <app-user-mini-top-content [dateFilter]="_dateFilter"
+            <app-user-mini-top-content *ngIf="_userViewConfig.lastViewedEntries"
+                                       [dateFilter]="_dateFilter"
                                        [userId]="_user.id"
                                        [refineFilter]="_refineFilter"></app-user-mini-top-content>
           </div>
-          <div class="kRightCol" [class.kCompare]="_isCompare">
+          <div class="kRightCol" *ngIf="_userViewConfig.insights" [class.kCompare]="_isCompare">
             <ui-carousel height="100%"
                          [class.kCompare]="_isCompare"
                          [infinite]="true"
@@ -75,23 +80,23 @@
                          [arrows]="false"
                          [fade]="false"
                          [speed]="200">
-              <ui-carousel-item>
+              <ui-carousel-item *ngIf="_userViewConfig.insights.minutesViewed">
                 <app-user-insight-minutes-viewed [userId]="_userId"
                                                  [dateFilter]="_dateFilter"
                                                  [refineFilter]="_refineFilter"></app-user-insight-minutes-viewed>
               </ui-carousel-item>
-              <ui-carousel-item>
+              <ui-carousel-item *ngIf="_userViewConfig.insights.plays">
                 <app-user-insight-plays [userId]="_userId"
                                         [dateFilter]="_dateFilter"
                                         [refineFilter]="_refineFilter"></app-user-insight-plays>
               </ui-carousel-item>
 
-              <ui-carousel-item>
+              <ui-carousel-item *ngIf="_userViewConfig.insights.domains">
                 <app-user-insight-domain [userId]="_userId"
                                          [dateFilter]="_dateFilter"
                                          [refineFilter]="_refineFilter"></app-user-insight-domain>
               </ui-carousel-item>
-              <ui-carousel-item>
+              <ui-carousel-item *ngIf="_userViewConfig.insights.sources">
                 <app-user-insight-source [userId]="_userId"
                                          [dateFilter]="_dateFilter"
                                          [refineFilter]="_refineFilter"></app-user-insight-source>
@@ -100,7 +105,7 @@
           </div>
         </div>
 
-        <div class="kReportTabs">
+        <div class="kReportTabs" *ngIf="_userViewConfig.viewer && _userViewConfig.contributor">
           <a class="kReportTabsItem kViewer"
              [class.kViewerActive]="_currentTab === _reportTabs.viewer"
              (click)="_selectTab(_reportTabs.viewer)">
@@ -115,15 +120,15 @@
           </a>
         </div>
 
-        <ng-container *ngIf="_currentTab === _reportTabs.viewer">
-          <div class="kReportContainer">
+        <ng-container *ngIf="_currentTab === _reportTabs.viewer && _userViewConfig.viewer">
+          <div class="kReportContainer" *ngIf="_userViewConfig.viewer.viewedEntries">
             <app-user-highlights [userId]="_user.id"
                                  [dateFilterComponent]="dateFilter"
                                  [dateFilter]="_dateFilter"
                                  [refineFilter]="_refineFilter"></app-user-highlights>
           </div>
 
-          <div class="kReportContainer">
+          <div class="kReportContainer" *ngIf="_userViewConfig.viewer.engagement">
             <app-impressions [title]="'app.user.viewingEngagementFunnel' | translate"
                              [userId]="_user.id"
                              [dateFilter]="_dateFilter"
@@ -131,21 +136,21 @@
           </div>
         </ng-container>
 
-        <ng-container *ngIf="_currentTab === _reportTabs.contributor">
-          <div class="kReportContainer">
+        <ng-container *ngIf="_currentTab === _reportTabs.contributor && _userViewConfig.contributor">
+          <div class="kReportContainer" *ngIf="_userViewConfig.contributor.mediaUpload">
             <app-user-media-upload [userId]="_user.id"
                                    [dateFilterComponent]="dateFilter"
                                    [dateFilter]="_dateFilter"
                                    [refineFilter]="_refineFilter"></app-user-media-upload>
           </div>
 
-          <div class="kReportContainer">
+          <div class="kReportContainer" *ngIf="_userViewConfig.contributor.topContent">
             <app-user-top-content [userId]="_user.id"
                                   [dateFilter]="_dateFilter"
                                   [refineFilter]="_refineFilter"></app-user-top-content>
           </div>
 
-          <div class="kReportContainer">
+          <div class="kReportContainer" *ngIf="_userViewConfig.contributor.sources">
             <app-user-sources [userId]="_user.id"
                               [userName]="_user.fullName"
                               [dateFilter]="_dateFilter"

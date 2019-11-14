@@ -15,7 +15,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 export interface LiveDevicesData {
   data: BarChartRow[];

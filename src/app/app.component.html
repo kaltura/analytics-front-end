@@ -1,11 +1,26 @@
-<k-area-blocker [showLoader]="_isBusy" [bodyScroll]="true" [classes]="'kAreaBlockerCoverAll'" *ngIf="_permissionsLoaded">
+<k-area-blocker *ngIf="_appService.permissionsLoaded$ | async"
+                [showLoader]="_isBusy"
+                [bodyScroll]="true"
+                [classes]="'kAreaBlockerCoverAll'">
   <router-outlet></router-outlet>
 </k-area-blocker>
 
-<p-confirmDialog #confirm header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440" [class.kAlignToLeft]="_confirmDialogAlignLeft" [acceptLabel]="_confirmationLabels.yes" [rejectLabel]="_confirmationLabels.no"></p-confirmDialog>
+<p-confirmDialog #confirm
+                header="Confirmation"
+                width="440"
+                [key]="'confirm'"
+                [closeOnEscape]="false"
+                [class.kAlignToLeft]="_appService.confirmDialogAlignLeft"
+                [acceptLabel]="_appService.confirmationLabels.yes"
+                [rejectLabel]="_appService.confirmationLabels.no"></p-confirmDialog>
 
-<p-confirmDialog #alert header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440" [class.kAlignToLeft]="_confirmDialogAlignLeft">
+<p-confirmDialog #alert
+                 header="Alert"
+                 width="440"
+                 [key]="'alert'"
+                 [closeOnEscape]="true"
+                 [class.kAlignToLeft]="_appService.confirmDialogAlignLeft">
   <p-footer>
-    <button type="button" pButton label="{{_confirmationLabels.ok}}" (click)="alert.accept()"></button>
+    <button type="button" pButton label="{{_appService.confirmationLabels.ok}}" (click)="alert.accept()"></button>
   </p-footer>
 </p-confirmDialog>

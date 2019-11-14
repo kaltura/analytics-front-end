@@ -1,7 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 
-
 @NgModule({
   imports: [],
   declarations: [],
@@ -12,7 +11,9 @@ export class FrameEventManagerModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FrameEventManagerModule,
-      providers: [FrameEventManagerService]
+      providers: [
+        FrameEventManagerService,
+      ]
     };
   }
   

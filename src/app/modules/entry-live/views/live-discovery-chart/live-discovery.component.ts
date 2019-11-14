@@ -14,8 +14,8 @@ import { KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { LiveGeoWidget } from '../live-geo/live-geo.widget';
 import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-live-discovery',

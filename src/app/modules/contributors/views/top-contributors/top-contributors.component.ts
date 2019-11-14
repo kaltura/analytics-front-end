@@ -6,6 +6,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TopContributorsExportConfig } from './top-contributors-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-top-contributors',
@@ -18,6 +19,13 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   
 })
 export class TopContributorsComponent {
+  public _contributorsViewConfig = analyticsConfig.viewsConfig.contributors;
+  public _miniViewsCount = [
+    this._contributorsViewConfig.miniHighlights,
+    this._contributorsViewConfig.miniTopContributors,
+    this._contributorsViewConfig.miniTopSources,
+  ].filter(Boolean).length;
+  public _miniViewsWidth = this._miniViewsCount === 3 ? '33%' : this._miniViewsCount === 2 ? '50%' : '100%';
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;

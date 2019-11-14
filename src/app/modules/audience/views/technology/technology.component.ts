@@ -8,6 +8,7 @@ import { TechnologyExportConfig } from './technology-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { EngagementExportConfig } from '../engagement/engagement-export.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-technology',
@@ -31,6 +32,7 @@ export class TechnologyComponent implements OnInit {
   public _devicesList: { value: string, label: string; }[] = [];
   public _reportType = reportTypeMap(KalturaReportType.platforms);
   public _exportConfig: ExportItem[] = [];
+  public _technologyViewConfig = analyticsConfig.viewsConfig.audience.technology;
   
   constructor(private _exportConfigService: TechnologyExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();

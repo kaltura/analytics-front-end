@@ -11,6 +11,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isEqual } from 'shared/utils/is-equals';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ViewConfig } from 'configuration/view-config';
 
 export interface OptionItem {
   value: any;
@@ -66,6 +68,21 @@ export class FilterComponent {
   @Input() locationFiltersWarning: string;
   
   @Input() showAutocompleteGroup = true;
+  
+  @Input() set viewConfig(value: ViewConfig) {
+    if (!isEmptyObject(value)) {
+      this._viewConfig = value;
+    } else {
+      this._viewConfig = {
+        mediaType: {},
+        entrySource: {},
+        tags: {},
+        owners: {},
+        categories: {},
+        geo: {},
+      };
+    }
+  }
 
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
@@ -116,6 +133,14 @@ export class FilterComponent {
   public _selectedValues: { [key: string]: string[]; }; // local state
   public _state: string;
   public _tags: FilterTagItem[] = [];
+  public _viewConfig: ViewConfig = {
+    mediaType: {},
+    entrySource: {},
+    tags: {},
+    owners: {},
+    categories: {},
+    geo: {},
+  };
   
   get showFilters() {
     return this._showFilters;

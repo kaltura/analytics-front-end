@@ -6,6 +6,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { EngagementExportConfig } from './engagement-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-engagement',
@@ -27,6 +28,12 @@ export class EngagementComponent {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
+  public _engagementViewConfig = analyticsConfig.viewsConfig.audience.engagement;
+  public _miniViewsCount = [
+    this._engagementViewConfig.miniHighlights,
+    this._engagementViewConfig.miniTopVideos,
+    this._engagementViewConfig.miniPeakDay,
+  ].filter(Boolean).length;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

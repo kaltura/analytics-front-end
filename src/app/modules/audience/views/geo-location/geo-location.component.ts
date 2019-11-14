@@ -76,6 +76,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _exportConfig: ExportItem[] = [];
+  public _geoViewConfig = analyticsConfig.viewsConfig.audience.geo;
   public _drillDown: string[] = [];
   public _mapDataReady = false;
   public _tableMode = GeoTableModes.countries;

@@ -19,36 +19,41 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kListFilters">
-            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
+          <div class="kListFilters" *ngIf="_viewConfig?.mediaType || _viewConfig?.entrySource">
+            <app-checkboxes-list-filter *ngIf="_viewConfig?.mediaType"
+                                        [label]="'app.filters.mediaType.title' | translate"
                                         [options]="_mediaTypes"
                                         [selectedFilters]="_selectedValues['mediaType']"
                                         (itemSelected)="_onItemSelected($event, 'mediaType')"
                                         (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter class="kLastItem"
+            <app-checkboxes-list-filter *ngIf="_viewConfig?.entrySource"
+                                        class="kLastItem"
                                         [label]="'app.filters.entrySources.title' | translate"
                                         [options]="_entrySources"
                                         [selectedFilters]="_selectedValues['entrySources']"
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"
                                         (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
           </div>
-          <div *ngIf="showAutocompleteGroup" class="kMiscFilters">
-            <app-tags-filter [selectedFilters]="_selectedValues['tags']"
+          <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners || _viewConfig?.categories)" class="kMiscFilters">
+            <app-tags-filter *ngIf="_viewConfig?.tags"
+                             [selectedFilters]="_selectedValues['tags']"
                              (itemSelected)="_onItemSelected($event, 'tags')"
                              (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
 
-            <app-owners-filter [selectedFilters]="_selectedValues['owners']"
+            <app-owners-filter *ngIf="_viewConfig?.owners"
+                               [selectedFilters]="_selectedValues['owners']"
                                (itemSelected)="_onItemSelected($event, 'owners')"
                                (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
 
-            <app-category-filter [label]="'app.filters.categories' | translate"
+            <app-category-filter *ngIf="_viewConfig?.categories"
+                                 [label]="'app.filters.categories' | translate"
                                  [selectedFilters]="_selectedValues['categories']"
                                  [linkLabel]="'app.filters.selectCategories' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
           </div>
-          <div class="kListFilters">
+          <div class="kListFilters" *ngIf="_viewConfig?.geo">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"

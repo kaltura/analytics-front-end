@@ -1,0 +1,99 @@
+<div class="kReportView kVideoMedia">
+  <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
+    <div class="kReportHeader">
+      <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+              [kTooltip]="'app.entry.back' | translate"></button>
+      <span class="kTitle">{{_entryName}}</span>
+      <div class="kHeaderRight">
+        <app-export-csv *ngIf="_viewConfig.export" name="entry"
+                        [reports]="_exportConfig"
+                        [refineFilter]="_refineFilter"
+                        [dateFilter]="_dateFilter"
+                        [entryId]="_entryId"></app-export-csv>
+        <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
+          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+            <span>{{'app.filters.filter' | translate}}</span>
+            <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+            <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+          </div>
+        </div>
+        <app-date-filter #dateFilter
+                         name="entry"
+                         [dateRange]="_dateRange"
+                         [selectedTimeUnit]="_timeUnit"
+                         [creationDate]="_creationDate"
+                         (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+      </div>
+    </div>
+
+    <div *ngIf="_viewConfig.details" class="kEntryDetails">
+      <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
+      <span>{{_entryType | mediaType: true}}</span>
+      <div class="kSeparator"></div>
+      <span>{{'app.entry.owner' | translate}}</span>
+      <span class="kOwner">{{owner}}</span>
+      <div *ngIf="!isChildAccount" class="kSeparator"></div>
+      <span *ngIf="!isChildAccount" class="link" (click)="navigateToEntry.emit()">{{'app.entry.seeAll' | translate}}</span>
+    </div>
+
+    <app-entry-filter [viewConfig]="_viewConfig.refineFilter"
+                      [opened]="_refineFilterOpened"
+                      [dateFilter]="_dateFilter"
+                      [selectedFilters]="_selectedRefineFilters"
+                      (closeFilters)="_refineFilterOpened = false"
+                      (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
+
+    <app-video-entry-totals *ngIf="_viewConfig.totals"
+                            [comments]="comments"
+                            [dateFilter]="_dateFilter"
+                            [entryId]="_entryId"
+                            [refineFilter]="_refineFilter"></app-video-entry-totals>
+
+    <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
+      <app-video-entry-preview *ngIf="_viewConfig.entryPreview"
+                               [dateFilter]="_dateFilter"
+                               [entryId]="_entryId"
+                               [refineFilter]="_refineFilter"></app-video-entry-preview>
+      <app-video-entry-user-engagement *ngIf="_viewConfig.userEngagement"
+                                       [viewConfig]="_viewConfig.userEngagement"
+                                       [dateFilter]="_dateFilter"
+                                       [duration]="_duration"
+                                       [refineFilter]="_refineFilter"
+                                       [entryId]="_entryId"></app-video-entry-user-engagement>
+    </div>
+
+    <div *ngIf="_viewConfig.performance" class="kReportContainer">
+      <app-video-entry-performance [dateFilterComponent]="dateFilter"
+                                   [dateFilter]="_dateFilter"
+                                   [entryId]="_entryId"
+                                   [refineFilter]="_refineFilter"></app-video-entry-performance>
+    </div>
+
+    <div *ngIf="_viewConfig.impressions" class="kReportContainer">
+      <app-impressions [dateFilter]="_dateFilter"
+                       [entryId]="_entryId"
+                       [refineFilter]="_refineFilter"></app-impressions>
+    </div>
+
+    <div *ngIf="_viewConfig.geo" class="kReportContainer">
+      <app-top-countries [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"
+                         [entryId]="_entryId"
+                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
+    </div>
+
+    <div *ngIf="_viewConfig.devices" class="kReportContainer">
+      <app-entry-devices-overview [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"
+                                  [entryId]="_entryId"></app-entry-devices-overview>
+    </div>
+
+    <div *ngIf="_viewConfig.syndication" class="kReportContainer">
+      <app-syndication [entryId]="_entryId"
+                       [dateFilterComponent]="dateFilter"
+                       [dateFilter]="_dateFilter"
+                       [refineFilter]="_refineFilter"
+                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-syndication>
+    </div>
+  </div>
+</div>

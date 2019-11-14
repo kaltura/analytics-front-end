@@ -1,0 +1,93 @@
+<div data-aid="report-entry-user-engagement" class="kReport">
+  <div class="kTable">
+    <div class="kToggle">
+    <span (click)="_toggleTable()">
+      <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+      <a>{{(_showTable ? 'app.entry.hideDetails' : 'app.entry.viewDetails') | translate}}</a>
+    </span>
+    </div>
+
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+      <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+        <app-user-engagement-filter *ngIf="_viewConfig.userFilter"
+                                    [totalCount]="_totalCount"
+                                    [dateFilter]="_dateFilter"
+                                    [selectedFilters]="_selectedRefineFilters"
+                                    (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+
+        <p-table dataKey="name"
+                 [sortField]="'count_plays'"
+                 [value]="_tableData"
+                 [customSort]="true"
+                 [defaultSortOrder]="-1"
+                 [sortOrder]="-1"
+                 (sortFunction)="_onSortChanged($event)">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
+              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
+                {{'app.entry.' + col | translate}}
+                <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
+              </th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data let-expanded="expanded">
+            <tr>
+              <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
+                <a [pRowToggler]="data">
+                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
+                     style="font-size: 1.25em"></i>
+                </a>
+              </td>
+              <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+            <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name'"
+                  class="kTrend">
+              <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+                <app-trend-value [value]="data[col].value"
+                                 [units]="data[col].units"
+                                 [trend]="data[col].trend"></app-trend-value>
+              </span>
+            </span>
+                <ng-container *ngIf="!_isCompareMode || col === 'name'">
+                  <span *ngIf="col !== 'avg_completion_rate' && col !== 'name'">{{data[col]}}</span>
+                  <a class="kTableColumn"
+                        *ngIf="col === 'name'"
+                        [kTooltip]="data[col]"
+                        [showOnEllipsis]="true"
+                        (click)="_drillDown(data)">{{data[col]}}</a>
+                  <app-bullet *ngIf="col === 'avg_completion_rate'"
+                              colorScheme="dropoff"
+                              [value]="data['avg_completion_rate']"></app-bullet>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+              <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+            </div>
+          </ng-template>
+          <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
+            <tr *ngIf="!_isCompareMode">
+              <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
+                <app-heat-map [attr.data-aid]="'heat-map-' + index"
+                              [userId]="data['name']"
+                              [entryId]="entryId"
+                              [duration]="duration"
+                              [filter]="_filter"></app-heat-map>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <p-paginator [rows]="_pager.pageSize"
+                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                     [totalRecords]="_totalCount"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </k-area-blocker>
+  </div>
+
+</div>

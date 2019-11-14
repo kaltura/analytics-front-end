@@ -4,7 +4,7 @@
       "audience": "Audience",
       "bandwidth": "Usage",
       "contributors": "Contributors",
-      "live": "Live"
+      "live": "Real-Time"
     },
     "filters": {
       "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
@@ -186,8 +186,8 @@
       "title": "Publisher Bandwidth & Storage Report",
       "month_id": "Month",
       "date_id": "Date",
-      "publisherStorage": "Publish Bandwidth & Storage Report",
-      "usersStorage": "End User Storage Report",
+      "publisherStorage": "Publishers Bandwidth & Storage",
+      "usersStorage": "End User Storage",
       "bandwidth_consumption": "Bandwidth Consumption",
       "average_storage": "Average Storage",
       "peak_storage": "Peak Storage",
@@ -258,9 +258,16 @@
       }
     },
     "audience": {
+      "menu": {
+        "engagement": "Engagement",
+        "contentInteractions": "Content Interactions",
+        "technology": "Technology",
+        "geoLocation": "Geo Location"
+      },
       "geo": {
         "title": "Geo Location",
         "count_plays": "Plays",
+        "count_loads": "Impressions",
         "unique_known_users": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
         "avg_view_drop_off": "Avg. Drop Off Rate",
@@ -366,6 +373,7 @@
         "month_id": "Month",
         "date_id": "Day",
         "count_plays": "Plays",
+        "count_loads": "Player Impressions",
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
         "avg_view_drop_off": "Avg. Drop Off Rate",
@@ -410,6 +418,7 @@
         "avg_view_drop_off": "Avg. Drop Off Rate",
         "count_plays_tt": "Plays",
         "plays_distribution": "Plays Distribution",
+        "loads_distribution": "Player Impressions Distribution",
         "sum_time_viewed_tt": "Minutes Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",
@@ -684,8 +693,10 @@
       "month_id": "Month",
       "date_id": "Date",
       "count_plays": "Plays",
+      "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
       "count_loads": "Player Impressions",
+      "loads_distribution": "Player Impressions Distribution",
       "avg_time_viewed": "Avg. View Time",
       "name": "Name",
       "avg_view_drop_off": "Avg. Drop Off Rate",
@@ -697,9 +708,15 @@
       "unique_known_users": "Unique Viewers",
       "unique_auth_known_users": "Unique Authenticated  Views",
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
+      "likes": "Likes",
+      "likes_tt": "Likes",
+      "comments": "Comments",
+      "comments_tt": "Comments",
       "users": "Users",
       "dates": "Dates",
       "entry_name": "Name",
+      "votes": "Likes",
+      "count_viral": "Shares",
       "heatMap": {
         "duration": "Duration {{0}}",
         "tooltip": {
@@ -720,6 +737,7 @@
       "exportLabels": {
         "userEngagement": "User Engagement",
         "videoPerformance": "Video Performance",
+        "imagePerformance": "Image Performance",
         "impressions": "Impressions",
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",

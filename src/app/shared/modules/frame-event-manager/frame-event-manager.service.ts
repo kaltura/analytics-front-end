@@ -1,13 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 export enum FrameEvents {
   UpdateLayout = 'updateLayout',
   Logout = 'logout',
   Init = 'init',
-  AnalyticsInit = 'analytics-init',
-  AnalyticsInitComplete = 'analytics-init-complete',
+  AnalyticsInit = 'analyticsInit',
+  AnalyticsInitComplete = 'analyticsInitComplete',
   Navigate = 'navigate',
   NavigateTo = 'navigateTo',
   UpdateFilters = 'updateFilters',
@@ -17,20 +18,19 @@ export enum FrameEvents {
   ModalClosed = 'modalClosed',
   SetLogsLevel = 'setLogsLevel',
   UpdateMultiAccount = 'updateMultiAccount',
-  UpdateAuthLiveUsersReports = 'updateAuthLiveUsersReports'
+  UpdateAuthLiveUsersReports = 'updateAuthLiveUsersReports',
+  UpdateConfig = 'updateConfig',
 }
 
 @Injectable()
 export class FrameEventManagerService implements OnDestroy {
   private _parentEvents: { [key: string]: BehaviorSubject<{ payload: any }> } = {};
-  private _targetOrigin = window.location.origin;
   private _ready = false;
   
   constructor() {
     this._windowEventListener = this._windowEventListener.bind(this);
   }
-  
-  
+
   ngOnDestroy(): void {
     window.removeEventListener('message', this._windowEventListener);
     Object.keys(this._parentEvents).forEach(key => this._parentEvents[key].complete());
@@ -75,7 +75,7 @@ export class FrameEventManagerService implements OnDestroy {
       message['payload'] = payload;
     }
     
-    window.parent.postMessage(message, this._targetOrigin);
+    window.parent.postMessage(message, analyticsConfig.originTarget);
   }
   
   public listen(eventName: FrameEvents): Observable<any> {

@@ -8,7 +8,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "link-kaltura-ng": "node ./scripts/link-kaltura-ng.js"
+    "example": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoader.html\" \"npm start\"",
+    "example:menu": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderMenu.html\" \"npm start\"",
+    "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\"",
+    "example:kms": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderKMS.html\" \"npm start\""
   },
   "private": true,
   "dependencies": {
@@ -56,6 +59,7 @@
     "@types/jasminewd2": "^2.0.6",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.1",
+    "concurrently": "^4.1.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "node-sass": "^4.12.0",

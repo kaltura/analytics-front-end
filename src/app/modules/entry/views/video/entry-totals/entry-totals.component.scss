@@ -1,0 +1,174 @@
+@import '../../../../../../styles/variables';
+.kTotals {
+  background-color: transparent !important;
+  margin-bottom: 0 !important;
+}
+.kTotalsRow{
+  display: flex;
+  width: 100%;
+}
+.kTotalsContainer {
+  width: 100%;
+  height: 136px;
+  display: flex;
+  margin-right: 24px;
+  background-color: #ffffff;
+  border-radius: 3px;
+
+  .kTotalContainer {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 24px;
+    padding-right: 12px;
+    padding-top: 24px;
+    box-sizing: border-box;
+
+    &:not(:last-child) {
+      border-right: 1px solid $kGrayscale6;
+    }
+
+    .kTotal {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+
+      .kValue {
+        font-size: 24px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+
+      .kLabel {
+        margin-top: 4px;
+        margin-bottom: 8px;
+        font-size: 15px;
+        color: $kGrayscale1;
+        white-space: nowrap;
+      }
+
+      .kTrend ::ng-deep {
+        .kValue {
+          font-size: 24px;
+          font-weight: bold;
+          color: $kGrayscale1;
+        }
+
+        .kUnits {
+          font-size: 13px;
+          font-weight: bold;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .kMiniIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+      flex: 0 0 auto;
+
+      &.aqua {
+        background-color: rgba(22, 168, 215, 0.2);
+        color: #16a8d7;
+      }
+
+      &.blue {
+        background-color: rgba(72, 122, 223, 0.2);
+        color: #487ADF;
+      }
+
+      &.violet {
+        background-color: rgba(155, 100, 230, 0.2);
+        color: #9B64E6;
+      }
+
+      &.orange {
+        background-color: rgba(225, 150, 46, 0.2);
+        color: #E1962E;
+      }
+
+      &.green {
+        background-color: rgba(129, 204, 111, 0.2);
+        color: #81cc6f;
+      }
+
+      .icon-upload {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+.kSocialHighlights {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  height: 88px;
+  padding: 24px 0;
+  background-color: #ffffff;
+  color: $kGrayscale1;
+  border-radius: 3px;
+
+  .kTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    margin-left: 24px;
+  }
+
+  .kSocialHighlightsItem {
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+
+    &:not(:last-child) {
+      margin-bottom: 13px;
+    }
+
+    .kValue {
+      font-size: 15px;
+      font-weight: bold;
+      margin-right: 9px;
+    }
+
+    .kIcon {
+      color: #487ADF;
+      margin-right: 9px;
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kTotalContainer {
+    padding-left: 15px !important;
+    padding-top: 15px !important;
+
+    .kLabel {
+      white-space: normal !important;
+    }
+  }
+}
+@media (max-width: 991px) {
+  .kTotalsRow {
+    display: block;
+    .kTotalsContainer {
+      margin-right: 0px;
+      margin-bottom: 24px;
+    }
+  }
+  .kSocialHighlights{
+    width: 100% !important;
+    height: 56px !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    box-sizing: border-box !important;
+    padding-top: 16px !important;
+  }
+}

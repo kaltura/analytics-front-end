@@ -1,0 +1,7 @@
+<div data-aid="report-entry-preview" class="kEntryPreview">
+  <div class="kThumbnailHolder" #holder>
+    <app-thumbnail-loader [thumbnailUrl]="_imgUrl"
+                          (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
+  </div>
+</div>
+

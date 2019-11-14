@@ -7,8 +7,12 @@
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
+            <app-toggle-live-btn *ngIf="_canShowToggleLive"
+                                 [entry]="_entry"
+                                 (entryToggled)="_liveToggled()"></app-toggle-live-btn>
             <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
-            <app-export-csv name="entry"
+            <app-export-csv *ngIf="_entryLiveViewConfig.export"
+                            name="entry"
                             [width]="380"
                             [reports]="_exportConfig"
                             [entryId]="_entryId"></app-export-csv>
@@ -18,7 +22,8 @@
           </div>
         </div>
 
-        <app-entry-details [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+        <app-entry-details *ngIf="_entryLiveViewConfig.details"
+                           [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
         <div class="kEntryWidgets">
           <div class="kWideColumn">
             <app-live-users [entry]="_entry"></app-live-users>
@@ -49,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div class="kReport">
+        <div *ngIf="_entryLiveViewConfig.discovery" class="kReport">
           <app-live-discovery (tableChange)="_onTableModeChange($event)"
                               (dateFilterChange)="_onDiscoveryDateFilterChange($event)"></app-live-discovery>
         </div>

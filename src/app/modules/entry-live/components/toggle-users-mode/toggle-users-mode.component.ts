@@ -2,8 +2,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { EntryLiveUsersMode } from 'shared/utils/live-report-type-map';
+import { EntryLiveUsersMode } from 'configuration/analytics-config';
 import { ToggleUsersModeService } from './toggle-users-mode.service';
 
 @Component({

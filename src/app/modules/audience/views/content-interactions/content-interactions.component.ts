@@ -6,6 +6,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { ContentInteractionsExportConfig } from './content-interactions-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { analyticsConfig } from 'configuration/analytics-config';
 
 @Component({
   selector: 'app-content-interactions',
@@ -27,6 +28,17 @@ export class ContentInteractionsComponent {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
+  public _contentInteractionsViewConfig = analyticsConfig.viewsConfig.audience.contentInteractions;
+  public _miniViewsCount = [
+    this._contentInteractionsViewConfig.miniInteractions,
+    this._contentInteractionsViewConfig.miniTopShared,
+    this._contentInteractionsViewConfig.topPlaybackSpeed,
+    this._contentInteractionsViewConfig.topStats,
+  ].filter(Boolean).length;
+  public _carouselItemsCount = [
+    this._contentInteractionsViewConfig.topPlaybackSpeed,
+    this._contentInteractionsViewConfig.topStats,
+  ].filter(Boolean).length;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,

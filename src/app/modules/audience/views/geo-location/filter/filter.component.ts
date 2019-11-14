@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { FilterComponent } from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ViewConfig } from 'configuration/view-config';
 
 @Component({
   selector: 'app-geo-filter',
@@ -32,4 +34,15 @@ import { ReportService } from 'shared/services';
   ]
 })
 export class GeoFilterComponent extends FilterComponent {
+  @Input() set viewConfig(value: ViewConfig) {
+    if (!isEmptyObject(value)) {
+      this._viewConfig = value;
+    } else {
+      this._viewConfig = {
+        geo: {},
+        tags: {},
+        categories: {},
+      };
+    }
+  }
 }

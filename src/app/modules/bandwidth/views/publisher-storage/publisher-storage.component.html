@@ -1,10 +1,12 @@
 <div data-aid="report-storage" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
-    <app-export-csv name="storage"
+    <app-export-csv *ngIf="_publisherViewConfig.export"
+                    name="storage"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
-    <div class="kFilter kOverrideFAIcons">
+    <div *ngIf="_publisherViewConfig.refineFilter"
+         class="kFilter kOverrideFAIcons">
       <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
         <span>{{'app.filters.filter' | translate}}</span>
         <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
@@ -21,6 +23,7 @@
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="engagement"
                        [locationFiltersWarning]="'app.bandwidth.locationFiltersWarning' | translate"
+                       [viewConfig]="_publisherViewConfig.refineFilter"
                        [showAutocompleteGroup]="false"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"

@@ -53,6 +53,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _showTable = false;
   public _totalCount: number;
   public _dateRange = DateRanges.CurrentQuarter;
+  public _endUserViewConfig = analyticsConfig.viewsConfig.bandwidth.endUser;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

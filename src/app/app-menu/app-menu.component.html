@@ -1,18 +1,13 @@
-<div class="kMenu" *ngIf="showNavBar">
-  <a [class.activeLink]="activeRoute === 'audience'" (click)="navigateToView('audience')">{{'app.modules.audience' | translate | uppercase}}</a>
-  <a [class.activeLink]="activeRoute === 'contributors'" (click)="navigateToView('contributors')">{{'app.modules.contributors' | translate | uppercase}}</a>
-  <a [class.activeLink]="activeRoute === 'bandwidth'" (click)="navigateToView('bandwidth')">{{'app.modules.bandwidth' | translate | uppercase}}</a>
-  <a [class.activeLink]="activeRoute === 'live'" (click)="navigateToView('live')">{{'app.modules.live' | translate | uppercase}}</a>
-</div>
+<ng-container *ngIf="_showNavBar">
+  <div class="kMenu">
+    <a *ngFor="let item of _menu"
+       [class.activeLink]="_activeRoute === item.id"
+       (click)="_navigateToView(item.link)">{{item.label | translate | uppercase}}</a>
+  </div>
 
-<div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'bandwidth'">
-  <a [class.activeLink]="activeSubRoute === 'publisher'" (click)="navigateToView('bandwidth/publisher')">{{'app.bandwidth.publisherStorage' | translate }}</a>
-  <a [class.activeLink]="activeSubRoute === 'end-user'" (click)="navigateToView('bandwidth/end-user')">{{'app.bandwidth.usersStorage' | translate }}</a>
-</div>
-
-<div class="kSubMenu" *ngIf="showNavBar && activeRoute === 'audience'">
-  <a [class.activeLink]="activeSubRoute === 'engagement'" (click)="navigateToView('audience/engagement')">Engagement</a>
-  <a [class.activeLink]="activeSubRoute === 'content-interactions'" (click)="navigateToView('audience/content-interactions')">Content Interactions</a>
-  <a [class.activeLink]="activeSubRoute === 'technology'" (click)="navigateToView('audience/technology')">Technology</a>
-  <a [class.activeLink]="activeSubRoute === 'geo-location'" (click)="navigateToView('audience/geo-location')">Geo-Location</a>
-</div>
+  <div class="kSubMenu" *ngIf="_getSubMenu(_activeRoute) as subMenu">
+    <a *ngFor="let subItem of subMenu"
+       [class.activeLink]="_activeSubRoute === subItem.id"
+       (click)="_navigateToView(subItem.link)">{{subItem.label | translate | uppercase}}</a>
+  </div>
+</ng-container>

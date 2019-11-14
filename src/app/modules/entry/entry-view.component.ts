@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISubscription } from 'rxjs/Subscription';
 import {
   BaseEntryGetAction,
   KalturaAPIException,
@@ -8,71 +7,40 @@ import {
   KalturaDetachedResponseProfile,
   KalturaMediaEntry,
   KalturaMediaType,
+  KalturaMetadata,
+  KalturaMetadataFilter,
   KalturaMultiRequest,
   KalturaMultiResponse,
-  KalturaReportInputFilter,
-  KalturaReportInterval,
-  KalturaReportType,
   KalturaRequestOptions,
   KalturaResponseProfileType,
   KalturaUser,
+  MetadataListAction,
   UserGetAction
 } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
-import { RefineFilter } from 'shared/components/filter/filter.component';
+import { cancelOnDestroy, XmlParser } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { filter, map } from 'rxjs/operators';
-import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import { EntryExportConfig } from './entry-export.config';
-import { EngagementExportConfig } from '../audience/views/engagement/engagement-export.config';
-import { reportTypeMap } from 'shared/utils/report-type-map';
 
 @Component({
   selector: 'app-entry',
   templateUrl: './entry-view.component.html',
   styleUrls: ['./entry-view.component.scss'],
-  providers: [
-    EntryExportConfig,
-  ]
 })
 export class EntryViewComponent implements OnInit, OnDestroy {
+  public _entryViewConfig = analyticsConfig.viewsConfig.entry;
   public _loadingEntry = false;
-  public _creationDate: moment.Moment = null;
-  public _selectedRefineFilters: RefineFilter = null;
-  public _dateRange = DateRanges.Last30D;
-  public _timeUnit = KalturaReportInterval.days;
-  public _totalCount: number;
-  public _reportType: KalturaReportType = reportTypeMap(KalturaReportType.userUsage);
-  public _selectedMetrics: string;
-  public _dateFilter: DateChangeEvent = null;
-  public _refineFilter: RefineFilter = null;
-  public _refineFilterOpened = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _exportConfig: ExportItem[] = [];
-  public _filter: KalturaReportInputFilter = new KalturaReportInputFilter(
-    {
-      searchInTags: true,
-      searchInAdminTags: false
-    }
-  );
-
-  private requestSubscription: ISubscription;
-  private subscription: ISubscription;
-
-
+  public _entry: KalturaMediaEntry;
+  public _mediaTypes = KalturaMediaType;
   public _entryId = '';
-  public _duration = 0;
-  public _entryName = '';
-  public _entryType: KalturaMediaType = null;
   public _owner = '';
   public _isChildAccount = false;
+  public _comments = 0;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -81,51 +49,36 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService,
-              private _authService: AuthService,
-              private _exportConfigService: EntryExportConfig) {
-    this._exportConfig = _exportConfigService.getConfig();
+              private _authService: AuthService) {
   }
-
+  
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
-    this.subscription = this._route.params.subscribe(params => {
-      this._entryId = params['id'];
-      if (this._entryId) {
-        this.loadEntryDetails();
-      }
-    });
+    this._route.params
+      .pipe(cancelOnDestroy(this))
+      .subscribe(params => {
+        this._entryId = params['id'];
+        if (this._entryId) {
+          this._loadEntryDetails();
+        }
+      });
   }
-
+  
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = null;
-    }
-
-    if (this.requestSubscription) {
-      this.requestSubscription.unsubscribe();
-      this.requestSubscription = null;
-    }
   }
-
-  public _onDateFilterChange(event: DateChangeEvent): void {
-    this._dateFilter = event;
-  }
-
-  public _onRefineFilterChange(event: RefineFilter): void {
-    this._refineFilter = event;
-  }
-
-  private loadEntryDetails(): void {
+  
+  private _loadEntryDetails(): void {
     this._loadingEntry = true;
     this._blockerMessage = null;
-
+    
+    const metadataProfileId = analyticsConfig.customData.metadataProfileId;
+    
     const request = new KalturaMultiRequest(
       new BaseEntryGetAction({ entryId: this._entryId })
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'name,mediaType,createdAt,msDuration,userId'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl'
           })
         }),
       new UserGetAction({ userId: null })
@@ -139,8 +92,17 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           })
         )
     );
-
-    this.requestSubscription = this._kalturaClient
+    
+    if (metadataProfileId) {
+      request.requests.push(new MetadataListAction({
+        filter: new KalturaMetadataFilter({
+          objectIdEqual: this._entryId,
+          metadataProfileIdEqual: metadataProfileId,
+        })
+      }));
+    }
+    
+    this._kalturaClient
       .multiRequest(request)
       .pipe(
         cancelOnDestroy(this),
@@ -152,65 +114,54 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               throw err;
             }
           }
-          return [responses[0].result, responses[1].result] as [KalturaMediaEntry, KalturaUser];
+          
+          const metadataList = responses.length === 3 ? responses[2].result : null;
+          const metadataItem = metadataList && metadataList.objects && metadataList.objects.length
+            ? metadataList.objects[0]
+            : null;
+          
+          return [
+            responses[0].result,
+            responses[1].result,
+            metadataItem,
+          ] as [KalturaMediaEntry, KalturaUser, KalturaMetadata];
         })
       )
       .subscribe(
-        ([entry, user]) => {
-          this._entryName = entry.name;
-          this._entryType = entry.mediaType;
-          this._duration = entry.msDuration || 0;
-          this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
+        ([entry, user, metadataItem]) => {
+          this._entry = entry;
           this._owner = user ? user.fullName : entry.userId; // fallback for deleted users
-          this.requestSubscription = null;
+
+          if (metadataItem) {
+            const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
+            this._comments = metadataObj.metadata && metadataObj.metadata.CommentsCount && metadataObj.metadata.CommentsCount.text
+              ? parseInt(metadataObj.metadata.CommentsCount.text, 10)
+              : 0;
+          }
+          
           this._loadingEntry = false;
         },
         error => {
-          this.requestSubscription = null;
           this._loadingEntry = false;
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this.loadEntryDetails();
+              this._loadEntryDetails();
             }
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-
+  
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
-
+  
   public _navigateToEntry(): void {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
   }
-
-  public _onSyndicationDrillDown(event: string): void {
-    let update: Partial<ExportItem> = {};
-    if (event) {
-      update.objectIds = event;
-    }
-
-    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
-  }
-
-  public _onGeoDrilldown(event: {reportType: KalturaReportType, drillDown: string[]}): void {
-    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
-
-    if (event.drillDown && event.drillDown.length > 0) {
-      update.additionalFilters.countryIn = event.drillDown[0];
-    }
-
-    if (event.drillDown && event.drillDown.length > 1) {
-      update.additionalFilters.regionIn = event.drillDown[1];
-    }
-
-    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
-  }
-
 }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaNullableBoolean, KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -23,6 +23,7 @@ import { defaultDateRange, FiltersService } from './views/live-discovery-chart/f
 import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
 import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
 import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
+import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 
 @Component({
   selector: 'app-entry-live',
@@ -54,7 +55,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _canShowToggleLive = false;
   public _selectedDateRange = defaultDateRange;
-
+  public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
+  
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
               private _dateFilter: FiltersService,
@@ -72,7 +74,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveDiscovery: LiveDiscoveryWidget,
               private _liveDevices: LiveDevicesWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
-              private _exportConfigService: EntryLiveExportConfig) {
+              private _exportConfigService: EntryLiveExportConfig,
+              private _permissions: AnalyticsPermissionsService) {
     this._exportConfig = _exportConfigService.getConfig();
   }
 
@@ -111,7 +114,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data;
-        this._canShowToggleLive = this._entry.explicitLive === 1;
+        this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive === KalturaNullableBoolean.trueValue;
         this._registerWidgets();
 
         if (this._timeSelector) {
@@ -132,18 +135,35 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       this._widgetsRegistered = true;
 
       const widgetArgs = { entryId: this._entryId };
+      const widgets = [];
+      const silentWidgets = [];
+      
+      if (this._entryLiveViewConfig.users) {
+        widgets.push(this._liveUsers);
+      }
+  
+      if (this._entryLiveViewConfig.bandwidth) {
+        widgets.push(this._liveBandwidth);
+      }
+  
+      if (this._entryLiveViewConfig.streamHealth) {
+        widgets.push(this._liveStreamHealth);
+      }
+  
+      if (this._entryLiveViewConfig.geo) {
+        widgets.push(this._liveGeo);
+      }
+  
+      if (this._entryLiveViewConfig.devices) {
+        widgets.push(this._liveDevices);
+      }
+      
+      if (this._entryLiveViewConfig.discovery) {
+        widgets.push(this._liveDiscovery);
+        silentWidgets.push(this._liveDiscoveryTable);
+      }
 
-      this._widgetsManager.register([
-        this._liveUsers,
-        this._liveBandwidth,
-        this._liveStreamHealth,
-        this._liveGeo,
-        this._liveDevices,
-        this._liveDiscovery,
-        // <-- append new widgets here
-      ], widgetArgs, [
-        this._liveDiscoveryTable,
-      ]);
+      this._widgetsManager.register(widgets, widgetArgs, silentWidgets);
     }
   }
 

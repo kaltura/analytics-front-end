@@ -1,5 +1,6 @@
 <div data-aid="report-group-technology">
-  <app-devices-overview #overview
+  <app-devices-overview *ngIf="_technologyViewConfig.devices"
+                        #overview
                         [filter]="_filterEvent"
                         [allowedDevices]="_allowedDevices"
                         (metricChanged)="_selectedMetric = $event"
@@ -7,7 +8,8 @@
                         (deviceFilterChange)="_onDeviceFilterChange($event)">
     <div class="kReportHeader">
       <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
-      <app-export-csv name="technology"
+      <app-export-csv *ngIf="_technologyViewConfig.export"
+                      name="technology"
                       [width]="260"
                       [reports]="_exportConfig"
                       [dateFilter]="_filterEvent"></app-export-csv>
@@ -19,14 +21,16 @@
     </div>
   </app-devices-overview>
 
-  <app-top-browsers [filter]="_filterEvent"
+  <app-top-browsers *ngIf="_technologyViewConfig.topBrowsers"
+                    [filter]="_filterEvent"
                     [selectedMetric]="_selectedMetric"
                     [devicesList]="_devicesList"
                     [deviceFilter]="_devicesFilter"
                     (deviceFilterChange)="_onReportDeviceFilterChange()"
                     (onDrillDown)="_onDrillDown($event)"></app-top-browsers>
 
-  <app-top-os [filter]="_filterEvent"
+  <app-top-os *ngIf="_technologyViewConfig.topOs"
+              [filter]="_filterEvent"
               [selectedMetric]="_selectedMetric"
               [devicesList]="_devicesList"
               [deviceFilter]="_devicesFilter"
