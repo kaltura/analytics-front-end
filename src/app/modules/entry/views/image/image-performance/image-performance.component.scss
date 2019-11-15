@@ -76,7 +76,7 @@
   }
 }
 
-:host /deep/ .kTableModeSelector {
+:host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 172px !important;
   }
