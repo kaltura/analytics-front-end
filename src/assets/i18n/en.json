@@ -54,7 +54,11 @@
       "domainPlaceholder": "Select Domain",
       "domainsSelected": "{0} Domains Selected",
       "filterUsers": "Filter Users",
-      "filterEntries": "Filter Entries"
+      "filterEntries": "Filter Entries",
+      "context": "Context",
+      "playbackContext": "Playback Context",
+      "selectPlaybackContext": "Playback Context",
+      "findContext": "Find Playback Context"
     },
     "categories": {
       "selectCategories": "Select Categories",

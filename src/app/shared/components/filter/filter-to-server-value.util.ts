@@ -12,7 +12,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [],
-    tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [];
+    tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [], context = [];
   
   refineFilter.forEach(item => {
     switch (item.type) {
@@ -27,6 +27,9 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
         break;
       case 'categories':
         categories.push(item.value.id);
+        break;
+      case 'context':
+        context.push(item.value.id);
         break;
       case 'tags':
         tags.push(item.value);
@@ -61,6 +64,12 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
     serverFilter.categoriesIdsIn = categories.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.categoriesIdsIn;
+  }
+  
+  if (context.length) {
+    serverFilter.playbackContextIdsIn = context.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.playbackContextIdsIn;
   }
   
   if (mediaType.length) {
