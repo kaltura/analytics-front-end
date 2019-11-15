@@ -75,7 +75,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
   private _loadReport(): void {
     this._isBusy = true;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
+    this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
@@ -83,7 +83,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
         
         const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
-        return this._reportService.getReport(compareReportConfig, this._dataConfig, false)
+        return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {

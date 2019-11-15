@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   styleUrls: ['./image-performance.component.scss'],
   providers: [ImagePerformanceConfig, ReportService]
 })
-export class ImageEntryPerformanceComponent extends EntryBase {
+export class ImageEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
   
@@ -35,12 +35,15 @@ export class ImageEntryPerformanceComponent extends EntryBase {
   private _dataConfig: ReportDataConfig;
   private _rawGraphData: KalturaReportGraph[] = [];
   private _ignoreFirstSortEvent = false;
+  private _filterChange = new Subject();
 
   public _metricsCompareTo: string = null;
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'image-performance';
   
+  public _filterChange$ = this._filterChange.asObservable();
+  public TableMode = TableModes;
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _usersColumns: string[] = [];
@@ -72,6 +75,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
   public _tableModes = [
     { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.entry.users'), value: TableModes.users },
+    { label: this._translate.instant('app.entry.context'), value: TableModes.context },
   ];
 
   public _currentDatePeriod = '';
@@ -106,6 +110,10 @@ export class ImageEntryPerformanceComponent extends EntryBase {
     });
   }
   
+  ngOnDestroy(): void {
+    this._filterChange.complete();
+  }
+  
   private _updateTableData(): void {
     const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
     const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
@@ -137,8 +145,8 @@ export class ImageEntryPerformanceComponent extends EntryBase {
     reportConfig.objectIds = this.entryId;
   
     sections = { ...sections }; // make local copy
-    
-    if (this._tableMode === TableModes.dates) {
+  
+    if ([TableModes.dates, TableModes.context].indexOf(this._tableMode) !== -1) {
       delete sections[ReportDataSection.table]; // remove table config to prevent table request
     } else if (this._tableMode === TableModes.users) {
       reportConfig.pager = this._pager;
@@ -216,6 +224,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
+    this._filterChange.next();
   }
   
   protected _updateFilter(): void {
@@ -238,6 +247,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
     } else {
       this._compareFilter = null;
     }
+    this._filterChange.next();
   }
   
   private _handleCompare(current: Report, compare: Report): void {
