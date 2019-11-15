@@ -1,0 +1,51 @@
+@import '../../../../styles/variables';
+
+.kContextDetailsOverlay {
+  width: 400px;
+  height: 132px;
+
+  k-area-blocker {
+    display: block;
+  }
+
+  .kContextName {
+    padding: 19px 16px;
+    font-weight: normal;
+    border-bottom: 1px solid $kGrayscale4;
+  }
+
+  .kContextDetails {
+    padding: 12px 16px 16px 16px;
+
+    .kDetailsRow {
+      display: flex;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      overflow: hidden;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .kLabel {
+        color: $kGrayscale3;
+        margin-right: 4px;
+      }
+
+      .kValue {
+        color: $kGrayscale1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.kErrorMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

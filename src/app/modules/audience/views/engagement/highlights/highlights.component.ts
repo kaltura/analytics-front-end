@@ -68,6 +68,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
     { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
+    { label: this._translate.instant('app.engagement.dimensions.context'), value: TableModes.context },
   ];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };

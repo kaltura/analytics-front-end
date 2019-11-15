@@ -342,7 +342,8 @@
       "dimensions": {
         "dates": "Dates",
         "users": "Users",
-        "entries": "Entries"
+        "entries": "Entries",
+        "context": "Playback Context"
       },
       "title": "Engagement",
       "playedEntries": "Out of {{0}} Played Entries",
@@ -748,6 +749,17 @@
         "syndication": "Syndication"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "context": {
+      "name": "Name",
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "sum_time_viewed": "Minutes Viewed",
+      "unique_viewers": "Unique Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
+      "owner": "Owner",
+      "categoryId": "Category ID"
     },
     "contentInteractions": {
       "title": "Content Interactions",

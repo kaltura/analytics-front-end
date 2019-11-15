@@ -86,6 +86,15 @@
                                  [reportInterval]="_reportInterval"
                                  [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
             </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.context">
+              <app-context-table [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [firstTimeLoading]="_firstTimeLoading"></app-context-table>
+            </ng-container>
           </ng-container>
         </div>
       </div>
