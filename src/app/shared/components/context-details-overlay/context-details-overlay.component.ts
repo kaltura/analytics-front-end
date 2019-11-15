@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CategoryGetAction, KalturaCategory, KalturaClient } from 'kaltura-ngx-client';
+import { CategoryGetAction, KalturaCategory, KalturaClient, KalturaDetachedResponseProfile, KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { Unsubscribable } from 'rxjs';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,13 +34,13 @@ export class ContextDetailsOverlayComponent implements OnInit, OnDestroy {
       this._requestSubscription = null;
     }
     
-    const action = new CategoryGetAction({ id: this.contextId });
-    // .setRequestOptions({
-    //   responseProfile: new KalturaDetachedResponseProfile({
-    //     type: KalturaResponseProfileType.includeFields,
-    //     fields: 'id,name,fullName,createdAt,roleNames,email'
-    //   })
-    // });
+    const action = new CategoryGetAction({ id: this.contextId })
+    .setRequestOptions({
+      responseProfile: new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,fullName,owner'
+      })
+    });
     this._requestSubscription = this._kalturaClient
       .request(action)
       .pipe(cancelOnDestroy(this))
