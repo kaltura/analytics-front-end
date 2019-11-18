@@ -14,18 +14,21 @@ export class EntryExportConfig extends ExportConfigService {
   public getConfig(viewConfig?: ViewConfig): ExportItem[] {
     const config: ExportItem[] = [
       {
+        id: 'userEngagement',
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
         reportType: reportTypeMap(KalturaReportType.userTopContent),
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
       },
       {
+        id: 'performance',
         label: this._translate.instant('app.entry.exportLabels.imagePerformance'),
         reportType: reportTypeMap(KalturaReportType.userTopContent),
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
       },
       {
+        id: 'impressions',
         label: this._translate.instant('app.entry.exportLabels.impressions'),
         reportType: reportTypeMap(KalturaReportType.contentDropoff),
         sections: [KalturaReportExportItemType.total],
@@ -39,6 +42,7 @@ export class EntryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
       {
+        id: 'devices',
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
         reportType: reportTypeMap(KalturaReportType.platforms),
         sections: [KalturaReportExportItemType.table],
