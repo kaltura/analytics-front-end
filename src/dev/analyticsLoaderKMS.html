@@ -72,7 +72,7 @@
           const viewsConfig = postMessageData.payload.viewsConfig;
           viewsConfig.entry.totals.comments = {}; // show comments
           viewsConfig.entry.totals.likes = {};    // show likes
-          viewsConfig.entry.syndication = null;    // show likes
+          viewsConfig.entry.syndication = null;   // hide syndication
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
@@ -94,7 +94,7 @@
             return acc;
           }, {});
 
-          sendMessage({'messageType': 'navigate', payload: { url }});
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
           sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
           break;
 
