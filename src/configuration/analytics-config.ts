@@ -90,7 +90,7 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  originTarget: window.location.origin,
+  originTarget: '*',
   multiAccount: false,
 };
 

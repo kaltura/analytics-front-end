@@ -25,7 +25,7 @@
 </head>
 <body>
 <h1>This is an external app loading Analytics in an iframe</h1>
-<iframe id="analytics" src="http://localhost:4200"></iframe>
+<iframe id="analytics" src="http://localhost:4200/entry/0_09e1pntr"></iframe>
 <script>
   const config = {
     kalturaServer: {
@@ -36,8 +36,8 @@
       serverUri: 'http://cdnapi.kaltura.com',
       securedServerUri: 'https://cdnapisec.kaltura.com'
     },
-    ks: '', // provide ks
-    pid: '', // provide partnerId
+      ks: 'djJ8MTY0NTE2MXzqiy5KUoXPReYxR29GdPvxuAt_BE5SnCTHwhoRRPYkSn2gplhmWgfHrUaXx6bM3RGksoUNvfXzMK6NJT7avz57A7wqn5v3iuQT4qYry5B9aQ4WOlmFL5KIysBgI7hNZNrIKTqLYJ4wTLvYdEepw5vm-AZ9SG-QU3tbAtbZ8HyCHw==', // provide ks
+      pid: '1645161', // provide partnerId
     locale: 'en',
     live: {
       pollInterval: 30,
@@ -72,12 +72,12 @@
           const viewsConfig = postMessageData.payload.viewsConfig;
           viewsConfig.entry.totals.comments = {}; // show comments
           viewsConfig.entry.totals.likes = {};    // show likes
+          viewsConfig.entry.syndication = null;    // show likes
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
         case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 

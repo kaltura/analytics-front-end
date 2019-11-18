@@ -20,7 +20,7 @@ import { isEmptyObject } from 'shared/utils/is-empty-object';
     EntryExportConfig,
   ]
 })
-export class VideoEntryViewComponent implements OnDestroy {
+export class VideoEntryViewComponent implements OnInit, OnDestroy {
   @Input() isChildAccount: boolean;
   @Input() set entry(value: KalturaMediaEntry) {
     if (value) {
@@ -66,7 +66,11 @@ export class VideoEntryViewComponent implements OnDestroy {
   constructor(private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: EntryExportConfig) {
-    this._exportConfig = _exportConfigService.getConfig();
+    
+  }
+  
+  ngOnInit() {
+    this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
   }
   
   ngOnDestroy() {

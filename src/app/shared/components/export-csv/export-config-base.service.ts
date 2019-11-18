@@ -1,4 +1,5 @@
 import { KalturaEndUserReportInputFilter, KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
+import { ViewConfig } from 'configuration/view-config';
 
 export interface ExportItem {
   id?: string;
@@ -34,5 +35,5 @@ export abstract class ExportConfigService {
     return result;
   }
   
-  public abstract getConfig(): ExportItem[];
+  public abstract getConfig(viewConfig?: ViewConfig): ExportItem[];
 }
