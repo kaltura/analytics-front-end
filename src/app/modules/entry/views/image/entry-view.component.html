@@ -49,7 +49,7 @@
                             [dateFilter]="_dateFilter"
                             [entryId]="_entryId"
                             [refineFilter]="_refineFilter">
-      <app-image-entry-preview *ngIf="_viewConfig.entryPreview" [entry]="entry"></app-image-entry-preview>
+      <app-image-entry-preview *ngIf="_viewConfig.entryPreview" [entry]="_entry"></app-image-entry-preview>
     </app-image-entry-totals>
 
     <div *ngIf="_viewConfig.performance" class="kReportContainer">

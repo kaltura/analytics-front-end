@@ -23,9 +23,21 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class ImageEntryViewComponent implements OnInit, OnDestroy {
   @Input() isChildAccount: boolean;
-  @Input() entry: KalturaMediaEntry;
   @Input() owner: string;
   @Input() comments: number = null;
+  
+  @Input() set entry(value: KalturaMediaEntry) {
+    if (value) {
+      this._entry = value;
+      this._entryId = value.id;
+      this._entryThumb = value.thumbnailUrl;
+      this._entryName = value.name;
+      this._entryType = value.mediaType;
+      this._duration = value.msDuration || 0;
+      this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
+    }
+  }
+
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -37,6 +49,7 @@ export class ImageEntryViewComponent implements OnInit, OnDestroy {
   @Output() back = new EventEmitter<void>();
   @Output() navigateToEntry = new EventEmitter<void>();
   
+  public _entry: KalturaMediaEntry;
   public _creationDate: moment.Moment = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
@@ -62,13 +75,6 @@ export class ImageEntryViewComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    if (this.entry) {
-      this._entryThumb = this.entry.thumbnailUrl;
-      this._entryName = this.entry.name;
-      this._entryType = this.entry.mediaType;
-      this._duration = this.entry.msDuration || 0;
-      this._creationDate = DateFilterUtils.getMomentDate(this.entry.createdAt);
-    }
     this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
   }
   
