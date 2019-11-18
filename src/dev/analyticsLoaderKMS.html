@@ -25,7 +25,7 @@
 </head>
 <body>
 <h1>This is an external app loading Analytics in an iframe</h1>
-<iframe id="analytics" src="http://localhost:4200/entry/0_09e1pntr"></iframe>
+<iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
   const config = {
     kalturaServer: {
@@ -78,6 +78,7 @@
           break;
 
         case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' }});
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 
