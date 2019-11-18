@@ -23,7 +23,7 @@ export class TableModeIconPipe implements PipeTransform {
       case TableModes.entries:
         return 'kIconUnknown';
       case TableModes.context:
-        return 'icon-bolt';
+        return 'kIconfolder';
       default:
         return '';
     }
