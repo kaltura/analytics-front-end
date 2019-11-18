@@ -1,5 +1,4 @@
 import { KalturaEndUserReportInputFilter, KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
-import { ViewConfig } from 'configuration/view-config';
 
 export interface ExportItem {
   id?: string;
