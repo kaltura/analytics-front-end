@@ -35,5 +35,5 @@ export abstract class ExportConfigService {
     return result;
   }
   
-  public abstract getConfig(viewConfig?: ViewConfig): ExportItem[];
+  public abstract getConfig(param?: unknown): ExportItem[];
 }

@@ -90,7 +90,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
       update.objectIds = event;
     }
     
-    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
+    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'syndication', update);
   }
   
   public _onGeoDrillDown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
@@ -104,7 +104,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
     
-    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(), 'geo', update);
+    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
   }
   
 }

@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { ViewConfig } from 'configuration/view-config';
 
 @Injectable()
 export class EntryExportConfig extends ExportConfigService {
@@ -10,8 +11,8 @@ export class EntryExportConfig extends ExportConfigService {
     super();
   }
   
-  public getConfig(): ExportItem[] {
-    return [
+  public getConfig(viewConfig?: ViewConfig): ExportItem[] {
+    const config: ExportItem[] = [
       {
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
         reportType: reportTypeMap(KalturaReportType.userTopContent),
@@ -50,5 +51,7 @@ export class EntryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
     ];
+  
+    return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;
   }
 }
