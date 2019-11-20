@@ -12,7 +12,7 @@
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <app-entry-geo #entryCompareGeo *ngIf="_isCompareMode"
+    <app-image-entry-geo #entryCompareGeo *ngIf="_isCompareMode"
                    name="compare"
                    [drillDownItems]="_drillDown"
                    [mapData]="_mapData"
@@ -23,8 +23,8 @@
                    [distributionCalculationKey]="_distributionCalculationKey"
                    [distributionKey]="_distributionKey"
                    [periodTitle]="_comparePeriodTitle"
-                   (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
-    <app-entry-geo #entryGeo
+                   (onDrillDown)="_onDrillDown($event)"></app-image-entry-geo>
+    <app-image-entry-geo #entryGeo
                    name="current"
                    [drillDownItems]="_drillDown"
                    [mapData]="_mapData"
@@ -35,7 +35,7 @@
                    [periodTitle]="_currentPeriodTitle"
                    [isCompareMode]="_isCompareMode"
                    [showTrend]="_isCompareMode"
-                   (onDrillDown)="_onDrillDown($event)"></app-entry-geo>
+                   (onDrillDown)="_onDrillDown($event)"></app-image-entry-geo>
 
   </k-area-blocker>
 </div>
