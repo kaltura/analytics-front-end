@@ -70,6 +70,8 @@ import { EntriesEngagementFilterComponent } from 'shared/components/entry-engage
 import { EntryEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entry-engagement-filter.component';
 import { ContextDetailsOverlayComponent } from 'shared/components/context-details-overlay/context-details-overlay.component';
 import { CategoryFullNamePipe } from './pipes/category-full-name.pipe';
+import { ContextTableFilterComponent } from 'shared/components/context-table-filter/context-table-filter.component';
+import { ContextFilterComponent } from 'shared/components/context-table-filter/users-filter/context-filter.component';
 
 @NgModule({
   imports: [
@@ -142,6 +144,8 @@ import { CategoryFullNamePipe } from './pipes/category-full-name.pipe';
     EntryEngagementFilterComponent,
     ContextDetailsOverlayComponent,
     CategoryFullNamePipe,
+    ContextFilterComponent,
+    ContextTableFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -189,7 +193,9 @@ import { CategoryFullNamePipe } from './pipes/category-full-name.pipe';
     EntryDetailsOverlayComponent,
     EntryEngagementFilterComponent,
     ContextDetailsOverlayComponent,
-    CategoryFullNamePipe
+    CategoryFullNamePipe,
+    ContextFilterComponent,
+    ContextTableFilterComponent,
   ],
   providers: [
   ]

@@ -36,14 +36,15 @@ export class ContextTableComponent implements OnInit, OnDestroy {
   private _reportType = reportTypeMap(KalturaReportType.topPlaybackContext);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
-  
+
   public _contextId: number;
-  public _totalCount = 0;
   public _tableData: TableRow[] = [];
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  
+  public totalCount = 0;
   
   constructor(private _reportService: ReportService,
               private _compareService: CompareService,
@@ -89,7 +90,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-          this._totalCount = 0;
+          this.totalCount = 0;
           
           if (compare) {
             this._handleCompare(report, compare);
@@ -130,14 +131,14 @@ export class ContextTableComponent implements OnInit, OnDestroy {
         'object_id',
       );
       this._columns = columns;
-      this._totalCount = current.table.totalCount;
+      this.totalCount = current.table.totalCount;
       this._tableData = tableData.map(fixContextTableName);
     }
   }
   
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
+    this.totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map(fixContextTableName);
   }

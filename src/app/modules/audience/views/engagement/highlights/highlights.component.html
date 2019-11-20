@@ -88,7 +88,13 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="_tableModes.context">
-              <app-context-table [filterChange]="_filterChange$"
+              <app-context-table-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="contextTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-context-table-filter>
+
+              <app-context-table #contextTableComponent
+                                 [filterChange]="_filterChange$"
                                  [filter]="_filter"
                                  [compareFilter]="_compareFilter"
                                  [isCompareMode]="_isCompareMode"
