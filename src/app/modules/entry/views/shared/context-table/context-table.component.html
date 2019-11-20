@@ -28,10 +28,10 @@
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'name'">
             <span *ngIf="col !== 'name'">{{data[col]}}</span>
-            <a class="kEntryLink kTableColumn"
+            <span class="kTableColumn"
                *ngIf="col === 'name'"
                (mouseleave)="_hideOverlay()"
-               (mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</a>
+               (mouseenter)="_showOverlay($event, data['object_id'])">{{data[col]}}</span>
           </ng-container>
         </td>
       </tr>

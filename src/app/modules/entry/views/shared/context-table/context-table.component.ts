@@ -15,6 +15,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { fixContextTableName } from 'shared/utils/fix-context-table-name';
 
 @Component({
   selector: 'app-context-table',
@@ -130,7 +131,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
       );
       this._columns = columns;
       this._totalCount = current.table.totalCount;
-      this._tableData = tableData;
+      this._tableData = tableData.map(fixContextTableName);
     }
   }
   
@@ -138,7 +139,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
-    this._tableData = tableData;
+    this._tableData = tableData.map(fixContextTableName);
   }
   
   public _onPaginationChanged(event: { page: number }): void {
@@ -158,9 +159,10 @@ export class ContextTableComponent implements OnInit, OnDestroy {
     }
   }
   
-  public _showOverlay(event: MouseEvent, contextId: number): void {
-    if (this._overlay) {
-      this._contextId = contextId;
+  public _showOverlay(event: MouseEvent, contextId: string): void {
+    const id = parseInt(contextId, 10);
+    if (this._overlay && id && !isNaN(id)) {
+      this._contextId = id;
       this._overlay.show(event);
     }
   }
