@@ -30,7 +30,7 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
           'coordinates': {
@@ -40,11 +40,11 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'count_loads',
+        preSelected: 'count_plays',
         fields: {
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.audience.geo.count_loads`),
+            title: this._translate.instant(`app.audience.geo.count_plays`),
           }
         }
       }

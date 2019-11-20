@@ -37,8 +37,8 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   
-  public _distributionKey = 'loads_distribution';
-  public _distributionCalculationKey = 'count_loads';
+  public _distributionKey = 'plays_distribution';
+  public _distributionCalculationKey = 'count_plays';
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
