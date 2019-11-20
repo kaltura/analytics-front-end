@@ -30,9 +30,9 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
             format: value => value,
             nonComparable: true,
           },
-          // 'count_loads': {
-          //   format: value => ReportHelper.numberOrNA(value)
-          // },
+          'count_loads': {
+            format: value => ReportHelper.numberOrNA(value)
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
@@ -43,13 +43,13 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        // preSelected: 'count_loads',
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
+        // preSelected: 'count_plays',
         fields: {
-          // 'count_loads': {
-          //   format: value => ReportHelper.numberOrNA(value),
-          //   title: this._translate.instant(`app.entry.count_loads`),
-          // },
+          'count_loads': {
+            format: value => ReportHelper.numberOrNA(value),
+            title: this._translate.instant(`app.entry.count_loads`),
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.entry.count_plays`),
