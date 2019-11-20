@@ -37,10 +37,9 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
   @ViewChild('entryCompareGeo', { static: false }) _entryCompareGeo: GeoComponent;
   
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
-  
-  // TODO update once the server supports impressions
-  public _distributionKey = 'plays_distribution';
-  public _distributionCalculationKey = 'count_plays';
+
+  public _distributionKey = 'loads_distribution';
+  public _distributionCalculationKey = 'count_loads';
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
