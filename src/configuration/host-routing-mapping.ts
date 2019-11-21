@@ -32,7 +32,7 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
       break;
     case 'live':
     case '/analytics/live':
-      analyticsRoute = '/live/live-reports';
+      analyticsRoute = '/live';
       break;
     case 'entry':
     case '/analytics/entry':
