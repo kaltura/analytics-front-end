@@ -32,6 +32,7 @@ export class DatesTableComponent implements OnInit {
   }
   
   @Input() compare;
+  @Input() sortField: string;
   
   private _order = '-count_loads';
   private _dataConfig: ReportDataConfig;

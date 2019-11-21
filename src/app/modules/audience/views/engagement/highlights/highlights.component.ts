@@ -53,6 +53,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _tableData: TableRow[] = [];
   public _selectedMetrics: string;
   public _reportInterval = KalturaReportInterval.days;
+  public _sortField = 'date_id';
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _lineChartData = {};
   public _showTable = false;
@@ -161,6 +162,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._order = this._reportInterval === KalturaReportInterval.days ? '-date_id' : '-month_id';
+    this._sortField = this._reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
