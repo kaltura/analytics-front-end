@@ -32,8 +32,9 @@ export class DatesTableComponent implements OnInit {
   }
   
   @Input() compare;
+  @Input() sortField: string;
   
-  private _order = '-count_loads';
+  private _order = '-date_id';
   private _dataConfig: ReportDataConfig;
   
   public _pageSize = analyticsConfig.defaultPageSize;
