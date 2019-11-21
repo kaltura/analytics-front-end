@@ -49,7 +49,7 @@
                 </th>
                 <th [ngStyle]="{'width': '30px'}"></th>
                 <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'loads_distribution'  || col === 'domain_name' ? null : col"
-                    [ngStyle]="{ 'width': '20%' }">
+                    [ngStyle]="{ 'width': '100%' }">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
                       {{'app.engagement.topDomainsReport.' + col | translate}}
