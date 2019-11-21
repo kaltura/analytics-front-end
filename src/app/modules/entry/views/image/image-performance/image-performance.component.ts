@@ -343,6 +343,7 @@ export class ImageEntryPerformanceComponent extends EntryBase {
 
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._metricsCompareTo = null;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
     this._metricsLineChartData = null;
   }
