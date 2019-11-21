@@ -391,6 +391,17 @@ export class ImageEntryPerformanceComponent extends EntryBase {
         this._currentDatePeriod,
         this._compareDatePeriod
       );
+      // Normalize yAxis
+      if (this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2) {
+        const maxValue = Math.max(this._metricsLineChartData.yAxis[0].max, this._metricsLineChartData.yAxis[1].max);
+        const maxInterval = Math.max(this._metricsLineChartData.yAxis[0].interval, this._metricsLineChartData.yAxis[1].interval);
+        if (maxValue && maxValue > 0) {
+          this._metricsLineChartData.yAxis[0].max = maxValue;
+          this._metricsLineChartData.yAxis[1].max = maxValue;
+          this._metricsLineChartData.yAxis[0].interval = maxInterval;
+          this._metricsLineChartData.yAxis[1].interval = maxInterval;
+        }
+      }
     } else {
       this._metricsLineChartData = null;
       this._metricsCompareTo = null;
