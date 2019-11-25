@@ -108,7 +108,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     this._usersFilter = {
       userIds: '',
       pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 }),
-      order: '-avg_view_buffering',
+      order: '-view_buffer_time_ratio',
     };
   }
   
