@@ -167,6 +167,12 @@
   .kReport .kPlayer{
     height: 370px;
   }
+  .kReport .chartContainer .kScrubber{
+    height: 162px;
+    .kCurrentTime {
+      bottom: 5px;
+    }
+  }
   .kReport .chartContainer {
     min-height: 220px !important;
     .kFooter{
