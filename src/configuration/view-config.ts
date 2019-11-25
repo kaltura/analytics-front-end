@@ -125,6 +125,7 @@ export const viewsConfig = {
   },
   playlist: {
     title: {},
+    export: {},
     refineFilter: {
       geo: {},
       owners: {},
