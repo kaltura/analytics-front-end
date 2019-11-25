@@ -18,7 +18,12 @@
                        (back)="_back()"
                        (navigateToEntry)="_navigateToEntry()"></app-video-entry>
     </ng-container-->
-
+    <app-path *ngIf="!_loadingPlaylist && _interactiveVideo"
+              [isChildAccount]="_isChildAccount"
+              [viewConfig]="_playlistViewConfig"
+              [playlist]="_playlist"
+              [owner]="_owner"
+              (back)="_back()"></app-path>
     <app-playlist-view *ngIf="!_loadingPlaylist && !_interactiveVideo"></app-playlist-view>
   </k-area-blocker>
 </div>

@@ -112,7 +112,8 @@
       "playlist": "Playlist",
       "live": "Live video",
       "document": "Document",
-      "other": "Other"
+      "other": "Other",
+      "interactive": "Interactive Video"
     },
     "dateFilter": {
       "preset": "Preset",

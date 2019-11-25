@@ -13,6 +13,8 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { TableModule } from 'primeng/table';
 import { PlaylistViewComponent } from './playlist-view.component';
 import { PlaylistComponent } from './views/playlist/playlist.component';
+import { PathViewComponent } from './views/path/path-view.component';
+import { PlaylistFilterComponent } from './filter/filter.component';
 
 @NgModule({
   imports: [
@@ -33,7 +35,9 @@ import { PlaylistComponent } from './views/playlist/playlist.component';
   ],
   declarations: [
     PlaylistViewComponent,
-    PlaylistComponent
+    PlaylistComponent,
+    PathViewComponent,
+    PlaylistFilterComponent
   ],
   exports: [],
   providers: []
