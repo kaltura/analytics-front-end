@@ -123,6 +123,18 @@ export const viewsConfig = {
     devices: {},
     discovery: {},
   },
+  playlist: {
+    title: {},
+    refineFilter: {
+      geo: {},
+      owners: {},
+      categories: {},
+    },
+    details: {},
+    totals: {},
+    performance: {},
+    videos: {},
+  },
   user: {
     export: {},
     refineFilter: {

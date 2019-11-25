@@ -1,0 +1,24 @@
+<div data-aid="report-group-playlist" class="kMain">
+  <k-area-blocker [showLoader]="_loadingPlaylist" [message]="_blockerMessage">
+
+    <!--ng-container [ngSwitch]="_entry?.mediaType">
+      <app-image-entry *ngSwitchCase="_mediaTypes.image"
+                       [isChildAccount]="_isChildAccount"
+                       [viewConfig]="_entryViewConfig"
+                       [entry]="_entry"
+                       [owner]="_owner"
+                       (back)="_back()"
+                       (navigateToEntry)="_navigateToEntry()"></app-image-entry>
+
+      <app-video-entry *ngSwitchDefault
+                       [isChildAccount]="_isChildAccount"
+                       [viewConfig]="_entryViewConfig"
+                       [entry]="_entry"
+                       [owner]="_owner"
+                       (back)="_back()"
+                       (navigateToEntry)="_navigateToEntry()"></app-video-entry>
+    </ng-container-->
+
+    <app-playlist-view *ngIf="!_loadingPlaylist && !_interactiveVideo"></app-playlist-view>
+  </k-area-blocker>
+</div>

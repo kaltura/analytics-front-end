@@ -16,6 +16,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
+        path: 'playlist/:id',
+        loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
+      },
+      {
+        path: 'playlist',
+        loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
+      },
+      {
         path: 'user/:id',
         loadChildren: '../modules/user/user.module#UserModule'
       },
