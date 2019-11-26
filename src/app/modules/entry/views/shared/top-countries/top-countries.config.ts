@@ -30,6 +30,9 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'count_loads': {
+            format: value => ReportHelper.numberOrNA(value)
+          },
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
