@@ -16,6 +16,13 @@
               </div>
             </th>
             <th [ngStyle]="{'width': '20%'}">
+              <div class="kColumnHeader" *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
+                <span [kTooltip]="'app.entry.count_loads' | translate" [showOnEllipsis]="true">
+                  {{'app.entry.count_loads' | translate}}
+                </span>
+              </div>
+            </th>
+            <th [ngStyle]="{'width': '20%'}">
               <div class="kColumnHeader">
                 <span [kTooltip]="('app.entry.' + distributionCalculationKey) | translate" [showOnEllipsis]="true">
                   {{('app.entry.' + distributionCalculationKey) | translate}}
@@ -44,6 +51,9 @@
               <a *ngIf="drillDownItems.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
               <a *ngIf="drillDownItems.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
               <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
+            </td>
+            <td *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
+              <span *ngIf="!data['count_loads']?.value">{{data['count_loads']}}</span>
             </td>
             <td>
               <span *ngIf="!data[distributionCalculationKey]?.value">{{data[distributionCalculationKey]}}</span>
