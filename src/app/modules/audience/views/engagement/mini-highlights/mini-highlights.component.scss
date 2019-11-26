@@ -15,6 +15,9 @@
   color: $kGrayscale3;
 }
 .kEntriesCountContainer{
+  height: 86px;
+}
+.kEntriesCountContainerCompare{
   height: 72px;
 }
 .kMini{
@@ -36,7 +39,7 @@
     display: flex;
     align-items: center;
     margin-left: 24px;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     height: 48px;
     .kMiniIcon{
       width: 30px;
