@@ -172,16 +172,22 @@ export class AppService implements OnDestroy {
     return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction))
       .pipe(map(responses => {
         if (responses.hasErrors()) {
-          throw responses.getFirstError();
+          const err = responses.getFirstError();
+          if (err.code === "SERVICE_FORBIDDEN") {
+            this._permissionsService.load([], []);
+            this._permissionsLoaded.next(true);
+          } else {
+            throw err;
+          }
+        } else {
+          const [userResponse, roleResponse, permissionsResponse] = responses;
+          const permissionList = permissionsResponse.result;
+          const userRole = roleResponse.result;
+          const partnerPermissionList = permissionList.objects.map(item => item.name);
+          const userRolePermissionList = userRole.permissionNames.split(',');
+          this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+          this._permissionsLoaded.next(true);
         }
-        
-        const [userResponse, roleResponse, permissionsResponse] = responses;
-        const permissionList = permissionsResponse.result;
-        const userRole = roleResponse.result;
-        const partnerPermissionList = permissionList.objects.map(item => item.name);
-        const userRolePermissionList = userRole.permissionNames.split(',');
-        this._permissionsService.load(userRolePermissionList, partnerPermissionList);
-        this._permissionsLoaded.next(true);
       }));
   }
   
