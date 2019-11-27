@@ -65,12 +65,12 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId, this._isAuthUsers);
     this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId, this._isAuthUsers);
 
     return ObservableOf(null);
   }
