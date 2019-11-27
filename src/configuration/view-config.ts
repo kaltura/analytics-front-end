@@ -99,7 +99,12 @@ export const viewsConfig = {
       categories: {},
     },
     details: {},
-    totals: {},
+    totals: {
+      social: {
+        likes: {},
+        shares: {}
+      }
+    },
     entryPreview: {},
     userEngagement: {
       userFilter: {},

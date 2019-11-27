@@ -8,6 +8,12 @@ import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
+  
+  constructor(private _entryId: string, _isAuthUsers: boolean = false) {
+    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
+    this._getTableActionArgs.order = _isAuthUsers ? '-view_unique_audience' : '-views';
+  }
+  
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
@@ -28,7 +34,7 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
       interval: this._interval,
     }),
     pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
-    order: '-count_plays',
+    order: '-views',
     responseOptions: this._responseOptions
   };
   
@@ -62,10 +68,6 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
       delete this._getTableActionArgs.reportInputFilter.countryIn;
       delete this._getTableActionArgs.reportInputFilter.regionIn;
     }
-  }
-  
-  constructor(private _entryId: string) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
   
   public onPollTickSuccess(): void {

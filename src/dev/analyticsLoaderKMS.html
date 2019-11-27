@@ -47,7 +47,8 @@
       showMenu: true,
     },
     customData: {
-      metadataProfileId: null, // provide metadataProfileId (number) to be able to see comments
+      metadataProfileId: null,     // provide metadataProfileId (number) to be able to see comments
+      disableUserDrilldown: true   // disable drilldown to user Analytics from entry details
     }
   };
 
@@ -70,8 +71,7 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
           const viewsConfig = postMessageData.payload.viewsConfig;
-          viewsConfig.entry.totals.comments = {}; // show comments
-          viewsConfig.entry.totals.likes = {};    // show likes
+          // viewsConfig.entry.totals.social.shares = null;    // hide social shares
           viewsConfig.entry.syndication = null;   // hide syndication
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });

@@ -396,6 +396,8 @@ export class ImageEntryPerformanceComponent extends EntryBase {
         const maxValue = Math.max(this._metricsLineChartData.yAxis[0].max, this._metricsLineChartData.yAxis[1].max);
         const maxInterval = Math.max(this._metricsLineChartData.yAxis[0].interval, this._metricsLineChartData.yAxis[1].interval);
         if (maxValue && maxValue > 0) {
+          this._metricsLineChartData.yAxis[0].min = 0;
+          this._metricsLineChartData.yAxis[1].min = 0;
           this._metricsLineChartData.yAxis[0].max = maxValue;
           this._metricsLineChartData.yAxis[1].max = maxValue;
           this._metricsLineChartData.yAxis[0].interval = maxInterval;

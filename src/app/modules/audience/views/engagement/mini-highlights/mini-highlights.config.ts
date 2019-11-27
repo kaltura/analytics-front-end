@@ -13,24 +13,30 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
+          'count_loads': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.count_loads_tt`),
+            sortOrder: 1,
+          },
           'count_plays': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
-            sortOrder: 1,
+            sortOrder: 2,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
             units: value => 'min',
-            sortOrder: 3,
+            sortOrder: 4,
           },
           'unique_known_users': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
-            sortOrder: 2,
+            sortOrder: 3,
           }
         }
       }

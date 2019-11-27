@@ -413,6 +413,7 @@
         "referrer": "Page URL",
         "sum_time_viewed": "Minutes Viewed",
         "count_loads": "Player Impressions",
+        "count_loads_tt": "Player Impressions",
         "load_play_ratio": "Play Impression Ratio",
         "avg_completion_rate": "Avg. Completion Rate",
         "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",

@@ -48,7 +48,7 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.watched`),
             tooltip: this._translate.instant('app.entry.watched_tt'),
             sortOrder: 5,
-            icon: 'icon-progress',
+            icon: 'icon-small-Completion-Rate',
             iconColor: 'green',
           },
           'count_viral': {
