@@ -50,6 +50,7 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
+  public _enableUserDrilldown = analyticsConfig.customData && analyticsConfig.customData.disableUserDrilldown ? false : true;
   
   public _viewConfig: ViewConfig = {
     userFilter: {},
