@@ -41,6 +41,12 @@
                         (closeFilters)="_refineFilterOpened = false"
                         (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
 
+    <app-path-entry-totals *ngIf="_viewConfig.totals"
+                            [dateFilter]="_dateFilter"
+                            [playlistId]="_playlistId"
+                            [viewConfig]="_viewConfig.totals"
+                            [reportType]="_totalsReportType"
+                            [refineFilter]="_refineFilter"></app-path-entry-totals>
     <!--app-video-entry-totals *ngIf="_viewConfig.totals"
                             [comments]="comments"
                             [dateFilter]="_dateFilter"

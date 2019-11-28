@@ -755,6 +755,12 @@
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
+    "playlist": {
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "unique_viewers": "Unique Viewers",
+      "sum_view_period": "Minutes Viewed"
+    },
     "context": {
       "name": "Name",
       "count_loads": "Player Impressions",

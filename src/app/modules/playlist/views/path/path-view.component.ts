@@ -17,6 +17,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { PathExportConfig } from './path-export.config';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { reportTypeMap } from "shared/utils/report-type-map";
 
 @Component({
   selector: 'app-path',
@@ -61,6 +62,7 @@ export class PathViewComponent implements OnInit, OnDestroy {
   public _playlistId = '';
   public _playlistName = '';
   public _viewConfig: ViewConfig = { ...viewsConfig.playlist };
+  public _totalsReportType = reportTypeMap(KalturaReportType.interactiveVideoHighlights);
   
   
   constructor(private _errorsManager: ErrorsManagerService,
