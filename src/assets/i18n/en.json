@@ -759,7 +759,10 @@
       "count_loads": "Player Impressions",
       "count_plays": "Plays",
       "unique_viewers": "Unique Viewers",
-      "sum_view_period": "Minutes Viewed"
+      "sum_view_period": "Minutes Viewed",
+      "exportLabels": {
+        "highlights": "Highlights"
+      }
     },
     "context": {
       "name": "Name",
