@@ -31,7 +31,8 @@ function mapMultiAccount(reportType: KalturaReportType): KalturaReportType {
     [KalturaReportType.contentReportReasons]:       KalturaReportType.contentReportReasonsVpaas,
     [KalturaReportType.playerRelatedInteractions]:  KalturaReportType.playerRelatedInteractionsVpaas,
     [KalturaReportType.playbackRate]:               KalturaReportType.playbackRateVpaas,
-    [KalturaReportType.partnerUsage]:               KalturaReportType.partnerUsageVpaas
+    [KalturaReportType.partnerUsage]:               KalturaReportType.partnerUsageVpaas,
+    [KalturaReportType.topPlaybackContext]:         KalturaReportType.topPlaybackContextVpaas,
   };
   return reportsMap[reportType] || reportType;
 }

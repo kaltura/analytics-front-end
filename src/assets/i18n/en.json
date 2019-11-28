@@ -54,7 +54,12 @@
       "domainPlaceholder": "Select Domain",
       "domainsSelected": "{0} Domains Selected",
       "filterUsers": "Filter Users",
-      "filterEntries": "Filter Entries"
+      "filterEntries": "Filter Entries",
+      "filterContext": "Filter Contexts",
+      "context": "Context",
+      "playbackContext": "Playback Context",
+      "selectPlaybackContext": "Playback Context",
+      "findContext": "Find Playback Context"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -338,7 +343,8 @@
       "dimensions": {
         "dates": "Dates",
         "users": "Users",
-        "entries": "Entries"
+        "entries": "Entries",
+        "context": "Playback Context"
       },
       "title": "Engagement",
       "playedEntries": "Out of {{0}} Played Entries",
@@ -678,6 +684,7 @@
       }
     },
     "entry": {
+      "context": "Playback Context",
       "views": "Views",
       "plays": "Plays {{0}}",
       "viewers": "Unique Viewers",
@@ -704,6 +711,7 @@
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
       "totalViewersCount": "{{0}} Viewers",
       "totalEntriesCount": "{{0}} Entries",
+      "totalContextCount": "{{0}} Contexts",
       "avg_completion_rate": "Avg. Completion Rate",
       "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
       "unique_known_users": "Unique Viewers",
@@ -745,6 +753,17 @@
         "syndication": "Syndication"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "context": {
+      "name": "Name",
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "sum_time_viewed": "Minutes Viewed",
+      "unique_viewers": "Unique Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
+      "owner": "Owner",
+      "categoryId": "Category ID"
     },
     "contentInteractions": {
       "title": "Content Interactions",
