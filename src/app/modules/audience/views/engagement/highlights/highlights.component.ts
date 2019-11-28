@@ -69,6 +69,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
     { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
+    { label: this._translate.instant('app.engagement.dimensions.context'), value: TableModes.context },
   ];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
@@ -257,6 +258,12 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         .map(filter => filter.value.id)
         .join(analyticsConfig.valueSeparator)
       : null;
+    const contextIds = event.length
+      ? event
+        .filter(filter => filter.type === 'context')
+        .map(filter => filter.value.id)
+        .join(analyticsConfig.valueSeparator)
+      : null;
     
     if (userIds) {
       this._filter.userIds = userIds;
@@ -283,6 +290,20 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   
       if (this._compareFilter) {
         delete this._compareFilter.entryIdIn;
+      }
+    }
+    
+    if (contextIds) {
+      this._filter.playbackContextIdsIn = contextIds;
+      
+      if (this._compareFilter) {
+        this._compareFilter.playbackContextIdsIn = contextIds;
+      }
+    } else {
+      delete this._filter.playbackContextIdsIn;
+  
+      if (this._compareFilter) {
+        delete this._compareFilter.playbackContextIdsIn;
       }
     }
     

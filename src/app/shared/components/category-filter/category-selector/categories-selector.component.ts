@@ -16,6 +16,12 @@ import { CategoriesTreeComponent } from 'shared/components/categories-tree/categ
 export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
   @Input() buttonLabel = '';
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Input() set title(value: string) {
+    this._title = value && typeof value === 'string' ? value : this._defaultTitle;
+  }
+  @Input() set filterPlaceholder(value: string) {
+    this._filterPlaceholder = value && typeof value === 'string' ? value : this._defaultPlaceholder;
+  }
   
   @Input() set value(value: CategoryData[]) {
     this._selectedCategories = value ? [...value] : [];
@@ -32,7 +38,11 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
   
   private _confirmClose = true;
   private _searchCategoriesSubscription: ISubscription;
+  private _defaultTitle = this._translate.instant('app.categories.selectCategories');
+  private _defaultPlaceholder = this._translate.instant('app.categories.searchCategories');
   
+  public _title: string = this._defaultTitle;
+  public _filterPlaceholder: string = this._defaultPlaceholder;
   public _categoriesLoaded = false;
   public _treeSelection: number[] = [];
   public _categoriesProvider = new Subject<SuggestionsProviderData>();

@@ -68,6 +68,10 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { EntriesEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entries-filter/entries-filter.component';
 import { EntryEngagementFilterComponent } from 'shared/components/entry-engagement-filter/entry-engagement-filter.component';
+import { ContextDetailsOverlayComponent } from 'shared/components/context-details-overlay/context-details-overlay.component';
+import { CategoryFullNamePipe } from './pipes/category-full-name.pipe';
+import { ContextTableFilterComponent } from 'shared/components/context-table-filter/context-table-filter.component';
+import { ContextFilterComponent } from 'shared/components/context-table-filter/users-filter/context-filter.component';
 
 @NgModule({
   imports: [
@@ -138,6 +142,10 @@ import { EntryEngagementFilterComponent } from 'shared/components/entry-engageme
     EntryDetailsOverlayComponent,
     EntriesEngagementFilterComponent,
     EntryEngagementFilterComponent,
+    ContextDetailsOverlayComponent,
+    CategoryFullNamePipe,
+    ContextFilterComponent,
+    ContextTableFilterComponent,
   ],
   exports: [
     DateFilterComponent,
@@ -184,6 +192,10 @@ import { EntryEngagementFilterComponent } from 'shared/components/entry-engageme
     HeatMapComponent,
     EntryDetailsOverlayComponent,
     EntryEngagementFilterComponent,
+    ContextDetailsOverlayComponent,
+    CategoryFullNamePipe,
+    ContextFilterComponent,
+    ContextTableFilterComponent,
   ],
   providers: [
   ]
