@@ -7,11 +7,11 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString('en-US', { maximumSignificantDigits: 20 });
   }
   
-  static percents(x: any, round = true, maxHundred = false, addUnits = true): string {
+  static percents(x: any, round = true, maxHundred = false, addUnits = true, precision = 1): string {
     x = parseFloat(x) * 100;
     x = maxHundred && x > 100 ? 100 : x;
     x = round ? Math.round(x) : x;
-    return !isNaN(x) ? `${this.numberWithCommas(x.toFixed(1))}${addUnits ? '%' : ''}` : 'N/A';
+    return !isNaN(x) ? `${this.numberWithCommas(x.toFixed(precision))}${addUnits ? '%' : ''}` : 'N/A';
   }
   
   static numberOrNA(x: any): string {
