@@ -30,7 +30,8 @@ export class ContextTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
-  
+  @Input() entryId: string;
+
   @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
   
   private _reportType = reportTypeMap(KalturaReportType.topPlaybackContext);
@@ -58,6 +59,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
+    this._setEntryId();
     this._loadReport();
     
     if (this.filterChange) {
@@ -65,12 +67,28 @@ export class ContextTableComponent implements OnInit, OnDestroy {
         .pipe(cancelOnDestroy(this))
         .subscribe(() => {
           this._pager.pageIndex = 1;
+          this._setEntryId();
           this._loadReport();
         });
     }
   }
   
   ngOnDestroy(): void {
+  }
+  
+  private _setEntryId(): void {
+    if (!this.entryId) {
+      console.warn('Entry id is not defined, check your inputs');
+      return;
+    }
+
+    if (this.filter) {
+      this.filter.entryIdIn = this.entryId;
+    }
+    
+    if (this.compareFilter) {
+      this.compareFilter.entryIdIn = this.entryId;
+    }
   }
   
   private _loadReport(): void {

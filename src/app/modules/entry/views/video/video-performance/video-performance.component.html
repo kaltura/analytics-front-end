@@ -124,7 +124,8 @@
           </ng-container>
 
           <ng-container *ngIf="_tableMode === TableMode.context">
-            <app-context-table [filterChange]="_filterChange$"
+            <app-context-table [entryId]="entryId"
+                               [filterChange]="_filterChange$"
                                [filter]="_filter"
                                [compareFilter]="_compareFilter"
                                [isCompareMode]="_isCompareMode"
