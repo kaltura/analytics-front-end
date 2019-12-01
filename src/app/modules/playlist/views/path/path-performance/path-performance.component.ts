@@ -31,7 +31,7 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
   @Input() dateFilterComponent: DateFilterComponent;
   
   private _order = '-date_id';
-  private _reportType = reportTypeMap(KalturaReportType.interactiveVideoHighlights);
+  private _reportType = reportTypeMap(KalturaReportType.userInteractiveVideo);
   private _dataConfig: ReportDataConfig;
   private _rawGraphData: KalturaReportGraph[] = [];
   private _ignoreFirstSortEvent = false;

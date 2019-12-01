@@ -62,7 +62,7 @@ export class PathViewComponent implements OnInit, OnDestroy {
   public _playlistId = '';
   public _playlistName = '';
   public _viewConfig: ViewConfig = { ...viewsConfig.playlist };
-  public _totalsReportType = reportTypeMap(KalturaReportType.interactiveVideoHighlights);
+  public _totalsReportType = reportTypeMap(KalturaReportType.userInteractiveVideo);
   
   
   constructor(private _errorsManager: ErrorsManagerService,

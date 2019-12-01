@@ -16,7 +16,7 @@ export class PathExportConfig extends ExportConfigService {
       {
         id: "totals",
         label: this._translate.instant('app.playlist.exportLabels.highlights'),
-        reportType: reportTypeMap(KalturaReportType.interactiveVideoHighlights),
+        reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
         sections: [KalturaReportExportItemType.total],
       }
     ];
