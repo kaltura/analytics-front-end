@@ -59,10 +59,7 @@ export class BasePlaylistTotalsComponent extends PlaylistBase {
     this._blockerMessage = null;
     
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this._filter, pager: this._pager, order: this._order };
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = this.playlistId;
+    reportConfig.filter.rootEntryIdIn = this.playlistId;
     
     this._reportService.getReport(reportConfig, sections)
       .pipe(
@@ -75,7 +72,7 @@ export class BasePlaylistTotalsComponent extends PlaylistBase {
           if (compareReportConfig['objectIds__null']) {
             delete compareReportConfig['objectIds__null'];
           }
-          compareReportConfig.objectIds = this.playlistId;
+          compareReportConfig.filter.rootEntryIdIn = this.playlistId;
           return this._reportService.getReport(compareReportConfig, sections)
             .pipe(map(compare => ({ report, compare })));
         }),
