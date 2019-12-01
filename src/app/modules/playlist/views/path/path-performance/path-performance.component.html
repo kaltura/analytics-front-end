@@ -29,14 +29,14 @@
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[1]"></div>
             <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[1]"></div>
-            <span class="kLegendItem">{{'app.entry.' + _metricsCompareTo | translate}}</span>
+            <span class="kLegendItem">{{'app.playlist.' + _metricsCompareTo | translate}}</span>
           </div>
           <div class="kLegendItemContainer">
             <span class="kPeriod">{{_currentDatePeriod}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_selectedMetrics].color[0]"></div>
             <span class="kLegendItem">{{_selectedMetricsLabel}}</span>
             <div class="kCircle" [style.background-color]="_lineChartData[_metricsCompareTo].color[0]"></div>
-            <span class="kLegendItem">{{'app.entry.' + _metricsCompareTo | translate}}</span>
+            <span class="kLegendItem">{{'app.playlist.' + _metricsCompareTo | translate}}</span>
           </div>
         </div>
       </div>
@@ -84,8 +84,8 @@
                 <tr>
                   <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
                       [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '22%' : '13%'}"
-                      [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
-                    {{'app.entry.' + col | translate}}
+                      [kTooltip]="'app.playlist.' + col | translate" [showOnEllipsis]="true">
+                    {{'app.playlist.' + col | translate}}
                     <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                   </th>
 

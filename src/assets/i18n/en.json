@@ -761,6 +761,9 @@
       "unique_viewers": "Unique Viewers",
       "sum_view_period": "Minutes Viewed",
       "avg_view_period_time": "Avg. Viewing Time",
+      "month_id": "Month",
+      "date_id": "Date",
+      "name": "Name",
       "exportLabels": {
         "highlights": "Highlights"
       }
