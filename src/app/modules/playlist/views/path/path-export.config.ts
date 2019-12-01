@@ -18,6 +18,13 @@ export class PathExportConfig extends ExportConfigService {
         label: this._translate.instant('app.playlist.exportLabels.highlights'),
         reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
         sections: [KalturaReportExportItemType.total],
+      },
+      {
+        id: 'performance',
+        label: this._translate.instant('app.playlist.exportLabels.videoPerformance'),
+        reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
+        sections: [KalturaReportExportItemType.graph],
+        order: '-date_id',
       }
     ];
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;

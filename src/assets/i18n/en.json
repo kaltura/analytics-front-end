@@ -765,7 +765,8 @@
       "date_id": "Date",
       "name": "Name",
       "exportLabels": {
-        "highlights": "Highlights"
+        "highlights": "Highlights",
+        "videoPerformance": "Video Performance"
       }
     },
     "context": {
