@@ -15,8 +15,8 @@
                 </span>
               </div>
             </th>
-            <th [ngStyle]="{'width': '20%'}">
-              <div class="kColumnHeader" *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
+            <th [ngStyle]="{'width': '20%'}" *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
+              <div class="kColumnHeader">
                 <span [kTooltip]="'app.entry.count_loads' | translate" [showOnEllipsis]="true">
                   {{'app.entry.count_loads' | translate}}
                 </span>
