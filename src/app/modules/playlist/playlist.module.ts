@@ -17,6 +17,7 @@ import { PathViewComponent } from './views/path/path-view.component';
 import { PlaylistFilterComponent } from './filter/filter.component';
 import { PathEntryTotalsComponent } from './views/path/path-totals/path-totals.component';
 import { BasePlaylistTotalsComponent } from './views/shared/playlist-totals/playlist-totals.component';
+import { PathPerformanceComponent } from './views/path/path-performance/path-performance.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { BasePlaylistTotalsComponent } from './views/shared/playlist-totals/play
     PathViewComponent,
     PlaylistFilterComponent,
     PathEntryTotalsComponent,
-    BasePlaylistTotalsComponent
+    BasePlaylistTotalsComponent,
+    PathPerformanceComponent
   ],
   exports: [],
   providers: []

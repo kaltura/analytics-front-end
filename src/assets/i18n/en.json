@@ -760,6 +760,7 @@
       "count_plays": "Plays",
       "unique_viewers": "Unique Viewers",
       "sum_view_period": "Minutes Viewed",
+      "avg_view_period_time": "Avg. Viewing Time",
       "exportLabels": {
         "highlights": "Highlights"
       }

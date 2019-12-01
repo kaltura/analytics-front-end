@@ -47,33 +47,15 @@
                             [viewConfig]="_viewConfig.totals"
                             [reportType]="_totalsReportType"
                             [refineFilter]="_refineFilter"></app-path-entry-totals>
-    <!--app-video-entry-totals *ngIf="_viewConfig.totals"
-                            [comments]="comments"
-                            [dateFilter]="_dateFilter"
-                            [entryId]="_entryId"
-                            [refineFilter]="_refineFilter"></app-video-entry-totals>
-
-    <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
-      <app-video-entry-preview *ngIf="_viewConfig.entryPreview"
-                               [dateFilter]="_dateFilter"
-                               [entryId]="_entryId"
-                               [refineFilter]="_refineFilter"></app-video-entry-preview>
-      <app-video-entry-user-engagement *ngIf="_viewConfig.userEngagement"
-                                       [viewConfig]="_viewConfig.userEngagement"
-                                       [dateFilter]="_dateFilter"
-                                       [duration]="_duration"
-                                       [refineFilter]="_refineFilter"
-                                       [entryId]="_entryId"></app-video-entry-user-engagement>
-    </div>
 
     <div *ngIf="_viewConfig.performance" class="kReportContainer">
-      <app-video-entry-performance [dateFilterComponent]="dateFilter"
+      <app-path-performance [dateFilterComponent]="dateFilter"
                                    [dateFilter]="_dateFilter"
-                                   [entryId]="_entryId"
-                                   [refineFilter]="_refineFilter"></app-video-entry-performance>
+                                   [playlistId]="_playlistId"
+                                   [refineFilter]="_refineFilter"></app-path-performance>
     </div>
 
-    <div *ngIf="_viewConfig.impressions" class="kReportContainer">
+    <!--div *ngIf="_viewConfig.impressions" class="kReportContainer">
       <app-impressions [dateFilter]="_dateFilter"
                        [entryId]="_entryId"
                        [refineFilter]="_refineFilter"></app-impressions>
