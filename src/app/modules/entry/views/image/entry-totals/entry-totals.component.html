@@ -39,7 +39,7 @@
                                [units]="_socialHighlights['likes']?.units"
                                [trend]="_socialHighlights['likes']?.trend"></app-trend-value>
           </span>
-          {{'app.user.votes' | translate}}
+          <span [class.kSocialLabel]="_isCompareMode">{{'app.user.votes' | translate}}</span>
         </div>
         <div class="kSocialHighlightsItem" *ngIf="_viewConfig.social.shares">
           <i class="kIcon icon-share"></i>
@@ -54,7 +54,7 @@
                                [units]="_socialHighlights['shares']?.units"
                                [trend]="_socialHighlights['shares']?.trend"></app-trend-value>
           </span>
-          {{'app.user.count_viral' | translate}}
+          <span [class.kSocialLabel]="_isCompareMode">{{'app.user.count_viral' | translate}}</span>
         </div>
       </div>
     </div>
