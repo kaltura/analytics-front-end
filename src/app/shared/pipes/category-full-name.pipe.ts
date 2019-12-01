@@ -10,7 +10,8 @@ export class CategoryFullNamePipe implements PipeTransform {
     }
     const chunks = value.split('>');
     const lastChunk = `<strong>${chunks[chunks.length - 1]}</strong>`;
+    chunks.splice(-1, 1); // remove last chunk
     
-    return `${chunks.join(' / ')} / ${lastChunk}`;
+    return `${chunks.join(' / ')} ${chunks.length ? '/' : ''} ${lastChunk}`;
   }
 }
