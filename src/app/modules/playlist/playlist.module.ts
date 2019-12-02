@@ -18,6 +18,8 @@ import { PlaylistFilterComponent } from './filter/filter.component';
 import { PathEntryTotalsComponent } from './views/path/path-totals/path-totals.component';
 import { BasePlaylistTotalsComponent } from './views/shared/playlist-totals/playlist-totals.component';
 import { PathPerformanceComponent } from './views/path/path-performance/path-performance.component';
+import { PathContentComponent } from './views/path/path-content/path-content.component';
+import { PathContentTableComponent } from './views/path/path-content/path-content-table/path-content-table.component';
 
 @NgModule({
   imports: [
@@ -43,7 +45,9 @@ import { PathPerformanceComponent } from './views/path/path-performance/path-per
     PlaylistFilterComponent,
     PathEntryTotalsComponent,
     BasePlaylistTotalsComponent,
-    PathPerformanceComponent
+    PathPerformanceComponent,
+    PathContentComponent,
+    PathContentTableComponent
   ],
   exports: [],
   providers: []

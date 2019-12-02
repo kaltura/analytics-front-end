@@ -55,6 +55,12 @@
                                    [refineFilter]="_refineFilter"></app-path-performance>
     </div>
 
+    <div class="kReportContainer" *ngIf="_viewConfig.videos">
+      <app-path-content [playlistId]="_playlistId"
+                        [dateFilter]="_dateFilter"
+                        [refineFilter]="_refineFilter"></app-path-content>
+    </div>
+
     <!--div *ngIf="_viewConfig.impressions" class="kReportContainer">
       <app-impressions [dateFilter]="_dateFilter"
                        [entryId]="_entryId"
