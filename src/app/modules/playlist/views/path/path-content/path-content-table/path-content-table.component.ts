@@ -1,8 +1,6 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { KalturaEntryStatus, KalturaFilterPager } from 'kaltura-ngx-client';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { NavigationDrillDownService } from 'shared/services';
 import { Subject } from 'rxjs';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
@@ -31,7 +29,6 @@ export class PathContentTableComponent implements OnDestroy {
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
-  private timeoutId = null;
   
   public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
@@ -39,7 +36,7 @@ export class PathContentTableComponent implements OnDestroy {
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
   public _paginationChanged$ = this._paginationChanged.asObservable();
   
-  constructor(private _navigationDrillDownService: NavigationDrillDownService) {
+  constructor() {
   
   }
   
@@ -52,12 +49,6 @@ export class PathContentTableComponent implements OnDestroy {
       this._paginationChanged.next();
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
-    }
-  }
-  
-  public _drillDown({ object_id: entryId, status, partner_id: partnerId }: { object_id: string, status: string, partner_id: string }): void {
-    if (status === '') { // status is already being transformed by formatter function
-      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
     }
   }
 }

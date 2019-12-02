@@ -85,7 +85,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator; // don't use mapper function to be able to get content source
+  public _reportType = KalturaReportType.topContentCreator;  // don't use mapper function to be able to get content source
                                                              // It'll work fine since we already might switched ks at this point
   
   constructor(private _errorsManager: ErrorsManagerService,
@@ -105,7 +105,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   ngOnInit() {
   }
   
-  private loadIVData(): Observable<any> {
+  private loadIVData(): Observable<Node[] | KalturaAPIException> {
     return new Observable(observer => {
       const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
       fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
@@ -132,7 +132,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
                     if (response && response.url) {
                       this.http.get(response.url)
                         .subscribe(data => {
-                          observer.next(data);
+                          observer.next(this.parseIVData(data));
                           observer.complete();
                         });
                     }
@@ -141,9 +141,6 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
                     observer.next(error);
                     observer.complete();
                   });
-            } else {
-              observer.next({message: "JSON File asset ID not found!"});
-              observer.complete();
             }
           },
           error => {
@@ -151,6 +148,50 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
             observer.complete();
           });
     });
+  }
+  
+  private parseIVData(data): Node[] {
+    let nodes: Node[] = [];
+    let currentLevel = 0;
+    let nextLevelNodes = [];
+    let levelsNodeFound = 0;
+    const startNodeId = data.settings && data.settings.startNodeId ? data.settings.startNodeId : '';
+    if (data.nodes) {
+      data.nodes.forEach(node => {
+        const newNode: Node = {
+          id: node.id,
+          isHome: node.id === startNodeId,
+          name: node.name,
+          entryId: node.entryId,
+          prefetchNodeIds: node.prefetchNodeIds
+        };
+        if (node.id === startNodeId) {
+          newNode.level = currentLevel;
+          levelsNodeFound++;
+          nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)];
+        }
+        nodes.push(newNode);
+      });
+      while (levelsNodeFound < nodes.length) {
+        currentLevel++;
+        let newNodes = [];
+        nextLevelNodes.forEach(nodeId => {
+          nodes.forEach(node => {
+            if (node.id === nodeId && !node.level) {
+              node.level = currentLevel;
+              levelsNodeFound++;
+              newNodes = [...newNodes, ...node.prefetchNodeIds];
+            }
+          });
+        });
+        nextLevelNodes = newNodes.filter(function(item, pos, self) {
+          return self.indexOf(item) === pos;
+        });
+      }
+      return nodes;
+    } else {
+      return [];
+    }
   }
   
   protected _loadReport(): void {
@@ -161,47 +202,8 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   
     
     this.loadIVData().pipe(cancelOnDestroy(this))
-      .subscribe(response => {
-          let nodes: Node[] = [];
-
-          let currentLevel = 0;
-          let nextLevelNodes = [];
-          let levelsNodeFound = 0;
-          const startNodeId = response.settings && response.settings.startNodeId ? response.settings.startNodeId : '';
-          if (response.nodes) {
-            response.nodes.forEach(node => {
-              const newNode: Node = {
-                id: node.id,
-                isHome: node.id === startNodeId,
-                name: node.name,
-                entryId: node.entryId,
-                prefetchNodeIds: node.prefetchNodeIds
-              };
-              if (node.id === startNodeId) {
-                newNode.level = currentLevel;
-                levelsNodeFound++;
-                nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)];
-              }
-              nodes.push(newNode);
-            });
-            while (levelsNodeFound < nodes.length) {
-              currentLevel++;
-              let newNodes = [];
-              nextLevelNodes.forEach(nodeId => {
-                nodes.forEach(node => {
-                  if (node.id === nodeId) {
-                    node.level = currentLevel;
-                    levelsNodeFound++;
-                    newNodes = [...newNodes, ...node.prefetchNodeIds];
-                  }
-                });
-              });
-              nextLevelNodes = newNodes.filter(function(item, pos, self) {
-                return self.indexOf(item) === pos;
-              });
-            }
-            console.log(nodes);
-          }
+      .subscribe((response: Node[]) => {
+          debugger;
         },
         error => {
           debugger;
