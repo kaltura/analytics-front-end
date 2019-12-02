@@ -109,8 +109,8 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
             const err: KalturaAPIException = responses.getFirstError();
-            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data.
-            if (err.code !== "INVALID_USER_ID") {
+            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data. Also support KMS weak KS.
+            if (err.code !== "INVALID_USER_ID" && err.code !== "CANNOT_RETRIEVE_ANOTHER_USER_USING_NON_ADMIN_SESSION") {
               throw err;
             }
           }
