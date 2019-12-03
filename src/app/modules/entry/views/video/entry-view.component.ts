@@ -1,5 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { KalturaMediaEntry, KalturaMediaType, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaEntryDisplayInSearchType,
+  KalturaMediaEntry,
+  KalturaMediaType,
+  KalturaReportInterval,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -29,6 +35,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
       this._entryType = value.mediaType;
       this._duration = value.msDuration || 0;
       this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
+      this._showViewDetails = value.displayInSearch !== KalturaEntryDisplayInSearchType.system;
     }
   }
   @Input() owner: string;
@@ -58,6 +65,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _entryId = '';
   public _duration = 0;
+  public _showViewDetails = false;
   public _entryName = '';
   public _entryType: KalturaMediaType = null;
   public _viewConfig: ViewConfig = { ...viewsConfig.entry };
