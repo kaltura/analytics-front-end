@@ -12,6 +12,7 @@ import {
   KalturaReportTable,
   KalturaReportType
 } from 'kaltura-ngx-client';
+import { map, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import {AuthService, ErrorsManagerService, Report, ReportService} from 'shared/services';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -105,49 +106,33 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   ngOnInit() {
   }
   
-  private loadIVData(): Observable<Node[] | KalturaAPIException> {
-    return new Observable(observer => {
-      const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
-      fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
-      fileAssetsListFilter.objectIdEqual = this.playlistId;
-      const fileAssetsListAction = new FileAssetListAction({filter: fileAssetsListFilter});
+  private loadIVData(): Observable<Node[]> {
+    const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
+    fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
+    fileAssetsListFilter.objectIdEqual = this.playlistId;
+    const fileAssetsListAction = new FileAssetListAction({filter: fileAssetsListFilter});
   
-      let jsonFileAssetId = 0;
-      this._kalturaClient.request(fileAssetsListAction)
-        .pipe(cancelOnDestroy(this))
-        .subscribe((response: KalturaFileAssetListResponse) => {
-            response.objects.forEach((fileAsset: KalturaFileAsset) => {
-              if (fileAsset.name === "GRAPH_DATA") {
-                jsonFileAssetId = fileAsset.id;
-              }
-            });
-            if (jsonFileAssetId !== 0) {
-              const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
-              fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
-              fileAssetsListFilter.objectIdEqual = this.playlistId;
-              const fileAssetsServeAction = new FileAssetServeAction({id: jsonFileAssetId});
-              this._kalturaClient.request(fileAssetsServeAction)
-                .pipe(cancelOnDestroy(this))
-                .subscribe(response => {
-                    if (response && response.url) {
-                      this.http.get(response.url)
-                        .subscribe(data => {
-                          observer.next(this.parseIVData(data));
-                          observer.complete();
-                        });
-                    }
-                  },
-                  error => {
-                    observer.next(error);
-                    observer.complete();
-                  });
-            }
-          },
-          error => {
-            observer.next(error);
-            observer.complete();
-          });
-    });
+    let jsonFileAssetId = 0;
+    return this._kalturaClient.request(fileAssetsListAction)
+      .pipe(cancelOnDestroy(this))
+      .pipe(switchMap((response: KalturaFileAssetListResponse) => {
+        response.objects.forEach((fileAsset: KalturaFileAsset) => {
+          if (fileAsset.name === "GRAPH_DATA") {
+            jsonFileAssetId = fileAsset.id;
+          }
+        });
+        const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
+        fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
+        fileAssetsListFilter.objectIdEqual = this.playlistId;
+        const fileAssetsServeAction = new FileAssetServeAction({id: jsonFileAssetId});
+        return this._kalturaClient.request(fileAssetsServeAction);
+      }))
+      .pipe(switchMap(response => {
+        return this.http.get(response.url);
+      }))
+      .pipe(map(data => {
+        return this.parseIVData(data);
+      }));
   }
   
   private parseIVData(data): Node[] {
