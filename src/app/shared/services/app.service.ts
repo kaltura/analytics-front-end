@@ -173,7 +173,7 @@ export class AppService implements OnDestroy {
       .pipe(map(responses => {
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
-          if (err.code === "SERVICE_FORBIDDEN" || err.code === "CANNOT_RETRIEVE_ANOTHER_USER_USING_NON_ADMIN_SESSION") {
+          if (err.code === "SERVICE_FORBIDDEN") {
             this._permissionsService.load([], []);
             this._permissionsLoaded.next(true);
           } else {

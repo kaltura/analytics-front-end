@@ -47,6 +47,7 @@ export class BaseEntryTotalsComponent extends EntryBase {
     likes: null,
     shares: null,
   };
+  public showLikes = false;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -93,6 +94,7 @@ export class BaseEntryTotalsComponent extends EntryBase {
         switchMap(({ report, compare }) => this._getLikes().pipe(map(likes => ({ report, compare, likes }))))
       )
       .subscribe(({ report, compare, likes }) => {
+          this.showLikes = likes[0] !== -1;
           if (compare) {
             this._handleCompare(report, compare, likes);
           } else {
@@ -209,7 +211,11 @@ export class BaseEntryTotalsComponent extends EntryBase {
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(map(responses => {
         if (responses.hasErrors()) {
-          throw responses.getFirstError();
+          // if loading likes is forbidden by permissions - we will return -1 and hide the likes section.
+          // currently we can't check the permissions under KMS so we use this workaround.
+          // TODO - once permissions are enabled under KMS, use permissions and remove this workaround
+          console.error("Error when loading likes: " + responses.getFirstError().message);
+          return responses.map(response => -1);
         }
         return responses.map(response => response.result.totalCount);
       }));
