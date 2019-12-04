@@ -10,12 +10,12 @@ import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { ViewConfig, viewsConfig } from 'configuration/view-config';
-import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { EntryBase } from '../entry-base/entry-base';
+import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 export const TotalsConfig = new InjectionToken<string>('TotalsConfig');
 
@@ -60,6 +60,7 @@ export class BaseEntryTotalsComponent extends EntryBase {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _kalturaClient: KalturaClient,
+              private _permissions: AnalyticsPermissionsService,
               @Inject(TotalsConfig) private _dataConfigService: ReportDataBaseConfig) {
     super();
     
@@ -193,31 +194,31 @@ export class BaseEntryTotalsComponent extends EntryBase {
   }
   
   private _getLikes(): Observable<number[]> {
-    const getAction = filter => new LikeListAction({
-      filter: new KalturaLikeFilter({
-        entryIdEqual: this.entryId,
-        createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
-        createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
-      }),
-      pager: new KalturaFilterPager({ pageSize: 1 }),
-    });
-    
-    const actions = [getAction(this._filter)];
-    
-    if (this._isCompareMode) {
-      actions.push(getAction(this._compareFilter));
+    if (this._permissions.hasPermission(AnalyticsPermissions.FEATURE_LIKE)) {
+      const getAction = filter => new LikeListAction({
+        filter: new KalturaLikeFilter({
+          entryIdEqual: this.entryId,
+          createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
+          createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
+        }),
+        pager: new KalturaFilterPager({pageSize: 1}),
+      });
+  
+      const actions = [getAction(this._filter)];
+  
+      if (this._isCompareMode) {
+        actions.push(getAction(this._compareFilter));
+      }
+  
+      return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+        .pipe(map(responses => {
+          if (responses.hasErrors()) {
+            throw responses.getFirstError();
+          }
+          return responses.map(response => response.result.totalCount);
+        }));
+    } else {
+      return Observable.of([-1]);
     }
-    
-    return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
-      .pipe(map(responses => {
-        if (responses.hasErrors()) {
-          // if loading likes is forbidden by permissions - we will return -1 and hide the likes section.
-          // currently we can't check the permissions under KMS so we use this workaround.
-          // TODO - once permissions are enabled under KMS, use permissions and remove this workaround
-          console.error("Error when loading likes: " + responses.getFirstError().message);
-          return responses.map(response => -1);
-        }
-        return responses.map(response => response.result.totalCount);
-      }));
   }
 }
