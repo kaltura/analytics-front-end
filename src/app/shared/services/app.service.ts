@@ -194,7 +194,7 @@ export class AppService implements OnDestroy {
             this._permissionsService.load(currentPermissions, currentPermissions);
             this._permissionsLoaded.next(true);
           } else {
-            // all other errors should stop the permissions loading proccess
+            // all other errors should stop the permissions loading process
             throw err;
           }
         } else {
