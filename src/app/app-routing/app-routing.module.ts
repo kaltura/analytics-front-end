@@ -66,5 +66,4 @@ export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation)
   ],
   declarations: []
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }
