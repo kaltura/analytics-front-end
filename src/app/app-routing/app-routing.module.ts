@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { LocationStrategy, PathLocationStrategy, PlatformLocation } from '@angular/common';
+import { VoidPathLocationStrategy } from './void-path-location-strategy';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 
@@ -51,13 +53,18 @@ const routes: Routes = [
   }
 ];
 
+export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation) => {
+  return window["loadInFriendlyIframe"] ? new VoidPathLocationStrategy(_platformLocation) : new PathLocationStrategy(_platformLocation);
+}
 @NgModule({
   imports: [
     RouterModule.forRoot(routes)
   ],
+  providers: [{ provide: LocationStrategy, useFactory: pathLocationStrategyFactory, deps: [PlatformLocation] }],
   exports: [
     RouterModule
   ],
   declarations: []
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
