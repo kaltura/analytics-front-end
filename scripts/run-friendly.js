@@ -22,7 +22,7 @@ function updateFrameEventTarget() {
 
 (async function () {
   updateFrameEventTarget();
-  //await buildProd();
+  await buildProd();
   console.log("------ Production build ready, Launching on port 4200 ------");
   serve('dist/analytics-front-end/index.html', 4200);
   console.log("------ Loading in iframe on port 4201 ------");
