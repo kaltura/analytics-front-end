@@ -111,6 +111,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.menuConfig = config.menuConfig;
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
   analyticsConfig.customData = config.customData || { };
+  analyticsConfig.multiAccount = config.multiAccount || false;
   setLiveEntryUsersReports(config.liveEntryUsersReports);
 }
 

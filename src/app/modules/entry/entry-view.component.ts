@@ -78,7 +78,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,displayInSearch'
           })
         }),
       new UserGetAction({ userId: null })

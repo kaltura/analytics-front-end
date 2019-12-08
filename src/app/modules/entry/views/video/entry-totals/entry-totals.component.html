@@ -23,7 +23,7 @@
 
       <div class="kSocialHighlights" *ngIf="_viewConfig.social">
         <span class="kTitle">{{'app.user.socialHighlights' | translate}}</span>
-        <div class="kSocialHighlightsItem" *ngIf="_viewConfig.social.likes">
+        <div class="kSocialHighlightsItem" *ngIf="_viewConfig.social.likes && showLikes">
           <i class="kIcon icon-small-like"></i>
           <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['likes']?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"

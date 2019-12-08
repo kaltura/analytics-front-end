@@ -3,7 +3,19 @@ import { analyticsConfig, getKalturaServerUri, setConfig } from 'configuration/a
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaMultiRequest, KalturaPermissionFilter, KalturaPermissionStatus, KalturaRequestOptions, KalturaResponseProfileType, PermissionListAction, UserGetAction, UserRoleGetAction } from 'kaltura-ngx-client';
+import {
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaFilterPager,
+  KalturaMultiRequest,
+  KalturaPermissionFilter,
+  KalturaPermissionStatus,
+  KalturaRequestOptions,
+  KalturaResponseProfileType,
+  PermissionGetCurrentPermissionsAction,
+  PermissionListAction,
+  UserGetAction,
+  UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -168,19 +180,24 @@ export class AppService implements OnDestroy {
           })
         })
       );
+    const getCurrentPermissions = new PermissionGetCurrentPermissionsAction(); // this one is used in cases user ks cannot list permissions and get role
     
-    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction))
+    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions))
       .pipe(map(responses => {
+        const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse] = responses;
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
-          if (err.code === "SERVICE_FORBIDDEN" || err.code === "CANNOT_RETRIEVE_ANOTHER_USER_USING_NON_ADMIN_SESSION") {
-            this._permissionsService.load([], []);
+          if (err.code === "SERVICE_FORBIDDEN") {
+            // weak ks such as KMS user cannot load user roles. In that case we will use the getCurrentPermissions API to load current permissions disregarding user roles
+            // if getCurrentPermissions didn't return a valid result (for example an exception) - we will init the permissions manager with no permissions as all
+            const currentPermissions = currentPermissionsResponse && currentPermissionsResponse.result ? currentPermissionsResponse.result.split(',') : [];
+            this._permissionsService.load(currentPermissions, currentPermissions);
             this._permissionsLoaded.next(true);
           } else {
+            // all other errors should stop the permissions loading process
             throw err;
           }
         } else {
-          const [userResponse, roleResponse, permissionsResponse] = responses;
           const permissionList = permissionsResponse.result;
           const userRole = roleResponse.result;
           const partnerPermissionList = permissionList.objects.map(item => item.name);
