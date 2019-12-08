@@ -111,19 +111,15 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
     fileAssetsListFilter.objectIdEqual = this.playlistId;
     const fileAssetsListAction = new FileAssetListAction({filter: fileAssetsListFilter});
-  
-    let jsonFileAssetId = 0;
     return this._kalturaClient.request(fileAssetsListAction)
       .pipe(cancelOnDestroy(this))
       .pipe(switchMap((response: KalturaFileAssetListResponse) => {
+        let jsonFileAssetId = 0;
         response.objects.forEach((fileAsset: KalturaFileAsset) => {
           if (fileAsset.name === "GRAPH_DATA") {
             jsonFileAssetId = fileAsset.id;
           }
         });
-        const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
-        fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
-        fileAssetsListFilter.objectIdEqual = this.playlistId;
         const fileAssetsServeAction = new FileAssetServeAction({id: jsonFileAssetId});
         return this._kalturaClient.request(fileAssetsServeAction);
       }))
@@ -136,12 +132,13 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   }
   
   private parseIVData(data): Node[] {
-    let nodes: Node[] = [];
-    let currentLevel = 0;
-    let nextLevelNodes = [];
-    let levelsNodeFound = 0;
-    const startNodeId = data.settings && data.settings.startNodeId ? data.settings.startNodeId : '';
+    let nodes: Node[] = [];   // the returned nodes array
+    let currentLevel = 0;     // initial level. We use this variable to increment the level for each pass on the nodes array
+    let nextLevelNodes = [];  // array holding all the found next level nodes to be scanned for
+    let levelsNodeFound = 0;  // counter used to check if all node levels were found
+    const startNodeId = data.settings && data.settings.startNodeId ? data.settings.startNodeId : '';  // get the start node ID from the JSON data. Used to mark the start node in the table (home icon)
     if (data.nodes) {
+      // first run on all nodes to find the start node. We also use this run to create all the IV nodes array, setting the level only to the start node (level = 0)
       data.nodes.forEach(node => {
         const newNode: Node = {
           id: node.id,
@@ -151,31 +148,41 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           prefetchNodeIds: node.prefetchNodeIds
         };
         if (node.id === startNodeId) {
-          newNode.level = currentLevel;
-          levelsNodeFound++;
-          nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)];
+          newNode.level = currentLevel; // set level 0
+          levelsNodeFound++;            // increment found nodes with levels counter
+          nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)]; // set the array to scan next with the found node children nodes
         }
-        nodes.push(newNode);
+        nodes.push(newNode); // save the found node with level to the returned nodes array
       });
+      // continue searching for node levels until all nodes are set with levels
       while (levelsNodeFound < nodes.length) {
-        currentLevel++;
-        let newNodes = [];
+        currentLevel++;    // increment level
+        // to prevent infinite loop in case of corrupted data, we add this conditional break (nobody likes stuck web pages)
+        if (currentLevel > nodes.length) {
+          console.error("Could not retrieve nodes data.");
+          break;
+        }
+        
+        let newNodes = []; // array holding the nodes that will be found in this pass
+        // scan the nextLevelNodes array and set the level to its nodes
         nextLevelNodes.forEach(nodeId => {
           nodes.forEach(node => {
+            // since the same node can be accessed in more than 1 level, we first check the the level wasn't set yet. This ensures we set the minimal level value (shortest IV route to this node)
             if (node.id === nodeId && !node.level) {
-              node.level = currentLevel;
-              levelsNodeFound++;
-              newNodes = [...newNodes, ...node.prefetchNodeIds];
+              node.level = currentLevel;   // set node level to the current level
+              levelsNodeFound++;           // increment found nodes with levels counter
+              newNodes = [...newNodes, ...node.prefetchNodeIds]; // append this node children to the nodes that will be scanned in the next pass
             }
           });
         });
+        // since nodes can be access more than once, we might get the same node few times in the array. The following code removes duplicated nodes from the nextLevelNodes array
         nextLevelNodes = newNodes.filter(function(item, pos, self) {
           return self.indexOf(item) === pos;
         });
       }
-      return nodes;
+      return nodes; // return the found nodes with levels
     } else {
-      return [];
+      return [];    // if no nodes were found - return an empty array
     }
   }
   
