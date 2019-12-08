@@ -6,20 +6,16 @@
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-path-content-table *ngIf="_isCompareMode"
                                        name="compare"
-                                       [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
-                                       [firstTimeLoading]="_compareFirstTimeLoading"
-                                       [columns]="_columns"></app-path-content-table>
+                                       [firstTimeLoading]="_compareFirstTimeLoading"></app-path-content-table>
       <app-path-content-table name="current"
                                        [tableData]="_tableData"
-                                       [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
-                                       [firstTimeLoading]="_firstTimeLoading"
-                                       [columns]="_columns"></app-path-content-table>
+                                       [firstTimeLoading]="_firstTimeLoading"></app-path-content-table>
     </k-area-blocker>
   </div>
 </div>

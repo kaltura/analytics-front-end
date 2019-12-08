@@ -7,14 +7,15 @@ import {
   KalturaEndUserReportInputFilter, KalturaFileAsset, KalturaFileAssetFilter, KalturaFileAssetListResponse,
   KalturaFileAssetObjectType,
   KalturaFilterPager,
-  KalturaObjectBaseFactory,
+  KalturaObjectBaseFactory, KalturaReportInputFilter,
   KalturaReportInterval,
   KalturaReportTable,
   KalturaReportType
 } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
 import * as moment from 'moment';
-import {AuthService, ErrorsManagerService, Report, ReportService} from 'shared/services';
+import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {CompareService} from 'shared/services/compare.service';
@@ -29,6 +30,7 @@ import {PlaylistBase} from "../../shared/playlist-base/playlist-base";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {HttpClient} from "@angular/common/http";
+import {reportTypeMap} from "shared/utils/report-type-map";
 
 export interface Node {
   id?: string;
@@ -36,6 +38,7 @@ export interface Node {
   level?: number;
   entryId?: string;
   name?: string;
+  thumbnailUrl?: string;
   plays?: number;
   viewers?: number;
   completionRate?: number;
@@ -60,11 +63,11 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-count_plays';
-  private _compareFilter: KalturaEndUserReportInputFilter = null;
+  private _order = '-nodePlay';
+  private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
-  private _filter = new KalturaEndUserReportInputFilter({
+  private _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -72,22 +75,18 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   protected _componentId = 'path-content';
   
   public topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
-  public totalCount$: BehaviorSubject<number> = new BehaviorSubject(0);
   
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
   public _tableData: TableRow<string>[] = [];
   public _compareTableData: TableRow<string>[] = [];
-  public _entryDetails: EntryDetailsOverlayData[] = [];
   public _isCompareMode: boolean;
-  public _columns: string[] = [];
-  public _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   public _firstTimeLoading = true;
   public _compareFirstTimeLoading = true;
   public _currentDates: string;
   public _compareDates: string;
-  public _reportType = KalturaReportType.topContentCreator;  // don't use mapper function to be able to get content source
-                                                             // It'll work fine since we already might switched ks at this point
+  public _reportType = reportTypeMap(KalturaReportType.interactiveVideoTopNodes);
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -186,49 +185,40 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     }
   }
   
-  protected _loadReport(): void {
-    this.topVideos$.next({table: null, compare: null, busy: true, error: null});
-    this.totalCount$.next(0);
-    this._isBusy = true;
-    this._blockerMessage = null;
-  
-    
-    this.loadIVData().pipe(cancelOnDestroy(this))
-      .subscribe((response: Node[]) => {
-          debugger;
-        },
-        error => {
-          debugger;
-        });
-      
-    
-    
-    /*
-    this._filter.ownerIdsIn = this.playlistId;
+  private loadIVReport(): Observable<{report: Report, compare: any}> {
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, this._dataConfig)
+    reportConfig.filter.rootEntryIdIn = this.playlistId;
+    return this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
-        this._compareFilter.ownerIdsIn = this.playlistId;
+        this._compareFilter.rootEntryIdIn = this.playlistId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
+      }));
+  }
+  
+  protected _loadReport(): void {
+    this.topVideos$.next({table: null, compare: null, busy: true, error: null});
+    this._isBusy = true;
+    this._blockerMessage = null;
+  
+    const loadIVData$ = this.loadIVData();
+    const loadIVReport$ = this.loadIVReport();
+  
+    Observable.forkJoin(loadIVData$, loadIVReport$)
+      .subscribe(( value: [ Node[], {report: Report, compare: any} ] ) => {
+        const nodes: Node[] = value[0];
+        const { report, compare } = {...value[1]};
           this._tableData = [];
-          this._entryDetails = [];
           this._compareTableData = [];
-          
           if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table, compare); // handle table
+            this._handleTable(nodes, report.table, compare); // handle table
             this.topVideos$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
-            this.totalCount$.next(report.table.totalCount);
           } else {
             this.topVideos$.next({ table: null, compare: null, busy: false, error: null });
-            this.totalCount$.next(0);
           }
           this._isBusy = false;
           this._firstTimeLoading = false;
@@ -245,11 +235,10 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
             },
           };
           this.topVideos$.next({ table: null, compare: null, busy: false, error: error });
-          this.totalCount$.next(0);
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
         
-     */
+     
   }
   
   protected _updateFilter(): void {
@@ -281,35 +270,44 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     }
   }
   
-  private _handleTable(table: KalturaReportTable, compare?: Report): void {
+  private appendMissingNodes(table: any[], nodes: Node[]) {
+    nodes.forEach(node => {
+      if (table.filter(row => row.node_id === node.id).length === 0) {
+        table.push({...node, count_node_plays: 0, unique_known_users: 0, avg_completion_rate: 0, thumbnailUrl: this.getThumbnailUrl(node)});
+      }
+    });
+  }
+  
+  private getThumbnailUrl(node: Node): string {
+    return `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${node.entryId}/width/256/height/144?rnd=${Math.random()}`;
+  }
+  
+  private _handleTable(nodes: Node[], table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    const extendTableRow = (item, index) => {
-      (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    
+    const extendTableRow = (item) => {
+      nodes.forEach(node => {
+        if (node.id === item.node_id) {
+          item = {...item, ...node, thumbnailUrl: this.getThumbnailUrl(node)};
+        }
+      });
       return item;
     };
-    this._columns = columns;
     this._tableData = tableData.map(extendTableRow);
+    this.appendMissingNodes(this._tableData, nodes);
     this._currentDates = null;
     this._compareDates = null;
-    
-    const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
-    this._entryDetails = entryDetails.map(extendTableRow);
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
-      this._columns = ['entry_name', 'count_plays'];
+      this.appendMissingNodes(this._compareTableData, nodes);
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-      
-      const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
-      this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }
   }
   
   ngOnDestroy() {
     this.topVideos$.complete();
-    this.totalCount$.complete();
   }
 }

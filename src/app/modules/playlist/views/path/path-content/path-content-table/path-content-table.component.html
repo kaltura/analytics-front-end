@@ -8,46 +8,35 @@
              [value]="_tableData">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
-          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
-          <th [ngStyle]="{'width': '111px', 'padding-left': '10px'}"></th>
-          <th [ngStyle]="{'width': '60%', 'padding-left': '0'}">
-            {{'app.user.topContentReport.name' | translate}}
+          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}">#</th>
+          <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
+          <th [ngStyle]="{'width': '40%', 'padding-left': '0'}">{{'app.user.topContentReport.name' | translate}}</th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.count_plays' | translate" [showOnEllipsis]="true">
+            {{'app.user.topContentReport.count_plays' | translate}}
           </th>
-          <ng-container *ngIf="!isCompareMode">
-            <th [ngStyle]="{'width': '20%'}">
-              {{'app.user.topContentReport.count_plays' | translate}}
-            </th>
-            <th [ngStyle]="{'width': '20%'}">
-              {{'app.user.topContentReport.unique_known_users' | translate}}
-            </th>
-            <th [ngStyle]="{'width': '20%'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
-          </ng-container>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true">
+            {{'app.user.topContentReport.unique_known_users' | translate}}
+          </th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true">
+            {{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
-            <div class="kReportRowIndex kFirst" *ngIf="data.index === 1">
-              <img src="assets/images/ribbon_large.svg">
-              <span>{{data.index}}</span>
-            </div>
-            <div class="kReportRowIndex" *ngIf="data.index !== 1">
-              <span>{{data.index}}</span>
-            </div>
+            <span>{{data['level']}}</span>
           </td>
-          <td [ngStyle]="{'width': '111px', 'padding-left': '10px'}">
+          <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
             <div class="kThumbnailHolder" #holder>
               <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
             </div>
           </td>
-          <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
-              <span class="kTableColumn kEntryName">{{data['entry_name']}}</span>
+          <td [ngStyle]="{'width': '40%', 'padding-left': 0}">
+              <span class="kTableColumn kEntryName">{{data['name']}}</span>
           </td>
-          <ng-container *ngIf="!isCompareMode">
-            <td [ngStyle]="{'width': '170px'}">{{data['count_plays']}}</td>
-            <td [ngStyle]="{'width': '220px'}">{{data['unique_known_users']}}</td>
-            <td [ngStyle]="{'width': '220px'}">{{data['avg_completion_rate']}}</td>
-          </ng-container>
+          <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
+          <td [ngStyle]="{'width': '20%'}">{{data['unique_known_users']}}</td>
+          <td [ngStyle]="{'width': '20%'}">{{data['avg_completion_rate']}}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">

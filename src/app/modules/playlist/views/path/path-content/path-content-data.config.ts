@@ -16,42 +16,22 @@ export class PathContentDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
+          'node_id': {
             format: value => value,
             hidden: true,
           },
-          'entry_name': {
-            format: value => value,
-            sortOrder: 1,
-          },
-          'status': {
-            format: value => value !== KalturaEntryStatus.ready ? value === KalturaEntryStatus.deleted ? this.translate.instant('app.engagement.topVideosReport.entryStatus.deleted') : this.translate.instant('app.engagement.topVideosReport.entryStatus.unavailable') : '',
-            sortOrder: 8,
-          },
-          'creator_name': {
-            format: value => value,
-            sortOrder: 2,
-          },
-           'created_at': {
-             format: value => ReportHelper.format('serverDate', value),
-            sortOrder: 3,
-          },
-          'count_plays': {
+          'count_node_plays': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 4,
+            sortOrder: 1,
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 5,
+            sortOrder: 2,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
-            sortOrder: 6,
+            sortOrder: 3,
           },
-          'engagement_ranking': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 7,
-          }
         }
       },
       entryDetails: {

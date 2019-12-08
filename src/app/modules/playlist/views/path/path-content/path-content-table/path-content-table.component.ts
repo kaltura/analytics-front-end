@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
-import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 
 @Component({
   selector: 'app-path-content-table',
@@ -18,11 +17,9 @@ export class PathContentTableComponent implements OnDestroy {
     this._totalCount = value.length;
   }
   
-  @Input() entryDetails: EntryDetailsOverlayData[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
   @Input() isCompareMode: boolean;
-  @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
@@ -30,7 +27,6 @@ export class PathContentTableComponent implements OnDestroy {
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
   
-  public _entryData: EntryDetailsOverlayData;
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
   public _pager = new KalturaFilterPager({ pageSize: this._pageSize, pageIndex: 1 });
