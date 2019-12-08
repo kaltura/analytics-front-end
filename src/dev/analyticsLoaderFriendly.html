@@ -106,7 +106,9 @@
       }
     });
 
-    var analyticsUrl = 'http://127.0.0.1:8000';
+    var analyticsUrl = 'http://127.0.0.1:8000'; // this is the default URL used by ws (local-web-server) used in this example
+    // we load the Analytics app content using Ajax and write it to a friendly iFrame content.
+    // we must update the base href of the Analytics app to point to the correct domain and inject the "loadInFriendlyIframe" flag to the Analytics window scope.
     $.ajax({
         type: "GET",
         url: analyticsUrl,

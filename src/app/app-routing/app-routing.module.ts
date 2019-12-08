@@ -54,6 +54,8 @@ const routes: Routes = [
 ];
 
 export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation) => {
+  // we use a factory since production build is compiled AOT and useClass cannot be conditional in AOT
+  // the "loadInFriendlyIframe" global variable must be injected by the host app to the Analytics window scope (see example in analyticsLoaderFriendly.html)
   return window["loadInFriendlyIframe"] ? new VoidPathLocationStrategy(_platformLocation) : new PathLocationStrategy(_platformLocation);
 }
 @NgModule({
