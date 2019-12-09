@@ -91,8 +91,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     this._dataConfig = _dataConfigService.getConfig();
   }
   
-  ngOnInit() {
-  }
+  ngOnInit() {}
   
   private loadIVData(): Observable<Node[]> {
     const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
@@ -150,7 +149,6 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           console.error("Could not retrieve nodes data.");
           break;
         }
-        
         let newNodes = []; // array holding the nodes that will be found in this pass
         // scan the nextLevelNodes array and set the level to its nodes
         nextLevelNodes.forEach(nodeId => {
@@ -284,10 +282,12 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
     this.appendMissingNodes(this._tableData, nodes);
     this._currentDates = this._compareDates = null;
-    
-    if (compare && compare.table && compare.table.header && compare.table.data) {
-      const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      this._compareTableData = compareTableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+  
+    if (compare && compare.table) {
+      if (compare.table.header && compare.table.data) {  // we have data for the compare table nodes
+        const {tableData: compareTableData} = this._reportService.parseTableData(compare.table, this._dataConfig.table);
+        this._compareTableData = compareTableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+      }
       this.appendMissingNodes(this._compareTableData, nodes);
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');

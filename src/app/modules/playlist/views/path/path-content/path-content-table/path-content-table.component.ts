@@ -26,7 +26,7 @@ export class PathContentTableComponent implements OnDestroy {
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
-  private _pageSize = 5;
+  private _pageSize = 10;
   
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
