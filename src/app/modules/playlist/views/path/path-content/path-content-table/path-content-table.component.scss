@@ -12,12 +12,16 @@
 }
 
 .kEntryName {
-  cursor: pointer;
+  /* cursor: pointer; */
   font-size: 15px;
   font-weight: bold;
   color: $kGrayscale1;
 }
-
+.kIcon {
+  color: #333333;
+  margin-left: 4px;
+  font-size: 18px;
+}
 .kTopVideoRow {
   height: 72px;
   .kReportRowIndex {
@@ -105,7 +109,7 @@
 }
 
 .kThumbnailHolder {
-  cursor: pointer;
+  /* cursor: pointer; */
   width: 86px;
   height: 48px;
 

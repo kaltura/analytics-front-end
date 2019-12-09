@@ -4,7 +4,7 @@ import {
   FileAssetListAction, FileAssetServeAction,
   KalturaAPIException,
   KalturaClient,
-  KalturaEndUserReportInputFilter, KalturaFileAsset, KalturaFileAssetFilter, KalturaFileAssetListResponse,
+  KalturaFileAsset, KalturaFileAssetFilter, KalturaFileAssetListResponse,
   KalturaFileAssetObjectType,
   KalturaFilterPager,
   KalturaObjectBaseFactory, KalturaReportInputFilter,
@@ -22,13 +22,10 @@ import {CompareService} from 'shared/services/compare.service';
 import {ReportDataConfig} from 'shared/services/storage-data-base.config';
 import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
 import {PathContentDataConfig} from './path-content-data.config';
-import {analyticsConfig, setConfig} from 'configuration/analytics-config';
+import {analyticsConfig} from 'configuration/analytics-config';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {TableRow} from 'shared/utils/table-local-sort-handler';
-import {EntryDetailsOverlayData} from 'shared/components/entry-details-overlay/entry-details-overlay.component';
 import {PlaylistBase} from "../../shared/playlist-base/playlist-base";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {HttpClient} from "@angular/common/http";
 import {reportTypeMap} from "shared/utils/report-type-map";
 
@@ -45,7 +42,6 @@ export interface Node {
   prefetchNodeIds?: string[];
 }
 
-
 @Component({
   selector: 'app-path-content',
   templateUrl: './path-content.component.html',
@@ -58,12 +54,9 @@ export interface Node {
 })
 export class PathContentComponent extends PlaylistBase implements OnInit, OnDestroy {
   @Input() playlistId: string;
-  
   private _partnerId = this._authService.pid;
-  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
-    ? analyticsConfig.kalturaServer.uri
-    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  private _order = '-nodePlay';
+  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http') ? analyticsConfig.kalturaServer.uri : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
+  private _order = '-count_node_plays';
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
   private _reportInterval = KalturaReportInterval.months;
@@ -71,15 +64,13 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     searchInTags: true,
     searchInAdminTags: false
   });
-  
   protected _componentId = 'path-content';
   
   public topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
-  
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
-  public _tableData: TableRow<string>[] = [];
-  public _compareTableData: TableRow<string>[] = [];
+  public _tableData: Node[] = [];
+  public _compareTableData: Node[] = [];
   public _isCompareMode: boolean;
   public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   public _firstTimeLoading = true;
@@ -97,10 +88,8 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
               private http: HttpClient,
               private _dataConfigService: PathContentDataConfig) {
     super();
-    
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
   
   ngOnInit() {
   }
@@ -237,8 +226,6 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           this.topVideos$.next({ table: null, compare: null, busy: false, error: error });
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-        
-     
   }
   
   protected _updateFilter(): void {
@@ -271,9 +258,10 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   }
   
   private appendMissingNodes(table: any[], nodes: Node[]) {
+    // add nodes with no data: missing from the report, available in the IV JSON data
     nodes.forEach(node => {
-      if (table.filter(row => row.node_id === node.id).length === 0) {
-        table.push({...node, count_node_plays: 0, unique_known_users: 0, avg_completion_rate: 0, thumbnailUrl: this.getThumbnailUrl(node)});
+      if (table.filter(row => row.node_id === node.id).length === 0) { // node doesn't exist in the report
+        table.push({...node, count_node_plays: 0, unique_known_users: 0, avg_completion_rate: 0, thumbnailUrl: this.getThumbnailUrl(node)}); // add node to the table
       }
     });
   }
@@ -293,14 +281,13 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       });
       return item;
     };
-    this._tableData = tableData.map(extendTableRow);
+    this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
     this.appendMissingNodes(this._tableData, nodes);
-    this._currentDates = null;
-    this._compareDates = null;
+    this._currentDates = this._compareDates = null;
     
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-      this._compareTableData = compareTableData.map(extendTableRow);
+      this._compareTableData = compareTableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
       this.appendMissingNodes(this._compareTableData, nodes);
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');

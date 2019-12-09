@@ -765,6 +765,7 @@
       "date_id": "Date",
       "name": "Name",
       "content": "Videos Overview",
+      "vidCount": "{{0}} Videos",
       "exportLabels": {
         "highlights": "Highlights",
         "videoPerformance": "Video Performance"

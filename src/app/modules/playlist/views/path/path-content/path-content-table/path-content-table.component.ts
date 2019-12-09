@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
+import {SortEvent} from "primeng/api";
 
 @Component({
   selector: 'app-path-content-table',
@@ -46,5 +47,20 @@ export class PathContentTableComponent implements OnDestroy {
       this._pager.pageIndex = event.page + 1;
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
     }
+  }
+  
+  public customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      const numericFields = ['count_node_plays', 'unique_known_users', 'avg_completion_rate'];
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      let result = null;
+      if (numericFields.indexOf(event.field) > -1) {
+        result = (parseFloat(value1) < parseFloat(value2)) ? -1 : (parseFloat(value1) > parseFloat(value2)) ? 1 : 0; // numeric compare
+      } else {
+        result = value1.localeCompare(value2); // string compare
+      }
+      return (event.order * result);
+    });
   }
 }

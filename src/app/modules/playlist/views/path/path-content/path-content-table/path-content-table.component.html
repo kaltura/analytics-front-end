@@ -1,29 +1,41 @@
 <div [attr.data-aid]="'table-top-videos' + name" class="kTableContainer">
   <span class="kDates" *ngIf="dates">{{dates}}</span>
+  <span class="kDates" *ngIf="!dates">{{'app.playlist.vidCount' | translate: { '0': _totalCount} }}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
     <p-table appScrollTopOnPaging
              [customPaginationEvent]="_paginationChanged$"
              [class.kCompareMode]="isCompareMode"
+             [sortField]="'count_node_plays'"
+             [sortOrder]="-1"
+             [customSort]="true"
+             (sortFunction)="customSort($event)"
              [value]="_tableData">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
-          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}">#</th>
+          <th [ngStyle]="{'width': '40px', 'text-align': 'center'}">#</th>
           <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
-          <th [ngStyle]="{'width': '40%', 'padding-left': '0'}">{{'app.user.topContentReport.name' | translate}}</th>
-          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.count_plays' | translate" [showOnEllipsis]="true">
+          <th [ngStyle]="{'width': '40%', 'padding-left': '0'}" [pSortableColumn]="'name'">
+            {{'app.user.topContentReport.name' | translate}}
+            <p-sortIcon [field]="'name'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.count_plays' | translate" [showOnEllipsis]="true" [pSortableColumn]="'count_node_plays'">
             {{'app.user.topContentReport.count_plays' | translate}}
+            <p-sortIcon [field]="'count_node_plays'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
-          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true">
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true" [pSortableColumn]="'unique_known_users'">
             {{'app.user.topContentReport.unique_known_users' | translate}}
+            <p-sortIcon [field]="'unique_known_users'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
-          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true">
-            {{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="'avg_completion_rate'">
+            {{'app.user.topContentReport.avg_completion_rate' | translate}}
+            <p-sortIcon [field]="'avg_completion_rate'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
-          <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
+          <td [ngStyle]="{'width': '40px', 'text-align': 'center'}">
             <span>{{data['level']}}</span>
           </td>
           <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
@@ -32,7 +44,7 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '40%', 'padding-left': 0}">
-              <span class="kTableColumn kEntryName">{{data['name']}}</span>
+              <span class="kTableColumn kEntryName">{{data['name']}}</span><i *ngIf="data['isHome']" class="kIcon kIconhouse"></i>
           </td>
           <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
           <td [ngStyle]="{'width': '20%'}">{{data['unique_known_users']}}</td>
