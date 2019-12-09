@@ -201,7 +201,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         const { report, compare } = {...value[1]};
           this._tableData = [];
           this._compareTableData = [];
-          if (report.table && report.table.header && report.table.data) {
+          if (report.table) {
             this._handleTable(nodes, report.table, compare); // handle table
             this.topVideos$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
           } else {
@@ -269,8 +269,6 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   }
   
   private _handleTable(nodes: Node[], table: KalturaReportTable, compare?: Report): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    
     const extendTableRow = (item) => {
       nodes.forEach(node => {
         if (node.id === item.node_id) {
@@ -279,7 +277,10 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       });
       return item;
     };
-    this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+    if (table.header && table.data) {
+      const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+      this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+    }
     this.appendMissingNodes(this._tableData, nodes);
     this._currentDates = this._compareDates = null;
   
