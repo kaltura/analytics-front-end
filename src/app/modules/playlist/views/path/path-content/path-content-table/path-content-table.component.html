@@ -13,7 +13,7 @@
              [value]="_tableData">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
-          <th [ngStyle]="{'width': '40px', 'text-align': 'center'}">#</th>
+          <th [ngStyle]="{'width': '60px'}">#</th>
           <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
           <th [ngStyle]="{'width': '40%', 'padding-left': '0'}" [pSortableColumn]="'name'">
             {{'app.user.topContentReport.name' | translate}}
@@ -35,7 +35,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
-          <td [ngStyle]="{'width': '40px', 'text-align': 'center'}">
+          <td [ngStyle]="{'width': '60px'}">
             <span>{{data['level']}}</span>
           </td>
           <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
