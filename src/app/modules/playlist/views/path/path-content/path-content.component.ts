@@ -154,7 +154,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         nextLevelNodes.forEach(nodeId => {
           nodes.forEach(node => {
             // since the same node can be accessed in more than 1 level, we first check the the level wasn't set yet. This ensures we set the minimal level value (shortest IV route to this node)
-            if (node.id === nodeId && !node.level) {
+            if (node.id === nodeId && typeof node.level === "undefined") {
               node.level = currentLevel;   // set node level to the current level
               levelsNodeFound++;           // increment found nodes with levels counter
               newNodes = [...newNodes, ...node.prefetchNodeIds]; // append this node children to the nodes that will be scanned in the next pass
