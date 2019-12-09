@@ -393,12 +393,32 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
         this._currentDatePeriod,
         this._compareDatePeriod
       );
+      // Normalize yAxis
+      if (this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2 && this.shouldNormalize(field)) {
+        const maxValue = Math.max(this._metricsLineChartData.yAxis[0].max, this._metricsLineChartData.yAxis[1].max);
+        const interval = parseFloat((maxValue / 5).toFixed(2));
+        if (maxValue && maxValue > 0) {
+          this._metricsLineChartData.yAxis[0].min = 0;
+          this._metricsLineChartData.yAxis[1].min = 0;
+          this._metricsLineChartData.yAxis[0].max = maxValue;
+          this._metricsLineChartData.yAxis[1].max = maxValue;
+          this._metricsLineChartData.yAxis[0].interval = interval;
+          this._metricsLineChartData.yAxis[1].interval = interval;
+        }
+      }
     } else {
       this._metricsLineChartData = null;
       this._metricsCompareTo = null;
     }
   }
-
+  
+  private shouldNormalize(metric: string): boolean {
+    return (metric === 'count_loads' && this._selectedMetrics === 'count_plays') ||
+      (metric === 'count_plays' && this._selectedMetrics === 'count_loads') ||
+      (metric === 'sum_view_period' && this._selectedMetrics === 'avg_view_period_time') ||
+      (metric === 'avg_view_period_time' && this._selectedMetrics === 'sum_view_period');
+  }
+  
   public _onPaginationChange(event: { page: number, first: number, rows: number, pageCount: number }): void {
     if (this._customPaginator && event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
