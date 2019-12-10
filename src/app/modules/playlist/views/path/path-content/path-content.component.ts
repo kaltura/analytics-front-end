@@ -28,6 +28,7 @@ import {PlaylistBase} from "../../shared/playlist-base/playlist-base";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {HttpClient} from "@angular/common/http";
 import {reportTypeMap} from "shared/utils/report-type-map";
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 export interface Node {
   id?: string;
@@ -86,6 +87,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
               private _compareService: CompareService,
               private _kalturaClient: KalturaClient,
               private http: HttpClient,
+              private _frameEventManager: FrameEventManagerService,
               private _dataConfigService: PathContentDataConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
@@ -210,6 +212,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           this._isBusy = false;
           this._firstTimeLoading = false;
           this._compareFirstTimeLoading = false;
+          this.updateLayout();
         },
         error => {
           this._isBusy = false;
@@ -292,6 +295,14 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       this.appendMissingNodes(this._compareTableData, nodes);
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
+    }
+  }
+  
+  private updateLayout(): void {
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
+      }, 0);
     }
   }
   
