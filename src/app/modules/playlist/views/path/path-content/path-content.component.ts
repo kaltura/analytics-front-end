@@ -111,7 +111,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         return this._kalturaClient.request(fileAssetsServeAction);
       }))
       .pipe(switchMap(response => {
-        return this.http.get(response.url);
+        return this.http.get(`${response.url}&rnd=${Math.random()}`);
       }))
       .pipe(map(data => {
         return this.parseIVData(data);
@@ -120,7 +120,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   
   private parseIVData(data): Node[] {
     let nodes: Node[] = [];   // the returned nodes array
-    let currentLevel = 0;     // initial level. We use this variable to increment the level for each pass on the nodes array
+    let currentLevel = 1;     // initial level. We use this variable to increment the level for each pass on the nodes array
     let nextLevelNodes = [];  // array holding all the found next level nodes to be scanned for
     let levelsNodeFound = 0;  // counter used to check if all node levels were found
     const startNodeId = data.settings && data.settings.startNodeId ? data.settings.startNodeId : '';  // get the start node ID from the JSON data. Used to mark the start node in the table (home icon)
