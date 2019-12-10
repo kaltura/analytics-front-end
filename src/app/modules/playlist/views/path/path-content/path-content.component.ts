@@ -279,7 +279,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     };
     if (table.header && table.data) {
       const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-      this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+      this._tableData = tableData.map(extendTableRow).filter(node => node.node_id !== '0' && typeof node.name !== "undefined"); // add missing properties and remove nodes with id='0' (backend issue) and deleted nodes
     }
     this.appendMissingNodes(this._tableData, nodes);
     this._currentDates = this._compareDates = null;
@@ -287,7 +287,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     if (compare && compare.table) {
       if (compare.table.header && compare.table.data) {  // we have data for the compare table nodes
         const {tableData: compareTableData} = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-        this._compareTableData = compareTableData.map(extendTableRow).filter(node => node.node_id !== '0'); // add missing properties and remove nodes with id='0' (backend issue)
+        this._compareTableData = compareTableData.map(extendTableRow).filter(node => node.node_id !== '0' && typeof node.name !== "undefined"); // add missing properties and remove nodes with id='0' (backend issue) and deleted nodes
       }
       this.appendMissingNodes(this._compareTableData, nodes);
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
