@@ -3,17 +3,19 @@
   <span class="kDates" *ngIf="!dates">{{'app.playlist.vidCount' | translate: { '0': _totalCount} }}</span>
   <div class="kDividerWrapper">
     <div class="kDivider" *ngIf="showDivider"></div>
-    <p-table appScrollTopOnPaging
-             [customPaginationEvent]="_paginationChanged$"
+    <p-table appScrollTopOnPaging [paginator]="true" [rows]="10"
              [class.kCompareMode]="isCompareMode"
-             [sortField]="'count_node_plays'"
-             [sortOrder]="-1"
+             [sortField]="'level'"
+             [sortOrder]="1"
              [customSort]="true"
              (sortFunction)="customSort($event)"
              [value]="_tableData">
       <ng-template pTemplate="header">
         <tr class="kTopVideoHeader">
-          <th [ngStyle]="{'width': '60px'}">#</th>
+          <th [ngStyle]="{'width': '60px'}" [pSortableColumn]="'level'">
+            #
+            <p-sortIcon [field]="'level'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
           <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
           <th [ngStyle]="{'width': '40%', 'padding-left': '0'}" [pSortableColumn]="'name'">
             {{'app.user.topContentReport.name' | translate}}
@@ -36,7 +38,7 @@
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px'}">
-            <span>{{data['level']}}</span>
+            <span>{{data['level'] ? data['level'] : 'app.common.na' | translate}}</span>
           </td>
           <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
             <div class="kThumbnailHolder" #holder>
@@ -59,8 +61,4 @@
       </ng-template>
     </p-table>
   </div>
-  <p-paginator [rows]="_pager.pageSize"
-               [first]="(_pager.pageIndex - 1) * _pager.pageSize"
-               [totalRecords]="_totalCount"
-               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>

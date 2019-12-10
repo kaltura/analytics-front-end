@@ -146,9 +146,9 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       // continue searching for node levels until all nodes are set with levels
       while (levelsNodeFound < nodes.length) {
         currentLevel++;    // increment level
-        // to prevent infinite loop in case of corrupted data, we add this conditional break (nobody likes stuck web pages)
+        // prevent infinite loop in case of un-attached nodes or corrupted data
         if (currentLevel > nodes.length) {
-          console.error("Could not retrieve nodes data.");
+          console.warn("Not all node levels were found. Could be un-attached nodes or corrupted data.");
           break;
         }
         let newNodes = []; // array holding the nodes that will be found in this pass
