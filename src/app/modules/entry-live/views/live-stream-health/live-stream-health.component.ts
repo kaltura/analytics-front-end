@@ -80,16 +80,12 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
   }
 
   private _filterSelfServeNotifications(notification) {
-    if (this._isSelfServe) {
-      // first filter all the alerts inside the notification
-      notification.alerts = notification.alerts.filter(alert => {
-        return this._selfServeAlertsBlacklist.indexOf(alert.Code) === -1;
-      });
+    // first filter all the alerts inside the notification
+    notification.alerts = notification.alerts.filter(alert => {
+      return this._selfServeAlertsBlacklist.indexOf(alert.Code) === -1;
+    });
 
-      // filter all notification with no alerts
-      return notification.alerts.length > 0;
-    } else {
-      return notification;
-    }
+    // filter all notification with no alerts
+    return notification.alerts.length > 0;
   }
 }
