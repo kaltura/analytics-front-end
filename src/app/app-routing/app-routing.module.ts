@@ -50,7 +50,8 @@ const routes: Routes = [
         loadChildren: () => import('../modules/live/live.module').then(m => m.LiveModule)
       }
     ]
-  }
+  },
+  { path: '**', component: DashboardComponent }
 ];
 
 export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation) => {
