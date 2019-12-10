@@ -12,11 +12,15 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-stream-health.component.scss']
 })
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
+  private _selfServeAlertsBlacklist = [101, 107, 117, 116];
+  private _selfServeChangedAlerts = [100, 104, 110, 111, 112, 113];
+  private _isSelfServe = true;
+
   @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];
-  
+
   constructor(private _liveStreamHealth: LiveStreamHealthWidget,
               private _errorsManager: ErrorsManagerService) {
   }
@@ -64,7 +68,23 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       }
       return 0;
     };
-    
-    return [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary].sort(sortHealthNotifications);
+
+    return [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary]
+      .filter(this._filterSelfServeNotifications.bind(this))
+      .sort(sortHealthNotifications);
+  }
+
+  private _filterSelfServeNotifications(notification) {
+    if (this._isSelfServe === true) {
+      // first filter all the alerts inside the notification
+      notification.alerts = notification.alerts.filter(alert => {
+        return this._selfServeAlertsBlacklist.indexOf(alert.Code) === -1;
+      });
+
+      // filter all notification with no alerts
+      return notification.alerts.length > 0;
+    } else {
+      return notification;
+    }
   }
 }
