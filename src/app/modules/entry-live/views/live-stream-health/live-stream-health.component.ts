@@ -14,7 +14,7 @@ import { filter } from 'rxjs/operators';
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
   private _selfServeAlertsBlacklist = [101, 107, 117, 116];
   private _selfServeChangedAlerts = [100, 104, 110, 111, 112, 113];
-  private _isSelfServe = true;
+  private _isSelfServe = false;
 
   @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
@@ -69,13 +69,18 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       return 0;
     };
 
-    return [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary]
-      .filter(this._filterSelfServeNotifications.bind(this))
-      .sort(sortHealthNotifications);
+    this._isSelfServe = response.selfServe.data;
+    let data = [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary];
+
+    if (this._isSelfServe) {
+      data = data.filter(this._filterSelfServeNotifications.bind(this));
+    }
+
+    return data.sort(sortHealthNotifications);
   }
 
   private _filterSelfServeNotifications(notification) {
-    if (this._isSelfServe === true) {
+    if (this._isSelfServe) {
       // first filter all the alerts inside the notification
       notification.alerts = notification.alerts.filter(alert => {
         return this._selfServeAlertsBlacklist.indexOf(alert.Code) === -1;
