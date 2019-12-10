@@ -76,7 +76,7 @@ export class PathPerformanceConfig extends ReportDataBaseConfig {
             format: value => value,
             title: this._translate.instant(`app.playlist.avg_view_period_time`),
             sortOrder: 2,
-            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.playlist.avg_view_period_time`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
 
