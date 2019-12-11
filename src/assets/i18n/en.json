@@ -669,6 +669,18 @@
         "118": {
           "message-log": "Exceeded max encoded entries allowed",
           "message-text-box": "Exceeded max encoded entries allowed, please contact support"
+        },
+        "119": {
+          "message-log": "Resolution limited by bandwidth"
+        },
+        "120": {
+          "message-log": "Resolution limited by CPU"
+        },
+        "121": {
+          "message-log": "Bandwidth back to normal"
+        },
+        "122": {
+          "message-log": "CPU back to normal"
         }
       },
       "exportLabels": {

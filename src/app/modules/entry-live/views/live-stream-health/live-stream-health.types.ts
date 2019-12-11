@@ -21,7 +21,13 @@ export enum DiagnosticsErrorCodes {
   AuthenticationEntryNotFound = 113,
   AuthenticationNoLivePermission = 114,
   AuthenticationTooManyStreams = 115,
-  AuthenticationTooManyTranscodedStreams = 118
+  FrameRateIsFluctuatingOnFlavor = 116,
+  FrameRateIsDifferentThanConfigured = 117,
+  AuthenticationTooManyTranscodedStreams = 118,
+  ResolutionLimitedByBandwidth = 119,
+  ResolutionLimitedByCPU = 120,
+  BandwidthBackToNormal = 121,
+  CPUBackToNormal = 122,
 }
 
 export enum AlertSeverity {

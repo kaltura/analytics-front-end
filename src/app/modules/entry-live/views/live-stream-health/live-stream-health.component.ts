@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
-import { LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
+import {DiagnosticsErrorCodes, LiveEntryDiagnosticsInfo, StreamHealth} from './live-stream-health.types';
 import { LiveStreamHealthWidget } from './live-stream-health.widget';
 import { filter } from 'rxjs/operators';
 
@@ -12,8 +12,22 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-stream-health.component.scss']
 })
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
-  private _selfServeAlertsBlacklist = [101, 107, 117, 116];
-  private _selfServeChangedAlerts = [100, 104, 110, 111, 112, 113];
+  private _selfServeAlertsBlacklist = [
+    DiagnosticsErrorCodes.BitrateUnmatched,
+    DiagnosticsErrorCodes.InvalidKeyFrameInterval,
+    DiagnosticsErrorCodes.FrameRateIsDifferentThanConfigured,
+    DiagnosticsErrorCodes.FrameRateIsFluctuatingOnFlavor
+  ];
+
+  private _selfServeChangedAlerts = [
+    DiagnosticsErrorCodes.EntryRestarted,
+    DiagnosticsErrorCodes.PtsDrift,
+    DiagnosticsErrorCodes.BackupOnlyStreamRecording,
+    DiagnosticsErrorCodes.AuthenticationInvalidToken,
+    DiagnosticsErrorCodes.AuthenticationIncorrectStream,
+    DiagnosticsErrorCodes.AuthenticationEntryNotFound
+  ];
+
   private _isSelfServe = false;
 
   @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;

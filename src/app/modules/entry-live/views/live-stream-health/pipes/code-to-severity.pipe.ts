@@ -14,6 +14,8 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.InvalidKeyFrameInterval:
       case DiagnosticsErrorCodes.HighFpsRate:
       case DiagnosticsErrorCodes.BackupOnlyStreamNoRecording:
+      case DiagnosticsErrorCodes.BandwidthBackToNormal:
+      case DiagnosticsErrorCodes.CPUBackToNormal:
         return AlertSeverity.info;
       
       case DiagnosticsErrorCodes.EntryRestarted:
@@ -23,6 +25,8 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.NoAudioSignal:
       case DiagnosticsErrorCodes.NoVideoSignal:
       case DiagnosticsErrorCodes.PtsDrift:
+      case DiagnosticsErrorCodes.ResolutionLimitedByBandwidth:
+      case DiagnosticsErrorCodes.ResolutionLimitedByCPU:
         return AlertSeverity.error;
       case DiagnosticsErrorCodes.AuthenticationInvalidToken:
       case DiagnosticsErrorCodes.AuthenticationIncorrectStream:
