@@ -20,13 +20,13 @@ export class CodeToSeverityPipe implements PipeTransform {
       
       case DiagnosticsErrorCodes.EntryRestarted:
       case DiagnosticsErrorCodes.BackupOnlyStreamRecording:
+      case DiagnosticsErrorCodes.ResolutionLimitedByBandwidth:
+      case DiagnosticsErrorCodes.ResolutionLimitedByCPU:
         return AlertSeverity.warning;
       
       case DiagnosticsErrorCodes.NoAudioSignal:
       case DiagnosticsErrorCodes.NoVideoSignal:
       case DiagnosticsErrorCodes.PtsDrift:
-      case DiagnosticsErrorCodes.ResolutionLimitedByBandwidth:
-      case DiagnosticsErrorCodes.ResolutionLimitedByCPU:
         return AlertSeverity.error;
       case DiagnosticsErrorCodes.AuthenticationInvalidToken:
       case DiagnosticsErrorCodes.AuthenticationIncorrectStream:
