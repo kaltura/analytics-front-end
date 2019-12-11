@@ -21,9 +21,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/__local_machine_only__",
-              "src/__local_machine_only__/**/*"
+              "src/.htaccess",
+              "src/embed.php",
+              "src/assets"
             ],
             "styles": [
               "src/styles/styles.scss"
