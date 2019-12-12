@@ -117,7 +117,8 @@
       "playlist": "Playlist",
       "live": "Live video",
       "document": "Document",
-      "other": "Other"
+      "other": "Other",
+      "interactive": "Interactive Video"
     },
     "dateFilter": {
       "preset": "Preset",
@@ -753,6 +754,22 @@
         "syndication": "Syndication"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "playlist": {
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "unique_viewers": "Unique Viewers",
+      "sum_view_period": "Minutes Viewed",
+      "avg_view_period_time": "Avg. Viewing Time",
+      "month_id": "Month",
+      "date_id": "Date",
+      "name": "Name",
+      "content": "Videos Overview",
+      "vidCount": "{{0}} Videos",
+      "exportLabels": {
+        "highlights": "Highlights",
+        "videoPerformance": "Video Performance"
+      }
     },
     "context": {
       "name": "Name",

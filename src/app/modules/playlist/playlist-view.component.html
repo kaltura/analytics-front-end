@@ -1,0 +1,11 @@
+<div data-aid="report-group-playlist" class="kMain">
+  <k-area-blocker [showLoader]="_loadingPlaylist" [message]="_blockerMessage">
+    <app-path *ngIf="!_loadingPlaylist && _interactiveVideo"
+              [isChildAccount]="_isChildAccount"
+              [viewConfig]="_playlistViewConfig"
+              [playlist]="_playlist"
+              [owner]="_owner"
+              (back)="_back()"></app-path>
+    <app-playlist-view *ngIf="!_loadingPlaylist && !_interactiveVideo"></app-playlist-view>
+  </k-area-blocker>
+</div>

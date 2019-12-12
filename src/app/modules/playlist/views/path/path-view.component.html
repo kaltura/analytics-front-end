@@ -1,0 +1,65 @@
+<div class="kReportView kVideoMedia">
+  <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
+    <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+      <button pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+              [kTooltip]="'app.entry.back' | translate"></button>
+      <span *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</span>
+      <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+        <app-export-csv *ngIf="_viewConfig.export" name="entry"
+                        [reports]="_exportConfig"
+                        [refineFilter]="_refineFilter"
+                        [dateFilter]="_dateFilter"
+                        [entryId]="_playlistId"></app-export-csv>
+        <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
+          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+            <span>{{'app.filters.filter' | translate}}</span>
+            <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+            <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+          </div>
+        </div>
+        <app-date-filter #dateFilter
+                         name="entry"
+                         [dateRange]="_dateRange"
+                         [selectedTimeUnit]="_timeUnit"
+                         [creationDate]="_creationDate"
+                         (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+      </div>
+    </div>
+
+    <div *ngIf="_viewConfig.details" class="kPlaylistDetails" [class.kFloatingDetails]="!_viewConfig.title">
+      <div class="kIconMediaType kIconplaylist_interactive_small"></div>
+      <span>{{'app.entryType.interactive' | translate}}</span>
+      <div class="kSeparator"></div>
+      <span>{{'app.entry.owner' | translate}}</span>
+      <span class="kOwner">{{owner}}</span>
+    </div>
+
+    <app-playlist-filter [viewConfig]="_viewConfig.refineFilter"
+                        [opened]="_refineFilterOpened"
+                        [dateFilter]="_dateFilter"
+                        [selectedFilters]="_selectedRefineFilters"
+                        (closeFilters)="_refineFilterOpened = false"
+                        (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
+
+    <app-path-entry-totals *ngIf="_viewConfig.totals"
+                            [dateFilter]="_dateFilter"
+                            [playlistId]="_playlistId"
+                            [viewConfig]="_viewConfig.totals"
+                            [reportType]="_totalsReportType"
+                            [refineFilter]="_refineFilter"></app-path-entry-totals>
+
+    <div *ngIf="_viewConfig.performance" class="kReportContainer">
+      <app-path-performance [dateFilterComponent]="dateFilter"
+                                   [dateFilter]="_dateFilter"
+                                   [playlistId]="_playlistId"
+                                   [refineFilter]="_refineFilter"></app-path-performance>
+    </div>
+
+    <div class="kReportContainer" *ngIf="_viewConfig.videos">
+      <app-path-content [playlistId]="_playlistId"
+                        [dateFilter]="_dateFilter"
+                        [refineFilter]="_refineFilter"></app-path-content>
+    </div>
+
+  </div>
+</div>

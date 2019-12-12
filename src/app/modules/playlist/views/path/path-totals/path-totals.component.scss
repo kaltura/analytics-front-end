@@ -1,0 +1,117 @@
+@import '../../../../../../styles/variables';
+.kTotals {
+  background-color: transparent !important;
+  margin-bottom: 24px !important;
+}
+.kTotalsRow{
+  display: flex;
+  width: 100%;
+}
+.kTotalsContainer {
+  width: 100%;
+  height: 136px;
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 3px;
+
+  .kTotalContainer {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 24px;
+    padding-right: 12px;
+    padding-top: 24px;
+    box-sizing: border-box;
+
+    &:not(:last-child) {
+      border-right: 1px solid $kGrayscale6;
+    }
+
+    .kTotal {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+
+      .kValue {
+        font-size: 24px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+
+      .kLabel {
+        margin-top: 4px;
+        margin-bottom: 8px;
+        font-size: 15px;
+        color: $kGrayscale1;
+        white-space: nowrap;
+      }
+
+      .kTrend ::ng-deep {
+        .kValue {
+          font-size: 24px;
+          font-weight: bold;
+          color: $kGrayscale1;
+        }
+
+        .kUnits {
+          font-size: 13px;
+          font-weight: bold;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .kMiniIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+      flex: 0 0 auto;
+
+      &.aqua {
+        background-color: rgba(22, 168, 215, 0.2);
+        color: #16a8d7;
+      }
+
+      &.blue {
+        background-color: rgba(72, 122, 223, 0.2);
+        color: #487ADF;
+      }
+
+      &.orange {
+        background-color: rgba(225, 150, 46, 0.2);
+        color: #E1962E;
+      }
+
+      &.green {
+        background-color: rgba(129, 204, 111, 0.2);
+        color: #81cc6f;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .kTotalContainer {
+    padding-left: 15px !important;
+    padding-top: 15px !important;
+
+    .kLabel {
+      white-space: normal !important;
+    }
+  }
+}
+@media (max-width: 991px) {
+  .kTotalsRow {
+    display: block;
+    .kTotalsContainer {
+      margin-right: 0px;
+      margin-bottom: 24px;
+    }
+  }
+}

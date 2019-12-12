@@ -1,0 +1,21 @@
+<div data-aid="report-mini-top-videos" class="kReport kContent kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.playlist.content' | translate}}</span>
+  </div>
+  <div class="kReportContent">
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+      <app-path-content-table *ngIf="_isCompareMode"
+                                       name="compare"
+                                       [isCompareMode]="_isCompareMode"
+                                       [tableData]="_compareTableData"
+                                       [dates]="_compareDates"
+                                       [firstTimeLoading]="_compareFirstTimeLoading"></app-path-content-table>
+      <app-path-content-table name="current"
+                                       [tableData]="_tableData"
+                                       [showDivider]="_isCompareMode"
+                                       [isCompareMode]="_isCompareMode"
+                                       [dates]="_currentDates"
+                                       [firstTimeLoading]="_firstTimeLoading"></app-path-content-table>
+    </k-area-blocker>
+  </div>
+</div>
