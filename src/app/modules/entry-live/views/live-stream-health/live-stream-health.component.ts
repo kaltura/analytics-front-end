@@ -83,7 +83,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       return 0;
     };
 
-    this._isSelfServe = response.selfServe.data;
+    this._isSelfServe = response.selfServe && response.selfServe.data;
     let data = [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary];
 
     if (this._isSelfServe) {
