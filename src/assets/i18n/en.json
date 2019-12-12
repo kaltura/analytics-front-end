@@ -768,7 +768,8 @@
       "vidCount": "{{0}} Videos",
       "exportLabels": {
         "highlights": "Highlights",
-        "videoPerformance": "Video Performance"
+        "videoPerformance": "Video Performance",
+        "videos": "Videos Overview"
       }
     },
     "context": {

@@ -25,6 +25,13 @@ export class PathExportConfig extends ExportConfigService {
         reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
+      },
+      {
+        id: 'videos',
+        label: this._translate.instant('app.playlist.exportLabels.videos'),
+        reportType: reportTypeMap(KalturaReportType.interactiveVideoTopNodes),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_node_plays',
       }
     ];
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;
