@@ -2,7 +2,7 @@
 
 @media screen and (min-width: 992px) {
   :host {
-    /deep/ {
+    ::ng-deep {
       .ui-table tr td,
       .ui-table tr th,
       .ui-table thead {
@@ -16,7 +16,7 @@
   width: 100%;
   height: auto;
 
-  /deep/ {
+  ::ng-deep {
     .ui-table-wrapper {
       min-height: 260px;
     }

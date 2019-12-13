@@ -144,18 +144,18 @@
   }
 }
 
-:host /deep/ .kErrorMessageContainer {
+:host ::ng-deep .kErrorMessageContainer {
   top: 200px !important;
   position: absolute;
 }
 
-:host /deep/ {
+:host ::ng-deep {
   ktags {
     margin: 0 !important;
   }
 }
 
-:host /deep/ .kReport {
+:host ::ng-deep .kReport {
   margin-bottom: 0 !important;
 }
 

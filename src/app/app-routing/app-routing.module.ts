@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { LocationStrategy, PathLocationStrategy, PlatformLocation } from '@angular/common';
+import { VoidPathLocationStrategy } from './void-path-location-strategy';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 
@@ -14,6 +16,14 @@ const routes: Routes = [
       {
         path: 'entry',
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
+      },
+      {
+        path: 'playlist/:id',
+        loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
+      },
+      {
+        path: 'playlist',
+        loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
       },
       {
         path: 'user/:id',
@@ -48,13 +58,20 @@ const routes: Routes = [
         loadChildren: () => import('../modules/live/live.module').then(m => m.LiveModule)
       }
     ]
-  }
+  },
+  { path: '**', component: DashboardComponent }
 ];
 
+export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation) => {
+  // we use a factory since production build is compiled AOT and useClass cannot be conditional in AOT
+  // the "loadInFriendlyIframe" global variable must be injected by the host app to the Analytics window scope (see example in analyticsLoaderFriendly.html)
+  return window["loadInFriendlyIframe"] ? new VoidPathLocationStrategy(_platformLocation) : new PathLocationStrategy(_platformLocation);
+}
 @NgModule({
   imports: [
     RouterModule.forRoot(routes)
   ],
+  providers: [{ provide: LocationStrategy, useFactory: pathLocationStrategyFactory, deps: [PlatformLocation] }],
   exports: [
     RouterModule
   ],

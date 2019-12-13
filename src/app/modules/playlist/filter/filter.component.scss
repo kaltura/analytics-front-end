@@ -1,0 +1,91 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kRefineFilters {
+  width: 100%;
+  height: auto;
+  margin-bottom: 0 !important;
+
+  .kRefineFiltersMain {
+    height: 100%;
+
+    .kFilterContainer {
+      padding: 32px 24px 0 24px;
+      display: flex;
+      flex-direction: column;
+
+      .kFilterContainerRow {
+        display: flex;
+      }
+
+      .kFilterContainerCol {
+        display: flex;
+        flex-direction: column;
+        width: 336px;
+        &:not(:first-child) {
+          margin-left: 24px;
+        }
+      }
+
+      .kListFilters {
+        display: flex;
+
+        .kLastItem {
+          margin-right: 18px !important;
+        }
+      }
+
+      .kMiscFilters {
+        display: flex;
+        flex-direction: column;
+        width: 432px;
+      }
+    }
+
+    .kGroupTitle {
+      display: inline-block;
+      color: $kGrayscale3;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .kRefineFiltersFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 66px;
+      padding: 0 24px;
+      margin-top: 8px;
+      button {
+        width: 100px;
+      }
+    }
+  }
+}
+
+app-domains-filter, app-category-filter{
+  margin-top: 12px;
+}
+
+app-owners-filter, app-category-filter, app-country-filter {
+  display: block;
+  width: 100%;
+  padding-right: 24px;
+}
+
+:host ::ng-deep {
+  app-autocomplete-filter, app-dropdown-filter {
+    margin: 0;
+  }
+
+  .ui-autocomplete-multiple-container {
+    min-height: 34px;
+    padding: 3px 6px !important;
+  }
+}

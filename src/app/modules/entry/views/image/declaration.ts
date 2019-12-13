@@ -4,6 +4,7 @@ import { ImageEntryPerformanceComponent } from './image-performance/image-perfor
 import { ImageEntryTotalsComponent } from './entry-totals/entry-totals.component';
 import { ImageTopCountriesComponent } from './top-countries/top-countries.component';
 import { ImageSyndicationComponent } from './syndication/syndication.component';
+import { ImageGeoComponent } from './top-countries/geo/geo.component';
 
 export const declarations = [
   ImageEntryPreviewComponent,
@@ -12,4 +13,5 @@ export const declarations = [
   ImageEntryViewComponent,
   ImageTopCountriesComponent,
   ImageSyndicationComponent,
+  ImageGeoComponent,
 ];

@@ -1,0 +1,50 @@
+import { Component, Input, OnDestroy } from '@angular/core';
+import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { Subject } from 'rxjs';
+import {SortEvent} from "primeng/api";
+
+@Component({
+  selector: 'app-path-content-table',
+  templateUrl: './path-content-table.component.html',
+  styleUrls: ['./path-content-table.component.scss']
+})
+export class PathContentTableComponent implements OnDestroy {
+  @Input() set tableData(value: TableRow<string>[]) {
+    value = Array.isArray(value) ? value : [];
+    this._tableData = value;
+    this._totalCount = value.length;
+  }
+  
+  @Input() showDivider = false;
+  @Input() dates: string;
+  @Input() isCompareMode: boolean;
+  @Input() firstTimeLoading = true;
+  @Input() name = 'default';
+  
+  private _paginationChanged = new Subject<void>();
+  private _originalTable: TableRow<string>[] = [];
+  
+  public _totalCount = 0;
+  public _tableData: TableRow<string>[] = [];
+  
+  constructor() { }
+  
+  ngOnDestroy(): void {
+    this._paginationChanged.complete();
+  }
+  
+  public customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      const numericFields = ['level', 'count_node_plays', 'unique_known_users', 'avg_completion_rate'];
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      let result = null;
+      if (numericFields.indexOf(event.field) > -1) {
+        result = (parseFloat(value1) < parseFloat(value2)) ? -1 : (parseFloat(value1) > parseFloat(value2)) ? 1 : 0; // numeric compare
+      } else {
+        result = value1.localeCompare(value2); // string compare
+      }
+      return (event.order * result);
+    });
+  }
+}

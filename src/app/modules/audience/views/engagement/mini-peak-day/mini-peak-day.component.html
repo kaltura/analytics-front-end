@@ -10,6 +10,11 @@
         <span class="peakDayLable" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">{{'app.engagement.peak' | translate}}</span>
       </div>
       <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
+        <i class="icon-small-impressions kAqua"></i>
+        <span class="kVal">{{_peakDayData?.count_loads}}</span>
+        <span class="kLabel">{{'app.user.impressions' | translate}}</span>
+      </div>
+      <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
         <i class="icon-small-play kBlue"></i>
         <span class="kVal">{{_peakDayData?.count_plays}}</span>
         <span class="kLabel">{{'app.engagement.plays' | translate}}</span>

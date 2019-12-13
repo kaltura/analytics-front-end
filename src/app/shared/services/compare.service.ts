@@ -789,13 +789,16 @@ export class CompareService implements OnDestroy {
         ...current.series.map((item, index) => ({
           ...item,
           name: currentMetricLabel,
-          lineStyle: { width: 3, color: current.color[index] }
+          yAxisIndex: 0,
+          lineStyle: { width: 3, color: current.color[index] },
+          itemStyle: { color: current.color[index] },
         })),
         ...compare.series.map((item, index) => ({
           ...item,
           name: compareMetricLabel,
           yAxisIndex: 1,
-          lineStyle: { width: 3, color: compare.color[index] }
+          lineStyle: { width: 3, color: compare.color[index] },
+          itemStyle: { color: compare.color[index] },
         })),
       ],
       'legend': {

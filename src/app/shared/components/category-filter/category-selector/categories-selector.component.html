@@ -1,6 +1,6 @@
 <div class="kAddCategory kTreeContainer kOverrideFAIcons">
   <div class="kHeader">
-    <span class="kTitle">{{'app.categories.selectCategories' | translate}}</span>
+    <span class="kTitle">{{_title}}</span>
   </div>
 
   <div class="kMain">
@@ -11,7 +11,7 @@
                    suggestionItemField="item"
                    suggestionLabelField="name"
                    suggestionSelectableField="isSelectable"
-                   [placeholder]="'app.categories.searchCategories' | translate"
+                   [placeholder]="_filterPlaceholder"
                    [minLength]="3"
                    (onSelect)="_onAutoCompleteSelected()"
                    [suggestionsProvider]="_categoriesProvider"

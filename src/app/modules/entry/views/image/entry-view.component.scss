@@ -45,6 +45,11 @@
     height: 80px;
   }
 
+  .kFloatingDetails{
+    position: absolute;
+    top: 32px;
+  }
+
   .kEntryDetails {
     display: flex;
     font-size: 14px;
@@ -122,18 +127,18 @@
   flex-wrap: wrap;
 }
 
-:host /deep/ .kErrorMessageContainer {
+:host ::ng-deep .kErrorMessageContainer {
   top: 200px !important;
   position: absolute;
 }
 
-:host /deep/ {
+:host ::ng-deep {
   ktags {
     margin: 0 !important;
   }
 }
 
-:host /deep/ .kReport {
+:host ::ng-deep .kReport {
   margin-bottom: 0px !important;
 }
 
@@ -141,6 +146,7 @@
 .kHeaderRight{
   display: flex;
   margin-left: auto;
+  z-index: 1;
 }
 @media (max-width: 991px) {
   .kHeaderRight{
@@ -149,6 +155,19 @@
   }
   .kReport .kEntryDetails{
     height: 86px;
+  }
+
+  .kReport .kReportHeader.noTitle{
+    height: 32px;
+  }
+
+  .kHeaderRight.noTitle{
+    top: 64px;
+  }
+
+  .kReport .kFloatingDetails{
+    position: relative;
+    top: 0px;
   }
 
   .kImageMedia {

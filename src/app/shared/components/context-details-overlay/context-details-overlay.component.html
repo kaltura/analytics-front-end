@@ -1,0 +1,21 @@
+<div data-aid="overlay-context" class="kContextDetailsOverlay">
+  <k-area-blocker [showLoader]="_loading">
+    <ng-container *ngIf="_data && !_errorMessage">
+      <div class="kContextName" [innerHTML]="_data.fullName | appCategoryFullName"></div>
+      <div class="kContextDetails">
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.context.owner' | translate}}</div>
+          <div class="kValue">{{_data.owner}}</div>
+        </div>
+
+        <div class="kDetailsRow">
+          <div class="kLabel">{{'app.context.categoryId' | translate}}</div>
+          <div class="kValue">{{_data.id}}</div>
+        </div>
+      </div>
+    </ng-container>
+    <div *ngIf="_errorMessage" class="kErrorMessage">
+      {{_errorMessage}}
+    </div>
+  </k-area-blocker>
+</div>

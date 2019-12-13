@@ -9,7 +9,7 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -30,10 +30,7 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
             format: value => value,
             nonComparable: true,
           },
-          // 'count_loads': {
-          //   format: value => ReportHelper.numberOrNA(value)
-          // },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrNA(value)
           },
           'coordinates': {
@@ -43,16 +40,11 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        // preSelected: 'count_loads',
-        preSelected: 'count_plays',
+        preSelected: 'count_loads',
         fields: {
-          // 'count_loads': {
-          //   format: value => ReportHelper.numberOrNA(value),
-          //   title: this._translate.instant(`app.entry.count_loads`),
-          // },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.entry.count_plays`),
+            title: this._translate.instant(`app.entry.count_loads`),
           },
         }
       }

@@ -4,8 +4,8 @@
   <div *ngIf="compare" class="kDeviceCard">
     <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
     <div *ngIf="compare" class="kBulletContainer">
-      <div class="kValues" *ngFor="let compareItem of compare | slice:0:2; let i = index">
-        <div class="kValuesItem">
+      <div class="kValues">
+        <div class="kValuesItem" *ngFor="let compareItem of compare | slice:0:2; let i = index">
           <i class="kIcon" [ngClass]="compareItem.device | appDeviceIcon" [class.kSecond]="i === 1"></i>
           <span class="kValue">{{compareItem.value}}%</span>
           {{compareItem.label}}

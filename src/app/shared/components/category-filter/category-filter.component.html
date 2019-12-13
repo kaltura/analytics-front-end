@@ -36,6 +36,8 @@
               (onClose)="_updateHost(false)">
   <ng-template>
     <app-categories-selector [parentPopupWidget]="categoriesPopup"
+                             [title]="popupTitle"
+                             [filterPlaceholder]="popupFilterPlaceholder"
                              [value]="_selectedValue"
                              (valueChange)="_updateCategories($event)"></app-categories-selector>
   </ng-template>

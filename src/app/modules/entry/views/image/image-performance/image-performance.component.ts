@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,8 +19,6 @@ import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-h
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'app-image-entry-performance',
@@ -31,20 +29,21 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 export class ImageEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
-  
-  @ViewChild(NgxEchartsDirective, { static: false }) _chart: NgxEchartsDirective;
-  
+
   private _order = '-date_id';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _rawGraphData: KalturaReportGraph[] = [];
   private _ignoreFirstSortEvent = false;
+  private _filterChange = new Subject();
 
   public _metricsCompareTo: string = null;
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'image-performance';
-  
+
+  public _filterChange$ = this._filterChange.asObservable();
+  public TableMode = TableModes;
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _usersColumns: string[] = [];
@@ -76,6 +75,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
   public _tableModes = [
     { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
     { label: this._translate.instant('app.entry.users'), value: TableModes.users },
+    { label: this._translate.instant('app.entry.context'), value: TableModes.context },
   ];
 
   public _currentDatePeriod = '';
@@ -84,21 +84,20 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: ImagePerformanceConfig,
-              private _browserService: BrowserService) {
+              private _dataConfigService: ImagePerformanceConfig) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
-    
+
     const totalsConfig = this._dataConfig[ReportDataSection.totals].fields;
     const graphConfig = this._dataConfig[ReportDataSection.graph].fields;
     Object.keys(totalsConfig).forEach(field => {
@@ -106,30 +105,15 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
         label: this._translate.instant(`app.entry.${field}`),
         value: field
       });
-      
+
       this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
     });
-  
-    this._browserService.contrastThemeChange$
-      .pipe(cancelOnDestroy(this))
-      .subscribe(isContrast => this._toggleChartTheme(isContrast));
   }
-  
+
   ngOnDestroy(): void {
-  
+    this._filterChange.complete();
   }
-  
-  private _toggleChartTheme(isContrast: boolean): void {
-    if (this._chart && this._chart.options) {
-      const color = isContrast ? '#333333' : '#999999';
-      
-      this._chart.options.tooltip.textStyle.color = color;
-      this._chart.options.xAxis.axisLabel.color = color;
-      this._chart.options.yAxis.axisLabel.color = color;
-      this._chart.setOption(this._chart.options);
-    }
-  }
-  
+
   private _updateTableData(): void {
     const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
     const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
@@ -149,37 +133,37 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       this._columns = columns;
     }
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
-  
+
     sections = { ...sections }; // make local copy
-    
-    if (this._tableMode === TableModes.dates) {
+
+    if ([TableModes.dates, TableModes.context].indexOf(this._tableMode) !== -1) {
       delete sections[ReportDataSection.table]; // remove table config to prevent table request
     } else if (this._tableMode === TableModes.users) {
       reportConfig.pager = this._pager;
     }
-    
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
         }
         compareReportConfig.objectIds = this.entryId;
-  
+
         if (this._tableMode === TableModes.users) {
           compareReportConfig.pager = this._pager;
         }
@@ -229,7 +213,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._datesTableData = null;
     this._usersTableData = null;
@@ -240,8 +224,9 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
+    this._filterChange.next();
   }
-  
+
   protected _updateFilter(): void {
     this._datesTableData = null;
     this._usersTableData = null;
@@ -262,8 +247,9 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
     } else {
       this._compareFilter = null;
     }
+    this._filterChange.next();
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
@@ -271,7 +257,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
     if (current.totals) {
       this._handleTotals(current.totals); // handle totals
     }
-    
+
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         currentPeriod,
@@ -282,12 +268,12 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
         this._reportInterval,
       );
       this._lineChartData = lineChartData;
-  
+
       if (this._metricsCompareTo) {
         this._onCompareTo(this._metricsCompareTo);
       }
     }
-  
+
     if (this._tableMode === TableModes.dates) {
       const compareTableData = this._compareService.compareTableFromGraph(
         currentPeriod,
@@ -297,7 +283,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
         this._dataConfig.table,
         this._reportInterval,
       );
-  
+
       if (compareTableData) {
         const { columns, tableData, totalCount } = compareTableData;
         this._totalCount = totalCount;
@@ -325,11 +311,11 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       }
     }
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-  
+
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
@@ -342,7 +328,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       this._onCompareTo(this._metricsCompareTo);
     }
   }
-  
+
   private _handleDatesTable(graphs: KalturaReportGraph[]): void {
     const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
       graphs,
@@ -355,7 +341,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
     this._columns = [...this._datesColumns];
     this._tableData = [...this._datesTableData];
   }
-  
+
   private _handleUsersTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
@@ -367,16 +353,16 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
 
   public _onTabChange(tab: Tab): void {
     this._selectedMetrics = tab.key;
+    this._metricsCompareTo = null;
     this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
     this._metricsLineChartData = null;
   }
-  
+
   public _toggleTable(): void {
-    this._ignoreFirstSortEvent = true;
     this._showTable = !this._showTable;
     this.updateLayout();
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (this._tableMode === TableModes.dates) {
       this._pager.pageIndex = 1;
@@ -388,7 +374,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
         this._ignoreFirstSortEvent = false;
         return;
       }
-      
+
       setTimeout(() => {
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this._order) {
@@ -399,7 +385,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       });
     }
   }
-  
+
   public _onCompareTo(field: string): void {
     if (field) {
       this._metricsCompareTo = field;
@@ -415,6 +401,19 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
         this._currentDatePeriod,
         this._compareDatePeriod
       );
+      // Normalize yAxis
+      if (this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2) {
+        const maxValue = Math.max(this._metricsLineChartData.yAxis[0].max, this._metricsLineChartData.yAxis[1].max);
+        const interval = parseFloat((maxValue / 5).toFixed(2));
+        if (maxValue && maxValue > 0) {
+          this._metricsLineChartData.yAxis[0].min = 0;
+          this._metricsLineChartData.yAxis[1].min = 0;
+          this._metricsLineChartData.yAxis[0].max = maxValue;
+          this._metricsLineChartData.yAxis[1].max = maxValue;
+          this._metricsLineChartData.yAxis[0].interval = interval;
+          this._metricsLineChartData.yAxis[1].interval = interval;
+        }
+      }
     } else {
       this._metricsLineChartData = null;
       this._metricsCompareTo = null;
@@ -437,7 +436,7 @@ export class ImageEntryPerformanceComponent extends EntryBase implements OnDestr
       }, 0);
     }
   }
-  
+
   public _onTableModeChange(mode: TableModes): void {
     this._tableMode = mode;
     this._customPaginator = this._ignoreFirstSortEvent = this._tableMode === TableModes.users;

@@ -21,6 +21,8 @@ export class CategoryFilterComponent {
   @Input() label: string;
   @Input() linkLabel: string;
   @Input() options: OptionItem[] = [];
+  @Input() popupTitle: string;
+  @Input() popupFilterPlaceholder: string;
 
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();

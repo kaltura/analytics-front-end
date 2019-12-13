@@ -5,6 +5,7 @@ export enum TableModes {
   users = 'users',
   devices = 'devices',
   entries = 'entries',
+  context = 'context',
 }
 
 @Pipe({
@@ -21,6 +22,8 @@ export class TableModeIconPipe implements PipeTransform {
         return 'icon-devices';
       case TableModes.entries:
         return 'kIconUnknown';
+      case TableModes.context:
+        return 'kIconfolder';
       default:
         return '';
     }

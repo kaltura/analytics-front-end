@@ -1,0 +1,27 @@
+<div data-aid="report-entry-totals" class="kReport kTotals kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kTotalsRow">
+      <div class="kTotalsContainer">
+        <div class="kTotalContainer" *ngFor="let tab of _tabsData">
+          <div class="kMiniIcon" [ngClass]="tab.iconColor"><i [class]="tab.icon"></i></div>
+          <div class="kTotal">
+            <span *ngIf="!_isCompareMode" class="kValue">{{tab.value}}</span>
+            <span *ngIf="_isCompareMode" class="kTrend"
+                  [kTooltip]="tab.tooltip"
+                  [maxWidth]="500"
+                  [escape]="false">
+              <app-trend-value valueStyleClass="kValue"
+                               unitsStyleClass="kUnits"
+                               [value]="tab.value"
+                               [units]="tab.units"
+                               [trend]="tab.trend"></app-trend-value>
+            </span>
+            <span class="kLabel">{{'app.playlist.' + tab.key | translate}}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>
+

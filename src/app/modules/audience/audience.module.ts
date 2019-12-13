@@ -46,6 +46,7 @@ import { UsersTableComponent } from './views/engagement/highlights/users-table/u
 import { EntriesTableComponent } from './views/engagement/highlights/entries-table/entries-table.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ContextTableComponent } from './views/engagement/highlights/context-table/context-table.component';
 
 @NgModule({
   imports: [
@@ -98,6 +99,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     DatesTableComponent,
     UsersTableComponent,
     EntriesTableComponent,
+    ContextTableComponent,
   ],
   exports: [],
   providers: []

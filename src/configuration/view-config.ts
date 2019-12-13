@@ -91,6 +91,7 @@ export const viewsConfig = {
     sources: {},
   },
   entry: {
+    title: {},
     export: {},
     refineFilter: {
       geo: {},
@@ -98,7 +99,12 @@ export const viewsConfig = {
       categories: {},
     },
     details: {},
-    totals: {},
+    totals: {
+      social: {
+        likes: {},
+        shares: {}
+      }
+    },
     entryPreview: {},
     userEngagement: {
       userFilter: {},
@@ -121,6 +127,19 @@ export const viewsConfig = {
     streamHealth: {},
     devices: {},
     discovery: {},
+  },
+  playlist: {
+    title: {},
+    export: {},
+    refineFilter: {
+      geo: {},
+      owners: {},
+      categories: {},
+    },
+    details: {},
+    totals: {},
+    performance: {},
+    videos: {},
   },
   user: {
     export: {},

@@ -6,7 +6,7 @@ import { KalturaMediaEntry, KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
-import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isEqual } from 'shared/utils/is-equals';
@@ -188,6 +188,7 @@ export class FilterComponent {
       'location': [],
       'countries': [],
       'entries': [],
+      'context': [],
     };
   }
   
@@ -204,6 +205,11 @@ export class FilterComponent {
           const category = value as CategoryData;
           label = category.name;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${category.fullName}`;
+          return { value, type, label, tooltip };
+        case 'context':
+          const context = value as CategoryData;
+          label = context.name;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${context.fullName}`;
           return { value, type, label, tooltip };
         case 'tags':
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;

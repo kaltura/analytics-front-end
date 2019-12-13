@@ -24,6 +24,7 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() refineFilter: RefineFilter = [];
   @Input() pager: KalturaPager = null;
   @Input() entryId: string = null;
+  @Input() rootEntryIdIn: string = null;
   @Input() userId: string = null;
   @Input() width = 240;
   
@@ -97,6 +98,10 @@ export class ExportCsvComponent implements OnDestroy {
     
     if (this.entryId) {
       filter.entryIdIn = this.entryId;
+    }
+    
+    if (this.rootEntryIdIn) {
+      filter.rootEntryIdIn = this.rootEntryIdIn;
     }
     
     if (this.userId) {

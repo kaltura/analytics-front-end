@@ -28,11 +28,13 @@
 
 
             <app-category-filter *ngIf="_viewConfig.categories"
-                                 [label]="'app.filters.categories' | translate"
-                                 [selectedFilters]="_selectedValues['categories']"
-                                 [linkLabel]="'app.filters.selectCategories' | translate"
-                                 (itemSelected)="_onItemSelected($event, 'categories')"
-                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+                                 [label]="'app.filters.playbackContext' | translate"
+                                 [selectedFilters]="_selectedValues['context']"
+                                 [linkLabel]="'app.filters.selectPlaybackContext' | translate"
+                                 [popupTitle]="'app.filters.selectPlaybackContext' | translate"
+                                 [popupFilterPlaceholder]="'app.filters.findContext' | translate"
+                                 (itemSelected)="_onItemSelected($event, 'context')"
+                                 (itemUnselected)="_onItemUnselected($event, 'context')"></app-category-filter>
 
             <!--<app-domains-filter [dateFilter]="_dateFilter"-->
                                 <!--[selectedFilters]="_selectedValues['domains']"-->

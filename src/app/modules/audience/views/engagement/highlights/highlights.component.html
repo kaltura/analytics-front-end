@@ -51,6 +51,7 @@
           <ng-container [ngSwitch]="_tableMode">
             <app-dates-table *ngSwitchCase="_tableModes.dates"
                              [data]="_datesTableData"
+                             [sortField]="_sortField"
                              [currentPeriod]="_currentPeriod"
                              [comparePeriod]="_comparePeriod"
                              [isCompareMode]="_isCompareMode"
@@ -85,6 +86,21 @@
                                  [isCompareMode]="_isCompareMode"
                                  [reportInterval]="_reportInterval"
                                  [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.context">
+              <app-context-table-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="contextTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-context-table-filter>
+
+              <app-context-table #contextTableComponent
+                                 [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [firstTimeLoading]="_firstTimeLoading"></app-context-table>
             </ng-container>
           </ng-container>
         </div>

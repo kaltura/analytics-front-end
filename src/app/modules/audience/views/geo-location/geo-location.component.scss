@@ -122,17 +122,10 @@
     width: calc(100% - 15px);
     height: 100%;
     font-weight: normal;
-
-    .kIcon {
-      color: $kGrayscale3;
-      margin-right: 12px;
-      font-size: 16px;
-      font-weight: bold;
-    }
   }
 }
 
-:host /deep/ .kTableModeSelector {
+:host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 164px !important;
   }

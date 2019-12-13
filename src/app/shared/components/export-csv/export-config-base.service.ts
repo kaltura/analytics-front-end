@@ -34,5 +34,5 @@ export abstract class ExportConfigService {
     return result;
   }
   
-  public abstract getConfig(): ExportItem[];
+  public abstract getConfig(param?: unknown): ExportItem[];
 }

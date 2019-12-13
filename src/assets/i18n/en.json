@@ -54,7 +54,12 @@
       "domainPlaceholder": "Select Domain",
       "domainsSelected": "{0} Domains Selected",
       "filterUsers": "Filter Users",
-      "filterEntries": "Filter Entries"
+      "filterEntries": "Filter Entries",
+      "filterContext": "Filter Contexts",
+      "context": "Context",
+      "playbackContext": "Playback Context",
+      "selectPlaybackContext": "Playback Context",
+      "findContext": "Find Playback Context"
     },
     "categories": {
       "selectCategories": "Select Categories",
@@ -112,7 +117,8 @@
       "playlist": "Playlist",
       "live": "Live video",
       "document": "Document",
-      "other": "Other"
+      "other": "Other",
+      "interactive": "Interactive Video"
     },
     "dateFilter": {
       "preset": "Preset",
@@ -338,7 +344,8 @@
       "dimensions": {
         "dates": "Dates",
         "users": "Users",
-        "entries": "Entries"
+        "entries": "Entries",
+        "context": "Playback Context"
       },
       "title": "Engagement",
       "playedEntries": "Out of {{0}} Played Entries",
@@ -412,6 +419,7 @@
         "referrer": "Page URL",
         "sum_time_viewed": "Minutes Viewed",
         "count_loads": "Player Impressions",
+        "count_loads_tt": "Player Impressions",
         "load_play_ratio": "Play Impression Ratio",
         "avg_completion_rate": "Avg. Completion Rate",
         "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
@@ -677,6 +685,7 @@
       }
     },
     "entry": {
+      "context": "Playback Context",
       "views": "Views",
       "plays": "Plays {{0}}",
       "viewers": "Unique Viewers",
@@ -703,6 +712,7 @@
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
       "totalViewersCount": "{{0}} Viewers",
       "totalEntriesCount": "{{0}} Entries",
+      "totalContextCount": "{{0}} Contexts",
       "avg_completion_rate": "Avg. Completion Rate",
       "avg_completion_rate_tt": "Sum of percent watched divided by number of plays",
       "unique_known_users": "Unique Viewers",
@@ -744,6 +754,34 @@
         "syndication": "Syndication"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "playlist": {
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "unique_viewers": "Unique Viewers",
+      "sum_view_period": "Minutes Viewed",
+      "avg_view_period_time": "Avg. Viewing Time",
+      "month_id": "Month",
+      "date_id": "Date",
+      "name": "Name",
+      "content": "Videos Overview",
+      "vidCount": "{{0}} Videos",
+      "exportLabels": {
+        "highlights": "Highlights",
+        "videoPerformance": "Video Performance",
+        "videos": "Videos Overview"
+      }
+    },
+    "context": {
+      "name": "Name",
+      "count_loads": "Player Impressions",
+      "count_plays": "Plays",
+      "sum_time_viewed": "Minutes Viewed",
+      "unique_viewers": "Unique Viewers",
+      "avg_completion_rate": "Avg. Completion Rate",
+      "avg_view_drop_off": "Avg. Drop Off Rate",
+      "owner": "Owner",
+      "categoryId": "Category ID"
     },
     "contentInteractions": {
       "title": "Content Interactions",

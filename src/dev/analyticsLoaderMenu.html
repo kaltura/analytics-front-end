@@ -100,7 +100,7 @@
             return acc;
           }, {});
 
-          sendMessage({'messageType': 'navigate', payload: { url }});
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
           sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
           break;
 

@@ -208,6 +208,12 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
   public updateFilters(event: DateFiltersChangedEvent, restart = true): void {
     this._dateFilter = event;
+    this._originalDateRange = {
+      dateRange: this._dateFilter.dateRange,
+      startDate: this._dateFilter.startDate,
+      endDate: this._dateFilter.endDate,
+      isPresetMode: this._dateFilter.isPresetMode,
+    };
 
     this._applyFilters();
 

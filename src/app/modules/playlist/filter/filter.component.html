@@ -1,0 +1,58 @@
+<div data-aid="filter-playlist" class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconhelp_full"></i>
+      {{'app.filters.disclaimer' | translate}}
+    </span>
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
+  </div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <div class="kFilterContainerRow">
+          <div class="kFilterContainerCol">
+            <app-country-filter *ngIf="_viewConfig.geo"
+                                [dateFilter]="_dateFilter"
+                                [selectedFilters]="_selectedValues['countries']"
+                                (itemSelected)="_onItemSelected($event, 'countries')"
+                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+
+
+            <app-category-filter *ngIf="_viewConfig.categories"
+                                 [label]="'app.filters.categories' | translate"
+                                 [selectedFilters]="_selectedValues['categories']"
+                                 [linkLabel]="'app.filters.selectCategories' | translate"
+                                 (itemSelected)="_onItemSelected($event, 'categories')"
+                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+
+            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
+                                <!--[selectedFilters]="_selectedValues['domains']"-->
+                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
+                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
+
+          </div>
+          <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
+            <app-owners-filter [selectedFilters]="_selectedValues['users']"
+                               [label]="'app.filters.users' | translate"
+                               (itemSelected)="_onItemSelected($event, 'users')"
+                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+          </div>
+        </div>
+      </div>
+      <div class="kRefineFiltersFooter">
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
+    </div>
+  </div>
+</div>

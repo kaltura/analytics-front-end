@@ -1,0 +1,64 @@
+<div [attr.data-aid]="'table-top-videos' + name" class="kTableContainer">
+  <span class="kDates" *ngIf="dates">{{dates}}</span>
+  <span class="kDates" *ngIf="!dates">{{'app.playlist.vidCount' | translate: { '0': _totalCount} }}</span>
+  <div class="kDividerWrapper">
+    <div class="kDivider" *ngIf="showDivider"></div>
+    <p-table appScrollTopOnPaging [paginator]="true" [rows]="10"
+             [class.kCompareMode]="isCompareMode"
+             [sortField]="'level'"
+             [sortOrder]="1"
+             [customSort]="true"
+             (sortFunction)="customSort($event)"
+             [value]="_tableData">
+      <ng-template pTemplate="header">
+        <tr class="kTopVideoHeader">
+          <th [ngStyle]="{'width': '60px'}" [pSortableColumn]="'level'">
+            #
+            <p-sortIcon [field]="'level'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
+          <th [ngStyle]="{'width': '40%', 'padding-left': '0'}" [pSortableColumn]="'name'">
+            {{'app.user.topContentReport.name' | translate}}
+            <p-sortIcon [field]="'name'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.count_plays' | translate" [showOnEllipsis]="true" [pSortableColumn]="'count_node_plays'">
+            {{'app.user.topContentReport.count_plays' | translate}}
+            <p-sortIcon [field]="'count_node_plays'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true" [pSortableColumn]="'unique_known_users'">
+            {{'app.user.topContentReport.unique_known_users' | translate}}
+            <p-sortIcon [field]="'unique_known_users'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="'avg_completion_rate'">
+            {{'app.user.topContentReport.avg_completion_rate' | translate}}
+            <p-sortIcon [field]="'avg_completion_rate'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr class="kTopVideoRow">
+          <td [ngStyle]="{'width': '60px'}">
+            <span>{{data['level'] ? data['level'] : 'app.common.na' | translate}}</span>
+          </td>
+          <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
+            <div class="kThumbnailHolder" #holder>
+              <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
+            </div>
+          </td>
+          <td [ngStyle]="{'width': '40%', 'padding-left': 0}">
+              <span class="kTableColumn kEntryName">{{data['name']}}</span><i *ngIf="data['isHome']" class="kIcon kIconhouse"></i>
+          </td>
+          <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
+          <td [ngStyle]="{'width': '20%'}">{{data['unique_known_users']}}</td>
+          <td [ngStyle]="{'width': '20%'}">{{data['avg_completion_rate']}}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <div class="emptymessage">
+          <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+          <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

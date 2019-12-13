@@ -49,12 +49,6 @@ export interface AnalyticsConfig {
     pollInterval?: PollInterval;
     healthNotificationsCount?: number;
   };
-  liveAnalytics?: {
-    uri?: string;
-    uiConfId?: string;
-    mapUrls?: string[];
-    mapZoomLevels?: string;
-  };
   customData?: {
     [key: string]: any;
   };
@@ -88,12 +82,12 @@ export function buildCDNUrl(suffix: string): string {
   } else {
     baseUrl = analyticsConfig.cdnServers.serverUri;
   }
-  
+
   return `${baseUrl}${suffix}`;
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.7.1',
+  appVersion: '1.10.0',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
@@ -105,14 +99,12 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   if (!config) {
     throw Error('No configuration provided!');
   }
-  
+
   analyticsConfig.ks = config.ks;
   analyticsConfig.pid = config.pid;
   analyticsConfig.locale = config.locale;
   analyticsConfig.kalturaServer = config.kalturaServer;
   analyticsConfig.cdnServers = config.cdnServers;
-  analyticsConfig.liveAnalytics = config.liveAnalytics;
-  analyticsConfig.contrastTheme = config.contrastTheme || false;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
   analyticsConfig.isHosted = hosted;
   analyticsConfig.live = config.live || { pollInterval: 30 };
@@ -120,6 +112,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.menuConfig = config.menuConfig;
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
   analyticsConfig.customData = config.customData || { };
+  analyticsConfig.multiAccount = config.multiAccount || false;
   setLiveEntryUsersReports(config.liveEntryUsersReports);
 }
 
@@ -137,13 +130,13 @@ export function initConfig(): Observable<void> {
       return () => {
       };
     }
-    
+
     // hosted
     window.parent.postMessage(
       { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
       analyticsConfig.originTarget,
     );
-    
+
     const initEventHandler = event => {
       if (event.data && event.data.messageType === 'init') {
         setConfig(event.data.payload, true);
@@ -151,9 +144,9 @@ export function initConfig(): Observable<void> {
         observer.complete();
       }
     };
-    
+
     window.addEventListener('message', initEventHandler);
-    
+
     return () => {
       window.removeEventListener('message', initEventHandler);
     };

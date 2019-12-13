@@ -24,9 +24,9 @@
         </div>
       </div>
 
-      <div class="kSocialHighlights">
+      <div class="kSocialHighlights" *ngIf="_viewConfig.social">
         <h2 class="kTitle" id="kSocialHighlights">{{'app.user.socialHighlights' | translate}}</h2>
-        <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights">
+        <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights" *ngIf="_viewConfig.social.likes && showLikes">
           <i class="kIcon icon-small-like"></i>
           <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['likes']?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"
@@ -39,9 +39,9 @@
                                [units]="_socialHighlights['likes']?.units"
                                [trend]="_socialHighlights['likes']?.trend"></app-trend-value>
           </span>
-          {{'app.user.votes' | translate}}
+          <span [class.kSocialLabel]="_isCompareMode">{{'app.user.votes' | translate}}</span>
         </div>
-        <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights">
+        <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights" *ngIf="_viewConfig.social.shares">
           <i class="kIcon icon-share"></i>
           <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['shares']?.value}}</span>
           <span *ngIf="_isCompareMode" class="kTrend"
@@ -54,7 +54,7 @@
                                [units]="_socialHighlights['shares']?.units"
                                [trend]="_socialHighlights['shares']?.trend"></app-trend-value>
           </span>
-          {{'app.user.count_viral' | translate}}
+          <span [class.kSocialLabel]="_isCompareMode">{{'app.user.count_viral' | translate}}</span>
         </div>
       </div>
     </div>
