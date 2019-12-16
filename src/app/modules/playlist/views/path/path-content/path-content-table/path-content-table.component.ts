@@ -36,9 +36,13 @@ export class PathContentTableComponent implements OnDestroy {
   public customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
       const numericFields = ['level', 'count_node_plays', 'unique_known_users', 'avg_completion_rate'];
+      let result;
       let value1 = data1[event.field];
       let value2 = data2[event.field];
-      let result = null;
+      // fix undefined values that brakes numeric sorting
+      value1 = typeof value1 === 'undefined' ? Infinity : value1;
+      value2 = typeof value2 === 'undefined' ? Infinity : value2;
+
       if (numericFields.indexOf(event.field) > -1) {
         result = (parseFloat(value1) < parseFloat(value2)) ? -1 : (parseFloat(value1) > parseFloat(value2)) ? 1 : 0; // numeric compare
       } else {
