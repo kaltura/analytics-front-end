@@ -441,5 +441,6 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
     this._customPaginator = this._ignoreFirstSortEvent = this._tableMode === TableModes.users;
     this._order = this._tableMode === TableModes.users ? '-name' : '-date_id';
     this._updateTableData();
+    this.updateLayout();
   }
 }
