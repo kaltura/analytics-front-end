@@ -66,14 +66,14 @@ export class PathPerformanceConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'sum_view_period': {
-            format: value => value,
+            format: value => parseFloat(value.toFixed(1)),
             title: this._translate.instant(`app.playlist.sum_view_period`),
             sortOrder: 2,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.playlist.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_view_period_time': {
-            format: value => value,
+            format: value => parseFloat(value.toFixed(1)),
             title: this._translate.instant(`app.playlist.avg_view_period_time`),
             sortOrder: 2,
             colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
