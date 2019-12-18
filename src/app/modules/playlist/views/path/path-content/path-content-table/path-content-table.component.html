@@ -29,10 +29,10 @@
             {{'app.user.topContentReport.unique_known_users' | translate}}
             <p-sortIcon [field]="'unique_known_users'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
-          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="'avg_completion_rate'">
-            {{'app.user.topContentReport.avg_completion_rate' | translate}}
-            <p-sortIcon [field]="'avg_completion_rate'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
-          </th>
+<!--          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="'avg_completion_rate'">-->
+<!--            {{'app.user.topContentReport.avg_completion_rate' | translate}}-->
+<!--            <p-sortIcon [field]="'avg_completion_rate'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>-->
+<!--          </th>-->
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-data>
@@ -50,7 +50,7 @@
           </td>
           <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
           <td [ngStyle]="{'width': '20%'}">{{data['unique_known_users']}}</td>
-          <td [ngStyle]="{'width': '20%'}">{{data['avg_completion_rate']}}</td>
+<!--          <td [ngStyle]="{'width': '20%'}">{{data['avg_completion_rate']}}</td>-->
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
