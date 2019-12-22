@@ -1,15 +1,118 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="kms">
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="./">
+  <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+
+  <script type="text/javascript">
+      var analyticsConfig = {
+          kalturaServer: {
+              uri : "www.kaltura.com",
+              "previewUIConf": 38524931,
+          },
+          cdnServers: {
+              serverUri: "http://cdnapi.kaltura.com",
+              securedServerUri: "https://cdnapisec.kaltura.com"
+          },
+          ks: "djJ8MTY0NTE2MXyAHEd4Yldun8W8xsTx5jhnTvQ9FLdVXZAKzQiwQDg3s2_JqxV-nx33z747iPpTYrIpYxytXU30miu_--FW771CTXST6lwD-xq8b2YJIuWodIWeAT8At4kuB_N1K-hddTlpLm2qRsWdPsCP5_yPkUAcahBa5YvlO2aT_7J9MWuaHg==",
+          pid: "",
+          locale: "en",
+          multiAccount: false,
+          live: {
+              "pollInterval": 30,
+              "healthNotificationsCount": 50,
+          },
+      }
+  </script>
+
+  <style>
+    /* Background */
+    .kms body {
+      background: transparent;
+      background-color: white;
+    }
+    .kms .kMain .kReportView .kReport {
+      background: transparent;
+    }
+    .kms .kMain .kReportView .kReport .kFilters {
+      background-color: white;
+    }
+    .kms .kMain .kReportView .kReport .kReportHeader {
+      background: transparent;
+    }
+    .kms .kMain .kReportView .kReport .kReportContainer {
+      background: transparent;
+    }
+    .kms .kMain .kReportView .kReport .kEntryDetails {
+      background: transparent;
+    }
+    .kms .kMain .kReportView .kReport.kImageReport {
+      background: transparent;
+    }
+    /* Margins */
+    .kms .kContent {
+      width: 100% !important;
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+      box-sizing: border-box;
+    }
+    /* Borders */
+    .kms .kTotalContainer, .kms .kSocialHighlights {
+      border: 1px solid #cccccc !important;
+    }
+    .kms .kTotalContainer:first-child {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    .kms .kTotalContainer:last-child {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-left: none !important;
+    }
+    .kms .kTotalContainer:not(:first-child):not(:last-child) {
+      border-left: none !important;
+    }
+    .kms .kEntryPreview app-video-entry-preview .kReport {
+      border: 1px solid #cccccc !important;
+      border-bottom: none !important;
+      border-radius: 0px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    .kms .kEntryPreview app-video-entry-user-engagement .kReport {
+      border: 1px solid #cccccc !important;
+      border-top: none !important;
+      border-radius: 0px;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    .kms .kReportContainer .kFilters {
+      border: 1px solid #cccccc !important;
+      border-bottom: none !important;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    .kms .kReportContainer .kReportContent {
+      border: 1px solid #cccccc !important;
+      border-top: none !important;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+    .kms .kReportContainer .kReportContent.kNoTitle {
+      border-top: 1px solid #cccccc !important;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+  </style>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>
