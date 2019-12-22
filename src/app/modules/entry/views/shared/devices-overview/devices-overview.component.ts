@@ -49,6 +49,7 @@ export interface Summary {
 })
 export class EntryDevicesOverviewComponent extends EntryBase implements OnDestroy {
   @Input() entryId: string = null;
+  @Input() colorScheme = 'default';
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'devices-overview';

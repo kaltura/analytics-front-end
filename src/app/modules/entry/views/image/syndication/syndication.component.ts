@@ -91,7 +91,7 @@ export class ImageSyndicationComponent {
   public _tabsData: Tab[] = [];
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
-  public _distributionColorScheme: string;
+  public _distributionColorScheme = 'impressions';
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -313,7 +313,7 @@ export class ImageSyndicationComponent {
     this._logger.trace('Handle tab change action by user', { tab });
     
     this._selectedMetrics = tab.key;
-    this._distributionColorScheme = 'default';
+    this._distributionColorScheme = 'impressions';
     
     this._logger.trace(
       'Update distribution color schema according to selected metric',
