@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
 import { BaseEntryGetAction, KalturaAPIException, KalturaBaseEntry, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryType, KalturaResponseProfileType } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { cancelOnDestroy, tag } from "@kaltura-ng/kaltura-common";
 import { NavigationDrillDownService } from "shared/services";
 
 @Injectable()
@@ -22,6 +22,7 @@ export class EntryCanActivate implements CanActivate, OnDestroy {
         
         this._kalturaClient.request(baseEntryRequest)
           .pipe(cancelOnDestroy(this))
+          .pipe(tag('block-shell'))
           .subscribe(
             (entry: KalturaBaseEntry) => {
               if (entry.type === KalturaEntryType.playlist) {
