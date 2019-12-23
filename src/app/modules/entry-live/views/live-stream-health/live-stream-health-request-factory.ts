@@ -15,7 +15,7 @@ export class LiveStreamHealthRequestFactory implements RequestFactory<KalturaMul
     filter: new KalturaBeaconFilter({
       orderBy: '-updatedAt',
       relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON,
-      eventTypeIn: '0_healthData,1_healthData',
+      eventTypeIn: '0_healthData,1_healthData,selfServeStats',
       objectIdIn: this._entryId,
       indexTypeEqual: KalturaBeaconIndexType.log
     }),

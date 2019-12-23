@@ -16,7 +16,7 @@
           <div *ngFor="let alert of notification.alerts" class="kMetaItem">
             <span class="kBullet mini" [ngClass]="alert.Code | appCodeToHealthIcon"></span>
             <span class="kText">
-            {{ "app.entryLive.alerts." + alert.Code + ".message-log" | translate: alert.Arguments }}
+            {{ "app.entryLive.alerts." + alert.Code + "." + (_isSelfServe && _selfServeChangedAlerts.indexOf(alert.Code) > -1 ? "self-serve-" : "")  + "message-log" | translate: alert.Arguments }}
           </span>
           </div>
         </div>
