@@ -118,14 +118,14 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
     const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
 
     if (tableData === null) {
+      let sections: ReportDataConfig = {table: this._dataConfig[ReportDataSection.table]};
       if (this._tableMode === TableModes.dates && !this._isCompareMode && this._rawGraphData.length) {
         this._handleDatesTable(this._rawGraphData);
       } else if (this._tableMode === TableModes.users) {
-        let sections: ReportDataConfig = { table: this._dataConfig[ReportDataSection.table] };
-        if (this._isCompareMode || !this._rawGraphData.length) {
-          sections = { ...sections, graph: this._dataConfig[ReportDataSection.graph] };
-        }
         this._loadReport(sections);
+      } else  if (this._isCompareMode || !this._rawGraphData.length) {
+          sections = { ...sections, graph: this._dataConfig[ReportDataSection.graph] };
+          this._loadReport(sections);
       }
     } else {
       this._tableData = tableData;
