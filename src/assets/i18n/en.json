@@ -594,6 +594,7 @@
         "no-alerts": "No reported issues",
         "100": {
           "message-log": "Encoder re-connection occurred",
+          "self-serve-message-log": "Encoder re-connection occurred. Everything OK",
           "message-text-box": "Encoder re-connection occurred. Please check your encoder logs"
         },
         "101": {
@@ -610,6 +611,7 @@
         },
         "104": {
           "message-log": "Incoming video rate is too slow",
+          "self-serve-message-log": "Incoming video rate is too slow, please check your bandwidth.",
           "message-text-box": "Incoming video rate is too slow - we are not receiving enough video to maintain smooth streaming. Viewers may experience buffering. Please check your encoder CPU, available bandwidth and consider to reduce the bitrate in your encoder configuration"
         },
         "105": {
@@ -631,18 +633,22 @@
         },
         "110": {
           "message-log": "No Data is received on the primary endpoint",
+          "self-serve-message-log": "No data is received on the primary endpoint. Recording is disabled.",
           "message-text-box": "No data is received on the primary endpoint. Broadcasting to the primary endpoint is mandatory for recording to operate."
         },
         "111": {
           "message-log": "Authentication failed: wrong token {{parameter}}",
+          "self-serve-message-log": "Authentication failed: please contact support.",
           "message-text-box": "Authentication failed: wrong token {{parameter}}. Please check your encoder settings and try again"
         },
         "112": {
           "message-log": "Authentication failed: Incorrect stream name/key {{parameter}}",
+          "self-serve-message-log": "Authentication failed: please contact support.",
           "message-text-box": "Authentication failed: Incorrect stream name/key {{parameter}}. Please check your encoder settings and try again."
         },
         "113": {
           "message-log": "Authentication failed: entry {{entryId}} does not exist",
+          "self-serve-message-log": "Authentication failed: please contact support.",
           "message-text-box": "Authentication failed: entry {{entryId}} does not exist. Please check your settings and try again"
         },
         "114": {
@@ -664,6 +670,18 @@
         "118": {
           "message-log": "Exceeded max encoded entries allowed",
           "message-text-box": "Exceeded max encoded entries allowed, please contact support"
+        },
+        "119": {
+          "message-log": "Resolution limited by bandwidth"
+        },
+        "120": {
+          "message-log": "Resolution limited by CPU"
+        },
+        "121": {
+          "message-log": "Bandwidth back to normal"
+        },
+        "122": {
+          "message-log": "CPU back to normal"
         }
       },
       "exportLabels": {

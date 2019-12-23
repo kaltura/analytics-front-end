@@ -60,7 +60,7 @@
             </td>
             <td *ngIf="!data[distributionCalculationKey]?.value">
               <div>
-                <app-bullet [value]="data[distributionKey]"></app-bullet>
+                <app-bullet [value]="data[distributionKey]" [colorScheme]="selectedMetrics === 'count_loads' ? 'impressions' : 'default'"></app-bullet>
               </div>
             </td>
             <td *ngIf="showTrend">

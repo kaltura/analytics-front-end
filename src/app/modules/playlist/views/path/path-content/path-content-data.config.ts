@@ -28,10 +28,11 @@ export class PathContentDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'avg_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
-            sortOrder: 3,
-          },
+          // TODO uncomment once the server side fix issue with completion rate calculation
+          // 'avg_completion_rate': {
+          //   format: value => ReportHelper.percents(value / 100, false, true),
+          //   sortOrder: 3,
+          // },
         }
       },
       entryDetails: {

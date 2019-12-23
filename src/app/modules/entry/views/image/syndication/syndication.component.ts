@@ -93,10 +93,9 @@ export class ImageSyndicationComponent implements OnDestroy {
   public _tabsData: Tab[] = [];
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
-  public _distributionColorScheme: string;
+  public _distributionColorScheme = 'impressions';
 
   @ViewChild(NgxEchartsDirective, { static: false }) _chart: NgxEchartsDirective;
-
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
@@ -335,8 +334,7 @@ export class ImageSyndicationComponent implements OnDestroy {
     this._logger.trace('Handle tab change action by user', { tab });
 
     this._selectedMetrics = tab.key;
-    this._distributionColorScheme = 'default';
-
+    this._distributionColorScheme = 'impressions';
     this._logger.trace(
       'Update distribution color schema according to selected metric',
       { selectedMetric: this._selectedMetrics, schema: this._distributionColorScheme },
