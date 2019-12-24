@@ -56,14 +56,6 @@ export class ExportCsvComponent implements OnDestroy {
   public _showComponent = false;
   public _exportingCsv = false;
   
-  @HostListener('document:keydown.enter', ['$event'])
-  toggleDropdown(event: KeyboardEvent) {
-    if (this._popup && (event.target as HTMLElement).localName === 'app-export-csv') {
-      this._popup.toggle();
-      this._focusSelectAll();
-    }
-  }
-  
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
@@ -228,5 +220,11 @@ export class ExportCsvComponent implements OnDestroy {
             message: this._translate.instant('app.exportReports.errorMessage'),
           });
         });
+  }
+  public toggleDropdown() {
+    if (this._popup) {
+      this._popup.toggle();
+      this._focusSelectAll();
+    }
   }
 }

@@ -29,7 +29,7 @@
       <div class="kFilters kPreset" *ngIf="selectedView==='preset'">
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
-          <p-radioButton tabindex="0"
+          <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeLast.value.val)"
                          *ngFor="let _dateRangeLast of lastDateRangeItems" name="dates" [label]="_dateRangeLast.label"
                          [value]="_dateRangeLast.value.val" [kTooltip]="_dateRangeLast.value.tooltip"
                          [placement]="'left'" [(ngModel)]="selectedDateRange"
@@ -37,7 +37,7 @@
         </div>
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.current' | translate | uppercase}}</span>
-          <p-radioButton tabindex="0"
+          <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeCurrent.value.val)"
                          *ngFor="let _dateRangeCurrent of currDateRangeItems" name="dates"
                          [label]="_dateRangeCurrent.label" [value]="_dateRangeCurrent.value.val"
                          [kTooltip]="_dateRangeCurrent.value.tooltip" [placement]="'right'"
@@ -52,11 +52,11 @@
       <hr>
       <div class="kCompare" *ngIf="showCompare">
         <p-checkbox tabindex="0"
-                    [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" binary="true"></p-checkbox>
-        <p-radioButton tabindex="0"
+                    [label]="'app.dateFilter.compare' | translate" [(ngModel)]="compare" (keydown.enter)="compare = !compare; disableHiddenElementTabs();" binary="true"></p-checkbox>
+        <p-radioButton tabindex="0" (keydown.enter)="selectedComparePeriod = 'lastYear'"
                        name="compare" value="lastYear" *ngIf="compare" [(ngModel)]="selectedComparePeriod"
                        [label]="'app.dateFilter.comparelastyear' | translate"></p-radioButton>
-        <p-radioButton tabindex="0"
+        <p-radioButton tabindex="0" (keydown.enter)="selectedComparePeriod = 'specific'"
                        name="compare" value="specific" *ngIf="compare" [(ngModel)]="selectedComparePeriod"
                        (ngModelChange)="updateSpecificCompareStartDate()"
                        [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
@@ -69,6 +69,7 @@
               pButton class="kButtonBranded"
               [disabled]="_applyDisabled"
               [label]="'app.common.apply' | translate"
+              (keydown.tab)="$event.preventDefault();setFocus();datesPopup.close()"
               (click)="updateDataRanges();datesPopup.close()"></button>
     </div>
   </ng-template>

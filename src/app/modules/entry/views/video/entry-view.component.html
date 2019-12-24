@@ -1,18 +1,18 @@
-<div class="kReportView kVideoMedia">
+<div class="kReportView kVideoMedia" #entryView>
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
       <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_entryName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-        <app-export-csv aria-label="Export"
-                        role="button" tabindex="0"
+        <app-export-csv aria-label="Export" #export
+                        role="button"
                         *ngIf="_viewConfig.export" name="entry"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
                         [entryId]="_entryId"></app-export-csv>
-        <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
+        <div class="kFilter kOverrideFAIcons">
           <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
                (click)="_refineFilterOpened = !_refineFilterOpened"
                (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
@@ -37,7 +37,7 @@
       <span>{{'app.entry.owner' | translate}}</span>
       <span class="kOwner">{{owner}}</span>
       <div *ngIf="!isChildAccount" class="kSeparator"></div>
-      <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="link" role="link" aria-label="See All Details"
+      <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="link" role="link" aria-label="See All Details" #link
          (click)="navigateToEntry.emit()"
          (keydown.enter)="navigateToEntry.emit()">
         <span class="link" (click)="navigateToEntry.emit()">{{'app.entry.seeAll' | translate}}</span>
@@ -48,7 +48,7 @@
                       [opened]="_refineFilterOpened"
                       [dateFilter]="_dateFilter"
                       [selectedFilters]="_selectedRefineFilters"
-                      (closeFilters)="_onCloseFilters()"
+                      (closeFilters)="_refineFilterOpened = false"
                       (filterChange)="_onRefineFilterChange($event)"></app-entry-filter>
 
     <app-video-entry-totals *ngIf="_viewConfig.totals"

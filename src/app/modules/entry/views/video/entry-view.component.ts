@@ -17,6 +17,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { EntryExportConfig } from './entry-export.config';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
+import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 
 @Component({
   selector: 'app-video-entry',
@@ -113,6 +114,12 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
     }
 
     this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
+  }
+  
+  public setFocus(el: ExportCsvComponent): void {
+    setTimeout(() => {
+      ((el as unknown) as HTMLElement).focus();
+    }, 0);
   }
 
 }

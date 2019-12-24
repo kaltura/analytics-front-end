@@ -255,13 +255,6 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   public openPopup(): void {
     this.selectedDateRange = this.lastSelectedDateRange;
-
-    setTimeout(() => {
-      const btn = document.querySelector('.kDateFilterPopup .ui-selectbutton .ui-button') as HTMLElement;
-      if (btn) {
-        btn.focus();
-      }
-    });
   }
   
   public resetCompare(): void {
@@ -309,15 +302,42 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this._updateRouteParams();
   }
   
+  public disableHiddenElementTabs(): void {
+    // disable native checkboxes tab by setting it to -1
+    setTimeout(() => {
+      const checkboxes = document.getElementsByTagName('input');
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].tabIndex = -1;
+      }
+    }, 0);
+  }
+  
   public _focusSelectButton(): void {
-    // TODO figure out how to select area inside popup
+    setTimeout(() => {
+      this.disableHiddenElementTabs();
+      // focus on the selected tab header (wow!)
+      try {
+        const elm = document.getElementsByClassName('kDateFilterPopup')[0].getElementsByClassName('ui-selectbutton')[0].getElementsByClassName('ui-state-active')[0] as HTMLDivElement;
+        if (elm) {
+          elm.focus();
+        }
+      } catch (e) {}
+    }, 0);
+  }
+  
+  public triggerClick(selection): void {
+    this.selectedDateRange = selection;
+    this. updateCompareMax();
+    this. resetCompare();
   }
 
   public setFocus(): void {
-    if (this._datesBtnElement) {
-      this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '-1');
-      this._datesBtnElement.focus();
-      this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '0');
-    }
+    setTimeout(() => {
+      if (this._datesBtnElement) {
+        this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '0');
+        this._datesBtnElement.focus();
+      }
+    }, 0);
+    
   }
 }
