@@ -5,7 +5,7 @@
               [kTooltip]="'app.entry.back' | translate"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_entryName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-        <app-export-csv aria-label="Export" #export
+        <app-export-csv aria-label="Export"
                         role="button"
                         *ngIf="_viewConfig.export" name="entry"
                         [reports]="_exportConfig"
