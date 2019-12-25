@@ -43,6 +43,10 @@ export class InteractionsConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+          },
           'entry_name': {
             format: value => value,
             nonComparable: true,

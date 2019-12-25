@@ -382,10 +382,10 @@ export class InteractionsComponent extends InteractionsBaseReportComponent imple
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status, partner_id } = row;
-
+    const { object_id: entryId, status, partner_id, entry_source } = row;
     if (status === KalturaEntryStatus.ready) {
-      this._navigationDrillDownService.drilldown('entry', entryId, true, partner_id);
+      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, entryId, true, partner_id);
     }
   }
 }
