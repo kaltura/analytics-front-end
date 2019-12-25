@@ -1,22 +1,27 @@
 <div class="kReportView kVideoMedia">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
-      <button pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+      <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
-      <span *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</span>
+      <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export" name="entry"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
                         [rootEntryIdIn]="_playlistId"></app-export-csv>
-        <div *ngIf="_viewConfig.export" class="kFilter kOverrideFAIcons">
-          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+
+
+        <div class="kFilter kOverrideFAIcons">
+          <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+               (click)="_refineFilterOpened = !_refineFilterOpened"
+               (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
             <span>{{'app.filters.filter' | translate}}</span>
             <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
             <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
           </div>
         </div>
+
         <app-date-filter #dateFilter
                          name="entry"
                          [dateRange]="_dateRange"
