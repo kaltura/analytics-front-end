@@ -37,6 +37,7 @@ export interface AnalyticsConfig {
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  contrastTheme?: boolean;
   menuConfig?: {
     showMenu: boolean;
     items?: MenuItem[];
@@ -81,7 +82,7 @@ export function buildCDNUrl(suffix: string): string {
   } else {
     baseUrl = analyticsConfig.cdnServers.serverUri;
   }
-  
+
   return `${baseUrl}${suffix}`;
 }
 
@@ -90,7 +91,7 @@ export const analyticsConfig: AnalyticsConfig = {
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  originTarget: '*',
+  originTarget: window.location.origin,
   multiAccount: false,
 };
 
@@ -98,7 +99,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   if (!config) {
     throw Error('No configuration provided!');
   }
-  
+
   analyticsConfig.ks = config.ks;
   analyticsConfig.pid = config.pid;
   analyticsConfig.locale = config.locale;
@@ -129,13 +130,13 @@ export function initConfig(): Observable<void> {
       return () => {
       };
     }
-    
+
     // hosted
     window.parent.postMessage(
       { messageType: 'analyticsInit', payload: { menuConfig: menu, viewsConfig: viewsConfig } },
       analyticsConfig.originTarget,
     );
-    
+
     const initEventHandler = event => {
       if (event.data && event.data.messageType === 'init') {
         setConfig(event.data.payload, true);
@@ -143,9 +144,9 @@ export function initConfig(): Observable<void> {
         observer.complete();
       }
     };
-    
+
     window.addEventListener('message', initEventHandler);
-    
+
     return () => {
       window.removeEventListener('message', initEventHandler);
     };

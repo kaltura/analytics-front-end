@@ -71,8 +71,9 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
           const viewsConfig = postMessageData.payload.viewsConfig;
-          // viewsConfig.entry.totals.social.shares = null;    // hide social shares
           viewsConfig.entry.syndication = null;   // hide syndication
+          viewsConfig.entry.totals.comments = {}; // show comments
+          viewsConfig.entry.totals.likes = {};    // show likes
 
           sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;

@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObject, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -65,6 +65,15 @@ export class ExportCsvComponent implements OnDestroy {
   ngOnDestroy(): void {
   }
   
+  private _focusSelectAll(): void {
+    setTimeout(() => {
+      const node = document.querySelector('.kExportPanel .ui-treenode-content') as HTMLElement;
+      if (node) {
+        node.focus();
+      }
+    });
+  }
+  
   private _getFilter(): KalturaEndUserReportInputFilter {
     let filter = new KalturaEndUserReportInputFilter();
     
@@ -108,6 +117,11 @@ export class ExportCsvComponent implements OnDestroy {
     }];
   }
   
+  public _onPopupOpen(): void {
+    this._opened = true;
+    this._focusSelectAll();
+  }
+  
   public _onPopupClose(): void {
     this._opened = false;
     this._selected = [];
@@ -132,7 +146,7 @@ export class ExportCsvComponent implements OnDestroy {
     const selection: ExportItem[] = this._selected
       .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
       .map(({ data }) => data);
-  
+    
     const mapReportItem = (item, label = null) => {
       const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
       if (item.startDate && item.endDate) {
@@ -151,21 +165,21 @@ export class ExportCsvComponent implements OnDestroy {
           filter: itemFilter,
           responseOptions,
         });
-    
+        
         if (item.order) {
           reportItem.order = item.order;
         }
-    
+        
         if (item.objectIds) {
           reportItem.objectIds = item.objectIds;
         }
-    
+        
         if (item.additionalFilters) {
           Object.keys(item.additionalFilters).forEach(key => {
             reportItem.filter[key] = item.additionalFilters[key];
           });
         }
-    
+        
         reportItems.push(reportItem);
       });
     };
@@ -187,7 +201,7 @@ export class ExportCsvComponent implements OnDestroy {
         cancelOnDestroy(this),
         finalize(() => {
           this._exportingCsv = false;
-
+          
           if (this._popup) {
             this._popup.close();
           }
@@ -206,5 +220,11 @@ export class ExportCsvComponent implements OnDestroy {
             message: this._translate.instant('app.exportReports.errorMessage'),
           });
         });
+  }
+  public toggleDropdown() {
+    if (this._popup) {
+      this._popup.toggle();
+      this._focusSelectAll();
+    }
   }
 }

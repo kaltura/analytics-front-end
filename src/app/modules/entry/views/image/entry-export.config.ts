@@ -10,7 +10,7 @@ export class EntryExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
     super();
   }
-  
+
   public getConfig(viewConfig?: ViewConfig): ExportItem[] {
     const config: ExportItem[] = [
       {
@@ -55,7 +55,7 @@ export class EntryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
     ];
-  
+
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;
   }
 }

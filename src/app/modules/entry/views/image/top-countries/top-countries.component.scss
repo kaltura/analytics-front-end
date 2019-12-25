@@ -8,8 +8,15 @@
 .kCompare {
   height: 760px;
 }
+
 @media (max-width: 991px) {
   .kCompare {
     height: auto;
+  }
+}
+
+.kHighContrast :host {
+  .kBreadcrumbsLink {
+    color: $kGrayscale1 !important;
   }
 }

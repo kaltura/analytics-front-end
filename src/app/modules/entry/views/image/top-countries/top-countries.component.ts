@@ -32,22 +32,22 @@ import { TopCountriesConfig } from '../../shared/top-countries/top-countries.con
 })
 export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnDestroy {
   @Input() entryId = '';
-  
+
   @ViewChild('entryGeo', { static: false }) _entryGeo: GeoComponent;
   @ViewChild('entryCompareGeo', { static: false }) _entryCompareGeo: GeoComponent;
-  
+
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
 
   public _distributionKey = 'loads_distribution';
   public _distributionCalculationKey = 'count_loads';
-  
+
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _order = `-${this._distributionCalculationKey}`;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  
+
   protected _componentId = 'top-geo';
-  
+
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _selectedMetrics: string;
@@ -67,11 +67,11 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
   public _mapData: any;
   public _currentPeriodTitle: string;
   public _comparePeriodTitle: string;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -83,10 +83,10 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   ngOnInit() {
     this._isBusy = false;
     // load works map data
@@ -95,19 +95,19 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
         this._mapData = data;
       });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._drillDownTop(false);
-    
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._drillDownTop(false);
-    
+
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
     this._filter.toDate = this._dateFilter.endDate;
@@ -123,18 +123,18 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       this._compareFilter = null;
     }
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
     this._compareTableData = [];
     this._blockerMessage = null;
-    
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
@@ -144,11 +144,11 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
           if (!this._isCompareMode) {
             return ObservableOf({ report, compare: null });
           }
-          
+
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
           }
-          
+
           const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
           this._updateReportConfig(compareReportConfig);
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
@@ -157,31 +157,31 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       )
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
-          
+
           if (report.totals) {
             this._tabsData = this._handleTotals(report.totals); // handle totals
           }
-          
+
           if (report.table && report.table.header && report.table.data) {
             this._tableData = this._handleTable(report.table, this._tabsData); // handle table
           }
-          
+
           if (compare) {
             this._currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
             this._comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`;
-            
+
             if (compare.totals) {
               this._compareTabsData = this._handleTotals(compare.totals); // handle totals
             }
             if (compare.table && compare.table.header && compare.table.data) {
               this._compareTableData = this._handleTable(compare.table, this._compareTabsData); // handle table
-              
+
               this._tableData.forEach(row => {
                 const relevantCompareRow = this._compareTableData.find(item => {
                   const sameCountry = item.country === row.country;
                   const sameRegion = item.region === row.region;
                   const sameCity = item.city === row.city;
-                  
+
                   return sameCountry && sameRegion && sameCity;
                 });
                 const compareValue = relevantCompareRow ? relevantCompareRow[this._distributionCalculationKey] : 0;
@@ -193,10 +193,10 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
               });
             }
           }
-          
+
           setTimeout(() => {
             this._entryGeo.updateMap(this._mapCenter);
-            
+
             if (this._entryCompareGeo) {
               this._entryCompareGeo.updateMap(this._mapCenter);
             }
@@ -215,7 +215,7 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _setPlaysTrend(row: TableRow, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
     const currentValue = parseFormattedValue(row[field]);
     compareValue = parseFormattedValue(compareValue.toString());
@@ -228,7 +228,7 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       units: value !== null ? '%' : '',
     };
   }
-  
+
   private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
@@ -238,7 +238,7 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
     let tmp = this._columns.pop();
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
-    
+
     return tableData.map(row => {
       const calculateDistribution = (key: string): number => {
         const tab = tabsData.find(item => item.key === key);
@@ -248,18 +248,18 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       };
       const playsDistribution = calculateDistribution(this._distributionCalculationKey);
       row[this._distributionKey] = ReportHelper.numberWithCommas(playsDistribution);
-      
+
       return row;
     });
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): Tab[] {
     return this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-  
+
   private _updateReportConfig(reportConfig: ReportConfig): void {
     const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
-    
+
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
     }
@@ -270,18 +270,18 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = '';
-    
+
     if (this._drillDown.length > 0) {
       reportConfig.filter.countryIn = this._drillDown[0];
     } else if (countriesFilterApplied) {
       refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
     }
-    
+
     if (this._drillDown.length > 1) {
       reportConfig.filter.regionIn = this._drillDown[1];
     }
   }
-  
+
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
     if (this._drillDown.length > 0) {
@@ -299,25 +299,25 @@ export class ImageTopCountriesComponent extends EntryBase implements OnInit, OnD
       }
     }
   }
-  
+
   public _onDrillDown(event: { drillDown: string[], reload: boolean }): void {
     const { drillDown, reload } = event;
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
     this._reportType = this._drillDown.length === 2 ? reportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? reportTypeMap(KalturaReportType.mapOverlayRegion) : reportTypeMap(KalturaReportType.mapOverlayCountry);
-    
+
     this.onDrillDown.emit({ reportType: this._reportType, drillDown: this._drillDown });
-    
+
     if (reload) {
       this._loadReport();
     }
   }
-  
+
   public _drillDownTop(reload = true): void {
     this._entryGeo.drillDown(null, reload);
-    
+
     if (this._entryCompareGeo) {
       this._entryCompareGeo.drillDown(null, reload);
     }
   }
-  
+
 }

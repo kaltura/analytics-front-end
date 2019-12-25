@@ -1,7 +1,7 @@
 <div [attr.data-aid]="'table-graph-geo-' + name" class="kReportContent kTopCountries" [ngClass]="isCompareMode ? 'kCompareMode' : 'kDefaultMode'">
   <div class="kTable">
     <div class="kTableContainer">
-      <p-table #table [value]="tableData" [paginator]="true" [rows]="5">
+      <p-table #table aria-label="Top Countries Table" [value]="tableData" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
           <tr>
             <th [ngStyle]="{'width': '50px'}">
@@ -12,13 +12,6 @@
               <div class="kColumnHeader">
                 <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
                   {{'app.audience.geo.object_id' | translate}}
-                </span>
-              </div>
-            </th>
-            <th [ngStyle]="{'width': '20%'}" *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
-              <div class="kColumnHeader">
-                <span [kTooltip]="'app.entry.count_loads' | translate" [showOnEllipsis]="true">
-                  {{'app.entry.count_loads' | translate}}
                 </span>
               </div>
             </th>
@@ -48,12 +41,19 @@
               <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
             </td>
             <td class="kHighlight">
-              <a *ngIf="drillDownItems.length === 0" (click)="drillDown(data['country'])">{{data['country']}}</a>
-              <a *ngIf="drillDownItems.length === 1" (click)="drillDown(data['region'])">{{data['region']}}</a>
+              <a tabindex="0" *ngIf="drillDownItems.length === 0"
+                 role="link"
+                 (click)="drillDown(data['country'])"
+                 (keydown.enter)="drillDown(data['country'])">
+                {{data['country']}}
+              </a>
+              <a tabindex="0" *ngIf="drillDownItems.length === 1"
+                 role="link"
+                 (click)="drillDown(data['region'])"
+                 (keydown.enter)="drillDown(data['region'])">
+                {{data['region']}}
+              </a>
               <span *ngIf="drillDownItems.length === 2">{{data['city']}}</span>
-            </td>
-            <td *ngIf="!isCompareMode && selectedMetrics === 'count_plays'">
-              <span *ngIf="!data['count_loads']?.value">{{data['count_loads']}}</span>
             </td>
             <td>
               <span *ngIf="!data[distributionCalculationKey]?.value">{{data[distributionCalculationKey]}}</span>
@@ -89,12 +89,19 @@
   <div *ngIf="isCompareMode" class="kPeriod">{{periodTitle}}</div>
   <div class="kMap">
     <div *ngIf="_mapDataReady" echarts class="kChart"
+         aria-label="World Map"
          [options]="_mapChartData"
          (chartClick)="_onChartClick($event)"
          (chartInit)="_onChartInit($event)"></div>
     <div class="kZoomWidget">
-      <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
-      <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+      <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus"
+              role="button" tabindex="0" aria-label="Zoom Out"
+              (click)="_zoom('out')"
+              (keydown.enter)="_zoom('out')"></button>
+      <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus"
+              role="button" tabindex="0" aria-label="Zoom In"
+              (click)="_zoom('in')"
+              (keydown.enter)="_zoom('in')"></button>
     </div>
   </div>
 </div>

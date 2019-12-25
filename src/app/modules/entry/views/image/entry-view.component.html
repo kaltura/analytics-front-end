@@ -1,18 +1,22 @@
 <div class="kReportView kImageEntry kImageMedia">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
-      <button pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+      <button tabindex="0" aria-label="Back" *ngIf="_viewConfig.title" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate"></button>
-      <span *ngIf="_viewConfig.title" class="kTitle">{{_entryName}}</span>
+      <h1 class="kTitle" *ngIf="_viewConfig.title">{{_entryName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export"
+                        aria-label="Export"
+                        role="button"
                         name="entry"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
                         [entryId]="_entryId"></app-export-csv>
         <div *ngIf="_viewConfig.refineFilter" class="kFilter kOverrideFAIcons">
-          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+          <div role="button" aria-label="Refine Filter" class="kDropDown" tabindex="0"
+               (click)="_refineFilterOpened = !_refineFilterOpened"
+               (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
             <span>{{'app.filters.filter' | translate}}</span>
             <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
             <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
@@ -27,14 +31,18 @@
       </div>
     </div>
 
-    <div *ngIf="_viewConfig.details" class="kEntryDetails" [class.kFloatingDetails]="!_viewConfig.title">
+    <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Image Entry Details" [class.kFloatingDetails]="!_viewConfig.title">
       <div class="kIconMediaType" [ngClass]="_entryType | mediaType: false"></div>
       <span>{{_entryType | mediaType: true}}</span>
       <div class="kSeparator"></div>
       <span>{{'app.entry.owner' | translate}}</span>
       <span class="kOwner">{{owner}}</span>
-      <div *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="kSeparator"></div>
-      <span *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="link" (click)="navigateToEntry.emit()">{{'app.entry.seeAll' | translate}}</span>
+      <div *ngIf="!isChildAccount" class="kSeparator"></div>
+      <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="link" role="link" aria-label="See All Details"
+         (click)="navigateToEntry.emit()"
+         (keydown.enter)="navigateToEntry.emit()">
+        <span *ngIf="!isChildAccount && _viewConfig.title && _showViewDetails" class="link" (click)="navigateToEntry.emit()">{{'app.entry.seeAll' | translate}}</span>
+      </a>
     </div>
 
     <app-entry-filter [viewConfig]="_viewConfig.refineFilter"

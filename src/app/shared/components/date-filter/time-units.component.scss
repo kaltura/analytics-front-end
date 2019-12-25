@@ -1,3 +1,10 @@
-::ng-deep p-selectbutton .ui-button{
-  width: 90px;
+::ng-deep p-selectbutton {
+  .ui-button {
+    width: 90px;
+  }
+
+  .ui-state-focus {
+    z-index: 10;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
 }

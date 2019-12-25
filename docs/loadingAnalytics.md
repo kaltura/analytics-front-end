@@ -48,6 +48,7 @@ liveAnalytics?: { // configuration of the legacy live analytics app, is displaye
 ks: string, // partner's ks
 pid: number, // partner id
 multiAccount: boolean, // notifies the analytics app that current session is running under multi-accont mode, all report types will be switched to ones that support multiaccount
+contrastTheme: boolean, // toggle contrast theme (currently supported in the entry drill-down only)
 locale: string, // locale code, currently only "en" translation is supported by analytics app
 dateFormat?: 'month-day-year' | 'day-month-year', // style of date format, currently support only "mdy" and "dmy" formats
 live?: { // configuration of the live module
@@ -98,6 +99,7 @@ H → A | `setLogsLevel` | `{ level: LogLevels }` | The analytics app implements
 H → A | `updateFilters` | `{ queryParams: { [key: string]: string } }` | Date filters in the analytics app are preserved via queryParams which allows to deep-link to required time range from the url, in case the host app handles all navigation it has to send the queryParams with required filters, otherwise the default one will be used
 H → A | `updateMultiAccount` | `{ multiAccount: boolean }` | Notifies the analytics app about switching the multi-account mode, reloads the page after update
 H → A | `updateConfig` | `{ config: [shape described above] }` | Allows to update the analytics config after the app's been initialized
+H → A | `toggleContrastTheme` | none | Toggle the contrast theme of the analytics app. Adds/removes the class from the analytics app body element.
 H ⇆ A | `navigate` | A listens for: `{ url: string, queryParams: { [key: string]: string } }`<br/>A sends: `{ [key: string]: string }` | In case the navigation is handled by the host app, the analytics app is listening for a url from the host app which which is mapped for according route inside the analytics. Upon a navigation event inside the analytics app it will send an event with updated queryParams to the host app which will should be updated and then send back via `updateFilters` event
 
 ### Example

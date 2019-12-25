@@ -10,12 +10,12 @@ import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-
 import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
+import { ViewConfig, viewsConfig } from 'configuration/view-config';
+import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { EntryBase } from '../entry-base/entry-base';
-import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
-import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 export const TotalsConfig = new InjectionToken<string>('TotalsConfig');
 
@@ -47,7 +47,6 @@ export class BaseEntryTotalsComponent extends EntryBase {
     likes: null,
     shares: null,
   };
-  public showLikes = false;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -60,7 +59,6 @@ export class BaseEntryTotalsComponent extends EntryBase {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _kalturaClient: KalturaClient,
-              private _permissions: AnalyticsPermissionsService,
               @Inject(TotalsConfig) private _dataConfigService: ReportDataBaseConfig) {
     super();
     
@@ -95,7 +93,6 @@ export class BaseEntryTotalsComponent extends EntryBase {
         switchMap(({ report, compare }) => this._getLikes().pipe(map(likes => ({ report, compare, likes }))))
       )
       .subscribe(({ report, compare, likes }) => {
-          this.showLikes = likes[0] !== -1;
           if (compare) {
             this._handleCompare(report, compare, likes);
           } else {
@@ -194,31 +191,27 @@ export class BaseEntryTotalsComponent extends EntryBase {
   }
   
   private _getLikes(): Observable<number[]> {
-    if (this._permissions.hasPermission(AnalyticsPermissions.FEATURE_LIKE)) {
-      const getAction = filter => new LikeListAction({
-        filter: new KalturaLikeFilter({
-          entryIdEqual: this.entryId,
-          createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
-          createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
-        }),
-        pager: new KalturaFilterPager({pageSize: 1}),
-      });
-  
-      const actions = [getAction(this._filter)];
-  
-      if (this._isCompareMode) {
-        actions.push(getAction(this._compareFilter));
-      }
-  
-      return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
-        .pipe(map(responses => {
-          if (responses.hasErrors()) {
-            throw responses.getFirstError();
-          }
-          return responses.map(response => response.result.totalCount);
-        }));
-    } else {
-      return Observable.of([-1]);
+    const getAction = filter => new LikeListAction({
+      filter: new KalturaLikeFilter({
+        entryIdEqual: this.entryId,
+        createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
+        createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
+      }),
+      pager: new KalturaFilterPager({ pageSize: 1 }),
+    });
+    
+    const actions = [getAction(this._filter)];
+    
+    if (this._isCompareMode) {
+      actions.push(getAction(this._compareFilter));
     }
+    
+    return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+      .pipe(map(responses => {
+        if (responses.hasErrors()) {
+          throw responses.getFirstError();
+        }
+        return responses.map(response => response.result.totalCount);
+      }));
   }
 }

@@ -2,6 +2,7 @@
   <div *ngIf="label" class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
     <kAutoComplete suggestionItemField="item"
+                   role="searchbox"
                    suggestionSelectableField="isSelectable"
                    [field]="field"
                    [suggestionLabelField]="suggestionLabelField"

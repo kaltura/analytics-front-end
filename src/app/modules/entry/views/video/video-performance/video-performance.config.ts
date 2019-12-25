@@ -92,7 +92,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.avg_completion_rate`),
             sortOrder: 4,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true, true, 3)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
           },
           'avg_view_drop_off': {
             format: value => Math.min(value * 100, 100),

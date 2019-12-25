@@ -30,6 +30,7 @@
     height: 20px;
     width: 18px;
     font-size: 24px;
+    overflow: hidden;
 
     &:active {
       box-shadow: none;
@@ -74,6 +75,7 @@
 
     .link {
       font-size: 14px;
+      height: 15px;
     }
   }
 }
@@ -190,4 +192,8 @@
   }
 }
 
-
+.kHighContrast :host {
+  .kEntryDetails, .kBackBtn {
+    color: $kGrayscale1;
+  }
+}

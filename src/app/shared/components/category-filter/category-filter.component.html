@@ -1,11 +1,26 @@
 <div class="kColumn">
   <div class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
-    <a *ngIf="!_selectedValue.length" (click)="_openCategoriesBrowser()">{{linkLabel}}</a>
+    <a tabindex="0" *ngIf="!_selectedValue.length"
+       role="button"
+       (click)="_openCategoriesBrowser()"
+       (keydown.enter)="_openCategoriesBrowser()">
+      {{linkLabel}}
+    </a>
     <span class="kSelected" *ngIf="_selectedValue.length">
       {{'app.categories.selected' | translate:{'0': _selectedValue.length} }}
-      <a (click)="_openCategoriesBrowser()">{{'app.categories.change' | translate}}</a>
-      <a (click)="_updateCategories([])">{{'app.common.clearAll' | translate}}</a>
+      <a tabindex="0"
+         role="button"
+         (click)="_openCategoriesBrowser()"
+         (keydown.enter)="_openCategoriesBrowser()">
+        {{'app.categories.change' | translate}}
+      </a>
+      <a tabindex="0"
+         role="button"
+         (click)="_updateCategories([])"
+         (keydown.enter)="_updateCategories([])">
+        {{'app.common.clearAll' | translate}}
+      </a>
     </span>
   </div>
 </div>

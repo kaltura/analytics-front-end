@@ -9,7 +9,7 @@ export class ImageTopCountriesConfig extends TopCountriesConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {

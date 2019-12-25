@@ -29,12 +29,18 @@
 
   <div class="kFooter">
     <div class="kActions">
-      <a (click)="_cancel()">{{'app.common.cancel' | translate}}</a>
-      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length <= 1"
+      <a role="button" tabindex="0"
+         (click)="_cancel()"
+         (keydown.enter)="_cancel()">
+        {{'app.common.cancel' | translate}}
+      </a>
+      <button tabindex="0"
+              class="kButtonBranded" pButton *ngIf="_selectedCategories.length <= 1"
               [disabled]="!_selectedCategories.length"
               [label]="'app.categories.select' | translate"
               (click)="_apply()"></button>
-      <button class="kButtonBranded" pButton *ngIf="_selectedCategories.length >= 2"
+      <button tabindex="0"
+              class="kButtonBranded" pButton *ngIf="_selectedCategories.length >= 2"
               [label]="'app.categories.selectCount' | translate:{'0': _selectedCategories.length}"
               (click)="_apply()"></button>
     </div>
