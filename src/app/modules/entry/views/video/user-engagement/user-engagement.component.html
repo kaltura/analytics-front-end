@@ -38,7 +38,7 @@
           <ng-template pTemplate="body" let-data let-expanded="expanded">
             <tr>
               <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
-                <a tabindex="0" href="#" [pRowToggler]="data" aria-role="button" aria-label="Expand Row">
+                <a tabindex="0" href="#" [pRowToggler]="data" role="button" aria-label="Expand Row">
                   <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
                      style="font-size: 1.25em"></i>
                 </a>
