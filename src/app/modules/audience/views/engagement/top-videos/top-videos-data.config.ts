@@ -20,6 +20,10 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+          },
           'entry_name': {
             format: value => value,
             sortOrder: 1,

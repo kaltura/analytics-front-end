@@ -107,10 +107,11 @@ export class TopVideosTableComponent implements OnDestroy {
     }
   }
 
-  public _drillDown({ object_id: entryId, status, partner_id }: { object_id: string, status: string, partner_id: string }): void {
+  public _drillDown({ object_id: entryId, status, partner_id, entry_source }: { object_id: string, status: string, partner_id: string, entry_source: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      this._navigationDrillDownService.drilldown('entry', entryId, true, partner_id);
+      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, entryId, true, partner_id);
     }
   }
-
+  
 }

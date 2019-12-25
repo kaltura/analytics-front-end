@@ -16,6 +16,10 @@ export class UserMiniTopContentConfig extends ReportDataBaseConfig {
           'object_id': {
             format: value => value,
           },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+          },
           'entry_name': {
             format: value => value,
           },

@@ -395,10 +395,11 @@ export class UserMediaUploadComponent extends UserBase implements OnDestroy {
   }
 
   public _drillDown(row: TableRow<string>): void {
-    const { object_id: entryId, status, partner_id: partnerId } = row;
+    const { object_id: entryId, status, partner_id: partnerId, entry_source } = row;
 
     if (status === KalturaEntryStatus.ready) {
-      this._navigationDrillDownService.drilldown('entry', entryId, true, partnerId);
+      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, entryId, true, partnerId);
     }
   }
 }

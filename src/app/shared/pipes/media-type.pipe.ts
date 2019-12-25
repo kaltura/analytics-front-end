@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaMediaType, KalturaPlaylistType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({name: 'mediaType'})
@@ -32,6 +32,10 @@ export class MediaTypePipe implements PipeTransform {
                     tooltip = this.translate.instant("app.entry.entryType.live");
                     className = 'kIconlive_transcoding';
                     break;
+                case KalturaPlaylistType.staticList:
+                  tooltip = this.translate.instant("app.entryType.interactive");
+                  className = 'kIconplaylist_interactive_small';
+                  break;
                 default:
                     tooltip = this.translate.instant("app.entry.entryType.unknown");
                     className = 'kIconfile-small';
