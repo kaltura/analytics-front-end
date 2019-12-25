@@ -204,13 +204,13 @@
       "publisher_table": {
         "month_id": "Month",
         "date_id": "Date",
-        "bandwidth_consumption": "BW Consumption (MB)",
-        "average_storage": "Average Storage (MB)",
-        "peak_storage": "Peak Storage (MB)",
-        "added_storage": "Added Storage (MB)",
-        "deleted_storage": "Deleted Storage (MB)",
-        "combined_bandwidth_storage": "BW and Storage Consumption (MB)",
-        "transcoding_consumption": "Transcoding Consumption (MB)"
+        "bandwidth_consumption": "BW Consumption (GB)",
+        "average_storage": "Average Storage (GB)",
+        "peak_storage": "Peak Storage (GB)",
+        "added_storage": "Added Storage (GB)",
+        "deleted_storage": "Deleted Storage (GB)",
+        "combined_bandwidth_storage": "BW and Storage Consumption (GB)",
+        "transcoding_consumption": "Transcoding Consumption (GB)"
       },
       "bandwidth_consumption_tt": "The amount of consumed bandwidth in the selected timeframe",
       "average_storage_tt": "The average storage in the selected timeframe",
