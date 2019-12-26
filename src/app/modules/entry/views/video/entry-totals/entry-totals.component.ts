@@ -19,5 +19,6 @@ export class VideoEntryTotalsComponent extends BaseEntryTotalsComponent {
       this._viewConfig = { ...viewsConfig.entry.totals };
     }
   }
+
   public _viewConfig: ViewConfig = { ...viewsConfig.entry.totals };
 }

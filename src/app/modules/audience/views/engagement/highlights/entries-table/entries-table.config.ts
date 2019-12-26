@@ -18,6 +18,10 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+          },
           'object_id': {
             format: value => value,
             nonComparable: true,

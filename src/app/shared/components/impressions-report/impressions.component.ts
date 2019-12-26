@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorDetails, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { SelectItem } from 'primeng/api';
@@ -19,6 +19,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export type funnelData = {
   impressions: number;
@@ -41,7 +42,7 @@ export type funnelData = {
     ReportService,
   ],
 })
-export class ImpressionsComponent implements OnInit {
+export class ImpressionsComponent implements OnInit, OnDestroy {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
       this._dateFilter = value;
@@ -113,7 +114,8 @@ export class ImpressionsComponent implements OnInit {
               private _translate: TranslateService,
               private _authService: AuthService,
               private _compareService: CompareService,
-              private _dataConfigService: ImpressionsDataConfig) {
+              private _dataConfigService: ImpressionsDataConfig,
+              private _browserService: BrowserService) {
     this._dataConfig = _dataConfigService.getConfig();
     
     this._chartData = _dataConfigService.getChartConfig((params) => {
@@ -123,10 +125,36 @@ export class ImpressionsComponent implements OnInit {
     this._compareChartData = _dataConfigService.getChartConfig((params) => {
       return this.getCompareChartTooltip(params);
     });
+  
+    this._browserService.contrastThemeChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isContrast => this._toggleChartTheme(isContrast));
   }
   
   ngOnInit() {
     this._isBusy = false;
+  }
+  
+  ngOnDestroy(): void {
+  
+  }
+  
+  private _toggleChartTheme(isContrast: boolean): void {
+    const toggle = (chart, color, background) => {
+      const data = {
+        tooltip: { textStyle: { color } },
+        series: [{ label: background }],
+      };
+      chart.setOption(data, false);
+    };
+    const color = isContrast ? '#333333' : '#999999';
+    const labelBackground = isContrast ? { backgroundColor: 'black', padding: 3 } : { backgroundColor: 'transparent', padding: 0 };
+    if (this.echartsIntance) {
+      toggle(this.echartsIntance, color, labelBackground);
+    }
+    if (this.compareEchartsIntance) {
+      toggle(this.compareEchartsIntance, color, labelBackground);
+    }
   }
   
   public onChartInit(ec) {

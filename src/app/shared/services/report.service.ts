@@ -31,6 +31,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { getPrimaryColor } from 'shared/utils/colors';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { BrowserService } from 'shared/services/browser.service';
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -60,15 +61,24 @@ export interface GraphsData {
 
 @Injectable()
 export class ReportService implements OnDestroy {
-  
+  private _labelColor: string;
   private _querySubscription: ISubscription;
   private _exportSubscription: ISubscription;
   
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
-              private _logger: KalturaLogger) {
+              private _logger: KalturaLogger,
+              private _browserService: BrowserService) {
     this._logger = _logger.subLogger('ReportService');
+    this._setLabelColor(this._browserService.isContrasTheme);
+    this._browserService.contrastThemeChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(isContrast => this._setLabelColor(isContrast));
+  }
+  
+  private _setLabelColor(isContrast: boolean): void {
+    this._labelColor = isContrast ? '#333333' : '#999999';
   }
   
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
@@ -356,7 +366,7 @@ export class ReportService implements OnDestroy {
           boundaryGap: true,
           data: xAxisData,
           axisLabel: {
-            color: '#999999',
+            color: this._labelColor,
             fontSize: 12,
             fontWeight: 'bold',
             fontFamily: 'Lato',
@@ -377,7 +387,7 @@ export class ReportService implements OnDestroy {
         yAxis: {
           type: 'value',
           axisLabel: {
-            color: '#999999',
+            color: this._labelColor,
             fontSize: 12,
             fontWeight: 'bold',
             fontFamily: 'Lato',
@@ -403,7 +413,7 @@ export class ReportService implements OnDestroy {
           borderWidth: 1,
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
           textStyle: {
-            color: '#999999'
+            color: this._labelColor,
           },
           axisPointer: {
             lineStyle: {
@@ -435,7 +445,7 @@ export class ReportService implements OnDestroy {
           type: 'category',
           data: xAxisData,
           axisLabel: {
-            color: '#999999',
+            color: this._labelColor,
             fontSize: 12,
             fontWeight: 'bold',
             fontFamily: 'Lato',
@@ -456,7 +466,7 @@ export class ReportService implements OnDestroy {
         yAxis: {
           type: 'value',
           axisLabel: {
-            color: '#999999',
+            color: this._labelColor,
             fontSize: 12,
             fontWeight: 'bold',
             fontFamily: 'Lato',
@@ -482,7 +492,7 @@ export class ReportService implements OnDestroy {
           borderWidth: 1,
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
           textStyle: {
-            color: '#999999'
+            color: this._labelColor
           },
           axisPointer: {
             type: 'shadow',

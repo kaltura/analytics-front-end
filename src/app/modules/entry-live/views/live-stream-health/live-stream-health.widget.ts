@@ -29,7 +29,8 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
       staticInfoSecondary: { updatedTime: 0 },
       dynamicInfoPrimary: { updatedTime: 0 },
       dynamicInfoSecondary: { updatedTime: 0 },
-      streamHealth: { updatedTime: Date.now(), data: { primary: [], secondary: [] } }
+      streamHealth: { updatedTime: Date.now(), data: { primary: [], secondary: [] } },
+      selfServe: { updatedTime: 0, data: false }
     });
   }
   
@@ -61,14 +62,16 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
     beaconsArray.forEach(b => {
       try {
         let privateData = JSON.parse(b.privateData);
-        let eventType = b.eventType.substring(2);
+        let eventType = b.eventType;
         let isPrimary = (b.eventType[0] === '0');
         let beaconUpdateTime = b.updatedAt.valueOf();
         
         let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
         if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
-          if (eventType === 'healthData') {
+          if (eventType.indexOf('healthData') > -1) {
             this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
+          } else if (eventType.indexOf('selfServeStats') > -1) {
+            objectToUpdate.data = true;
           } else {
             objectToUpdate.data = privateData;
           }
@@ -85,17 +88,19 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
     return entryDiagnosticsObject;
   }
   
-  private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, event: string, isPrimary: boolean): { updatedFormattedTime?: string, updatedTime?: number, data?: any } {
-    switch (event) {
-      case 'staticData':
-        return (isPrimary) ? entryDiagnosticsObject.staticInfoPrimary : entryDiagnosticsObject.staticInfoSecondary;
-      case 'dynamicData':
-        return (isPrimary) ? entryDiagnosticsObject.dynamicInfoPrimary : entryDiagnosticsObject.dynamicInfoSecondary;
-      case 'healthData':
-        return entryDiagnosticsObject.streamHealth;
-      default:
-        this._logger.warn(`Beacon event Type unknown: ${event}`, { event });
-        return null;
+  private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, eventType: string, isPrimary: boolean): { updatedFormattedTime?: string, updatedTime?: number, data?: any } {
+
+    if (eventType.indexOf('staticData') > -1) {
+      return (isPrimary) ? entryDiagnosticsObject.staticInfoPrimary : entryDiagnosticsObject.staticInfoSecondary;
+    } else if (eventType.indexOf('dynamicData') > -1) {
+      return (isPrimary) ? entryDiagnosticsObject.dynamicInfoPrimary : entryDiagnosticsObject.dynamicInfoSecondary;
+    } else if (eventType.indexOf('healthData') > -1) {
+      return entryDiagnosticsObject.streamHealth;
+    } else if (eventType.indexOf('selfServeStats') > -1) {
+      return entryDiagnosticsObject.selfServe;
+    } else {
+      this._logger.warn(`Beacon event Type unknown: ${eventType}`, { event: eventType });
+      return null;
     }
   }
   

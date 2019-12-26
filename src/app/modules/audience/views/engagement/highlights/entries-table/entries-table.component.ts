@@ -156,6 +156,9 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   }
   
   public _drillDown(row: TableRow): void {
-    this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
+    const path = row['entry_source'] === 'Interactive Video' ? 'playlist' : 'entry';
+    this._navigationDrillDownService.drilldown(path, row['object_id'], true, row['partner_id']);
   }
 }
+
+

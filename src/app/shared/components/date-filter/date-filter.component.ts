@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
 import { DateFilterUtils } from './date-filter-utils';
@@ -44,6 +44,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
+  @ViewChild('datesBtn', { static: false }) set datesBtn(elRef: ElementRef) {
+    if (elRef && elRef.nativeElement) {
+      this._datesBtnElement = elRef.nativeElement;
+    }
+  }
+  
+  private _datesBtnElement: HTMLElement;
+
   public _defaultDateRageType = DateRangeType.LongTerm;
   public _defaultDateRange = DateRanges.CurrentYear;
   public _dateRangeType = this._defaultDateRageType;
@@ -86,7 +94,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
               private _route: ActivatedRoute,
               private _router: Router,
               private _dateFilterService: DateFilterService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _renderer: Renderer2) {
   }
 
   ngOnInit() {
@@ -292,5 +301,43 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     });
     this._updateRouteParams();
   }
+  
+  public disableHiddenElementTabs(): void {
+    // disable native checkboxes tab by setting it to -1
+    setTimeout(() => {
+      const checkboxes = document.getElementsByTagName('input');
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].tabIndex = -1;
+      }
+    }, 0);
+  }
+  
+  public _focusSelectButton(): void {
+    setTimeout(() => {
+      this.disableHiddenElementTabs();
+      // focus on the selected tab header (wow!)
+      try {
+        const elm = document.getElementsByClassName('kDateFilterPopup')[0].getElementsByClassName('ui-selectbutton')[0].getElementsByClassName('ui-state-active')[0] as HTMLDivElement;
+        if (elm) {
+          elm.focus();
+        }
+      } catch (e) {}
+    }, 0);
+  }
+  
+  public triggerClick(selection): void {
+    this.selectedDateRange = selection;
+    this. updateCompareMax();
+    this. resetCompare();
+  }
 
+  public setFocus(): void {
+    setTimeout(() => {
+      if (this._datesBtnElement) {
+        this._renderer.setAttribute(this._datesBtnElement, 'tabindex', '0');
+        this._datesBtnElement.focus();
+      }
+    }, 0);
+    
+  }
 }

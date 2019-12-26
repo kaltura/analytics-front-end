@@ -48,6 +48,10 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => value,
             hidden: true,
           },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+          },
           'duration': {
             format: value => parseInt(value, 10),
             hidden: true,

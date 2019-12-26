@@ -1,9 +1,11 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { Params } from '@angular/router';
 import { analyticsConfig } from "configuration/analytics-config";
+import { DOCUMENT } from '@angular/common';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export enum HeaderTypes {
     error = 1,
@@ -32,7 +34,15 @@ export type OnShowConfirmationFn = (confirmation: Confirmation) => void;
 
 @Injectable()
 export class BrowserService {
+  private _renderer: Renderer2;
+  private _contrastThemeChange = new Subject<boolean>();
   private _currentQueryParams: Params = {}; // keep current query params since they're not accessible under host app
+  
+  public contrastThemeChange$ = this._contrastThemeChange.asObservable();
+
+  public get isContrasTheme(): boolean {
+    return analyticsConfig.contrastTheme;
+  }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
         // this is the default confirmation dialog provided by the browser.
@@ -58,7 +68,10 @@ export class BrowserService {
     }
 
     constructor(private _translateService: TranslateService,
-                private _frameEventManager: FrameEventManagerService) {
+                private _frameEventManager: FrameEventManagerService,
+                private _rendererFactory: RendererFactory2,
+                @Inject(DOCUMENT) private _document) {
+      this._renderer = _rendererFactory.createRenderer(null, null);
     }
     
     public updateCurrentQueryParams(params: Params): void {
@@ -188,6 +201,18 @@ export class BrowserService {
       xhr.responseType = 'blob';
       xhr.send();
     });
+  }
+  
+  public toggleContrastTheme(): void {
+    const themeClass = 'kHighContrast';
+    const body = this._document.body;
+    if (body.classList.contains(themeClass)) {
+      this._renderer.removeClass(body, themeClass);
+      this._contrastThemeChange.next(false);
+    } else {
+      this._renderer.addClass(body, themeClass);
+      this._contrastThemeChange.next(true);
+    }
   }
 
 }

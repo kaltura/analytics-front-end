@@ -19,6 +19,7 @@ import { ViewConfig } from 'configuration/view-config';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
+import { SortEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-video-entry-user-engagement',
@@ -47,10 +48,10 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
+  private _ignoreFirstSortEvent = true;
   
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
-  public _enableUserDrilldown = analyticsConfig.customData && analyticsConfig.customData.disableUserDrilldown ? false : true;
   
   public _viewConfig: ViewConfig = {
     userFilter: {},
@@ -201,6 +202,11 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     }
 
     this._showTable = !this._showTable;
+
+    if (!this._showTable) {
+      this._ignoreFirstSortEvent = true;
+    }
+
     setTimeout(() => {
       this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
     }, 0);
@@ -213,14 +219,15 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     }
   }
   
-  public _onSortChanged(event) {
-    if (event.data.length && event.field && event.order && !this._isCompareMode) {
+  public _onSortChanged(event: SortEvent): void {
+    if (event.field && event.order && !this._isCompareMode && !this._ignoreFirstSortEvent) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
         this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
       }
     }
+    this._ignoreFirstSortEvent = false;
   }
   
   public _onRefineFilterChange(event: RefineFilter): void {

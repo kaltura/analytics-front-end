@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
-import { LiveEntryDiagnosticsInfo, StreamHealth } from './live-stream-health.types';
+import {DiagnosticsErrorCodes, LiveEntryDiagnosticsInfo, StreamHealth} from './live-stream-health.types';
 import { LiveStreamHealthWidget } from './live-stream-health.widget';
 import { filter } from 'rxjs/operators';
 
@@ -12,11 +12,29 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./live-stream-health.component.scss']
 })
 export class LiveStreamHealthComponent implements OnInit, OnDestroy {
+  private _selfServeAlertsBlacklist = [
+    DiagnosticsErrorCodes.BitrateUnmatched,
+    DiagnosticsErrorCodes.InvalidKeyFrameInterval,
+    DiagnosticsErrorCodes.FrameRateIsDifferentThanConfigured,
+    DiagnosticsErrorCodes.FrameRateIsFluctuatingOnFlavor
+  ];
+
+  private _selfServeChangedAlerts = [
+    DiagnosticsErrorCodes.EntryRestarted,
+    DiagnosticsErrorCodes.PtsDrift,
+    DiagnosticsErrorCodes.BackupOnlyStreamRecording,
+    DiagnosticsErrorCodes.AuthenticationInvalidToken,
+    DiagnosticsErrorCodes.AuthenticationIncorrectStream,
+    DiagnosticsErrorCodes.AuthenticationEntryNotFound
+  ];
+
+  private _isSelfServe = false;
+
   @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];
-  
+
   constructor(private _liveStreamHealth: LiveStreamHealthWidget,
               private _errorsManager: ErrorsManagerService) {
   }
@@ -64,7 +82,24 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
       }
       return 0;
     };
-    
-    return [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary].sort(sortHealthNotifications);
+
+    this._isSelfServe = response.selfServe && response.selfServe.data;
+    let data = [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary];
+
+    if (this._isSelfServe) {
+      data = data.filter(this._filterSelfServeNotifications.bind(this));
+    }
+
+    return data.sort(sortHealthNotifications);
+  }
+
+  private _filterSelfServeNotifications(notification) {
+    // first filter all the alerts inside the notification
+    notification.alerts = notification.alerts.filter(alert => {
+      return this._selfServeAlertsBlacklist.indexOf(alert.Code) === -1;
+    });
+
+    // filter all notification with no alerts
+    return notification.alerts.length > 0;
   }
 }

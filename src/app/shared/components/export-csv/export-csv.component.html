@@ -1,46 +1,53 @@
-<ng-container *ngIf="_showComponent">
+<div tabindex="0" (keydown.enter)="toggleDropdown()" #main>
+  <ng-container *ngIf="_showComponent">
 
-  <ng-container *ngIf="!_singleMode">
-    <div class="kExport" #toggle>
-      <div class="kDropDown">
-        <span>{{'app.common.exportCsv' | translate}}</span>
-        <i *ngIf="!_opened" class="kIcondropdown_arrow_bottom"></i>
-        <i *ngIf="_opened" class="kIcondropdown_arrow_top"></i>
-      </div>
-    </div>
-
-    <kPopupWidget #popupWidgetComponent
-                  [attr.data-aid]="'export-csv-' + name"
-                  [popupWidth]="width"
-                  [closeBtn]="false"
-                  [targetRef]="toggle"
-                  [targetOffset]="{'x': 0, 'y': 42}"
-                  (onOpen)="_opened = true"
-                  (onClose)="_onPopupClose()">
-      <ng-template>
-        <div class="kExportPanel">
-          <p-tree selectionMode="checkbox"
-                  [value]="_options"
-                  [(selection)]="_selected"></p-tree>
-
-          <button pButton
-                  class="kButtonBranded kExportBtn"
-                  [class.kButtonProcess]="_exportingCsv"
-                  [disabled]="_exportingCsv || !_selected.length"
-                  [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
-                  (click)="_export()"></button>
+    <ng-container *ngIf="!_singleMode">
+      <div [attr.tabindex]="_opened ? 0 : -1" class="kExport" #toggle role="button">
+        <div class="kDropDown">
+          <span>{{'app.common.exportCsv' | translate}}</span>
+          <i *ngIf="!_opened" class="kIcondropdown_arrow_bottom"></i>
+          <i *ngIf="_opened" class="kIcondropdown_arrow_top"></i>
         </div>
-      </ng-template>
-    </kPopupWidget>
-  </ng-container>
+      </div>
 
-  <ng-container *ngIf="_singleMode">
-    <div class="kExport">
-      <button pButton class="kButtonDefault kExportBtn" icon="icon-export" (click)="_export()"
-              [class.kButtonProcess]="_exportingCsv"
-              [disabled]="_exportingCsv"
-              [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"></button>
-    </div>
-  </ng-container>
+      <kPopupWidget #popupWidgetComponent
+                    [attr.data-aid]="'export-csv-' + name"
+                    [popupWidth]="width"
+                    [closeBtn]="false"
+                    [targetRef]="toggle"
+                    [targetOffset]="{'x': 0, 'y': 42}"
+                    (onOpen)="_onPopupOpen()"
+                    (onClose)="_onPopupClose()">
+        <ng-template>
+          <div class="kExportPanel">
+            <p-tree selectionMode="checkbox"
+                    [value]="_options"
+                    [(selection)]="_selected"></p-tree>
 
-</ng-container>
+            <button pButton
+                    tabindex="0"
+                    class="kButtonBranded kExportBtn"
+                    [class.kButtonProcess]="_exportingCsv"
+                    [class.kDisabled]="_exportingCsv || !_selected.length"
+                    [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportReports') | translate"
+                    (click)="_export()"
+                    (keydown.tab)="popupWidgetComponent.close();main.focus()"
+                    (keydown.enter)="_export()"></button>
+          </div>
+        </ng-template>
+      </kPopupWidget>
+    </ng-container>
+
+    <ng-container *ngIf="_singleMode">
+      <div class="kExport">
+        <button pButton class="kButtonDefault kExportBtn" icon="icon-export"
+                [class.kButtonProcess]="_exportingCsv"
+                [disabled]="_exportingCsv"
+                [label]="(_exportingCsv ? 'app.common.exporting' : 'app.common.exportCsv') | translate"
+                (click)="_export()"
+                (keydown.enter)="_export()"></button>
+      </div>
+    </ng-container>
+
+  </ng-container>
+</div>

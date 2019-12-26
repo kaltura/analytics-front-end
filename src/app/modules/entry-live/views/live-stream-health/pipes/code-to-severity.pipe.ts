@@ -14,10 +14,14 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.InvalidKeyFrameInterval:
       case DiagnosticsErrorCodes.HighFpsRate:
       case DiagnosticsErrorCodes.BackupOnlyStreamNoRecording:
+      case DiagnosticsErrorCodes.BandwidthBackToNormal:
+      case DiagnosticsErrorCodes.CPUBackToNormal:
         return AlertSeverity.info;
       
       case DiagnosticsErrorCodes.EntryRestarted:
       case DiagnosticsErrorCodes.BackupOnlyStreamRecording:
+      case DiagnosticsErrorCodes.ResolutionLimitedByBandwidth:
+      case DiagnosticsErrorCodes.ResolutionLimitedByCPU:
         return AlertSeverity.warning;
       
       case DiagnosticsErrorCodes.NoAudioSignal:

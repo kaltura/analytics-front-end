@@ -47,3 +47,9 @@
     color: $kGrayscale3;
   }
 }
+
+.kHighContrast :host ::ng-deep {
+  .kUnits {
+    color: $kGrayscale1 !important;
+  }
+}

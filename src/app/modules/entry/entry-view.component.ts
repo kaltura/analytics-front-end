@@ -51,7 +51,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               private _navigationDrillDownService: NavigationDrillDownService,
               private _authService: AuthService) {
   }
-  
+
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
     this._route.params
@@ -63,16 +63,16 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   private _loadEntryDetails(): void {
     this._loadingEntry = true;
     this._blockerMessage = null;
-    
+
     const metadataProfileId = analyticsConfig.customData.metadataProfileId;
-    
+
     const request = new KalturaMultiRequest(
       new BaseEntryGetAction({ entryId: this._entryId })
         .setRequestOptions({
@@ -92,7 +92,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           })
         )
     );
-    
+
     if (metadataProfileId) {
       request.requests.push(new MetadataListAction({
         filter: new KalturaMetadataFilter({
@@ -101,7 +101,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
         })
       }));
     }
-    
+
     this._kalturaClient
       .multiRequest(request)
       .pipe(
@@ -114,12 +114,12 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               throw err;
             }
           }
-          
+
           const metadataList = responses.length === 3 ? responses[2].result : null;
           const metadataItem = metadataList && metadataList.objects && metadataList.objects.length
             ? metadataList.objects[0]
             : null;
-          
+
           return [
             responses[0].result,
             responses[1].result,
@@ -138,7 +138,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
               ? parseInt(metadataObj.metadata.CommentsCount.text, 10)
               : 0;
           }
-          
+
           this._loadingEntry = false;
         },
         error => {
@@ -154,11 +154,11 @@ export class EntryViewComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
-  
+
   public _navigateToEntry(): void {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);

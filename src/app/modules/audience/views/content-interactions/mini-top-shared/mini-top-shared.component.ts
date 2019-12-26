@@ -186,9 +186,10 @@ export class MiniTopSharedComponent extends InteractionsBaseReportComponent {
   }
   
   public _drillDown(row: TableRow<string>): void {
-    const { object_id, status, partner_id } = row;
+    const { object_id, status, partner_id, entry_source } = row;
     if (status === KalturaEntryStatus.ready) {
-      this._navigationDrillDownService.drilldown('entry', object_id, true, partner_id);
+      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, object_id, true, partner_id);
     }
   }
 

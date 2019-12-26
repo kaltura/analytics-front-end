@@ -1,5 +1,5 @@
 <div class="kChartContainer">
-  <div class="kTable">
+  <div class="kTable" aria-label="Devices Table">
     <div class="kTableRow" *ngFor="let row of (data || [])">
       <span class="kRowIndex" *ngIf="showIndex">{{row.index}}</span>
       <i *ngIf="row.icon" class="kIcon" [ngClass]="row.icon"></i>
@@ -17,7 +17,7 @@
       <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
     </div>
 
-    <div *ngIf="isCompareMode && data?.length" class="kCustomLegend">
+    <div aria-label="Legend" *ngIf="isCompareMode && data?.length" class="kCustomLegend">
       <div class="kLegendItemContainer">
         <div class="kCircle" [style.background-color]="_colors[0]"></div>
         <span class="kLegendItem">{{_currentPeriodLabel}}</span>
@@ -29,7 +29,8 @@
     </div>
   </div>
 
-  <p-paginator *ngIf="pager && data?.length"
+  <p-paginator aria-label="Pagination"
+               *ngIf="pager && data?.length"
                [rows]="pager.pageSize"
                [first]="(pager.pageIndex - 1) * pager.pageSize"
                [totalRecords]="totalCount"

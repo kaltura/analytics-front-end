@@ -20,7 +20,7 @@ export class DatesTableComponent implements OnInit {
   @Input() reportInterval: KalturaReportInterval;
   @Input() currentPeriod: { from: number, to: number };
   @Input() comparePeriod: { from: number, to: number };
-  
+
   @Input() set data(value: { current: Report, compare?: Report }) {
     if (value) {
       if (value.compare) {
@@ -30,27 +30,27 @@ export class DatesTableComponent implements OnInit {
       }
     }
   }
-  
+
   @Input() compare;
   @Input() sortField: string;
-  
+
   private _order = '-date_id';
   private _dataConfig: ReportDataConfig;
-  
+
   public _pageSize = analyticsConfig.defaultPageSize;
   public _tableData: TableRow = [];
   public _columns: string[] = [];
-  
+
   constructor(private _reportService: ReportService,
               private _compareService: CompareService,
               private _dataConfigService: HighlightsDatesConfig) {
     this._dataConfig = this._dataConfigService.getConfig();
-    
+
   }
-  
+
   ngOnInit() {
   }
-  
+
   private _handleTable(report: Report): void {
     const graphs = report.graphs;
     const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
@@ -61,7 +61,7 @@ export class DatesTableComponent implements OnInit {
     this._columns = columns;
     this._tableData = tableData;
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     if (current.graphs.length && compare.graphs.length) {
       const compareTableData = this._compareService.compareTableFromGraph(
@@ -72,7 +72,7 @@ export class DatesTableComponent implements OnInit {
         this._dataConfig.table,
         this.reportInterval,
       );
-      
+
       if (compareTableData) {
         const { columns, tableData, totalCount } = compareTableData;
         this._columns = columns;
@@ -80,7 +80,7 @@ export class DatesTableComponent implements OnInit {
       }
     }
   }
-  
+
   public _onSortChanged(event: SortEvent) {
     this._order = tableLocalSortHandler(event, this._order, this.isCompareMode);
   }

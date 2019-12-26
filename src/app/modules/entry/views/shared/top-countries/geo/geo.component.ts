@@ -21,12 +21,12 @@ export class GeoComponent {
   @Input() isBusy = true;
   @Input() isCompareMode = false;
   @Input() showTrend = false;
-  @Input() selectedMetrics = 'count_plays';
+  @Input() selectedMetrics = 'count_loads';
   @Input() periodTitle: string;
   @Input() drillDownItems: string[] = [];
   @Input() name = 'default';
-  @Input() distributionCalculationKey = 'count_plays';
-  @Input() distributionKey = 'plays_distribution';
+  @Input() distributionCalculationKey = 'count_loads';
+  @Input() distributionKey = 'loads_distribution';
   
   @Input() set mapData(value) {
     if (value) {
@@ -87,21 +87,17 @@ export class GeoComponent {
     this.tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
       let value = [coords[1], coords[0]];
-      const val = parseFormattedValue(data[this.selectedMetrics]);
-      value.push(val);
-      // when displaying plays and plays = 0 (we have only impressions) - don't show on the map
-      if (this.selectedMetrics !== 'count_plays' || (this.selectedMetrics === 'count_plays' && val > 0)) {
-        mapConfig.series[0].data.push({
-          name: this.drillDownItems.length === 0
-            ? getCountryName(data.country, false)
-            : this.drillDownItems.length === 1
-              ? data.region
-              : data.city,
-          value
-        });
-        if (parseInt(data[this.selectedMetrics]) > maxValue) {
-          maxValue = parseFormattedValue(data[this.selectedMetrics]);
-        }
+      value.push(parseFormattedValue(data[this.selectedMetrics]));
+      mapConfig.series[0].data.push({
+        name: this.drillDownItems.length === 0
+          ? getCountryName(data.country, false)
+          : this.drillDownItems.length === 1
+            ? data.region
+            : data.city,
+        value
+      });
+      if (parseInt(data[this.selectedMetrics]) > maxValue) {
+        maxValue = parseFormattedValue(data[this.selectedMetrics]);
       }
     });
     

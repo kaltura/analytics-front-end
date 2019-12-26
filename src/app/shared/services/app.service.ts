@@ -18,7 +18,7 @@ import {
   UserRoleGetAction } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, skip } from 'rxjs/operators';
 import { BrowserService } from 'shared/services/browser.service';
 import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
@@ -31,7 +31,7 @@ import { Location } from '@angular/common';
 @Injectable()
 export class AppService implements OnDestroy {
   private _permissionsLoaded = new BehaviorSubject<boolean>(false);
-  
+
   public readonly permissionsLoaded$ = this._permissionsLoaded.asObservable();
   public confirmDialogAlignLeft = false;
   public confirmationLabels = {
@@ -39,7 +39,7 @@ export class AppService implements OnDestroy {
     no: 'No',
     ok: 'OK'
   };
-  
+
   constructor(private _logger: KalturaLogger,
               private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService,
@@ -52,15 +52,15 @@ export class AppService implements OnDestroy {
               private _frameEventManager: FrameEventManagerService) {
     this._logger = _logger.subLogger('AppService');
   }
-  
+
   ngOnDestroy(): void {
     this._permissionsLoaded.complete();
   }
-  
+
   public init(): void {
     this._authService.ks = analyticsConfig.ks;
     this._authService.pid = analyticsConfig.pid;
-    
+
     delete analyticsConfig.ks;
     delete analyticsConfig.pid;
 
@@ -73,7 +73,7 @@ export class AppService implements OnDestroy {
     this._kalturaServerClient.setDefaultRequestOptions({
       ks: this._authService.ks
     });
-    
+
     this._browserService.registerOnShowConfirmation((confirmationMessage) => {
       const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
       const formattedMessage = Object.assign(
@@ -97,45 +97,51 @@ export class AppService implements OnDestroy {
           },
         }
       );
-      
+
       if (confirmationMessage.alignMessage === 'byContent') {
         this.confirmDialogAlignLeft = confirmationMessage.message && /\r|\n/.test(confirmationMessage.message);
       } else {
         this.confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
       }
-      
+
       this._frameEventManager.publish(FrameEvents.ModalOpened);
-      
+
       this._confirmationService.confirm(formattedMessage);
     });
-    
+
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(config => setConfig(config, true));
-  
+
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ url, queryParams, prevRoute }) => {
-      
+
         // restore parent ks for multi-account when coming back from drilldown view of entry or user by clicking another menu item
         const needToRestoreParent = (url.indexOf('/analytics/entry') === -1 && url.indexOf('/analytics/user') === -1 && url.indexOf('/analytics/entry-live') === -1);
         if (needToRestoreParent) {
           this._authService.restoreParentIfNeeded();
         }
-      
+
         this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute));
       });
-    
+
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
-  
+
     this._frameEventManager.listen(FrameEvents.UpdateMultiAccount)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(({ multiAccount }) => {
         this._updateMultiAccount(multiAccount, true);
       });
-    
+
+    this._frameEventManager.listen(FrameEvents.ToggleContrastTheme)
+      .pipe(cancelOnDestroy(this), skip(1))
+      .subscribe(() => {
+        this._browserService.toggleContrastTheme();
+      });
+
     // load localization
     this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang(analyticsConfig.locale);
@@ -147,17 +153,20 @@ export class AppService implements OnDestroy {
           if (analyticsConfig.isHosted) {
             this._frameEventManager.publish(FrameEvents.AnalyticsInitComplete);
           }
+          if (analyticsConfig.contrastTheme) {
+            this._browserService.toggleContrastTheme();
+          }
         },
         (error) => {
           this._initAppError(error.message);
         }
       );
   }
-  
+
   private _initAppError(errorMsg: string): void {
     this._logger.error(errorMsg);
   }
-  
+
   private _loadPermissions(): Observable<void> {
     const getUserAction = new UserGetAction().setRequestOptions(
       new KalturaRequestOptions({
@@ -181,7 +190,7 @@ export class AppService implements OnDestroy {
         })
       );
     const getCurrentPermissions = new PermissionGetCurrentPermissionsAction(); // this one is used in cases user ks cannot list permissions and get role
-    
+
     return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions))
       .pipe(map(responses => {
         const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse] = responses;
@@ -207,7 +216,7 @@ export class AppService implements OnDestroy {
         }
       }));
   }
-  
+
   private _updateMultiAccount(showMultiAccount: boolean, reload = false): void {
     const needToReload = reload && showMultiAccount !== analyticsConfig.multiAccount;
     const navigate = url => {
@@ -223,13 +232,13 @@ export class AppService implements OnDestroy {
         this._router.navigate([decodeURI(this._location.path())]);
       });
     };
-  
+
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
     } else {
       analyticsConfig.multiAccount = false;
     }
-  
+
     if (needToReload) {
       if (showMultiAccount) {
         refresh();
