@@ -126,6 +126,11 @@
             margin-left: 16px;
           }
         }
+        p-calendar {
+          ::ng-deep button {
+            pointer-events: none;
+          }
+        }
       }
       p-calendar{
         ::ng-deep .ui-calendar .ui-datepicker{
