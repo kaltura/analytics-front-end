@@ -113,6 +113,15 @@
     &.kSpecific{
       display: flex;
       justify-content: center;
+      flex-direction: column;
+      padding-left: 22px;
+      .kStartEnd{
+        display: flex;
+        align-items: center;
+      }
+      span{
+        padding-bottom: 4px;
+      }
       p-calendar{
         ::ng-deep .ui-calendar .ui-datepicker{
           width: 380px;
@@ -120,6 +129,14 @@
             background-color: $kPrimary;
           }
         }
+        ::ng-deep .ui-inputtext {
+          margin-left: 8px;
+        }
+      }
+      .kInvalid{
+        color: $kDandger;
+        font-size: 14px;
+        padding-bottom: 12px;
       }
     }
   }

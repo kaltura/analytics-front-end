@@ -71,11 +71,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public selectedComparePeriod = 'lastYear';
 
   public _dateRangeLabel = '';
-  public specificDateRange: Date[] = [new Date(), new Date()];
+  public specificStart: Date = new Date();
+  public specificEnd: Date = new Date();
+  public specificDateRange: Date[] = [this.specificStart, this.specificEnd];
   public compare = false;
   public specificCompareStartDate: Date = new Date();
   public compareMaxDate: Date;
   public comparing = false;
+  public validDateRange = true;
 
   private compareStartDate: Date;
   private compareEndDate: Date;
@@ -86,7 +89,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   private _queryParams: { [key: string]: string } = null;
   
   public get _applyDisabled(): boolean {
-    return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2;
+    return this.selectedView === 'specific' && this.specificDateRange.filter(Boolean).length !== 2 || !this.validDateRange;
   }
 
   constructor(private _translate: TranslateService,
@@ -114,12 +117,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       const params = this._route.snapshot.queryParams;
       this._init(params);
     }
-    
-    
   }
   
   ngOnDestroy() {
-  
   }
   
   private _init(queryParams: Params): void {
@@ -152,7 +152,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   
       if (dateFrom.isValid() && dateTo.isValid()) {
         this.selectedView = 'specific';
-        this.specificDateRange = [dateFrom.toDate(), dateTo.toDate()];
+        this.specificStart = dateFrom.toDate();
+        this.specificEnd = dateTo.toDate();
+        this.specificDateRange = [this.specificStart, this.specificEnd];
       }
     }
   
@@ -206,7 +208,6 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   
   private _updateRouteParams(): void {
     const queryParams = this._getUpdatedRouteParams();
-  
     this._browserService.updateCurrentQueryParams(queryParams);
   
     if (analyticsConfig.isHosted) {
@@ -259,6 +260,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   
   public resetCompare(): void {
     this.selectedComparePeriod = 'lastYear';
+    this.disableHiddenElementTabs();
   }
 
   public updateCompareMax(): void {
@@ -266,6 +268,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       this.compareMaxDate = this.selectedView === 'specific'
         ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
         : this._dateFilterService.getMaxCompare(this.selectedDateRange, this.creationDate);
+      this.specificStart = this.specificDateRange[0];
+      this.specificEnd = this.specificDateRange[1];
+      this.validate();
     }, 0);
   }
   
@@ -274,6 +279,13 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
       : this._dateFilterService.getMaxCompare(this._dateRange, this.creationDate);
     this.specificCompareStartDate = this.specificCompareStartDate > maxCompareDate ? maxCompareDate : this.specificCompareStartDate;
+    this.specificStart = this.specificDateRange[0];
+    this.specificEnd = this.specificDateRange[1];
+  }
+  
+  public updateSpecific(): void {
+    this.validate();
+    this.specificDateRange = [this.specificStart, this.specificEnd];
   }
 
   public exitCompare(): void {
@@ -307,7 +319,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const checkboxes = document.getElementsByTagName('input');
       for (let i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].tabIndex = -1;
+        if (checkboxes[i].type === 'radio' || checkboxes[i].type === 'checkbox') {
+          checkboxes[i].tabIndex = -1;
+        }
       }
     }, 0);
   }
@@ -315,7 +329,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public _focusSelectButton(): void {
     setTimeout(() => {
       this.disableHiddenElementTabs();
-      // focus on the selected tab header (wow!)
+      // focus on the selected tab header
       try {
         const elm = document.getElementsByClassName('kDateFilterPopup')[0].getElementsByClassName('ui-selectbutton')[0].getElementsByClassName('ui-state-active')[0] as HTMLDivElement;
         if (elm) {
@@ -339,5 +353,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       }
     }, 0);
     
+  }
+  
+  private validate(): void {
+    this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true); // validation
   }
 }

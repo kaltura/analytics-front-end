@@ -121,6 +121,8 @@
       "interactive": "Interactive Video"
     },
     "dateFilter": {
+      "from": "From Date:",
+      "to": "To Date:",
       "preset": "Preset",
       "specific": "Specific Date Range",
       "last": "Last",
