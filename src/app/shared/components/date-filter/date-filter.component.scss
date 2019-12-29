@@ -118,9 +118,14 @@
       .kStartEnd{
         display: flex;
         align-items: center;
-      }
-      span{
-        padding-bottom: 4px;
+        margin-bottom: 8px;
+        span{
+          padding-bottom: 4px;
+          margin-right: 8px;
+          &.end{
+            margin-left: 16px;
+          }
+        }
       }
       p-calendar{
         ::ng-deep .ui-calendar .ui-datepicker{
@@ -130,7 +135,7 @@
           }
         }
         ::ng-deep .ui-inputtext {
-          margin-left: 8px;
+          margin-left: 40px;
         }
       }
       .kInvalid{

@@ -47,9 +47,9 @@
       <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
         <div class="kStartEnd">
           <span>{{'app.dateFilter.from' | translate}}</span>
-          <p-calendar [showOnFocus]="false" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0"></p-calendar>
-          <span>{{'app.dateFilter.to' | translate}}</span>
-          <p-calendar [showOnFocus]="false" [(ngModel)]="specificEnd" aria-label="end date" (onBlur)="updateSpecific()" [tabindex]="0"></p-calendar>
+          <p-calendar [showOnFocus]="false" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+          <span class="end">{{'app.dateFilter.to' | translate}}</span>
+          <p-calendar [showOnFocus]="false" [(ngModel)]="specificEnd" aria-label="end date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
         </div>
         <span class="kInvalid" *ngIf="!validDateRange">{{'app.dateFilter.error' | translate }}</span>
         <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true"

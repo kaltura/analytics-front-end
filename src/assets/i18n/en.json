@@ -121,8 +121,8 @@
       "interactive": "Interactive Video"
     },
     "dateFilter": {
-      "from": "From Date:",
-      "to": "To Date:",
+      "from": "From",
+      "to": "To",
       "preset": "Preset",
       "specific": "Specific Date Range",
       "last": "Last",
@@ -138,7 +138,7 @@
       "monthly": "Monthly",
       "daily": "Daily",
       "sinceCreation": "Since Creation",
-      "error": "'From Date' must be before 'To Date'",
+      "error": "'From' date must be before 'To' date",
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
       "comparespecific": "Same period starting at:",

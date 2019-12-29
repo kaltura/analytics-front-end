@@ -25,7 +25,7 @@
                     [(selection)]="_selected"></p-tree>
 
             <button pButton
-                    tabindex="0"
+                    tabindex="0" [attr.aria-label]="_exportingCsv || !_selected.length ? 'disabled ' + ('app.common.exportReports' | translate) : ('app.common.exportReports' | translate)"
                     class="kButtonBranded kExportBtn"
                     [class.kButtonProcess]="_exportingCsv"
                     [class.kDisabled]="_exportingCsv || !_selected.length"
