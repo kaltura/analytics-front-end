@@ -40,14 +40,12 @@
 
         app-trend-value, .kTrendStub {
           display: inline-block;
-          width: 60px;
           height: 100%;
           margin-left: 16px;
         }
       }
 
       .kValue {
-        flex: 1 0 auto;
         font-size: 15px;
         font-weight: bold;
         color: $kGrayscale1;
@@ -63,7 +61,7 @@
       }
 
       .kBullet {
-        width: 100%;
+        flex: 1 1 auto;
         height: 18px;
         border: 0 solid $kGrayscale7;
         border-radius: 3px;
