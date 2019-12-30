@@ -1,5 +1,5 @@
 import { EventEmitter, Inject, InjectionToken, Input, OnDestroy, Output } from '@angular/core';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,8 +12,7 @@ import { TrendService } from 'shared/services/trend.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { isArrayEquals } from 'shared/utils/is-array-equals';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
@@ -82,7 +81,6 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() onDrillDown = new EventEmitter<{ drillDown: string, reportType: KalturaReportType, name: string }>();
   
-  private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
   private _paginationChanged = new Subject<void>();
   
   public abstract _name: string;
@@ -143,7 +141,6 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   
   ngOnDestroy() {
     this._paginationChanged.complete();
-    this._devicesDataLoaded.complete();
   }
   
   private _insertColumnAfter(column: string, after: string, columns: string[]): void {
@@ -209,8 +206,8 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           this._isBusy = false;
           this._firstTimeLoading = false;
           this._showIcon = !this._drillDown;
-    
-          this._devicesDataLoaded.next(true);
+          
+          this._loadTrendData();
         },
         error => {
           this._isBusy = false;
@@ -224,8 +221,6 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-  
-    this._loadTrendData();
   }
   
   private _setPlaysTrend(row: any, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string): void {
@@ -259,27 +254,19 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
-        const waitForDevicesData = this._devicesDataLoaded // make sure main data has loaded
-          .asObservable()
-          .pipe(filter(Boolean))
-          .subscribe(() => {
-            this._devicesDataLoaded.next(false);
-            if (waitForDevicesData) {
-              waitForDevicesData.unsubscribe();
-            }
-            if (report.table && report.table.header && report.table.data) {
-              const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
-              this._tableData.forEach(row => {
-                const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
-                const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
-                this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
-              });
-            } else {
-              this._tableData.forEach(row => {
-                this._setPlaysTrend(row, 0, currentPeriodTitle, comparePeriodTitle);
-              });
-            }
-          });
+          if (report.table && report.table.header && report.table.data) {
+            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
+            
+            this._tableData.forEach(row => {
+              const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
+              const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
+              this._setPlaysTrend(row, compareValue, currentPeriodTitle, comparePeriodTitle);
+            });
+          } else {
+            this._tableData.forEach(row => {
+              this._setPlaysTrend(row, 0, currentPeriodTitle, comparePeriodTitle);
+            });
+          }
       }, error => {
         const err: ErrorDetails = this._errorsManager.getError(error);
         if (err.forceLogout) {
