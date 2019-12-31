@@ -51,7 +51,7 @@ export function getColorsBetween(startColor: string, endColor: string, numColors
   } else if (numColors === 1) {
     return [getPrimaryColor()];
   } else if (numColors === 2) {
-    return [getSecondaryColor(), getPrimaryColor()];
+    return [getPrimaryColor(), getSecondaryColor()];
   } else {
     let ramp = [];
     ramp.push(startColor);

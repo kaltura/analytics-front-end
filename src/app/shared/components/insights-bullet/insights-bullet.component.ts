@@ -20,7 +20,7 @@ export class InsightsBulletComponent {
 
     if (Array.isArray(value)) {
       const sum = value.reduce((acc, val) => acc + val.value, 0);
-      const colors = getColorsBetween(getColorPalette()[0], getColorPalette()[7], value.length);
+      const colors = getColorsBetween(getColorPalette()[7], getColorPalette()[0], value.length);
       this._values = value
         .map((item, index) => {
           const result = sum ? parseFloat((item.value / sum * 100).toFixed(2)) : 0;
