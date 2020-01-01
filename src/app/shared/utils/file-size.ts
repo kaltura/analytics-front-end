@@ -18,8 +18,8 @@ export function fileSize(mBytes: number = 0, precision: number = 2): { value: st
   let unit = 0;
   let value = parseFloat(String(mBytes));
 
-  while (value >= 1024) {
-    value /= 1024;
+  while (value >= 1000) {
+    value /= 1000;
     unit++;
   }
   
