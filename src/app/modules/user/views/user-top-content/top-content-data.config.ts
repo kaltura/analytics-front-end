@@ -23,6 +23,7 @@ export class TopContentDataConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'entry_name': {
             format: value => value,
@@ -72,6 +73,8 @@ export class TopContentDataConfig extends ReportDataBaseConfig {
           },
           'entry_source': {
             format: value => value,
+            hidden: true,
+            nonComparable: true
           },
           'created_at': {
             format: value => ReportHelper.format('serverDate', value),

@@ -23,6 +23,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'entry_name': {
             format: value => value,
