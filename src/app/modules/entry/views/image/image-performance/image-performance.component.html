@@ -84,7 +84,7 @@
                    (onPage)="_onPaginationChange($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col" [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '22%' : '13%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
+                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col" [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
                   <span>{{'app.entry.' + col | translate}}</span>
                   <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
                 </th>

@@ -86,7 +86,7 @@
               <ng-template pTemplate="header">
                 <tr>
                   <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
-                      [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '22%' : '13%'}"
+                      [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '40%' : '20%'}"
                       [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
                     {{'app.entry.' + col | translate}}
                     <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
