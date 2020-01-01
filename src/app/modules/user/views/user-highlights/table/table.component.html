@@ -17,7 +17,7 @@
             <th [ngStyle]="{'width':'40px'}" *ngIf="!isCompareMode"></th>
             <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
+                [ngStyle]="{'width': col === 'entry_name' ? '35%' : '20%'}"
                 [kTooltip]="'app.user.' + col | translate"
                 [showOnEllipsis]="true">
               {{'app.user.' + col | translate}}
@@ -44,7 +44,7 @@
             </td>
             <td *ngFor="let col of columns; let i = index"
                 [class.kHighlight]="i===0"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}">
+                [ngStyle]="{'width': col === 'entry_name' ? '35%' : '20%'}">
               <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
               <span class="kEntryLink kTableColumn"
                     *ngIf="col === 'entry_name'"

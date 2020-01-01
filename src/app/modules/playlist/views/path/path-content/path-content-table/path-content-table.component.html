@@ -17,7 +17,7 @@
             <p-sortIcon [field]="'level'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
           <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
-          <th [ngStyle]="{'width': '40%', 'padding-left': '0'}" [pSortableColumn]="'name'">
+          <th [ngStyle]="{'width': '35%', 'padding-left': '0'}" [pSortableColumn]="'name'">
             {{'app.user.topContentReport.name' | translate}}
             <p-sortIcon [field]="'name'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
@@ -25,7 +25,7 @@
             {{'app.user.topContentReport.count_plays' | translate}}
             <p-sortIcon [field]="'count_node_plays'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
-          <th [ngStyle]="{'width': '20%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true" [pSortableColumn]="'unique_known_users'">
+          <th [ngStyle]="{'width': '25%'}" [kTooltip]="'app.user.topContentReport.unique_known_users' | translate" [showOnEllipsis]="true" [pSortableColumn]="'unique_known_users'">
             {{'app.user.topContentReport.unique_known_users' | translate}}
             <p-sortIcon [field]="'unique_known_users'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
@@ -45,14 +45,14 @@
               <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
             </div>
           </td>
-          <td [ngStyle]="{'width': '40%', 'padding-left': 0}">
+          <td [ngStyle]="{'width': '35%', 'padding-left': 0}">
             <div class="kNameColumn">
               <span class="kTableColumn kEntryName">{{data['name']}}</span><i *ngIf="data['isHome']" class="kIcon kIconhouse"></i>
               <span *ngIf="data['deleted']" class="kDeleted" [class.kDeletedDate]="data['deletedDate']" [kTooltip]="data['deletedDate']">{{'app.playlist.deleted' | translate}}</span>
             </div>
           </td>
           <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
-          <td [ngStyle]="{'width': '20%'}">{{data['unique_known_users']}}</td>
+          <td [ngStyle]="{'width': '25%'}">{{data['unique_known_users']}}</td>
 <!--          <td [ngStyle]="{'width': '20%'}">{{data['avg_completion_rate']}}</td>-->
         </tr>
       </ng-template>

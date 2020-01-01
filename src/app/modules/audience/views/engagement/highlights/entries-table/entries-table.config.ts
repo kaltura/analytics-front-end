@@ -21,6 +21,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'object_id': {
             format: value => value,

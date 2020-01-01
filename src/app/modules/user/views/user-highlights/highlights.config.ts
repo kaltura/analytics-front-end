@@ -51,6 +51,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'duration': {
             format: value => parseInt(value, 10),

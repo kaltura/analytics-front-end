@@ -189,8 +189,8 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           id: node.id,
           name: node.name,
           deleted: true,
-          entryId: node.entryId,
-          deletedDate: node.deleteDate ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(node.deleteDate) : ''
+          entryId: node.entry_id,
+          deletedDate: node.delete_date ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(node.delete_date) : ''
         };
         nodes.push(newNode);
       });

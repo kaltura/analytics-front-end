@@ -19,6 +19,7 @@ export class UserMiniTopContentConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'entry_name': {
             format: value => value,

@@ -20,6 +20,7 @@ export class MiniTopVideosConfig extends ReportDataBaseConfig {
           'entry_source': {
             format: value => value,
             hidden: true,
+            nonComparable: true
           },
           'status': {
             format: value => value,
