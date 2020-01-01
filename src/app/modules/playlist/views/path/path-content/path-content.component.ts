@@ -41,7 +41,8 @@ export interface Node {
   viewers?: number;
   completionRate?: number;
   prefetchNodeIds?: string[];
-  deletedDate?: number;
+  deleted?: boolean;
+  deletedDate?: string;
 }
 
 @Component({
@@ -187,8 +188,9 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         const newNode: Node = {
           id: node.id,
           name: node.name,
-          entryId: node.entry_id,
-          deletedDate: node.delete_date
+          deleted: true,
+          entryId: node.entryId,
+          deletedDate: node.deleteDate ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(node.deleteDate) : ''
         };
         nodes.push(newNode);
       });

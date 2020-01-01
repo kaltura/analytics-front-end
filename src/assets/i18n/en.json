@@ -784,6 +784,8 @@
       "month_id": "Month",
       "date_id": "Date",
       "name": "Name",
+      "deleted": "Deleted",
+      "deletionDate": "Deletion Date",
       "content": "Videos Overview",
       "vidCount": "{{0}} Videos",
       "exportLabels": {
