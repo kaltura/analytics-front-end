@@ -71,56 +71,72 @@
             </p-dropdown>
           </div>
 
-          <p-table aria-label="Image Performance Table"
-                   appScrollTopOnPaging
-                   [sortField]="_customPaginator ? 'name' : _columns[0]"
-                   [value]="_tableData"
-                   [customSort]="true"
-                   [defaultSortOrder]="-1"
-                   [sortOrder]="-1"
-                   [paginator]="!_customPaginator"
-                   [rows]="_pageSize"
-                   (sortFunction)="_onSortChanged($event)"
-                   (onPage)="_onPaginationChange($event)">
-            <ng-template pTemplate="header">
-              <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col" [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
-                  <span>{{'app.entry.' + col | translate}}</span>
-                  <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
-                </th>
 
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-data>
-              <tr>
-                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
-                  <span *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'name'"
-                        class="kTrend">
+          <ng-container *ngIf="_tableMode !== TableMode.context">
+            <p-table appScrollTopOnPaging
+                     aria-label="Image Performance Table"
+                     [sortField]="_customPaginator ? 'name' : _columns[0]"
+                     [value]="_tableData"
+                     [customSort]="true"
+                     [defaultSortOrder]="-1"
+                     [sortOrder]="-1"
+                     [paginator]="!_customPaginator"
+                     [rows]="_pageSize"
+                     (sortFunction)="_onSortChanged($event)"
+                     (onPage)="_onPaginationChange($event)">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode ? null : col"
+                      [ngStyle]="{'width': col === 'month_id' || col === 'date_id' || col === 'name' ? '40%' : '20%'}"
+                      [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
+                    {{'app.entry.' + col | translate}}
+                    <p-sortIcon [field]="col" *ngIf="!_isCompareMode"></p-sortIcon>
+                  </th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-data>
+                <tr>
+                  <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
+                  <span
+                    *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'name'"
+                    class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
                                        [units]="data[col].units"
                                        [trend]="data[col].trend"></app-trend-value>
                     </span>
                   </span>
-                  <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id' || col === 'name'">
-                    <span>{{data[col]}}</span>
-                  </ng-container>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <div class="emptymessage">
-                <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
-                <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
-              </div>
-            </ng-template>
-          </p-table>
-          <p-paginator aria-label="Pagination"
-                       *ngIf="_customPaginator"
-                       [rows]="_pager.pageSize"
-                       [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                       [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChange($event)" ></p-paginator>
+                    <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id' || col === 'name'">
+                      <span>{{data[col]}}</span>
+                    </ng-container>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">
+                  <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+                  <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+                </div>
+              </ng-template>
+            </p-table>
+            <p-paginator *ngIf="_customPaginator"
+                         aria-label="Pagination"
+                         [rows]="_pager.pageSize"
+                         [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                         [totalRecords]="_totalCount"
+                         (onPageChange)="_onPaginationChange($event)"></p-paginator>
+          </ng-container>
+
+          <ng-container *ngIf="_tableMode === TableMode.context">
+            <app-context-table [entryId]="entryId"
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [firstTimeLoading]="_firstTimeLoading"></app-context-table>
+          </ng-container>
         </div>
       </div>
     </div>
