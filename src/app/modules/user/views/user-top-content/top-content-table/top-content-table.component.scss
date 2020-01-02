@@ -107,9 +107,16 @@
   cursor: pointer;
   width: 86px;
   height: 48px;
-
+  position: relative;
   ::ng-deep img {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
     width: 86px;
-    height: 48px;
+    height: auto;
+    border-radius: 3px;
   }
 }

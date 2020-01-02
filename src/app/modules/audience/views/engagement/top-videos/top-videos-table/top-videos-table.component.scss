@@ -154,7 +154,14 @@
   height: 72px;
   display: block;
   ::ng-deep img {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
     width: 128px;
-    height: 72px;
+    height: auto;
+    border-radius: 3px;
   }
 }

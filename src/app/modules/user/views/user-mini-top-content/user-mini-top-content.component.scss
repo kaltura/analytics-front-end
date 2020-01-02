@@ -75,10 +75,17 @@
     width: 202px;
     height: 101px;
     cursor: pointer;
-
+    position: relative;
     ::ng-deep img {
+      position: absolute;
+      left: -100%;
+      right: -100%;
+      top: -100%;
+      bottom: -100%;
+      margin: auto;
       width: 202px;
-      height: 101px;
+      height: auto;
+      border-radius: 3px;
     }
   }
 
@@ -97,10 +104,17 @@
       width: 160px !important;
       height: 78px !important;
       cursor: pointer;
-
+      position: relative;
       ::ng-deep img {
         width: 160px !important;
-        height: 78px !important;
+        position: absolute;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        height: auto !important;
+        border-radius: 3px;
       }
     }
 
@@ -131,10 +145,17 @@
   .kThumbnailHolder {
     width: 171px;
     height: 101px;
-
+    position: relative;
     ::ng-deep img {
+      position: absolute;
+      left: -100%;
+      right: -100%;
+      top: -100%;
+      bottom: -100%;
+      margin: auto;
       width: 171px;
-      height: 101px;
+      height: auto;
+      border-radius: 3px;
     }
   }
 
@@ -147,10 +168,17 @@
       width: 160px !important;
       height: 78px !important;
       cursor: pointer;
-
+      position: relative;
       ::ng-deep img {
         width: 160px !important;
-        height: 78px !important;
+        position: absolute;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        height: auto !important;
+        border-radius: 3px;
       }
     }
 
@@ -170,10 +198,17 @@
   .kThumbnailHolder {
     width: 171px;
     height: 101px;
-
+    position: relative;
     ::ng-deep img {
+      position: absolute;
+      left: -100%;
+      right: -100%;
+      top: -100%;
+      bottom: -100%;
+      margin: auto;
       width: 171px;
-      height: 101px;
+      height: auto;
+      border-radius: 3px;
     }
   }
 
@@ -186,10 +221,17 @@
       width: 128px !important;
       height: 72px !important;
       cursor: pointer;
-
+      position: relative;
       ::ng-deep img {
         width: 128px !important;
-        height: 72px !important;
+        position: absolute;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        height: auto !important;
+        border-radius: 3px;
       }
     }
 
