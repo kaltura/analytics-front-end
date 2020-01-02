@@ -150,4 +150,9 @@
 
 .kThumbnailHolder {
   cursor: pointer;
+  width: 128px;
+  height: 72px;
+  ::ng-deep img {
+    width: 128px;
+  }
 }
