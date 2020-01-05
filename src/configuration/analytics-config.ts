@@ -52,6 +52,10 @@ export interface AnalyticsConfig {
   customData?: {
     [key: string]: any;
   };
+  customStyle?: {
+    baseClassName: string,
+    css: any
+  };
 }
 
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
@@ -114,11 +118,26 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.customData = config.customData || { };
   analyticsConfig.multiAccount = config.multiAccount || false;
   setLiveEntryUsersReports(config.liveEntryUsersReports);
+  if (config.customStyle) {
+    setCustomStyle(config.customStyle);
+  }
 }
 
 function setLiveEntryUsersReports(value: string): void {
   const allowedValues = Object.keys(EntryLiveUsersMode);
   analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
+}
+
+function setCustomStyle(value: {baseClassName: string, css: any}): void {
+  try {
+    document.body.classList.add(value.baseClassName); // add baseClassName to body
+    // inject CSS to head
+    let css = document.createElement('style');
+    css.innerText = value.css.replace(/(\r\n|\n|\r)/gm, '');
+    document.getElementsByTagName('head')[0].appendChild(css);
+  } catch (e) {
+    console.warn(`Error injecting custom CSS: ${e.message}`);
+  }
 }
 
 export function initConfig(): Observable<void> {

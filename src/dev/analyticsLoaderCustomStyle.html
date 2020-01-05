@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title>Analytics Loader</title>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+      transition: height 0.3s;
+    }
+  </style>
+</head>
+<body>
+<h1>This is an external app loading Analytics in an iframe</h1>
+<iframe id="analytics" src="http://localhost:4200"></iframe>
+<script>
+  const config = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 44299511,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: '',
+    pid: '', // provide partnerId
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: true,
+    },
+    customStyle: {
+        baseClassName: 'kms',
+        css: `
+            body.kms {
+                background: transparent;
+                background-color: white;
+            }
+            .kms .kMain .kReportView .kReport {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport .kTotalsRow {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport .kFilters {
+                background-color: white;
+            }
+            .kms .kMain .kReportView .kReport .kReportHeader {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport .kReportContainer {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport .kEntryDetails {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport.kImageReport {
+                background: transparent;
+            }
+            .kms .kMain .kReportView .kReport app-entry-filter {
+                background: transparent;
+            }
+            /* Margins */
+            .kms .kContent {
+                width: 100% !important;
+            }
+            .kms .kReportView .kContent {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+                box-sizing: border-box;
+            }
+            /* Borders */
+            .kms .kTotalContainer, .kms .kSocialHighlights {
+                border: 1px solid #cccccc !important;
+            }
+            .kms .kTotalContainer:first-child {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+            .kms .kTotalContainer:last-child {
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                border-left: none !important;
+            }
+            .kms .kTotalContainer:not(:first-child):not(:last-child) {
+                border-left: none !important;
+            }
+            .kms .kEntryPreview app-video-entry-preview .kReport {
+                border: 1px solid #cccccc !important;
+                border-bottom: none !important;
+                border-radius: 0px;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+            .kms .kEntryPreview app-video-entry-user-engagement .kReport {
+                border: 1px solid #cccccc !important;
+                border-top: none !important;
+                border-radius: 0px;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+            .kms .kReportContainer .kFilters {
+                border: 1px solid #cccccc !important;
+                border-bottom: none !important;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+            .kms .kReportContainer .kReportContent {
+                border: 1px solid #cccccc !important;
+                border-top: none !important;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+            .kms .kReportContainer .kReportContent.kNoTitle {
+                border-top: 1px solid #cccccc !important;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }`
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          sendMessage({ messageType: 'init', payload: config });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
+</script>
+</body>
+</html>

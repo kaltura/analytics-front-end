@@ -1,7 +1,13 @@
 @import '../../../../../../styles/variables';
+.kImageReport.kReport.kTotals {
+  background-color: $appBkgColor;
+  margin-bottom: 0px !important;
+  padding-bottom: 24px;
+}
 .kTotalsRow{
   display: flex;
   width: 100%;
+  background-color: $appBkgColor;
 }
 .kPreview {
   width: 50%;

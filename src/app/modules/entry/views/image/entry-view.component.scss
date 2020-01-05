@@ -17,7 +17,7 @@
 }
 
 .kReport {
-  background-color: $appBkgColor !important;
+  background-color: $appBkgColor;
 
   .kBackBtn {
     margin-top: 4px;
@@ -55,6 +55,7 @@
     font-size: 14px;
     color: $kGrayscale2;
     height: 36px;
+    background-color: $appBkgColor;
 
     .kIconMediaType {
       margin-right: 8px;
