@@ -130,7 +130,7 @@ export class EntryViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ([entry, user, metadataItem]) => {
           this._entry = entry;
-          this._owner = user ? user.fullName : entry.userId; // fallback for deleted users
+          this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
 
           if (metadataItem) {
             const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };

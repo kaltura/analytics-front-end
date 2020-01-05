@@ -10,13 +10,27 @@
   margin-bottom: 16px;
   display: inline-block;
 }
-
-.kEntryName {
-  /* cursor: pointer; */
-  font-size: 15px;
-  font-weight: bold;
-  color: $kGrayscale1;
+.kNameColumn{
+  display: flex;
+  align-items: center;
+  .kEntryName {
+    /* cursor: pointer; */
+    font-size: 15px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+  .kDeleted{
+    flex: 0 0 auto;
+    color: $kGrayscale3;
+    font-weight: bold;
+    font-style: italic;
+    margin-left: 8px;
+    &.kDeletedDate {
+      cursor: pointer;
+    }
+  }
 }
+
 .kIcon {
   color: #333333;
   margin-left: 4px;

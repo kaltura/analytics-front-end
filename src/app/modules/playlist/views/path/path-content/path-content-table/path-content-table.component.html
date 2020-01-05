@@ -38,7 +38,7 @@
       <ng-template pTemplate="body" let-data>
         <tr class="kTopVideoRow">
           <td [ngStyle]="{'width': '60px'}">
-            <span>{{data['level'] ? data['level'] : 'app.common.na' | translate}}</span>
+            <span>{{data['level'] ? data['level'] : '-'}}</span>
           </td>
           <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
             <div class="kThumbnailHolder" #holder>
@@ -46,7 +46,10 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '35%', 'padding-left': 0}">
+            <div class="kNameColumn">
               <span class="kTableColumn kEntryName">{{data['name']}}</span><i *ngIf="data['isHome']" class="kIcon kIconhouse"></i>
+              <span *ngIf="data['deleted']" class="kDeleted" [class.kDeletedDate]="data['deletedDate']" [kTooltip]="data['deletedDate']">{{'app.playlist.deleted' | translate}}</span>
+            </div>
           </td>
           <td [ngStyle]="{'width': '20%'}">{{data['count_node_plays']}}</td>
           <td [ngStyle]="{'width': '25%'}">{{data['unique_known_users']}}</td>

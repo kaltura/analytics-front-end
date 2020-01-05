@@ -107,7 +107,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
         ([playlist, user]) => {
           this._playlist = playlist;
           this._interactiveVideo = playlist.adminTags ? playlist.adminTags.split(',').indexOf('raptentry') > -1 : false;
-          this._owner = user ? user.fullName : playlist.userId; // fallback for deleted users
+          this._owner = user && user.fullName ? user.fullName : playlist.userId; // fallback for deleted users
           this._loadingPlaylist = false;
         },
         error => {

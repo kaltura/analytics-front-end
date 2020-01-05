@@ -41,6 +41,8 @@ export interface Node {
   viewers?: number;
   completionRate?: number;
   prefetchNodeIds?: string[];
+  deleted?: boolean;
+  deletedDate?: string;
 }
 
 @Component({
@@ -104,19 +106,24 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       .pipe(cancelOnDestroy(this))
       .pipe(switchMap((response: KalturaFileAssetListResponse) => {
         let jsonFileAssetId = 0;
+        let projectFileAssetId = 0;
         response.objects.forEach((fileAsset: KalturaFileAsset) => {
           if (fileAsset.name === "GRAPH_DATA") {
             jsonFileAssetId = fileAsset.id;
           }
+          if (fileAsset.name === "PROJECT_DATA") {
+            projectFileAssetId = fileAsset.id;
+          }
         });
         const fileAssetsServeAction = new FileAssetServeAction({id: jsonFileAssetId});
-        return this._kalturaClient.request(fileAssetsServeAction);
+        const projectAssetsServeAction = new FileAssetServeAction({id: projectFileAssetId});
+        return Observable.forkJoin(this._kalturaClient.request(fileAssetsServeAction), this._kalturaClient.request(projectAssetsServeAction));
       }))
-      .pipe(switchMap(response => {
-        return this.http.get(`${response.url}&rnd=${Math.random()}`);
+      .pipe(switchMap(responses => {
+        return Observable.forkJoin(this.http.get(`${responses[0].url}&rnd=${Math.random()}`), this.http.get(`${responses[1].url}&rnd=${Math.random()}`));
       }))
-      .pipe(map(data => {
-        return this.parseIVData(data);
+      .pipe(map(dataArray => {
+        return this.parseIVData(dataArray[0]).concat(this.parseIVDeletedNodes(dataArray[1]));
       }));
   }
   
@@ -172,6 +179,23 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     } else {
       return [];    // if no nodes were found - return an empty array
     }
+  }
+  
+  private parseIVDeletedNodes(data): Node[] {
+    let nodes: Node[] = [];   // the returned nodes array
+    if (data.deletedNodes) {
+      data.deletedNodes.forEach(node => {
+        const newNode: Node = {
+          id: node.id,
+          name: node.name,
+          deleted: true,
+          entryId: node.entry_id,
+          deletedDate: node.delete_date ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(node.delete_date) : ''
+        };
+        nodes.push(newNode);
+      });
+    }
+    return nodes;
   }
   
   private loadIVReport(): Observable<{report: Report, compare: any}> {
