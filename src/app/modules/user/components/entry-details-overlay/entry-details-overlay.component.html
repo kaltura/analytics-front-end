@@ -1,7 +1,7 @@
 <div data-aid="overlay-entry-details" class="kEntryDetailsOverlay">
   <ng-container *ngIf="entryData">
     <div class="kEntryThumbnail" #holder>
-      <app-thumbnail-loader [thumbnailUrl]="entryData.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
+      <thumb-loader [thumbnailUrl]="entryData.thumbnailUrl" [width]="300" [height]="140"></thumb-loader>
       <div class="kProtector"></div>
       <div class="kEntryName">
         <span>{{entryData.entry_name}}</span>

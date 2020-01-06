@@ -83,36 +83,10 @@
     border: none;
     position: relative;
     flex: 1 1 auto;
-
-    .kThumbnailHolder {
-      overflow: hidden;
-      position: relative;
-      width: 80px;
-      height: 46px;
-      background-color: $kGrayscale6;
-      white-space: nowrap;
-      text-align: center;
-      border-radius: 3px;
-      cursor: pointer;
-
-      ::ng-deep img {
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        width: 80px;
-        height: auto;
-        border-radius: 3px;
-      }
-    }
-
     .emptymessage {
       display: table-row;
       border: 0;
       height: 200px;
-
       .kEmptyMessage {
         position: absolute;
         width: 100%;

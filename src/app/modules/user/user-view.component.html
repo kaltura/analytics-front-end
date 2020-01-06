@@ -6,7 +6,7 @@
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
           <div class="kAvatar">
-            <div *ngIf="_user?.thumbnailUrl" class="kThumbnailHolder">
+            <div *ngIf="_user?.thumbnailUrl" class="kUserThumbnailHolder">
               <img [src]="_user?.thumbnailUrl">
             </div>
             <div *ngIf="!_user?.thumbnailUrl" class="kStub">

@@ -39,12 +39,7 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '111px', 'padding-left': '10px'}">
-            <div class="kThumbnailHolder" #holder
-                 (click)="_drillDown(data)"
-                 (mouseleave)="_hideOverlay()"
-                 (mouseenter)="_showOverlay($event, data['object_id'])">
-              <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
-            </div>
+            <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" (onMouseEnter)="_showOverlay($event, data['object_id'])" (onMouseLeave)="_hideOverlay()"></thumb-loader>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
               <span class="kTableColumn kEntryName"

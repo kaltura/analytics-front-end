@@ -128,38 +128,9 @@
       }
     }
 
-    .kReportRowThumbnail {
-      overflow: hidden;
-      position: relative;
-      width: 86px;
-      height: 48px;
-      flex: 0 0 auto;
-      background-color: $kGrayscale6;
-      white-space: nowrap;
-      text-align: center;
-      border-radius: 3px;
-      margin-right: 10px;
-      cursor: pointer;
-
-      &.error {
-        border: 1px solid $kGrayscale4;
-      }
-
-      ::ng-deep img {
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        width: 86px;
-        height: auto;
-        border-radius: 3px;
-      }
-    }
-
     .kReportRowDetails {
       display: flex;
+      margin-left: 10px;
       flex-direction: column;
       white-space: nowrap;
       overflow: hidden;

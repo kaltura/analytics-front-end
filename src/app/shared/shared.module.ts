@@ -9,7 +9,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 
 import { DateFilterComponent } from './components/date-filter/date-filter.component';
-import { ThumbnailLoaderComponent } from './components/thumbnail-loader/thumbnail-loader.component';
+import { ThumbLoaderComponent } from './components/thumb-loader/thumb-loader.component';
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
@@ -98,7 +98,7 @@ import { ContextFilterComponent } from 'shared/components/context-table-filter/u
   ],
   declarations: [
     DateFilterComponent,
-    ThumbnailLoaderComponent,
+    ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,
@@ -149,7 +149,7 @@ import { ContextFilterComponent } from 'shared/components/context-table-filter/u
   ],
   exports: [
     DateFilterComponent,
-    ThumbnailLoaderComponent,
+    ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,

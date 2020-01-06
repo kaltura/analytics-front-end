@@ -39,10 +39,6 @@
   justify-content: space-between;
   align-items: center;
 
-  .kThumbnailHolder {
-    cursor: pointer;
-  }
-
   .kCard {
     display: flex;
     flex-direction: column;
@@ -71,21 +67,11 @@
 }
 
 @media screen and (max-width: 1280px) {
-  .kThumbnailHolder {
+  ::ng-deep .kThumbnailHolder {
     width: 202px;
     height: 101px;
-    cursor: pointer;
-    position: relative;
-    ::ng-deep img {
-      position: absolute;
-      left: -100%;
-      right: -100%;
-      top: -100%;
-      bottom: -100%;
-      margin: auto;
+    img {
       width: 202px;
-      height: auto;
-      border-radius: 3px;
     }
   }
 
@@ -99,22 +85,12 @@
     display: none !important;
   }
 
-  .kCompare {
+  .kCompare ::ng-deep {
     .kThumbnailHolder {
       width: 160px !important;
       height: 78px !important;
-      cursor: pointer;
-      position: relative;
-      ::ng-deep img {
+      img {
         width: 160px !important;
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        height: auto !important;
-        border-radius: 3px;
       }
     }
 
@@ -142,43 +118,17 @@
 }
 
 @media screen and (min-width: 1280px) and (max-width: 1609px) {
-  .kThumbnailHolder {
-    width: 171px;
-    height: 101px;
-    position: relative;
-    ::ng-deep img {
-      position: absolute;
-      left: -100%;
-      right: -100%;
-      top: -100%;
-      bottom: -100%;
-      margin: auto;
-      width: 171px;
-      height: auto;
-      border-radius: 3px;
-    }
-  }
 
   .kCard {
     width: 171px;
   }
 
-  .kCompare {
+  .kCompare ::ng-deep {
     .kThumbnailHolder {
       width: 160px !important;
       height: 78px !important;
-      cursor: pointer;
-      position: relative;
-      ::ng-deep img {
+      img {
         width: 160px !important;
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        height: auto !important;
-        border-radius: 3px;
       }
     }
 
@@ -195,20 +145,11 @@
 }
 
 @media screen and (min-width: 1609px)  {
-  .kThumbnailHolder {
+  ::ng-deep.kThumbnailHolder {
     width: 171px;
     height: 101px;
-    position: relative;
-    ::ng-deep img {
-      position: absolute;
-      left: -100%;
-      right: -100%;
-      top: -100%;
-      bottom: -100%;
-      margin: auto;
+    img {
       width: 171px;
-      height: auto;
-      border-radius: 3px;
     }
   }
 
@@ -216,22 +157,12 @@
     width: 171px;
   }
 
-  .kCompare {
+  .kCompare ::ng-deep{
     .kThumbnailHolder {
       width: 128px !important;
       height: 72px !important;
-      cursor: pointer;
-      position: relative;
-      ::ng-deep img {
+      img {
         width: 128px !important;
-        position: absolute;
-        left: -100%;
-        right: -100%;
-        top: -100%;
-        bottom: -100%;
-        margin: auto;
-        height: auto !important;
-        border-radius: 3px;
       }
     }
 

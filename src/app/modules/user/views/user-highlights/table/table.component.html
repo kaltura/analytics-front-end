@@ -35,12 +35,7 @@
               </a>
             </td>
             <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
-              <div class="kThumbnailHolder" #holder
-                   (mouseleave)="_hideOverlay()"
-                   (mouseenter)="_showOverlay($event, data['object_id'])"
-                   (click)="drillDown.emit(data)">
-                <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
-              </div>
+              <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="drillDown.emit(data)" (onMouseEnter)="_showOverlay($event, data['object_id'])" (onMouseLeave)="_hideOverlay()"></thumb-loader>
             </td>
             <td *ngFor="let col of columns; let i = index"
                 [class.kHighlight]="i===0"

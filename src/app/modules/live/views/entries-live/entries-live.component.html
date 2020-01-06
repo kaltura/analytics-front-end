@@ -46,11 +46,7 @@
         <ng-template pTemplate="body" let-data>
           <tr class="kEntriesLiveRow" (click)="_drillDown(data)">
             <td [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
-              <div class="kThumbnailHolder" #holder>
-                <img [src]="data.thumbnailUrl"
-                     onError="this.onerror=null;this.style.display='none'"
-                     (error)="holder.classList.add('error')">
-              </div>
+              <thumb-loader [thumbnailUrl]="data.thumbnailUrl"></thumb-loader>
             </td>
             <td *ngFor="let col of _columns; let i = index"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}">

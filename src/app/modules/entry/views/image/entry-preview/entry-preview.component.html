@@ -1,7 +1,7 @@
 <div data-aid="report-entry-preview" class="kEntryPreview">
-  <div class="kThumbnailHolder" #holder>
-    <app-thumbnail-loader [thumbnailUrl]="_imgUrl"
-                          (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
+  <div class="kImageThumbnailHolder" #holder>
+    <img *ngIf="_imgUrl" [src]="_imgUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=_imgUrl+'/ks/'+ _ks" alt="Image entry">
+    <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
   </div>
 </div>
 

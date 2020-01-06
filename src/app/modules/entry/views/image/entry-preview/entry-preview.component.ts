@@ -21,6 +21,7 @@ export class ImageEntryPreviewComponent {
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   
   public _imgUrl: string;
+  public _ks = this._authService.ks;
   
   constructor(private _authService: AuthService) {
   }

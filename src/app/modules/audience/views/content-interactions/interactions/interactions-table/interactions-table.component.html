@@ -30,9 +30,7 @@
           <tr [ngStyle]="{'width': '100%', 'height': '72px'}">
             <td [ngStyle]="{'width': '42px', 'text-align': 'center'}">{{data.index}}</td>
             <td *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}">
-              <div class="kThumbnailHolder" #holder (click)="drillDown.emit(data)">
-                <app-thumbnail-loader [thumbnailUrl]="data.thumbnailUrl" (onerrror)="holder.classList.add('error')"></app-thumbnail-loader>
-              </div>
+              <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="drillDown.emit(data)"></thumb-loader>
             </td>
             <td *ngFor="let col of columns; let i = index"
                 [class.kHighlight]="i===0"
