@@ -91,11 +91,11 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '1.11.0',
+  appVersion: '1.11.1',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
-  originTarget: window.location.origin,
+  originTarget: '*',
   multiAccount: false,
 };
 
