@@ -24,37 +24,37 @@ export class PublisherStorageDataConfig extends ReportDataBaseConfig {
           },
           'bandwidth_consumption': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'average_storage': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'peak_storage': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'added_storage': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'deleted_storage': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'combined_bandwidth_storage': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           },
           'transcoding_consumption': {
             format: value => value,
-            graphTooltip: (value) => value > 1000 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1000), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => value > 1024 ? `<span class="kValue">${ReportHelper.numberOrZero(String(value / 1024), false)}</span>&nbsp;GB` : `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
             units: value => 'GB',
           }
         }
