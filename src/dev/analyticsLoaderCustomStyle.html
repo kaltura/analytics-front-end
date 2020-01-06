@@ -14,7 +14,12 @@
       text-align: center;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
-
+    button {
+      width: 160px;
+      height: 32px;
+      font-size: 16px;
+      margin-left: 12px;
+    }
     iframe {
       width: 100%;
       height: 100vh;
@@ -24,7 +29,10 @@
   </style>
 </head>
 <body>
-<h1>This is an external app loading Analytics in an iframe</h1>
+<div style="display: flex; align-items: center; width: 100%; justify-content: center">
+  <h1>External app loading Analytics in an iframe with custom style</h1>
+  <button id="btn">Toggle Contrast</button>
+</div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
   const config = {
@@ -36,8 +44,8 @@
       serverUri: 'http://cdnapi.kaltura.com',
       securedServerUri: 'https://cdnapisec.kaltura.com'
     },
-    ks: '',
-    pid: '', // provide partnerId
+    ks: "djJ8MTc4ODY3MXx8jAMN6HrykH9oo3_O1eG_7G5hNSYkiHQXXECBoLXWXQDU3xsZie0MLrdpo0PvGuvtaVYQTrgoeqE18K8cWbvFQtpJD6wefs5Gb5PSB31uP1e0qrkDCsBI2Mg1COEP9Yv9msTxnC-JYJfbUe4BGCMb",
+    pid: "1788671",
     locale: 'en',
     live: {
       pollInterval: 30,
@@ -139,12 +147,17 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const analyticsApp = document.getElementById('analytics');
+    const toggleContrastBtn = document.getElementById('btn');
 
     const sendMessage = message => {
       if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
         analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
       }
     };
+
+    toggleContrastBtn.addEventListener('click', e => {
+        sendMessage({ messageType: 'toggleContrastTheme' });
+    });
 
     window.addEventListener('message', e => {
       if (!e.data) {
