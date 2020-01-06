@@ -24,7 +24,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
   
   private _order = '-count_plays';
-  private _pager = new KalturaFilterPager({ pageSize: 5, pageIndex: 1 });
+  private _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
   private _reportType = reportTypeMap(KalturaReportType.latestPlayedEntries);
   private _dataConfig: ReportDataConfig;
   private _partnerId = this._authService.pid;
@@ -147,6 +147,16 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._columns = columns;
     this._tableData = tableData.map(this._extendTableRow.bind(this));
+    this._tableData = this.filterUnique(this._tableData, 'object_id').slice(0, 5); // get first 5 unique entries (report returns duplicates)
+  }
+  
+  // following function filters a given objects array and returns only objects that have unique value in the passed key field
+  private filterUnique(arr: TableRow[], key: string): TableRow[] {
+    return arr.filter((entry, index, self) =>
+      index === self.findIndex( item => (
+        item[key] === entry[key]
+      ))
+    );
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -156,11 +166,13 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
     if (current.table && current.table.data) {
       const { columns, tableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
       this._columns = columns;
-      this._tableData = tableData.map(this._extendTableRow.bind(this)).slice(0, 3);
+      this._tableData = tableData.map(this._extendTableRow.bind(this));
+      this._tableData = this.filterUnique(this._tableData, 'object_id').slice(0, 3); // get first 3 unique entries (report returns duplicates)
       
       if (compare.table && compare.table.data) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
-        this._compareTableData = compareTableData.map(this._extendTableRow.bind(this)).slice(0, 3);
+        this._compareTableData = compareTableData.map(this._extendTableRow.bind(this));
+        this._compareTableData = this.filterUnique(this._compareTableData, 'object_id').slice(0, 3); // get first 3 unique entries (report returns duplicates)
       } else {
         this._compareTableData = [];
       }
