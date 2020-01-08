@@ -55,6 +55,10 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 7,
           },
+          'total_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
+            sortOrder: 8,
+          },
         }
       },
       [ReportDataSection.graph]: {

@@ -93,6 +93,10 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value / 100, false),
             sortOrder: 6,
           },
+          'total_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
+            sortOrder: 7,
+          },
         }
       },
       [ReportDataSection.totals]: {
