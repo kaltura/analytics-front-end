@@ -698,7 +698,7 @@ export class CompareService implements OnDestroy {
     const current = graphsData[currentMetric];
     const compare = graphsData[compareMetric];
   
-    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series.map(({ data }) => data))).toFixed(1));
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series.map(({ data }) => data))).toFixed(2));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
     const getInterval = (a, b) => b ? getInterval(b, a % b) : Math.abs(a); // greatest common divisor function
@@ -750,14 +750,14 @@ export class CompareService implements OnDestroy {
     const compareMax = getMaxValue(compare.series) || 1;
     let currentMin = getMinValue(current.series);
     let compareMin = getMinValue(compare.series);
-  
+
     // prevent having min equals max
     currentMin = currentMin === currentMax ? 0 : currentMin;
     compareMin = compareMin === compareMax ? 0 : compareMin;
 
-    const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(2));
-    const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(2));
-    
+    const currentInterval = parseFloat(((currentMax - currentMin) / 5).toFixed(3));
+    const compareInterval = parseFloat(((compareMax - compareMin) / 5).toFixed(3));
+
     return {
       'color': [current.color[0], compare.color[0], current.color[1], compare.color[1]],
       'textStyle': { ...current.textStyle },
