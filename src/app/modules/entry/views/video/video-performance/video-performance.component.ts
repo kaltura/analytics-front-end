@@ -420,8 +420,11 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
         this._compareDatePeriod
       );
       // Normalize yAxis if metrics are comparable and max values of both y-axis are close enough
-      const comparableMetrics = ['count_plays', 'count_loads', 'unique_known_users', 'sum_time_viewed'];
-      if (comparableMetrics.indexOf(field) > -1 && comparableMetrics.indexOf(this._selectedMetrics) > -1 && this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2) {
+      const comparableUnitsMetrics = ['count_plays', 'count_loads', 'unique_known_users', 'sum_time_viewed'];
+      const comparablePercentMetrics = ['avg_completion_rate', 'avg_view_drop_off'];
+      const allowNormalize = (comparableUnitsMetrics.indexOf(field) > -1 && comparableUnitsMetrics.indexOf(this._selectedMetrics) > -1) ||
+        (comparablePercentMetrics.indexOf(field) > -1 && comparablePercentMetrics.indexOf(this._selectedMetrics) > -1);
+      if (allowNormalize && this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2) {
         const max1 = this._metricsLineChartData.yAxis[0].max;
         const max2 = this._metricsLineChartData.yAxis[1].max;
         const maxValue = Math.max(max1, max2);
