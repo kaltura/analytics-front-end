@@ -21,6 +21,7 @@ export enum FrameEvents {
   UpdateAuthLiveUsersReports = 'updateAuthLiveUsersReports',
   UpdateConfig = 'updateConfig',
   ToggleContrastTheme = 'toggleContrastTheme',
+  SetLanguage = 'setLanguage',
 }
 
 @Injectable()

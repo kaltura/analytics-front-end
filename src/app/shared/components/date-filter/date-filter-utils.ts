@@ -154,6 +154,7 @@ export class DateFilterUtils {
       const month: string = value.substring(4, 6);
       const day: string = value.substring(6, 8);
       const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
+      locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
       result = `${date.toLocaleString(locale, { month: monthFormat })} ${day}, ${date.getFullYear()}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);
