@@ -110,18 +110,20 @@ To see analytics in action follow the steps:
 1. Make sure all dependencies are installed, otherwise run `npm install`
 2. Get valid KS and partner id
 3. Go to `src/dev/analyticsLoader.html` and copy them into the config (lines [37](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L37) and [38](https://github.com/kaltura/analytics-front-end/tree/master/src/dev/analyticsLoader.html#L38) accordingly as strings)
-4. Run `npm run example` (or `npm run example:menu`, or `npm run example:view`)
+4. Run `npm run example` 
 5. Wait until build is completed
 6. Go to your browser and open `http://localhost:4201`
 
+#### Additional demos
+
+* [Setting custom style](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderCustomStyle.html) (to run example: `npm run example:style`)
+* [Force friendly iframe loading](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderFriendly.html) (to run example: `npm run example:friendly`)
+* [Changing locale at runtime](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderLocale.html) (to run example: `npm run example:locale`)
+* [Setting custom menu](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderMenu.html) (to run example: `npm run example:menu`)
+* [Hiding analytics sections](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderView.html) (to run example: `npm run example:view`)
+
 **DO NOT COMMIT ANYTHING WHILE THE EXAMPLE SCRIPT IS RUNNING**
 
-There're 2 more examples: menu and view.
-The menu example shows how to configure the internal analytics menu from the host app.
-The view example shows hot to configure the analytics views and components from the host app.
-
-To run those example use `npm run example:menu` and `npm run example:view` commands accordingly.  
-
-##### Troubleshooting
+#### Troubleshooting
 
 Make sure the ports `4200` and `4201` are available, make sure the KS and partner id are valid and not expired.  
