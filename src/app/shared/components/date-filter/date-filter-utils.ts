@@ -38,6 +38,7 @@ export class DateFilterUtils {
   // March 2019
   static formatMonthString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -84,6 +85,7 @@ export class DateFilterUtils {
   // Mar 18
   static formatDayString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -105,6 +107,7 @@ export class DateFilterUtils {
   // March
   static formatMonthOnlyString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -149,12 +152,12 @@ export class DateFilterUtils {
   // Mar 18, 2019 or March 18, 2019
   static formatMonthDayString(value: string | number | Date, locale = analyticsConfig.locale, monthFormat = 'short'): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
       const day: string = value.substring(6, 8);
       const date: Date = new Date( parseFloat(year) , parseFloat(month) , 0);
-      locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
       result = `${date.toLocaleString(locale, { month: monthFormat })} ${day}, ${date.getFullYear()}`;
     } else if (typeof value === 'number') {
       const date = this.fromServerDate(value);

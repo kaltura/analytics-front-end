@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.engagement.title' | translate}}</span>
     <app-export-csv *ngIf="_engagementViewConfig.export"
                     name="engagement"
+                    [width]="290"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>

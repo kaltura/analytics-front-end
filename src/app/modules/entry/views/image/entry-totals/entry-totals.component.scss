@@ -10,21 +10,27 @@
   background-color: $appBkgColor;
 }
 .kPreview {
-  width: 50%;
+  width: 100%;
   height: 100%;
-  margin-right: 24px;
+  margin-right: 0px;
+  justify-self: center;
 }
-
+.kDivider{
+  width: 24px;
+  flex: 0 0 auto;
+  background-color: $appBkgColor;
+}
 .kTitle {
   margin-top: 0;
 }
 
 k-area-blocker{
   flex-direction: row;
+  background-color: black;
 }
 
 .kTotalContainer {
-  width: 50%;
+  width: 100%;
 
   .kMiniIcon {
     &.aqua {
@@ -47,10 +53,9 @@ k-area-blocker{
 @media (max-width: 991px) {
   .kTotalsRow {
     display: flex;
-    height: 137px;
+    height: auto;
     .kTotalsContainer {
-      margin-bottom: 24px;
-      height: 137px;
+      height: auto;
       .kTotalContainer{
         padding-left: 16px;
       }
@@ -58,7 +63,7 @@ k-area-blocker{
     .kSocialHighlights {
       display: flex;
       flex-direction: column;
-      width: 50%;
+      width: 100%;
       height: 100%;
       padding: 24px 0;
       align-items: flex-start;

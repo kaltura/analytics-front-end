@@ -191,11 +191,11 @@
 
 @media screen and (min-width: 1280px) {
   ui-carousel:not(.kCompare) {
-    height: 391px !important;
+    min-height: 391px !important;
   }
 
   ui-carousel.kCompare {
-    height: 495px !important;
+    min-height: 495px !important;
   }
 }
 
