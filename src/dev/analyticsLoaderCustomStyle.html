@@ -55,93 +55,65 @@
       showMenu: true,
     },
     customStyle: {
-        baseClassName: 'kms',
+        baseClassName: 'webcasting',
         css: `
-            body.kms {
+            body.webcasting {
+                background: black;
+                background-color: black;
+            }
+            .webcasting .kMain .kReportView .kReport {
                 background: transparent;
+                background-color: black !important;
+            }
+            .webcasting .kMain .kReportView .kReport .kTotalsRow {
+                background: transparent;
+            }
+            .webcasting .kMain .kReportView .kReport .kFilters {
                 background-color: white;
             }
-            .kms .kMain .kReportView .kReport {
+            .webcasting .kMain .kReportView .kReport .kReportHeader {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kTotalsRow {
+            .webcasting .kMain .kReportView .kReport .kReportContainer {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kFilters {
-                background-color: white;
-            }
-            .kms .kMain .kReportView .kReport .kReportHeader {
+            .webcasting .kMain .kReportView .kReport .kEntryDetails {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kReportContainer {
+            .webcasting .kMain .kReportView .kReport.kImageReport {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kEntryDetails {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport.kImageReport {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport app-entry-filter {
+            .webcasting .kMain .kReportView .kReport app-entry-filter {
                 background: transparent;
             }
             /* Margins */
-            .kms .kContent {
+            .webcasting .kContent {
                 width: 100% !important;
             }
-            .kms .kReportView .kContent {
+            .webcasting .kReportView .kContent {
                 padding-left: 20px !important;
                 padding-right: 20px !important;
                 box-sizing: border-box;
             }
-            /* Borders */
-            .kms .kTotalContainer, .kms .kSocialHighlights {
-                border: 1px solid #cccccc !important;
+            /* Colors */
+            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, app-horizontal-bar-row .kBarContainer .kLabel, .kBarContainer .kBarWrapper .kBarWrapperRow .kValue, .kSummaryRow .kRightSide, p-table .ui-table .ui-table-tbody > tr > td, p-table tr.kSummaryRow th {
+              color: white !important;
             }
-            .kms .kTotalContainer:first-child {
-                border-top-left-radius: 3px;
-                border-bottom-left-radius: 3px;
+            .kLineCover{
+              background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 62%, rgba(0,0,0,1) 100%) !important;
+              background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
+              background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
             }
-            .kms .kTotalContainer:last-child {
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
-                border-left: none !important;
+            kScrollToTopContainer, .kChartContainer, p-table .ui-table .ui-table-tbody > tr {
+              background-color: black !important;
             }
-            .kms .kTotalContainer:not(:first-child):not(:last-child) {
-                border-left: none !important;
+            .webcasting .kMain .kReportView .kReport .kFilters, .kMain .kReportView .kReport .kReportContent {
+              background-color: black;
             }
-            .kms .kEntryPreview app-video-entry-preview .kReport {
-                border: 1px solid #cccccc !important;
-                border-bottom: none !important;
-                border-radius: 0px;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
+            .webcasting .kMain .kReportView .kReport .kFilters.kPreset, .webcasting .kMain .kReportView .kReport .kFilters.kSpecific  {
+              background-color: white;
             }
-            .kms .kEntryPreview app-video-entry-user-engagement .kReport {
-                border: 1px solid #cccccc !important;
-                border-top: none !important;
-                border-radius: 0px;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-            }
-
-            .kms .kReportContainer .kFilters {
-                border: 1px solid #cccccc !important;
-                border-bottom: none !important;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }
-            .kms .kReportContainer .kReportContent {
-                border: 1px solid #cccccc !important;
-                border-top: none !important;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-            }
-            .kms .kReportContainer .kReportContent.kNoTitle {
-                border-top: 1px solid #cccccc !important;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }`
+            `
     }
   };
 
@@ -172,7 +144,7 @@
           break;
 
         case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/live' } });
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 
