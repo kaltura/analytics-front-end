@@ -38,7 +38,7 @@
   const config = {
     kalturaServer: {
       uri: 'www.kaltura.com',
-      previewUIConf: 44299511,
+      previewUIConf: 38524931,
     },
     cdnServers: {
       serverUri: 'http://cdnapi.kaltura.com',
@@ -65,26 +65,12 @@
                 background: transparent;
                 background-color: black !important;
             }
-            .webcasting .kMain .kReportView .kReport .kTotalsRow {
-                background: transparent;
-            }
-            .webcasting .kMain .kReportView .kReport .kFilters {
-                background-color: white;
-            }
             .webcasting .kMain .kReportView .kReport .kReportHeader {
-                background: transparent;
-            }
-            .webcasting .kMain .kReportView .kReport .kReportContainer {
                 background: transparent;
             }
             .webcasting .kMain .kReportView .kReport .kEntryDetails {
                 background: transparent;
-            }
-            .webcasting .kMain .kReportView .kReport.kImageReport {
-                background: transparent;
-            }
-            .webcasting .kMain .kReportView .kReport app-entry-filter {
-                background: transparent;
+                color: white;
             }
             /* Margins */
             .webcasting .kContent {
@@ -96,7 +82,7 @@
                 box-sizing: border-box;
             }
             /* Colors */
-            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, app-horizontal-bar-row .kBarContainer .kLabel, .kBarContainer .kBarWrapper .kBarWrapperRow .kValue, .kSummaryRow .kRightSide, p-table .ui-table .ui-table-tbody > tr > td, p-table tr.kSummaryRow th {
+            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, .kMain .kReportView .kReport .kReportHeader .kTitle, .kMain .kReportView .kReport {
               color: white !important;
             }
             .kLineCover{
@@ -107,11 +93,8 @@
             kScrollToTopContainer, .kChartContainer, p-table .ui-table .ui-table-tbody > tr {
               background-color: black !important;
             }
-            .webcasting .kMain .kReportView .kReport .kFilters, .kMain .kReportView .kReport .kReportContent {
-              background-color: black;
-            }
-            .webcasting .kMain .kReportView .kReport .kFilters.kPreset, .webcasting .kMain .kReportView .kReport .kFilters.kSpecific  {
-              background-color: white;
+            .webcasting .kMain .kReportView .kReport .kEntryDetails .link {
+                color: #1c94c4;
             }
             `
     }
@@ -140,11 +123,18 @@
 
       switch (postMessageData.messageType) {
         case 'analyticsInit':
-          sendMessage({ messageType: 'init', payload: config });
+          const viewsConfig = postMessageData.payload.viewsConfig;
+          viewsConfig.entryLive.export = null;
+          viewsConfig.entryLive.userMode = null;
+          viewsConfig.entryLive.toggleLive = null;
+          viewsConfig.entryLive.geo = null;
+          viewsConfig.entryLive.devices = null;
+          viewsConfig.entryLive.discovery = null;
+          sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
         case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/live' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 

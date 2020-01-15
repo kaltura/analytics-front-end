@@ -117,6 +117,7 @@ export const viewsConfig = {
   },
   entryLive: {
     export: {},
+    userMode: {},
     toggleLive: {},
     details: {},
     users: {},

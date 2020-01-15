@@ -7,7 +7,7 @@
                   [kTooltip]="'app.entryLive.back' | translate"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
-            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
+            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()" *ngIf="_entryLiveViewConfig.userMode"></app-toggle-users-mode>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
                             name="entry"
                             [width]="380"
@@ -33,19 +33,19 @@
           </div>
         </div>
 
-        <div class="kFilters kLiveFilters kOverrideFAIcons">
+        <div class="kFilters kLiveFilters kOverrideFAIcons" *ngIf="_entryLiveViewConfig.deo || _entryLiveViewConfig.devices || _entryLiveViewConfig.discovery">
           <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
 
           <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
 
         </div>
-        <div class="kEntryWidgets">
-          <div class="kWideColumn">
+        <div class="kEntryWidgets" *ngIf="_entryLiveViewConfig.deo || _entryLiveViewConfig.devices">
+          <div class="kWideColumn" *ngIf="_entryLiveViewConfig.geo">
             <div class="kReport kNoBottomMargin">
               <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
             </div>
           </div>
-          <div class="kNarrowColumn">
+          <div class="kNarrowColumn" *ngIf="_entryLiveViewConfig.devices">
             <div class="kReport kNoBottomMargin">
               <app-live-devices></app-live-devices>
             </div>
