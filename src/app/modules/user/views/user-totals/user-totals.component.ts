@@ -198,7 +198,7 @@ export class UserTotalsComponent extends UserBase {
       .pipe(map(responses => {
         if (responses.hasErrors()) {
           const error = responses.getFirstError();
-          if (error.code === 'SERVICE_FORBIDDEN') {
+          if (error.code === 'SERVICE_FORBIDDEN' || error.code === 'FEATURE_FORBIDDEN') {
             return new Array(responses.length).fill(-1);
           }
           throw responses.getFirstError();
