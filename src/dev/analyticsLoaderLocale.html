@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title>Analytics Loader</title>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    select {
+      width: 160px;
+      height: 32px;
+      font-size: 16px;
+      margin-left: 24px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+      transition: height 0.3s;
+    }
+  </style>
+</head>
+<body>
+<div style="display: flex; align-items: center; width: 100%; justify-content: center">
+  <h1>External app loading Analytics in an iframe with locale selector</h1>
+  <select id="locale">
+    <option value="en">English</option>
+    <option value="de">German</option>
+    <option value="es">Spanish</option>
+    <option value="fr">French</option>
+    <option value="nl">Dutch</option>
+    <option value="ja">Japanese</option>
+    <option value="ru">Russian</option>
+    <option value="pt_br">Portuguese (Brazil)</option>
+    <option value="zh_hans">Chinese (China)</option>
+    <option value="zh_hant">Chinese (Taiwan)</option>
+  </select>
+</div>
+<iframe id="analytics" src="http://localhost:4200"></iframe>
+<script>
+  const config = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 44299511,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: '', // provide ks
+    pid: '', // provide partnerId
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: true,
+    },
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+    const localeSelector = document.getElementById('locale');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    localeSelector.addEventListener('change', e => {
+        sendMessage({ messageType: 'setLanguage', payload: e.target.value });
+    });
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          sendMessage({ messageType: 'init', payload: config });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
+</script>
+</body>
+</html>

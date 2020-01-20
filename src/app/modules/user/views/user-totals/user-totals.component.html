@@ -18,6 +18,7 @@
           <span class="kLabel">{{'app.user.' + tab.key | translate}}</span>
         </div>
       </div>
+      <div *ngIf="_socialHighlights" class="kDivider"></div>
       <div *ngIf="_socialHighlights" class="kSocialHighlights">
         <span class="kTitle">{{'app.user.socialHighlights' | translate}}</span>
         <div class="kSocialHighlightsItem">

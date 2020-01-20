@@ -10,22 +10,25 @@
 }
 .kTotalsContainer {
   width: 100%;
-  height: 136px;
+  height: auto;
   display: flex;
-  margin-right: 24px;
-  background-color: #ffffff;
+  background-color: $appBkgColor;
   border-radius: 3px;
-
+  margin-right: 0px;
+  .kTotals {
+    display: flex;
+    width: 80%;
+  }
   .kTotalContainer {
-    width: 20%;
-    height: 100%;
+    width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     padding-left: 24px;
     padding-right: 12px;
     padding-top: 24px;
     box-sizing: border-box;
-
+    background-color: #ffffff;
     &:not(:last-child) {
       border-right: 1px solid $kGrayscale6;
     }
@@ -46,7 +49,7 @@
         margin-bottom: 8px;
         font-size: 15px;
         color: $kGrayscale1;
-        white-space: nowrap;
+        white-space: normal;
       }
 
       .kTrend ::ng-deep {
@@ -110,12 +113,13 @@
 .kSocialHighlights {
   display: flex;
   flex-direction: column;
-  width: 25%;
-  height: 88px;
+  width: 20%;
+  height: auto;
   padding: 24px 0;
   background-color: #ffffff;
   color: $kGrayscale1;
   border-radius: 3px;
+  margin-left: 24px;
 
   .kTitle {
     font-size: 20px;
@@ -151,7 +155,6 @@
   .kTotalContainer {
     padding-left: 15px !important;
     padding-top: 15px !important;
-
     .kLabel {
       white-space: normal !important;
     }
@@ -161,8 +164,14 @@
   .kTotalsRow {
     display: block;
     .kTotalsContainer {
+      flex-flow: row wrap;
       margin-right: 0px;
-      margin-bottom: 24px;
+      .kTotals {
+        width: 100%;
+      }
+      .kTotalContainer {
+        width: 20%;
+      }
     }
   }
   .kSocialHighlights{
@@ -172,5 +181,7 @@
     align-items: baseline !important;
     box-sizing: border-box !important;
     padding-top: 16px !important;
+    margin-top: 24px;
+    margin-left: 0px;
   }
 }
