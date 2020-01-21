@@ -12,6 +12,12 @@
     .ui-multiselect-items-wrapper {
       overflow-x: hidden;
     }
+    .ui-multiselect-label{
+      white-space: nowrap;
+    }
+    .ui-multiselect {
+      width: auto;
+    }
   }
 }
 

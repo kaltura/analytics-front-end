@@ -1,6 +1,6 @@
 <div class="kHeader" [class.kCompare]="isCompare">{{'app.user.topLocation' | translate}}</div>
 
-<div class="kGeoWrapper" [class.kCompare]="isCompare">
+<div class="kGeoWrapper" [class.kCompare]="isCompare" *ngIf="data">
   <div class="kGeoCard">
     <span *ngIf="compareDates" class="kPeriod">{{compareDates}}</span>
     <div *ngIf="compare" class="kGeo" [class.kCompare]="isCompare">
