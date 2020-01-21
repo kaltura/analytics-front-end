@@ -85,7 +85,7 @@
 .kFilter {
   display: flex;
   align-items: center;
-
+  flex: 0 0 auto;
   .kDropDown {
     background-color: white;
     height: 34px;
