@@ -303,6 +303,7 @@ export class FilterComponent {
       }
     } else {
       this._currentFilters.push(value);
+      this._updateLayout();
     }
   }
   
@@ -316,6 +317,7 @@ export class FilterComponent {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === value && filterItem.type === type);
     } else {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
+      this._updateLayout();
     }
 
     if (unselectedItemIndex !== -1) {
