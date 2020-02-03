@@ -53,7 +53,7 @@
                   </span>
                 </span>
                 <ng-container *ngIf="!_isCompareMode || col === 'name'">
-                  <span *ngIf="col !== 'avg_completion_rate' && col !== 'name'">{{data[col]}}</span>
+                  <span *ngIf="col !== 'avg_completion_rate' && col !== 'name' && col !== 'total_completion_rate'">{{data[col]}}</span>
                   <a class="kTableColumn"
                      tabindex="0"
                      role="link"
@@ -65,6 +65,9 @@
                   <app-bullet *ngIf="col === 'avg_completion_rate'"
                               colorScheme="dropoff"
                               [value]="data['avg_completion_rate']"></app-bullet>
+                  <app-bullet *ngIf="col === 'total_completion_rate'"
+                              colorScheme="dropoff"
+                              [value]="data['total_completion_rate']"></app-bullet>
                 </ng-container>
               </td>
             </tr>
