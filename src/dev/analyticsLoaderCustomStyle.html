@@ -44,8 +44,8 @@
       serverUri: 'http://cdnapi.kaltura.com',
       securedServerUri: 'https://cdnapisec.kaltura.com'
     },
-    ks: "",
-    pid: "",
+    ks: '',  // provide ks
+    pid: '', // provide partnerId
     locale: 'en',
     live: {
       pollInterval: 30,
@@ -61,10 +61,10 @@
                 background: transparent;
                 background-color: white;
             }
-            .kms .kMain .kReportView .kReport {
+            .kms .kMain .kReportView .kReport, .kms .kMain .kReportView .kReport .kDivider {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kTotalsRow {
+            .kms .kMain .kReportView .kReport .kTotalsRow,  .kms .kMain .kReportView .kReport .kTotalsContainer {
                 background: transparent;
             }
             .kms .kMain .kReportView .kReport .kFilters {

@@ -26,7 +26,6 @@
 
 k-area-blocker{
   flex-direction: row;
-  background-color: black;
 }
 
 .kTotalContainer {
@@ -65,7 +64,7 @@ k-area-blocker{
       flex-direction: column;
       width: 100%;
       height: 100%;
-      padding: 24px 0;
+      padding: 12px 12px 0px 0px;
       align-items: flex-start;
       box-sizing: border-box;
       .kTitle {
