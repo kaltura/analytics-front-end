@@ -27,11 +27,11 @@ const routes: Routes = [
       },
       {
         path: 'user/:id',
-        loadChildren: '../modules/user/user.module#UserModule'
+        loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
       },
       {
         path: 'user',
-        loadChildren: '../modules/user/user.module#UserModule'
+        loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
       },
       {
         path: 'entry-live/:id',
