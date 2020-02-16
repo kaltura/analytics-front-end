@@ -23,7 +23,8 @@
               "src/favicon.ico",
               "src/.htaccess",
               "src/embed.php",
-              "src/assets"
+              "src/assets",
+              "src/engagement.html"
             ],
             "styles": [
               "src/styles/styles.scss"

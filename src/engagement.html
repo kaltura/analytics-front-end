@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="login" style="display: none">
+  <span>Login</span>
+</div>
+<iframe id="analytics" src=""></iframe>
+<script>
+  const config = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 38524931,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: '', // provide ks
+    pid: '', // provide partnerId
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: false,
+    },
+  };
+
+  function login(){
+      $("#login").show();
+  }
+
+  function updateConfig(data){
+      config.ks = data.ks;
+      config.pid = data.partnerId;
+      // refresh session in local storage
+      const kData = {
+          pid: data.partnerId,
+          ks: data.ks
+      };
+      window.localStorage.setItem('kData', JSON.stringify(kData));
+  }
+
+  // load ks and pid from local storage
+  const kData = JSON.parse(window.localStorage.getItem('kData'));
+  if (!kData || !kData.ks){ // no ks stored in local storage
+      login();
+  } else {
+      // ks found - check that it is valid
+      $.post( "https://www.kaltura.com/api_v3/service/user/action/loginByKs", {
+          ks: kData.ks,
+          format: 1,
+          requestedPartnerId: kData.pid
+      },  data => {
+          if (data.ks && data.partnerId) {
+              updateConfig(data);
+              // load Analytics
+              $("#analytics").attr("src", "https://il-kmc-ng.dev.kaltura.com/hack20/external/analytics-v0.1/index.html");
+          } else {
+              login();
+          }
+      })
+  }
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          sendMessage({ messageType: 'init', payload: config });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
+</script>
+</body>
+</html>
