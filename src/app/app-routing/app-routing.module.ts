@@ -56,6 +56,10 @@ const routes: Routes = [
       {
         path: 'live',
         loadChildren: () => import('../modules/live/live.module').then(m => m.LiveModule)
+      },
+      {
+        path: 'embed',
+        loadChildren: () => import('../modules/embed/embed.module').then(m => m.EmbedModule)
       }
     ]
   },

@@ -53,4 +53,9 @@ export const menu = [
     link: 'live',
     label: 'app.modules.live',
   },
+  {
+    id: 'embed',
+    link: 'embed',
+    label: 'app.modules.embed',
+  },
 ];

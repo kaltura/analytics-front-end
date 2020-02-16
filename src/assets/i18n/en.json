@@ -4,7 +4,8 @@
       "audience": "Audience",
       "bandwidth": "Usage",
       "contributors": "Contributors",
-      "live": "Real-Time"
+      "live": "Real-Time",
+      "embed": "Share & Embed"
     },
     "filters": {
       "disclaimer": "Some filters you applied are not supported for dates period prior April 2018",
