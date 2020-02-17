@@ -8,15 +8,14 @@
   <link rel="stylesheet" href="embed.css">
 </head>
 <body>
-<div id="login">
+<div id="login" style="display: none">
   <div class="loginPanel">
     <span class="title">Login</span>
     <input type="text" id="user" placeholder="User Name"/>
     <input type="password" id="pass" placeholder="Password"/>
-    <button onclick="login()">Login</button>
+    <button id="login-button" onclick="login()">Login</button>
     <span class="error"></span>
   </div>
-
 </div>
 <iframe id="analytics" src=""></iframe>
 <script src="embed.js"></script>

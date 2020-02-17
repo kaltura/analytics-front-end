@@ -45,6 +45,7 @@ iframe {
   font-size: 14px;
   border-radius: 4px;
   padding: 4px 4px;
+  outline: none;
 }
 .loginPanel button{
   width: 60px;
@@ -62,4 +63,8 @@ iframe {
   font-size: 12px;
   position: absolute;
   bottom: 6px;
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
 }

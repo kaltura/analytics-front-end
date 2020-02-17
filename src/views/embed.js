@@ -60,6 +60,7 @@ function showAlert(t){
 
 function login(){
   $(".error").text('');
+  $('#login-button').addClass("disabled");
   const user = $('#user').val();
   const pass = $('#pass').val();
   $.post( "https://www.kaltura.com/api_v3/service/user/action/loginByLoginId", {
@@ -67,6 +68,7 @@ function login(){
     loginId: user,
     password: pass
   }, function( data ) {
+    $('#login-button').removeClass("disabled");
     if (data.message){
       $(".error").text(data.message);
     } else {
