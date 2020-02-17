@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial;
+}
+
+iframe {
+  width: 100%;
+  height: 100vh;
+  border: 0;
+}
+
+#login{
+  position: absolute;
+  display: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loginPanel{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 340px;
+  height: 240px;
+  background-color: lightgrey;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.loginPanel .title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.loginPanel input{
+  width: 280px;
+  height: 28px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 4px 4px;
+}
+.loginPanel button{
+  width: 60px;
+  height: 32px;
+  margin-left: 230px;
+  background-color: #00a784;
+  color: #fff;
+  border-radius: 3px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+.loginPanel .error{
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  bottom: 6px;
+}

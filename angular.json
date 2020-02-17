@@ -24,7 +24,7 @@
               "src/.htaccess",
               "src/embed.php",
               "src/assets",
-              "src/engagement.html"
+              "src/views"
             ],
             "styles": [
               "src/styles/styles.scss"

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="./">
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<div id="login">
+  <div class="loginPanel">
+    <span class="title">Login</span>
+    <input type="text" id="user" placeholder="User Name"/>
+    <input type="password" id="pass" placeholder="Password"/>
+    <button onclick="login()">Login</button>
+    <span class="error"></span>
+  </div>
+
+</div>
+<iframe id="analytics" src=""></iframe>
+<script src="embed.js"></script>
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+            const viewsConfig = postMessageData.payload.viewsConfig;
+            viewsConfig.audience.engagement.refineFilter = null;
+            viewsConfig.audience.engagement.export = null;
+            viewsConfig.audience.engagement.miniTopVideos = null;
+            viewsConfig.audience.engagement.miniHighlights = null;
+            viewsConfig.audience.engagement.miniPeakDay = null;
+            viewsConfig.audience.engagement.syndication = null;
+            viewsConfig.audience.engagement.impressions = null;
+            viewsConfig.audience.engagement.topVideos = null;
+            viewsConfig.audience.engagement.title = null;
+            sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
+</script>
+</body>
+</html>
