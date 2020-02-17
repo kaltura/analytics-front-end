@@ -1,6 +1,6 @@
 <div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
-    <span class="kTitle">{{'app.engagement.title' | translate}}</span>
+    <span class="kTitle" [class.kHidden]="!_engagementViewConfig.title">{{'app.engagement.title' | translate}}</span>
     <app-export-csv *ngIf="_engagementViewConfig.export"
                     name="engagement"
                     [width]="290"
@@ -89,10 +89,10 @@
                              [refineFilter]="_refineFilter"></app-engagement-duration>
   </div-->
 
-  <div *ngIf="_engagementViewConfig.impressions"
+  <div *ngIf="_engagementViewConfig.impressions" [class.kHidden]="!_engagementViewConfig.impressions"
        class="kReportContainer">
     <!--div class="kSmallReportContainer"-->
-      <app-impressions [dateFilter]="_dateFilter"
+      <app-impressions [dateFilter]="_dateFilter" [class.kHidden]="!_engagementViewConfig.impressions"
                        [refineFilter]="_refineFilter"></app-impressions>
     <!--/div-->
     <!--div class="kSmallReportContainer">
@@ -101,7 +101,7 @@
     </div-->
   </div>
 
-  <div *ngIf="_engagementViewConfig.syndication"
+  <div *ngIf="_engagementViewConfig.syndication" [class.kHidden]="!_engagementViewConfig.syndication"
        class="kReportContainer">
     <app-syndication [dateFilterComponent]="dateFilter"
                      [dateFilter]="_dateFilter"

@@ -5,6 +5,7 @@ export interface ViewConfig {
 export const viewsConfig = {
   audience: {
     engagement: {
+      title: {},
       export: {},
       refineFilter: {
         mediaType: {},
