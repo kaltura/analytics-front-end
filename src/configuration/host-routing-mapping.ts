@@ -38,6 +38,10 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
     case '/analytics/entry':
       analyticsRoute = `/entry${idPostfix}`;
       break;
+    case 'category':
+    case '/analytics/category':
+      analyticsRoute = `/category${idPostfix}`;
+      break;
     case 'playlist':
     case '/analytics/playlist':
       analyticsRoute = `/playlist${idPostfix}`;

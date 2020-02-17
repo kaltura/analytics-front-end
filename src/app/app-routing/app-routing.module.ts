@@ -18,6 +18,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
+        path: 'category/:id',
+        loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)
+      },
+      {
+        path: 'category',
+        loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)
+      },
+      {
         path: 'playlist/:id',
         loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
       },
