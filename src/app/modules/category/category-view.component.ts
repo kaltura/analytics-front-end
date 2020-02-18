@@ -1,158 +1,112 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  BaseEntryGetAction,
-  KalturaAPIException,
-  KalturaClient,
-  KalturaDetachedResponseProfile,
-  KalturaMediaEntry,
-  KalturaMediaType,
-  KalturaMetadata,
-  KalturaMetadataFilter,
-  KalturaMultiRequest,
-  KalturaMultiResponse,
-  KalturaRequestOptions,
-  KalturaResponseProfileType,
-  KalturaUser,
-  MetadataListAction,
-  UserGetAction
-} from 'kaltura-ngx-client';
-import { cancelOnDestroy, XmlParser } from '@kaltura-ng/kaltura-common';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { map } from 'rxjs/operators';
+import { CategoryGetAction, KalturaCategory, KalturaClient, KalturaDetachedResponseProfile, KalturaReportInterval, KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
-import { TranslateService } from '@ngx-translate/core';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import { ViewConfig, viewsConfig } from "configuration/view-config";
+import { DateChangeEvent, DateRanges } from "shared/components/date-filter/date-filter.service";
+import { analyticsConfig } from "configuration/analytics-config";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import {ExportItem} from "shared/components/export-csv/export-config-base.service";
+import {RefineFilter} from "shared/components/filter/filter.component";
+import {CategoryExportConfig} from "./category-export.config";
 
 @Component({
   selector: 'app-category',
   templateUrl: './category-view.component.html',
   styleUrls: ['./category-view.component.scss'],
+  providers: [
+    CategoryExportConfig
+  ]
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
-  public _entryViewConfig = analyticsConfig.viewsConfig.entry;
-  public _loadingEntry = false;
+  
+  public _viewConfig: ViewConfig = { ...viewsConfig.category };
+  public _dateRange = DateRanges.Last30D;
+  public _timeUnit = KalturaReportInterval.days;
+  public _creationDate = '';
+  public _updateDate = '';
+  public _dateFilter: DateChangeEvent = null;
+  public _exportConfig: ExportItem[] = [];
+  public _refineFilter: RefineFilter = null;
+  public _refineFilterOpened = false;
+  
+  public _loadingCategory = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _entry: KalturaMediaEntry;
-  public _mediaTypes = KalturaMediaType;
-  public _entryId = '';
-  public _owner = '';
-  public _isChildAccount = false;
-  public _comments = 0;
+  public _category: KalturaCategory;
+  public _categoryId = '';
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
-              private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
-              private _frameEventManager: FrameEventManagerService,
-              private _navigationDrillDownService: NavigationDrillDownService,
-              private _authService: AuthService) {
+              private _exportConfigService: CategoryExportConfig,
+              private _navigationDrillDownService: NavigationDrillDownService) {
   }
 
   ngOnInit() {
-    this._isChildAccount = this._authService.isChildAccount;
+    this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
-        this._entryId = params['id'];
-        if (this._entryId) {
-          this._loadEntryDetails();
+        this._categoryId = params['id'];
+        if (this._categoryId) {
+          this._loadCategoryDetails();
         }
       });
   }
 
   ngOnDestroy() {
   }
+  
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
+  }
+  
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+  }
 
-  private _loadEntryDetails(): void {
-    this._loadingEntry = true;
+  private _loadCategoryDetails(): void {
+    this._loadingCategory = true;
     this._blockerMessage = null;
 
-    const metadataProfileId = analyticsConfig.customData.metadataProfileId;
-
-    const request = new KalturaMultiRequest(
-      new BaseEntryGetAction({ entryId: this._entryId })
+    const request = new CategoryGetAction({ id: parseInt(this._categoryId) })
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,displayInSearch'
+            fields: 'id,name,parentId,createdAt,updatedAt,directSubCategoriesCount,entriesCount'
           })
-        }),
-      new UserGetAction({ userId: null })
-        .setDependency(['userId', 0, 'userId'])
-        .setRequestOptions(
-          new KalturaRequestOptions({
-            responseProfile: new KalturaDetachedResponseProfile({
-              type: KalturaResponseProfileType.includeFields,
-              fields: 'id,fullName'
-            })
-          })
-        )
-    );
-
-    if (metadataProfileId) {
-      request.requests.push(new MetadataListAction({
-        filter: new KalturaMetadataFilter({
-          objectIdEqual: this._entryId,
-          metadataProfileIdEqual: metadataProfileId,
-        })
-      }));
-    }
+        });
 
     this._kalturaClient
-      .multiRequest(request)
-      .pipe(
-        cancelOnDestroy(this),
-        map((responses: KalturaMultiResponse) => {
-          if (responses.hasErrors()) {
-            const err: KalturaAPIException = responses.getFirstError();
-            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data. Also support KMS weak KS.
-            if (err.code !== "INVALID_USER_ID" && err.code !== "CANNOT_RETRIEVE_ANOTHER_USER_USING_NON_ADMIN_SESSION") {
-              throw err;
-            }
-          }
-
-          const metadataList = responses.length === 3 ? responses[2].result : null;
-          const metadataItem = metadataList && metadataList.objects && metadataList.objects.length
-            ? metadataList.objects[0]
-            : null;
-
-          return [
-            responses[0].result,
-            responses[1].result,
-            metadataItem,
-          ] as [KalturaMediaEntry, KalturaUser, KalturaMetadata];
-        })
-      )
+      .request(request)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
-        ([entry, user, metadataItem]) => {
-          this._entry = entry;
-          this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
-
-          if (metadataItem) {
-            const metadataObj = XmlParser.toJson(metadataItem.xml) as { metadata: { CommentsCount: { text: string } } };
-            this._comments = metadataObj.metadata && metadataObj.metadata.CommentsCount && metadataObj.metadata.CommentsCount.text
-              ? parseInt(metadataObj.metadata.CommentsCount.text, 10)
-              : 0;
-          }
-
-          this._loadingEntry = false;
+        (category: KalturaCategory) => {
+          this._category = category;
+          const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+          this._creationDate = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
+          this._updateDate = DateFilterUtils.getMomentDate(category.updatedAt).format(dateFormat);
+          this._loadingCategory = false;
         },
         error => {
-          this._loadingEntry = false;
+          this._loadingCategory = false;
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._loadEntryDetails();
+              this._loadCategoryDetails();
             }
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
+  }
+
+  public _navigateToParent(parentId: number): void {
+    this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
   }
 
   public _back(): void {

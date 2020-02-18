@@ -115,6 +115,19 @@ export const viewsConfig = {
     devices: {},
     syndication: {},
   },
+  category: {
+    title: {},
+    export: {},
+    refineFilter: {
+      geo: {},
+      owners: {},
+      categories: {},
+    },
+    details: {},
+    performance: {},
+    devices: {},
+    syndication: {},
+  },
   entryLive: {
     export: {},
     toggleLive: {},

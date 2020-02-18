@@ -15,6 +15,8 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { TableModule } from 'primeng/table';
 //import { EntryFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import {CatFilterComponent} from "./filter/filter.component";
+
 // import { declarations as sharedEntryDeclarations } from './views/shared/declaration';
 // import { declarations as imageEntryDeclarations } from './views/image/declaration';
 // import { declarations as videoEntryDeclarations } from './views/video/declaration';
@@ -39,6 +41,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
   ],
   declarations: [
     CategoryViewComponent,
+    CatFilterComponent
     // EntryFilterComponent,
     // ...sharedEntryDeclarations,
     // ...videoEntryDeclarations,

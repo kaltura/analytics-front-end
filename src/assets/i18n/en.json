@@ -704,6 +704,14 @@
         }
       }
     },
+    "category": {
+      "parent": "Parent:",
+      "id": "ID:",
+      "subcats": "Sub Categories:",
+      "entries": "Entries:",
+      "created": "Creation Date:",
+      "updated": "Last Update:"
+    },
     "entry": {
       "context": "Playback Context",
       "views": "Views",
