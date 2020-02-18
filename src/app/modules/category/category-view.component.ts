@@ -3,22 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryGetAction, KalturaCategory, KalturaClient, KalturaDetachedResponseProfile, KalturaReportInterval, KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { ViewConfig, viewsConfig } from "configuration/view-config";
 import { DateChangeEvent, DateRanges } from "shared/components/date-filter/date-filter.service";
 import { analyticsConfig } from "configuration/analytics-config";
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
-import {ExportItem} from "shared/components/export-csv/export-config-base.service";
-import {RefineFilter} from "shared/components/filter/filter.component";
-import {CategoryExportConfig} from "./category-export.config";
+import { ExportItem } from "shared/components/export-csv/export-config-base.service";
+import { RefineFilter } from "shared/components/filter/filter.component";
+import { CategoryExportConfig } from "./category-export.config";
+import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 @Component({
   selector: 'app-category',
   templateUrl: './category-view.component.html',
   styleUrls: ['./category-view.component.scss'],
-  providers: [
-    CategoryExportConfig
-  ]
+  providers: [CategoryExportConfig]
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
   
@@ -40,8 +39,10 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _kalturaClient: KalturaClient,
+              private _browserService: BrowserService,
               private _errorsManager: ErrorsManagerService,
               private _exportConfigService: CategoryExportConfig,
+              private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService) {
   }
 
@@ -107,6 +108,10 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
 
   public _navigateToParent(parentId: number): void {
     this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string', { id: parentId.toString() });
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/category?${params}`);
+    }
   }
 
   public _back(): void {
