@@ -146,3 +146,10 @@ $.urlParam = function (name) {
   }
   return results[1] || 0;
 }
+
+$('#login-button').keypress(function(event){
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if(keycode == '13'){
+    login();
+  }
+});

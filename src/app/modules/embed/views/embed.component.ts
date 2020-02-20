@@ -20,12 +20,12 @@ export class EmbedComponent implements OnInit {
     {
       label: 'Partner Engagement Report',
       entryId: -1,
-      code: 'https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/engagement.html'
+      code: document.location.href.replace('embed', 'views/engagement.html')
     },
     {
       label: 'Entry Performance',
       entryId: '',
-      code: 'https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/entry.html?id='
+      code: document.location.href.replace('embed', 'views/entry.html?id=')
     }
   ];
   
