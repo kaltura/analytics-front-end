@@ -8,6 +8,7 @@ import { AuthService } from "shared/services";
 })
 export class EmbedComponent implements OnInit {
   
+  public entryId = '';
   constructor(private _authService: AuthService) {
   }
   

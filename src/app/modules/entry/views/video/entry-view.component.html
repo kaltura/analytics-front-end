@@ -12,7 +12,7 @@
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
                         [entryId]="_entryId"></app-export-csv>
-        <div class="kFilter kOverrideFAIcons">
+        <div class="kFilter kOverrideFAIcons" *ngIf="_viewConfig.refineFilter">
           <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
                (click)="_refineFilterOpened = !_refineFilterOpened"
                (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
@@ -74,6 +74,7 @@
     <div *ngIf="_viewConfig.performance" class="kReportContainer">
       <app-video-entry-performance [dateFilterComponent]="dateFilter"
                                    [dateFilter]="_dateFilter"
+                                   [showTitle]="_viewConfig.title"
                                    [entryId]="_entryId"
                                    [refineFilter]="_refineFilter"></app-video-entry-performance>
     </div>

@@ -1,6 +1,14 @@
-<div style="display: flex; align-items: center; height: 42px">
-  <span style="margin-right: 8px; margin-left: 8px; flex: 0 0 auto">Partner Engagement Report:</span>
-  <input #engagement type="text" style="margin-right: 8px; width: 100%" value="https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/engagement.html"/>
-  <button style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(engagement.value)">Copy</button>
+<div style="display: flex; flex-direction: column; padding: 20px">
+  <div style="display: flex; align-items: center; height: 48px">
+    <span style="margin-right: 8px; flex: 0 0 auto">Partner Engagement Report:</span>
+    <input #engagement type="text" style="margin-right: 8px; width: 100%" value="https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/engagement.html"/>
+    <button style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(engagement.value)">Copy</button>
+  </div>
+  <div style="display: flex; align-items: center; height: 48px">
+    <span style="margin-right: 8px; flex: 0 0 auto">Entry Performance:</span>
+    <input type="text" style="margin-right: 8px; width: 80px" placeholder="Entry ID" [(ngModel)]="entryId"/>
+    <input #entry type="text" style="margin-right: 8px; width: 100%" [value]="'https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/entry.html?id=' + entryId"/>
+    <button [disabled]="!entryId.length" style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(entry.value)">Copy</button>
+  </div>
 </div>
 

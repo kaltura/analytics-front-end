@@ -29,6 +29,7 @@ import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
 })
 export class VideoEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
+  @Input() showTitle = true;
   @Input() dateFilterComponent: DateFilterComponent;
 
   private _order = '-date_id';

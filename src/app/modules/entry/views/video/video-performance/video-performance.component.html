@@ -1,5 +1,5 @@
 <div data-aid="report-entry-video-performance" class="kReport kNoMargin kOverrideFAIcons">
-  <div class="kFilters">
+  <div class="kFilters" *ngIf="showTitle">
     <h2 class="kTitle" id="kVideoPerformance">{{'app.entry.videoPerformance' | translate}}</h2>
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
