@@ -24,3 +24,4 @@
     <button type="button" pButton label="{{_appService.confirmationLabels.ok}}" (click)="alert.accept()"></button>
   </p-footer>
 </p-confirmDialog>
+<p-growl [(value)]="_growlMessages" [immutable]="true"></p-growl>

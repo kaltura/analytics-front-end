@@ -1,4 +1,52 @@
-<div style="display: flex; flex-direction: column; padding: 20px">
+<div data-aid="page-usage" class="kMain">
+  <div class="kReportView kContent">
+    <div class="kReport kContent kOverrideFAIcons">
+      <div class="kReportHeader">
+        <span class="kTitle">Embed Analytics Components</span>
+      </div>
+
+      <div class="kReportContent">
+        <div class="kFilters">
+          <span class="kTitle">Partner Analytics</span>
+        </div>
+        <p-table [value]="partnerLinks">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 20%">Report Name</th>
+              <th style="width: 10%">Entry ID</th>
+              <th style="width: 55%">Embed Code</th>
+              <th style="width: 15%">Copy to Clipboard</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-link>
+            <tr>
+              <td style="color: #333333; font-weight: bold">{{link.label}}</td>
+              <td>
+                <input placeholder="Entry ID" style="width: 100%; color: #999999" type="text" *ngIf="link.entryId !== -1" [(ngModel)]="link.entryId"/>
+                <span *ngIf="link.entryId === -1">N/A</span>
+              </td>
+              <td>{{link.entryId === -1 ? link.code : link.code + link.entryId}}</td>
+              <td>
+                <button type="button" pButton class="kButtonBranded" [disabled]="link.entryId !== -1 && link.entryId.length === 0" style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(link)">Copy</button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="kSeparator"></div>
+
+      <div class="kReportContent">
+        <div class="kFilters">
+          <span class="kTitle">Global Analytics</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--div style="display: flex; flex-direction: column; padding: 20px">
   <div style="display: flex; align-items: center; height: 48px">
     <span style="margin-right: 8px; flex: 0 0 auto">Partner Engagement Report:</span>
     <input #engagement type="text" style="margin-right: 8px; width: 100%" value="https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/engagement.html"/>
@@ -10,5 +58,5 @@
     <input #entry type="text" style="margin-right: 8px; width: 100%" [value]="'https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/views/entry.html?id=' + entryId"/>
     <button [disabled]="!entryId.length" style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(entry.value)">Copy</button>
   </div>
-</div>
+</div-->
 

@@ -9,10 +9,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from 'shared/shared.module';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   imports: [
     CommonModule,
+    ButtonModule,
     RouterModule.forChild(routing),
     KalturaUIModule,
     SharedModule,

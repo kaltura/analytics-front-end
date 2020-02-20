@@ -6,12 +6,19 @@ import { Params } from '@angular/router';
 import { analyticsConfig } from "configuration/analytics-config";
 import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
+import {GrowlMessage} from "../../modules/embed/views/embed.component";
 
 export enum HeaderTypes {
     error = 1,
     attention = 2,
     cancel = 3,
     retry = 4
+}
+
+export interface GrowlMessage {
+  severity: 'success' | 'info' | 'error' | 'warn';
+  summary?: string;
+  detail?: string;
 }
 
 export interface Confirmation {
@@ -35,6 +42,8 @@ export type OnShowConfirmationFn = (confirmation: Confirmation) => void;
 @Injectable()
 export class BrowserService {
   private _renderer: Renderer2;
+  private _growlMessage = new Subject<GrowlMessage>();
+  public growlMessage$ = this._growlMessage.asObservable();
   private _contrastThemeChange = new Subject<boolean>();
   private _currentQueryParams: Params = {}; // keep current query params since they're not accessible under host app
   
@@ -212,6 +221,12 @@ export class BrowserService {
     } else {
       this._renderer.addClass(body, themeClass);
       this._contrastThemeChange.next(true);
+    }
+  }
+  
+  public showGrowlMessage(message: GrowlMessage): void {
+    if (message.detail || message.summary) {
+      this._growlMessage.next(message);
     }
   }
 
