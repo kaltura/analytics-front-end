@@ -15,7 +15,9 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { TableModule } from 'primeng/table';
 //import { EntryFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import {CatFilterComponent} from "./filter/filter.component";
+import { CatFilterComponent } from "./filter/filter.component";
+import { CategoryTopCountriesComponent } from "./views/top-countries/top-countries.component";
+import { CategoryGeoComponent } from "./views/top-countries/geo/geo.component";
 
 // import { declarations as sharedEntryDeclarations } from './views/shared/declaration';
 // import { declarations as imageEntryDeclarations } from './views/image/declaration';
@@ -41,6 +43,8 @@ import {CatFilterComponent} from "./filter/filter.component";
   ],
   declarations: [
     CategoryViewComponent,
+    CategoryGeoComponent,
+    CategoryTopCountriesComponent,
     CatFilterComponent
     // EntryFilterComponent,
     // ...sharedEntryDeclarations,

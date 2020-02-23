@@ -1,6 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryGetAction, KalturaCategory, KalturaClient, KalturaDetachedResponseProfile, KalturaReportInterval, KalturaResponseProfileType } from 'kaltura-ngx-client';
+import {
+  CategoryGetAction,
+  KalturaCategory,
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaReportInterval,
+  KalturaReportType,
+  KalturaResponseProfileType
+} from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
@@ -12,6 +20,7 @@ import { ExportItem } from "shared/components/export-csv/export-config-base.serv
 import { RefineFilter } from "shared/components/filter/filter.component";
 import { CategoryExportConfig } from "./category-export.config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
+import {EntryExportConfig} from "../entry/views/video/entry-export.config";
 
 @Component({
   selector: 'app-category',
@@ -115,6 +124,21 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
+  
+  public _onGeoDrillDown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+    
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+    
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+    
+    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
+  }
+  
 
   public _navigateToParent(parentId: number): void {
     this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});

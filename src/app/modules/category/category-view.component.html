@@ -55,11 +55,17 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <div *ngIf="_viewConfig.syndication && _category?.id.toString().length"
-             class="kReportContainer">
+        <div *ngIf="_viewConfig.geo && _category?.id.toString().length" class="kReportContainer">
+          <category-top-countries [dateFilter]="_dateFilter"
+                                   [refineFilter]="_refineFilter"
+                                   [categoryId]="_category?.id.toString()"
+                                   (onDrillDown)="_onGeoDrillDown($event)"></category-top-countries>
+        </div>
+
+        <div *ngIf="_viewConfig.syndication && _category?.id.toString().length" class="kReportContainer">
           <app-syndication [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"
-                           [categoryId]="_category.id.toString()"
+                           [categoryId]="_category?.id.toString()"
                            [refineFilter]="_refineFilter"></app-syndication>
         </div>
 

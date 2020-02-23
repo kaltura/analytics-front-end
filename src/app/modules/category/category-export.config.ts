@@ -35,18 +35,18 @@ export class CategoryExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
       {
+        id: 'devices',
+        label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
+        reportType: reportTypeMap(KalturaReportType.platforms),
+        sections: [KalturaReportExportItemType.table],
+      },*/
+      {
         id: 'geo',
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
       },
-      {
-        id: 'devices',
-        label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
-        reportType: reportTypeMap(KalturaReportType.platforms),
-        sections: [KalturaReportExportItemType.table],
-      },*/
       {
         id: 'syndication',
         label: this._translate.instant('app.entry.exportLabels.syndication'),
