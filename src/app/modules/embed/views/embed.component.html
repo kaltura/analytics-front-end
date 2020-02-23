@@ -9,7 +9,7 @@
         <div class="kFilters">
           <span class="kTitle">Partner Analytics</span>
         </div>
-        <p-table [value]="partnerLinks">
+        <p-table [value]="partnerLinks" [paginator]="true" [rows]="5">
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 20%">Report Name</th>
@@ -40,6 +40,24 @@
         <div class="kFilters">
           <span class="kTitle">Global Analytics</span>
         </div>
+        <p-table [value]="globalLinks" [paginator]="true" [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 20%">Report Name</th>
+              <th style="width: 65%">Embed Code</th>
+              <th style="width: 15%">Copy to Clipboard</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-link>
+            <tr>
+              <td style="color: #333333; font-weight: bold">{{link.label}}</td>
+              <td>{{link.code}}</td>
+              <td>
+                <button type="button" pButton class="kButtonBranded" style="margin-right: 8px; flex: 0 0 auto" (click)="copyLink(link)">Copy</button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
 
     </div>

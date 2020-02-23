@@ -21,8 +21,6 @@
 <script src="embed.js"></script>
 <script>
 
-  const entryId = $.urlParam('id');
-
   document.addEventListener('DOMContentLoaded', () => {
     const analyticsApp = document.getElementById('analytics');
 
@@ -42,22 +40,16 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
             const viewsConfig = postMessageData.payload.viewsConfig;
-            viewsConfig.entry.title = null;
-            viewsConfig.entry.export = null;
-            viewsConfig.entry.refineFilter = null;
-            viewsConfig.entry.details = null;
-            viewsConfig.entry.totals = null;
-            viewsConfig.entry.entryPreview = null;
-            viewsConfig.entry.userEngagement = null;
-            viewsConfig.entry.impressions = null;
-            viewsConfig.entry.geo = null;
-            viewsConfig.entry.devices = null;
-            viewsConfig.entry.syndication = null;
+            viewsConfig.audience.technology.refineFilter = null;
+            viewsConfig.audience.technology.export = null;
+            viewsConfig.audience.technology.topBrowsers = null;
+            viewsConfig.audience.technology.topOs = null;
+            viewsConfig.audience.technology.title = null;
             sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
         case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/entry/' + entryId} });
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/technology' } });
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 

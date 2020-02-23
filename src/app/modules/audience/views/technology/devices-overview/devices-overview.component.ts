@@ -46,6 +46,7 @@ export interface Summary {
 })
 export class DevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
+  @Input() showTitle = true;
   
   @Input() set filter(value: DateChangeEvent) {
     if (value) {

@@ -50,6 +50,7 @@ export const viewsConfig = {
     },
     technology: {
       export: {},
+      title: {},
       devices: {},
       topBrowsers: {},
       topOs: {},

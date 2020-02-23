@@ -1,13 +1,14 @@
 <div data-aid="report-group-technology">
   <app-devices-overview *ngIf="_technologyViewConfig.devices"
                         #overview
+                        [showTitle]="_technologyViewConfig.title"
                         [filter]="_filterEvent"
                         [allowedDevices]="_allowedDevices"
                         (metricChanged)="_selectedMetric = $event"
                         (devicesListChange)="_onDevicesListChange($event)"
                         (deviceFilterChange)="_onDeviceFilterChange($event)">
     <div class="kReportHeader">
-      <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
+      <span class="kTitle" *ngIf="_technologyViewConfig.title">{{'app.audience.technology.title' | translate}}</span>
       <app-export-csv *ngIf="_technologyViewConfig.export"
                       name="technology"
                       [width]="260"

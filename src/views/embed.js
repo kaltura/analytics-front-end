@@ -24,8 +24,8 @@ const config = {
                 background: transparent;
                 background-color: white;
             }
-            .hack20 .kMain .kReportView .kReport .kFilters {
-                background-color: white;
+            .hack20 .kMain .kReportView .kReport .kFilters, .hack20 .kTotalsContainer {
+                background-color: white !important;
             }
             .hack20 .kMain .kReportView .kReport .kReportHeader {
                 background: transparent;
@@ -41,6 +41,22 @@ const config = {
             }
             .hack20 .kTable {
                 display: none !important;
+            }
+            /* Borders */
+            .hack20 .kTotalContainer, .hack20 .kSocialHighlights {
+                border: 1px solid #cccccc !important;
+            }
+            .hack20 .kTotalContainer:first-child {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+            .hack20 .kTotalContainer:last-child {
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                border-left: none !important;
+            }
+            .hack20 .kTotalContainer:not(:first-child):not(:last-child) {
+                border-left: none !important;
             }`
   }
 };

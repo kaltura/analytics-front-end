@@ -23,9 +23,46 @@ export class EmbedComponent implements OnInit {
       code: document.location.href.replace('embed', 'views/engagement.html')
     },
     {
+      label: 'Partner Devices Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/devices.html')
+    },
+    {
+      label: 'Partner Browsers Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/browsers.html')
+    },
+    {
+      label: 'Entry Summary',
+      entryId: '',
+      code: document.location.href.replace('embed', 'views/entry-totals.html?id=')
+    },
+    {
       label: 'Entry Performance',
       entryId: '',
       code: document.location.href.replace('embed', 'views/entry.html?id=')
+    }
+  ];
+  public globalLinks = [
+    {
+      label: 'Global Geo Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/global-geo.html')
+    },
+    {
+      label: 'Global Engagement Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/global-engagement.html')
+    },
+    {
+      label: 'Global Storage Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/global-storage.html')
+    },
+    {
+      label: 'Global Operating Systems Report',
+      entryId: -1,
+      code: document.location.href.replace('embed', 'views/global-os.html')
     }
   ];
   

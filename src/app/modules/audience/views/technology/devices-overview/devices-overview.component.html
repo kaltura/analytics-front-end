@@ -1,7 +1,7 @@
 <div data-aid="report-devices-overview" class="kReport kOverrideFAIcons">
   <ng-content></ng-content>
 
-  <div class="kFilters">
+  <div class="kFilters" *ngIf="showTitle">
     <span class="kTitle">{{'app.audience.technology.devicesOverview' | translate}}</span>
   </div>
 
