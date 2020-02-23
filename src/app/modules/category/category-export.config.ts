@@ -46,14 +46,14 @@ export class CategoryExportConfig extends ExportConfigService {
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
         reportType: reportTypeMap(KalturaReportType.platforms),
         sections: [KalturaReportExportItemType.table],
-      },
+      },*/
       {
         id: 'syndication',
         label: this._translate.instant('app.entry.exportLabels.syndication'),
         reportType: reportTypeMap(KalturaReportType.topSyndication),
         sections: [KalturaReportExportItemType.table],
         order: '-count_plays',
-      },*/
+      }
     ];
   
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;

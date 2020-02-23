@@ -55,6 +55,14 @@
           <span>{{_updateDate}}</span>
         </div>
 
+        <div *ngIf="_viewConfig.syndication && _category?.id.toString().length"
+             class="kReportContainer">
+          <app-syndication [dateFilterComponent]="dateFilter"
+                           [dateFilter]="_dateFilter"
+                           [categoryId]="_category.id.toString()"
+                           [refineFilter]="_refineFilter"></app-syndication>
+        </div>
+
       </div>
     </div>
   </k-area-blocker>

@@ -46,7 +46,10 @@ export class SyndicationComponent implements OnDestroy {
       
       if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
         this._updateFilter();
-        this._loadReport();
+        // load report in the next run cycle to be sure all properties are updated
+        setTimeout(() => {
+          this._loadReport();
+        });
       }
     }
   }
@@ -55,12 +58,15 @@ export class SyndicationComponent implements OnDestroy {
     if (value) {
       this._refineFilter = value;
       this._updateRefineFilter();
-      this._loadReport();
+      // load report in the next run cycle to be sure all properties are updated
+      setTimeout(() => {
+        this._loadReport();
+      });
     }
   }
   
   @Input() entryId: string;
-  
+  @Input() categoryId: string;
   @Input() dateFilterComponent: DateFilterComponent;
   
   @Output() onDrillDown = new EventEmitter<string>();
@@ -142,6 +148,9 @@ export class SyndicationComponent implements OnDestroy {
     
     if (this.entryId) {
       reportConfig.filter.entryIdIn = this.entryId;
+    }
+    if (this.categoryId.length) {
+      reportConfig.filter.categoriesIdsIn = this.categoryId;
     }
     
     this._reportService.getReport(reportConfig, sections)
