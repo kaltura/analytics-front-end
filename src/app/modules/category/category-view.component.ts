@@ -35,6 +35,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _category: KalturaCategory;
   public _categoryId = '';
+  public _parentCategoryName = '';
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -69,15 +70,15 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     this._refineFilter = event;
   }
 
-  private _loadCategoryDetails(): void {
+  private _loadCategoryDetails(parentCategory = false): void {
     this._loadingCategory = true;
     this._blockerMessage = null;
 
-    const request = new CategoryGetAction({ id: parseInt(this._categoryId) })
+    const request = new CategoryGetAction({ id: (parentCategory && this._category.parentId) ? this._category.parentId : parseInt(this._categoryId) })
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,parentId,createdAt,updatedAt,directSubCategoriesCount,entriesCount'
+            fields: parentCategory ? 'id,name' : 'id,name,parentId,createdAt,updatedAt,directSubCategoriesCount,entriesCount'
           })
         });
 
@@ -86,11 +87,20 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (category: KalturaCategory) => {
-          this._category = category;
-          const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
-          this._creationDate = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
-          this._updateDate = DateFilterUtils.getMomentDate(category.updatedAt).format(dateFormat);
-          this._loadingCategory = false;
+          if (parentCategory) {
+            this._parentCategoryName = category.name;
+            this._loadingCategory = false;
+          } else {
+            this._category = category;
+            const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+            this._creationDate = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
+            this._updateDate = DateFilterUtils.getMomentDate(category.updatedAt).format(dateFormat);
+            if (category.parentId) {
+              this._loadCategoryDetails(true);
+            } else {
+              this._loadingCategory = false;
+            }
+          }
         },
         error => {
           this._loadingCategory = false;

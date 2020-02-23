@@ -37,7 +37,7 @@
              [class.kFloatingDetails]="!_viewConfig.title">
           <span class="kLabel" *ngIf="_category?.parentId">{{'app.category.parent' | translate}}</span>
           <a *ngIf="_category?.parentId" class="kParentLink"
-             (click)="_navigateToParent(_category.parentId)">{{_category.parentId}}</a>
+             (click)="_navigateToParent(_category.parentId)">{{_parentCategoryName}}</a>
           <div *ngIf="_category?.parentId" class="kSeparator"></div>
           <span class="kLabel">{{'app.category.id' | translate}}</span>
           <span>{{_category?.id}}</span>
