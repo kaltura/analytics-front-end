@@ -39,7 +39,7 @@ const config = {
             .hack20 .kMain .kReportView .kReport, .hack20 .kMain .kReportView .kReport .kDivider {
                 background: transparent;
             }
-            .hack20 .kTable {
+            .hack20 .kTableToggle {
                 display: none !important;
             }
             /* Borders */

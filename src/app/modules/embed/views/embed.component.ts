@@ -28,9 +28,9 @@ export class EmbedComponent implements OnInit {
       code: document.location.href.replace('embed', 'views/devices.html')
     },
     {
-      label: 'Partner Browsers Report',
+      label: 'Partner Domains Report',
       entryId: -1,
-      code: document.location.href.replace('embed', 'views/browsers.html')
+      code: document.location.href.replace('embed', 'views/domains.html')
     },
     {
       label: 'Entry Summary',
