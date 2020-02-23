@@ -63,19 +63,23 @@ function login(){
   $('#login-button').addClass("disabled");
   const user = $('#user').val();
   const pass = $('#pass').val();
-  $.post( "https://www.kaltura.com/api_v3/service/user/action/loginByLoginId", {
-    format: 1,
-    loginId: user,
-    password: pass
-  }, function( data ) {
-    $('#login-button').removeClass("disabled");
-    if (data.message){
-      $(".error").text(data.message);
-    } else {
-      getUsername(data);
-      config.ks = data;
-    }
-  });
+  if (pass.length > 20){ // KS - try login by KS
+    loginByKs(user, pass);
+  } else {
+    $.post("https://www.kaltura.com/api_v3/service/user/action/loginByLoginId", {
+      format: 1,
+      loginId: user,
+      password: pass
+    }, function (data) {
+      $('#login-button').removeClass("disabled");
+      if (data.message) {
+        $(".error").text(data.message);
+      } else {
+        getUsername(data);
+        config.ks = data;
+      }
+    });
+  }
 }
 
 function getUsername(ks){
@@ -117,16 +121,11 @@ function loadAnalytics(){
   $("#analytics").attr("src", "https://il-kmc-ng.dev.kaltura.com/hack20/apps/analytics-v1.12.1/index.html");
 }
 
-// load ks and pid from local storage
-const kData = JSON.parse(window.localStorage.getItem('kData'));
-if (!kData || !kData.ks){ // no ks stored in local storage
-  showLogin();
-} else {
-  // ks found - check that it is valid
+function loginByKs(pid, ks) {
   $.post( "https://www.kaltura.com/api_v3/service/user/action/loginByKs", {
-    ks: kData.ks,
+    ks: ks,
     format: 1,
-    requestedPartnerId: kData.pid
+    requestedPartnerId: pid
   },  data => {
     if (data.ks && data.partnerId) {
       updateConfig(data);
@@ -135,7 +134,15 @@ if (!kData || !kData.ks){ // no ks stored in local storage
     } else {
       showLogin();
     }
-  })
+  });
+}
+// load ks and pid from local storage
+const kData = JSON.parse(window.localStorage.getItem('kData'));
+if (!kData || !kData.ks){ // no ks stored in local storage
+  showLogin();
+} else {
+  // ks found - check that it is valid
+  loginByKs(kData.pid, kData.ks);
 }
 
 $.urlParam = function (name) {
