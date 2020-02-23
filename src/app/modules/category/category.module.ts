@@ -18,6 +18,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
 import { CategoryTopCountriesComponent } from "./views/top-countries/top-countries.component";
 import { CategoryGeoComponent } from "./views/top-countries/geo/geo.component";
+import {CategoryDevicesOverviewComponent} from "./views/devices-overview/devices-overview.component";
 
 // import { declarations as sharedEntryDeclarations } from './views/shared/declaration';
 // import { declarations as imageEntryDeclarations } from './views/image/declaration';
@@ -44,6 +45,7 @@ import { CategoryGeoComponent } from "./views/top-countries/geo/geo.component";
   declarations: [
     CategoryViewComponent,
     CategoryGeoComponent,
+    CategoryDevicesOverviewComponent,
     CategoryTopCountriesComponent,
     CatFilterComponent
     // EntryFilterComponent,
