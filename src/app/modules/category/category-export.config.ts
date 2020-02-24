@@ -36,6 +36,13 @@ export class CategoryExportConfig extends ExportConfigService {
       },
       */
       {
+        id: 'topVideos',
+        label: this._translate.instant('app.engagement.exportLabels.topVideos'),
+        reportType: reportTypeMap(KalturaReportType.topContentCreator),
+        sections: [KalturaReportExportItemType.table],
+        order: '-engagement_ranking',
+      },
+      {
         id: 'geo',
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
         reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),

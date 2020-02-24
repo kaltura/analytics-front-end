@@ -16,7 +16,7 @@ import { TableModule } from 'primeng/table';
 
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
-
+import { CategoryTopContentComponent, CategoryTopContentTableComponent, CategoryEntryDetailsOverlayComponent } from './views/category-top-content';
 
 @NgModule({
   imports: [
@@ -38,11 +38,10 @@ import { CatFilterComponent } from "./filter/filter.component";
   ],
   declarations: [
     CategoryViewComponent,
-    CatFilterComponent
-    // EntryFilterComponent,
-    // ...sharedEntryDeclarations,
-    // ...videoEntryDeclarations,
-    // ...imageEntryDeclarations,
+    CatFilterComponent,
+    CategoryTopContentComponent,
+    CategoryTopContentTableComponent,
+    CategoryEntryDetailsOverlayComponent
   ],
   exports: [],
   providers: []

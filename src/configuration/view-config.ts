@@ -125,6 +125,7 @@ export const viewsConfig = {
     },
     details: {},
     performance: {},
+    topVideos: {},
     geo: {},
     devices: {},
     syndication: {},
