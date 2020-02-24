@@ -5,7 +5,6 @@ import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-
 import { TranslateService } from '@ngx-translate/core';
 import { TopCountriesConfig } from './top-countries.config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { EntryBase } from '../entry-base/entry-base';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -22,6 +21,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { QueryBase } from "shared/components/query-base/query-base";
 
 @Component({
   selector: 'app-top-countries',
@@ -29,11 +29,12 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
   styleUrls: ['./top-countries.component.scss'],
   providers: [TopCountriesConfig, ReportService]
 })
-export class TopCountriesComponent extends EntryBase implements OnInit, OnDestroy {
-  @Input() entryId = '';
+export class TopCountriesComponent extends QueryBase implements OnInit, OnDestroy {
+  @Input() categoryId: string = null;
+  @Input() entryId: string = null;
   
-  @ViewChild('entryGeo', { static: false }) _entryGeo: GeoComponent;
-  @ViewChild('entryCompareGeo', { static: false }) _entryCompareGeo: GeoComponent;
+  @ViewChild('categoryGeo', { static: false }) _categoryGeo: GeoComponent;
+  @ViewChild('categoryCompareGeo', { static: false }) _categoryCompareGeo: GeoComponent;
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   
@@ -97,7 +98,7 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   
   protected _updateRefineFilter(): void {
     this._drillDownTop(false);
-
+    
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
@@ -129,9 +130,12 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
     this._tableData = [];
     this._compareTableData = [];
     this._blockerMessage = null;
-    
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
+    }
+    if (this.categoryId) {
+      this._filter.categoriesIdsIn = this.categoryId;
     }
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -146,6 +150,9 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
           
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
+          }
+          if (this.categoryId) {
+            this._compareFilter.categoriesIdsIn = this.categoryId;
           }
           
           const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
@@ -194,10 +201,10 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
           }
           
           setTimeout(() => {
-            this._entryGeo.updateMap(this._mapCenter);
+            this._categoryGeo.updateMap(this._mapCenter);
             
-            if (this._entryCompareGeo) {
-              this._entryCompareGeo.updateMap(this._mapCenter);
+            if (this._categoryCompareGeo) {
+              this._categoryCompareGeo.updateMap(this._mapCenter);
             }
           }, 0);
         },
@@ -312,10 +319,12 @@ export class TopCountriesComponent extends EntryBase implements OnInit, OnDestro
   }
   
   public _drillDownTop(reload = true): void {
-    this._entryGeo.drillDown(null, reload);
+    if (this._categoryGeo) {
+      this._categoryGeo.drillDown(null, reload);
+    }
     
-    if (this._entryCompareGeo) {
-      this._entryCompareGeo.drillDown(null, reload);
+    if (this._categoryCompareGeo) {
+      this._categoryCompareGeo.drillDown(null, reload);
     }
   }
 

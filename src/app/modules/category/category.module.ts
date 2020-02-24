@@ -16,8 +16,7 @@ import { TableModule } from 'primeng/table';
 
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
-import { CategoryTopCountriesComponent } from "./views/top-countries/top-countries.component";
-import { CategoryGeoComponent } from "./views/top-countries/geo/geo.component";
+
 
 @NgModule({
   imports: [
@@ -39,8 +38,6 @@ import { CategoryGeoComponent } from "./views/top-countries/geo/geo.component";
   ],
   declarations: [
     CategoryViewComponent,
-    CategoryGeoComponent,
-    CategoryTopCountriesComponent,
     CatFilterComponent
     // EntryFilterComponent,
     // ...sharedEntryDeclarations,

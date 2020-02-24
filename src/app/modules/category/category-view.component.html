@@ -56,10 +56,10 @@
         </div>
 
         <div *ngIf="_viewConfig.geo && _category?.id.toString().length" class="kReportContainer">
-          <category-top-countries [dateFilter]="_dateFilter"
+          <app-top-countries [dateFilter]="_dateFilter"
                                    [refineFilter]="_refineFilter"
                                    [categoryId]="_category?.id.toString()"
-                                   (onDrillDown)="_onGeoDrillDown($event)"></category-top-countries>
+                                   (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
         </div>
 
         <div *ngIf="_viewConfig.devices && _category?.id.toString().length" class="kReportContainer">

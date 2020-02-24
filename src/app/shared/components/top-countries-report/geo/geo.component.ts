@@ -12,7 +12,7 @@ import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 
 @Component({
-  selector: 'app-entry-geo',
+  selector: 'app-geo',
   templateUrl: './geo.component.html',
   styleUrls: ['./geo.component.scss'],
 })
