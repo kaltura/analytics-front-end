@@ -41,6 +41,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _refineFilterOpened = false;
   
   public _loadingCategory = false;
+  public _categoryLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _category: KalturaCategory;
   public _categoryId = '';
@@ -81,6 +82,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
 
   private _loadCategoryDetails(parentCategory = false): void {
     this._loadingCategory = true;
+    this._categoryLoaded = false;
     this._blockerMessage = null;
 
     const request = new CategoryGetAction({ id: (parentCategory && this._category.parentId) ? this._category.parentId : parseInt(this._categoryId) })
@@ -96,9 +98,11 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (category: KalturaCategory) => {
+          this._categoryLoaded = true;
           if (parentCategory) {
             this._parentCategoryName = category.name;
             this._loadingCategory = false;
+            this._categoryLoaded = true;
           } else {
             this._category = category;
             const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
@@ -113,6 +117,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
         },
         error => {
           this._loadingCategory = false;
+          this._categoryLoaded = false;
           const actions = {
             'close': () => {
               this._blockerMessage = null;

@@ -55,27 +55,27 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <div *ngIf="_viewConfig.topVideos && _category?.id.toString().length" class="kReportContainer">
+        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer">
           <app-category-top-content [categoryId]="_category?.id.toString()"
                                 [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-category-top-content>
         </div>
 
-        <div *ngIf="_viewConfig.geo && _category?.id.toString().length" class="kReportContainer">
+        <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer">
           <app-top-countries [dateFilter]="_dateFilter"
                                    [refineFilter]="_refineFilter"
                                    [categoryId]="_category?.id.toString()"
                                    (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
         </div>
 
-        <div *ngIf="_viewConfig.devices && _category?.id.toString().length" class="kReportContainer">
+        <div *ngIf="_viewConfig.devices && _categoryLoaded" class="kReportContainer">
           <app-devices-overview [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"
                                       [colorScheme]="'impressions'"
                                       [categoryId]="_category?.id.toString()"></app-devices-overview>
         </div>
 
-        <div *ngIf="_viewConfig.syndication && _category?.id.toString().length" class="kReportContainer">
+        <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer">
           <app-syndication [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"
                            [categoryId]="_category?.id.toString()"
