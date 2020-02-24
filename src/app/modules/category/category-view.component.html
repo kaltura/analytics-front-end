@@ -63,10 +63,10 @@
         </div>
 
         <div *ngIf="_viewConfig.devices && _category?.id.toString().length" class="kReportContainer">
-          <app-category-devices-overview [dateFilter]="_dateFilter"
+          <app-devices-overview [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"
                                       [colorScheme]="'impressions'"
-                                      [categoryId]="_category?.id.toString()"></app-category-devices-overview>
+                                      [categoryId]="_category?.id.toString()"></app-devices-overview>
         </div>
 
         <div *ngIf="_viewConfig.syndication && _category?.id.toString().length" class="kReportContainer">

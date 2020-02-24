@@ -149,7 +149,7 @@ export class SyndicationComponent implements OnDestroy {
     if (this.entryId) {
       reportConfig.filter.entryIdIn = this.entryId;
     }
-    if (this.categoryId.length) {
+    if (this.categoryId) {
       reportConfig.filter.categoriesIdsIn = this.categoryId;
     }
     

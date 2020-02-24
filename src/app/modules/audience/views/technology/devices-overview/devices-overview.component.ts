@@ -35,7 +35,7 @@ export interface Summary {
 }
 
 @Component({
-  selector: 'app-devices-overview',
+  selector: 'app-tech-devices-overview',
   templateUrl: './devices-overview.component.html',
   styleUrls: ['./devices-overview.component.scss'],
   providers: [
@@ -44,7 +44,7 @@ export interface Summary {
     ReportService,
   ]
 })
-export class DevicesOverviewComponent implements OnDestroy {
+export class TechDevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
   
   @Input() set filter(value: DateChangeEvent) {

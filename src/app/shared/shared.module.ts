@@ -72,6 +72,7 @@ import { ContextDetailsOverlayComponent } from 'shared/components/context-detail
 import { CategoryFullNamePipe } from './pipes/category-full-name.pipe';
 import { ContextTableFilterComponent } from 'shared/components/context-table-filter/context-table-filter.component';
 import { ContextFilterComponent } from 'shared/components/context-table-filter/users-filter/context-filter.component';
+import {DevicesOverviewComponent} from "shared/components/devices-report/devices-overview.component";
 
 @NgModule({
   imports: [
@@ -98,6 +99,7 @@ import { ContextFilterComponent } from 'shared/components/context-table-filter/u
   ],
   declarations: [
     DateFilterComponent,
+    DevicesOverviewComponent,
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
@@ -149,6 +151,7 @@ import { ContextFilterComponent } from 'shared/components/context-table-filter/u
   ],
   exports: [
     DateFilterComponent,
+    DevicesOverviewComponent,
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,

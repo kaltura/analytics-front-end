@@ -10,7 +10,6 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TrendService } from 'shared/services/trend.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { EntryBase } from '../entry-base/entry-base';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { CompareService } from 'shared/services/compare.service';
 import { map, switchMap } from 'rxjs/operators';
@@ -20,6 +19,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { BarChartRow } from 'shared/components/horizontal-bar-chart/horizontal-bar-chart.component';
 import { DeviceIconPipe } from 'shared/pipes/device-icon.pipe';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { QueryBase } from "shared/components/query-base/query-base";
 
 export interface SummaryItem {
   key: string;
@@ -38,7 +38,7 @@ export interface Summary {
 }
 
 @Component({
-  selector: 'app-entry-devices-overview',
+  selector: 'app-devices-overview',
   templateUrl: './devices-overview.component.html',
   styleUrls: ['./devices-overview.component.scss'],
   providers: [
@@ -47,7 +47,8 @@ export interface Summary {
     ReportService,
   ]
 })
-export class EntryDevicesOverviewComponent extends EntryBase implements OnDestroy {
+export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
+  @Input() categoryId: string = null;
   @Input() entryId: string = null;
   @Input() colorScheme = 'default';
   
@@ -128,8 +129,14 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
     this._blockerMessage = null;
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
+    
+    
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
+    }
+    
+    if (this.categoryId) {
+      this._filter.categoriesIdsIn = this.categoryId;
     }
     
     const reportConfig: ReportConfig = {
@@ -149,6 +156,10 @@ export class EntryDevicesOverviewComponent extends EntryBase implements OnDestro
           
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
+          }
+          
+          if (this.categoryId) {
+            this._compareFilter.categoriesIdsIn = this.categoryId;
           }
           
           const compareReportConfig: ReportConfig = {
