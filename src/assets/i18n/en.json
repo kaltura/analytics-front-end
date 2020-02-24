@@ -394,6 +394,7 @@
         "count_plays": "Plays",
         "unique_known_users": "Unique Viewers",
         "avg_view_drop_off": "Avg. View Period",
+        "avg_completion_rate": "Avg. Completion Rate",
         "sum_time_viewed": "Minutes Viewed",
         "index": "#",
         "type": "Type",

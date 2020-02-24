@@ -29,7 +29,7 @@
               <p-sortIcon field="unique_known_users"></p-sortIcon>
             </th>
             <th [ngStyle]="{'width': '220px'}" pSortableColumn="avg_view_drop_off">
-              {{'app.engagement.topVideosReport.avg_view_drop_off' | translate}}
+              {{'app.engagement.topVideosReport.avg_completion_rate' | translate}}
               <p-sortIcon field="avg_view_drop_off"></p-sortIcon>
             </th>
           </ng-container>
@@ -85,7 +85,7 @@
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-small-time"></i>
-                <span class="kCellValue">{{data['avg_view_drop_off']}}</span>&nbsp;
+                <span class="kCellValue">{{data['avg_completion_rate']}}</span>&nbsp;
               </div>
             </td>
           </ng-container>
