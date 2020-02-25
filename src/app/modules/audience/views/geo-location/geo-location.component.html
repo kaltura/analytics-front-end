@@ -1,6 +1,6 @@
 <div data-aid="report-geo" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
-    <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
+    <span class="kTitle" *ngIf="_geoViewConfig.title">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv *ngIf="_geoViewConfig.export"
                     name="geo"
                     [reports]="_exportConfig"

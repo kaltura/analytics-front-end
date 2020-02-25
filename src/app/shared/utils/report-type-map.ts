@@ -2,11 +2,18 @@ import { KalturaReportType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 
 export function reportTypeMap(reportType: KalturaReportType): KalturaReportType {
-  if (analyticsConfig.multiAccount) {
+  if (analyticsConfig.customData && analyticsConfig.customData.globalReports && analyticsConfig.customData.globalReports === true) {
+    return mapGlobalReports(reportType);
+  } else  if (analyticsConfig.multiAccount) {
     return mapMultiAccount(reportType);
   } else {
     return reportType;
   }
+}
+function mapGlobalReports(reportType: KalturaReportType): KalturaReportType {
+  console.log("---> looking for global report...");
+  const reportsMap = {};
+  return reportsMap[reportType] || reportType;
 }
 
 function mapMultiAccount(reportType: KalturaReportType): KalturaReportType {

@@ -1,4 +1,4 @@
-const config = {
+let config = {
   kalturaServer: {
     uri: 'www.kaltura.com',
     previewUIConf: 38524931,

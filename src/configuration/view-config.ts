@@ -41,6 +41,7 @@ export const viewsConfig = {
       moderation: {},
     },
     geo: {
+      title: {},
       export: {},
       refineFilter: {
         geo: {},
