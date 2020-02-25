@@ -21,15 +21,9 @@
 <script src="embed.js"></script>
 <script>
 
-   config['customData'] = {
-      globalReports: true
-   };
-   config['customStyle']['css']  += `
-    .hack20 .kMain .kReportView .kReport .kReportHeader {
-        position: absolute;
-        right: 50px;
-    }
-   `;
+    config['customData'] = {
+        globalReports: true
+    };
 
   document.addEventListener('DOMContentLoaded', () => {
     const analyticsApp = document.getElementById('analytics');
@@ -50,14 +44,20 @@
       switch (postMessageData.messageType) {
         case 'analyticsInit':
             const viewsConfig = postMessageData.payload.viewsConfig;
-            viewsConfig.audience.geo.export = null;
-            viewsConfig.audience.geo.title = null;
-            viewsConfig.audience.geo.refineFilter = null;
+            viewsConfig.audience.engagement.refineFilter = null;
+            viewsConfig.audience.engagement.export = null;
+            viewsConfig.audience.engagement.miniTopVideos = null;
+            viewsConfig.audience.engagement.miniHighlights = null;
+            viewsConfig.audience.engagement.miniPeakDay = null;
+            viewsConfig.audience.engagement.syndication = null;
+            viewsConfig.audience.engagement.impressions = null;
+            viewsConfig.audience.engagement.topVideos = null;
+            viewsConfig.audience.engagement.title = null;
             sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
           break;
 
         case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/geo-location' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
           sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
           break;
 

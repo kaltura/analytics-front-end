@@ -1,6 +1,6 @@
 <div data-aid="report-storage" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
-    <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
+    <span class="kTitle" *ngIf="_publisherViewConfig.title">{{'app.bandwidth.publisherStorage' | translate}}</span>
     <app-export-csv *ngIf="_publisherViewConfig.export"
                     name="storage"
                     [reports]="_exportConfig"
@@ -36,20 +36,20 @@
 
     <div class="kReportContent">
 
-      <div class="kFilters">
+      <div class="kFilters" *ngIf="_publisherViewConfig.title">
         <span class="kTitle">{{'app.bandwidth.highlights' | translate}}</span>
       </div>
 
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kDimensions">
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)" *ngIf="_publisherViewConfig.highlights"></app-report-tabs>
+      <div class="kDimensions" *ngIf="_publisherViewConfig.highlights">
         <app-time-units [dateFilter]="dateFilter"></app-time-units>
       </div>
-      <div class="kChart">
+      <div *ngIf="_publisherViewConfig.highlights" class="kChart">
         <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]" *ngIf="_chartType==='bar'"></div>
         <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
       </div>
 
-      <div class="kTable">
+      <div class="kTable kTableToggle" *ngIf="_publisherViewConfig.highlights">
         <div class="kToggle">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
@@ -100,9 +100,9 @@
         </div>
       </div>
 
-      <div class="kSeparator"></div>
-      <span class="kAccumulativeTitle">{{'app.bandwidth.accumulative' | translate}}</span>
-      <div class="kAccumulative">
+      <div class="kSeparator" *ngIf="_publisherViewConfig.accumulative"></div>
+      <span class="kAccumulativeTitle" *ngIf="_publisherViewConfig.accumulative">{{'app.bandwidth.accumulative' | translate}}</span>
+      <div class="kAccumulative" *ngIf="_publisherViewConfig.accumulative">
         <div class="kItem" *ngFor="let item of _accumulativeStorage">
           <span class="kLabel">{{item.title}}</span>
           <div class="kValueContainer">

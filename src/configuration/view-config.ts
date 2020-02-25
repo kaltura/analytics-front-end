@@ -68,12 +68,15 @@ export const viewsConfig = {
       },
     },
     publisher: {
+      title: {},
       export: {},
       refineFilter: {
         mediaType: {},
         entrySource: {},
         geo: {},
       },
+      highlights: {},
+      accumulative: {},
     },
   },
   contributors: {

@@ -60,9 +60,9 @@ export class EmbedComponent implements OnInit {
       code: document.location.href.replace('embed', 'views/global-storage.html')
     },
     {
-      label: 'Global Operating Systems Report',
+      label: 'Global Domains Report',
       entryId: -1,
-      code: document.location.href.replace('embed', 'views/global-os.html')
+      code: document.location.href.replace('embed', 'views/global-domains.html')
     }
   ];
   
