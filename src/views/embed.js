@@ -79,7 +79,7 @@ function login(){
   $('#login-button').addClass("disabled");
   const user = $('#user').val();
   const pass = $('#pass').val();
-  if (pass.length > 20){ // KS - try login by KS
+  if (pass.length > 20 && parseInt(user).toString() === user){ // KS - try login by KS
     loginByKs(user, pass);
   } else {
     $.post("https://www.kaltura.com/api_v3/service/user/action/loginByLoginId", {
@@ -170,9 +170,10 @@ $.urlParam = function (name) {
   return results[1] || 0;
 }
 
-$('#login-button').keypress(function(event){
-  var keycode = (event.keyCode ? event.keyCode : event.which);
-  if(keycode == '13'){
+var input = document.getElementById("pass");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
     login();
   }
 });
