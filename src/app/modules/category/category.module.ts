@@ -13,12 +13,13 @@ import { CategoryViewComponent } from './category-view.component';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
-
+import { UICarouselModule } from 'ng-carousel-iuno';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
 import { CategoryTopContentComponent, CategoryTopContentTableComponent, CategoryEntryDetailsOverlayComponent } from './views/category-top-content';
 import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.component";
 import {CategoryMiniTopViewersComponent} from "./views/mini-top-viewers/mini-top-viewers.component";
+import {InsightDomainsComponent} from "./views/insight-domains/insight-domains.component";
 
 @NgModule({
   imports: [
@@ -37,11 +38,13 @@ import {CategoryMiniTopViewersComponent} from "./views/mini-top-viewers/mini-top
     RouterModule.forChild(routing),
     AutoCompleteModule,
     InputHelperModule,
+    UICarouselModule
   ],
   declarations: [
     CategoryViewComponent,
     CategoryMiniTopViewersComponent,
     MiniTopVideosComponent,
+    InsightDomainsComponent,
     CatFilterComponent,
     CategoryTopContentComponent,
     CategoryTopContentTableComponent,

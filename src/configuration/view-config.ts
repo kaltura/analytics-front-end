@@ -126,6 +126,11 @@ export const viewsConfig = {
     details: {},
     miniTopViewers: {},
     miniTopVideos: {},
+    insights: {
+      domains: {},
+      geo: {},
+      devices: {}
+    },
     performance: {},
     topVideos: {},
     geo: {},

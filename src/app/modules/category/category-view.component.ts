@@ -22,6 +22,7 @@ import { CategoryExportConfig } from "./category-export.config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {EntryExportConfig} from "../entry/views/video/entry-export.config";
 import {CategoryTopContentComponent} from "./views/category-top-content";
+import {SyndicationComponent} from "shared/components/syndication-report/syndication.component";
 
 @Component({
   selector: 'app-category',
@@ -36,6 +37,11 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       this._categoryTopContentComponent = comp;
     }, 0);
   }
+  @ViewChild('topDomains', {static: false}) set topDomains(comp: SyndicationComponent) {
+    setTimeout(() => { // use timeout to prevent check after init error
+      this._syndicationComponent = comp;
+    }, 0);
+  }
   
   public _viewConfig: ViewConfig = { ...viewsConfig.category };
   public _dateRange = DateRanges.Last30D;
@@ -48,7 +54,8 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _refineFilterOpened = false;
   public _miniViewsCount = [
     this._viewConfig.miniTopVideos,
-    this._viewConfig.miniTopViewers
+    this._viewConfig.miniTopViewers,
+    this._viewConfig.insights
   ].filter(Boolean).length;
   
   public _loadingCategory = false;
@@ -58,6 +65,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _categoryId = '';
   public _parentCategoryName = '';
   public _categoryTopContentComponent: CategoryTopContentComponent;
+  public _syndicationComponent: SyndicationComponent;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
