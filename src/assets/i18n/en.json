@@ -711,7 +711,8 @@
       "subcats": "Sub Categories:",
       "entries": "Entries:",
       "created": "Creation Date:",
-      "updated": "Last Update:"
+      "updated": "Last Update:",
+      "plays": "{{0}} Plays"
     },
     "entry": {
       "context": "Playback Context",

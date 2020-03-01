@@ -18,6 +18,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
 import { CategoryTopContentComponent, CategoryTopContentTableComponent, CategoryEntryDetailsOverlayComponent } from './views/category-top-content';
 import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.component";
+import {CategoryMiniTopViewersComponent} from "./views/mini-top-viewers/mini-top-viewers.component";
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.
   ],
   declarations: [
     CategoryViewComponent,
+    CategoryMiniTopViewersComponent,
     MiniTopVideosComponent,
     CatFilterComponent,
     CategoryTopContentComponent,
@@ -48,5 +50,6 @@ import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.
   exports: [],
   providers: []
 })
+
 export class CategoryModule {
 }

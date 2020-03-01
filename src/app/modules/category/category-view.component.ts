@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CategoryGetAction,
@@ -21,6 +21,7 @@ import { RefineFilter } from "shared/components/filter/filter.component";
 import { CategoryExportConfig } from "./category-export.config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {EntryExportConfig} from "../entry/views/video/entry-export.config";
+import {CategoryTopContentComponent} from "./views/category-top-content";
 
 @Component({
   selector: 'app-category',
@@ -29,6 +30,12 @@ import {EntryExportConfig} from "../entry/views/video/entry-export.config";
   providers: [CategoryExportConfig]
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
+  
+  @ViewChild('topVideos', {static: false}) set topVideos(comp: CategoryTopContentComponent) {
+    setTimeout(() => { // use timeout to prevent check after init error
+      this._categoryTopContentComponent = comp;
+    }, 0);
+  }
   
   public _viewConfig: ViewConfig = { ...viewsConfig.category };
   public _dateRange = DateRanges.Last30D;
@@ -40,7 +47,8 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _miniViewsCount = [
-    this._viewConfig.miniTopVideos
+    this._viewConfig.miniTopVideos,
+    this._viewConfig.miniTopViewers
   ].filter(Boolean).length;
   
   public _loadingCategory = false;
@@ -49,6 +57,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _category: KalturaCategory;
   public _categoryId = '';
   public _parentCategoryName = '';
+  public _categoryTopContentComponent: CategoryTopContentComponent;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,

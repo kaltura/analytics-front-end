@@ -29,10 +29,6 @@ import { CategoryBase } from "../category-base/category-base";
   ]
 })
 export class MiniTopVideosComponent extends CategoryBase implements OnDestroy, OnInit {
-  @Input() dateFilterComponent: DateFilterComponent;
-  
-  @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
-  
   protected _componentId = 'mini-top-videos';
   private _dataConfig: ReportDataConfig;
   private _partnerId = this._authService.pid;
@@ -60,6 +56,26 @@ export class MiniTopVideosComponent extends CategoryBase implements OnDestroy, O
     return this._compareFilter !== null;
   }
   
+  public _topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
+  
+  @Input() dateFilterComponent: DateFilterComponent;
+  @Input() set topVideos(topVideos$: any) {
+    if (topVideos$) {
+      this._topVideos$ = topVideos$;
+      this._topVideos$
+        .pipe(cancelOnDestroy(this))
+        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
+          this._isBusy = data.busy;
+          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
+          this._tableData = [];
+          this._compareTableData = [];
+          if (data.table && data.table.header && data.table.data) {
+            this._handleTable(data.table, data.compare); // handle table
+          }
+        });
+    }
+  }
+  
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -76,19 +92,7 @@ export class MiniTopVideosComponent extends CategoryBase implements OnDestroy, O
   }
   
   ngOnInit() {
-    if (this.topVideos$) {
-      this.topVideos$
-        .pipe(cancelOnDestroy(this))
-        .subscribe((data: { table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }) => {
-          this._isBusy = data.busy;
-          this._blockerMessage = this._errorsManager.getErrorMessage(data.error, { 'close': () => { this._blockerMessage = null; } });
-          this._tableData = [];
-          this._compareTableData = [];
-          if (data.table && data.table.header && data.table.data) {
-            this._handleTable(data.table, data.compare); // handle table
-          }
-        });
-    }
+  
   }
 
   protected _loadReport(sections = this._dataConfig): void {
