@@ -25,7 +25,7 @@ import {CategoryBase} from "../category-base/category-base";
   ],
 })
 export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
-  @Input() userId: string;
+  @Input() categoryId: string = null;
   
   protected _componentId = 'category-insight-top-domains';
   private _dataConfig: ReportDataConfig;
@@ -68,7 +68,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
     this._isBusy = true;
     this._blockerMessage = null;
     
-    this._filter.userIds = this.userId;
+    this._filter.categoriesIdsIn = this.categoryId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -76,7 +76,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
           return ObservableOf({ report, compare: null });
         }
         
-        this._compareFilter.userIds = this.userId;
+        this._compareFilter.categoriesIdsIn = this.categoryId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, sections)

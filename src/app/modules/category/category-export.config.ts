@@ -36,6 +36,13 @@ export class CategoryExportConfig extends ExportConfigService {
       },
       */
       {
+        id: 'miniTopViewers',
+        label: this._translate.instant('app.category.topViewers'),
+        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
+      },
+      {
         id: 'topVideos',
         label: this._translate.instant('app.engagement.exportLabels.topVideos'),
         reportType: reportTypeMap(KalturaReportType.topContentCreator),
