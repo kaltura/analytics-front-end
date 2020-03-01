@@ -124,6 +124,7 @@ export const viewsConfig = {
       categories: {},
     },
     details: {},
+    miniTopVideos: {},
     performance: {},
     topVideos: {},
     geo: {},

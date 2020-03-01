@@ -39,11 +39,10 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '111px', 'padding-left': '10px'}">
-            <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" (onMouseEnter)="_showOverlay($event, data['object_id'])" (onMouseLeave)="_hideOverlay()"></thumb-loader>
+            <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onMouseEnter)="_showOverlay($event, data['object_id'])" (onMouseLeave)="_hideOverlay()"></thumb-loader>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
               <span class="kTableColumn kEntryName"
-                    (click)="_drillDown(data)"
                     (mouseleave)="_hideOverlay()"
                     (mouseenter)="_showOverlay($event, data['object_id'])">{{data['entry_name']}}</span>
           </td>

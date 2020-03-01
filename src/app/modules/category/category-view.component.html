@@ -55,8 +55,29 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer">
-          <app-category-top-content [categoryId]="_category?.id.toString()"
+        <div *ngIf="_miniViewsCount" class="kReportContainer">
+          <div *ngIf="_viewConfig.miniTopVideos"
+               class="kMiniReportContainer">
+            <app-category-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
+                                            [refineFilter]="_refineFilter"></app-category-mini-top-videos>
+          </div>
+
+          <!--div *ngIf="_engagementViewConfig.miniTopVideos"
+               class="kMiniReportContainer">
+            <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
+                                            [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
+          </div>
+
+          <div *ngIf="_engagementViewConfig.miniPeakDay"
+               class="kMiniReportContainer">
+            <app-engagement-mini-peak-day [dateFilter]="_dateFilter"
+                                          [refineFilter]="_refineFilter"></app-engagement-mini-peak-day>
+          </div-->
+
+        </div>
+
+        <div [class.kHidden]="!_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos" >
+          <app-category-top-content [categoryId]="_category?.id.toString()" #topVideos
                                 [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-category-top-content>
         </div>

@@ -39,6 +39,9 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
+  public _miniViewsCount = [
+    this._viewConfig.miniTopVideos
+  ].filter(Boolean).length;
   
   public _loadingCategory = false;
   public _categoryLoaded = false;
