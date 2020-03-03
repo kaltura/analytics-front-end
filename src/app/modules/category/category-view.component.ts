@@ -20,9 +20,8 @@ import { ExportItem } from "shared/components/export-csv/export-config-base.serv
 import { RefineFilter } from "shared/components/filter/filter.component";
 import { CategoryExportConfig } from "./category-export.config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
-import {EntryExportConfig} from "../entry/views/video/entry-export.config";
-import {CategoryTopContentComponent} from "./views/category-top-content";
-import {SyndicationComponent} from "shared/components/syndication-report/syndication.component";
+import { CategoryTopContentComponent } from "./views/category-top-content";
+import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
 
 @Component({
   selector: 'app-category',
@@ -37,9 +36,9 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       this._categoryTopContentComponent = comp;
     }, 0);
   }
-  @ViewChild('topDomains', {static: false}) set topDomains(comp: SyndicationComponent) {
+  @ViewChild('topCountries', {static: false}) set topCountries(comp: TopCountriesComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
-      this._syndicationComponent = comp;
+      this._topCountriesComponent = comp;
     }, 0);
   }
   
@@ -65,7 +64,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _categoryId = '';
   public _parentCategoryName = '';
   public _categoryTopContentComponent: CategoryTopContentComponent;
-  public _syndicationComponent: SyndicationComponent;
+  public _topCountriesComponent: TopCountriesComponent;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -161,7 +160,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
     
-    this._exportConfig = EntryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
+    this._exportConfig = CategoryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
   }
   
 

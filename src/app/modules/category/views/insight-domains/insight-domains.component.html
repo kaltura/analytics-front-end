@@ -1,4 +1,4 @@
-<div data-aid="mini-top-sources" class="kReport kMini kOverrideFAIcons">
+<div data-aid="insight-top-domains" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
     <a (click)="scrollTo('#top-domains')" class="kDetails">{{'app.common.details' | translate}}</a>
@@ -6,40 +6,47 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div *ngIf="!_isCompareMode" class="kReportContent">
+
       <div class="kReportRow">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
           <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <div class="kColumns">
+          <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+          <span class="kDomain">{{'app.user.popularDomain' | translate}}</span>
+        </div>
       </div>
-      <div class="kReportRow kDomain">
-        <span class="kLabel">{{'app.user.popularDomain' | translate}}</span>
-      </div>
+
       <div class="kReportRow">
         <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
+      </div>
+
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_bulletValues[0]">
+        {{'app.common.noResults' | translate}}
       </div>
     </div>
 
     <div *ngIf="_isCompareMode && _bulletValues[0]" class="kReportContent kCompare">
       <!-- Compare -->
-      <!--div class="kReportRow">
-        <span class="kLabel">{{'app.user.popularDomain' | translate}}</span>
-      </div-->
 
       <span class="kPeriod">{{_compareDates}}</span>
 
-      <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
+
+      <div class="kReportRow">
         <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder>
           <img [src]="'http://' + _compareTopSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>
-        <a class="topDomain" [href]="'http://' + _compareTopSourceLabel" target="_blank">{{_compareTopSourceLabel}}</a>
+        <div class="kColumns">
+          <a class="topDomain" [href]="'http://' + _compareTopSourceLabel" target="_blank">{{_compareTopSourceLabel}}</a>
+          <!--span class="kDomain">{{'app.user.popularDomain' | translate}}</span-->
+        </div>
       </div>
 
-      <div class="kReportRow" *ngIf="!_isBusy && _compareBulletValues[0]">
+      <div class="kReportRow">
         <app-insights-bullet [values]="_compareBulletValues" [showLegend]="false"></app-insights-bullet>
       </div>
 
@@ -50,13 +57,16 @@
       <!-- Current -->
       <span class="kPeriod" style="margin-top: 4px">{{_currentDates}}</span>
 
-      <div class="kReportRow kDomain">
+      <div class="kReportRow">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
           <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <div class="kColumns">
+          <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+          <!--span class="kDomain">{{'app.user.popularDomain' | translate}}</span-->
+        </div>
       </div>
 
       <div class="kReportRow">

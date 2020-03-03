@@ -223,23 +223,25 @@ export class ReportService implements OnDestroy {
   
   public parseTableData(table: KalturaReportTable | KalturaReportTotal, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
-    let columns = table.header.toLowerCase().split(analyticsConfig.valueSeparator);
+    let columns = table.header ? table.header.toLowerCase().split(analyticsConfig.valueSeparator) : [];
     const tableData = [];
   
     this._logger.trace('Parse table data', { headers: table.header });
     
     // parse table data
-    table.data.split(';').forEach(valuesString => {
-      if (valuesString.length) {
-        let data = {};
-        valuesString.split(analyticsConfig.valueSeparator).forEach((value, index) => {
-          if (config.fields[columns[index]]) {
-            data[columns[index]] = config.fields[columns[index]].format(value);
-          }
-        });
-        tableData.push(data);
-      }
-    });
+    if (table.data) {
+      table.data.split(';').forEach(valuesString => {
+        if (valuesString.length) {
+          let data = {};
+          valuesString.split(analyticsConfig.valueSeparator).forEach((value, index) => {
+            if (config.fields[columns[index]]) {
+              data[columns[index]] = config.fields[columns[index]].format(value);
+            }
+          });
+          tableData.push(data);
+        }
+      });
+    }
     
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
     columns.sort((a, b) => {

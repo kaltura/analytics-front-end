@@ -20,6 +20,7 @@ import { CategoryTopContentComponent, CategoryTopContentTableComponent, Category
 import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.component";
 import { CategoryMiniTopViewersComponent } from "./views/mini-top-viewers/mini-top-viewers.component";
 import { InsightDomainsComponent } from "./views/insight-domains/insight-domains.component";
+import { InsightGeoComponent } from "./views/insight-geo/insight-geo.component";
 import { InsightDevicesComponent } from "./views/insight-devices/insight-devices.component";
 
 @NgModule({
@@ -46,6 +47,7 @@ import { InsightDevicesComponent } from "./views/insight-devices/insight-devices
     CategoryMiniTopViewersComponent,
     MiniTopVideosComponent,
     InsightDomainsComponent,
+    InsightGeoComponent,
     InsightDevicesComponent,
     CatFilterComponent,
     CategoryTopContentComponent,

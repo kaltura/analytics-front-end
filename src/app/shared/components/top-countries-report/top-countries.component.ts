@@ -1,5 +1,14 @@
 import { Component, EventEmitter, Inject, InjectionToken, Input, OnDestroy, OnInit, Output, Self, ViewChild } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaAPIException,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaObjectBaseFactory,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { ReportDataBaseConfig, ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,7 +27,7 @@ import { significantDigits } from 'shared/utils/significant-digits';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { GeoComponent } from './geo/geo.component';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import {BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { QueryBase } from "shared/components/query-base/query-base";
@@ -71,6 +80,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
+  public topCountries$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
   
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
@@ -85,6 +95,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   ngOnDestroy() {
+    this.topCountries$.complete();
   }
   
   ngOnInit() {
@@ -125,6 +136,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   protected _loadReport(sections = this._dataConfig): void {
+    this.topCountries$.next({ table: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
@@ -170,6 +182,9 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     
           if (report.table && report.table.header && report.table.data) {
             this._tableData = this._handleTable(report.table, this._tabsData); // handle table
+            this.topCountries$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
+          } else {
+            this.topCountries$.next({ table: null, compare: null, busy: false, error: null });
           }
           
           if (compare) {
@@ -210,6 +225,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
         },
         error => {
           this._isBusy = false;
+          this.topCountries$.next({ table: null, compare: null, busy: false, error: error });
           const actions = {
             'close': () => {
               this._blockerMessage = null;

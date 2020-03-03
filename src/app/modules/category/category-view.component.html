@@ -82,10 +82,9 @@
                                               [refineFilter]="_refineFilter"></app-category-insight-domains>
               </ui-carousel-item>
               <ui-carousel-item *ngIf="_viewConfig.insights.geo">
-                <span>geo</span>
-                <!--app-user-insight-plays [userId]="_userId"
-                                        [dateFilter]="_dateFilter"
-                                        [refineFilter]="_refineFilter"></app-user-insight-plays-->
+                <app-category-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"
+                                          [dateFilter]="_dateFilter"
+                                          [refineFilter]="_refineFilter"></app-category-insight-geo>
               </ui-carousel-item>
 
               <ui-carousel-item *ngIf="_viewConfig.insights.devices">
@@ -123,7 +122,7 @@
         </div>
 
         <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">
-          <app-top-countries [dateFilter]="_dateFilter"
+          <app-top-countries [dateFilter]="_dateFilter" #topCountries
                                    [refineFilter]="_refineFilter"
                                    [categoryId]="_category?.id.toString()"
                                    (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
@@ -137,7 +136,7 @@
         </div>
 
         <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer" id="top-domains">
-          <app-syndication [dateFilterComponent]="dateFilter" #topDomains
+          <app-syndication [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"
                            [categoryId]="_category?.id.toString()"
                            [refineFilter]="_refineFilter"></app-syndication>

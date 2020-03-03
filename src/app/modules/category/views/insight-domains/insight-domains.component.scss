@@ -33,42 +33,47 @@
   }
 
   .kPeriod {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: normal;
     padding: 0 24px;
-    margin-bottom: 11px;
+    margin-bottom: 8px;
   }
 
+  .kColumns{
+    display: flex;
+    flex-direction: column;
+    .kDomain {
+      font-size: 18px;
+      font-weight: normal;
+      color: $kGrayscale1;
+      margin-top: 12px;
+    }
+  }
   .kReportRow {
     display: flex;
     align-items: center;
     padding: 0 24px;
     margin-bottom: 20px;
-
-    &.kDomain {
-      margin-bottom: 16px !important;
-    }
+    margin-top: 12px;
 
     .kDomainIcon {
       overflow: hidden;
       position: relative;
-      width: 24px;
-      height: 24px;
+      width: 40px;
+      height: 40px;
       background-color: transparent;
       white-space: nowrap;
       text-align: center;
       border-radius: 3px;
-      margin-right: 10px;
-
-      &.kIconfile-small {
-        width: auto !important;
-        height: auto !important;
-      }
+      margin-right: 24px;
 
       &.error {
         border: 1px solid $kGrayscale4;
       }
-
+      &.kIconfile-small:before{
+        font-size: 40px;
+        color: $kGrayscale1;
+      }
       img {
         position: absolute;
         left: -100%;
@@ -76,20 +81,20 @@
         top: -100%;
         bottom: -100%;
         margin: auto;
-        width: 24px;
+        width: 40px;
         height: auto;
         border-radius: 3px;
       }
     }
 
     .topDomain {
-      font-size: 15px;
-      font-weight: normal;
+      font-size: 24px;
+      font-weight: bold;
       text-decoration: none;
     }
 
     .kLabel {
-      font-size: 15px;
+      font-size: 18px;
       font-weight: normal;
     }
 
@@ -129,12 +134,39 @@
   }
 }
 
-.kCompare {
+.kMini.kReport .kCompare {
   .topSource {
     font-size: 15px !important;
   }
   .kReportRow{
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+  .topDomain {
+    font-size: 16px;
+  }
+
+  .kDomain {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .kReportRow {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    .kDomainIcon {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+      &.kIconfile-small:before{
+        font-size: 18px;
+      }
+      img {
+        width: 18px;
+      }
+    }
+  }
+  .kLegend{
+    margin-top: 4px;
   }
 }
 
