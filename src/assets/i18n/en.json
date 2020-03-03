@@ -716,7 +716,9 @@
       "topViewers": "Top Viewers",
       "topViewers_tt": "Top viewers based on user's number of plays",
       "popularDevice": "Most Popular Device",
+      "topDevices": "Top Devices",
       "otherDevices": "Other Devices",
+      "topDomains": "Top Domains",
       "otherDomains": "Other Domains",
       "topLocations": "Top Locations"
     },

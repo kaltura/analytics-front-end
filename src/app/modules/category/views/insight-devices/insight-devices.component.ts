@@ -37,8 +37,8 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _topSourceLabel = '';
-  public _compareTopSourceLabel = '';
+  public _topDeviceLabel = '';
+  public _compareTopDeviceLabel = '';
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
@@ -88,8 +88,8 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
       .subscribe(({ report, compare }) => {
           this._bulletValues = [];
           this._compareBulletValues = [];
-          this._topSourceLabel = null;
-          this._compareTopSourceLabel = null;
+          this._topDeviceLabel = null;
+          this._compareTopDeviceLabel = null;
           
           if (report.totals) {
             this._handleTotals(report.totals, compare ? compare.totals : null);
@@ -169,9 +169,9 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
       const othersPlays = this._currentTotalPlays - topPlays;
       
       if (topPlays || othersPlays) {
-        this._topSourceLabel = currentTop['device'];
+        this._topDeviceLabel = currentTop['device'];
         this._bulletValues = [
-          { value: topPlays, label: this._topSourceLabel }
+          { value: topPlays, label: this._topDeviceLabel }
         ];
         if (othersPlays) {
           this._bulletValues.push({ value: othersPlays, label: this._translate.instant('app.category.otherDevices') });
@@ -183,9 +183,9 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
           const compareTopPlays = parseInt(compareTop['count_plays'], 10);
           const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
           if (compareTopPlays || compareOthersPlays) {
-            this._compareTopSourceLabel = compareTop['device'];
+            this._compareTopDeviceLabel = compareTop['device'];
             this._compareBulletValues = [
-              { value: compareTopPlays, label: this._compareTopSourceLabel }
+              { value: compareTopPlays, label: this._compareTopDeviceLabel }
             ];
             if (compareOthersPlays) {
               this._compareBulletValues.push({ value: compareOthersPlays, label: this._translate.instant('app.category.otherDevices') });

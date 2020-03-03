@@ -14,7 +14,12 @@
   overflow: hidden;
   position: relative;
 }
-
+.kHeader{
+  padding: 0 24px;
+  font-size: 20px;
+  color: $kGrayscale1;
+  margin-bottom: 16px;
+}
 .kFilters {
   height: 93px !important;
 }
@@ -36,7 +41,7 @@
     font-size: 15px;
     font-weight: normal;
     padding: 0 24px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   .kColumns{

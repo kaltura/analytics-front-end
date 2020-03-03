@@ -7,29 +7,32 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div *ngIf="!_isCompareMode" class="kReportContent">
       <div class="kReportRow">
-        <span varclass="topDevice">{{_topSourceLabel}}</span>
+        <div class="kColumns">
+          <span class="topDevice">{{_topDeviceLabel}}</span>
+          <span class="kDomain">{{'app.category.popularDevice' | translate}}</span>
+        </div>
       </div>
-      <div class="kReportRow kDomain">
-        <span class="kLabel">{{'app.category.popularDevice' | translate}}</span>
-      </div>
+
       <div class="kReportRow">
         <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
       </div>
+
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_bulletValues[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
     </div>
 
-    <div *ngIf="_isCompareMode && _bulletValues[0]" class="kReportContent kCompare">
-      <!-- Compare -->
-      <!--div class="kReportRow">
-        <span class="kLabel">{{'app.user.popularDomain' | translate}}</span>
-      </div-->
 
+    <div *ngIf="_isCompareMode && _bulletValues[0]" class="kReportContent kCompare">
+      <span class="kHeader">{{'app.category.topDevices' | translate}}</span>
+      <!-- Compare -->
       <span class="kPeriod">{{_compareDates}}</span>
 
-      <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
-        <span varclass="topDevice">{{_compareTopSourceLabel}}</span>
+      <div class="kReportRow kDomain" *ngIf="_compareTopDeviceLabel">
+        <span class="topDevice">{{_compareTopDeviceLabel}}</span>
       </div>
 
-      <div class="kReportRow" *ngIf="!_isBusy && _compareBulletValues[0]">
+      <div class="kReportRow" *ngIf="!_isBusy && _compareBulletValues[0]" style="margin-top: 2px">
         <app-insights-bullet [values]="_compareBulletValues" [showLegend]="false"></app-insights-bullet>
       </div>
 
@@ -38,19 +41,19 @@
       </div>
 
       <!-- Current -->
-      <span class="kPeriod" style="margin-top: 4px">{{_currentDates}}</span>
+      <span class="kPeriod" style="margin-top: 12px">{{_currentDates}}</span>
 
       <div class="kReportRow kDomain">
-        <span varclass="topDevice">{{_topSourceLabel}}</span>
+        <span class="topDevice">{{_topDeviceLabel}}</span>
       </div>
 
-      <div class="kReportRow">
+      <div class="kReportRow" style="margin-top: 2px">
         <app-insights-bullet [values]="_bulletValues"
                              [showLegend]="false"
                              (appliedColors)="_updateColors($event)"></app-insights-bullet>
       </div>
 
-      <div class="kReportRow">
+      <!--div class="kReportRow">
         <div class="kLegend">
           <div class="kLegendItem">
             <div class="kCircle" [style.background-color]="_colors[0]"></div>
@@ -61,7 +64,7 @@
             <span>{{'app.user.otherSources' | translate}}</span>
           </div>
         </div>
-      </div>
+      </div-->
     </div>
 
     <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_bulletValues[0]">
