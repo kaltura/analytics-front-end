@@ -73,7 +73,7 @@
             <ui-carousel height="100%"
                          [infinite]="true"
                          [autoPlay]="true"
-                         [autoPlaySpeed]="5000"
+                         [autoPlaySpeed]="50000"
                          [arrows]="false"
                          [fade]="false"
                          [speed]="200">
@@ -89,10 +89,9 @@
               </ui-carousel-item>
 
               <ui-carousel-item *ngIf="_viewConfig.insights.devices">
-                <span>devices</span>
-                <!--app-user-insight-domain [userId]="_userId"
+                <app-category-devices-domains [categoryId]="_category?.id.toString()"
                                          [dateFilter]="_dateFilter"
-                                         [refineFilter]="_refineFilter"></app-user-insight-domain-->
+                                         [refineFilter]="_refineFilter"></app-category-devices-domains>
               </ui-carousel-item>
 
             </ui-carousel>
@@ -117,27 +116,27 @@
           <span>Category Performance Over Time</span>
         </div>
 
-        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos" >
+        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos">
           <app-category-top-content [categoryId]="_category?.id.toString()" #topVideos
                                 [dateFilter]="_dateFilter"
                                 [refineFilter]="_refineFilter"></app-category-top-content>
         </div>
 
-        <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer">
+        <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">
           <app-top-countries [dateFilter]="_dateFilter"
                                    [refineFilter]="_refineFilter"
                                    [categoryId]="_category?.id.toString()"
                                    (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
         </div>
 
-        <div *ngIf="_viewConfig.devices && _categoryLoaded" class="kReportContainer">
+        <div *ngIf="_viewConfig.devices && _categoryLoaded" class="kReportContainer" id="top-devices">
           <app-devices-overview [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"
                                       [colorScheme]="'impressions'"
                                       [categoryId]="_category?.id.toString()"></app-devices-overview>
         </div>
 
-        <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer">
+        <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer" id="top-domains">
           <app-syndication [dateFilterComponent]="dateFilter" #topDomains
                            [dateFilter]="_dateFilter"
                            [categoryId]="_category?.id.toString()"

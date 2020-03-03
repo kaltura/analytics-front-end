@@ -7,31 +7,31 @@ import { InsightsBulletValue } from 'shared/components/insights-bullet/insights-
 import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { InsightDomainsConfig } from './insight-domains.config';
+import { InsightDevicesConfig } from './insight-devices.config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { getColorPalette, getColorsBetween } from 'shared/utils/colors';
 import { map, switchMap } from 'rxjs/operators';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import {CategoryBase} from "../category-base/category-base";
-import {analyticsConfig} from "configuration/analytics-config";
 import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
+import {analyticsConfig} from "configuration/analytics-config";
 
 @Component({
-  selector: 'app-category-insight-domains',
-  templateUrl: './insight-domains.component.html',
-  styleUrls: ['./insight-domains.component.scss'],
+  selector: 'app-category-devices-domains',
+  templateUrl: './insight-devices.component.html',
+  styleUrls: ['./insight-devices.component.scss'],
   providers: [
     ReportService,
-    InsightDomainsConfig
+    InsightDevicesConfig
   ],
 })
-export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
+export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
   @Input() categoryId: string = null;
   
   protected _componentId = 'category-insight-top-domains';
   private _dataConfig: ReportDataConfig;
-  private _reportType = reportTypeMap(KalturaReportType.topSyndication);
+  private _reportType = reportTypeMap(KalturaReportType.platforms);
   private _order = '-count_plays';
   
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -59,7 +59,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private pageScrollService: PageScrollService,
-              private _dataConfigService: InsightDomainsConfig) {
+              private _dataConfigService: InsightDevicesConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -169,12 +169,12 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
       const othersPlays = this._currentTotalPlays - topPlays;
       
       if (topPlays || othersPlays) {
-        this._topSourceLabel = currentTop['domain_name'];
+        this._topSourceLabel = currentTop['device'];
         this._bulletValues = [
           { value: topPlays, label: this._topSourceLabel }
         ];
         if (othersPlays) {
-          this._bulletValues.push({ value: othersPlays, label: this._translate.instant('app.category.otherDomains') });
+          this._bulletValues.push({ value: othersPlays, label: this._translate.instant('app.category.otherDevices') });
         }
         
         if (compare && compare.data && compare.header) {
@@ -183,12 +183,12 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
           const compareTopPlays = parseInt(compareTop['count_plays'], 10);
           const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
           if (compareTopPlays || compareOthersPlays) {
-            this._compareTopSourceLabel = compareTop['domain_name'];
+            this._compareTopSourceLabel = compareTop['device'];
             this._compareBulletValues = [
               { value: compareTopPlays, label: this._compareTopSourceLabel }
             ];
             if (compareOthersPlays) {
-              this._compareBulletValues.push({ value: compareOthersPlays, label: this._translate.instant('app.category.otherDomains') });
+              this._compareBulletValues.push({ value: compareOthersPlays, label: this._translate.instant('app.category.otherDevices') });
             }
           }
         } else {

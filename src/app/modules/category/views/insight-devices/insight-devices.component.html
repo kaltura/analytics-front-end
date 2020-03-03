@@ -1,21 +1,16 @@
 <div data-aid="mini-top-sources" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
-    <a (click)="scrollTo('#top-domains')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <a (click)="scrollTo('#top-devices')" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div *ngIf="!_isCompareMode" class="kReportContent">
       <div class="kReportRow">
-        <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
-        </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <span varclass="topDevice">{{_topSourceLabel}}</span>
       </div>
       <div class="kReportRow kDomain">
-        <span class="kLabel">{{'app.user.popularDomain' | translate}}</span>
+        <span class="kLabel">{{'app.category.popularDevice' | translate}}</span>
       </div>
       <div class="kReportRow">
         <app-insights-bullet [values]="_bulletValues"></app-insights-bullet>
@@ -31,12 +26,7 @@
       <span class="kPeriod">{{_compareDates}}</span>
 
       <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
-        <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _compareTopSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
-        </div>
-        <a class="topDomain" [href]="'http://' + _compareTopSourceLabel" target="_blank">{{_compareTopSourceLabel}}</a>
+        <span varclass="topDevice">{{_compareTopSourceLabel}}</span>
       </div>
 
       <div class="kReportRow" *ngIf="!_isBusy && _compareBulletValues[0]">
@@ -51,12 +41,7 @@
       <span class="kPeriod" style="margin-top: 4px">{{_currentDates}}</span>
 
       <div class="kReportRow kDomain">
-        <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
-        </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <span varclass="topDevice">{{_topSourceLabel}}</span>
       </div>
 
       <div class="kReportRow">

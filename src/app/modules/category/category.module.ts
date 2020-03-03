@@ -18,8 +18,9 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
 import { CategoryTopContentComponent, CategoryTopContentTableComponent, CategoryEntryDetailsOverlayComponent } from './views/category-top-content';
 import { MiniTopVideosComponent } from "./views/mini-top-videos/mini-top-videos.component";
-import {CategoryMiniTopViewersComponent} from "./views/mini-top-viewers/mini-top-viewers.component";
-import {InsightDomainsComponent} from "./views/insight-domains/insight-domains.component";
+import { CategoryMiniTopViewersComponent } from "./views/mini-top-viewers/mini-top-viewers.component";
+import { InsightDomainsComponent } from "./views/insight-domains/insight-domains.component";
+import { InsightDevicesComponent } from "./views/insight-devices/insight-devices.component";
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import {InsightDomainsComponent} from "./views/insight-domains/insight-domains.c
     CategoryMiniTopViewersComponent,
     MiniTopVideosComponent,
     InsightDomainsComponent,
+    InsightDevicesComponent,
     CatFilterComponent,
     CategoryTopContentComponent,
     CategoryTopContentTableComponent,

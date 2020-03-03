@@ -714,7 +714,10 @@
       "updated": "Last Update:",
       "plays": "{{0}} Plays",
       "topViewers": "Top Viewers",
-      "topViewers_tt": "Top category viewers calculated by plays"
+      "topViewers_tt": "Top category viewers calculated by plays",
+      "popularDevice": "Most Popular Device",
+      "otherDevices": "Other Devices",
+      "otherDomains": "Other Domains"
     },
     "entry": {
       "context": "Playback Context",
