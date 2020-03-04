@@ -35,7 +35,26 @@
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"
                                         (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
           </div>
-          <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners || _viewConfig?.categories)" class="kMiscFilters">
+
+          <div *ngIf="showAutocompleteGroup && (_viewConfig?.context || _viewConfig?.categories)" class="kMiscFilters">
+            <app-category-context-filter *ngIf="_viewConfig?.context"
+                  [label]="'app.category.context' | translate"
+                  [options]="_contextTypes"
+                  [selectedFilters]="_selectedValues['context']"
+                  (itemSelected)="_onItemSelected($event, 'context')"
+                  (itemUnselected)="_onItemUnselected($event, 'context')">
+            </app-category-context-filter>
+
+            <app-category-filter *ngIf="_viewConfig?.categories"
+                                 [label]="'app.category.subcat' | translate"
+                                 [selectedFilters]="_selectedValues['categories']"
+                                 [linkLabel]="'app.category.subcatSelect' | translate"
+                                 [popupTitle]="'app.category.subcatSelect' | translate"
+                                 (itemSelected)="_onItemSelected($event, 'categories')"
+                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+          </div>
+
+          <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners)" class="kMiscFilters">
             <app-tags-filter *ngIf="_viewConfig?.tags"
                              [selectedFilters]="_selectedValues['tags']"
                              (itemSelected)="_onItemSelected($event, 'tags')"
@@ -46,13 +65,6 @@
                                (itemSelected)="_onItemSelected($event, 'owners')"
                                (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
 
-            <app-category-filter *ngIf="_viewConfig?.categories"
-                                 [label]="'app.category.subcat' | translate"
-                                 [selectedFilters]="_selectedValues['categories']"
-                                 [linkLabel]="'app.category.subcatSelect' | translate"
-                                 [popupTitle]="'app.category.subcatSelect' | translate"
-                                 (itemSelected)="_onItemSelected($event, 'categories')"
-                                 (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
           </div>
           <div class="kListFilters" *ngIf="_viewConfig?.geo">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"

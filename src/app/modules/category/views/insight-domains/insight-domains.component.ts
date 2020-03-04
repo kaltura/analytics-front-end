@@ -71,7 +71,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
     this._isBusy = true;
     this._blockerMessage = null;
     
-    if (!this._filter.categoriesIdsIn) {
+    if (!this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
@@ -80,7 +80,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        if (!this._compareFilter.categoriesIdsIn) {
+        if (!this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
           this._compareFilter.categoriesIdsIn = this.categoryId;
         }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };

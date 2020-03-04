@@ -123,6 +123,7 @@ export const viewsConfig = {
       entrySource: {},
       tags: {},
       owners: {},
+      context: {},
       categories: {},
       geo: {},
     },

@@ -10,6 +10,7 @@
   width: 100%;
   height: auto;
   margin-bottom: 0 !important;
+  overflow: hidden;
 
   .kRefineFiltersMain {
     height: 100%;
@@ -59,6 +60,24 @@
       button {
         width: 100px;
       }
+    }
+  }
+}
+
+.kContextFilter{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  .kTitle {
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  p-radioButton{
+    margin-bottom: 8px;
+    ::ng-deep .ui-radiobutton-label {
+      font-size: 15px;
+      font-weight: normal;
+      color: $kGrayscale1;
     }
   }
 }

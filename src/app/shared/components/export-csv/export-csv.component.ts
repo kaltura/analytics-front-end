@@ -93,7 +93,7 @@ export class ExportCsvComponent implements OnDestroy {
       filter.entryIdIn = this.entryId;
     }
     
-    if (this.categoryId && !filter.categoriesIdsIn) {
+    if (this.categoryId && !filter.categoriesIdsIn && !filter.playbackContextIdsIn) {
       filter.categoriesIdsIn = this.categoryId;
     }
     

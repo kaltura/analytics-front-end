@@ -13,6 +13,7 @@ import { CategoryViewComponent } from './category-view.component';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { UICarouselModule } from 'ng-carousel-iuno';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { CatFilterComponent } from "./filter/filter.component";
@@ -22,6 +23,7 @@ import { CategoryMiniTopViewersComponent } from "./views/mini-top-viewers/mini-t
 import { InsightDomainsComponent } from "./views/insight-domains/insight-domains.component";
 import { InsightGeoComponent } from "./views/insight-geo/insight-geo.component";
 import { InsightDevicesComponent } from "./views/insight-devices/insight-devices.component";
+import { CategoryContextFilterComponent } from "./filter/context-filter/context-filter.component";
 
 @NgModule({
   imports: [
@@ -35,6 +37,7 @@ import { InsightDevicesComponent } from "./views/insight-devices/insight-devices
     PaginatorModule,
     SharedModule,
     TableModule,
+    RadioButtonModule,
     TooltipModule,
     NgxEchartsModule,
     RouterModule.forChild(routing),
@@ -52,7 +55,8 @@ import { InsightDevicesComponent } from "./views/insight-devices/insight-devices
     CatFilterComponent,
     CategoryTopContentComponent,
     CategoryTopContentTableComponent,
-    CategoryEntryDetailsOverlayComponent
+    CategoryEntryDetailsOverlayComponent,
+    CategoryContextFilterComponent
   ],
   exports: [],
   providers: []

@@ -108,7 +108,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: parentCategory ? 'id,name' : 'id,name,parentId,createdAt,updatedAt,directSubCategoriesCount,entriesCount'
+            fields: parentCategory ? 'id,name' : 'id,name,fullName,parentId,createdAt,updatedAt,directSubCategoriesCount,entriesCount'
           })
         });
 
@@ -122,8 +122,10 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
             this._parentCategoryName = category.name;
             this._loadingCategory = false;
             this._categoryLoaded = true;
+            this._viewConfig.refineFilter.categories = category.directSubCategoriesCount ? {} : null; // hide sub-categories filter if the current category has no sub categories
           } else {
             this._category = category;
+            this._viewConfig.refineFilter.categories = category.directSubCategoriesCount ? {} : null; // hide sub-categories filter if the current category has no sub categories
             const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
             this._creationDate = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
             this._updateDate = DateFilterUtils.getMomentDate(category.updatedAt).format(dateFormat);
@@ -132,9 +134,6 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
             } else {
               this._loadingCategory = false;
             }
-          }
-          if (!category.directSubCategoriesCount) {
-            this._viewConfig.refineFilter.categories = null; // hide sub-categories filter if the current category has no sub categories
           }
         },
         error => {

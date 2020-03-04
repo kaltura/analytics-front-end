@@ -722,7 +722,10 @@
       "otherDomains": "Other Domains",
       "topLocations": "Top Locations",
       "subcat": "Sub Categories",
-      "subcatSelect": "Select Sub Category"
+      "subcatSelect": "Select Sub Category",
+      "context": "Viewing Context",
+      "contextAll": "All",
+      "contextCategory": "Category Page Only"
     },
     "entry": {
       "context": "Playback Context",

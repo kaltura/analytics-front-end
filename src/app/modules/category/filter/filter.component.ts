@@ -3,10 +3,11 @@ import { LocationsFilterService } from 'shared/components/filter/location-filter
 import { DomainsFilterService } from 'shared/components/domain-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
-import { FilterComponent } from 'shared/components/filter/filter.component';
+import {FilterComponent, FilterItem, OptionItem} from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import {KalturaCategory} from "kaltura-ngx-client";
 
 @Component({
   selector: 'app-cat-filter',
@@ -40,10 +41,23 @@ export class CatFilterComponent extends FilterComponent {
       this._viewConfig = value;
     } else {
       this._viewConfig = {
-        geo: {},
+        mediaType: {},
+        entrySource: {},
+        tags: {},
         owners: {},
+        context: {},
         categories: {},
+        geo: {},
       };
     }
   }
+  @Input() set category(value: KalturaCategory) {
+    this._contextTypes[1].value = [{...value}];
+  }
+  
+  public _contextTypes: OptionItem[] = [
+    { value: [], label: 'app.category.contextAll' },
+    { value: [], label: 'app.category.contextCategory' }
+  ];
+  
 }
