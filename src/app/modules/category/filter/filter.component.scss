@@ -4,7 +4,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  background-color: $appBkgColor;
 }
 
 .kRefineFilters {
@@ -16,20 +15,14 @@
     height: 100%;
 
     .kFilterContainer {
-      padding: 32px 24px 0 24px;
+      padding: 32px 24px 16px 24px;
       display: flex;
       flex-direction: column;
 
       .kFilterContainerRow {
         display: flex;
-      }
-
-      .kFilterContainerCol {
-        display: flex;
-        flex-direction: column;
-        width: 336px;
         &:not(:first-child) {
-          margin-left: 24px;
+          margin-top: 24px;
         }
       }
 
@@ -44,7 +37,7 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        width: 432px;
+        flex: 1;
       }
     }
 
@@ -62,7 +55,7 @@
       align-items: center;
       height: 66px;
       padding: 0 24px;
-      margin-top: 8px;
+
       button {
         width: 100px;
       }
@@ -70,28 +63,23 @@
   }
 }
 
-app-category-filter{
-  margin-top: 20px;
+app-checkboxes-list-filter {
+  min-width: 206px;
 }
 
-app-owners-filter, app-category-filter, app-country-filter {
-  display: block;
-  width: 100%;
-  padding-right: 24px;
+:host ::ng-deep .ui-autocomplete-multiple-container {
+  min-height: 34px;
+  padding: 3px 6px !important;
 }
 
-:host ::ng-deep {
-  .ui-state-focus {
-    margin-top: 4px;
-    outline: 5px auto rgba(0, 150, 255, 1) !important;
-  }
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
 
-  app-autocomplete-filter, app-dropdown-filter {
-    margin: 0;
-  }
-
-  .ui-autocomplete-multiple-container {
-    min-height: 34px;
-    padding: 3px 6px !important;
+    ::ng-deep .kTags {
+      width: auto;
+      padding: 7px;
+    }
   }
 }

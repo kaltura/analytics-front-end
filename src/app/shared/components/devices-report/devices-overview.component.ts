@@ -135,7 +135,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
       this._filter.entryIdIn = this.entryId;
     }
     
-    if (this.categoryId) {
+    if (this.categoryId && !this._filter.categoriesIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
     
@@ -158,7 +158,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
             this._compareFilter.entryIdIn = this.entryId;
           }
           
-          if (this.categoryId) {
+          if (this.categoryId && !this._compareFilter.categoriesIdsIn) {
             this._compareFilter.categoriesIdsIn = this.categoryId;
           }
           

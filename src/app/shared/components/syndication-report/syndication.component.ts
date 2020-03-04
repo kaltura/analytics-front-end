@@ -149,7 +149,7 @@ export class SyndicationComponent implements OnDestroy {
     if (this.entryId) {
       reportConfig.filter.entryIdIn = this.entryId;
     }
-    if (this.categoryId) {
+    if (this.categoryId && !reportConfig.filter.categoriesIdsIn) {
       reportConfig.filter.categoriesIdsIn = this.categoryId;
     }
     
@@ -169,6 +169,10 @@ export class SyndicationComponent implements OnDestroy {
         
         if (this.entryId) {
           compareReportConfig.filter.entryIdIn = this.entryId;
+        }
+  
+        if (this.categoryId && !compareReportConfig.filter.categoriesIdsIn) {
+          compareReportConfig.filter.categoriesIdsIn = this.categoryId;
         }
         
         return this._reportService.getReport(compareReportConfig, sections)

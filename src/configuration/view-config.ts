@@ -119,9 +119,12 @@ export const viewsConfig = {
     title: {},
     export: {},
     refineFilter: {
-      geo: {},
+      mediaType: {},
+      entrySource: {},
+      tags: {},
       owners: {},
       categories: {},
+      geo: {},
     },
     details: {},
     miniTopViewers: {},

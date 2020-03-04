@@ -33,6 +33,16 @@
           </div>
         </div>
 
+        <div class="kReportContainer kNoPadding">
+          <app-cat-filter name="category"
+                             [viewConfig]="_viewConfig.refineFilter"
+                             [opened]="_refineFilterOpened"
+                             [dateFilter]="_dateFilter"
+                             [selectedFilters]="_selectedRefineFilters"
+                             (closeFilters)="_refineFilterOpened = false"
+                             (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
+        </div>
+
         <div *ngIf="_viewConfig.details" class="kCategoryDetails" aria-label="Category Details"
              [class.kFloatingDetails]="!_viewConfig.title">
           <span class="kLabel" *ngIf="_category?.parentId">{{'app.category.parent' | translate}}</span>

@@ -720,7 +720,9 @@
       "otherDevices": "Other Devices",
       "topDomains": "Top Domains",
       "otherDomains": "Other Domains",
-      "topLocations": "Top Locations"
+      "topLocations": "Top Locations",
+      "subcat": "Sub Categories",
+      "subcatSelect": "Select Sub Category"
     },
     "entry": {
       "context": "Playback Context",

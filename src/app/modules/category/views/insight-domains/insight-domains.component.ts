@@ -71,15 +71,18 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
     this._isBusy = true;
     this._blockerMessage = null;
     
-    this._filter.categoriesIdsIn = this.categoryId;
+    if (!this._filter.categoriesIdsIn) {
+      this._filter.categoriesIdsIn = this.categoryId;
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
-        this._compareFilter.categoriesIdsIn = this.categoryId;
+        if (!this._compareFilter.categoriesIdsIn) {
+          this._compareFilter.categoriesIdsIn = this.categoryId;
+        }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, sections)

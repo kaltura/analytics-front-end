@@ -41,7 +41,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
       this._topCountriesComponent = comp;
     }, 0);
   }
-  
+  public _selectedRefineFilters: RefineFilter = null;
   public _viewConfig: ViewConfig = { ...viewsConfig.category };
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
@@ -132,6 +132,9 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
             } else {
               this._loadingCategory = false;
             }
+          }
+          if (!category.directSubCategoriesCount) {
+            this._viewConfig.refineFilter.categories = null; // hide sub-categories filter if the current category has no sub categories
           }
         },
         error => {

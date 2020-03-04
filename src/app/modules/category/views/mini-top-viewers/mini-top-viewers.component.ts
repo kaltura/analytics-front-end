@@ -88,7 +88,7 @@ export class CategoryMiniTopViewersComponent extends CategoryBase {
     this._isBusy = true;
     this._blockerMessage = null;
   
-    if (this.categoryId) {
+    if (this.categoryId && !this._filter.categoriesIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
     
@@ -99,7 +99,7 @@ export class CategoryMiniTopViewersComponent extends CategoryBase {
           return ObservableOf({ report, compare: null });
         }
   
-        if (this.categoryId) {
+        if (this.categoryId && !this._compareFilter.categoriesIdsIn) {
           this._compareFilter.categoriesIdsIn = this.categoryId;
         }
         
