@@ -37,7 +37,8 @@
           </div>
 
           <div *ngIf="showAutocompleteGroup && (_viewConfig?.context || _viewConfig?.categories)" class="kMiscFilters">
-            <app-category-context-filter *ngIf="_viewConfig?.context"
+            <app-category-context-filter [class.kHidden]="!_viewConfig?.context" #contextFilter
+                  [class.kDisabled]="subCategoriesFilter._selectedValue.length"
                   [label]="'app.category.context' | translate"
                   [options]="_contextTypes"
                   [selectedFilters]="_selectedValues['context']"
@@ -45,7 +46,8 @@
                   (itemUnselected)="_onItemUnselected($event, 'context')">
             </app-category-context-filter>
 
-            <app-category-filter *ngIf="_viewConfig?.categories"
+            <app-category-filter [class.kHidden]="!_viewConfig?.categories" #subCategoriesFilter
+                                 [class.kDisabled]="contextFilter._selectedValue.length"
                                  [label]="'app.category.subcat' | translate"
                                  [selectedFilters]="_selectedValues['categories']"
                                  [linkLabel]="'app.category.subcatSelect' | translate"
