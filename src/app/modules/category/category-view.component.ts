@@ -122,7 +122,6 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
             this._parentCategoryName = category.name;
             this._loadingCategory = false;
             this._categoryLoaded = true;
-            this._viewConfig.refineFilter.categories = category.directSubCategoriesCount ? {} : null; // hide sub-categories filter if the current category has no sub categories
           } else {
             this._category = category;
             this._viewConfig.refineFilter.categories = category.directSubCategoriesCount ? {} : null; // hide sub-categories filter if the current category has no sub categories
