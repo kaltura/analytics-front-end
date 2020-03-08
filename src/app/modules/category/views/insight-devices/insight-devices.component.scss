@@ -43,11 +43,18 @@
     padding: 0 24px;
     margin-bottom: 4px;
   }
-
+  .kDeviceLabel{
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+  }
   .kColumns{
     display: flex;
     flex-direction: column;
-    .kDomain {
+    .kDevice {
       font-size: 18px;
       font-weight: normal;
       color: $kGrayscale1;
@@ -109,6 +116,15 @@
 }
 
 .kMini.kReport .kCompare {
+  .kHeader {
+    font-size: 18px;
+  }
+  .kPeriod {
+    font-size: 12px;
+    padding: 0 24px;
+    margin-bottom: 0px;
+    margin-top: 4px;
+  }
   .topSource {
     font-size: 15px !important;
   }
@@ -131,9 +147,15 @@
       height: 18px;
       margin-right: 12px;
     }
+    .kDeviceLabel{
+      i {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
   }
   .kLegend{
-    margin-top: 4px;
+    margin-top: 2px;
   }
 }
 

@@ -201,3 +201,6 @@
     color: $kGrayscale1;
   }
 }
+ui-carousel ::ng-deep dots.middle {
+  bottom: 12px;
+}

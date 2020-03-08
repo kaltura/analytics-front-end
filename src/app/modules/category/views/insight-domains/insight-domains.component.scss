@@ -140,6 +140,15 @@
 }
 
 .kMini.kReport .kCompare {
+  .kHeader {
+    font-size: 18px;
+  }
+  .kPeriod {
+    font-size: 12px;
+    padding: 0 24px;
+    margin-bottom: 0px;
+    margin-top: 4px;
+  }
   .topSource {
     font-size: 15px !important;
   }
@@ -148,7 +157,7 @@
     margin-top: 8px;
   }
   .topDomain {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .kDomain {
@@ -159,19 +168,19 @@
     margin-bottom: 8px;
     margin-top: 8px;
     .kDomainIcon {
-      width: 18px;
-      height: 18px;
-      margin-right: 12px;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
       &.kIconfile-small:before{
-        font-size: 18px;
+        font-size: 16px;
       }
       img {
-        width: 18px;
+        width: 16px;
       }
     }
   }
   .kLegend{
-    margin-top: 4px;
+    margin-top: 2px;
   }
 }
 
