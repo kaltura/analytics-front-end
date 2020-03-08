@@ -1,4 +1,4 @@
-<div class="kColumn">
+<div class="kColumn" [class.kDisabled]="disabled">
   <div class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
     <div class="kCheckboxGroup" *ngFor="let option of options; let i = index">

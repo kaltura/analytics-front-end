@@ -19,7 +19,7 @@ export class CategoryFilterComponent implements OnInit, OnDestroy {
       this._setDiffer();
     }
   }
-  
+  @Input() disabled = false;
   @Input() label: string;
   @Input() linkLabel: string;
   @Input() options: OptionItem[] = [];
@@ -61,7 +61,9 @@ export class CategoryFilterComponent implements OnInit, OnDestroy {
   }
 
   public _openCategoriesBrowser(): void {
-    this._categoriesPopup.open();
+    if (!this.disabled) {
+      this._categoriesPopup.open();
+    }
   }
   
   public _updateCategories(value: CategoryData[]): void {

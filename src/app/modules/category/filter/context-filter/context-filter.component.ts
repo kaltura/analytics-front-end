@@ -15,7 +15,7 @@ export class CategoryContextFilterComponent {
       this._setDiffer();
     }
   }
-  
+  @Input() disabled = false;
   @Input() label: string;
   @Input() options: OptionItem[] = [];
 
