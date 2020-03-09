@@ -128,6 +128,8 @@ export const viewsConfig = {
       geo: {},
     },
     details: {},
+    miniHighlights: {},
+    miniPageViews: {},
     miniTopViewers: {},
     miniTopVideos: {},
     insights: {

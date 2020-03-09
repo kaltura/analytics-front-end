@@ -1,0 +1,90 @@
+<div data-aid="report-category-mini-highlights" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+      <span class="kTitle">{{'app.category.highlights' | translate}}</span>
+      <a (click)="scrollTo('#performance')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+      <div class="kReportContent">
+
+        <div class="kVal">
+          <div class="kMiniIcon aqua"><i class="icon-small-impressions"></i></div>
+          <span *ngIf="!_isCompareMode" class="value">{{_tabsData[0]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[0]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[0]?.value"
+                           [units]="_tabsData[0]?.units"
+                           [trend]="_tabsData[0]?.trend"></app-trend-value>
+        </span>
+          <span class="title">{{_tabsData[0]?.title}}</span>
+        </div>
+
+
+        <div class="kVal">
+          <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+          <div class="kEntriesCountContainer" [class.kEntriesCountContainerCompare]="_isCompareMode">
+            <div [ngStyle]="{'margin-top': '22px'}">
+              <span *ngIf="!_isCompareMode" class="value">{{_tabsData[1]?.value}}</span>
+              <span *ngIf="_isCompareMode" class="kTrend"
+                    [kTooltip]="_tabsData[1]?.tooltip"
+                    [maxWidth]="500"
+                    [escape]="false">
+              <app-trend-value valueStyleClass="kValue"
+                               unitsStyleClass="kUnits"
+                               [value]="_tabsData[1]?.value"
+                               [units]="_tabsData[1]?.units"
+                               [trend]="_tabsData[1]?.trend"></app-trend-value>
+            </span>
+              <span class="title">{{_tabsData[1]?.title}}</span>
+            </div>
+            <span class="kPlayedEntries" *ngIf="!_isCompareMode">
+          {{'app.engagement.playedEntries' | translate: { '0': _tabsData[2]?.value } }}
+        </span>
+          </div>
+        </div>
+
+        <div class="kVal">
+          <div class="kMiniIcon green"><i class="icon-small-viewer-contributor"></i></div>
+          <span *ngIf="!_isCompareMode" class="value">{{_tabsData[3]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[3]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[3]?.value"
+                           [units]="_tabsData[3]?.units"
+                           [trend]="_tabsData[3]?.trend"></app-trend-value>
+        </span>
+          <span class="title">{{_tabsData[3]?.title}}</span>
+        </div>
+
+        <div class="kVal">
+          <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
+          <span *ngIf="!_isCompareMode" class="value">{{_tabsData[4]?.value}}</span>
+          <span *ngIf="_isCompareMode" class="kTrend"
+                [kTooltip]="_tabsData[4]?.tooltip"
+                [maxWidth]="500"
+                [escape]="false">
+          <app-trend-value valueStyleClass="kValue"
+                           unitsStyleClass="kUnits"
+                           [value]="_tabsData[4]?.value"
+                           [units]="_tabsData[4]?.units"
+                           [trend]="_tabsData[4]?.trend"></app-trend-value>
+        </span>
+          <span class="title">{{_tabsData[4]?.title}}</span>
+        </div>
+      </div>
+
+
+
+  </k-area-blocker>
+
+</div>
+

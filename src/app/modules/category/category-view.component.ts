@@ -22,6 +22,7 @@ import { CategoryExportConfig } from "./category-export.config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { CategoryTopContentComponent } from "./views/category-top-content";
 import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
+import { CatFilterComponent } from "./filter/filter.component";
 
 @Component({
   selector: 'app-category',
@@ -30,7 +31,7 @@ import { TopCountriesComponent } from "shared/components/top-countries-report/to
   providers: [CategoryExportConfig]
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
-  
+  @ViewChild('categoryFilter', {static: true}) categoryFilter: CatFilterComponent;
   @ViewChild('topVideos', {static: false}) set topVideos(comp: CategoryTopContentComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
       this._categoryTopContentComponent = comp;
@@ -51,6 +52,10 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
+  public _topMiniViewsCount = [
+    this._viewConfig.miniPageViews,
+    this._viewConfig.miniHighlights
+  ].filter(Boolean).length;
   public _miniViewsCount = [
     this._viewConfig.miniTopVideos,
     this._viewConfig.miniTopViewers,
@@ -164,6 +169,9 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     this._exportConfig = CategoryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
   }
   
+  public openContextFilter(): void {
+    this.categoryFilter.openFilter('context');
+  }
 
   public _navigateToParent(parentId: number): void {
     this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});

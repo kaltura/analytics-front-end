@@ -15,7 +15,6 @@
   padding-bottom: 24px;
   background-color: $appBkgColor;
   display: flex;
-  flex-wrap: wrap;
 
   .kSmallReportContainer{
     width: 60%;
@@ -32,6 +31,12 @@
     margin-right: 24px;
     &:last-child {
       margin-right: 0;
+    }
+    &.kMiniTopReportContainer{
+      height: 248px;
+    }
+    &.short{
+      height: 185px;
     }
   }
 }

@@ -350,7 +350,7 @@
         "context": "Playback Context"
       },
       "title": "Engagement",
-      "playedEntries": "Out of {{0}} Played Entries",
+      "playedEntries": "Out of {{0}} Entries",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
       "insights": "Insights",
@@ -725,7 +725,11 @@
       "subcatSelect": "Select Sub Category",
       "context": "Viewing Context",
       "contextAll": "All",
-      "contextCategory": "Category Page Only"
+      "contextCategory": "Category Page Only",
+      "pageViews": "Category Page Views",
+      "pageViews_tt": "Category Page Views",
+      "pageViewLabel": "Views from category page compared to all views",
+      "highlights": "Highlights"
     },
     "entry": {
       "context": "Playback Context",

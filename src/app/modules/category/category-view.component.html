@@ -34,7 +34,7 @@
         </div>
 
         <div class="kReportContainer kNoPadding">
-          <app-cat-filter name="category"
+          <app-cat-filter name="category" #categoryFilter
                              [category]="_category"
                              [viewConfig]="_viewConfig.refineFilter"
                              [opened]="_refineFilterOpened"
@@ -64,6 +64,20 @@
           <div class="kSeparator"></div>
           <span class="kLabel">{{'app.category.updated' | translate}}</span>
           <span>{{_updateDate}}</span>
+        </div>
+
+        <div *ngIf="_topMiniViewsCount && _categoryLoaded" class="kReportContainer">
+          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer" [class.short]="categoryFilter.contextSelected" style="width: 66%">
+            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"
+                                          [categoryId]="_category?.id.toString()"
+                                          [refineFilter]="_refineFilter"></app-category-mini-highlights>
+          </div>
+          <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer" style="width: 32%">
+            <app-category-mini-page-views [dateFilter]="_dateFilter"
+                                          [categoryId]="_category?.id.toString()"
+                                          [refineFilter]="_refineFilter"
+                                          (openFilterClick)="openContextFilter()"></app-category-mini-page-views>
+          </div>
         </div>
 
         <div *ngIf="_miniViewsCount && _categoryLoaded" class="kReportContainer">

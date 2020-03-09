@@ -24,6 +24,8 @@ import { InsightDomainsComponent } from "./views/insight-domains/insight-domains
 import { InsightGeoComponent } from "./views/insight-geo/insight-geo.component";
 import { InsightDevicesComponent } from "./views/insight-devices/insight-devices.component";
 import { CategoryContextFilterComponent } from "./filter/context-filter/context-filter.component";
+import { CategoryMiniPageViewsComponent } from "./views/mini-page-views/mini-page-views.component";
+import { CategoryMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
 
 @NgModule({
   imports: [
@@ -48,6 +50,7 @@ import { CategoryContextFilterComponent } from "./filter/context-filter/context-
   declarations: [
     CategoryViewComponent,
     CategoryMiniTopViewersComponent,
+    CategoryMiniHighlightsComponent,
     MiniTopVideosComponent,
     InsightDomainsComponent,
     InsightGeoComponent,
@@ -56,7 +59,8 @@ import { CategoryContextFilterComponent } from "./filter/context-filter/context-
     CategoryTopContentComponent,
     CategoryTopContentTableComponent,
     CategoryEntryDetailsOverlayComponent,
-    CategoryContextFilterComponent
+    CategoryContextFilterComponent,
+    CategoryMiniPageViewsComponent
   ],
   exports: [],
   providers: []

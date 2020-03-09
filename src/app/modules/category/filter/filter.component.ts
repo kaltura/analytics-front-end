@@ -55,9 +55,24 @@ export class CatFilterComponent extends FilterComponent {
     this._contextTypes[1].value = [{...value}];
   }
   
+  public contextSelected = false;
+  
   public _contextTypes: OptionItem[] = [
     { value: [], label: 'app.category.contextAll' },
     { value: [], label: 'app.category.contextCategory' }
   ];
+  
+  public openFilter(filter: string): void {
+    if (filter === "context") {
+      this._onItemSelected(this._contextTypes[1].value[0], filter);
+      this.contextSelected = true;
+      this._apply();
+    }
+  }
+  
+  public _apply(forceApply = false): void {
+    super._apply(forceApply);
+    this.contextSelected = this._appliedFilters.filter(filter => filter.type === 'context').length > 0;
+  }
   
 }
