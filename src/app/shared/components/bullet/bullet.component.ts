@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { significantDigits } from 'shared/utils/significant-digits';
-import { getPrimaryColor } from 'shared/utils/colors';
+import { getColorPercent } from 'shared/utils/colors';
 
 @Component({
   selector: 'app-bullet',
@@ -9,10 +9,11 @@ import { getPrimaryColor } from 'shared/utils/colors';
 })
 export class BulletComponent {
   public _value = 0;
-  public _color = getPrimaryColor();
+  public _color = getColorPercent(65);
   
   @Input() formatter: Function = significantDigits;
   @Input() animate = true;
+  @Input() colorPercent = 65;
   
   @Input() set value(value: any) {
     if (this.animate) {
@@ -26,7 +27,7 @@ export class BulletComponent {
   }
   
   @Input() set colorScheme(type: string) {
-    this._color = getPrimaryColor(type);
+    this._color = getColorPercent(this.colorPercent, type);
   }
   
   private _setValue(value: any): void {

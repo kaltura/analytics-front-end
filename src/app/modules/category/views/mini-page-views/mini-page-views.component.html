@@ -22,7 +22,7 @@
         <span class="title">{{_currentValues[0]?.title}}</span>
       </div>
       <div class="kReportRow">
-        <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null"></app-bullet>
+        <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="90"></app-bullet>
       </div>
       <div class="kReportRow kMargin">
         <span class="contextLabel">{{_contextCurrentValues[1]?.value}}</span>
@@ -31,7 +31,7 @@
         <span class="title">{{_currentValues[1]?.title}}</span>
       </div>
       <div class="kReportRow">
-        <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null"></app-bullet>
+        <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="90"></app-bullet>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && (!_currentValues.length || !_contextCurrentValues.length)">
         {{'app.common.noResults' | translate}}
@@ -46,13 +46,13 @@
             <span class="contextLabel">{{_contextCurrentValues[0]?.value}}</span>
             <span class="separator">/</span>
             <span>{{_currentValues[0]?.value}}</span>
-            <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null"></app-bullet>
+            <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="90"></app-bullet>
           </div>
           <div class="kRow">
             <span class="contextLabel">{{_contextCompareValues[0]?.value}}</span>
             <span class="separator">/</span>
             <span>{{_compareValues[0]?.value}}</span>
-            <app-bullet [value]="_contextCompareValues[0]?.value /_compareValues[0]?.value * 100" [colorScheme]="'impressions'" [formatter]="null"></app-bullet>
+            <app-bullet [value]="_contextCompareValues[0]?.value /_compareValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="20"></app-bullet>
           </div>
         </div>
       </div>
@@ -64,24 +64,24 @@
             <span class="contextLabel">{{_contextCurrentValues[1]?.value}}</span>
             <span class="separator">/</span>
             <span>{{_currentValues[1]?.value}}</span>
-            <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null"></app-bullet>
+            <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="90"></app-bullet>
           </div>
           <div class="kRow">
             <span class="contextLabel">{{_contextCompareValues[1]?.value}}</span>
             <span class="separator">/</span>
             <span>{{_compareValues[1]?.value}}</span>
-            <app-bullet [value]="_contextCompareValues[1]?.value /_compareValues[1]?.value * 100" [colorScheme]="'dropoff'" [formatter]="null"></app-bullet>
+            <app-bullet [value]="_contextCompareValues[1]?.value /_compareValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="35"></app-bullet>
           </div>
         </div>
       </div>
       <div class="legend">
-        <div class="circle" style="background-color: #487ADF"></div>
-        <div class="circle whiteBorder" style="background-color: #31BEA6"></div>
+        <div class="circle" style="background-color: #2655b0"></div>
+        <div class="circle whiteBorder" style="background-color: #1b8271"></div>
         <span>{{_currentDates}}</span>
       </div>
       <div class="legend">
-        <div class="circle" style="background-color: #16A8D7"></div>
-        <div class="circle whiteBorder" style="background-color: #81CC6F"></div>
+        <div class="circle" style="background-color: #b5cdfc"></div>
+        <div class="circle whiteBorder" style="background-color: #60e4cc"></div>
         <span>{{_compareDates}}</span>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy &&  (!_compareValues.length || !_contextCompareValues.length)">
