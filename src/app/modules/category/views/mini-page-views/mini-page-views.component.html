@@ -75,13 +75,13 @@
         </div>
       </div>
       <div class="legend">
-        <div style="width: 10px; height: 10px; border-radius: 5px; background-color: #487ADF"></div>
-        <div style="width: 10px; height: 10px; border: 2px solid white; border-radius: 7px; position: absolute; left: 31px; background-color: #16A8D7"></div>
+        <div class="circle" style="background-color: #487ADF"></div>
+        <div class="circle whiteBorder" style="background-color: #31BEA6"></div>
         <span>{{_currentDates}}</span>
       </div>
       <div class="legend">
-        <div style="width: 10px; height: 10px; border-radius: 5px; background-color: #31BEA6"></div>
-        <div style="width: 10px; height: 10px; border: 2px solid white; border-radius: 7px; position: absolute; left: 31px; background-color: #81CC6F"></div>
+        <div class="circle" style="background-color: #16A8D7"></div>
+        <div class="circle whiteBorder" style="background-color: #81CC6F"></div>
         <span>{{_compareDates}}</span>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy &&  (!_compareValues.length || !_contextCompareValues.length)">

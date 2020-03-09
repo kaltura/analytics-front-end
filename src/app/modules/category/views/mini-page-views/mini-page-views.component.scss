@@ -121,6 +121,17 @@
       span {
         margin-left: 18px;
       }
+      .circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+      }
+      .whiteBorder {
+        border: 2px solid white;
+        border-radius: 7px;
+        position: absolute;
+        left: 31px;
+      }
     }
   }
 
