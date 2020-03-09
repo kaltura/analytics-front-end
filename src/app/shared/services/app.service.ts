@@ -159,7 +159,8 @@ export class AppService implements OnDestroy {
 
     // load localization
     this._logger.info('Loading permissions and localization...');
-    this._translate.setDefaultLang(analyticsConfig.locale);
+    this._translate.setDefaultLang('en');
+    this._translate.use(analyticsConfig.locale);
     this._loadPermissions()
       .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
       .subscribe(
