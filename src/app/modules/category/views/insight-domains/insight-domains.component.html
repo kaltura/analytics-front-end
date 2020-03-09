@@ -14,7 +14,7 @@
                (error)="holder.classList.add('kIconfile-small')">
         </div>
         <div class="kColumns">
-          <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+          <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank" [kTooltip]="_topSourceLabel" [showOnEllipsis]="true">{{_topSourceLabel}}</a>
           <span class="kDomain">{{'app.user.popularDomain' | translate}}</span>
         </div>
       </div>

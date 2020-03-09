@@ -47,6 +47,7 @@
   .kColumns{
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     .kDomain {
       font-size: 18px;
       font-weight: normal;
@@ -71,7 +72,7 @@
       text-align: center;
       border-radius: 3px;
       margin-right: 24px;
-
+      flex: 0 0 auto;
       &.error {
         border: 1px solid $kGrayscale4;
       }
@@ -96,6 +97,9 @@
       font-size: 24px;
       font-weight: bold;
       text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .kLabel {
