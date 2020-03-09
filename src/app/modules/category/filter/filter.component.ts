@@ -56,6 +56,7 @@ export class CatFilterComponent extends FilterComponent {
   }
   
   public contextSelected = false;
+  public subCategoriesSelected = false;
   
   public _contextTypes: OptionItem[] = [
     { value: [], label: 'app.category.contextAll' },
@@ -73,6 +74,7 @@ export class CatFilterComponent extends FilterComponent {
   public _apply(forceApply = false): void {
     super._apply(forceApply);
     this.contextSelected = this._appliedFilters.filter(filter => filter.type === 'context').length > 0;
+    this.subCategoriesSelected = this._appliedFilters.filter(filter => filter.type === 'categories').length > 0;
   }
   
 }

@@ -9,7 +9,7 @@ import {
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { Observable, of as ObservableOf, forkJoin } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,6 +33,7 @@ import { CategoryBase } from "../category-base/category-base";
 export class CategoryMiniPageViewsComponent extends CategoryBase {
   @Input() dateFilterComponent: DateFilterComponent;
   @Input() categoryId: string = null;
+  @Input() subCategoriesSelected = false;
   
   @Output() openFilterClick = new EventEmitter<void>();
   
@@ -47,10 +48,17 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
+  public _contextCompareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 3, pageIndex: 1 });
   public _currentValues = [];
   public _compareValues = [];
+  public _contextCurrentValues = [];
+  public _contextCompareValues = [];
   public _filter = new KalturaEndUserReportInputFilter({
+    searchInTags: true,
+    searchInAdminTags: false
+  });
+  public _contextFilter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -74,40 +82,54 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
+    this._refineFilterToServerValue(this._contextFilter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
+      this._refineFilterToServerValue(this._contextCompareFilter);
     }
   }
   
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this._currentValues = this._contextCurrentValues = this._compareValues = this._contextCompareValues = [];
   
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
+      this._contextFilter.playbackContextIdsIn = this.categoryId;
     }
     
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._reportService.getReport(reportConfig, sections)
-      .pipe(switchMap(report => {
+    const contextReportConfig: ReportConfig = { reportType: this._reportType, filter: this._contextFilter, pager: this._pager, order: this._order };
+      forkJoin({
+        report: this._reportService.getReport(reportConfig, sections, false),
+        contextReport: this._reportService.getReport(contextReportConfig, sections, false)
+      })
+      .pipe(switchMap(({report, contextReport}) => {
         if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
+          return ObservableOf({ report, contextReport, compare: null, contextCompare: null });
         }
   
         if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
           this._compareFilter.categoriesIdsIn = this.categoryId;
+          this._contextCompareFilter.playbackContextIdsIn = this.categoryId;
         }
         
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
+        const contextCompareReportConfig = { reportType: this._reportType, filter: this._contextCompareFilter, pager: this._pager, order: this._order };
+        
+        return Observable.forkJoin({
+          compare: this._reportService.getReport(compareReportConfig, sections, false),
+          contextCompare: this._reportService.getReport(contextCompareReportConfig, sections, false)
+        })
+        .pipe(map(({compare, contextCompare}) => ({ report, contextReport, compare, contextCompare })));
       }))
-      .subscribe(({ report, compare }) => {
+      .subscribe(({report, contextReport, compare, contextCompare}) => {
           if (compare) {
-            this._handleCompare(report, compare);
+            this._handleCompare(report, contextReport, compare, contextCompare);
           } else {
-            if (report.totals) {
-              this._handleTotals(report.totals); // handle table
+            if (report.totals && contextReport.totals) {
+              this._handleTotals(report.totals, contextReport.totals);
             }
           }
           this._isBusy = false;
@@ -126,36 +148,42 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
         });
   }
   
-  private _handleTotals(totals: KalturaReportTotal): void {
+  private _handleTotals(totals: KalturaReportTotal, contextTotals: KalturaReportTotal): void {
     this._currentValues = this._reportService.parseTotals(totals, this._dataConfig.totals);
+    this._contextCurrentValues = this._reportService.parseTotals(contextTotals, this._dataConfig.totals);
   }
   
   protected _updateFilter(): void {
-    this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this._filter.fromDate = this._dateFilter.startDate;
-    this._filter.toDate = this._dateFilter.endDate;
-    this._filter.interval = this._dateFilter.timeUnits;
+    this._filter.timeZoneOffset = this._contextFilter.timeZoneOffset = this._dateFilter.timeZoneOffset;
+    this._filter.fromDate = this._contextFilter.fromDate = this._dateFilter.startDate;
+    this._filter.toDate = this._contextFilter.toDate = this._dateFilter.endDate;
+    this._filter.interval = this._contextFilter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
     this._pager.pageIndex = 1;
     if (this._dateFilter.compare.active) {
       const compare = this._dateFilter.compare;
       this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDate = compare.startDate;
-      this._compareFilter.toDate = compare.endDate;
+      this._contextCompareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._contextFilter), this._contextFilter);
+      this._compareFilter.fromDate = this._contextCompareFilter.fromDate = compare.startDate;
+      this._compareFilter.toDate = this._contextCompareFilter.toDate = compare.endDate;
     } else {
       this._compareFilter = null;
+      this._contextCompareFilter = null;
     }
   }
   
-  private _handleCompare(current: Report, compare: Report): void {
-    this._handleTotals(current.totals);
+  private _handleCompare(report: Report, contextReport: Report, compare: Report, contextCompare: Report): void {
+    this._handleTotals(report.totals, contextReport.totals);
     this._compareValues = this._reportService.parseTotals(compare.totals, this._dataConfig.totals);
+    this._contextCompareValues = this._reportService.parseTotals(contextCompare.totals, this._dataConfig.totals);
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
   }
   
   public openFilter(): void {
-    this.openFilterClick.emit();
+    if (!this.subCategoriesSelected) {
+      this.openFilterClick.emit();
+    }
   }
   
 }

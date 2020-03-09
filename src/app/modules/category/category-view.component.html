@@ -33,17 +33,6 @@
           </div>
         </div>
 
-        <div class="kReportContainer kNoPadding">
-          <app-cat-filter name="category" #categoryFilter
-                             [category]="_category"
-                             [viewConfig]="_viewConfig.refineFilter"
-                             [opened]="_refineFilterOpened"
-                             [dateFilter]="_dateFilter"
-                             [selectedFilters]="_selectedRefineFilters"
-                             (closeFilters)="_refineFilterOpened = false"
-                             (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
-        </div>
-
         <div *ngIf="_viewConfig.details" class="kCategoryDetails" aria-label="Category Details"
              [class.kFloatingDetails]="!_viewConfig.title">
           <span class="kLabel" *ngIf="_category?.parentId">{{'app.category.parent' | translate}}</span>
@@ -66,6 +55,17 @@
           <span>{{_updateDate}}</span>
         </div>
 
+        <div class="kReportContainer kNoPadding">
+          <app-cat-filter name="category" #categoryFilter
+                          [category]="_category"
+                          [viewConfig]="_viewConfig.refineFilter"
+                          [opened]="_refineFilterOpened"
+                          [dateFilter]="_dateFilter"
+                          [selectedFilters]="_selectedRefineFilters"
+                          (closeFilters)="_refineFilterOpened = false"
+                          (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
+        </div>
+
         <div *ngIf="_topMiniViewsCount && _categoryLoaded" class="kReportContainer">
           <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer" [class.short]="categoryFilter.contextSelected" style="width: 66%">
             <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"
@@ -74,6 +74,7 @@
           </div>
           <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer" style="width: 32%">
             <app-category-mini-page-views [dateFilter]="_dateFilter"
+                                          [subCategoriesSelected]="categoryFilter.subCategoriesSelected"
                                           [categoryId]="_category?.id.toString()"
                                           [refineFilter]="_refineFilter"
                                           (openFilterClick)="openContextFilter()"></app-category-mini-page-views>
