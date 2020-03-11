@@ -54,6 +54,8 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
     return this._compareFilter !== null;
   }
   
+  private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
+  
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -174,8 +176,11 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
       
       if (topPlays || othersPlays) {
         this._topDeviceLabel = currentTop['device'];
+        if (this._allowedDevices.indexOf(this._topDeviceLabel) === -1) {
+          this._topDeviceLabel = 'OTHER';
+        }
         this._bulletValues = [
-          { value: topPlays, label: this._topDeviceLabel }
+          { value: topPlays, label: this._translate.instant(`app.audience.technology.devices.${this._topDeviceLabel}`) }
         ];
         if (othersPlays) {
           this._bulletValues.push({ value: othersPlays, label: this._translate.instant('app.category.otherDevices') });
@@ -188,8 +193,11 @@ export class InsightDevicesComponent extends CategoryBase implements OnDestroy {
           const compareOthersPlays = this._compareTotalPlays - compareTopPlays;
           if (compareTopPlays || compareOthersPlays) {
             this._compareTopDeviceLabel = compareTop['device'];
+            if (this._allowedDevices.indexOf(this._compareTopDeviceLabel) === -1) {
+              this._compareTopDeviceLabel = 'OTHER';
+            }
             this._compareBulletValues = [
-              { value: compareTopPlays, label: this._compareTopDeviceLabel }
+              { value: compareTopPlays, label: this._translate.instant(`app.audience.technology.devices.${this._compareTopDeviceLabel}`) }
             ];
             if (compareOthersPlays) {
               this._compareBulletValues.push({ value: compareOthersPlays, label: this._translate.instant('app.category.otherDevices') });

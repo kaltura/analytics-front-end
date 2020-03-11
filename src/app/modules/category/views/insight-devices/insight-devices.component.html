@@ -10,7 +10,7 @@
         <div class="kColumns">
           <div class="kDeviceLabel">
             <i class="kIcon" [ngClass]="_topDeviceLabel | appDeviceIcon"></i>
-            <span class="topDevice">{{_topDeviceLabel}}</span>
+            <span class="topDevice">{{('app.audience.technology.devices.' + _topDeviceLabel) | translate}}</span>
           </div>
           <span class="kDevice">{{'app.category.popularDevice' | translate}}</span>
         </div>
@@ -34,7 +34,7 @@
       <div class="kReportRow kDevice" *ngIf="_compareTopDeviceLabel">
         <div class="kDeviceLabel">
           <i class="kIcon" [ngClass]="_compareTopDeviceLabel | appDeviceIcon"></i>
-          <span class="topDevice">{{_compareTopDeviceLabel}}</span>
+          <span class="topDevice">{{('app.audience.technology.devices.' + _compareTopDeviceLabel) | translate}}</span>
         </div>
       </div>
 
@@ -52,7 +52,7 @@
       <div class="kReportRow kDevice">
         <div class="kDeviceLabel">
           <i class="kIcon" [ngClass]="_topDeviceLabel | appDeviceIcon"></i>
-          <span class="topDevice">{{_topDeviceLabel}}</span>
+          <span class="topDevice">{{('app.audience.technology.devices.' + _topDeviceLabel) | translate}}</span>
         </div>
       </div>
 

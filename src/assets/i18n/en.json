@@ -729,7 +729,11 @@
       "pageViews": "Category Page Views",
       "pageViews_tt": "Category Page Views",
       "pageViewLabel": "Views from category page compared to all views",
-      "highlights": "Highlights"
+      "highlights": "Highlights",
+      "performances": "Category Performance Over Time",
+      "subcategories": "Subcategories",
+      "subcatsnum": "{{0}} Subcategories",
+      "playedEntries": "{{0}} Played Entries"
     },
     "entry": {
       "context": "Playback Context",
