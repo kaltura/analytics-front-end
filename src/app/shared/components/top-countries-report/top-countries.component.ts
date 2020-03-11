@@ -136,7 +136,9 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   protected _loadReport(sections = this._dataConfig): void {
-    this.topCountries$.next({ table: null, compare: null, busy: true, error: null });
+    if (this._drillDown.length === 0) {
+      this.topCountries$.next({table: null, compare: null, busy: true, error: null});
+    }
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
@@ -182,8 +184,15 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     
           if (report.table && report.table.header && report.table.data) {
             this._tableData = this._handleTable(report.table, this._tabsData); // handle table
-            this.topCountries$.next({ table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null });
-          } else {
+            if (this._drillDown.length === 0) {
+              this.topCountries$.next({
+                table: report.table,
+                compare: compare && compare.table ? compare.table : null,
+                busy: false,
+                error: null
+              });
+            }
+          } else if (this._drillDown.length === 0) {
             this.topCountries$.next({ table: null, compare: null, busy: false, error: null });
           }
           
@@ -225,7 +234,9 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
         },
         error => {
           this._isBusy = false;
-          this.topCountries$.next({ table: null, compare: null, busy: false, error: error });
+          if (this._drillDown.length === 0) {
+            this.topCountries$.next({table: null, compare: null, busy: false, error: error});
+          }
           const actions = {
             'close': () => {
               this._blockerMessage = null;
