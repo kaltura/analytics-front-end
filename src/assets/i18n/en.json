@@ -728,7 +728,7 @@
       "contextAll": "All",
       "contextCategory": "Category Page Only",
       "pageViews": "Category Page Views",
-      "pageViews_tt": "Category Page Views",
+      "pageViews_tt": "A Category Page refers to the applications category pages: Channels and Galleries in KMS, and Media Gallery in KAF. This includes secure embed in KMS, and KAF embeds using the BSE (Browse Search and Embed) tool.",
       "pageViewLabel": "Views from category page compared to all views",
       "highlights": "Highlights",
       "performances": "Category Performance Over Time",
