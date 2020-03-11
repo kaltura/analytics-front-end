@@ -85,7 +85,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-          
+          this.totalCount = 0;
           if (compare) {
             this._handleCompare(report, compare);
           } else if (report.table && report.table.data && report.table.header) {
