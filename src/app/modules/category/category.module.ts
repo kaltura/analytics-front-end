@@ -26,6 +26,10 @@ import { InsightDevicesComponent } from "./views/insight-devices/insight-devices
 import { CategoryContextFilterComponent } from "./filter/context-filter/context-filter.component";
 import { CategoryMiniPageViewsComponent } from "./views/mini-page-views/mini-page-views.component";
 import { CategoryMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
+import { CategoryPerformanceComponent } from "./views/performance/performance.component";
+import { UsersTableComponent } from "./views/performance/users-table/users-table.component";
+import { EntriesTableComponent } from "./views/performance/entries-table/entries-table.component";
+import { DatesTableComponent } from "./views/performance/dates-table/dates-table.component";
 
 @NgModule({
   imports: [
@@ -60,7 +64,11 @@ import { CategoryMiniHighlightsComponent } from "./views/mini-highlights/mini-hi
     CategoryTopContentTableComponent,
     CategoryEntryDetailsOverlayComponent,
     CategoryContextFilterComponent,
-    CategoryMiniPageViewsComponent
+    CategoryMiniPageViewsComponent,
+    CategoryPerformanceComponent,
+    UsersTableComponent,
+    EntriesTableComponent,
+    DatesTableComponent
   ],
   exports: [],
   providers: []

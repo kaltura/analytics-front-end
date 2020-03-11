@@ -131,7 +131,11 @@
         </div>
 
         <div *ngIf="_viewConfig.performance && _categoryLoaded" class="kReportContainer" id="performance" >
-          <span>Category Performance Over Time</span>
+          <app-category-performance
+                [categoryId]="_category?.id.toString()"
+                [dateFilter]="_dateFilter"
+                [dateFilterComponent]="dateFilter"
+                [refineFilter]="_refineFilter"></app-category-performance>
         </div>
 
         <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos">

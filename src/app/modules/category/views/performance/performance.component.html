@@ -1,0 +1,99 @@
+<div data-aid="report-performance-highlights" class="kReport kContent kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.category.performances' | translate}}</span>
+      </div>
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units applyIn="performance"
+                        [dateFilter]="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <div class="kTableModeSelector">
+            <p-dropdown [style]="{'width': '172px'}"
+                        [options]="_tableModesOptions"
+                        (ngModelChange)="_onChangeMode()"
+                        [(ngModel)]="_tableMode">
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
+          <ng-container [ngSwitch]="_tableMode">
+            <app-dates-table *ngSwitchCase="_tableModes.dates"
+                             [data]="_datesTableData"
+                             [sortField]="_sortField"
+                             [currentPeriod]="_currentPeriod"
+                             [comparePeriod]="_comparePeriod"
+                             [isCompareMode]="_isCompareMode"
+                             [reportInterval]="_reportInterval"
+                             [firstTimeLoading]="_firstTimeLoading"></app-dates-table>
+
+            <ng-container *ngSwitchCase="_tableModes.users">
+              <app-user-engagement-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="usersTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+
+              <app-users-table #usersTableComponent
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [firstTimeLoading]="_firstTimeLoading"></app-users-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.entries">
+              <app-entry-engagement-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="entriesTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>
+
+              <app-entries-table #entriesTableComponent
+                                 [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+            </ng-container>
+
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+
