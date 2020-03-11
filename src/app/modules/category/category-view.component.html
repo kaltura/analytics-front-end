@@ -136,6 +136,8 @@
 
         <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">
           <app-top-countries [dateFilter]="_dateFilter" #topCountries
+                                   [_distributionKey]="'plays_distribution'"
+                                   [_distributionCalculationKey]="'count_plays'"
                                    [refineFilter]="_refineFilter"
                                    [categoryId]="_category?.id.toString()"
                                    (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>

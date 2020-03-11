@@ -47,8 +47,8 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   
-  public _distributionKey = 'loads_distribution';
-  public _distributionCalculationKey = 'count_loads';
+  @Input() _distributionKey = 'loads_distribution';
+  @Input() _distributionCalculationKey = 'count_loads';
   
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];

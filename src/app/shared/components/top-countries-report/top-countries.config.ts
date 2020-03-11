@@ -33,6 +33,9 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
           'count_loads': {
             format: value => ReportHelper.numberOrNA(value)
           },
+          'count_plays': {
+            format: value => ReportHelper.numberOrNA(value)
+          },
           'coordinates': {
             format: value => value
           }
@@ -45,6 +48,10 @@ export class TopCountriesConfig extends ReportDataBaseConfig {
           'count_loads': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.audience.geo.count_loads`),
+          },
+          'count_plays': {
+            format: value => ReportHelper.numberOrNA(value),
+            title: this._translate.instant(`app.audience.geo.count_plays`),
           }
         }
       }
