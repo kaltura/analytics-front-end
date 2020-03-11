@@ -66,36 +66,42 @@
                           (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
         </div>
 
-        <div *ngIf="_topMiniViewsCount && _categoryLoaded" class="kReportContainer">
-          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer" [class.short]="categoryFilter.contextSelected" style="width: 66%">
+        <div *ngIf="_topMiniViewsCount && _categoryLoaded" class="kReportContainer kTabletPadding">
+          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide" [class.short]="categoryFilter.contextSelected">
             <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"
                                           [categoryId]="_category?.id.toString()"
                                           [refineFilter]="_refineFilter"></app-category-mini-highlights>
           </div>
-          <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer" style="width: 32%">
+
+          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected"></div>
+          <div class="divider showOnTablet"></div>
+
+          <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
             <app-category-mini-page-views [dateFilter]="_dateFilter"
                                           [subCategoriesSelected]="categoryFilter.subCategoriesSelected"
                                           [categoryId]="_category?.id.toString()"
                                           [refineFilter]="_refineFilter"
                                           (openFilterClick)="openContextFilter()"></app-category-mini-page-views>
           </div>
-        </div>
 
-        <div *ngIf="_miniViewsCount && _categoryLoaded" class="kReportContainer">
+          <div class="divider hideOnTablet"></div>
+          <div class="separator showOnTablet" *ngIf="!categoryFilter.contextSelected"></div>
 
-          <div *ngIf="_viewConfig.miniTopVideos"
-               class="kMiniReportContainer">
+          <div *ngIf="_viewConfig.miniTopVideos" class="kMiniReportContainer kMiniTopReportSmall">
             <app-category-mini-top-videos [dateFilter]="_dateFilter" [topVideos]="_categoryTopContentComponent?.topVideos$"
                                           [refineFilter]="_refineFilter"></app-category-mini-top-videos>
           </div>
 
-          <div *ngIf="_viewConfig.miniTopViewers"
-               class="kMiniReportContainer">
+          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniTopViewers || _viewConfig.insights"></div>
+          <div class="divider showOnTablet"></div>
+
+          <div *ngIf="_viewConfig.miniTopViewers" class="kMiniReportContainer kMiniTopReportSmall">
             <app-category-mini-top-viewers [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"
                                            [refineFilter]="_refineFilter"></app-category-mini-top-viewers>
           </div>
 
-          <div class="kMiniReportContainer" *ngIf="_viewConfig.insights && _categoryLoaded">
+          <div class="separator" *ngIf="_viewConfig.insights && (_viewConfig.miniTopVideos || _viewConfig.miniTopViewers)"></div>
+          <div class="kMiniReportContainer kMiniTopReportSmall" *ngIf="_viewConfig.insights && _categoryLoaded">
             <ui-carousel height="100%"
                          [infinite]="true"
                          [autoPlay]="true"

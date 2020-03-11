@@ -20,3 +20,11 @@
     }
   }
 }
+/* responsive design */
+@media (max-width: 991px) {
+  :host {
+    ::ng-deep .ui-multiselect {
+      width: 180px !important;
+    }
+  }
+}

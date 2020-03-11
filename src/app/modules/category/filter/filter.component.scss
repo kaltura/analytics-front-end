@@ -29,7 +29,7 @@
 
       .kListFilters {
         display: flex;
-
+        flex: 1 1 auto;
         .kLastItem {
           margin-right: 18px !important;
         }
@@ -38,7 +38,7 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 1 1 auto;
       }
     }
 
@@ -99,5 +99,17 @@ app-checkboxes-list-filter {
       width: auto;
       padding: 7px;
     }
+  }
+}
+
+.tabletMode{
+  display: flex;
+  flex: 1 1 auto;
+}
+/* responsive design */
+@media (max-width: 991px) {
+  .tabletMode{
+    flex-direction: column;
+    width: 200px;
   }
 }
