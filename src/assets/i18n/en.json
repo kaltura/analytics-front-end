@@ -350,7 +350,7 @@
         "context": "Playback Context"
       },
       "title": "Engagement",
-      "playedEntries": "Out of {{0}} Entries",
+      "playedEntries": "Out of {{0}} Played Entries",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
       "insights": "Insights",
