@@ -33,25 +33,29 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_plays': {
+          'count_loads': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'unique_known_users': {
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
+          'unique_known_users': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5,
+          },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 5,
+            sortOrder: 6,
           },
           'avg_completion_rate': {
             format: value =>  ReportHelper.percents(value / 100, false, true),
-            sortOrder: 6,
+            sortOrder: 7,
           },
         }
       }

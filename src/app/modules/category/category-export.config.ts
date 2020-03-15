@@ -44,7 +44,7 @@ export class CategoryExportConfig extends ExportConfigService {
       },
       {
         id: 'performance',
-        label: this._translate.instant('app.category.performance'),
+        label: this._translate.instant('app.category.performances'),
         reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
         sections: [KalturaReportExportItemType.table],
         order: '-date_id',
