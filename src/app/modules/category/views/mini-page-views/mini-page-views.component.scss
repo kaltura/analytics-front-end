@@ -25,7 +25,7 @@
     width: 100%;
   }
   .kFilters {
-    height: 93px !important;
+    height: 112px !important;
     flex: 0 0 auto;
     .kTitle{
       width: auto;
@@ -137,3 +137,11 @@
 
 }
 
+@media (max-width: 991px) {
+  .kMini .kFilters {
+    height: 93px !important;
+    &.kCompare {
+      height: 52px !important;
+    }
+  }
+}
