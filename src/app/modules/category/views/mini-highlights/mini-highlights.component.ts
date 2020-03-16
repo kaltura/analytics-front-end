@@ -33,7 +33,7 @@ export class CategoryMiniHighlightsComponent extends CategoryBase {
   private _reportType = reportTypeMap(KalturaReportType.categoryHighlights);
   private _dataConfig: ReportDataConfig;
   
-  protected _componentId = 'mini-mini-highlights';
+  protected _componentId = 'category-mini-highlights';
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportInterval = KalturaReportInterval.days;

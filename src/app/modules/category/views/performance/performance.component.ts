@@ -44,7 +44,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
   
   public _tableModes = TableModes;
-  public _tableMode = TableModes.users;
+  public _tableMode = ''; // set default table view only after the filter is updated with the category ID
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = true;
@@ -128,7 +128,9 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-          
+          if (this._tableMode === '') {
+            this._tableMode = TableModes.users;
+          }
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
           
           if (report.totals && !this._tabsData.length) {

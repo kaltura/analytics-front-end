@@ -735,7 +735,12 @@
       "performances": "Category Performance Over Time",
       "subcategories": "Subcategories",
       "subcatsnum": "{{0}} Subcategories",
-      "playedEntries": "{{0}} Played Entries"
+      "playedEntries": "{{0}} Played Entries",
+      "exportLabels": {
+        "metrics": "Metrics over time",
+        "user": "User Engagement",
+        "media": "Media Engagement"
+      }
     },
     "entry": {
       "context": "Playback Context",

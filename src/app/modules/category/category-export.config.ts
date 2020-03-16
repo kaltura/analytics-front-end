@@ -36,18 +36,11 @@ export class CategoryExportConfig extends ExportConfigService {
       },
       */
       {
-        id: 'miniTopViewers',
-        label: this._translate.instant('app.category.topViewers'),
-        reportType: reportTypeMap(KalturaReportType.userTopContent),
-        sections: [KalturaReportExportItemType.table],
+        id: 'miniHighlights',
+        label: this._translate.instant('app.category.highlights'),
+        reportType: reportTypeMap(KalturaReportType.categoryHighlights),
+        sections: [KalturaReportExportItemType.total],
         order: '-count_plays',
-      },
-      {
-        id: 'performance',
-        label: this._translate.instant('app.category.performances'),
-        reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
-        sections: [KalturaReportExportItemType.table],
-        order: '-date_id',
       },
       {
         id: 'topVideos',
@@ -55,6 +48,27 @@ export class CategoryExportConfig extends ExportConfigService {
         reportType: reportTypeMap(KalturaReportType.topContentCreator),
         sections: [KalturaReportExportItemType.table],
         order: '-engagement_ranking',
+      },
+      {
+        id: 'performance',
+        label: this._translate.instant('app.category.exportLabels.metrics'),
+        reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
+        sections: [KalturaReportExportItemType.graph],
+        order: '-date_id',
+      },
+      {
+        id: 'performance',
+        label: this._translate.instant('app.category.exportLabels.user'),
+        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
+      },
+      {
+        id: 'performance',
+        label: this._translate.instant('app.category.exportLabels.media'),
+        reportType: reportTypeMap(KalturaReportType.topContentCreator),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       },
       {
         id: 'geo',
