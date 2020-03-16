@@ -90,4 +90,8 @@
   }
 
 }
-
+@media (max-width: 991px) {
+  :host.short .kReportContent {
+    height: 180px;
+  }
+}

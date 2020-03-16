@@ -388,7 +388,8 @@
         "avg_view_drop_off": "Avg. Drop Off Rate",
         "avg_completion_rate": "Avg. Completion Rate",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
-        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles"
+        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
+        "unique_owners": "Contributors"
       },
       "topVideosReport": {
         "entry_name": "Name",

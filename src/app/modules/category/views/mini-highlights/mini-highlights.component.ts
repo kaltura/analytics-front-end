@@ -30,7 +30,7 @@ export class CategoryMiniHighlightsComponent extends CategoryBase {
   @Input() categoryId: string = null;
   
   private _order = '-count_plays';
-  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
+  private _reportType = reportTypeMap(KalturaReportType.categoryHighlights);
   private _dataConfig: ReportDataConfig;
   
   protected _componentId = 'mini-mini-highlights';

@@ -43,6 +43,12 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 4,
+          },
+          'unique_owners': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.unique_owners`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_owners`),
+            sortOrder: 6,
           }
         }
       }

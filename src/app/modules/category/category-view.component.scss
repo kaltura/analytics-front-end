@@ -195,7 +195,7 @@
     .kMiniReportContainer.kMiniTopReportContainer {
       height: 308px;
       &.short{
-        height: 185px;
+        height: 248px !important;
       }
       ::ng-deep .kFilters{
         margin-top: 12px;
