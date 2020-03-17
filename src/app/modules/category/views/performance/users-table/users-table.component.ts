@@ -31,7 +31,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
-  private _order = '-count_plays';
+  private _order = '-count_loads';
   
   public totalCount = 0;
   

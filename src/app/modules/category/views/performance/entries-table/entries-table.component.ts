@@ -31,7 +31,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   private _dataConfig: ReportDataConfig;
-  private _order = '-count_plays';
+  private _order = '-count_loads';
   
   public totalCount = 0;
   
