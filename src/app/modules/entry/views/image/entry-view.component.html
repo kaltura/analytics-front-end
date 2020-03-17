@@ -69,17 +69,17 @@
     </div>
 
     <div *ngIf="_viewConfig.geo" class="kReportContainer">
-      <app-image-top-countries [dateFilter]="_dateFilter"
+      <app-top-countries [dateFilter]="_dateFilter"
                          [refineFilter]="_refineFilter"
                          [entryId]="_entryId"
-                         (onDrillDown)="_onGeoDrillDown($event)"></app-image-top-countries>
+                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
     </div>
 
     <div *ngIf="_viewConfig.devices" class="kReportContainer">
-      <app-entry-devices-overview [dateFilter]="_dateFilter"
+      <app-devices-overview [dateFilter]="_dateFilter"
                                   [refineFilter]="_refineFilter"
                                   [colorScheme]="'impressions'"
-                                  [entryId]="_entryId"></app-entry-devices-overview>
+                                  [entryId]="_entryId"></app-devices-overview>
     </div>
 
     <div *ngIf="_viewConfig.syndication" class="kReportContainer">

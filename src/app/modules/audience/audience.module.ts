@@ -25,7 +25,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule, PopupWidgetModule, InputHelperModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
-import { DevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
+import { TechDevicesOverviewComponent } from './views/technology/devices-overview/devices-overview.component';
 import { TopBrowsersComponent } from './views/technology/top-browsers/top-browsers.component';
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
@@ -82,7 +82,7 @@ import { ContextTableComponent } from './views/engagement/highlights/context-tab
     EngagementDurationComponent,
     EngagementUsersComponent,
     ContentInteractionsComponent,
-    DevicesOverviewComponent,
+    TechDevicesOverviewComponent,
     TopBrowsersComponent,
     TopOsComponent,
     TopVideosTableComponent,

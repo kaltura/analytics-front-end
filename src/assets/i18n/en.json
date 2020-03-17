@@ -386,8 +386,10 @@
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
         "avg_view_drop_off": "Avg. Drop Off Rate",
+        "avg_completion_rate": "Avg. Completion Rate",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
-        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles"
+        "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
+        "unique_owners": "Contributors"
       },
       "topVideosReport": {
         "entry_name": "Name",
@@ -705,6 +707,41 @@
         }
       }
     },
+    "category": {
+      "parent": "Parent:",
+      "id": "ID:",
+      "subcats": "Sub Categories:",
+      "entries": "Entries:",
+      "created": "Creation Date:",
+      "updated": "Last Update:",
+      "plays": "{{0}} Plays",
+      "topViewers": "Top Viewers",
+      "topViewers_tt": "Top viewers based on user's number of plays",
+      "popularDevice": "Most Popular Device",
+      "topDevices": "Top Devices",
+      "otherDevices": "Other Devices",
+      "topDomains": "Top Domains",
+      "otherDomains": "Other Domains",
+      "topLocations": "Top Locations",
+      "subcat": "Sub Categories",
+      "subcatSelect": "Select Sub Category",
+      "context": "Viewing Context",
+      "contextAll": "All",
+      "contextCategory": "Category Page Only",
+      "pageViews": "Category Page Views",
+      "pageViews_tt": "A Category Page refers to the applications category pages: Channels and Galleries in KMS, and Media Gallery in KAF. This includes secure embed in KMS, and KAF embeds using the BSE (Browse Search and Embed) tool.",
+      "pageViewLabel": "Views from category page compared to all views",
+      "highlights": "Highlights",
+      "performances": "Category Performance Over Time",
+      "subcategories": "Subcategories",
+      "subcatsnum": "{{0}} Subcategories",
+      "playedEntries": "{{0}} Played Entries",
+      "exportLabels": {
+        "metrics": "Metrics over time",
+        "user": "User Engagement",
+        "media": "Media Engagement"
+      }
+    },
     "entry": {
       "context": "Playback Context",
       "views": "Views",
@@ -774,7 +811,7 @@
         "impressions": "Impressions",
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",
-        "syndication": "Syndication"
+        "syndication": "Top Domains"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },

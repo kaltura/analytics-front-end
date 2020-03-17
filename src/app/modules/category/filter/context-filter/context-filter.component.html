@@ -1,0 +1,16 @@
+<div class="kColumn" [class.kDisabled]="disabled">
+  <div class="kColumnLabel">{{label}}</div>
+  <div class="kColumnContent">
+    <div class="kCheckboxGroup" *ngFor="let option of options; let i = index">
+      <p-radioButton name="context" [class.selected]="_selectedValue.length === i"
+                  [inputId]="option.label"
+                  [value]="option.value"
+                  (onClick)="_onSelectionChange()"
+                  [(ngModel)]="_selectedValue"></p-radioButton>
+      <label [for]="option.label">
+        <span class="kLabel">{{option.label | translate}}</span>
+      </label>
+    </div>
+  </div>
+</div>
+

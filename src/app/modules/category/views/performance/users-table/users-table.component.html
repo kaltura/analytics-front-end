@@ -1,0 +1,57 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <p-table dataKey="name"
+           [sortField]="'count_plays'"
+           [value]="_tableData"
+           [customSort]="true"
+           [defaultSortOrder]="-1"
+           [sortOrder]="-1"
+           (sortFunction)="_onSortChanged($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'name' ? null : col">
+          {{'app.entry.' + col | translate}}
+          <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'name'"></p-sortIcon>
+        </th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr>
+        <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+          <span *ngIf="isCompareMode && data[col]?.value && col !== 'name'"
+                class="kTrend">
+            <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+              <app-trend-value [value]="data[col].value"
+                               [units]="data[col].units"
+                               [trend]="data[col].trend"></app-trend-value>
+            </span>
+          </span>
+          <ng-container *ngIf="!isCompareMode || col === 'name'">
+            <span *ngIf="col !== 'name'">{{data[col]}}</span>
+            <span class="kTableColumn"
+                  *ngIf="col === 'name'"
+                  [kTooltip]="data[col]"
+                  [showOnEllipsis]="true"
+                  >{{data[col]}}</span>
+            <!--a class="kTableColumn"
+               *ngIf="col === 'name'"
+               [kTooltip]="data[col]"
+               [showOnEllipsis]="true"
+               (click)="_drillDown(data)">{{data[col]}}</a-->
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <div class="emptymessage">
+        <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+        <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-paginator [rows]="_pager.pageSize"
+               [first]="(_pager.pageIndex -1) * _pager.pageSize"
+               [totalRecords]="totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</k-area-blocker>

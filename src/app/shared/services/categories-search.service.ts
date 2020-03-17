@@ -57,6 +57,10 @@ export class CategoriesSearchService implements OnDestroy {
     return this._getCategoriesWithCache({ cacheToken: 'all_categories_token' });
   }
   
+  public getSubCategories(rootCategoryId: number): Observable<CategoriesQuery> {
+    return this._getCategoriesWithCache({ cacheToken: rootCategoryId.toString(), parentId: rootCategoryId });
+  }
+  
   public getRootCategories(): Observable<CategoriesQuery> {
     return this._getCategoriesWithCache({ cacheToken: 'root_categories', parentId: 0 });
   }
@@ -103,15 +107,19 @@ export class CategoriesSearchService implements OnDestroy {
     return this._getCategoriesWithCache({ cacheToken: parentId + '', parentId });
   }
   
-  public getSuggestions(text: string): Observable<CategoryData[]> {
+  public getSuggestions(text: string, rootCategoryId: number = null): Observable<CategoryData[]> {
     // DEVELOPER NOTICE: this method always query the server bypassing the cache. this is by design.
     // changing it prioritize cache will require refactoring places that are using this method.
     if (text) {
       return Observable.create(observer => {
-        const filter = new KalturaCategoryFilter({
+        let filter = new KalturaCategoryFilter({
           nameOrReferenceIdStartsWith: text,
           orderBy: '+fullName'
         });
+        
+        if (rootCategoryId) {
+          filter['ancestorIdIn'] = rootCategoryId.toString();
+        }
         
         const pager = new KalturaFilterPager({
           pageIndex: 0,

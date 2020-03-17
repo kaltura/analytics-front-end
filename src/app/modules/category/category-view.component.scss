@@ -1,0 +1,215 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+  .kMiniReportContainer{
+    height: 308px;
+    flex: 1 1 auto;
+    &.kMiniTopReportContainer{
+      height: 248px;
+    }
+    &.short{
+      height: 185px;
+    }
+  }
+  .kMiniTopReportSmall{
+    width: 30%;
+  }
+  .kMiniTopReportWide{
+    width: calc(60% + 48px);
+  }
+  .showOnTablet {
+    display: none;
+  }
+  .separator {
+    width: 24px;
+  }
+  .divider {
+    height: 24px;
+    width: 100%;
+  }
+}
+.kReport {
+  background-color: $appBkgColor;
+
+  .kBackBtn {
+    margin-top: 4px;
+    margin-left: -40px;
+    margin-right: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $kGrayscale3;
+    height: 20px;
+    width: 18px;
+    font-size: 24px;
+    overflow: hidden;
+
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+  }
+
+  .kReportHeader {
+    height: 80px;
+    position: relative;
+  }
+
+  .kFloatingDetails{
+    position: absolute;
+    top: 32px;
+  }
+
+  .kCategoryDetails {
+    display: flex;
+    font-size: 14px;
+    color: $kGrayscale2;
+    height: 36px;
+    background-color: $appBkgColor;
+    .kParentLink {
+      font-size: 14px;
+      height: 15px;
+    }
+    .kLabel{
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+    .kSeparator {
+      width: 1px;
+      height: 12px;
+      margin-top: 2px;
+      background-color: $kGrayscale4;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+
+  }
+}
+.kFilter {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  .kDropDown {
+    background-color: white;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
+}
+
+/* responsive design */
+.kHeaderRight{
+  display: flex;
+  margin-left: auto;
+  z-index: 1;
+}
+@media (max-width: 1280px) {
+  ::ng-deep app-checkboxes-list-filter {
+    min-width: 118px !important;
+  }
+}
+@media (max-width: 991px) {
+  .kHeaderRight{
+    position: absolute;
+    top: 110px;
+    left: 0px;
+  }
+  .kReport .kEntryDetails{
+    height: 86px;
+  }
+
+  .kReport .kReportHeader.noTitle{
+    height: 32px;
+  }
+
+  .kHeaderRight.noTitle{
+    top: 64px;
+  }
+
+  .kReport .kFloatingDetails{
+    position: relative;
+    top: 0px;
+  }
+  .kReportContainer {
+    &.kNoPadding {
+      padding-top: 48px !important;
+    }
+    .kMiniTopReportSmall {
+      width: 40%;
+    }
+    .kMiniTopReportWide {
+      width: 80%;
+      height: 248px !important;
+    }
+    .hideOnTablet {
+      display: none;
+    }
+    .showOnTablet {
+      display: block;
+    }
+    .kMiniReportContainer.kMiniTopReportContainer {
+      height: 308px;
+      &.short{
+        height: 248px !important;
+      }
+      ::ng-deep .kFilters{
+        margin-top: 12px;
+      }
+    }
+  }
+
+}
+
+.kHighContrast :host {
+  .kEntryDetails, .kBackBtn {
+    color: $kGrayscale1;
+  }
+}
+ui-carousel ::ng-deep dots.middle {
+  bottom: 12px;
+}

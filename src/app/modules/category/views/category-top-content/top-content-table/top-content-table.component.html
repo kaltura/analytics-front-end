@@ -1,0 +1,79 @@
+<div [attr.data-aid]="'table-top-videos' + name" class="kTableContainer">
+  <span class="kDates" *ngIf="dates">{{dates}}</span>
+  <div class="kDividerWrapper">
+    <div class="kDivider" *ngIf="showDivider"></div>
+    <p-table appScrollTopOnPaging
+             [customPaginationEvent]="_paginationChanged$"
+             [class.kCompareMode]="isCompareMode"
+             [value]="_tableData">
+      <ng-template pTemplate="header">
+        <tr class="kTopVideoHeader">
+          <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
+          <th [ngStyle]="{'width': '111px', 'padding-left': '10px'}"></th>
+          <th [ngStyle]="{'width': '60%', 'padding-left': '0'}">
+            {{'app.user.topContentReport.name' | translate}}
+          </th>
+          <ng-container *ngIf="!isCompareMode">
+            <th [ngStyle]="{'width': '20%'}">
+              {{'app.user.topContentReport.count_plays' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '20%'}">
+              {{'app.user.topContentReport.unique_known_users' | translate}}
+            </th>
+            <th [ngStyle]="{'width': '20%'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
+          </ng-container>
+          <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}">
+            {{'app.user.topContentReport.score' | translate}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data>
+        <tr class="kTopVideoRow">
+          <td [ngStyle]="{'width': '60px', 'text-align': 'center'}">
+            <div class="kReportRowIndex kFirst" *ngIf="data.index === 1">
+              <img src="assets/images/ribbon_large.svg">
+              <span>{{data.index}}</span>
+            </div>
+            <div class="kReportRowIndex" *ngIf="data.index !== 1">
+              <span>{{data.index}}</span>
+            </div>
+          </td>
+          <td [ngStyle]="{'width': '111px', 'padding-left': '10px'}">
+            <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onMouseEnter)="_showOverlay($event, data['object_id'])" (onMouseLeave)="_hideOverlay()"></thumb-loader>
+          </td>
+          <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
+              <span class="kTableColumn kEntryName"
+                    (mouseleave)="_hideOverlay()"
+                    (mouseenter)="_showOverlay($event, data['object_id'])">{{data['entry_name']}}</span>
+          </td>
+          <ng-container *ngIf="!isCompareMode">
+            <td [ngStyle]="{'width': '170px'}">{{data['count_plays']}}</td>
+            <td [ngStyle]="{'width': '220px'}">{{data['unique_known_users']}}</td>
+            <td [ngStyle]="{'width': '220px'}">{{data['avg_completion_rate']}}</td>
+          </ng-container>
+          <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
+            <div *ngIf="data['status']?.length">
+              <span class="kEntryStatus">{{data['status']}}</span>
+              <span>{{data['engagement_ranking']}}<span class="kTop">/10</span></span>
+            </div>
+            <span *ngIf="!data['status']?.length">{{data['engagement_ranking']}}<span class="kTop">/10</span></span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <div class="emptymessage">
+          <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+          <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-paginator [rows]="_pager.pageSize"
+               [first]="(_pager.pageIndex - 1) * _pager.pageSize"
+               [totalRecords]="_totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-category-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-category-entry-details-overlay>
+</k-overlayPanel>

@@ -1,0 +1,137 @@
+@import '../../../../../styles/variables';
+
+@media screen and (min-width: 992px) {
+  :host {
+    ::ng-deep {
+      .ui-table tr td,
+      .ui-table tr th,
+      .ui-table thead {
+        border: none !important;
+      }
+    }
+  }
+}
+
+:host {
+  width: 100%;
+  height: auto;
+
+  ::ng-deep {
+    .ui-table-wrapper {
+      min-height: 260px;
+    }
+  }
+}
+
+.kPeriod {
+  margin: 24px 24px 17px;
+}
+
+.kFlag {
+  width: 24px;
+  height: 24px;
+}
+
+.kFlagColumn {
+  padding-left: 18px !important;
+}
+
+.kTopCountries {
+  display: flex;
+  height: 100%;
+
+  &.kDefaultMode {
+    flex-direction: row !important;
+  }
+
+  &.kCompareMode {
+    flex-direction: column-reverse !important;
+  }
+
+  .kTable, .kMap {
+    flex: 1;
+  }
+}
+
+@media (max-width: 991px) {
+  .kTopCountries.kDefaultMode {
+    flex-direction: column-reverse !important;
+  }
+  .kTopCountries.kCompareMode .kMap {
+    display: none;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -100px;
+    left: -100px;
+  }
+  ::ng-deep k-area-blocker {
+    flex-direction: column;
+  }
+  ::ng-deep .ui-table thead {
+    border-top: 1px solid #d9d9d9 !important;
+  }
+  ::ng-deep .ui-table-wrapper {
+    min-height: 0px !important;
+  }
+  ::ng-deep .kTable {
+    flex: 0 0 auto !important;
+  }
+}
+
+.kMap {
+  position: relative;
+
+  .kChart {
+    width: 100%;
+    height: 268px;
+    margin-bottom: 24px;
+  }
+
+  .kZoomWidget {
+    position: absolute;
+    right: 24px;
+    bottom: 12px;
+
+    button {
+      width: 42px;
+      height: 34px;
+    }
+
+    .kZoomInBtn {
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .kZoomOutBtn {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
+.emptymessage, .kEmptyMessage {
+  border: none;
+  font-size: 15px;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .kEmptyMessage {
+    color: $kGrayscale1 !important;
+  }
+
+  ::ng-deep {
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
+}

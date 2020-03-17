@@ -1,0 +1,173 @@
+<div data-aid="report-group-category" class="kMain">
+  <k-area-blocker [showLoader]="_loadingCategory" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title"
+                  class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entry.back' | translate"></button>
+          <h1 *ngIf="_viewConfig.title" class="kTitle">{{_category?.name}}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+            <app-export-csv aria-label="Export"
+                            role="button"
+                            *ngIf="_viewConfig.export" name="entry"
+                            [reports]="_exportConfig"
+                            [refineFilter]="_refineFilter"
+                            [dateFilter]="_dateFilter"
+                            [categoryId]="_categoryId"></app-export-csv>
+            <div class="kFilter kOverrideFAIcons">
+              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+                   (click)="_refineFilterOpened = !_refineFilterOpened"
+                   (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
+                <span>{{'app.filters.filter' | translate}}</span>
+                <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+                <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+              </div>
+            </div>
+            <app-date-filter #dateFilter
+                             name="category"
+                             [dateRange]="_dateRange"
+                             [selectedTimeUnit]="_timeUnit"
+                             [creationDate]="_creationDate"
+                             (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+          </div>
+        </div>
+
+        <div *ngIf="_viewConfig.details" class="kCategoryDetails" aria-label="Category Details"
+             [class.kFloatingDetails]="!_viewConfig.title">
+          <span class="kLabel" *ngIf="_category?.parentId">{{'app.category.parent' | translate}}</span>
+          <a *ngIf="_category?.parentId" class="kParentLink"
+             (click)="_navigateToParent(_category.parentId)">{{_parentCategoryName}}</a>
+          <div *ngIf="_category?.parentId" class="kSeparator"></div>
+          <span class="kLabel">{{'app.category.id' | translate}}</span>
+          <span>{{_category?.id}}</span>
+          <div class="kSeparator"></div>
+          <span class="kLabel">{{'app.category.subcats' | translate}}</span>
+          <span>{{_category?.directSubCategoriesCount}}</span>
+          <div class="kSeparator"></div>
+          <!--span class="kLabel">{{'app.category.entries' | translate}}</span>
+          <span>{{_category?.entriesCount}}</span>
+          <div class="kSeparator"></div-->
+          <span class="kLabel">{{'app.category.created' | translate}}</span>
+          <span>{{_creationDate}}</span>
+          <div class="kSeparator"></div>
+          <span class="kLabel">{{'app.category.updated' | translate}}</span>
+          <span>{{_updateDate}}</span>
+        </div>
+
+        <div class="kReportContainer kNoPadding">
+          <app-cat-filter name="category" #categoryFilter
+                          [category]="_category"
+                          [viewConfig]="_viewConfig.refineFilter"
+                          [opened]="_refineFilterOpened"
+                          [dateFilter]="_dateFilter"
+                          [selectedFilters]="_selectedRefineFilters"
+                          (closeFilters)="_refineFilterOpened = false"
+                          (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
+        </div>
+
+        <div *ngIf="_topMiniViewsCount && _categoryLoaded" class="kReportContainer kTabletPadding">
+          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide" [class.short]="categoryFilter.contextSelected">
+            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"
+                                          [categoryId]="_category?.id.toString()"
+                                          [refineFilter]="_refineFilter"></app-category-mini-highlights>
+          </div>
+
+          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected"></div>
+          <div class="divider showOnTablet"></div>
+
+          <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
+            <app-category-mini-page-views [dateFilter]="_dateFilter"
+                                          [subCategoriesSelected]="categoryFilter.subCategoriesSelected"
+                                          [categoryId]="_category?.id.toString()"
+                                          [refineFilter]="_refineFilter"
+                                          (openFilterClick)="openContextFilter()"></app-category-mini-page-views>
+          </div>
+
+          <div class="divider hideOnTablet"></div>
+          <div class="separator showOnTablet" *ngIf="!categoryFilter.contextSelected"></div>
+
+          <div *ngIf="_viewConfig.miniTopVideos" class="kMiniReportContainer kMiniTopReportSmall">
+            <app-category-mini-top-videos [dateFilter]="_dateFilter" [topVideos]="_categoryTopContentComponent?.topVideos$"
+                                          [refineFilter]="_refineFilter"></app-category-mini-top-videos>
+          </div>
+
+          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniTopViewers || _viewConfig.insights"></div>
+          <div class="divider showOnTablet"></div>
+
+          <div *ngIf="_viewConfig.miniTopViewers" class="kMiniReportContainer kMiniTopReportSmall">
+            <app-category-mini-top-viewers [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"
+                                           [refineFilter]="_refineFilter"></app-category-mini-top-viewers>
+          </div>
+
+          <div class="separator" *ngIf="_viewConfig.insights && (_viewConfig.miniTopVideos || _viewConfig.miniTopViewers)"></div>
+          <div class="kMiniReportContainer kMiniTopReportSmall" *ngIf="_viewConfig.insights && _categoryLoaded">
+            <ui-carousel height="100%"
+                         [infinite]="true"
+                         [autoPlay]="true"
+                         [autoPlaySpeed]="5000"
+                         [arrows]="false"
+                         [fade]="false"
+                         [speed]="200">
+              <ui-carousel-item *ngIf="_viewConfig.insights.domains">
+                <app-category-insight-domains [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"
+                                              [refineFilter]="_refineFilter"></app-category-insight-domains>
+              </ui-carousel-item>
+              <ui-carousel-item *ngIf="_viewConfig.insights.geo">
+                <app-category-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"
+                                          [dateFilter]="_dateFilter"
+                                          [refineFilter]="_refineFilter"></app-category-insight-geo>
+              </ui-carousel-item>
+
+              <ui-carousel-item *ngIf="_viewConfig.insights.devices">
+                <app-category-devices-domains [categoryId]="_category?.id.toString()"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter"></app-category-devices-domains>
+              </ui-carousel-item>
+
+            </ui-carousel>
+          </div>
+
+        </div>
+
+        <div *ngIf="_viewConfig.performance && _categoryLoaded" class="kReportContainer" id="performance" >
+          <app-category-performance
+                [categoryId]="_category?.id.toString()"
+                [dateFilter]="_dateFilter"
+                [dateFilterComponent]="dateFilter"
+                [refineFilter]="_refineFilter"></app-category-performance>
+        </div>
+
+        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos">
+          <app-category-top-content [categoryId]="_category?.id.toString()" #topVideos
+                                [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-category-top-content>
+        </div>
+
+        <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">
+          <app-top-countries [dateFilter]="_dateFilter" #topCountries
+                                   [_distributionKey]="'plays_distribution'"
+                                   [_distributionCalculationKey]="'count_plays'"
+                                   [refineFilter]="_refineFilter"
+                                   [categoryId]="_category?.id.toString()"
+                                   (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
+        </div>
+
+        <div *ngIf="_viewConfig.devices && _categoryLoaded" class="kReportContainer" id="top-devices">
+          <app-devices-overview [dateFilter]="_dateFilter"
+                                      [refineFilter]="_refineFilter"
+                                      [colorScheme]="'impressions'"
+                                      [categoryId]="_category?.id.toString()"></app-devices-overview>
+        </div>
+
+        <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer" id="top-domains">
+          <app-syndication [dateFilterComponent]="dateFilter"
+                           [dateFilter]="_dateFilter"
+                           [categoryId]="_category?.id.toString()"
+                           [refineFilter]="_refineFilter"></app-syndication>
+        </div>
+
+      </div>
+    </div>
+  </k-area-blocker>
+</div>

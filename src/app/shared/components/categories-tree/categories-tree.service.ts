@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { CategoriesTreeNode, NodeChildrenStatuses } from './categories-tree-node';
 import { TranslateService } from '@ngx-translate/core';
-import { CategoriesSearchService, CategoryData } from 'shared/services/categories-search.service';
+import { CategoriesQuery, CategoriesSearchService, CategoryData } from 'shared/services/categories-search.service';
 import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 
@@ -17,13 +17,19 @@ export class CategoriesTreeService {
               private _translate: TranslateService) {
   }
   
-  public getCategories(): Observable<{ categories: CategoriesTreeNode[] }> {
+  public getCategories(rootCategoryId: number = null): Observable<{ categories: CategoriesTreeNode[] }> {
     
     return Observable.create(observer => {
-      const categories$ = this._inLazyMode ? this._categoriesSearchService.getRootCategories() : this._categoriesSearchService.getAllCategories();
+      let categories$: Observable<CategoriesQuery>;
+      if (rootCategoryId) {
+        categories$ = this._categoriesSearchService.getSubCategories(rootCategoryId);
+        this._inLazyMode = true;
+      } else {
+        categories$ = this._inLazyMode ? this._categoriesSearchService.getRootCategories() : this._categoriesSearchService.getAllCategories();
+      }
       let categories = [];
       const categoriesSubsciption = categories$.subscribe(result => {
-          categories = this.createNode(result.items);
+          categories = this.createNode(result.items, null, rootCategoryId);
           observer.next({ categories: categories });
           observer.complete();
         },
@@ -77,10 +83,10 @@ export class CategoriesTreeService {
     }
   }
   
-  createNode(items: CategoryData[], parentNode: CategoriesTreeNode = null): CategoriesTreeNode[] {
+  createNode(items: CategoryData[], parentNode: CategoriesTreeNode = null, rootCategoryId: number = null): CategoriesTreeNode[] {
     const result: CategoriesTreeNode[] = [];
     const rootParent = parentNode || null;
-    const rootParentId = rootParent ? rootParent.value : null;
+    const rootParentId = rootParent ? rootParent.value : (rootCategoryId ? rootCategoryId : null);
     
     if (items && items.length > 0) {
       items.sort((a, b) => {

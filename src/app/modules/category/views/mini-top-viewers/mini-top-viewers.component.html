@@ -1,0 +1,76 @@
+<div data-aid="report-contributors-mini-higlights" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.category.topViewers' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.category.topViewers_tt' | translate}}</span>
+    </kInputHelper>
+    <a (click)="scrollTo('#performance')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
+      <div class="kReportRow" *ngFor="let item of _tableData">
+        <div class="kReportRowIndex kFirst" *ngIf="item.index === 1">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{item.index}}</span>
+        </div>
+        <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="item.name" [showOnEllipsis]="true">
+            {{item.name}}
+          </span>
+          <span class="kScore">{{'app.category.plays' | translate: { '0': item['count_plays'] } }}</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+    <div class="kReportContent" *ngIf="_isCompareMode">
+      <span class="kDates">{{_currentDates}}</span>
+      <div class="kReportRow" *ngIf="_tableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_tableData[0].index}}</span>
+        </div>
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_tableData[0].name" [showOnEllipsis]="true">
+            {{_tableData[0].name}}
+          </span>
+          <span class="kScore">{{'app.category.plays' | translate: { '0': _tableData[0]['count_plays'] } }}</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+      <span class="kDates">{{_compareDates}}</span>
+      <div class="kReportRow" *ngIf="_compareTableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_compareTableData[0].index}}</span>
+        </div>
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
+        </div>
+        <div class="kReportRowDetails">
+          <span class="kTitle" [kTooltip]="_compareTableData[0].name" [showOnEllipsis]="true">
+            {{_compareTableData[0].name}}
+          </span>
+          <span class="kScore">{{'app.category.plays' | translate: { '0':_compareTableData[0]['count_plays'] } }}</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

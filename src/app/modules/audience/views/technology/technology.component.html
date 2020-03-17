@@ -1,5 +1,5 @@
 <div data-aid="report-group-technology">
-  <app-devices-overview *ngIf="_technologyViewConfig.devices"
+  <app-tech-devices-overview *ngIf="_technologyViewConfig.devices"
                         #overview
                         [filter]="_filterEvent"
                         [allowedDevices]="_allowedDevices"
@@ -19,7 +19,7 @@
                        [showCompare]="false"
                        (filterChange)="_onDateFilterChange($event)"></app-date-filter>
     </div>
-  </app-devices-overview>
+  </app-tech-devices-overview>
 
   <app-top-browsers *ngIf="_technologyViewConfig.topBrowsers"
                     [filter]="_filterEvent"

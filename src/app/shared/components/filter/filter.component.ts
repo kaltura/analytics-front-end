@@ -78,6 +78,7 @@ export class FilterComponent {
         entrySource: {},
         tags: {},
         owners: {},
+        context: {},
         categories: {},
         geo: {},
       };
@@ -138,6 +139,7 @@ export class FilterComponent {
     entrySource: {},
     tags: {},
     owners: {},
+    context: {},
     categories: {},
     geo: {},
   };
@@ -209,7 +211,7 @@ export class FilterComponent {
         case 'context':
           const context = value as CategoryData;
           label = context.name;
-          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${context.fullName}`;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${context.fullName ? context.fullName : context.name}`;
           return { value, type, label, tooltip };
         case 'tags':
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;

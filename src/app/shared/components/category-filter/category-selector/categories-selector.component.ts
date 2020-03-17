@@ -15,6 +15,7 @@ import { CategoriesTreeComponent } from 'shared/components/categories-tree/categ
 })
 export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
   @Input() buttonLabel = '';
+  @Input() rootCategoryId: number;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() set title(value: string) {
     this._title = value && typeof value === 'string' ? value : this._defaultTitle;
@@ -105,7 +106,7 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
       this._searchCategoriesSubscription = null;
     }
     
-    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
+    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query, this.rootCategoryId).subscribe(data => {
         const suggestions = [];
         const entryCategories = this._selectedCategories || [];
         
