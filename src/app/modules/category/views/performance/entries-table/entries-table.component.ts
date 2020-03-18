@@ -28,6 +28,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
+  @Input() userId = '';
   
   private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   private _dataConfig: ReportDataConfig;
@@ -71,13 +72,18 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   private _loadReport(): void {
     this._isBusy = true;
+    if (this.userId && this.userId.length) {
+      this.filter.userIds = this.userId;
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+        if (this.userId && this.userId.length) {
+          this.compareFilter.userIds = this.userId;
+        }
         const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, this._dataConfig, false)

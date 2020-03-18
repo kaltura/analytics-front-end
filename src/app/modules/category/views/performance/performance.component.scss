@@ -1,5 +1,33 @@
 @import '../../../../../styles/variables';
 
+.kFilters .kTitle.drillDownRoot{
+  color: $kGrayscale3;
+  padding-left: 24px;
+  padding-right: 8px;
+  width: auto;
+  cursor: pointer;
+  &.kSlash{
+    padding-left: 0px;
+    padding-right: 8px;
+  }
+}
+.kDrilldown {
+  font-size: 20px;
+  color: $kGrayscale1;
+  font-weight: bold;
+}
+.kIconexternal_link {
+  color: #999999;
+  font-size: 24px;
+  margin-left: 4px;
+  margin-top: 3px;
+  cursor: pointer;
+}
+.kTotalCount {
+  padding-left: 24px;
+  margin-bottom: 16px;
+  display: block;
+}
 .kNoResults {
   display: flex;
   width: 100%;

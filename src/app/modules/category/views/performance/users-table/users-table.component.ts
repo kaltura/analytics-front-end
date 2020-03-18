@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
@@ -12,7 +12,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { SortEvent } from 'primeng/api';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -28,6 +28,8 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
+  
+  @Output() drillDown: EventEmitter<{user: string, pid: string}> = new EventEmitter();
   
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
@@ -48,8 +50,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UsersTableConfig,
-              private _navigationDrillDownService: NavigationDrillDownService) {
+              private _dataConfigService: UsersTableConfig) {
     this._dataConfig = _dataConfigService.getConfig();
   }
   
@@ -158,7 +159,6 @@ export class UsersTableComponent implements OnInit, OnDestroy {
     if (row['name'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
-  
-    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
+    this.drillDown.emit({user: row['name'], pid: row['partner_id']});
   }
 }

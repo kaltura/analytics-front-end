@@ -736,6 +736,8 @@
       "subcategories": "Subcategories",
       "subcatsnum": "{{0}} Subcategories",
       "playedEntries": "{{0}} Played Entries",
+      "userDrillDown": "Go To User Analytics",
+      "entryDrillDown": "Go To Entry Analytics",
       "exportLabels": {
         "metrics": "Metrics over time",
         "user": "User Engagement",
