@@ -83,9 +83,13 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
     this._refineFilterToServerValue(this._contextFilter);
+    this._contextFilter.playbackContextIdsIn = this._contextFilter.categoriesIdsIn;
+    delete this._contextFilter.categoriesIdsIn;
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
       this._refineFilterToServerValue(this._contextCompareFilter);
+      this._contextCompareFilter.playbackContextIdsIn = this._contextCompareFilter.categoriesIdsIn;
+      delete this._contextCompareFilter.categoriesIdsIn;
     }
   }
   
