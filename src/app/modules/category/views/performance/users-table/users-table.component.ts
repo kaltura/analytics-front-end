@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import {BrowserService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService} from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
@@ -28,6 +28,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
+  @Input() entryDrilldown = false;
   
   @Output() drillDown: EventEmitter<{user: string, pid: string}> = new EventEmitter();
   
@@ -73,6 +74,12 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   private _loadReport(): void {
     this._isBusy = true;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
+    if (this.entryDrilldown) {
+      this._dataConfig.table.fields['total_completion_rate'] = {
+        format: value =>  ReportHelper.percents(value / 100, false, true),
+        sortOrder: 7
+      };
+    }
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {

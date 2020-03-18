@@ -27,12 +27,17 @@
             </span>
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'name'">
-            <span *ngIf="col !== 'name'">{{data[col]}}</span>
+            <span *ngIf="col !== 'name' && col !== 'total_completion_rate'">{{data[col]}}</span>
             <a class="kTableColumn"
-               *ngIf="col === 'name'"
+               *ngIf="col === 'name' && !entryDrilldown"
                [kTooltip]="data[col]"
                [showOnEllipsis]="true"
                (click)="_drillDown(data)">{{data[col]}}</a>
+            <span class="kTableColumn"
+               *ngIf="col === 'name' && entryDrilldown"
+               [kTooltip]="data[col]"
+               [showOnEllipsis]="true">{{data[col]}}</span>
+            <app-bullet *ngIf="col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
           </ng-container>
         </td>
       </tr>

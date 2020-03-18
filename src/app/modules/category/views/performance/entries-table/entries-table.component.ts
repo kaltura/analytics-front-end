@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -28,7 +28,9 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
-  @Input() userId = '';
+  @Input() userDrilldown = false;
+  
+  @Output() drillDown: EventEmitter<{entry: string, name: string, pid: string, source: string}> = new EventEmitter();
   
   private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
@@ -72,8 +74,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   private _loadReport(): void {
     this._isBusy = true;
-    if (this.userId && this.userId.length) {
-      this.filter.userIds = this.userId;
+    if (this.userDrilldown) {
       this._dataConfig.table.fields['total_completion_rate'] = {
         format: value =>  ReportHelper.percents(value / 100, false, true),
         sortOrder: 8
@@ -84,9 +85,6 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
-        }
-        if (this.userId && this.userId.length) {
-          this.compareFilter.userIds = this.userId;
         }
         const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
@@ -166,8 +164,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   }
   
   public _drillDown(row: TableRow): void {
-    const path = row['entry_source'] === 'Interactive Video' ? 'playlist' : 'entry';
-    this._navigationDrillDownService.drilldown(path, row['object_id'], true, row['partner_id']);
+    this.drillDown.emit({entry: row['object_id'], name: row['entry_name'], pid: row['partner_id'], source: row['entry_source']});
   }
 }
 

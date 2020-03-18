@@ -87,6 +87,7 @@
                                           (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>
 
               <app-entries-table #entriesTableComponent
+                                 (drillDown)="onDrillDown('entry', $event)"
                                  [filterChange]="_filterChange$"
                                  [filter]="_filter"
                                  [compareFilter]="_compareFilter"
@@ -96,15 +97,28 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="_tableModes.user">
-              <span class="kTotalCount">{{'app.entry.totalEntriesCount' | translate: { '0': entriesTableComponent.totalCount } }}</span>
-              <app-entries-table #entriesTableComponent
+              <span class="kTotalCount">{{'app.entry.totalEntriesCount' | translate: { '0': entriesTableComponentDrilldown.totalCount } }}</span>
+              <app-entries-table #entriesTableComponentDrilldown
                                  [filterChange]="_filterChange$"
                                  [filter]="_filter"
                                  [compareFilter]="_compareFilter"
                                  [isCompareMode]="_isCompareMode"
                                  [reportInterval]="_reportInterval"
-                                 [userId]="_drillDown.id"
+                                 [userDrilldown]="true"
                                  [firstTimeLoading]="_firstTimeLoading"></app-entries-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.entry">
+              <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': usersTableComponentDrilldown.totalCount } }}</span>
+
+              <app-users-table #usersTableComponentDrilldown
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [entryDrilldown]="true"
+                               [firstTimeLoading]="_firstTimeLoading"></app-users-table>
             </ng-container>
 
           </ng-container>

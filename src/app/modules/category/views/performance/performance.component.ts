@@ -75,7 +75,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _comparePeriod: { from: number, to: number };
   public _filterChange$ = this._filterChange.asObservable();
   
-  public _drillDown: {label: string, id: string, pid: string} = {label: '', id: '', pid: ''};
+  public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -356,6 +356,15 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       this._tableMode = TableModes.user;
       this._loadReport();
     }
+    if (type === 'entry') {
+      this._drillDown = {label: event.name, id: event.entry, pid: event.pid, source: event.source};
+      this._filter.entryIdIn = event.id;
+      if (this._isCompareMode) {
+        this._compareFilter.entryIdIn = event.id;
+      }
+      this._tableMode = TableModes.entry;
+      this._loadReport();
+    }
   }
   
   public drillUp(): void {
@@ -380,6 +389,10 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public navigateToDrilldown() {
     if (this._tableMode === TableModes.user) {
       this._navigationDrillDownService.drilldown('user', this._drillDown.id, true, this._drillDown.pid);
+    }
+    if (this._tableMode === TableModes.entry) {
+      const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, this._drillDown.id, true, this._drillDown.pid);
     }
   }
 }
