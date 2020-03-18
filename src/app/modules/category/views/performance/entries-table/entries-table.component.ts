@@ -5,13 +5,13 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
 import { SortEvent } from 'primeng/api';
 import { EntriesTableConfig } from './entries-table.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
@@ -30,7 +30,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() filterChange: Observable<void>;
   @Input() userId = '';
   
-  private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
+  private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
   
@@ -51,10 +51,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: EntriesTableConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
-    this._dataConfig = _dataConfigService.getConfig();
   }
   
   ngOnInit() {
+    this._dataConfig = this._dataConfigService.getConfig();
     this._loadReport();
     
     if (this.filterChange) {
@@ -74,6 +74,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     if (this.userId && this.userId.length) {
       this.filter.userIds = this.userId;
+      this._dataConfig.table.fields['total_completion_rate'] = {
+        format: value =>  ReportHelper.percents(value / 100, false, true),
+        sortOrder: 8
+      };
     }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)

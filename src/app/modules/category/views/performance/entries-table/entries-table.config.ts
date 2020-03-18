@@ -56,7 +56,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
           'avg_completion_rate': {
             format: value =>  ReportHelper.percents(value / 100, false, true),
             sortOrder: 7,
-          },
+          }
         }
       }
     };
