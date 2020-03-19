@@ -30,6 +30,7 @@
                    [showTrend]="false"
                    [distributionCalculationKey]="_distributionCalculationKey"
                    [distributionKey]="_distributionKey"
+                   [selectedMetrics]="_distributionCalculationKey"
                    [periodTitle]="_comparePeriodTitle"
                    (onDrillDown)="_onDrillDown($event)"></app-geo>
     <app-geo #categoryGeo
@@ -39,6 +40,7 @@
                    [mapData]="_mapData"
                    [tableData]="_tableData"
                    [isBusy]="_isBusy"
+                   [selectedMetrics]="_distributionCalculationKey"
                    [distributionCalculationKey]="_distributionCalculationKey"
                    [distributionKey]="_distributionKey"
                    [periodTitle]="_currentPeriodTitle"
