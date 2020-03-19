@@ -5,7 +5,7 @@
         <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
           <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title"
                   class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
-                  [kTooltip]="'app.entry.back' | translate"></button>
+                  [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle">{{_category?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
             <app-export-csv aria-label="Export"

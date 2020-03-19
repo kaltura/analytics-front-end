@@ -65,7 +65,9 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         .pipe(cancelOnDestroy(this))
         .subscribe(() => {
           this._pager.pageIndex = 1;
-          this._loadReport();
+          setTimeout(() => {
+            this._loadReport();
+          }, 200);
         });
     }
   }
