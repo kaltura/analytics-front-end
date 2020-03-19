@@ -29,12 +29,12 @@
           <ng-container *ngIf="!isCompareMode || col === 'entry_name'">
             <span *ngIf="col !== 'entry_name' && col !== 'total_completion_rate' && (col !== 'avg_completion_rate' || (col == 'avg_completion_rate' && userDrilldown))">{{data[col]}}</span>
             <span class="kEntryLink kTableColumn"
-                  *ngIf="col === 'entry_name' && userDrilldown"
+                  *ngIf="col === 'entry_name' && (userDrilldown || !_viewConfig.entryDrilldown)"
                   [kTooltip]="data[col]"
                   [showOnEllipsis]="true"
                   >{{data[col]}}</span>
             <a class="kEntryLink kTableColumn"
-               *ngIf="col === 'entry_name' && !userDrilldown"
+               *ngIf="col === 'entry_name' && !userDrilldown && _viewConfig.entryDrilldown"
                [kTooltip]="data[col]"
                [showOnEllipsis]="true"
                (click)="_drillDown(data)">{{data[col]}}</a>

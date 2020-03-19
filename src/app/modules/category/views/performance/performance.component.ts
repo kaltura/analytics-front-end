@@ -19,6 +19,7 @@ import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { CategoryBase } from "../category-base/category-base";
+import {ViewConfig} from "configuration/view-config";
 
 @Component({
   selector: 'app-category-performance',
@@ -76,6 +77,8 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _filterChange$ = this._filterChange.asObservable();
   
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
+  private _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
+  public _showExternalLink = true;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -353,6 +356,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._isCompareMode) {
         this._compareFilter.userIds = event.id;
       }
+      this._showExternalLink = !!this._viewConfig.userLink;
       this._tableMode = TableModes.user;
       this._loadReport();
     }
@@ -362,6 +366,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._isCompareMode) {
         this._compareFilter.entryIdIn = event.id;
       }
+      this._showExternalLink = !!this._viewConfig.entryLink;
       this._tableMode = TableModes.entry;
       this._loadReport();
     }

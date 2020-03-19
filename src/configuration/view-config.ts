@@ -137,7 +137,12 @@ export const viewsConfig = {
       geo: {},
       devices: {}
     },
-    performance: {},
+    performance: {
+      userDrilldown: {},
+      userLink: {},
+      entryDrilldown: {},
+      entryLink: {}
+    },
     topVideos: {},
     geo: {},
     devices: {},

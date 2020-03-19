@@ -14,6 +14,7 @@ import { EntriesTableConfig } from './entries-table.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-entries-table',
@@ -43,6 +44,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   
   constructor(private _reportService: ReportService,
               private _compareService: CompareService,
