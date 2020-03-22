@@ -57,7 +57,7 @@
           </div>
 
           <div class="tabletMode">
-            <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners)" class="kMiscFilters">
+            <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners)" class="kMiscFilters kTagsOwners">
               <app-tags-filter *ngIf="_viewConfig?.tags"
                                [selectedFilters]="_selectedValues['tags']"
                                (itemSelected)="_onItemSelected($event, 'tags')"
