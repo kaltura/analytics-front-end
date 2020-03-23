@@ -32,7 +32,7 @@
           <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeLast.value.val)"
                          *ngFor="let _dateRangeLast of lastDateRangeItems" name="dates" [label]="_dateRangeLast.label"
                          [value]="_dateRangeLast.value.val" [kTooltip]="_dateRangeLast.value.tooltip"
-                         [placement]="'left'" [(ngModel)]="selectedDateRange"
+                         [(ngModel)]="selectedDateRange"
                          (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
         <div class="col">
@@ -40,7 +40,7 @@
           <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeCurrent.value.val)"
                          *ngFor="let _dateRangeCurrent of currDateRangeItems" name="dates"
                          [label]="_dateRangeCurrent.label" [value]="_dateRangeCurrent.value.val"
-                         [kTooltip]="_dateRangeCurrent.value.tooltip" [placement]="'right'"
+                         [kTooltip]="_dateRangeCurrent.value.tooltip"
                          [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
       </div>
