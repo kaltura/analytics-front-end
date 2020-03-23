@@ -101,7 +101,9 @@ app-checkboxes-list-filter {
     }
   }
 }
-
+.kTagsOwners{
+  width: 40%;
+}
 .tabletMode{
   display: flex;
   flex: 1 1 auto;
@@ -111,5 +113,8 @@ app-checkboxes-list-filter {
   .tabletMode{
     flex-direction: column;
     width: 200px;
+    .kTagsOwners{
+      width: 200px;
+    }
   }
 }

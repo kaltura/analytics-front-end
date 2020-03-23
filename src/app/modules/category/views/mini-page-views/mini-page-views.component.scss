@@ -19,20 +19,20 @@
     flex-direction: column;
     width: 100%;
   }
-  .kRow {
+  .kRow, .kTitleRow {
     display: flex;
     align-items: center;
     width: 100%;
   }
   .kFilters {
-    height: 112px !important;
+    height: 95px !important;
     flex: 0 0 auto;
     .kTitle{
       width: auto;
       padding-right: 0;
     }
     &.kCompare {
-      height: 67px !important;
+      height: 75px !important;
     }
   }
   .kLabel{

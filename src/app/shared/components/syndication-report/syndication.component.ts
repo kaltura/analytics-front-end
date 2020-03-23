@@ -348,12 +348,14 @@ export class SyndicationComponent implements OnDestroy {
     this._logger.trace('Handle tab change action by user', { tab });
     
     this._selectedMetrics = tab.key;
-    
     switch (this._selectedMetrics) {
+      case 'count_loads':
+        this._distributionColorScheme = 'impressions';
+        break;
       case 'sum_time_viewed':
         this._distributionColorScheme = 'time';
         break;
-      case 'avg_view_drop_off':
+      case 'avg_completion_rate':
         this._distributionColorScheme = 'dropoff';
         break;
       default:

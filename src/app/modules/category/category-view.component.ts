@@ -23,6 +23,7 @@ import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-even
 import { CategoryTopContentComponent } from "./views/category-top-content";
 import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
 import { CatFilterComponent } from "./filter/filter.component";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-category',
@@ -46,7 +47,8 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
-  public _creationDate = '';
+  public _creationDateLabel = '';
+  public _creationDate: moment.Moment = null;
   public _updateDate = '';
   public _dateFilter: DateChangeEvent = null;
   public _exportConfig: ExportItem[] = [];
@@ -129,7 +131,8 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
             this._category = category;
             this._viewConfig.refineFilter.categories = category.directSubCategoriesCount ? {} : null; // hide sub-categories filter if the current category has no sub categories
             const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
-            this._creationDate = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
+            this._creationDateLabel = DateFilterUtils.getMomentDate(category.createdAt).format(dateFormat);
+            this._creationDate = DateFilterUtils.getMomentDate(category.createdAt);
             this._updateDate = DateFilterUtils.getMomentDate(category.updatedAt).format(dateFormat);
             if (category.parentId) {
               this._loadCategoryDetails(true);
@@ -170,12 +173,13 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public openContextFilter(): void {
     this.categoryFilter.openFilter('context');
   }
-
+  
   public _navigateToParent(parentId: number): void {
-    this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
     if (analyticsConfig.isHosted) {
       const params = this._browserService.getCurrentQueryParams('string', { id: parentId.toString() });
       this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/category?${params}`);
+    } else {
+      this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
     }
   }
 

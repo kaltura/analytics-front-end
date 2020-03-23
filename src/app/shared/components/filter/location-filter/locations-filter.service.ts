@@ -52,8 +52,8 @@ export class LocationsFilterService implements OnDestroy {
   
   private _handleCountryTable(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
-  
-    this._countriesOptions.next(tableData.map(data => ({
+    // server might return unknown countries with empty object_id. Filter them out before mapping data.
+    this._countriesOptions.next(tableData.filter(data => data['object_id'] !== '').map(data => ({
       value: { name: data.country, id: data.object_id.toLowerCase() },
       label: data.country,
     })));
