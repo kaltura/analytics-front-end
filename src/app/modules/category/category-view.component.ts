@@ -177,10 +177,11 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   }
   
   public _navigateToParent(parentId: number): void {
-    this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
     if (analyticsConfig.isHosted) {
       const params = this._browserService.getCurrentQueryParams('string', { id: parentId.toString() });
       this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/category?${params}`);
+    } else {
+      this._router.navigate(['category/' + parentId], {queryParams: this._route.snapshot.queryParams});
     }
   }
 
