@@ -125,7 +125,7 @@ export class AppService implements OnDestroy {
           this._authService.restoreParentIfNeeded();
         }
 
-        this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute));
+        this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute), { replaceUrl: true });
       });
 
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
