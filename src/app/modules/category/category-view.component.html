@@ -144,6 +144,12 @@
                                 [refineFilter]="_refineFilter"></app-category-top-content>
         </div>
 
+        <div *ngIf="_viewConfig.subcategories && _categoryLoaded && !categoryFilter.contextSelected && _category?.directSubCategoriesCount" class="kReportContainer" id="subcategories">
+          <app-subcategories [categoryId]="_category?.id.toString()" #topVideos
+                             [dateFilter]="_dateFilter"
+                             [refineFilter]="_refineFilter"></app-subcategories>
+        </div>
+
         <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">
           <app-top-countries [dateFilter]="_dateFilter" #topCountries
                                    [_distributionKey]="'plays_distribution'"

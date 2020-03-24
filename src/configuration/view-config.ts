@@ -144,6 +144,7 @@ export const viewsConfig = {
       entryLink: {}
     },
     topVideos: {},
+    subcategories: {},
     geo: {},
     devices: {},
     syndication: {},
