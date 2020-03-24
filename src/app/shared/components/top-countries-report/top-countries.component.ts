@@ -151,7 +151,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
-    
+    this._order = `-${this._distributionCalculationKey}`;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
@@ -291,7 +291,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   private _updateReportConfig(reportConfig: ReportConfig): void {
-    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
+    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries') || this._refineFilter.find(({ type }) => type === 'location');
     
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
