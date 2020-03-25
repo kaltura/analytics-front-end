@@ -254,12 +254,13 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
       const relevantCompareTotal = this._compareTabsData.find(total => total.key === key);
       const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
       
-      return data.map((item, index) => {
+      return data.map((item) => {
         const rawValue = parseFloat(item[key]);
         const currentValue = getValue(rawValue, totalValue);
         
         if (compareData) {
-          const compareRawValue = parseFloat(compareData[index][key]);
+          const compareDevice = compareData.filter(compareItem => compareItem.device === item.device)
+          const compareRawValue = compareDevice.length ? parseFloat(compareDevice[0][key]) : 0;
           const compareValue = getValue(compareRawValue, compareTotalValue);
   
           const { value, direction } = this._trendService.calculateTrend(Number(rawValue), Number(compareRawValue));

@@ -144,7 +144,11 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     this._tableData = [];
     this._compareTableData = [];
     this._blockerMessage = null;
-
+    
+    this._order = `-${this._distributionCalculationKey}`;
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    this._updateReportConfig(reportConfig);
+  
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
@@ -152,8 +156,6 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       this._filter.categoriesIdsIn = this.categoryId;
     }
     
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
       .pipe(
         cancelOnDestroy(this),
@@ -162,6 +164,9 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
             return ObservableOf({ report, compare: null });
           }
           
+          const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+          this._updateReportConfig(compareReportConfig);
+          
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
           }
@@ -169,8 +174,6 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
             this._compareFilter.categoriesIdsIn = this.categoryId;
           }
           
-          const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-          this._updateReportConfig(compareReportConfig);
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         })
@@ -263,7 +266,12 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    let { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    // server might return unknown countries with empty object_id. Filter them out.
+    // TODO: Will need to change to "Unknown" if inconsistency with total will occur in the future.
+    if (this._drillDown.length === 0) {
+      tableData = tableData.filter(country => country['object_id']);
+    }
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._columns[0] = this._columns.splice(1, 1, this._columns[0])[0]; // switch places between the first 2 columns
@@ -291,7 +299,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   private _updateReportConfig(reportConfig: ReportConfig): void {
-    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
+    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries') || this._refineFilter.find(({ type }) => type === 'location');
     
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
