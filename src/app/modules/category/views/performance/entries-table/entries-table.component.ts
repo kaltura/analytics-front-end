@@ -128,7 +128,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
         'object_id',
       );
       this._columns = columns;
-      this.totalCount = current.table.totalCount;
+      this.totalCount = current.table.totalCount || 0;
       this._tableData = tableData;
     }
   }
