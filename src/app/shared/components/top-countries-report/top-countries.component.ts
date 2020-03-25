@@ -263,7 +263,10 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   }
   
   private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    let { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    // server might return unknown countries with empty object_id. Filter them out.
+    // TODO: Will need to change to "Unknown" if inconsistency with total will occur in the future.
+    tableData = tableData.filter(country => country['object_id']);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._columns[0] = this._columns.splice(1, 1, this._columns[0])[0]; // switch places between the first 2 columns
