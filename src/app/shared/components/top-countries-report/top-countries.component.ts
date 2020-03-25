@@ -144,16 +144,18 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     this._tableData = [];
     this._compareTableData = [];
     this._blockerMessage = null;
-
+    
+    this._order = `-${this._distributionCalculationKey}`;
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    this._updateReportConfig(reportConfig);
+  
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
-    this._order = `-${this._distributionCalculationKey}`;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    this._updateReportConfig(reportConfig);
+    
     this._reportService.getReport(reportConfig, sections)
       .pipe(
         cancelOnDestroy(this),
