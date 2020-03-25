@@ -164,6 +164,9 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
             return ObservableOf({ report, compare: null });
           }
           
+          const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+          this._updateReportConfig(compareReportConfig);
+          
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
           }
@@ -171,8 +174,6 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
             this._compareFilter.categoriesIdsIn = this.categoryId;
           }
           
-          const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-          this._updateReportConfig(compareReportConfig);
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         })
