@@ -4,6 +4,11 @@
       <div class="kFilters">
         <span class="kTitle">{{'app.category.subcategories' | translate}}</span>
       </div>
+      <span *ngIf="totalCount !== undefined" class="kTotalCount">
+        <span>
+          {{'app.category.subcatsnum' | translate: { '0': totalCount } }}
+        </span>
+      </span>
       <div class="kTable">
         <p-table dataKey="object_id"
                  [sortField]="'count_plays'"
@@ -20,10 +25,15 @@
                 {{'app.entry.count_plays' | translate}}
                 <p-sortIcon [field]="'count_plays'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
-              <!--th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'entry_name' ? null : col">
-                {{'app.entry.' + col | translate}}
-                <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
-              </th-->
+              <th *ngIf="!_isCompareMode">{{'app.entry.plays_distribution' | translate}}</th>
+              <th [pSortableColumn]="_isCompareMode ? null : 'unique_viewers'">
+                {{'app.entry.unique_viewers' | translate}}
+                <p-sortIcon [field]="'unique_viewers'" *ngIf="!_isCompareMode"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="_isCompareMode ? null : 'sum_time_viewed'">
+                {{'app.entry.sum_time_viewed' | translate}}
+                <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!_isCompareMode"></p-sortIcon>
+              </th>
 
             </tr>
           </ng-template>
@@ -34,6 +44,7 @@
               </td>
               <td class="kHighlight">
                 <a class="kEntryLink kTableColumn"
+                   (mouseenter)="_showOverlay($event, data)" (mouseleave)="_hideOverlay()"
                    [kTooltip]="data['name']"
                    [showOnEllipsis]="true">{{data['name']}}</a>
               </td>
@@ -48,33 +59,32 @@
                 <span *ngIf="!_isCompareMode">{{data['count_plays']}}</span>
               </td>
 
-              <!--td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-            <span *ngIf="_isCompareMode && data[col]?.value && col !== 'entry_name'"
-                  class="kTrend">
-              <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
-                <app-trend-value [value]="data[col].value"
-                                 [units]="data[col].units"
-                                 [trend]="data[col].trend"></app-trend-value>
-              </span>
-            </span>
-                <ng-container *ngIf="!_isCompareMode || col === 'entry_name'">
-                  <span
-                    *ngIf="col !== 'entry_name' && col !== 'total_completion_rate' && (col !== 'avg_completion_rate' || (col == 'avg_completion_rate' && userDrilldown))">{{data[col]}}</span>
-                  <span class="kEntryLink kTableColumn"
-                        *ngIf="col === 'entry_name' && (userDrilldown || !_viewConfig.entryDrilldown)"
-                        [kTooltip]="data[col]"
-                        [showOnEllipsis]="true"
-                  >{{data[col]}}</span>
-                  <a class="kEntryLink kTableColumn"
-                     *ngIf="col === 'entry_name' && !userDrilldown && _viewConfig.entryDrilldown"
-                     [kTooltip]="data[col]"
-                     [showOnEllipsis]="true"
-                     (click)="_drillDown(data)">{{data[col]}}</a>
-                  <app-bullet
-                    *ngIf="(col === 'avg_completion_rate' && !userDrilldown) || col === 'total_completion_rate'"
-                    [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
-                </ng-container>
-              </td-->
+              <td *ngIf="!_isCompareMode">
+                <app-bullet [value]="_totalPlaysCount ? data['count_plays'] / _totalPlaysCount * 100 : 0" [formatter]="null"></app-bullet>
+              </td>
+
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data['unique_viewers'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['unique_viewers'].value"
+                                     [units]="data['unique_viewers'].units"
+                                     [trend]="data['unique_viewers'].trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data['unique_viewers']}}</span>
+              </td>
+
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data['sum_time_viewed'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['sum_time_viewed'].value"
+                                     [units]="data['sum_time_viewed'].units"
+                                     [trend]="data['sum_time_viewed'].trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data['sum_time_viewed']}}</span>
+              </td>
+
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
@@ -93,3 +103,7 @@
     </div>
   </k-area-blocker>
 </div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-subcategory-details-overlay *ngIf="_subcategoryData" [subcategoryData]="_subcategoryData"></app-subcategory-details-overlay>
+</k-overlayPanel>

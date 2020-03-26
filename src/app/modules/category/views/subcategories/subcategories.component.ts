@@ -1,18 +1,11 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import {
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval,
-  KalturaReportTable,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { map, switchMap } from 'rxjs/operators';
 import { SortEvent } from 'primeng/api';
@@ -21,7 +14,9 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { ViewConfig } from "configuration/view-config";
-import {CategoryBase} from "../category-base/category-base";
+import { CategoryBase } from "../category-base/category-base";
+import { SubcategoryDetailsOverlayData } from "./subcategory-details-overlay/subcategory-details-overlay.component";
+import { OverlayComponent } from "shared/components/overlay/overlay.component";
 
 @Component({
   selector: 'app-subcategories',
@@ -31,27 +26,32 @@ import {CategoryBase} from "../category-base/category-base";
 })
 export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
   @Input() categoryId: string = null;
+  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
   public _firstTimeLoading = true;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
-  public _reportInterval = KalturaReportInterval.days
-  private _reportType = reportTypeMap(KalturaReportType.subCategories);
-  private _dataConfig: ReportDataConfig;
-  private _order = '-count_plays';
+  public _reportInterval = KalturaReportInterval.days;
   
   protected _componentId = 'subcategories';
   
   public totalCount = 0;
-  
   public _tableData: TableRow[] = [];
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category;
+  
+  private _reportType = reportTypeMap(KalturaReportType.subCategories);
+  private _dataConfig: ReportDataConfig;
+  private _order = '-count_plays';
+  private timeoutId = null;
+  public _totalPlaysCount = 0;
+  public _subcategoryData: SubcategoryDetailsOverlayData;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -94,6 +94,11 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
       .subscribe(({ report, compare }) => {
           this._tableData = [];
           this.totalCount = 0;
+    
+          // IMPORTANT to handle totals first, distribution rely on it
+          if (report.totals) {
+            this._handleTotals(report.totals); // handle totals
+          }
           
           if (compare) {
             this._handleCompare(report, compare);
@@ -116,6 +121,13 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
+  }
+  
+  private _handleTotals(totals: KalturaReportTotal): void {
+    const tabs = this._reportService.parseTotals(totals, this._dataConfig.totals, this._dataConfig.totals.preSelected);
+    if (tabs.length) {
+      this._totalPlaysCount = Number(tabs[0].rawValue);
+    }
   }
   
   private _handleCompare(current: Report, compare: Report): void {
@@ -145,6 +157,29 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
     this._tableData = tableData;
   }
   
+  public _showOverlay(event: MouseEvent, data: SubcategoryDetailsOverlayData): void {
+    if (this._overlay) {
+      this._subcategoryData = data;
+      if (this.timeoutId === null) {
+        this.timeoutId = setTimeout(() => {
+          this._overlay.show(event);
+          this.timeoutId = null;
+        }, 1000);
+      }
+    }
+  }
+  
+  public _hideOverlay(): void {
+    if (this._overlay) {
+      this._subcategoryData = null;
+      this._overlay.hide();
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
+    }
+  }
+  
   public _onPaginationChanged(event: { page: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
@@ -161,6 +196,7 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
       }
     }
   }
+  
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -178,19 +214,10 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
   }
   
   protected _updateRefineFilter(): void {
-    const userIds = this._filter.userIds;
-    
+    this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
-    
-    if (userIds) {
-      this._filter.userIds = userIds;
-    }
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
-      
-      if (userIds) {
-        this._compareFilter.userIds = userIds;
-      }
     }
   }
   

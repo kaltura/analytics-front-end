@@ -31,6 +31,7 @@ import { UsersTableComponent } from "./views/performance/users-table/users-table
 import { EntriesTableComponent } from "./views/performance/entries-table/entries-table.component";
 import { DatesTableComponent } from "./views/performance/dates-table/dates-table.component";
 import { SubcategoriesComponent } from './views/subcategories/subcategories.component';
+import { SubcategoryDetailsOverlayComponent } from "./views/subcategories/subcategory-details-overlay/subcategory-details-overlay.component";
 
 @NgModule({
   imports: [
@@ -70,7 +71,8 @@ import { SubcategoriesComponent } from './views/subcategories/subcategories.comp
     UsersTableComponent,
     EntriesTableComponent,
     DatesTableComponent,
-    SubcategoriesComponent
+    SubcategoriesComponent,
+    SubcategoryDetailsOverlayComponent
   ],
   exports: [],
   providers: []

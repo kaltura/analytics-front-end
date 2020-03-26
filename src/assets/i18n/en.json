@@ -742,7 +742,14 @@
         "metrics": "Metrics over time",
         "user": "User Engagement",
         "media": "Media Engagement"
+      },
+      "overlay": {
+        "id": "ID",
+        "subcategories": "Sub Categories",
+        "entries": "Entries Count",
+        "parent": "Parent"
       }
+
     },
     "entry": {
       "context": "Playback Context",
