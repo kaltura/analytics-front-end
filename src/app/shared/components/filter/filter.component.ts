@@ -113,7 +113,7 @@ export class FilterComponent {
       if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
         setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
           if (this._currentFilters.find(({ type }) => type === 'location')) {
-            this._removeFilter({ type: 'location', value: null, label: null });
+            this._removeFilter({ value: 'location', label: 'Location', type: 'location' });
           }
         });
       }

@@ -87,6 +87,9 @@ export class LocationsFilterService implements OnDestroy {
       pager: this._pager,
       order: null,
     };
+    if (reportConfig.filter.countryIn) {
+      delete reportConfig.filter.countryIn;
+    }
     this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
