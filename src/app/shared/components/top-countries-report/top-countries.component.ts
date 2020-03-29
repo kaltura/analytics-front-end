@@ -300,11 +300,12 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   
   private _updateReportConfig(reportConfig: ReportConfig): void {
     const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries') || this._refineFilter.find(({ type }) => type === 'location');
+    const regionsFilterApplied = this._refineFilter.find(({ type, value }) => type === 'location' && value['region'] && value['region'].length);
     
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
     }
-    if (reportConfig.filter['regionIn']) {
+    if (!regionsFilterApplied && reportConfig.filter['regionIn']) {
       delete reportConfig.filter['regionIn'];
     }
     if (reportConfig['objectIds__null']) {
