@@ -35,28 +35,28 @@
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
-  const config = {
-    kalturaServer: {
-      uri: 'www.kaltura.com',
-      previewUIConf: 38524931,
-    },
-    cdnServers: {
-      serverUri: 'http://cdnapi.kaltura.com',
-      securedServerUri: 'https://cdnapisec.kaltura.com'
-    },
-    ks: '',  // provide ks
-    pid: '', // provide partnerId
-    locale: 'en',
-    live: {
-      pollInterval: 30,
-      healthNotificationsCount: 50,
-    },
-    menuConfig: {
-      showMenu: true,
-    },
-    customStyle: {
-        baseClassName: 'kms',
-        css: `
+    const config = {
+        kalturaServer: {
+            uri: 'www.kaltura.com',
+            previewUIConf: 38524931,
+        },
+        cdnServers: {
+            serverUri: 'http://cdnapi.kaltura.com',
+            securedServerUri: 'https://cdnapisec.kaltura.com'
+        },
+        ks: "djJ8MTY0NTE2MXzrm5DkkVJHrNuKTh3LBF241Oy6KQzp4hb_eIq5nxMDrElHQKA7LdnJFicWejxugrxBglX5sUliNcezs4NP0BZ6PvrxiEWaZruZV3Ldit7BS9kQKRxD6ablf7ng9S5vyyaB8dOkIyWFXDLG9Vn6i-nhWFXj0Ibe9ITpIIAN8GBaLw==",
+        pid: "1645161",
+        locale: 'en',
+        live: {
+            pollInterval: 30,
+            healthNotificationsCount: 50,
+        },
+        menuConfig: {
+            showMenu: true,
+        },
+        customStyle: {
+            baseClassName: 'kms',
+            css: `
             body.kms {
                 background: transparent;
                 background-color: white;
@@ -82,7 +82,7 @@
             .kms .kMain .kReportView .kReport.kImageReport {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport app-entry-filter {
+            .kms .kMain .kReportView .kReport .kRefineFiltersHost {
                 background: transparent;
             }
             /* Margins */
@@ -142,62 +142,62 @@
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
             }`
-    }
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const analyticsApp = document.getElementById('analytics');
-    const toggleContrastBtn = document.getElementById('btn');
-
-    const sendMessage = message => {
-      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
-        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
-      }
+        }
     };
 
-    toggleContrastBtn.addEventListener('click', e => {
-        sendMessage({ messageType: 'toggleContrastTheme' });
+    document.addEventListener('DOMContentLoaded', () => {
+        const analyticsApp = document.getElementById('analytics');
+        const toggleContrastBtn = document.getElementById('btn');
+
+        const sendMessage = message => {
+            if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+                analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+            }
+        };
+
+        toggleContrastBtn.addEventListener('click', e => {
+            sendMessage({ messageType: 'toggleContrastTheme' });
+        });
+
+        window.addEventListener('message', e => {
+            if (!e.data) {
+                return;
+            }
+
+            const postMessageData = e.data;
+
+            switch (postMessageData.messageType) {
+                case 'analyticsInit':
+                    sendMessage({ messageType: 'init', payload: config });
+                    break;
+
+                case 'analyticsInitComplete':
+                    sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+                    sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+                    break;
+
+                case 'updateLayout':
+                    analyticsApp.style.height = `${postMessageData.payload.height}px`;
+                    break;
+
+                case 'navigateTo':
+                    const [url, params] = postMessageData.payload.split('?');
+                    const queryParams = params.split('&').reduce((acc, val) => {
+                        const [key, value] = val.split('=');
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+
+                    sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+                    sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+                    break;
+
+                default:
+                    console.log(`${postMessageData.messageType} event is not implemented`);
+                    break;
+            }
+        })
     });
-
-    window.addEventListener('message', e => {
-      if (!e.data) {
-        return;
-      }
-
-      const postMessageData = e.data;
-
-      switch (postMessageData.messageType) {
-        case 'analyticsInit':
-          sendMessage({ messageType: 'init', payload: config });
-          break;
-
-        case 'analyticsInitComplete':
-          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
-          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
-          break;
-
-        case 'updateLayout':
-          analyticsApp.style.height = `${postMessageData.payload.height}px`;
-          break;
-
-        case 'navigateTo':
-          const [url, params] = postMessageData.payload.split('?');
-          const queryParams = params.split('&').reduce((acc, val) => {
-            const [key, value] = val.split('=');
-            acc[key] = value;
-            return acc;
-          }, {});
-
-          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
-          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
-          break;
-
-        default:
-          console.log(`${postMessageData.messageType} event is not implemented`);
-          break;
-      }
-    })
-  });
 </script>
 </body>
 </html>

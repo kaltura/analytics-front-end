@@ -78,7 +78,7 @@
     top: 32px;
   }
 
-  .kCategoryDetails {
+  .kEntryDetails {
     display: flex;
     font-size: 14px;
     color: $kGrayscale2;
@@ -176,9 +176,6 @@
     top: 0px;
   }
   .kReportContainer {
-    &.kNoPadding {
-      padding-top: 48px !important;
-    }
     .kMiniTopReportSmall {
       width: 40%;
     }
@@ -196,9 +193,6 @@
       height: 308px;
       &.short{
         height: 248px !important;
-      }
-      ::ng-deep .kFilters{
-        margin-top: 12px;
       }
     }
   }

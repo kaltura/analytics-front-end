@@ -9,10 +9,10 @@
 }
 .kReportContent{
   flex-wrap: wrap;
-  height: 180px;
+  height: 180px !important;
 }
 :host.short .kReportContent{
-  height: 120px;
+  height: 120px !important;
 }
 .kPlayedEntries {
   display: inline-block;

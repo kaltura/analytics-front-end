@@ -1,5 +1,8 @@
 @import '../../../../../styles/variables';
-
+:host {
+  width: 100%;
+  height: 100%;
+}
 .kFilters .kTitle.drillDownRoot{
   color: $kGrayscale3;
   padding-left: 24px;
@@ -41,9 +44,11 @@
   }
 }
 .kReport .kReportContent .kChart{
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
-
+.kReport{
+  margin-bottom: 0px !important;
+}
 .kTableModeSelector {
   margin-left: 24px;
   margin-bottom: 16px;

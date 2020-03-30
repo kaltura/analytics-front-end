@@ -33,7 +33,7 @@
           </div>
         </div>
 
-        <div *ngIf="_viewConfig.details" class="kCategoryDetails" aria-label="Category Details"
+        <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Category Details"
              [class.kFloatingDetails]="!_viewConfig.title">
           <span class="kLabel" *ngIf="_category?.parentId">{{'app.category.parent' | translate}}</span>
           <a *ngIf="_category?.parentId" class="kParentLink"
@@ -55,16 +55,16 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <div class="kReportContainer kNoPadding">
-          <app-cat-filter name="category" #categoryFilter
-                          [category]="_category"
-                          [viewConfig]="_viewConfig.refineFilter"
-                          [opened]="_refineFilterOpened"
-                          [dateFilter]="_dateFilter"
-                          [selectedFilters]="_selectedRefineFilters"
-                          (closeFilters)="_refineFilterOpened = false"
-                          (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
-        </div>
+        <app-cat-filter class="kRefineFiltersHost"
+                        name="category" #categoryFilter
+                        [category]="_category"
+                        [viewConfig]="_viewConfig.refineFilter"
+                        [opened]="_refineFilterOpened"
+                        [dateFilter]="_dateFilter"
+                        [selectedFilters]="_selectedRefineFilters"
+                        (closeFilters)="_refineFilterOpened = false"
+                        (filterChange)="_onRefineFilterChange($event)"></app-cat-filter>
+
 
         <div *ngIf="_miniViewsCount && _categoryLoaded" class="kReportContainer kTabletPadding">
           <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide" [class.short]="categoryFilter.contextSelected">

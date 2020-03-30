@@ -1,13 +1,13 @@
-<div data-aid="report-performance-highlights" class="kReport kContent kOverrideFAIcons">
+<div data-aid="report-performance-highlights" class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle" [class.drillDownRoot]="_drillDown.label.length" (click)="drillUp()">{{'app.category.performances' | translate}}</span>
+    <span class="kTitle drillDownRoot kSlash" *ngIf="_drillDown.label.length">/</span>
+    <span class="kDrilldown" *ngIf="_drillDown.label.length">{{_drillDown.label}}</span>
+    <i *ngIf="_drillDown.label.length && _showExternalLink" (click)="navigateToDrilldown()" class="kIconexternal_link"
+       [kTooltip]="'app.category.' + _tableMode + 'DrillDown' | translate"></i>
+  </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <div class="kFilters">
-        <span class="kTitle" [class.drillDownRoot]="_drillDown.label.length" (click)="drillUp()">{{'app.category.performances' | translate}}</span>
-        <span class="kTitle drillDownRoot kSlash" *ngIf="_drillDown.label.length">/</span>
-        <span class="kDrilldown" *ngIf="_drillDown.label.length">{{_drillDown.label}}</span>
-        <i *ngIf="_drillDown.label.length && _showExternalLink" (click)="navigateToDrilldown()" class="kIconexternal_link"
-           [kTooltip]="'app.category.' + _tableMode + 'DrillDown' | translate"></i>
-      </div>
       <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units applyIn="performance"

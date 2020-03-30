@@ -114,9 +114,10 @@ body {
         display: flex;
         flex-direction: column;
         width: 100%;
+        height: 100%;
         background-color: white;
         min-width: 0;
-
+        box-sizing: border-box;
         .kDimensions {
           width: 100%;
           margin-top: 16px;

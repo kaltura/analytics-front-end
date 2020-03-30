@@ -39,12 +39,13 @@
       <span class="kOwner">{{owner}}</span>
     </div>
 
-    <app-playlist-filter [viewConfig]="_viewConfig.refineFilter"
-                        [opened]="_refineFilterOpened"
-                        [dateFilter]="_dateFilter"
-                        [selectedFilters]="_selectedRefineFilters"
-                        (closeFilters)="_refineFilterOpened = false"
-                        (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
+    <app-playlist-filter class="kRefineFiltersHost"
+                         [viewConfig]="_viewConfig.refineFilter"
+                         [opened]="_refineFilterOpened"
+                         [dateFilter]="_dateFilter"
+                         [selectedFilters]="_selectedRefineFilters"
+                         (closeFilters)="_refineFilterOpened = false"
+                         (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
 
     <app-path-entry-totals *ngIf="_viewConfig.totals"
                             [dateFilter]="_dateFilter"
