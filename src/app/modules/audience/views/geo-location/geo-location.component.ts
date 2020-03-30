@@ -536,4 +536,19 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
       }
     }
   }
+  
+  public exportPDF(): void {
+    const pixelRatio = this._echartsIntance.getHeight() / this._echartsIntance.getWidth();
+    const imgData = this._echartsIntance.getDataURL({
+      type: 'jpeg',
+      backgroundColor: '#fff',
+      pixelRatio: 1
+    });
+    let doc = new window['jsPDF']();
+    doc.setFontSize(20);
+    doc.text(5, 15, 'Geo location report');
+    doc.addImage(imgData, 'JPEG', 0, 30, 200, 200 * pixelRatio);
+    doc.autoTable({ html: document.getElementsByTagName('table')[0], startY: 140 })
+    doc.save('report.pdf');
+  }
 }

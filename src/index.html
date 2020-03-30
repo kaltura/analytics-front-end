@@ -3,13 +3,38 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="./">
+  <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+  <script src="https://unpkg.com/jspdf"></script>
+  <script src="https://unpkg.com/jspdf-autotable"></script>
+  <script type="text/javascript">
+      var analyticsConfig = {
+          kalturaServer: {
+              uri : "www.kaltura.com",
+              "previewUIConf": 38524931,
+          },
+          cdnServers: {
+              serverUri: "http://cdnapi.kaltura.com",
+              securedServerUri: "https://cdnapisec.kaltura.com"
+          },
+          ks: "djJ8MTY0NTE2MXzrm5DkkVJHrNuKTh3LBF241Oy6KQzp4hb_eIq5nxMDrElHQKA7LdnJFicWejxugrxBglX5sUliNcezs4NP0BZ6PvrxiEWaZruZV3Ldit7BS9kQKRxD6ablf7ng9S5vyyaB8dOkIyWFXDLG9Vn6i-nhWFXj0Ibe9ITpIIAN8GBaLw==",
+          pid: "1645161",
+          locale: "en",
+          multiAccount: false,
+          live: {
+              "pollInterval": 30,
+              "healthNotificationsCount": 50,
+          },
+      }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>
+
+
