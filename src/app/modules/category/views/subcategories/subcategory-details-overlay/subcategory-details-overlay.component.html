@@ -1,0 +1,32 @@
+<div data-aid="overlay-entry-details" class="kSubcategoryDetailsOverlay">
+  <div class="kSubcategoryDetails" *ngIf="subcategoryData">
+    <div class="kName">
+      <span>{{subcategoryData.name}}</span>
+    </div>
+    <div class="kDetails">
+      <div class="kRow">
+        <span class="kLabel">{{'app.category.overlay.id' | translate}}</span>
+        <span class="kValue">{{subcategoryData.object_id}}</span>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">{{'app.category.overlay.subcategories' | translate}}</span>
+        <span class="kValue">{{subcategoryData.direct_sub_categories_count}}</span>
+      </div>
+
+
+      <div class="kRow">
+        <span class="kLabel">{{'app.category.overlay.entries' | translate}}</span>
+        <span class="kValue">{{subcategoryData.entries_count}}</span>
+      </div>
+
+
+      <div class="kRow">
+        <span class="kLabel">{{'app.category.overlay.parent' | translate}}</span>
+        <span class="kValue">{{subcategoryData.parent_name}}</span>
+      </div>
+
+    </div>
+
+  </div>
+</div>

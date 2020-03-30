@@ -12,7 +12,7 @@ import {
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
-import { ViewConfig, viewsConfig } from "configuration/view-config";
+import { ViewConfig } from "configuration/view-config";
 import { DateChangeEvent, DateRanges } from "shared/components/date-filter/date-filter.service";
 import { analyticsConfig } from "configuration/analytics-config";
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
@@ -44,7 +44,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     }, 0);
   }
   public _selectedRefineFilters: RefineFilter = null;
-  public _viewConfig: ViewConfig = { ...viewsConfig.category };
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _creationDateLabel = '';
@@ -54,14 +54,12 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
-  public _topMiniViewsCount = [
-    this._viewConfig.miniPageViews,
-    this._viewConfig.miniHighlights
-  ].filter(Boolean).length;
   public _miniViewsCount = [
     this._viewConfig.miniTopVideos,
     this._viewConfig.miniTopViewers,
-    this._viewConfig.insights
+    this._viewConfig.insights,
+    this._viewConfig.miniPageViews,
+    this._viewConfig.miniHighlights
   ].filter(Boolean).length;
   
   public _loadingCategory = false;

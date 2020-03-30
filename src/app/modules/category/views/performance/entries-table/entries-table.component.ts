@@ -1,19 +1,20 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
 import { SortEvent } from 'primeng/api';
 import { EntriesTableConfig } from './entries-table.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-entries-table',
@@ -28,8 +29,11 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   @Input() reportInterval: KalturaReportInterval;
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
+  @Input() userDrilldown = false;
   
-  private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
+  @Output() drillDown: EventEmitter<{entry: string, name: string, pid: string, source: string}> = new EventEmitter();
+  
+  private _reportType = reportTypeMap(KalturaReportType.topUserContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
   
@@ -40,6 +44,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   
   constructor(private _reportService: ReportService,
               private _compareService: CompareService,
@@ -50,10 +55,10 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: EntriesTableConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
-    this._dataConfig = _dataConfigService.getConfig();
   }
   
   ngOnInit() {
+    this._dataConfig = this._dataConfigService.getConfig();
     this._loadReport();
     
     if (this.filterChange) {
@@ -73,13 +78,18 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   
   private _loadReport(): void {
     this._isBusy = true;
+    if (this.userDrilldown) {
+      this._dataConfig.table.fields['total_completion_rate'] = {
+        format: value =>  ReportHelper.percents(value / 100, false, true),
+        sortOrder: 8
+      };
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(switchMap(report => {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
         const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
         
         return this._reportService.getReport(compareReportConfig, this._dataConfig, false)
@@ -158,8 +168,7 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   }
   
   public _drillDown(row: TableRow): void {
-    const path = row['entry_source'] === 'Interactive Video' ? 'playlist' : 'entry';
-    this._navigationDrillDownService.drilldown(path, row['object_id'], true, row['partner_id']);
+    this.drillDown.emit({entry: row['object_id'], name: row['entry_name'], pid: row['partner_id'], source: row['entry_source']});
   }
 }
 

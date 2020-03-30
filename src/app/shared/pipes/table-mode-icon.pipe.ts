@@ -6,6 +6,8 @@ export enum TableModes {
   devices = 'devices',
   entries = 'entries',
   context = 'context',
+  user = 'user',
+  entry = 'entry'
 }
 
 @Pipe({

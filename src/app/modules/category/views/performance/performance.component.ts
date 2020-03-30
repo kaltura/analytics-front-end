@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -19,6 +19,7 @@ import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { CategoryBase } from "../category-base/category-base";
+import {ViewConfig} from "configuration/view-config";
 
 @Component({
   selector: 'app-category-performance',
@@ -75,6 +76,10 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _comparePeriod: { from: number, to: number };
   public _filterChange$ = this._filterChange.asObservable();
   
+  public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
+  private _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
+  public _showExternalLink = true;
+  
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -86,6 +91,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _dataConfigService: PerformanceConfig,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _logger: KalturaLogger) {
     super();
 
@@ -107,7 +113,12 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
-    
+    if (this._tableMode === this._tableModes.user) {
+      this._filter.userIds = this._drillDown.id;
+    }
+    if (this._tableMode === this._tableModes.entry) {
+      this._filter.entryIdIn = this._drillDown.id;
+    }
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
     
@@ -120,6 +131,12 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   
         if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
           this._compareFilter.categoriesIdsIn = this.categoryId;
+        }
+        if (this._tableMode === this._tableModes.user) {
+          this._compareFilter.userIds = this._drillDown.id;
+        }
+        if (this._tableMode === this._tableModes.entry) {
+          this._compareFilter.entryIdIn = this._drillDown.id;
         }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
         
@@ -325,10 +342,62 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     // clean up users and entries filters
     delete this._filter.userIds;
     delete this._filter.entryIdIn;
-    
+
     if (this._compareFilter) {
       delete this._compareFilter.userIds;
       delete this._compareFilter.entryIdIn;
+    }
+  }
+  
+  public onDrillDown(type: 'user' | 'entry', event): void {
+    if (type === 'user') {
+      this._drillDown = {label: event.user, id: event.user, pid: event.pid};
+      this._filter.userIds = event.id;
+      if (this._isCompareMode) {
+        this._compareFilter.userIds = event.id;
+      }
+      this._showExternalLink = !!this._viewConfig.userLink;
+      this._tableMode = TableModes.user;
+      this._loadReport();
+    }
+    if (type === 'entry') {
+      this._drillDown = {label: event.name, id: event.entry, pid: event.pid, source: event.source};
+      this._filter.entryIdIn = event.id;
+      if (this._isCompareMode) {
+        this._compareFilter.entryIdIn = event.id;
+      }
+      this._showExternalLink = !!this._viewConfig.entryLink;
+      this._tableMode = TableModes.entry;
+      this._loadReport();
+    }
+  }
+  
+  public drillUp(): void {
+    if (this._drillDown.label.length) {
+      this._drillDown = {label: '', id: '', pid: ''};
+      this._filter.userIds = '';
+      this._filter.entryIdIn = '';
+      if (this._isCompareMode) {
+        this._compareFilter.userIds = '';
+        this._compareFilter.entryIdIn = '';
+      }
+    }
+    if (this._tableMode === TableModes.user) {
+      this._tableMode = TableModes.users;
+    }
+    if (this._tableMode === TableModes.entry) {
+      this._tableMode = TableModes.entries;
+    }
+    this._loadReport();
+  }
+  
+  public navigateToDrilldown() {
+    if (this._tableMode === TableModes.user) {
+      this._navigationDrillDownService.drilldown('user', this._drillDown.id, true, this._drillDown.pid);
+    }
+    if (this._tableMode === TableModes.entry) {
+      const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : 'entry';
+      this._navigationDrillDownService.drilldown(path, this._drillDown.id, true, this._drillDown.pid);
     }
   }
 }

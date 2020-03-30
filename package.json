@@ -40,7 +40,7 @@
     "echarts": "^4.2.1",
     "jquery": "^3.3.1",
     "jsnlog": "^2.29.0",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200316-081948.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200324-083723.tgz",
     "moment": "^2.24.0",
     "ng-carousel-iuno": "^0.3.0",
     "ngx-echarts": "^4.2.1",
@@ -54,7 +54,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.801.0",
+    "@angular-devkit/build-angular": "^0.803.25",
     "@angular/cli": "^8.3.5",
     "@angular/compiler-cli": "^8.2.7",
     "@angular/language-service": "^8.2.7",
