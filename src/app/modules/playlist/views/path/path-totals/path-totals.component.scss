@@ -1,7 +1,7 @@
 @import '../../../../../../styles/variables';
 .kTotals {
   background-color: transparent !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 0 !important;
 }
 .kTotalsRow{
   display: flex;
@@ -14,7 +14,7 @@
   display: flex;
   background-color: #ffffff;
   border-radius: 3px;
-
+  margin-bottom: 24px;
   .kTotalContainer {
     width: 25%;
     height: 100%;

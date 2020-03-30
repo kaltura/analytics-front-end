@@ -1,8 +1,14 @@
 .kCompareMode ::ng-deep .ui-table {
   border-left: 1px solid #d9d9d9;
 }
-
+:host {
+  width: 100%;
+  height: 100%;
+}
 .kTitle{
   width: auto !important;
   padding-right: 0 !important;
+}
+.kReportContent{
+  box-sizing: border-box;
 }
