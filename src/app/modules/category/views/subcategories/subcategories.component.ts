@@ -157,7 +157,8 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
     this._tableData = tableData;
     // calculate plays distribution
     this._tableData.forEach(categoryData => {
-      categoryData['plays_distribution'] = (parseInt(categoryData.count_plays.replace(/,/g, '')) / this._totalPlaysCount * 100).toFixed(2);
+      const distribution = parseInt(categoryData.count_plays.replace(/,/g, '')) / this._totalPlaysCount * 100;
+      categoryData['plays_distribution'] = Math.round(distribution * 100) / 100;
     });
   }
   public _showOverlay(event: MouseEvent, data: SubcategoryDetailsOverlayData): void {
