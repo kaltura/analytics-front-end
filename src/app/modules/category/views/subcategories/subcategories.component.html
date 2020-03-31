@@ -60,7 +60,7 @@
               </td>
 
               <td *ngIf="!_isCompareMode">
-                <app-bullet [value]="_totalPlaysCount ? data['count_plays'] / _totalPlaysCount * 100 : 0" [formatter]="null"></app-bullet>
+                <app-bullet [value]="_totalPlaysCount ? data['plays_distribution'] : 0" [formatter]="null"></app-bullet>
               </td>
 
               <td>
