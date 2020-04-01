@@ -10,7 +10,7 @@ import { CompareService } from 'shared/services/compare.service';
 import { map, switchMap } from 'rxjs/operators';
 import { SortEvent } from 'primeng/api';
 import { SubcategoriesConfig } from './subcategories.config';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { ViewConfig } from "configuration/view-config";
@@ -198,6 +198,15 @@ export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
         this._order = order;
         this._loadReport();
       }
+    }
+  }
+  
+  public _navigateToCategory(category: string): void {
+    if (analyticsConfig.isHosted) {
+      const params = this._browserService.getCurrentQueryParams('string', { id: category });
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/category?${params}`);
+    } else {
+      this._router.navigate(['category/' + category], {queryParams: this._activatedRoute.snapshot.queryParams});
     }
   }
   

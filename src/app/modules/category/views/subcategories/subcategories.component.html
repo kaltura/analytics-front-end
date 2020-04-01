@@ -45,7 +45,7 @@
               <td class="kHighlight">
                 <a class="kEntryLink kTableColumn"
                    (mouseenter)="_showOverlay($event, data)" (mouseleave)="_hideOverlay()"
-                   [kTooltip]="data['name']"
+                   [kTooltip]="data['name']" (click)="_navigateToCategory(data['object_id'])"
                    [showOnEllipsis]="true">{{data['name']}}</a>
               </td>
               <td>
