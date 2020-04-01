@@ -76,13 +76,12 @@ export class PerformanceConfig extends ReportDataBaseConfig {
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),
-            units: value => '%',
             title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),
             sortOrder: 4,
           },
           'avg_completion_rate': {
-            format: value => value,
+            format: value => ReportHelper.percents(value / 100, false),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate_tt`),
             sortOrder: 5,
