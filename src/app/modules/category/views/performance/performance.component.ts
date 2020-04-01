@@ -79,6 +79,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
   private _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   public _showExternalLink = true;
+  public _showCustomLegend = false;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -164,8 +165,15 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
               this._datesTableData = { current: report };
             }
           }
+          
           this._firstTimeLoading = false;
-          this._isBusy = false;
+          
+          if (this._filter.playbackContextIdsIn) {
+            // need to load non-context graph
+            this.addNoContextSeries();
+          } else {
+            this._isBusy = false;
+          }
         },
         error => {
           this._isBusy = false;
@@ -221,20 +229,24 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this._filterChange.next();
   }
   
-  private _handleCompare(current: Report, compare: Report): void {
+  private _handleCompare(current: Report, compare: Report, secondSeries = false): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
     
-    if (current.graphs.length && compare.graphs.length) {
-      const { lineChartData } = this._compareService.compareGraphData(
-        this._currentPeriod,
-        this._comparePeriod,
-        current.graphs,
-        compare.graphs,
-        this._dataConfig.graph,
-        this._reportInterval,
-      );
-      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+    if (secondSeries) {
+      // TODO handle second series in compare view, handle legend
+    } else {
+      if (current.graphs.length && compare.graphs.length) {
+        const { lineChartData } = this._compareService.compareGraphData(
+          this._currentPeriod,
+          this._comparePeriod,
+          current.graphs,
+          compare.graphs,
+          this._dataConfig.graph,
+          this._reportInterval,
+        );
+        this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      }
     }
   }
   
@@ -242,15 +254,54 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
-  private _handleGraphs(graphs: KalturaReportGraph[]): void {
+  private _handleGraphs(graphs: KalturaReportGraph[], secondSeries = false): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-    
-    this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+    if (secondSeries && this._lineChartData) {
+      Object.keys(lineChartData).forEach(key => {
+        if (this._lineChartData[key] && this._lineChartData[key].series) {
+          let secondSeries = lineChartData[key]['series'][0];
+          secondSeries['lineStyle']['type'] = 'dashed';
+          
+          const getFormatter = color => params => {
+            const { name, value } = Array.isArray(params) ? params[0] : params;
+            return `
+          <div class="kGraphTooltip">
+            ${name}<br/>
+            <div class="row">
+                <div class="line" style="background-color: ${color}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                <span class="value">${value}</span>
+            </div>
+            <div class="row">
+                <div class="dashed" style="border-top: 3px dotted ${color}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                <span class="value">${params[1].value}</span>
+            </div>
+          </div>
+        `;
+          };
+          this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color[0]);
+          this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
+          this._lineChartData[key].series.push(secondSeries);
+          this._showCustomLegend = true;
+        }
+      });
+      
+      // hack to refresh the selected metrics data
+      const saveMetrics = this._selectedMetrics;
+      this._selectedMetrics = null;
+      setTimeout(() => {
+        this._selectedMetrics = saveMetrics;
+      }, 0);
+    } else {
+      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      this._showCustomLegend = false;
+    }
   }
   
   public _onTabChange(tab: Tab): void {
@@ -399,5 +450,54 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : 'entry';
       this._navigationDrillDownService.drilldown(path, this._drillDown.id, true, this._drillDown.pid);
     }
+  }
+  
+  private addNoContextSeries(sections = this._dataConfig): void {
+    delete sections.table;
+    delete sections.totals;
+    const replaceFilter = (filter: KalturaEndUserReportInputFilter) => {
+      let noContextFilter = new KalturaEndUserReportInputFilter({
+        searchInTags: true,
+        searchInAdminTags: false
+      });
+      noContextFilter = Object.assign(noContextFilter, filter);
+      noContextFilter.categoriesIdsIn = noContextFilter.playbackContextIdsIn;
+      delete noContextFilter.playbackContextIdsIn;
+      return noContextFilter;
+    };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: replaceFilter(this._filter), order: this._order };
+    this._reportService.getReport(reportConfig, sections, false)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+        const compareReportConfig = { reportType: this._reportType, filter: replaceFilter(this._compareFilter), order: this._order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+    
+          if (compare) {
+            this._handleCompare(report, compare, true);
+          } else {
+            if (report.graphs.length) {
+              this._handleGraphs(report.graphs, true); // handle graphs
+            }
+          }
+
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
   }
 }

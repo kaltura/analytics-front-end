@@ -748,6 +748,20 @@
         "subcategories": "Sub Categories",
         "entries": "Entries Count",
         "parent": "Parent"
+      },
+      "graphs": {
+        "category_count_loads": "Category Page Player Impressions",
+        "category_count_plays": "Category Page Plays",
+        "category_unique_known_users": "Category Page Unique Viewers",
+        "category_sum_time_viewed": "Category Page Minutes Viewed",
+        "category_avg_view_drop_off": "Category Page Avg. Drop Off Rate",
+        "category_avg_completion_rate": "Category Page Avg. Completion Rate",
+        "context_count_loads": "All Category Player Impressions",
+        "context_count_plays": "All Category Plays",
+        "context_unique_known_users": "All Category Unique Viewers",
+        "context_sum_time_viewed": "All Category Minutes Viewed",
+        "context_avg_view_drop_off": "All Category Avg. Drop Off Rate",
+        "context_avg_completion_rate": "All Category Avg. Completion Rate"
       }
 
     },

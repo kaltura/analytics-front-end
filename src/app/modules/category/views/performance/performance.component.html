@@ -25,7 +25,12 @@
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
       </div>
-
+      <div class="kLegend" *ngIf="_showCustomLegend">
+        <div class="line" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+        <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+      </div>
       <div class="kTable">
         <div class="kToggle" [class.kHidden]="_tableMode === 'user' || _tableMode === 'entry'">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>

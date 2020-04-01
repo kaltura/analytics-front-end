@@ -68,7 +68,59 @@
     }
   }
 }
-
+.kLegend {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  margin-bottom: 20px;
+  .dashed {
+    width: 16px;
+    margin-left: 20px;
+    margin-right: 6px;
+    height: 0px;
+  }
+  .line {
+    width: 12px;
+    height: 3px;
+    margin-right: 6px;
+    &.margin {
+      margin-left: 20px;
+    }
+  }
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+}
+:host ::ng-deep .kGraphTooltip {
+  .row {
+    display: flex;
+    align-items: center;
+    .dashed {
+      width: 16px;
+      margin-right: 4px;
+      height: 0px;
+    }
+    .line {
+      width: 16px;
+      height: 3px;
+      margin-right: 4px;
+    }
+    .label {
+      margin-left: 4px;
+      margin-right: 4px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .value {
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
 :host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 172px !important;
