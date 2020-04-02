@@ -233,19 +233,69 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
     
-    if (secondSeries) {
-      // TODO handle second series in compare view, handle legend
-    } else {
-      if (current.graphs.length && compare.graphs.length) {
-        const { lineChartData } = this._compareService.compareGraphData(
-          this._currentPeriod,
-          this._comparePeriod,
-          current.graphs,
-          compare.graphs,
-          this._dataConfig.graph,
-          this._reportInterval,
-        );
+    if (current.graphs.length && compare.graphs.length) {
+      const { lineChartData } = this._compareService.compareGraphData(
+        this._currentPeriod,
+        this._comparePeriod,
+        current.graphs,
+        compare.graphs,
+        this._dataConfig.graph,
+        this._reportInterval,
+      );
+      if (secondSeries && this._lineChartData) {
+        Object.keys(lineChartData).forEach(key => {
+          if (this._lineChartData[key] && this._lineChartData[key].series) {
+            let thirdSeries = lineChartData[key]['series'][0];
+            thirdSeries['lineStyle']['type'] = 'dashed';
+            let forthSeries = lineChartData[key]['series'][1];
+            forthSeries['lineStyle']['type'] = 'dashed';
+      
+            const getFormatter = colors => params => {
+              return `
+          <div class="kGraphTooltip">
+            ${params[1].seriesName}<br/>
+            <div class="row">
+                <div class="line" style="background-color: ${colors[1]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                <span class="value">${params[1].value}</span>
+            </div>
+            <div class="row">
+                <div class="dashed" style="border-top: 3px dotted ${colors[1]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                <span class="value">${params[3].value}</span>
+            </div>
+            ${params[0].seriesName}<br/>
+            <div class="row">
+                <div class="line" style="background-color: ${colors[0]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                <span class="value">${params[0].value}</span>
+            </div>
+            <div class="row">
+                <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                <span class="value">${params[2].value}</span>
+            </div>
+          </div>
+        `;
+            };
+            this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color);
+            this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
+            this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[1]);
+            this._lineChartData[key].series.push(thirdSeries);
+            this._lineChartData[key].series.push(forthSeries);
+            this._showCustomLegend = true;
+          }
+        });
+  
+        // hack to refresh the selected metrics data
+        const saveMetrics = this._selectedMetrics;
+        this._selectedMetrics = null;
+        setTimeout(() => {
+          this._selectedMetrics = saveMetrics;
+        }, 0);
+      } else {
         this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+        this._showCustomLegend = false;
       }
     }
   }
@@ -267,25 +317,24 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           let secondSeries = lineChartData[key]['series'][0];
           secondSeries['lineStyle']['type'] = 'dashed';
           
-          const getFormatter = color => params => {
-            const { name, value } = Array.isArray(params) ? params[0] : params;
+          const getFormatter = colors => params => {
             return `
           <div class="kGraphTooltip">
-            ${name}<br/>
+            ${params[0].name}<br/>
             <div class="row">
-                <div class="line" style="background-color: ${color}"></div>
+                <div class="line" style="background-color: ${colors[0]}"></div>
                 <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
-                <span class="value">${value}</span>
+                <span class="value">${params[0].value}</span>
             </div>
             <div class="row">
-                <div class="dashed" style="border-top: 3px dotted ${color}"></div>
+                <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
                 <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
                 <span class="value">${params[1].value}</span>
             </div>
           </div>
         `;
           };
-          this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color[0]);
+          this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color);
           this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
           this._lineChartData[key].series.push(secondSeries);
           this._showCustomLegend = true;
