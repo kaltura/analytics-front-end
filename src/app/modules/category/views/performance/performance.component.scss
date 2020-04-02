@@ -45,6 +45,7 @@
 }
 .kReport .kReportContent .kChart{
   margin-bottom: 0px;
+  position: relative;
 }
 .kReport{
   margin-bottom: 0px !important;
@@ -73,11 +74,23 @@
   align-items: center;
   margin-left: 24px;
   margin-bottom: 20px;
+  .kDates{
+    font-size: 12px;
+    font-weight: normal;
+    color: $kGrayscale1;
+    margin-right: 12px;
+  }
   .dashed {
     width: 16px;
     margin-left: 20px;
     margin-right: 6px;
     height: 0px;
+  }
+  .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 6px;
   }
   .line {
     width: 12px;
@@ -91,6 +104,15 @@
     font-size: 12px;
     font-weight: bold;
     color: $kGrayscale1;
+  }
+}
+.kCompareLegend{
+  position: absolute;
+  bottom: 0px;
+  height: 50px;
+  background-color: white;
+  .kLegend:first-child {
+    margin-bottom: 8px;
   }
 }
 :host ::ng-deep .kGraphTooltip {
