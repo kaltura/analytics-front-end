@@ -45,6 +45,7 @@
 }
 .kReport .kReportContent .kChart{
   margin-bottom: 0px;
+  position: relative;
 }
 .kReport{
   margin-bottom: 0px !important;
@@ -68,7 +69,80 @@
     }
   }
 }
-
+.kLegend {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  margin-bottom: 20px;
+  .kDates{
+    font-size: 12px;
+    font-weight: normal;
+    color: $kGrayscale1;
+    margin-right: 12px;
+  }
+  .dashed {
+    width: 16px;
+    margin-left: 20px;
+    margin-right: 6px;
+    height: 0px;
+  }
+  .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 6px;
+  }
+  .line {
+    width: 12px;
+    height: 3px;
+    margin-right: 6px;
+    &.margin {
+      margin-left: 20px;
+    }
+  }
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+}
+.kCompareLegend{
+  position: absolute;
+  bottom: 0px;
+  height: 50px;
+  background-color: white;
+  .kLegend:first-child {
+    margin-bottom: 8px;
+  }
+}
+:host ::ng-deep .kGraphTooltip {
+  .row {
+    display: flex;
+    align-items: center;
+    .dashed {
+      width: 16px;
+      margin-right: 4px;
+      height: 0px;
+    }
+    .line {
+      width: 16px;
+      height: 3px;
+      margin-right: 4px;
+    }
+    .label {
+      margin-left: 4px;
+      margin-right: 4px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .value {
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
 :host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 172px !important;

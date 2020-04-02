@@ -8,22 +8,43 @@
   </div>
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="_tabsData" [showValue]="_filter.userIds" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units applyIn="performance"
                         [dateFilter]="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
-        <div echarts class="kChart"
+        <div echarts class="kChart" (chartInit)="onCompareChartInit($event)"
              *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
              [options]="_lineChartData[_selectedMetrics]"></div>
-
         <div
           *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
           class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
+        <div class="kCompareLegend" *ngIf="_showCustomLegend && _isCompareMode">
+          <div class="kLegend">
+            <span class="kDates">{{_lineChartData[_selectedMetrics]?.legend?.data[1]}}:</span>
+            <div class="circle" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[1]}"></div>
+            <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+            <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[1]}"></div>
+            <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+          </div>
+          <div class="kLegend">
+            <span class="kDates">{{_lineChartData[_selectedMetrics]?.legend?.data[0]}}:</span>
+            <div class="circle" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[0]}"></div>
+            <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+            <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[0]}"></div>
+            <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="kLegend" *ngIf="_showCustomLegend && !_isCompareMode">
+        <div class="line" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+        <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
       </div>
 
       <div class="kTable">

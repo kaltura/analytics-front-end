@@ -19,7 +19,7 @@ import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { CategoryBase } from "../category-base/category-base";
-import {ViewConfig} from "configuration/view-config";
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-category-performance',
@@ -39,6 +39,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
   private _filterChange = new Subject();
+  private compareEchartsIntance: any;
   
   protected _componentId = 'performance';
   
@@ -79,6 +80,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
   private _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   public _showExternalLink = true;
+  public _showCustomLegend = false;
   
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -109,7 +111,8 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
-  
+    this._showCustomLegend = false;
+    
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
@@ -150,7 +153,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           }
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
           
-          if (report.totals && !this._tabsData.length) {
+          if (report.totals && (!this._tabsData.length || this._filter.userIds)) {
             this._handleTotals(report.totals); // handle totals
           }
           
@@ -164,8 +167,15 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
               this._datesTableData = { current: report };
             }
           }
+          
           this._firstTimeLoading = false;
-          this._isBusy = false;
+          
+          if (this._filter.playbackContextIdsIn) {
+            // need to load non-context graph
+            this.loadNoContextData();
+          } else {
+            this._isBusy = false;
+          }
         },
         error => {
           this._isBusy = false;
@@ -198,7 +208,6 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     } else {
       this._compareFilter = null;
     }
-    
     this._filterChange.next();
   }
   
@@ -221,7 +230,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this._filterChange.next();
   }
   
-  private _handleCompare(current: Report, compare: Report): void {
+  private _handleCompare(current: Report, compare: Report, secondSeries = false): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
     
@@ -234,7 +243,16 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
         this._dataConfig.graph,
         this._reportInterval,
       );
-      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      if (secondSeries && this._lineChartData) {
+        this.addNoContextSeries(lineChartData, true);
+        setTimeout(() => {
+          this.compareEchartsIntance.setOption({ legend: [{ show: false }] }, false);
+        }, 100);
+        
+      } else {
+        this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+        this._showCustomLegend = false;
+      }
     }
   }
   
@@ -242,15 +260,19 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
   
-  private _handleGraphs(graphs: KalturaReportGraph[]): void {
+  private _handleGraphs(graphs: KalturaReportGraph[], secondSeries = false): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-    
-    this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+    if (secondSeries && this._lineChartData) {
+      this.addNoContextSeries(lineChartData);
+    } else {
+      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      this._showCustomLegend = false;
+    }
   }
   
   public _onTabChange(tab: Tab): void {
@@ -332,7 +354,6 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
         delete this._compareFilter.playbackContextIdsIn;
       }
     }
-    
     this._filterChange.next();
   }
   
@@ -399,5 +420,129 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : 'entry';
       this._navigationDrillDownService.drilldown(path, this._drillDown.id, true, this._drillDown.pid);
     }
+  }
+  
+  public onCompareChartInit(ec) {
+    this.compareEchartsIntance = ec;
+  }
+  
+  private loadNoContextData(sections = this._dataConfig): void {
+    delete sections.table;
+    delete sections.totals;
+    this._showCustomLegend = false;
+    const replaceFilter = (filter: KalturaEndUserReportInputFilter) => {
+      let noContextFilter = new KalturaEndUserReportInputFilter({
+        searchInTags: true,
+        searchInAdminTags: false
+      });
+      noContextFilter = Object.assign(noContextFilter, filter);
+      noContextFilter.categoriesIdsIn = noContextFilter.playbackContextIdsIn;
+      delete noContextFilter.playbackContextIdsIn;
+      return noContextFilter;
+    };
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: replaceFilter(this._filter), order: this._order };
+    this._reportService.getReport(reportConfig, sections, false)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+        const compareReportConfig = { reportType: this._reportType, filter: replaceFilter(this._compareFilter), order: this._order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
+          .pipe(map(compare => ({ report, compare })));
+      }))
+      .subscribe(({ report, compare }) => {
+          if (compare) {
+            this._handleCompare(report, compare, true);
+          } else {
+            if (report.graphs.length) {
+              this._handleGraphs(report.graphs, true); // handle graphs
+            }
+          }
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadReport();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
+  }
+  
+  private addNoContextSeries(lineChartData, isCompare = false): void {
+    Object.keys(lineChartData).forEach(key => {
+      if (this._lineChartData[key] && this._lineChartData[key].series) {
+        let secondSeries = lineChartData[key]['series'][0];
+        let thirdSeries;
+        secondSeries['lineStyle']['type'] = 'dashed';
+        if (isCompare) {
+          thirdSeries = lineChartData[key]['series'][1];
+          thirdSeries['lineStyle']['type'] = 'dashed';
+        }
+        const round = value => Math.round(value * 100) / 100;
+        const getFormatter = colors => params => {
+          return isCompare ? `
+            <div class="kGraphTooltip">
+              ${params[1].seriesName}<br/>
+              <div class="row">
+                  <div class="line" style="background-color: ${colors[1]}"></div>
+                  <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                  <span class="value">${round(params[1].value)}</span>
+              </div>
+              <div class="row">
+                  <div class="dashed" style="border-top: 3px dotted ${colors[1]}"></div>
+                  <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                  <span class="value">${round(params[3].value)}</span>
+              </div>
+              ${params[0].seriesName}<br/>
+              <div class="row">
+                  <div class="line" style="background-color: ${colors[0]}"></div>
+                  <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                  <span class="value">${round(params[0].value)}</span>
+              </div>
+              <div class="row">
+                  <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
+                  <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                  <span class="value">${round(params[2].value)}</span>
+              </div>
+            </div>
+            ` : `
+          <div class="kGraphTooltip">
+            ${params[0].name}<br/>
+            <div class="row">
+                <div class="line" style="background-color: ${colors[0]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
+                <span class="value">${round(params[0].value)}</span>
+            </div>
+            <div class="row">
+                <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
+                <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
+                <span class="value">${round(params[1].value)}</span>
+            </div>
+          </div>
+        `;
+        };
+        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color);
+        this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
+        this._lineChartData[key].series.push(secondSeries);
+        if (isCompare) {
+          this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[1]);
+          this._lineChartData[key].series.push(thirdSeries);
+        }
+        this._showCustomLegend = true;
+      }
+    });
+    
+    // hack to refresh the selected metrics data
+    const saveMetrics = this._selectedMetrics;
+    this._selectedMetrics = null;
+    setTimeout(() => {
+      this._selectedMetrics = saveMetrics;
+    }, 0);
   }
 }
