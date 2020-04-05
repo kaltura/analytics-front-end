@@ -22,7 +22,7 @@
         <span class="title">{{_currentValues[0]?.title}}</span>
       </div>
       <div class="kReportRow">
-        <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="90"></app-bullet>
+        <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null"></app-bullet>
       </div>
       <div class="kReportRow kMargin">
         <span class="contextLabel">{{_contextCurrentValues[1]?.value}}</span>
@@ -31,7 +31,7 @@
         <span class="title">{{_currentValues[1]?.title}}</span>
       </div>
       <div class="kReportRow">
-        <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="90"></app-bullet>
+        <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null"></app-bullet>
       </div>
       <div class="kReportRow kNoResults" *ngIf="!_isBusy && (!_currentValues.length || !_contextCurrentValues.length)">
         {{'app.common.noResults' | translate}}
