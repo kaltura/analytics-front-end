@@ -27,6 +27,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class NodePreviewComponent extends QueryBase implements OnInit {
   @Input() entryId = '';
+  @Input() nodeId = '';
 
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
@@ -242,15 +243,11 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     this._isBusy = true;
     this._blockerMessage = null;
   
-    if (this.entryId) {
-    //  this._filter.nodeIdsIn = this.entryId;
+    if (this.nodeId) {
+      this._filter.nodeIdsIn = this.nodeId;
     }
   
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    // if (reportConfig['objectIds__null']) {
-    //   delete reportConfig['objectIds__null'];
-    // }
-    reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
 
     this._reportService.getReport(reportConfig, sections)
@@ -260,13 +257,9 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
         }
 
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
-        // if (compareReportConfig['objectIds__null']) {
-        //   delete compareReportConfig['objectIds__null'];
-        // }
-        if (this.entryId) {
-          this._compareFilter.nodeIdsIn = this.entryId;
+        if (this.nodeId) {
+          this._compareFilter.nodeIdsIn = this.nodeId;
         }
-        // compareReportConfig.objectIds = this.entryId;
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))

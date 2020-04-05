@@ -24,6 +24,6 @@
   </div>
 
   <div class="kReportContent" *ngIf="drillDown">
-    <app-node-preview [entryId]="drillDown.entryId" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-node-preview>
+    <app-node-preview [entryId]="drillDown.entryId" [nodeId]="drillDown.id" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-node-preview>
   </div>
 </div>
