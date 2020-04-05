@@ -20,6 +20,7 @@ import { BasePlaylistTotalsComponent } from './views/shared/playlist-totals/play
 import { PathPerformanceComponent } from './views/path/path-performance/path-performance.component';
 import { PathContentComponent } from './views/path/path-content/path-content.component';
 import { PathContentTableComponent } from './views/path/path-content/path-content-table/path-content-table.component';
+import { NodePreviewComponent } from './views/path/path-content/node-preview/node-preview.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { PathContentTableComponent } from './views/path/path-content/path-conten
     BasePlaylistTotalsComponent,
     PathPerformanceComponent,
     PathContentComponent,
-    PathContentTableComponent
+    PathContentTableComponent,
+    NodePreviewComponent
   ],
   exports: [],
   providers: []

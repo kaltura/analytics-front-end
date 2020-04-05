@@ -81,6 +81,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = reportTypeMap(KalturaReportType.interactiveVideoTopNodes);
+  public drillDown: Node = null;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -328,6 +329,14 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
       }, 0);
     }
+  }
+  
+  public _drillDown(node: Node): void {
+    this.drillDown = node;
+  }
+  
+  public _drillUp(): void {
+    this.drillDown = null;
   }
   
   ngOnDestroy() {
