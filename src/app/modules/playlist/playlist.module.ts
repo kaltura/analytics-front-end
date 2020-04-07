@@ -21,6 +21,7 @@ import { PathPerformanceComponent } from './views/path/path-performance/path-per
 import { PathContentComponent } from './views/path/path-content/path-content.component';
 import { PathContentTableComponent } from './views/path/path-content/path-content-table/path-content-table.component';
 import { NodePreviewComponent } from './views/path/path-content/node-preview/node-preview.component';
+import { NodeHotspotsComponent } from "./views/path/path-content/node-hotspots/node-hotspots.component";
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { NodePreviewComponent } from './views/path/path-content/node-preview/nod
     PathPerformanceComponent,
     PathContentComponent,
     PathContentTableComponent,
-    NodePreviewComponent
+    NodePreviewComponent,
+    NodeHotspotsComponent
   ],
   exports: [],
   providers: []
