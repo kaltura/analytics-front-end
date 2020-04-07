@@ -479,10 +479,10 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._lineChartData[key] && this._lineChartData[key].series) {
         let secondSeries = lineChartData[key]['series'][0];
         let thirdSeries;
-        secondSeries['lineStyle']['type'] = 'dashed';
+        secondSeries['lineStyle']['type'] = 'dotted';
         if (isCompare) {
           thirdSeries = lineChartData[key]['series'][1];
-          thirdSeries['lineStyle']['type'] = 'dashed';
+          thirdSeries['lineStyle']['type'] = 'dotted';
         }
         const round = value => Math.round(value * 100) / 100;
         const getFormatter = colors => params => {
