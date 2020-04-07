@@ -158,7 +158,7 @@ export class FilterComponent {
     this._updateLayout();
   }
   
-  constructor(private _translate: TranslateService,
+  constructor(public _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _logger: KalturaLogger) {
     this._clearAll();
