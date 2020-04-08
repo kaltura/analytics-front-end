@@ -34,6 +34,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   private _playerInstance: any = null;
   private _playerInitialized = false;
   private _reportType = reportTypeMap(KalturaReportType.percentiles);
+  private _firstTimeLoading = true;
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
@@ -240,6 +241,11 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   }
   
   protected _loadReport(sections = this._dataConfig): void {
+    // skip first report load due to refine filter set
+    if (this._firstTimeLoading) {
+      this._firstTimeLoading = false;
+      return;
+    }
     this._isBusy = true;
     this._blockerMessage = null;
   

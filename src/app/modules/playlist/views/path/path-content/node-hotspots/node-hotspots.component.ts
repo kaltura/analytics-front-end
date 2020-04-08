@@ -70,6 +70,11 @@ export class NodeHotspotsComponent extends QueryBase {
   }
   
   protected _loadReport(sections = this._dataConfig): void {
+    // skip first report load due to refine filter set
+    if (this._firstTimeLoading) {
+      this._firstTimeLoading = false;
+      return;
+    }
     this._isBusy = true;
     this._blockerMessage = null;
   
@@ -104,7 +109,6 @@ export class NodeHotspotsComponent extends QueryBase {
             }
           }
           this._isBusy = false;
-          this._firstTimeLoading = false;
         },
         error => {
           this._isBusy = false;
