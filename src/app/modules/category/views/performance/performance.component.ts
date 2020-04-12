@@ -527,11 +527,11 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           </div>
         `;
         };
-        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color);
-        this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
+        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[key].color);
+        this._lineChartData[key].color.push(this._lineChartData[key].color[0]);
         this._lineChartData[key].series.push(secondSeries);
         if (isCompare) {
-          this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[1]);
+          this._lineChartData[key].color.push(this._lineChartData[key].color[1]);
           this._lineChartData[key].series.push(thirdSeries);
         }
         this._showCustomLegend = true;
