@@ -254,6 +254,17 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
         this._showCustomLegend = false;
       }
     }
+  
+    if (current.totals && compare.totals) {
+      this._tabsData = this._compareService.compareTotalsData(
+        this._currentPeriod,
+        this._comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig.totals,
+        this._selectedMetrics,
+      );
+    }
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
