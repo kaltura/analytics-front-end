@@ -3,11 +3,13 @@ import { LocationsFilterService } from 'shared/components/filter/location-filter
 import { DomainsFilterService } from 'shared/components/domain-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
-import {FilterComponent, FilterItem, OptionItem} from 'shared/components/filter/filter.component';
+import {FilterComponent, OptionItem} from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
-import {KalturaCategory} from "kaltura-ngx-client";
+import { KalturaCategory } from "kaltura-ngx-client";
+import { TranslateService } from "@ngx-translate/core";
+import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 @Component({
   selector: 'app-cat-filter',
@@ -63,6 +65,12 @@ export class CatFilterComponent extends FilterComponent {
     { value: [], label: 'app.category.contextCategory' }
   ];
   
+  constructor(_translate: TranslateService,
+              _frameEventManager: FrameEventManagerService,
+              _logger: KalturaLogger) {
+    super(_translate, _frameEventManager, _logger);
+  }
+  
   public openFilter(filter: string): void {
     if (filter === "context") {
       this._onItemSelected(this._contextTypes[1].value[0], filter);
@@ -75,6 +83,13 @@ export class CatFilterComponent extends FilterComponent {
     super._apply(forceApply);
     this.contextSelected = this._appliedFilters.filter(filter => filter.type === 'context').length > 0;
     this.subCategoriesSelected = this._appliedFilters.filter(filter => filter.type === 'categories').length > 0;
+  }
+  
+  public _onItemSelected(item: any, type: string): void {
+    if (type === 'context') {
+      item.name = this._translate.instant('app.category.contextCategory');
+    }
+    super._onItemSelected(item, type);
   }
   
 }

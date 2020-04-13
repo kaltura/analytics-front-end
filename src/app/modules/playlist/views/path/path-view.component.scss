@@ -43,6 +43,7 @@
 
   .kReportHeader {
     height: 80px;
+    position: relative;
   }
 
   .kFloatingDetails{
@@ -151,6 +152,7 @@
   .kHeaderRight{
     position: absolute;
     top: 110px;
+    left: 0px;
   }
   .kReport .kEntryDetails{
     height: 86px;

@@ -49,13 +49,16 @@
   }
 
   .kTable, .kMap {
-    flex: 1;
+    flex: 1 1 0%;
   }
 }
 
 @media (max-width: 991px) {
   .kTopCountries.kDefaultMode {
     flex-direction: column-reverse !important;
+  }
+  .kTable, .kMap {
+    flex: 1 1 auto !important;
   }
   .kTopCountries.kCompareMode .kMap {
     display: none;

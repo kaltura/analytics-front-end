@@ -254,6 +254,17 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
         this._showCustomLegend = false;
       }
     }
+  
+    if (current.totals && compare.totals) {
+      this._tabsData = this._compareService.compareTotalsData(
+        this._currentPeriod,
+        this._comparePeriod,
+        current.totals,
+        compare.totals,
+        this._dataConfig.totals,
+        this._selectedMetrics,
+      );
+    }
   }
   
   private _handleTotals(totals: KalturaReportTotal): void {
@@ -479,10 +490,10 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._lineChartData[key] && this._lineChartData[key].series) {
         let secondSeries = lineChartData[key]['series'][0];
         let thirdSeries;
-        secondSeries['lineStyle']['type'] = 'dashed';
+        secondSeries['lineStyle']['type'] = 'dotted';
         if (isCompare) {
           thirdSeries = lineChartData[key]['series'][1];
-          thirdSeries['lineStyle']['type'] = 'dashed';
+          thirdSeries['lineStyle']['type'] = 'dotted';
         }
         const round = value => Math.round(value * 100) / 100;
         const getFormatter = colors => params => {
@@ -527,11 +538,11 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           </div>
         `;
         };
-        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[this._selectedMetrics].color);
-        this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[0]);
+        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[key].color);
+        this._lineChartData[key].color.push(this._lineChartData[key].color[0]);
         this._lineChartData[key].series.push(secondSeries);
         if (isCompare) {
-          this._lineChartData[key].color.push(this._lineChartData[this._selectedMetrics].color[1]);
+          this._lineChartData[key].color.push(this._lineChartData[key].color[1]);
           this._lineChartData[key].series.push(thirdSeries);
         }
         this._showCustomLegend = true;
