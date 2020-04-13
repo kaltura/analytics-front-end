@@ -321,6 +321,8 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     
     if (this._drillDown.length > 1) {
       reportConfig.filter.regionIn = this._drillDown[1];
+    } else if (regionsFilterApplied) {
+      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
     }
   }
   
