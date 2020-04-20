@@ -312,11 +312,13 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = '';
+  
+    if (countriesFilterApplied || regionsFilterApplied) {
+      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
+    }
     
     if (this._drillDown.length > 0) {
       reportConfig.filter.countryIn = this._drillDown[0];
-    } else if (countriesFilterApplied) {
-      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
     }
     
     if (this._drillDown.length > 1) {

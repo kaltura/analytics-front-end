@@ -34,13 +34,13 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
   @Input() dateFilterComponent: DateFilterComponent;
   @Input() categoryId: string = null;
   @Input() subCategoriesSelected = false;
-  
+
   @Output() openFilterClick = new EventEmitter<void>();
-  
+
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
-  
+
   protected _componentId = 'mini-page-views';
   public _currentDates: string;
   public _compareDates: string;
@@ -62,11 +62,11 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
@@ -75,10 +75,10 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
               private _dataConfigService: MiniPageViewsConfig,
               private _logger: KalturaLogger) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -92,17 +92,17 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
       delete this._contextCompareFilter.categoriesIdsIn;
     }
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._currentValues = this._contextCurrentValues = this._compareValues = this._contextCompareValues = [];
-  
+
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
       this._contextFilter.playbackContextIdsIn = this.categoryId;
     }
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     const contextReportConfig: ReportConfig = { reportType: this._reportType, filter: this._contextFilter, pager: this._pager, order: this._order };
       forkJoin({
@@ -113,15 +113,15 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
         if (!this._isCompareMode) {
           return ObservableOf({ report, contextReport, compare: null, contextCompare: null });
         }
-  
+
         if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
           this._compareFilter.categoriesIdsIn = this.categoryId;
           this._contextCompareFilter.playbackContextIdsIn = this.categoryId;
         }
-        
+
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         const contextCompareReportConfig = { reportType: this._reportType, filter: this._contextCompareFilter, pager: this._pager, order: this._order };
-        
+
         return Observable.forkJoin({
           compare: this._reportService.getReport(compareReportConfig, sections, false),
           contextCompare: this._reportService.getReport(contextCompareReportConfig, sections, false)
@@ -151,12 +151,12 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal, contextTotals: KalturaReportTotal): void {
     this._currentValues = this._reportService.parseTotals(totals, this._dataConfig.totals);
     this._contextCurrentValues = this._reportService.parseTotals(contextTotals, this._dataConfig.totals);
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._contextFilter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._contextFilter.fromDate = this._dateFilter.startDate;
@@ -175,7 +175,7 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
       this._contextCompareFilter = null;
     }
   }
-  
+
   private _handleCompare(report: Report, contextReport: Report, compare: Report, contextCompare: Report): void {
     this._handleTotals(report.totals, contextReport.totals);
     this._compareValues = this._reportService.parseTotals(compare.totals, this._dataConfig.totals);
@@ -183,11 +183,11 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
   }
-  
+
   public openFilter(): void {
     if (!this.subCategoriesSelected) {
       this.openFilterClick.emit();
     }
   }
-  
+
 }

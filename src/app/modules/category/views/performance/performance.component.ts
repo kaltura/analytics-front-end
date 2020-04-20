@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -92,6 +92,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
+              private _browserService: BrowserService,
               private _dataConfigService: PerformanceConfig,
               private _navigationDrillDownService: NavigationDrillDownService,
               private _logger: KalturaLogger) {
@@ -388,7 +389,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._isCompareMode) {
         this._compareFilter.userIds = event.id;
       }
-      this._showExternalLink = !!this._viewConfig.userLink;
+      this._showExternalLink = !!this._viewConfig.userLink && !this._browserService.isIE11() && !this._browserService.isEdge();
       this._tableMode = TableModes.user;
       this._loadReport();
     }
@@ -398,7 +399,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       if (this._isCompareMode) {
         this._compareFilter.entryIdIn = event.id;
       }
-      this._showExternalLink = !!this._viewConfig.entryLink;
+      this._showExternalLink = !!this._viewConfig.entryLink && !this._browserService.isIE11() && !this._browserService.isEdge();
       this._tableMode = TableModes.entry;
       this._loadReport();
     }
