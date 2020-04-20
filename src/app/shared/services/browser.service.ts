@@ -159,6 +159,9 @@ export class BrowserService {
   public isIE11(): boolean {
     return !!window['MSInputMethodContext'] && !!document['documentMode'];
   }
+  public isEdge(): boolean {
+    return (/edge/.test(navigator.userAgent.toLowerCase()));
+  }
 
   public download(data, filename, type): void {
     let file;
