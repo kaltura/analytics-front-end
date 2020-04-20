@@ -76,7 +76,7 @@
           <div class="separator hideOnTablet" *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected"></div>
           <div class="divider showOnTablet"></div>
 
-          <div *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
+          <div *ngIf="_viewConfig.miniPageViews" [class.kHidden]="categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
             <app-category-mini-page-views [dateFilter]="_dateFilter"
                                           [subCategoriesSelected]="categoryFilter.subCategoriesSelected"
                                           [categoryId]="_category?.id.toString()"
@@ -144,7 +144,7 @@
                                 [refineFilter]="_refineFilter"></app-category-top-content>
         </div>
 
-        <div *ngIf="_viewConfig.subcategories && _categoryLoaded && !categoryFilter.contextSelected && _category?.directSubCategoriesCount" class="kReportContainer" id="subcategories">
+        <div *ngIf="_viewConfig.subcategories && _categoryLoaded && _category?.directSubCategoriesCount" [class.kHidden]="categoryFilter.contextSelected" class="kReportContainer" id="subcategories">
           <app-subcategories [categoryId]="_category?.id.toString()" #topVideos
                              [dateFilter]="_dateFilter"
                              [refineFilter]="_refineFilter"></app-subcategories>
