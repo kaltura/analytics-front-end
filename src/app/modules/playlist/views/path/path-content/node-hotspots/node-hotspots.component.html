@@ -13,15 +13,17 @@
                  [customSort]="true"
                  [defaultSortOrder]="-1"
                  [sortOrder]="-1"
+                 [paginator]="true"
+                 [rows]="10"
                  (sortFunction)="_onSortChanged($event)">
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width': '45px'}"></th>
               <th>{{'app.playlist.name' | translate}}</th>
               <th>{{'app.playlist.destination' | translate}}</th>
-              <th [pSortableColumn]="'hotspot_clicked'">
+              <th [pSortableColumn]="_isCompareMode ? null :'hotspot_clicked'">
                 {{'app.playlist.clicks' | translate}}
-                <p-sortIcon [field]="'hotspot_clicked'"></p-sortIcon>
+                <p-sortIcon *ngIf="!_isCompareMode" [field]="'hotspot_clicked'"></p-sortIcon>
               </th>
             </tr>
           </ng-template>
@@ -40,7 +42,14 @@
                 </div>
               </td>
               <td>
-                <span>{{data.hotspot_clicked}}</span>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data.hotspot_clicked.tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data.hotspot_clicked.value"
+                                     [units]="data.hotspot_clicked.units"
+                                     [trend]="data.hotspot_clicked.trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data.hotspot_clicked}}</span>
               </td>
             </tr>
           </ng-template>
@@ -51,11 +60,6 @@
             </div>
           </ng-template>
         </p-table>
-
-        <p-paginator [rows]="_pager.pageSize"
-                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
-                     [totalRecords]="_totalCount"
-                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
       </div>
     </k-area-blocker>
   </div>

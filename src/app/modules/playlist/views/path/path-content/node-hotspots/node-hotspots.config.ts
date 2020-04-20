@@ -8,7 +8,7 @@ export class NodeHotspotsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -21,6 +21,11 @@ export class NodeHotspotsConfig extends ReportDataBaseConfig {
           'hotspot_clicked': {
             format: value => value,
             sortOrder: 1,
+          },
+          'destination': {
+            format: value => value,
+            nonComparable: true,
+            sortOrder: 2,
           }
         }
       },

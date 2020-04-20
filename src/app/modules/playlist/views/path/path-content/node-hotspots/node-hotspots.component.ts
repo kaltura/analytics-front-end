@@ -3,9 +3,9 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseF
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { Observable, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { NodeHotspotsConfig } from './node-hotspots.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -30,15 +30,16 @@ export class NodeHotspotsComponent extends QueryBase {
   @Input() nodeId = '';
   @Input() duration = 0;
   @Input() hotspots: HotSpot[] = [];
-  
+
   private _order = '-hotspot_clicked';
-  private _reportType = reportTypeMap(KalturaReportType.interactiveVideoNodeTopHotspots);
+  private _reportTypeTopHotspots = reportTypeMap(KalturaReportType.interactiveVideoNodeTopHotspots);
+  private _reportTypeSwitchTopHotspots = reportTypeMap(KalturaReportType.intercativeVideoNodeSwitchTopHotspots);
   private _dataConfig: ReportDataConfig;
   private _ignoreFirstSortEvent = true;
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'node-hotspots';
-  
+
   public _selectedRefineFilters: RefineFilter = null;
   public _columns: string[] = [];
   public _totalCount = 0;
@@ -48,16 +49,16 @@ export class NodeHotspotsComponent extends QueryBase {
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
-  public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -65,10 +66,10 @@ export class NodeHotspotsComponent extends QueryBase {
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: NodeHotspotsConfig) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     // skip first report load due to refine filter set
     if (this._firstTimeLoading) {
@@ -77,34 +78,54 @@ export class NodeHotspotsComponent extends QueryBase {
     }
     this._isBusy = true;
     this._blockerMessage = null;
-  
+
     if (this.nodeId) {
       this._filter.nodeIdsIn = this.nodeId;
     }
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    
-    this._reportService.getReport(reportConfig, sections)
+    // we need to load 2 separate reports: one for external link clicks and one for node switch clicks as the player use different events
+    // create 2 report calls and use forkJoin to get them both
+    const reportConfigTopHotSpots: ReportConfig = { reportType: this._reportTypeTopHotspots, filter: this._filter, pager: this._pager, order: this._order };
+    const topHotSpots = this._reportService.getReport(reportConfigTopHotSpots, sections, false)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-  
+
         if (this.nodeId) {
           this._compareFilter.nodeIdsIn = this.nodeId;
         }
-        
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
-        return this._reportService.getReport(compareReportConfig, sections)
+
+        const compareReportConfig: ReportConfig = { reportType: this._reportTypeTopHotspots, filter: this._compareFilter, pager: this._pager, order: this._order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
           .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          this._tableData = [];
-          this._totalCount = 0;
-          
+      }));
+
+    const reportConfigSwitchTopHotSpots: ReportConfig = { reportType: this._reportTypeSwitchTopHotspots, filter: this._filter, pager: this._pager, order: this._order };
+    const topSwitchHotSpots = this._reportService.getReport(reportConfigSwitchTopHotSpots, sections, false)
+      .pipe(switchMap(report => {
+        if (!this._isCompareMode) {
+          return ObservableOf({ report, compare: null });
+        }
+
+        if (this.nodeId) {
+          this._compareFilter.nodeIdsIn = this.nodeId;
+        }
+
+        const compareReportConfig: ReportConfig = { reportType: this._reportTypeSwitchTopHotspots, filter: this._compareFilter, pager: this._pager, order: this._order };
+        return this._reportService.getReport(compareReportConfig, sections, false)
+          .pipe(map(compare => ({ report, compare })));
+      }));
+
+    // once both reports return, we need to merge the results and then generate the table and compare data
+    Observable.forkJoin(topHotSpots, topSwitchHotSpots)
+      .subscribe(([topHotSpots, switchTopHotSpots]) => {
+        this._tableData = [];
+        this._totalCount = 0;
+        const {report, compare } = this.mergeReports(topHotSpots, switchTopHotSpots);
           if (compare) {
-            this._handleCompare(report, compare);
+             this._handleCompare(report, compare);
           } else {
-            if (report.table && report.table.header && report.table.data) {
+            if (report && report.table && report.table.header && report.table.data) {
               this._handleTable(report.table); // handle totals
             }
           }
@@ -123,14 +144,41 @@ export class NodeHotspotsComponent extends QueryBase {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
+  // function use to merge the results of the 2 reports. As the report fields are the same we just need to extend the data string
+  private mergeReports (topHotSpots, switchTopHotSpots): {report, compare} {
+    // handle regular report
+    let report = topHotSpots.report;
+    if (topHotSpots.report.table && topHotSpots.report.table.header && topHotSpots.report.table.data) {
+      if (switchTopHotSpots.report.table && switchTopHotSpots.report.table.header && switchTopHotSpots.report.table.data) {
+        report.table.data += switchTopHotSpots.report.table.data;
+      }
+    } else {
+      if (switchTopHotSpots.report.table && switchTopHotSpots.report.table.header && switchTopHotSpots.report.table.data) {
+        report = switchTopHotSpots.report;
+      }
+    }
+    // handle compare
+    let compare = topHotSpots.compare;
+    if (topHotSpots.compare && topHotSpots.compare.table && topHotSpots.compare.table.header && topHotSpots.compare.table.data) {
+      if (switchTopHotSpots.compare && switchTopHotSpots.compare.table && switchTopHotSpots.compare.table.header && switchTopHotSpots.compare.table.data) {
+        compare.table.data += switchTopHotSpots.compare.table.data;
+      }
+    } else {
+      if (switchTopHotSpots.compare && switchTopHotSpots.compare.table && switchTopHotSpots.compare.table.header && switchTopHotSpots.compare.table.data) {
+        compare = switchTopHotSpots.compare;
+      }
+    }
+    return {report, compare};
+  }
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -147,7 +195,7 @@ export class NodeHotspotsComponent extends QueryBase {
       this._compareFilter = null;
     }
   }
-  
+
   private extendHotspotsData(): void {
     this._tableData.forEach(tableRow => {
       // extend hotspots data from hotspots array
@@ -158,15 +206,15 @@ export class NodeHotspotsComponent extends QueryBase {
       });
     });
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
+    this._totalCount = tableData.length;
     this._columns = columns;
     this._tableData = tableData;
     this.extendHotspotsData();
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
@@ -187,46 +235,39 @@ export class NodeHotspotsComponent extends QueryBase {
       this.extendHotspotsData();
     }
   }
-  
-  public _onPaginationChanged(event: any): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
-      this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
-    }
-  }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (event.field && event.order && !this._isCompareMode && !this._ignoreFirstSortEvent) {
-      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
-      if (order !== this._order) {
-        this._order = order;
-        this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
+      if (event.order === 1 ) {
+        this._tableData = this._tableData.sort((a, b) => parseInt(a.hotspot_clicked) > parseInt(b.hotspot_clicked) ? 1 : -1);
+      } else {
+        this._tableData = this._tableData.sort((a, b) => parseInt(a.hotspot_clicked) < parseInt(b.hotspot_clicked) ? 1 : -1);
       }
     }
     this._ignoreFirstSortEvent = false;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     const userIds = event.length
       ? event
         .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
         .join(analyticsConfig.valueSeparator)
       : null;
-    
+
     if (userIds) {
       this._filter.userIds = userIds;
-  
+
       if (this._compareFilter) {
         this._compareFilter.userIds = userIds;
       }
     } else {
       delete this._filter.userIds;
-      
+
       if (this._compareFilter) {
         delete this._compareFilter.userIds;
       }
     }
-  
+
     this._loadReport();
   }
 }
