@@ -13,12 +13,6 @@
 .kNameColumn{
   display: flex;
   align-items: center;
-  .kEntryName {
-    /* cursor: pointer; */
-    font-size: 15px;
-    font-weight: bold;
-    color: $kGrayscale1;
-  }
   .kDeleted{
     flex: 0 0 auto;
     color: $kGrayscale3;
@@ -32,7 +26,7 @@
 }
 
 .kIcon {
-  color: #333333;
+  color: $menuBkgColor;
   margin-left: 4px;
   font-size: 18px;
 }

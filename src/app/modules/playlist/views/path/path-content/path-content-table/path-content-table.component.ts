@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
-import {SortEvent} from "primeng/api";
+import { SortEvent } from "primeng/api";
+import { Node } from '../path-content.component';
 
 @Component({
   selector: 'app-path-content-table',
@@ -21,8 +22,9 @@ export class PathContentTableComponent implements OnDestroy {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
   
+  @Output() drillDown: EventEmitter<Node> = new EventEmitter();
+  
   private _paginationChanged = new Subject<void>();
-  private _originalTable: TableRow<string>[] = [];
   
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
@@ -50,5 +52,9 @@ export class PathContentTableComponent implements OnDestroy {
       }
       return (event.order * result);
     });
+  }
+  
+  public _drillDown(data: Node): void {
+    this.drillDown.emit(data);
   }
 }

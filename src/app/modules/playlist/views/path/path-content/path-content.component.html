@@ -1,21 +1,30 @@
 <div data-aid="report-mini-top-videos" class="kReport kOverrideFAIcons">
   <div class="kFilters">
-    <span class="kTitle">{{'app.playlist.content' | translate}}</span>
+    <span class="kTitle" [class.drillDownRoot]="drillDown" (click)="_drillUp()">{{'app.playlist.content' | translate}}</span>
+    <span class="kTitle drillDownRoot kSlash" *ngIf="drillDown">/</span>
+    <span class="kDrilldown" *ngIf="drillDown">{{drillDown.name}}</span>
   </div>
-  <div class="kReportContent">
+  <div class="kReportContent" *ngIf="!drillDown">
     <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
       <app-path-content-table *ngIf="_isCompareMode"
+                                       (drillDown)="_drillDown($event)"
                                        name="compare"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
                                        [dates]="_compareDates"
                                        [firstTimeLoading]="_compareFirstTimeLoading"></app-path-content-table>
       <app-path-content-table name="current"
+                                       (drillDown)="_drillDown($event)"
                                        [tableData]="_tableData"
                                        [showDivider]="_isCompareMode"
                                        [isCompareMode]="_isCompareMode"
                                        [dates]="_currentDates"
                                        [firstTimeLoading]="_firstTimeLoading"></app-path-content-table>
     </k-area-blocker>
+  </div>
+
+  <div class="kReportContent" *ngIf="drillDown">
+    <app-node-preview [entryId]="drillDown.entryId" [nodeId]="drillDown.id" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-node-preview>
+    <app-node-hotspots [nodeId]="drillDown.id" [hotspots]="drillDown.hotspots" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-node-hotspots>
   </div>
 </div>

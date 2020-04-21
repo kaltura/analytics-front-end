@@ -1,0 +1,67 @@
+<div data-aid="report-entry-user-engagement" class="kReport">
+  <div class="kTable">
+
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+      <div class="kTableContainer">
+        <span class="kTotalCount">
+           {{'app.playlist.hotspotsCount' | translate: {'0': _totalCount} }}
+        </span>
+        <p-table dataKey="name"
+                 aria-label="Hotspots Per Node Table"
+                 [sortField]="'hotspot_clicked'"
+                 [value]="_tableData"
+                 [customSort]="true"
+                 [defaultSortOrder]="-1"
+                 [sortOrder]="-1"
+                 [paginator]="true"
+                 [rows]="10"
+                 (sortFunction)="_onSortChanged($event)">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [ngStyle]="{'width': '45px'}"></th>
+              <th>{{'app.playlist.name' | translate}}</th>
+              <th>{{'app.playlist.destination' | translate}}</th>
+              <th [pSortableColumn]="_isCompareMode ? null :'hotspot_clicked'">
+                {{'app.playlist.clicks' | translate}}
+                <p-sortIcon *ngIf="!_isCompareMode" [field]="'hotspot_clicked'"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td [ngStyle]="{'width': '45px'}">
+                <i class="kIconppv"></i>
+              </td>
+              <td>
+                <span class="kName">{{data.name}}</span>
+              </td>
+              <td>
+                <div class="kDestination" *ngIf="data.destination && data.destination.length">
+                  <i [ngClass]="data.type"></i>
+                  <span>{{data.destination}}</span>
+                </div>
+              </td>
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data.hotspot_clicked.tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data.hotspot_clicked.value"
+                                     [units]="data.hotspot_clicked.units"
+                                     [trend]="data.hotspot_clicked.trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data.hotspot_clicked}}</span>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+              <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </k-area-blocker>
+  </div>
+
+</div>

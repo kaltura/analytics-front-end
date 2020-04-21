@@ -43,6 +43,18 @@ export interface Node {
   prefetchNodeIds?: string[];
   deleted?: boolean;
   deletedDate?: string;
+  hotspots?: HotSpot[];
+}
+
+export interface HotSpot {
+  id?: string;
+  destinationId?: string;
+  destination?: string;
+  name?: string;
+  behavior?: string;
+  hyperlinkUrl?: string;
+  hotspot_clicked?: number;
+  type?: 'link' | 'hyperlink' | 'pause' | 'none';
 }
 
 @Component({
@@ -81,6 +93,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = reportTypeMap(KalturaReportType.interactiveVideoTopNodes);
+  public drillDown: Node = null;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -123,11 +136,11 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         return Observable.forkJoin(this.http.get(`${responses[0].url}&rnd=${Math.random()}`), this.http.get(`${responses[1].url}&rnd=${Math.random()}`));
       }))
       .pipe(map(dataArray => {
-        return this.parseIVData(dataArray[0]).concat(this.parseIVDeletedNodes(dataArray[1]));
+        return this.parseIVData(dataArray[0], dataArray[1]).concat(this.parseIVDeletedNodes(dataArray[1]));
       }));
   }
   
-  private parseIVData(data): Node[] {
+  private parseIVData(data, metadata): Node[] {
     let nodes: Node[] = [];   // the returned nodes array
     let currentLevel = 1;     // initial level. We use this variable to increment the level for each pass on the nodes array
     let nextLevelNodes = [];  // array holding all the found next level nodes to be scanned for
@@ -141,12 +154,50 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           isHome: node.id === startNodeId,
           name: node.name,
           entryId: node.entryId,
-          prefetchNodeIds: node.prefetchNodeIds
+          prefetchNodeIds: node.prefetchNodeIds,
+          hotspots: []
         };
         if (node.id === startNodeId) {
           newNode.level = currentLevel; // set level 0
           levelsNodeFound++;            // increment found nodes with levels counter
           nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)]; // set the array to scan next with the found node children nodes
+        }
+        // add hotspots
+        if (data.hotspots) {
+          data.hotspots.forEach(hotspot => {
+            if (hotspot.nodeId === node.id) {
+              let newHotspot: HotSpot = {
+                id: hotspot.id,
+                name: hotspot.name,
+                type: 'none'
+              };
+              // add hotspot properties from metadata json
+              if (metadata.hotspots) {
+                metadata.hotspots.forEach(metadataHotspot => {
+                  if (metadataHotspot.id === hotspot.id) {
+                    if (metadataHotspot.behavior === "instant_jump" && metadataHotspot.destinationId) {
+                      newHotspot.type = 'link';
+                      // use the destinationId to find the destination node and set its name to the destination property
+                      data.nodes.forEach(node => {
+                        if (node.id === metadataHotspot.destinationId) {
+                          newHotspot.destination = node.name;
+                        }
+                      });
+                    }
+                    if (metadataHotspot.behavior === "non_clickable" && metadataHotspot.hyperlinkUrl) {
+                      newHotspot.destination = metadataHotspot.hyperlinkUrl;
+                      newHotspot.type = 'hyperlink';
+                    }
+                    if (metadataHotspot.behavior === "pause_video") {
+                      newHotspot.destination = '';
+                      newHotspot.type = 'pause';
+                    }
+                  }
+                });
+              }
+              newNode.hotspots.push(newHotspot);
+            }
+          });
         }
         nodes.push(newNode); // save the found node with level to the returned nodes array
       });
@@ -328,6 +379,14 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
       }, 0);
     }
+  }
+  
+  public _drillDown(node: Node): void {
+    this.drillDown = node;
+  }
+  
+  public _drillUp(): void {
+    this.drillDown = null;
   }
   
   ngOnDestroy() {
