@@ -121,7 +121,12 @@ export class NodeHotspotsComponent extends QueryBase {
       .subscribe(([topHotSpots, switchTopHotSpots]) => {
         this._tableData = [];
         this._totalCount = 0;
-        const {report, compare } = this.mergeReports(topHotSpots, switchTopHotSpots);
+        // override headers for nodeSwitch report
+        let updatedSwitchTopHotSpots: any = Object.assign(switchTopHotSpots);
+          if (switchTopHotSpots.report && switchTopHotSpots.report.table && switchTopHotSpots.report.table.header) {
+            updatedSwitchTopHotSpots.report.table.header = switchTopHotSpots.report.table.header.replace('count_node_switch', 'count_hotspot_clicked');
+          }
+        const {report, compare } = this.mergeReports(topHotSpots, updatedSwitchTopHotSpots);
           if (compare) {
              this._handleCompare(report, compare);
           } else {
@@ -229,7 +234,7 @@ export class NodeHotspotsComponent extends QueryBase {
         this._reportInterval,
         'name'
       );
-      this._totalCount = current.table.totalCount;
+      this._totalCount = tableData.length;
       this._columns = columns;
       this._tableData = tableData;
       this.extendHotspotsData();
