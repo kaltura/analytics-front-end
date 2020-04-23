@@ -18,7 +18,7 @@ export class NodeHotspotsConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
-          'hotspot_clicked': {
+          'count_hotspot_clicked': {
             format: value => value,
             sortOrder: 1,
           },
