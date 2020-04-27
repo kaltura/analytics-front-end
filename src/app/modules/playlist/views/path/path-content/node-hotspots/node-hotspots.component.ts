@@ -218,6 +218,8 @@ export class NodeHotspotsComponent extends QueryBase {
     this._columns = columns;
     this._tableData = tableData;
     this.extendHotspotsData();
+    // remove deleted hotspots
+    this._tableData = this._tableData.filter(hotspot => hotspot.name);
   }
 
   private _handleCompare(current: Report, compare: Report): void {
