@@ -234,7 +234,7 @@ export class NodeHotspotsComponent extends QueryBase {
         compare.table,
         this._dataConfig.table,
         this._reportInterval,
-        'name'
+        'hotspot_id'
       );
       this._totalCount = tableData.length;
       this._columns = columns;
