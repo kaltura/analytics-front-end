@@ -31,7 +31,7 @@ export class NodeHotspotsComponent extends QueryBase {
   @Input() duration = 0;
   @Input() hotspots: HotSpot[] = [];
 
-  private _order = '-hotspot_clicked';
+  private _order = '-count_hotspot_clicked';
   private _reportTypeTopHotspots = reportTypeMap(KalturaReportType.interactiveVideoNodeTopHotspots);
   private _reportTypeSwitchTopHotspots = reportTypeMap(KalturaReportType.intercativeVideoNodeSwitchTopHotspots);
   private _dataConfig: ReportDataConfig;
