@@ -246,9 +246,9 @@ export class NodeHotspotsComponent extends QueryBase {
   public _onSortChanged(event: SortEvent): void {
     if (event.field && event.order && !this._isCompareMode && !this._ignoreFirstSortEvent) {
       if (event.order === 1 ) {
-        this._tableData = this._tableData.sort((a, b) => parseInt(a.hotspot_clicked) > parseInt(b.hotspot_clicked) ? 1 : -1);
+        this._tableData = this._tableData.sort((a, b) => parseInt(a.count_hotspot_clicked) > parseInt(b.count_hotspot_clicked) ? 1 : -1);
       } else {
-        this._tableData = this._tableData.sort((a, b) => parseInt(a.hotspot_clicked) < parseInt(b.hotspot_clicked) ? 1 : -1);
+        this._tableData = this._tableData.sort((a, b) => parseInt(a.count_hotspot_clicked) < parseInt(b.count_hotspot_clicked) ? 1 : -1);
       }
     }
     this._ignoreFirstSortEvent = false;
