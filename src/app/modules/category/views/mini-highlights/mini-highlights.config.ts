@@ -8,7 +8,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
@@ -38,7 +38,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             units: value => 'min',
             sortOrder: 5,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
