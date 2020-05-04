@@ -2,7 +2,7 @@
   <div class="kFilters" [class.kCompare]="_isCompareMode">
     <div class="kCol">
       <div class="kTitleRow">
-        <span class="kTitle">{{'app.category.pageViews' | translate}}</span>
+        <span class="kTitle" [kTooltip]="'app.category.pageViews' | translate" [showOnEllipsis]="true">{{'app.category.pageViews' | translate}}</span>
         <kInputHelper>
           <span>{{'app.category.pageViews_tt' | translate}}</span>
         </kInputHelper>
