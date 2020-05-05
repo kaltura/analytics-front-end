@@ -38,7 +38,7 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
   @Output() openFilterClick = new EventEmitter<void>();
 
   private _order = '-count_plays';
-  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
+  private _reportType = reportTypeMap(KalturaReportType.categoryHighlights);
   private _dataConfig: ReportDataConfig;
 
   protected _componentId = 'mini-page-views';

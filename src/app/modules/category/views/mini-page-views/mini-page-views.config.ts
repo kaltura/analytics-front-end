@@ -8,7 +8,7 @@ export class MiniPageViewsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
@@ -19,7 +19,7 @@ export class MiniPageViewsConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
             sortOrder: 1,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
