@@ -33,6 +33,9 @@
     height: auto !important;
     flex: 0 0 auto;
     .kTitle{
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       width: auto;
       padding-right: 0;
     }
