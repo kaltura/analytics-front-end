@@ -1,9 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import { BroadcastingEntries, BroadcastingEntriesService } from "./broadcasting-entries.service";
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
-import { ErrorsManagerService } from "shared/services";
-import { ISubscription } from "rxjs/Subscription";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {BroadcastingEntries, BroadcastingEntriesService} from "./broadcasting-entries.service";
+import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {ErrorsManagerService} from "shared/services";
+import {ISubscription} from "rxjs/Subscription";
+import {KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
+import * as moment from "moment";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-live-entries-broadcasting',
@@ -31,7 +34,11 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registerStateChange();
     this.registerDataChange();
+    this.startPolling();
+  }
 
+  private startPolling(): void {
+    this.clearIntervals();
     const DATA_LOAD_INTERVAL = 10 * 1000000; // 30 seconds interval
     this._broadcastingEntriesService.loadData();
     this.reportIntervalId = setInterval(() => {
@@ -40,14 +47,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.reportIntervalId) {
-      clearInterval(this.reportIntervalId);
-      this.reportIntervalId = null;
-    }
-    if (this.timeUpdateIntervalId) {
-      clearInterval(this.timeUpdateIntervalId);
-      this.timeUpdateIntervalId = null;
-    }
+    this.clearIntervals();
     if (this.statusChangeSubscription) {
       this.statusChangeSubscription.unsubscribe();
       this.statusChangeSubscription = null;
@@ -55,6 +55,17 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
     if (this.dataChangeSubscription) {
       this.dataChangeSubscription.unsubscribe();
       this.dataChangeSubscription = null;
+    }
+  }
+
+  private clearIntervals(): void {
+    if (this.reportIntervalId) {
+      clearInterval(this.reportIntervalId);
+      this.reportIntervalId = null;
+    }
+    if (this.timeUpdateIntervalId) {
+      clearInterval(this.timeUpdateIntervalId);
+      this.timeUpdateIntervalId = null;
     }
   }
 
@@ -81,8 +92,10 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   private registerDataChange(): void {
     this.dataChangeSubscription = this._broadcastingEntriesService.data$
       .pipe(cancelOnDestroy(this))
-      .subscribe((data: {entries: BroadcastingEntries[], update: boolean}) => {
-        if (data.update) { // no need to create new entries - only update existing ones
+      .subscribe((data: {entries: BroadcastingEntries[], update: boolean, forceReload: boolean}) => {
+        if (data.forceReload) {
+          this.startPolling();
+        } else if (data.update) { // no need to create new entries - only update existing ones
           data.entries.forEach((entry: BroadcastingEntries) => {
             this.broadcastingEntries.forEach((broadcastingEntry: BroadcastingEntries) => {
               if (broadcastingEntry.id === entry.id) {
@@ -106,7 +119,11 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   private setTimeUpdateInterval(): void {
     this.timeUpdateIntervalId = setInterval(() => {
-      console.log("Update time for all entries");
+      this.broadcastingEntries.forEach((entry: BroadcastingEntries) => {
+        if (entry.status !== KalturaLiveStreamBroadcastStatus.offline && entry.currentBroadcastStartTime) {
+          entry.broadcastTime = moment.duration(Math.abs(moment().diff(DateFilterUtils.getMomentDate(entry.currentBroadcastStartTime))));
+        }
+      });
     }, 1000);
   }
 }

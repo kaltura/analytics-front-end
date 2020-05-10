@@ -5,7 +5,8 @@
         <div *ngFor="let entry of broadcastingEntries" class="entry">
           <div class="preview">
             <div class="header">
-              <span>{{entry.status | broadcastStatus}}</span>
+              <span class="status">{{entry.status | broadcastStatus}}</span>
+              <span>{{entry.broadcastTime | appStreamDuration}}</span>
             </div>
           </div>
           <div class="details">
@@ -20,13 +21,42 @@
               <div class="separator"></div>
               <span>{{'app.entriesLive.recording' | translate}} {{entry.recording | liveRecordingStatus}}</span>
               <div class="separator"></div>
-              <span>{{'app.entriesLive.transcoding' | translate}}</span>
+              <span>{{'app.entriesLive.transcoding' | translate}} N/A</span>
+            </div>
+            <div class="reportData">
+              <div class="col">
+                <div class="row">
+                  <span class="value">{{entry.activeUsers}}</span>
+                  <span class="label">{{'app.entriesLive.view_unique_audience' | translate}}</span>
+                </div>
+                <div class="row">
+                  <span class="value">{{entry.engagedUsers}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_engagement' | translate}}</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <span class="value">{{entry.buffering}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_buffering' | translate}}</span>
+                </div>
+                <div class="row">
+                  <span class="value">{{entry.downstream}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_downstream_bandwidth' | translate}}</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <span class="value">N/A</span>
+                  <span class="label">{{'app.entriesLive.stream_health' | translate}}</span>
+                </div>
+                <div class="row">
+                  <span class="value">N/A</span>
+                  <span class="label">{{'app.entriesLive.redundancy' | translate}}</span>
+                </div>
+              </div>
             </div>
 
-            <span>Active Users: {{entry.activeUsers}}</span>
-            <span>Engaged Users: {{entry.engagedUsers}}</span>
-            <span>User Buffering: {{entry.buffering}}</span>
-            <span>Downstream Bandwidth: {{entry.downstream}}</span>
+
           </div>
         </div>
     </div>

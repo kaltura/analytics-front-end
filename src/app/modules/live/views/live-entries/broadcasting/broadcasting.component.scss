@@ -27,6 +27,9 @@
         font-weight: 700;
         span {
           margin-left: 12px;
+          &.status {
+            text-transform: uppercase;
+          }
         }
       }
     }
@@ -61,6 +64,30 @@
         width: 12px;
         margin-left: 12px;
         border-left: 1px solid $kGrayscale2;
+      }
+    }
+    .reportData{
+      margin-top: 16px;
+      display: flex;
+      color: $kGrayscale1;
+      .col {
+        display: flex;
+        flex-direction: column;
+        .row {
+          display: flex;
+          align-items: flex-end;
+          margin-top: 16px;
+          .value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 8px;
+          }
+          .label {
+            font-size: 15px;
+            font-weight: 300;
+            margin-right: 40px;
+          }
+        }
       }
     }
   }

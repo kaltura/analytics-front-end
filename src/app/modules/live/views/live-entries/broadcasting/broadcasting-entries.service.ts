@@ -26,7 +26,8 @@ import { ISubscription } from "rxjs/Subscription";
 export interface BroadcastingEntries {
   id?: string;
   status?: KalturaLiveStreamBroadcastStatus;
-  broadcastTime?: string;
+  broadcastTime?: moment.Duration;
+  currentBroadcastStartTime?: number;
   name?: string;
   owner?: string;
   dvr?: KalturaDVRStatus;
@@ -46,9 +47,10 @@ export class BroadcastingEntriesService implements OnDestroy {
   private readonly _dataConfig: ReportDataConfig;
   private _broadcastingEntries: BroadcastingEntries[] = [];
   private _broadcastingEntriesIDs = '';
-  private _data = new BehaviorSubject<{entries: BroadcastingEntries[], update: boolean}>({entries: this._broadcastingEntries, update: false});
+  private _data = new BehaviorSubject<{entries: BroadcastingEntries[], update: boolean, forceReload: boolean}>({entries: this._broadcastingEntries, update: false, forceReload: false});
   private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException }>({ isBusy: false });
   private _firstTimeLoading = true;
+  private _forceRefresh = false;
 
   private reportSubscription: ISubscription = null;
   private baseEntryListSubscription: ISubscription = null;
@@ -162,6 +164,10 @@ export class BroadcastingEntriesService implements OnDestroy {
         });
       });
     }
+    if (this._forceRefresh) {
+      refresh = true;
+      this._forceRefresh = false;
+    }
     return refresh;
   }
 
@@ -176,10 +182,11 @@ export class BroadcastingEntriesService implements OnDestroy {
                 broadcastingEntry.name = entry.name;
                 broadcastingEntry.owner = entry.userId;
                 broadcastingEntry.dvr = entry.dvrStatus;
+                broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
                 broadcastingEntry.recording = entry.recordingStatus;
               }
             });
-            this._data.next({entries: this._broadcastingEntries, update: false});
+            this._data.next({entries: this._broadcastingEntries, update: false, forceReload: this._forceRefresh});
           });
           this._state.next({ isBusy: false, error: null });
 
@@ -200,10 +207,13 @@ export class BroadcastingEntriesService implements OnDestroy {
           responses.forEach((response, index) => {
             const streamDetails: KalturaLiveStreamDetails = response.result;
             if (streamDetails && streamDetails.broadcastStatus) {
+              if (typeof this._broadcastingEntries[index].status !== "undefined" && this._broadcastingEntries[index].status !== streamDetails.broadcastStatus) {
+                this._forceRefresh = true; // if stream status change - we must reload all data in order to update playback duration
+              }
               this._broadcastingEntries[index].status = streamDetails.broadcastStatus;
             }
           });
-          this._data.next({entries: this._broadcastingEntries, update: true});
+          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
         },
         error => {
           console.log("LiveEntries::Error loading entries streamDetails: " + error.message);
