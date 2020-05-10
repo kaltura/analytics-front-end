@@ -3,16 +3,21 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './live.routes';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import { EntriesLiveComponent } from './views/entries-live/entries-live.component';
-import { EntriesLivePollsService } from './views/entries-live/entries-live-polls.service';
+import { LiveEntriesComponent } from './views/live-entries/live-entries.component';
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
-import { EntriesLiveDataConfig } from './views/entries-live/entries-live-data.config';
 import { EntryDetailsOverlayComponent } from './views/entries-live/entry-details-overlay/entry-details-overlay.component';
 import { SharedModule } from 'shared/shared.module';
 import { EntriesLiveNoDataIconComponent } from './views/entries-live/entries-live-no-data-icon/entries-live-no-data-icon.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
+import { BroadcastingComponent } from "./views/live-entries/broadcasting/broadcasting.component";
+import { EndedComponent } from "./views/live-entries/ended/ended.component";
+import { BroadcastingEntriesService } from "./views/live-entries/broadcasting/broadcasting-entries.service";
+import { BroadcastingEntriesDataConfig } from "./views/live-entries/broadcasting/broadcasting-entries-data.config";
+import { RecordingStatusPipe } from "./views/live-entries/pipes/recording-status.pipe";
+import { DVRStatusPipe } from "./views/live-entries/pipes/dvr-status.pipe";
+import { BroadcastStatusPipe } from "./views/live-entries/pipes/broadcast-status.pipe";
 
 @NgModule({
   imports: [
@@ -28,13 +33,18 @@ import { InputTextModule } from 'primeng/inputtext';
     TooltipModule,
   ],
   declarations: [
-    EntriesLiveComponent,
+    LiveEntriesComponent,
+    BroadcastingComponent,
+    EndedComponent,
     EntryDetailsOverlayComponent,
     EntriesLiveNoDataIconComponent,
+    RecordingStatusPipe,
+    DVRStatusPipe,
+    BroadcastStatusPipe
   ],
   providers: [
-    EntriesLivePollsService,
-    EntriesLiveDataConfig,
+    BroadcastingEntriesDataConfig,
+    BroadcastingEntriesService
   ]
 })
 export class LiveModule {

@@ -1,0 +1,36 @@
+<div data-aid="report-group-user" class="kMain">
+  <div class="kReportView">
+    <k-area-blocker [showLoader]="_loadingEntries" [message]="_blockerMessage">
+    <div class="kReport kContent kOverrideFAIcons">
+        <div *ngFor="let entry of broadcastingEntries" class="entry">
+          <div class="preview">
+            <div class="header">
+              <span>{{entry.status | broadcastStatus}}</span>
+            </div>
+          </div>
+          <div class="details">
+            <div class="header">
+              <span>Name: {{entry.name}}</span>
+              <a>{{'app.entriesLive.full' | translate}}</a>
+            </div>
+            <div class="entryData">
+              <span>{{'app.entriesLive.owner' | translate}} {{entry.owner}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.dvr' | translate}} {{entry.dvr | liveDvrStatus}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.recording' | translate}} {{entry.recording | liveRecordingStatus}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.transcoding' | translate}}</span>
+            </div>
+
+            <span>Active Users: {{entry.activeUsers}}</span>
+            <span>Engaged Users: {{entry.engagedUsers}}</span>
+            <span>User Buffering: {{entry.buffering}}</span>
+            <span>Downstream Bandwidth: {{entry.downstream}}</span>
+          </div>
+        </div>
+    </div>
+    </k-area-blocker>
+  </div>
+</div>
+

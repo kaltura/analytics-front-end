@@ -905,6 +905,28 @@
       }
     },
     "entriesLive": {
+      "broadcasting": "Broadcasting Now",
+      "ended": "Broadcast Ended",
+      "full": "Full Dashboard",
+      "owner": "Owner:",
+      "dvr": "DVR:",
+      "recording": "Recording:",
+      "transcoding": "Transcoding:",
+      "recordingStatus": {
+        "active": "Active",
+        "disabled": "Disabled",
+        "paused":  "Paused",
+        "stopped": "Stopped"
+      },
+      "dvrStatus": {
+        "enabled": "On",
+        "disabled": "Off"
+      },
+      "broadcastStatus": {
+        "live": "Live",
+        "offline": "Offline",
+        "preview": "Preview"
+      },
       "title": "Live Entries",
       "entriesCount": "{{0}} Entries",
       "period": "Last 7 days",
