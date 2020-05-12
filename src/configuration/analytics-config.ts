@@ -26,6 +26,7 @@ export interface AnalyticsConfig {
   kalturaServer?: {
     uri?: string,
     previewUIConf?: number,
+    previewUIConfV7?: number,
   };
   cdnServers?: {
     serverUri?: string,

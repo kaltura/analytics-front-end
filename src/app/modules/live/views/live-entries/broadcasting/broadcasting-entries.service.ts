@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ReportService } from 'shared/services';
+import {AuthService, ReportService} from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { analyticsConfig } from 'configuration/analytics-config';
+import { analyticsConfig, buildCDNUrl } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
 import {
   BaseEntryListAction,
@@ -56,6 +56,7 @@ export interface BroadcastingEntries {
   streamHealthColor?: number;
   redundancy?: boolean;
   conversionProfileId?: number;
+  previewUrl?: string;
 }
 
 @Injectable()
@@ -79,6 +80,7 @@ export class BroadcastingEntriesService implements OnDestroy {
 
   constructor(private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
+              private _authService: AuthService,
               private _dataConfigService: BroadcastingEntriesDataConfig) {
     this._dataConfig = this._dataConfigService.getConfig();
   }
@@ -122,14 +124,12 @@ export class BroadcastingEntriesService implements OnDestroy {
           if (refresh) { // no need to reload entries data if entries returned from the report were not changed
             this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
             this.loadAdditionalEntriesData();
-            // this.loadTranscoding();
-            // this.loadPreviews();
+            this.loadPreviews();
           }
 
           this.loadStreamDetails();
           this.loadRedundancy();
           // this.loadStreamHealth();
-
         },
         error => {
           this._state.next({ isBusy: false, error });
@@ -280,6 +280,23 @@ export class BroadcastingEntriesService implements OnDestroy {
         error => {
           console.log("LiveEntries::Error loading entries transcoding: " + error.message);
         });
+  }
+
+  private loadStreamHealth(): void {
+    let actions = [];
+    this._broadcastingEntries.forEach(entry => {
+      actions.push(new ConversionProfileAssetParamsListAction({filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })}));
+    });
+  }
+
+  private loadPreviews(): void {
+    const pid = this._authService.pid;
+    const uiconfId = analyticsConfig.kalturaServer.previewUIConfV7;
+    const ks = this._authService.ks;
+    const baseUrl = buildCDNUrl('');
+    this._broadcastingEntries.forEach(entry => {
+      entry.previewUrl = `${baseUrl}/p/${pid}/embedPlaykitJs/uiconf_id/${uiconfId}/partner_id/${pid}?iframeembed=true&entry_id=${entry.id}&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}&config[playback]={"autoplay":true,"muted":true}&config[abr]={"capLevelToPlayerSize":true}`;
+    });
   }
 
   private clearAllSubscriptions(): void {

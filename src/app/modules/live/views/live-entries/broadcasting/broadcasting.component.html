@@ -8,6 +8,7 @@
               <span class="status">{{entry.status | broadcastStatus}}</span>
               <span>{{entry.broadcastTime | appStreamDuration}}</span>
             </div>
+            <iframe allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="entry.previewUrl | safe" width="290" height="152"></iframe>
           </div>
           <div class="details">
             <div class="header">
