@@ -919,8 +919,8 @@
         "stopped": "Stopped"
       },
       "dvrStatus": {
-        "enabled": "On",
-        "disabled": "Off"
+        "enabled": "ON",
+        "disabled": "OFF"
       },
       "broadcastStatus": {
         "live": "Live",

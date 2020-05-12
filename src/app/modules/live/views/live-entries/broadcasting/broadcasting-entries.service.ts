@@ -26,7 +26,10 @@ import {
   KalturaLiveStreamBroadcastStatus,
   EntryServerNodeListAction,
   KalturaLiveEntryServerNodeFilter,
-  KalturaLiveEntryServerNode, KalturaEntryServerNodeStatus
+  KalturaLiveEntryServerNode,
+  KalturaEntryServerNodeStatus,
+  ConversionProfileAssetParamsListAction,
+  KalturaConversionProfileAssetParamsFilter, KalturaConversionProfileAssetParams, KalturaAssetParamsOrigin
 } from 'kaltura-ngx-client';
 import { BroadcastingEntriesDataConfig } from './broadcasting-entries-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -52,6 +55,7 @@ export interface BroadcastingEntries {
   streamHealth?: string;
   streamHealthColor?: number;
   redundancy?: boolean;
+  conversionProfileId?: number;
 }
 
 @Injectable()
@@ -68,6 +72,7 @@ export class BroadcastingEntriesService implements OnDestroy {
   private baseEntryListSubscription: ISubscription = null;
   private streamDetailsSubscription: ISubscription = null;
   private entryServerNodeSubscription: ISubscription = null;
+  private conversionProfilesSubscription: ISubscription = null;
 
   public readonly data$ = this._data.asObservable();
   public readonly state$ = this._state.asObservable();
@@ -197,12 +202,13 @@ export class BroadcastingEntriesService implements OnDestroy {
                 broadcastingEntry.dvr = entry.dvrStatus;
                 broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
                 broadcastingEntry.recording = entry.recordingStatus;
+                broadcastingEntry.conversionProfileId = entry.conversionProfileId;
               }
             });
             this._data.next({entries: this._broadcastingEntries, update: false, forceReload: this._forceRefresh});
           });
           this._state.next({ isBusy: false, error: null });
-
+          this.loadTranscodingData(); // we load transcoding data after we get entry data since we need the conversionProfileId for each entry. Not using multi-request for better user experience as this data load only once
         },
         error => {
           console.log("LiveEntries::Error loading additional entries data: " + error.message);
@@ -232,9 +238,7 @@ export class BroadcastingEntriesService implements OnDestroy {
           console.log("LiveEntries::Error loading entries streamDetails: " + error.message);
         });
   }
-  private _getEntryServerNodeListAction(entryIdEqual: string): EntryServerNodeListAction {
-    return new EntryServerNodeListAction({ filter: new KalturaLiveEntryServerNodeFilter({ entryIdEqual }) });
-  }
+
   private loadRedundancy(): void {
     let actions = [];
     this._broadcastingEntries.forEach(entry => {
@@ -258,23 +262,36 @@ export class BroadcastingEntriesService implements OnDestroy {
         });
   }
 
+  private loadTranscodingData(): void {
+    let actions = [];
+    this._broadcastingEntries.forEach(entry => {
+      actions.push(new ConversionProfileAssetParamsListAction({filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })}));
+    });
+    this.conversionProfilesSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+      .pipe(cancelOnDestroy(this))
+      .subscribe((responses: KalturaMultiResponse) => {
+          responses.forEach((response, index) => {
+            const profiles: KalturaConversionProfileAssetParams[] = response.result.objects;
+            const transcoding = !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert);
+            this._broadcastingEntries[index].transcoding = transcoding;
+          });
+          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+        },
+        error => {
+          console.log("LiveEntries::Error loading entries transcoding: " + error.message);
+        });
+  }
+
   private clearAllSubscriptions(): void {
-    if (this.reportSubscription) {
-      this.reportSubscription.unsubscribe();
-      this.reportSubscription = null;
-    }
-    if (this.baseEntryListSubscription) {
-      this.baseEntryListSubscription.unsubscribe();
-      this.baseEntryListSubscription = null;
-    }
-    if (this.streamDetailsSubscription) {
-      this.streamDetailsSubscription.unsubscribe();
-      this.streamDetailsSubscription = null;
-    }
-    if (this.entryServerNodeSubscription) {
-      this.entryServerNodeSubscription.unsubscribe();
-      this.entryServerNodeSubscription = null;
-    }
+    const subscriptions = [this.reportSubscription, this.baseEntryListSubscription, this.streamDetailsSubscription,
+      this.entryServerNodeSubscription, this.conversionProfilesSubscription];
+
+    subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+        subscription = null;
+      }
+    });
   }
 
   public paginationChange(pager: KalturaFilterPager): void {

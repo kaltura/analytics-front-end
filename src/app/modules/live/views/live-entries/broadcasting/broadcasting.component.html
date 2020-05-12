@@ -21,7 +21,8 @@
               <div class="separator"></div>
               <span>{{'app.entriesLive.recording' | translate}} {{entry.recording | liveRecordingStatus}}</span>
               <div class="separator"></div>
-              <span>{{'app.entriesLive.transcoding' | translate}} N/A</span>
+              <span>{{'app.entriesLive.transcoding' | translate}}</span>
+              <span *ngIf="entry.transcoding !== undefined" style="margin-left: 4px">{{entry.transcoding ? ('app.entryLive.on' | translate) : ('app.entryLive.off' | translate) }}</span>
             </div>
             <div class="reportData">
               <div class="col">
