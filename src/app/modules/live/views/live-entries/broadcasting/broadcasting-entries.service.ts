@@ -6,15 +6,27 @@ import { BehaviorSubject } from 'rxjs';
 import {
   BaseEntryListAction,
   KalturaAPIException,
-  KalturaBaseEntryFilter, KalturaBaseEntryListResponse,
+  KalturaBaseEntryFilter,
+  KalturaBaseEntryListResponse,
   KalturaClient,
-  KalturaDVRStatus, KalturaEndUserReportInputFilter,
-  KalturaFilterPager, KalturaLiveStreamAdminEntry, KalturaLiveStreamDetails, KalturaMultiRequest, KalturaMultiResponse,
-  KalturaRecordingStatus, KalturaReportResponseOptions,
-  KalturaReportTable, KalturaReportType, LiveStreamGetDetailsAction,
+  KalturaDVRStatus,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaLiveStreamAdminEntry,
+  KalturaLiveStreamDetails,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaRecordingStatus,
+  KalturaReportResponseOptions,
+  KalturaReportTable,
+  KalturaReportType,
+  LiveStreamGetDetailsAction,
   ReportGetTableAction,
   ReportGetTableActionArgs,
-  KalturaLiveStreamBroadcastStatus
+  KalturaLiveStreamBroadcastStatus,
+  EntryServerNodeListAction,
+  KalturaLiveEntryServerNodeFilter,
+  KalturaLiveEntryServerNode, KalturaEntryServerNodeStatus
 } from 'kaltura-ngx-client';
 import { BroadcastingEntriesDataConfig } from './broadcasting-entries-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -55,6 +67,7 @@ export class BroadcastingEntriesService implements OnDestroy {
   private reportSubscription: ISubscription = null;
   private baseEntryListSubscription: ISubscription = null;
   private streamDetailsSubscription: ISubscription = null;
+  private entryServerNodeSubscription: ISubscription = null;
 
   public readonly data$ = this._data.asObservable();
   public readonly state$ = this._state.asObservable();
@@ -104,12 +117,12 @@ export class BroadcastingEntriesService implements OnDestroy {
           if (refresh) { // no need to reload entries data if entries returned from the report were not changed
             this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
             this.loadAdditionalEntriesData();
+            // this.loadTranscoding();
             // this.loadPreviews();
           }
 
           this.loadStreamDetails();
-          // this.loadTranscoding();
-          // this.loadRedundancy();
+          this.loadRedundancy();
           // this.loadStreamHealth();
 
         },
@@ -219,6 +232,31 @@ export class BroadcastingEntriesService implements OnDestroy {
           console.log("LiveEntries::Error loading entries streamDetails: " + error.message);
         });
   }
+  private _getEntryServerNodeListAction(entryIdEqual: string): EntryServerNodeListAction {
+    return new EntryServerNodeListAction({ filter: new KalturaLiveEntryServerNodeFilter({ entryIdEqual }) });
+  }
+  private loadRedundancy(): void {
+    let actions = [];
+    this._broadcastingEntries.forEach(entry => {
+      actions.push(new EntryServerNodeListAction({filter: new KalturaLiveEntryServerNodeFilter({ entryIdEqual: entry.id })}));
+    });
+    this.entryServerNodeSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+      .pipe(cancelOnDestroy(this))
+      .subscribe((responses: KalturaMultiResponse) => {
+          responses.forEach((response, index) => {
+            let redundancy = false;
+            const entryServerNodes: KalturaLiveEntryServerNode[] = response.result.objects;
+            if (entryServerNodes.length > 1) {
+              redundancy = entryServerNodes.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
+            }
+            this._broadcastingEntries[index].redundancy = redundancy;
+          });
+          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+        },
+        error => {
+          console.log("LiveEntries::Error loading entries redundancy: " + error.message);
+        });
+  }
 
   private clearAllSubscriptions(): void {
     if (this.reportSubscription) {
@@ -232,6 +270,10 @@ export class BroadcastingEntriesService implements OnDestroy {
     if (this.streamDetailsSubscription) {
       this.streamDetailsSubscription.unsubscribe();
       this.streamDetailsSubscription = null;
+    }
+    if (this.entryServerNodeSubscription) {
+      this.entryServerNodeSubscription.unsubscribe();
+      this.entryServerNodeSubscription = null;
     }
   }
 
