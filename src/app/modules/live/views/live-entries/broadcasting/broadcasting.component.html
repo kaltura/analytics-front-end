@@ -4,7 +4,8 @@
     <div class="kReport kContent kOverrideFAIcons">
         <div *ngFor="let entry of broadcastingEntries" class="entry">
           <div class="preview">
-            <div class="header">
+            <div class="header" [class.previewColor]="entry.status===2" [class.offlineColor]="entry.status===1">
+              <i [class.icon-preview]="entry.status===2" [class.icon-stream_offline]="entry.status===1" [class.kStatusActive]="entry.status===0"></i>
               <span class="status">{{entry.status | broadcastStatus}}</span>
               <span>{{entry.broadcastTime | appStreamDuration}}</span>
             </div>
