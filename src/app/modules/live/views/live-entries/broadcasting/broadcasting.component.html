@@ -63,6 +63,11 @@
 
           </div>
         </div>
+        <div class="noResults" *ngIf="!_loadingEntries && broadcastingEntries.length === 0">
+          <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
+          <span class="kNoDataTitle">{{'app.entriesLive.noLiveEntriesTitle' | translate}}</span>
+          <span class="kNoDataMessage">{{'app.entriesLive.noLiveEntriesMessage' | translate}}</span>
+        </div>
     </div>
     </k-area-blocker>
   </div>

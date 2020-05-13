@@ -127,6 +127,23 @@
       }
     }
   }
+  .noResults {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    width: 100%;
+    align-items: center;
+    .kNoDataTitle {
+      color: $kGrayscale1;
+      font-weight: bold;
+      margin-bottom: 8px;
+      margin-top: 24px;
+    }
+    .kNoDataMessage {
+      color: $kGrayscale2;
+      font-weight: normal;
+    }
+  }
 }
 
 ::ng-deep .kAreaBlockerContainer {

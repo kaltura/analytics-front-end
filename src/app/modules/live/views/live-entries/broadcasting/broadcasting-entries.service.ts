@@ -113,6 +113,10 @@ export class BroadcastingEntriesService implements OnDestroy {
             this.loadStreamDetails();
             this.loadRedundancy();
             this.loadStreamHealth();
+          } else {
+            this._broadcastingEntries = [];
+            this._state.next({ isBusy: false, error: null });
+            this._data.next({entries: this._broadcastingEntries, update: false, forceReload: false});
           }
         },
         error => {
