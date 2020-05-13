@@ -1,42 +1,23 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {AuthService, ReportService} from 'shared/services';
+import { AuthService, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig, buildCDNUrl } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
-import {
-  BaseEntryListAction,
-  KalturaAPIException,
-  KalturaBaseEntryFilter,
-  KalturaBaseEntryListResponse,
-  KalturaClient,
-  KalturaDVRStatus,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaLiveStreamAdminEntry,
-  KalturaLiveStreamDetails,
-  KalturaMultiRequest,
-  KalturaMultiResponse,
-  KalturaRecordingStatus,
-  KalturaReportResponseOptions,
-  KalturaReportTable,
-  KalturaReportType,
-  LiveStreamGetDetailsAction,
-  ReportGetTableAction,
-  ReportGetTableActionArgs,
-  KalturaLiveStreamBroadcastStatus,
-  EntryServerNodeListAction,
-  KalturaLiveEntryServerNodeFilter,
-  KalturaLiveEntryServerNode,
-  KalturaEntryServerNodeStatus,
-  ConversionProfileAssetParamsListAction,
-  KalturaConversionProfileAssetParamsFilter, KalturaConversionProfileAssetParams, KalturaAssetParamsOrigin
+import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient,
+  KalturaDVRStatus, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveStreamAdminEntry, KalturaLiveStreamDetails,
+  KalturaMultiRequest, KalturaMultiResponse, KalturaRecordingStatus, KalturaReportResponseOptions, KalturaReportTable,
+  KalturaReportType, LiveStreamGetDetailsAction, ReportGetTableAction, ReportGetTableActionArgs, KalturaLiveStreamBroadcastStatus,
+  EntryServerNodeListAction, KalturaLiveEntryServerNodeFilter, KalturaLiveEntryServerNode, KalturaEntryServerNodeStatus,
+  ConversionProfileAssetParamsListAction, KalturaConversionProfileAssetParamsFilter, KalturaConversionProfileAssetParams,
+  KalturaAssetParamsOrigin, BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaBeacon, KalturaBeaconObjectTypes
 } from 'kaltura-ngx-client';
 import { BroadcastingEntriesDataConfig } from './broadcasting-entries-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import * as moment from "moment";
 import { ISubscription } from "rxjs/Subscription";
+import { TranslateService } from "@ngx-translate/core";
+import * as moment from "moment";
 
 export interface BroadcastingEntries {
   id?: string;
@@ -53,7 +34,7 @@ export interface BroadcastingEntries {
   buffering?: number;
   downstream?: number;
   streamHealth?: string;
-  streamHealthColor?: number;
+  streamHealthClassName?: string;
   redundancy?: boolean;
   conversionProfileId?: number;
   previewUrl?: string;
@@ -74,6 +55,7 @@ export class BroadcastingEntriesService implements OnDestroy {
   private streamDetailsSubscription: ISubscription = null;
   private entryServerNodeSubscription: ISubscription = null;
   private conversionProfilesSubscription: ISubscription = null;
+  private streamHealthSubscription: ISubscription = null;
 
   public readonly data$ = this._data.asObservable();
   public readonly state$ = this._state.asObservable();
@@ -81,6 +63,7 @@ export class BroadcastingEntriesService implements OnDestroy {
   constructor(private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
               private _authService: AuthService,
+              private _translate: TranslateService,
               private _dataConfigService: BroadcastingEntriesDataConfig) {
     this._dataConfig = this._dataConfigService.getConfig();
   }
@@ -120,16 +103,17 @@ export class BroadcastingEntriesService implements OnDestroy {
             const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig[ReportDataSection.table]);
             refresh = this.shouldRefreshEntries(tableData);
             this.mapReportResultToEntries(tableData, refresh);
-          }
-          if (refresh) { // no need to reload entries data if entries returned from the report were not changed
-            this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
-            this.loadAdditionalEntriesData();
-            this.loadPreviews();
-          }
 
-          this.loadStreamDetails();
-          this.loadRedundancy();
-          // this.loadStreamHealth();
+            if (refresh) { // no need to reload entries data if entries returned from the report were not changed
+              this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
+              this.loadAdditionalEntriesData();
+              this.loadPreviews();
+            }
+
+            this.loadStreamDetails();
+            this.loadRedundancy();
+            this.loadStreamHealth();
+          }
         },
         error => {
           this._state.next({ isBusy: false, error });
@@ -285,8 +269,28 @@ export class BroadcastingEntriesService implements OnDestroy {
   private loadStreamHealth(): void {
     let actions = [];
     this._broadcastingEntries.forEach(entry => {
-      actions.push(new ConversionProfileAssetParamsListAction({filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: entry.conversionProfileId })}));
+      actions.push(new BeaconListAction({filter: new KalturaBeaconFilter({
+          orderBy: '-updatedAt',
+          relatedObjectTypeIn: KalturaBeaconObjectTypes.entryBeacon,
+          eventTypeIn: '0_healthData,1_healthData',
+          objectIdIn: entry.id,
+          indexTypeEqual: KalturaBeaconIndexType.log
+        })}));
     });
+    this.streamHealthSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
+      .pipe(cancelOnDestroy(this))
+      .subscribe((responses: KalturaMultiResponse) => {
+          responses.forEach((response, index) => {
+            const beacons: KalturaBeacon[] = response.result.objects;
+            const streamHealth: {health: string, className: string} = this.getStreamHealth(beacons);
+            this._broadcastingEntries[index].streamHealth = streamHealth.health;
+            this._broadcastingEntries[index].streamHealthClassName = streamHealth.className;
+          });
+          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+        },
+        error => {
+          console.log("LiveEntries::Error loading entries stream health: " + error.message);
+        });
   }
 
   private loadPreviews(): void {
@@ -295,13 +299,14 @@ export class BroadcastingEntriesService implements OnDestroy {
     const ks = this._authService.ks;
     const baseUrl = buildCDNUrl('');
     this._broadcastingEntries.forEach(entry => {
+      // tslint:disable-next-line:max-line-length
       entry.previewUrl = `${baseUrl}/p/${pid}/embedPlaykitJs/uiconf_id/${uiconfId}/partner_id/${pid}?iframeembed=true&entry_id=${entry.id}&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}&config[playback]={"autoplay":true,"muted":true}&config[abr]={"capLevelToPlayerSize":true}`;
     });
   }
 
   private clearAllSubscriptions(): void {
     const subscriptions = [this.reportSubscription, this.baseEntryListSubscription, this.streamDetailsSubscription,
-      this.entryServerNodeSubscription, this.conversionProfilesSubscription];
+      this.entryServerNodeSubscription, this.conversionProfilesSubscription, this.streamHealthSubscription];
 
     subscriptions.forEach(subscription => {
       if (subscription) {
@@ -309,6 +314,44 @@ export class BroadcastingEntriesService implements OnDestroy {
         subscription = null;
       }
     });
+  }
+
+  private getStreamHealth(beacons: KalturaBeacon[]): {health: string, className: string} {
+    // find the first primary and first secondary stream (these are the most updated since we ordered by descending updatedAt)
+    let primary = null;
+    let secondary = null;
+    beacons.forEach(beacon => {
+      if (primary === null && beacon.eventType[0] === '0' && beacon.privateData) {
+        primary = beacon;
+      }
+      if (secondary === null && beacon.eventType[0] === '1' && beacon.privateData) {
+        secondary = beacon;
+      }
+    });
+
+    const severityToHealth = (severity: number) => {
+      let health = '';
+      if (severity === 0 || severity === 1) {
+        health = 'good';
+      } else if (severity === 2) {
+        health = 'fair';
+      } else if (severity === 3 || severity === 4) {
+        health = 'poor';
+      }
+      return health;
+    };
+
+    let key = '';
+    let className = '';
+    if (primary !== null) {
+      className = severityToHealth(JSON.parse(primary.privateData).maxSeverity);
+      key = 'primary_' + className;
+    } else if (secondary !== null) {
+      className = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
+      key = 'secondary_' + className;
+    }
+    const localizationKey = key.length ? 'app.entriesLive.health.' + key : 'app.common.na';
+    return { health: this._translate.instant(localizationKey), className };
   }
 
   public paginationChange(pager: KalturaFilterPager): void {

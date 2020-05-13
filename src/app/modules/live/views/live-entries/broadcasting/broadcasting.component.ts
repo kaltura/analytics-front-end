@@ -39,7 +39,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   private startPolling(): void {
     this.clearIntervals();
-    const DATA_LOAD_INTERVAL = 10 * 1000; // 30 seconds interval
+    const DATA_LOAD_INTERVAL = 30 * 1000; // 30 seconds interval
     this._broadcastingEntriesService.loadData();
     this.reportIntervalId = setInterval(() => {
       this._broadcastingEntriesService.loadData();

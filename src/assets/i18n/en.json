@@ -927,6 +927,14 @@
         "offline": "Offline",
         "preview": "Preview"
       },
+      "health": {
+        "primary_good": "Good Primary Stream",
+        "primary_poor": "Poor Primary Stream",
+        "primary_fair": "Fair Primary Stream",
+        "secondary_good": "Good Secondary Stream",
+        "secondary_poor": "Poor Secondary Stream",
+        "secondary_fair": "Fair Secondary Stream"
+      },
       "view_unique_audience": "Active Users",
       "avg_view_engagement": "Engaged Users",
       "avg_view_buffering": "Users Buffering",

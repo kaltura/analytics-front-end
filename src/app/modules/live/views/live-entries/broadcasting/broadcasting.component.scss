@@ -103,6 +103,26 @@
             font-weight: 700;
             margin-right: 8px;
           }
+          .healthIcon {
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            margin-right: 8px;
+            align-self: center;
+            display: none;
+            &.good {
+              display: block;
+              background-color: #009444;
+            }
+            &.fair {
+              display: block;
+              background-color: #f9a71b;
+            }
+            &.poor {
+              display: block;
+              background-color: #db1f26;
+            }
+          }
         }
       }
     }

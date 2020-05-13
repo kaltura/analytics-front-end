@@ -49,7 +49,8 @@
               </div>
               <div class="col">
                 <div class="row">
-                  <span class="value">N/A</span>
+                  <div class="healthIcon" [ngClass]="entry.streamHealthClassName"></div>
+                  <span class="value">{{entry.streamHealth}}</span>
                   <span class="label">{{'app.entriesLive.stream_health' | translate}}</span>
                 </div>
                 <div class="row" *ngIf="entry.redundancy">
