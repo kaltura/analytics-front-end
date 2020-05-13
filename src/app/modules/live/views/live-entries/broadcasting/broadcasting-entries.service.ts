@@ -45,10 +45,12 @@ export class BroadcastingEntriesService implements OnDestroy {
   private readonly _dataConfig: ReportDataConfig;
   private _broadcastingEntries: BroadcastingEntries[] = [];
   private _broadcastingEntriesIDs = '';
-  private _data = new BehaviorSubject<{entries: BroadcastingEntries[], update: boolean, forceReload: boolean}>({entries: this._broadcastingEntries, update: false, forceReload: false});
+  private _data = new BehaviorSubject<{entries: BroadcastingEntries[], totalCount: number, update: boolean, forceReload: boolean}>({entries: this._broadcastingEntries, totalCount: 0, update: false, forceReload: false});
   private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException }>({ isBusy: false });
   private _firstTimeLoading = true;
   private _forceRefresh = false;
+  private _totalCount = 0;
+  private _pageIndex = 1;
 
   private reportSubscription: ISubscription = null;
   private baseEntryListSubscription: ISubscription = null;
@@ -88,7 +90,7 @@ export class BroadcastingEntriesService implements OnDestroy {
         toDate: moment().unix(),
         fromDate: moment().subtract(6, 'days').unix()
       }),
-      pager: new KalturaFilterPager({ pageSize: 5, pageIndex: 1 }),
+      pager: new KalturaFilterPager({ pageSize: 5, pageIndex: this._pageIndex }),
       order: '-entry_name',
       responseOptions: new KalturaReportResponseOptions({
         delimiter: analyticsConfig.valueSeparator,
@@ -99,7 +101,9 @@ export class BroadcastingEntriesService implements OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe((table: KalturaReportTable) => {
           let refresh = true;
+          this._totalCount = 0;
           if (table && table.header && table.data) {
+            this._totalCount = table.totalCount;
             const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig[ReportDataSection.table]);
             refresh = this.shouldRefreshEntries(tableData);
             this.mapReportResultToEntries(tableData, refresh);
@@ -116,7 +120,7 @@ export class BroadcastingEntriesService implements OnDestroy {
           } else {
             this._broadcastingEntries = [];
             this._state.next({ isBusy: false, error: null });
-            this._data.next({entries: this._broadcastingEntries, update: false, forceReload: false});
+            this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: false});
           }
         },
         error => {
@@ -193,7 +197,7 @@ export class BroadcastingEntriesService implements OnDestroy {
                 broadcastingEntry.conversionProfileId = entry.conversionProfileId;
               }
             });
-            this._data.next({entries: this._broadcastingEntries, update: false, forceReload: this._forceRefresh});
+            this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: this._forceRefresh});
           });
           this._state.next({ isBusy: false, error: null });
           this.loadTranscodingData(); // we load transcoding data after we get entry data since we need the conversionProfileId for each entry. Not using multi-request for better user experience as this data load only once
@@ -211,6 +215,9 @@ export class BroadcastingEntriesService implements OnDestroy {
     this.streamDetailsSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(cancelOnDestroy(this))
       .subscribe((responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            console.error("LiveEntries::Error loading entries streamDetails: " + responses.getFirstError().message) ;
+          }
           responses.forEach((response, index) => {
             const streamDetails: KalturaLiveStreamDetails = response.result;
             if (streamDetails && streamDetails.broadcastStatus) {
@@ -220,7 +227,7 @@ export class BroadcastingEntriesService implements OnDestroy {
               this._broadcastingEntries[index].status = streamDetails.broadcastStatus;
             }
           });
-          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+          this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: true, forceReload: this._forceRefresh});
         },
         error => {
           console.log("LiveEntries::Error loading entries streamDetails: " + error.message);
@@ -235,15 +242,18 @@ export class BroadcastingEntriesService implements OnDestroy {
     this.entryServerNodeSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(cancelOnDestroy(this))
       .subscribe((responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            console.error("LiveEntries::Error loading entries redundancy: " + responses.getFirstError().message) ;
+          }
           responses.forEach((response, index) => {
             let redundancy = false;
-            const entryServerNodes: KalturaLiveEntryServerNode[] = response.result.objects;
+            const entryServerNodes: KalturaLiveEntryServerNode[] = response.result ? response.result.objects : [];
             if (entryServerNodes.length > 1) {
               redundancy = entryServerNodes.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
             }
             this._broadcastingEntries[index].redundancy = redundancy;
           });
-          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+          this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: true, forceReload: this._forceRefresh});
         },
         error => {
           console.log("LiveEntries::Error loading entries redundancy: " + error.message);
@@ -258,12 +268,15 @@ export class BroadcastingEntriesService implements OnDestroy {
     this.conversionProfilesSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(cancelOnDestroy(this))
       .subscribe((responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            console.error("LiveEntries::Error loading entries transcoding: " + responses.getFirstError().message) ;
+          }
           responses.forEach((response, index) => {
             const profiles: KalturaConversionProfileAssetParams[] = response.result.objects;
             const transcoding = !!profiles.find(({ origin }) => origin === KalturaAssetParamsOrigin.convert);
             this._broadcastingEntries[index].transcoding = transcoding;
           });
-          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+          this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: true, forceReload: this._forceRefresh});
         },
         error => {
           console.log("LiveEntries::Error loading entries transcoding: " + error.message);
@@ -284,13 +297,16 @@ export class BroadcastingEntriesService implements OnDestroy {
     this.streamHealthSubscription = this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(cancelOnDestroy(this))
       .subscribe((responses: KalturaMultiResponse) => {
+          if (responses.hasErrors()) {
+            console.error("LiveEntries::Error loading entries stream health: " + responses.getFirstError().message) ;
+          }
           responses.forEach((response, index) => {
             const beacons: KalturaBeacon[] = response.result.objects;
             const streamHealth: {health: string, className: string} = this.getStreamHealth(beacons);
             this._broadcastingEntries[index].streamHealth = streamHealth.health;
             this._broadcastingEntries[index].streamHealthClassName = streamHealth.className;
           });
-          this._data.next({entries: this._broadcastingEntries, update: true, forceReload: this._forceRefresh});
+          this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: true, forceReload: this._forceRefresh});
         },
         error => {
           console.log("LiveEntries::Error loading entries stream health: " + error.message);
@@ -358,7 +374,8 @@ export class BroadcastingEntriesService implements OnDestroy {
     return { health: this._translate.instant(localizationKey), className };
   }
 
-  public paginationChange(pager: KalturaFilterPager): void {
-
+  public paginationChange(newPageIndex: number): void {
+    this._firstTimeLoading = true;
+    this._pageIndex = newPageIndex;
   }
 }

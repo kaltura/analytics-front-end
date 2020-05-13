@@ -68,6 +68,7 @@
           <span class="kNoDataTitle">{{'app.entriesLive.noLiveEntriesTitle' | translate}}</span>
           <span class="kNoDataMessage">{{'app.entriesLive.noLiveEntriesMessage' | translate}}</span>
         </div>
+        <p-paginator [rows]="5" [totalRecords]="_totalCount" (onPageChange)="paginate($event)"></p-paginator>
     </div>
     </k-area-blocker>
   </div>

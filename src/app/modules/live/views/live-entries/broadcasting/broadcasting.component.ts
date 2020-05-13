@@ -4,7 +4,7 @@ import {BroadcastingEntries, BroadcastingEntriesService} from "./broadcasting-en
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {ErrorsManagerService} from "shared/services";
 import {ISubscription} from "rxjs/Subscription";
-import {KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
+import {KalturaFilterPager, KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
 import * as moment from "moment";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
@@ -21,6 +21,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _loadingEntries = false;
+  public _totalCount = 0;
 
   private reportIntervalId = null;
   private timeUpdateIntervalId = null;
@@ -48,14 +49,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearIntervals();
-    if (this.statusChangeSubscription) {
-      this.statusChangeSubscription.unsubscribe();
-      this.statusChangeSubscription = null;
-    }
-    if (this.dataChangeSubscription) {
-      this.dataChangeSubscription.unsubscribe();
-      this.dataChangeSubscription = null;
-    }
+    this.clearSubscriptions();
   }
 
   private clearIntervals(): void {
@@ -66,6 +60,17 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
     if (this.timeUpdateIntervalId) {
       clearInterval(this.timeUpdateIntervalId);
       this.timeUpdateIntervalId = null;
+    }
+  }
+
+  private clearSubscriptions(): void {
+    if (this.statusChangeSubscription) {
+      this.statusChangeSubscription.unsubscribe();
+      this.statusChangeSubscription = null;
+    }
+    if (this.dataChangeSubscription) {
+      this.dataChangeSubscription.unsubscribe();
+      this.dataChangeSubscription = null;
     }
   }
 
@@ -92,8 +97,10 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   private registerDataChange(): void {
     this.dataChangeSubscription = this._broadcastingEntriesService.data$
       .pipe(cancelOnDestroy(this))
-      .subscribe((data: {entries: BroadcastingEntries[], update: boolean, forceReload: boolean}) => {
+      .subscribe((data: {entries: BroadcastingEntries[], totalCount: number, update: boolean, forceReload: boolean}) => {
+        this._totalCount = data.totalCount;
         if (data.forceReload) {
+          this.clearSubscriptions();
           this.startPolling();
         } else if (data.update) { // no need to create new entries - only update existing ones
           data.entries.forEach((entry: BroadcastingEntries) => {
@@ -125,5 +132,10 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
         }
       });
     }, 1000);
+  }
+
+  public paginate(event) {
+    this._broadcastingEntriesService.paginationChange(event.page + 1);
+    this.startPolling();
   }
 }
