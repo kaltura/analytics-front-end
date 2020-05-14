@@ -11,6 +11,7 @@
     "ws": "ws --spa index.html -d dist/analytics-front-end",
     "example": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoader.html\" \"npm start\"",
     "example:style": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderCustomStyle.html\" \"npm start\"",
+    "example:locale": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderLocale.html\" \"npm start\"",
     "example:menu": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderMenu.html\" \"npm start\"",
     "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\"",
     "example:kms": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderKMS.html\" \"npm start\"",
@@ -37,9 +38,9 @@
     "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^3.2.1",
     "echarts": "^4.2.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.1",
     "jsnlog": "^2.29.0",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200105-113119.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200420-092433.tgz",
     "moment": "^2.24.0",
     "ng-carousel-iuno": "^0.3.0",
     "ngx-echarts": "^4.2.1",
@@ -53,7 +54,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.801.0",
+    "@angular-devkit/build-angular": "^0.803.25",
     "@angular/cli": "^8.3.5",
     "@angular/compiler-cli": "^8.2.7",
     "@angular/language-service": "^8.2.7",

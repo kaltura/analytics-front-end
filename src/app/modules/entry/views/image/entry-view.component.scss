@@ -43,6 +43,7 @@
 
   .kReportHeader {
     height: 80px;
+    position: relative;
   }
 
   .kFloatingDetails{
@@ -84,10 +85,9 @@
 .kFilter {
   display: flex;
   align-items: center;
-
+  flex: 0 0 auto;
   .kDropDown {
     background-color: white;
-    width: 100px;
     height: 34px;
     border: 1px solid $kGrayscale4;
     border-radius: 3px;
@@ -153,6 +153,7 @@
   .kHeaderRight{
     position: absolute;
     top: 110px;
+    left: 0px;
   }
   .kReport .kEntryDetails{
     height: 86px;

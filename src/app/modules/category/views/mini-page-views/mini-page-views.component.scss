@@ -1,0 +1,161 @@
+@import '../../../../../styles/variables';
+:host ::ng-deep .kBulletContainer {
+  width: 100% !important;
+  .kBullet {
+    width: 100% !important;
+  }
+  .kValue{
+    display: none !important;
+  }
+}
+
+.kReportContent{
+  margin-top: 0px;
+  &.kCompare {
+    margin-top: 20px;
+    height: auto !important;
+  }
+}
+.kMini{
+  height: 100%;
+  .kCol {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .kRow, .kTitleRow {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 22px;
+  }
+  .kFilters {
+    height: auto !important;
+    flex: 0 0 auto;
+    .kTitle{
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: auto;
+      padding-right: 0;
+    }
+  }
+  .kLabel{
+    font-size: 15px;
+    color: $kGrayscale1;
+    margin-top: 12px;
+    padding: 0 24px;
+    margin-bottom: 20px;
+  }
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+    &.disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    &.kMargin{
+      margin-top: 12px;
+    }
+    &.kNoResults {
+      font-size: 28px;
+      height: 100%;
+      color: $kGrayscale3;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .contextLabel{
+      font-weight: bold;
+      color: $kGrayscale1;
+    }
+    .separator{
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+    .title {
+      margin-left: 12px;
+    }
+  }
+  .kCompare{
+    .kReportRow {
+      font-size: 15px;
+      align-items: flex-start;
+      .kRow {
+        margin-bottom: 10px;
+        margin-top: 0px;
+      }
+    }
+    .kCol {
+      display: flex;
+      flex-direction: column;
+    }
+    .kRow {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+    }
+    .separator{
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+    .title {
+      margin-left: 0px;
+      white-space: nowrap;
+      width: 80px;
+    }
+    app-bullet {
+      width: 35%;
+      margin-left: 12px;
+    }
+    .legend {
+      position: relative;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0 24px;
+      margin-bottom: 8px;
+      span {
+        margin-left: 18px;
+      }
+      .circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+      }
+      .whiteBorder {
+        border: 2px solid white;
+        border-radius: 7px;
+        position: absolute;
+        left: 31px;
+        top: 0px;
+      }
+    }
+  }
+}
+@media (max-width: 991px) {
+  .kReportContent{
+    &.kCompare {
+      margin-top: 40px;
+      .legend {
+        margin-top: 20px;
+        &:last-child {
+          margin-top: 0px;
+        }
+      }
+    }
+  }
+}

@@ -209,6 +209,10 @@ export class BaseEntryTotalsComponent extends EntryBase {
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(map(responses => {
         if (responses.hasErrors()) {
+          const error = responses.getFirstError();
+          if (error.code === 'SERVICE_FORBIDDEN' || error.code === 'FEATURE_FORBIDDEN') {
+            return new Array(responses.length).fill(-1);
+          }
           throw responses.getFirstError();
         }
         return responses.map(response => response.result.totalCount);

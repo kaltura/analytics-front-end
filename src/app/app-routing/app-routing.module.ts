@@ -18,6 +18,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },
       {
+        path: 'category/:id',
+        loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)
+      },
+      {
+        path: 'category',
+        loadChildren: () => import('../modules/category/category.module').then(m => m.CategoryModule)
+      },
+      {
         path: 'playlist/:id',
         loadChildren: () => import('../modules/playlist/playlist.module').then(m => m.PlaylistModule)
       },
@@ -27,11 +35,11 @@ const routes: Routes = [
       },
       {
         path: 'user/:id',
-        loadChildren: '../modules/user/user.module#UserModule'
+        loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
       },
       {
         path: 'user',
-        loadChildren: '../modules/user/user.module#UserModule'
+        loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
       },
       {
         path: 'entry-live/:id',

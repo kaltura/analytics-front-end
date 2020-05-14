@@ -1,0 +1,64 @@
+<div data-aid="report-entry-preview" class="kReport kTotals kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div style="display: flex; flex-direction: column; width: 100%">
+      <div class="kPlayer" aria-label="Player">
+        <app-k-player #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
+                      [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
+                      [flashvars]="_playerConfig.flashvars" [lazy]="true"
+                      (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player>
+
+      </div>
+
+      <div class="chartContainer">
+        <div aria-label="Timeline Chart" echarts class="kChart"
+             [options]="_chartOptions"
+             (click)="_onChartClick($event)"></div>
+        <div class="kScrubber" [style.width.%]="_playProgress" [class.kHidden]="!_playerPlayed">
+          <div class="kLine"></div>
+          <span class="kCurrentTime">{{_currentTime | appDuration}}</span>
+        </div>
+        <div class="kFooter">
+          <span>0:00</span>
+          <span class="kDuration">{{_duration | appDuration}}</span>
+        </div>
+        <div aria-label="Legend" class="kLegend" [class.kCompare]="_isCompareMode">
+          <ng-container *ngIf="!_isCompareMode">
+            <div class="kValue">
+              <span class="kBullet kViews">&bull;</span>
+              <span class="kLabel">{{'app.entry.views' | translate}}</span>
+            </div>
+            <div class="kValue">
+              <span class="kBullet kUsers">&bull;</span>
+              <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="_isCompareMode">
+            <div class="kValue">
+              <div style="display: flex; margin-right: 32px">
+                <span class="kPeriod">{{_compareDatePeriodLabel}}</span>
+                <span class="kBullet kCompareViews">&bull;</span>
+                <span class="kLabel">{{'app.entry.views' | translate}}</span>
+              </div>
+              <div style="display: flex">
+                <span class="kBullet kCompareUsers">&bull;</span>
+                <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
+              </div>
+            </div>
+            <div class="kValue">
+              <div style="display: flex; margin-right: 32px">
+                <span class="kPeriod">{{_currentDatePeriodLabel}}</span>
+                <span class="kBullet kViews">&bull;</span>
+                <span class="kLabel">{{'app.entry.views' | translate}}</span>
+              </div>
+              <div style="display: flex">
+                <span class="kBullet kUsers">&bull;</span>
+                <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

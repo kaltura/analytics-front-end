@@ -7,7 +7,7 @@
 </div>
 
 <kPopupWidget [appendTo]="timeSelector"
-              [popupWidth]="415"
+              [popupWidth]="460"
               [targetRef]="toggle"
               [closeBtn]="false"
               [targetOffset]="{x: 0, y: 40}"
@@ -75,10 +75,12 @@
         </div>
       </div>
       <hr>
-      <button pButton class="kButtonBranded"
+      <div class="kFooter">
+        <button pButton class="kButtonBranded"
               [disabled]="_applyDisabled"
               [label]="'app.common.apply' | translate"
               (click)="_closePopup()"></button>
+      </div>
     </div>
   </ng-template>
 </kPopupWidget>

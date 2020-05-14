@@ -4,9 +4,6 @@
   margin-right: 24px;
 
   ::ng-deep {
-    .ui-multiselect {
-      width: 180px;
-    }
 
     .ui-widget-header {
       height: 0;
@@ -15,13 +12,18 @@
     .ui-multiselect-items-wrapper {
       overflow-x: hidden;
     }
+    .ui-multiselect-label{
+      white-space: nowrap;
+    }
+    .ui-multiselect {
+      width: auto;
+    }
   }
 }
 
 .kDevicesListItem {
-  vertical-align: middle;
-  display: inline-flex;
-  width: 170px;
+  vertical-align: middle !important;
+  display: inline-flex !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

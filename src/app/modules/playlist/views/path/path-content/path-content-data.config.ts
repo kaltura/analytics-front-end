@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
 import { ReportHelper } from 'shared/services';
-import {KalturaEntryStatus} from "kaltura-ngx-client";
 
 @Injectable()
 export class PathContentDataConfig extends ReportDataBaseConfig {

@@ -1,0 +1,109 @@
+<div data-aid="report-subcategories" class="kReport kContent kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.category.subcategories' | translate}}</span>
+      </div>
+      <span *ngIf="totalCount !== undefined" class="kTotalCount">
+        <span>
+          {{'app.category.subcatsnum' | translate: { '0': totalCount } }}
+        </span>
+      </span>
+      <div class="kTable">
+        <p-table dataKey="object_id"
+                 [sortField]="'count_plays'"
+                 [value]="_tableData"
+                 [customSort]="true"
+                 [defaultSortOrder]="-1"
+                 [sortOrder]="-1"
+                 (sortFunction)="_onSortChanged($event)">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [ngStyle]="{'width': '52px'}"></th>
+              <th>{{'app.entry.name' | translate}}</th>
+              <th [pSortableColumn]="_isCompareMode ? null : 'count_plays'">
+                {{'app.entry.count_plays' | translate}}
+                <p-sortIcon [field]="'count_plays'" *ngIf="!_isCompareMode"></p-sortIcon>
+              </th>
+              <th *ngIf="!_isCompareMode">{{'app.entry.plays_distribution' | translate}}</th>
+              <th [pSortableColumn]="_isCompareMode ? null : 'unique_viewers'">
+                {{'app.entry.unique_viewers' | translate}}
+                <p-sortIcon [field]="'unique_viewers'" *ngIf="!_isCompareMode"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="_isCompareMode ? null : 'sum_time_viewed'">
+                {{'app.entry.sum_time_viewed' | translate}}
+                <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!_isCompareMode"></p-sortIcon>
+              </th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td>
+                <i class="kIconfolder_large"></i>
+              </td>
+              <td class="kHighlight">
+                <a class="kEntryLink kTableColumn"
+                   (mouseenter)="_showOverlay($event, data)" (mouseleave)="_hideOverlay()"
+                   [kTooltip]="data['name']" (click)="_navigateToCategory(data['object_id'])"
+                   [showOnEllipsis]="true" [placement]="'right'">{{data['name']}}</a>
+              </td>
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data['count_plays'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['count_plays'].value"
+                                     [units]="data['count_plays'].units"
+                                     [trend]="data['count_plays'].trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data['count_plays']}}</span>
+              </td>
+
+              <td *ngIf="!_isCompareMode">
+                <app-bullet [value]="_totalPlaysCount ? data['plays_distribution'] : 0" [formatter]="null"></app-bullet>
+              </td>
+
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data['unique_viewers'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['unique_viewers'].value"
+                                     [units]="data['unique_viewers'].units"
+                                     [trend]="data['unique_viewers'].trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data['unique_viewers']}}</span>
+              </td>
+
+              <td>
+                <span *ngIf="_isCompareMode" class="kTrend">
+                  <span [kTooltip]="data['sum_time_viewed'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['sum_time_viewed'].value"
+                                     [units]="data['sum_time_viewed'].units"
+                                     [trend]="data['sum_time_viewed'].trend"></app-trend-value>
+                  </span>
+                </span>
+                <span *ngIf="!_isCompareMode">{{data['sum_time_viewed']}}</span>
+              </td>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+              <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        <p-paginator [rows]="_pager.pageSize"
+                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                     [totalRecords]="totalCount"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+
+<k-overlayPanel #overlay appendTo="body">
+  <app-subcategory-details-overlay *ngIf="_subcategoryData" [subcategoryData]="_subcategoryData"></app-subcategory-details-overlay>
+</k-overlayPanel>

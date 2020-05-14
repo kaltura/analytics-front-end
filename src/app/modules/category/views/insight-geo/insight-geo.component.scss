@@ -1,0 +1,66 @@
+@import '../../../../../styles/variables';
+
+.kMini{
+  height: 100%;
+  .kFilters {
+    height: 93px !important;
+  }
+  .kTitle{
+    color: $kGrayscale1;
+    font-weight: bold;
+  }
+  .kHeader{
+    font-size: 20px;
+    color: $kGrayscale1;
+  }
+  .kIndex{
+    font-size: 15px;
+    font-weight: normal;
+    color: $kGrayscale3;
+    margin-right: 24px;
+  }
+  .kFlag {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+  }
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+
+  .kDates {
+    font-size: 15px;
+    margin-left: 24px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 24px;
+
+    &.kNoResults {
+      height: 100%;
+      font-size: 28px;
+      color: $kGrayscale3;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+.kMini.kReport .kCompare {
+  .kHeader {
+    font-size: 18px;
+  }
+
+  .kDates {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+}

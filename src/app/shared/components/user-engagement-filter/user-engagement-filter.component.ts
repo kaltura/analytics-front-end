@@ -9,7 +9,15 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
   providers: [KalturaLogger.createLogger('UserEngagementFilterComponent')],
 })
 export class UserEngagementFilterComponent extends FilterComponent {
-  @Input() totalCount = 0;
+  public _totalCount = 0;
+  
+  @Input() set totalCount(val) {
+    if (val !== undefined) {
+      this._totalCount = val;
+    } else {
+      this._totalCount = 0;
+    }
+  }
 
   public _onItemSelected(item: any, type: string): void {
     super._onItemSelected(item, type);

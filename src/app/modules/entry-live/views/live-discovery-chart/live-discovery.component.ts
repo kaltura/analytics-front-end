@@ -94,9 +94,9 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._rangeLabel = event.shortRangeLabel;
   
     this._liveExploreWidget.updateFilters(event, !event.initialRun);
-
+    this._liveDiscoveryTable.updateFilters(event);
+    
     if (!event.initialRun) {
-      this._liveDiscoveryTable.updateFilters(event);
       this._liveDevicesWidget.updateFilters(event);
       this._liveGeoWidget.updateFilters(event);
     }

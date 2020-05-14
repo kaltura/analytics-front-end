@@ -40,7 +40,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   @Input() showCompare = true;
   
-  @Input() creationDate: moment.Moment = null;
+  @Input() set creationDate( value: moment.Moment) {
+    if (value) {
+      this._creationDate = value;
+      this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this._creationDate);
+    }
+  }
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
@@ -51,6 +56,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
   
   private _datesBtnElement: HTMLElement;
+  private _creationDate: moment.Moment = null;
 
   public _defaultDateRageType = DateRangeType.LongTerm;
   public _defaultDateRange = DateRanges.CurrentYear;
@@ -126,7 +132,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const params = this._dateFilterService.currentFilters || queryParams;
     this._browserService.updateCurrentQueryParams(params);
     this._initCurrentFilterFromEventParams(params);
-    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.creationDate);
+    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this._creationDate);
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
@@ -145,7 +151,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
     if (dateBy) {
       this.selectedView = 'preset';
-      this._dateRange = dateBy === DateRanges.SinceCreation && !this.creationDate ? DateRanges.Last30D : dateBy;
+      this._dateRange = dateBy === DateRanges.SinceCreation && !this._creationDate ? DateRanges.Last30D : dateBy;
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
       const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
       const dateTo = moment(params[DateFilterQueryParams.dateTo]);
@@ -169,7 +175,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
           const compareToDate = compareToDateObject.toDate();
           const maxCompareDate = this.selectedView === 'specific'
             ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-            : this._dateFilterService.getMaxCompare(this._dateRange, this.creationDate);
+            : this._dateFilterService.getMaxCompare(this._dateRange, this._creationDate);
           this.selectedComparePeriod = 'specific';
           this.specificCompareStartDate = compareToDate > maxCompareDate ? maxCompareDate : compareToDate;
         } else {
@@ -220,7 +226,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public updateDataRanges(isUserAction = true): void {
     this.lastSelectedDateRange = this.selectedDateRange;
     if (this.selectedView === 'preset') {
-      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, this.creationDate);
+      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, this._creationDate);
       this.startDate = dates.startDate;
       this.endDate = dates.endDate;
       this._dateRangeLabel = dates.label;
@@ -267,7 +273,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     setTimeout(() => { // use a timeout to allow binded variables to update before calculations
       this.compareMaxDate = this.selectedView === 'specific'
         ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-        : this._dateFilterService.getMaxCompare(this.selectedDateRange, this.creationDate);
+        : this._dateFilterService.getMaxCompare(this.selectedDateRange, this._creationDate);
       this.specificStart = this.specificDateRange[0];
       this.specificEnd = this.specificDateRange[1];
       this.validate();
@@ -277,7 +283,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public updateSpecificCompareStartDate(): void {
     const maxCompareDate = this.selectedView === 'specific'
       ? this._dateFilterService.getMaxCompare(this.specificDateRange[0], this.specificDateRange[1])
-      : this._dateFilterService.getMaxCompare(this._dateRange, this.creationDate);
+      : this._dateFilterService.getMaxCompare(this._dateRange, this._creationDate);
     this.specificCompareStartDate = this.specificCompareStartDate > maxCompareDate ? maxCompareDate : this.specificCompareStartDate;
     this.specificStart = this.specificDateRange[0];
     this.specificEnd = this.specificDateRange[1];

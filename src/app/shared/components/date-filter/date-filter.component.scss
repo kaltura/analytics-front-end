@@ -134,7 +134,7 @@
       }
       p-calendar{
         ::ng-deep .ui-calendar .ui-datepicker{
-          width: 380px;
+          width: 420px;
           .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
             background-color: $kPrimary;
           }
@@ -157,7 +157,7 @@
     padding-bottom: 20px;
     justify-content: center;
     ::ng-deep p-selectbutton .ui-button{
-      min-width: 190px;
+      width: 210px;
     }
   }
   .kCompare{
@@ -189,16 +189,27 @@
     margin-bottom: 0px;
     padding: 0;
   }
-  button{
-    width: 80px;
-    margin-left: 316px;
+  .kFooter {
+    width: 100%;
+    display: flex;
     margin-bottom: 24px;
     margin-top: 24px;
+    button {
+      margin-right: 24px;
+      margin-left: auto;
+    }
   }
 }
 
 :host ::ng-deep {
   .ui-state-focus {
     outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
+}
+::ng-deep .ui-button{
+  height: auto;
+  min-height: 34px;
+  .ui-button-text {
+    line-height: 16px;
   }
 }

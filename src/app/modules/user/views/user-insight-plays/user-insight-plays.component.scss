@@ -30,7 +30,7 @@
       flex-direction: column;
       font-size: 15px;
       font-weight: normal;
-      width: 100%;
+      width: 60%;
       margin-bottom: 24px;
 
       &:first-child {
@@ -45,7 +45,7 @@
     }
 
     .kPlaysRow {
-      width: 100%;
+      width: 60%;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -60,10 +60,15 @@
         font-weight: bold;
         margin-right: 8px;
         min-width: 24px;
+        flex: 0 0 auto;
       }
       .kLabel{
         width: 100%;
       }
+    }
+
+    .kNarrow {
+      width: 40%;
     }
   }
 }

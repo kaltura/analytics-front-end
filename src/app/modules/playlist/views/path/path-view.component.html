@@ -2,7 +2,7 @@
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
       <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
-              [kTooltip]="'app.entry.back' | translate"></button>
+              [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export" name="entry"
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div *ngIf="_viewConfig.details" class="kPlaylistDetails" [class.kFloatingDetails]="!_viewConfig.title">
+    <div *ngIf="_viewConfig.details" class="kEntryDetails" [class.kFloatingDetails]="!_viewConfig.title">
       <div class="kIconMediaType kIconplaylist_interactive_small"></div>
       <span>{{'app.entryType.interactive' | translate}}</span>
       <div class="kSeparator"></div>
@@ -39,12 +39,13 @@
       <span class="kOwner">{{owner}}</span>
     </div>
 
-    <app-playlist-filter [viewConfig]="_viewConfig.refineFilter"
-                        [opened]="_refineFilterOpened"
-                        [dateFilter]="_dateFilter"
-                        [selectedFilters]="_selectedRefineFilters"
-                        (closeFilters)="_refineFilterOpened = false"
-                        (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
+    <app-playlist-filter class="kRefineFiltersHost"
+                         [viewConfig]="_viewConfig.refineFilter"
+                         [opened]="_refineFilterOpened"
+                         [dateFilter]="_dateFilter"
+                         [selectedFilters]="_selectedRefineFilters"
+                         (closeFilters)="_refineFilterOpened = false"
+                         (filterChange)="_onRefineFilterChange($event)"></app-playlist-filter>
 
     <app-path-entry-totals *ngIf="_viewConfig.totals"
                             [dateFilter]="_dateFilter"

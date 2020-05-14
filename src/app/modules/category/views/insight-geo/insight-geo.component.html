@@ -1,0 +1,46 @@
+<div data-aid="report-insight-top-countries" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.contributors.insights' | translate}}</span>
+    <a (click)="scrollTo('#top-geo')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
+      <div class="kReportRow">
+        <span class="kHeader">{{'app.category.topLocations' | translate}}</span>
+      </div>
+
+      <div class="kReportRow" *ngFor="let item of _tableData; let i = index">
+        <span class="kIndex">{{i+1}}</span>
+        <i class="kFlag" [ngClass]="'kFlag-' + item['object_id']"></i>
+        <span class="kTitle">{{item.country}}</span>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+    <div class="kReportContent kCompare" *ngIf="_isCompareMode">
+      <div class="kReportRow">
+        <span class="kHeader">{{'app.category.topLocations' | translate}}</span>
+      </div>
+      <span class="kDates">{{_currentDates}}</span>
+      <div class="kReportRow" *ngIf="_tableData[0]">
+        <i class="kFlag" [ngClass]="'kFlag-' + _tableData[0]['object_id']"></i>
+        <span class="kTitle">{{_tableData[0].country}}</span>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+      <span class="kDates">{{_compareDates}}</span>
+      <div class="kReportRow" *ngIf="_compareTableData[0]">
+        <i class="kFlag" [ngClass]="'kFlag-' + _compareTableData[0]['object_id']"></i>
+        <span class="kTitle">{{_compareTableData[0].country}}</span>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

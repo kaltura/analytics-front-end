@@ -1,0 +1,165 @@
+@import '../../../../../styles/variables';
+
+:host ::ng-deep .kValue {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host ::ng-deep .kUnits {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kReportContent {
+  overflow: hidden;
+  position: relative;
+}
+.kHeader{
+  padding: 0 24px;
+  font-size: 20px;
+  color: $kGrayscale1;
+  margin-bottom: 16px;
+}
+.kFilters {
+  height: 93px !important;
+}
+.kDetails {
+  margin-left: auto;
+  white-space: nowrap;
+  margin-right: 24px;
+}
+.kMini {
+  height: 100%;
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+
+  .kPeriod {
+    font-size: 15px;
+    font-weight: normal;
+    padding: 0 24px;
+    margin-bottom: 4px;
+  }
+  .kDeviceLabel{
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 24px;
+      margin-right: 12px;
+      color: $kGrayscale3;
+    }
+  }
+  .kColumns{
+    display: flex;
+    flex-direction: column;
+    .kDevice {
+      font-size: 18px;
+      font-weight: normal;
+      color: $kGrayscale1;
+      margin-top: 12px;
+    }
+  }
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 20px;
+    margin-top: 12px;
+
+    .topDevice {
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .kLabel {
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    &.kNoResults {
+      height: 100%;
+      font-size: 28px;
+      color: $kGrayscale3;
+      position: absolute;
+      background-color: white;
+      width: 100%;
+      top: 0;
+    }
+  }
+}
+
+.kLegend {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  position: absolute;
+  font-size: 12px;
+  color: $kGrayscale1;
+  font-weight: bold;
+
+  .kLegendItem {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    margin-top: 4px;
+
+    .kCircle {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.kMini.kReport .kCompare {
+  .kHeader {
+    font-size: 18px;
+  }
+  .kPeriod {
+    font-size: 12px;
+    padding: 0 24px;
+    margin-bottom: 0px;
+    margin-top: 4px;
+  }
+  .topSource {
+    font-size: 15px !important;
+  }
+  .kReportRow{
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+  .topDevice {
+    font-size: 16px;
+  }
+  .kDevice {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .kReportRow {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    .topDevice {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+    }
+    .kDeviceLabel{
+      i {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
+  }
+  .kLegend{
+    margin-top: 2px;
+  }
+}
+
+:host ::ng-deep .kBullet {
+  height: 8px !important;
+}

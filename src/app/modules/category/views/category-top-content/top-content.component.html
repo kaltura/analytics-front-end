@@ -1,0 +1,25 @@
+<div data-aid="report-mini-top-videos" class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
+  </div>
+  <div class="kReportContent">
+    <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+      <category-top-content *ngIf="_isCompareMode"
+                                       name="compare"
+                                       [entryDetails]="_entryDetails"
+                                       [isCompareMode]="_isCompareMode"
+                                       [tableData]="_compareTableData"
+                                       [dates]="_compareDates"
+                                       [firstTimeLoading]="_compareFirstTimeLoading"
+                                       [columns]="_columns"></category-top-content>
+      <category-top-content name="current"
+                                       [tableData]="_tableData"
+                                       [entryDetails]="_entryDetails"
+                                       [showDivider]="_isCompareMode"
+                                       [isCompareMode]="_isCompareMode"
+                                       [dates]="_currentDates"
+                                       [firstTimeLoading]="_firstTimeLoading"
+                                       [columns]="_columns"></category-top-content>
+    </k-area-blocker>
+  </div>
+</div>

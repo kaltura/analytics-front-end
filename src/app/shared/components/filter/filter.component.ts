@@ -78,6 +78,7 @@ export class FilterComponent {
         entrySource: {},
         tags: {},
         owners: {},
+        context: {},
         categories: {},
         geo: {},
       };
@@ -112,7 +113,7 @@ export class FilterComponent {
       if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
         setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
           if (this._currentFilters.find(({ type }) => type === 'location')) {
-            this._removeFilter({ type: 'location', value: null, label: null });
+            this._removeFilter({ value: 'location', label: 'Location', type: 'location' });
           }
         });
       }
@@ -138,6 +139,7 @@ export class FilterComponent {
     entrySource: {},
     tags: {},
     owners: {},
+    context: {},
     categories: {},
     geo: {},
   };
@@ -156,7 +158,7 @@ export class FilterComponent {
     this._updateLayout();
   }
   
-  constructor(private _translate: TranslateService,
+  constructor(public _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _logger: KalturaLogger) {
     this._clearAll();
@@ -209,7 +211,7 @@ export class FilterComponent {
         case 'context':
           const context = value as CategoryData;
           label = context.name;
-          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${context.fullName}`;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${context.fullName ? context.fullName : context.name}`;
           return { value, type, label, tooltip };
         case 'tags':
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value}`;
@@ -303,6 +305,7 @@ export class FilterComponent {
       }
     } else {
       this._currentFilters.push(value);
+      this._updateLayout();
     }
   }
   
@@ -316,6 +319,7 @@ export class FilterComponent {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === value && filterItem.type === type);
     } else {
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value === item && filterItem.type === type);
+      this._updateLayout();
     }
 
     if (unselectedItemIndex !== -1) {

@@ -57,10 +57,10 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'votes': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.entry.votes`),
+            format: value => value === '-1' ? 'N/A' : ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.user.votes`),
             hidden: true,
-          },
+          }
         }
       }
     };

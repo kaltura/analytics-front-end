@@ -17,7 +17,7 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="420" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-210, 'y': 42}"
+              [popupWidth]="460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-233, 'y': 42}"
               (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
@@ -32,7 +32,7 @@
           <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeLast.value.val)"
                          *ngFor="let _dateRangeLast of lastDateRangeItems" name="dates" [label]="_dateRangeLast.label"
                          [value]="_dateRangeLast.value.val" [kTooltip]="_dateRangeLast.value.tooltip"
-                         [placement]="'left'" [(ngModel)]="selectedDateRange"
+                         [(ngModel)]="selectedDateRange"
                          (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
         <div class="col">
@@ -40,7 +40,7 @@
           <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeCurrent.value.val)"
                          *ngFor="let _dateRangeCurrent of currDateRangeItems" name="dates"
                          [label]="_dateRangeCurrent.label" [value]="_dateRangeCurrent.value.val"
-                         [kTooltip]="_dateRangeCurrent.value.tooltip" [placement]="'right'"
+                         [kTooltip]="_dateRangeCurrent.value.tooltip"
                          [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
       </div>
@@ -72,12 +72,15 @@
                     [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true"
                     [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
       </div>
-      <button tabindex="0"
-              pButton class="kButtonBranded"
-              [disabled]="_applyDisabled"
-              [label]="'app.common.apply' | translate"
-              (keydown.tab)="$event.preventDefault();setFocus();datesPopup.close()"
-              (click)="updateDataRanges();datesPopup.close()"></button>
+      <div class="kFooter">
+        <button tabindex="0"
+                pButton class="kButtonBranded"
+                [disabled]="_applyDisabled"
+                [label]="'app.common.apply' | translate"
+                (keydown.tab)="$event.preventDefault();setFocus();datesPopup.close()"
+                (click)="updateDataRanges();datesPopup.close()"></button>
+      </div>
+
     </div>
   </ng-template>
 </kPopupWidget>

@@ -1,0 +1,98 @@
+@import '../../../../../styles/variables';
+:host ::ng-deep .kValue{
+  font-size: 24px;
+  font-weight: 700;
+}
+:host ::ng-deep .kUnits{
+  font-size: 13px;
+  font-weight: 700;
+}
+.kReportContent{
+  flex-wrap: wrap;
+  height: 180px !important;
+}
+:host.short .kReportContent{
+  height: 120px !important;
+}
+.kPlayedEntries {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: $kGrayscale3;
+}
+.kEntriesCountContainer{
+  height: 86px;
+}
+.kEntriesCountContainerCompare{
+  height: 72px;
+}
+.kMini{
+  height: 100%;
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0px;
+    }
+  }
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+  .kVal{
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    margin-bottom: 10px;
+    height: 48px;
+    .kMiniIcon{
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+      &.blue{
+        background-color: rgba(72,122,223,0.2);
+        color: #487ADF;
+      }
+      &.green{
+        background-color: rgba(49,190,166,0.2);
+        color: #31BEA6;
+
+      }
+      &.aqua {
+        background-color: rgba(22, 168, 215, 0.2);
+        color: #16a8d7;
+      }
+      &.orange{
+        background-color: rgba(225,150,46,0.2);
+        color: #E1962E;
+      }
+    }
+    .value{
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 700;
+      color: $kGrayscale1;
+    }
+    .title{
+      font-size: 18px;
+      line-height: 18px;
+      color: $kGrayscale1;
+      margin-left: 14px;
+      width: 50%;
+    }
+  }
+
+}
+@media (max-width: 991px) {
+  :host.short .kReportContent {
+    height: 180px;
+  }
+}

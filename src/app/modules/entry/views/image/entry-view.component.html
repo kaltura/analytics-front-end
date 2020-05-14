@@ -2,7 +2,7 @@
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
       <button tabindex="0" aria-label="Back" *ngIf="_viewConfig.title" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
-              [kTooltip]="'app.entry.back' | translate"></button>
+              [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 class="kTitle" *ngIf="_viewConfig.title">{{_entryName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export"
@@ -45,7 +45,8 @@
       </a>
     </div>
 
-    <app-entry-filter [viewConfig]="_viewConfig.refineFilter"
+    <app-entry-filter class="kRefineFiltersHost"
+                      [viewConfig]="_viewConfig.refineFilter"
                       [opened]="_refineFilterOpened"
                       [dateFilter]="_dateFilter"
                       [selectedFilters]="_selectedRefineFilters"
@@ -69,17 +70,17 @@
     </div>
 
     <div *ngIf="_viewConfig.geo" class="kReportContainer">
-      <app-image-top-countries [dateFilter]="_dateFilter"
+      <app-top-countries [dateFilter]="_dateFilter"
                          [refineFilter]="_refineFilter"
                          [entryId]="_entryId"
-                         (onDrillDown)="_onGeoDrillDown($event)"></app-image-top-countries>
+                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
     </div>
 
     <div *ngIf="_viewConfig.devices" class="kReportContainer">
-      <app-entry-devices-overview [dateFilter]="_dateFilter"
+      <app-devices-overview [dateFilter]="_dateFilter"
                                   [refineFilter]="_refineFilter"
                                   [colorScheme]="'impressions'"
-                                  [entryId]="_entryId"></app-entry-devices-overview>
+                                  [entryId]="_entryId"></app-devices-overview>
     </div>
 
     <div *ngIf="_viewConfig.syndication" class="kReportContainer">

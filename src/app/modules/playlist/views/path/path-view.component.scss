@@ -17,7 +17,7 @@
 }
 
 .kReport {
-  background-color: $appBkgColor !important;
+  background-color: $appBkgColor;
 
   .kBackBtn {
     margin-top: 4px;
@@ -43,6 +43,7 @@
 
   .kReportHeader {
     height: 80px;
+    position: relative;
   }
 
   .kFloatingDetails{
@@ -50,11 +51,12 @@
     margin-top: 32px;
   }
 
-  .kPlaylistDetails {
+  .kEntryDetails {
     display: flex;
     font-size: 14px;
     color: $kGrayscale2;
     height: 36px;
+    background-color: $appBkgColor;
 
     .kIconMediaType {
       margin-right: 8px;
@@ -85,7 +87,6 @@
 
   .kDropDown {
     background-color: white;
-    width: 100px;
     height: 34px;
     border: 1px solid $kGrayscale4;
     border-radius: 3px;
@@ -151,6 +152,7 @@
   .kHeaderRight{
     position: absolute;
     top: 110px;
+    left: 0px;
   }
   .kReport .kEntryDetails{
     height: 86px;

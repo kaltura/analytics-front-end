@@ -4,7 +4,7 @@
       <div *ngIf="_entry" class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
-                  [kTooltip]="'app.entryLive.back' | translate"></button>
+                  [kTooltip]="'app.entryLive.back' | translate" [placement]="'bottom'"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
             <app-toggle-users-mode (modeChanges)="_onUsersModeChange()" *ngIf="_entryLiveViewConfig.userMode"></app-toggle-users-mode>

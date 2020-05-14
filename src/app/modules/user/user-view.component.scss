@@ -46,7 +46,7 @@
     height: 20px;
     width: 18px;
     font-size: 24px;
-
+    overflow: hidden;
     &:active {
       box-shadow: none;
     }
@@ -87,7 +87,6 @@
 
   .kDropDown {
     background-color: white;
-    width: 100px;
     height: 34px;
     border: 1px solid $kGrayscale4;
     border-radius: 3px;
@@ -191,11 +190,11 @@
 
 @media screen and (min-width: 1280px) {
   ui-carousel:not(.kCompare) {
-    height: 391px !important;
+    min-height: 391px !important;
   }
 
   ui-carousel.kCompare {
-    height: 495px !important;
+    min-height: 495px !important;
   }
 }
 
@@ -253,4 +252,7 @@
       font-size: 15px;
     }
   }
+}
+ui-carousel ::ng-deep dots.middle {
+  bottom: 12px;
 }

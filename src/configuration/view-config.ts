@@ -115,6 +115,40 @@ export const viewsConfig = {
     devices: {},
     syndication: {},
   },
+  category: {
+    title: {},
+    export: {},
+    refineFilter: {
+      mediaType: {},
+      entrySource: {},
+      tags: {},
+      owners: {},
+      context: {},
+      categories: {},
+      geo: {},
+    },
+    details: {},
+    miniHighlights: {},
+    miniPageViews: {},
+    miniTopViewers: {},
+    miniTopVideos: {},
+    insights: {
+      domains: {},
+      geo: {},
+      devices: {}
+    },
+    performance: {
+      userDrilldown: {},
+      userLink: {},
+      entryDrilldown: {},
+      entryLink: {}
+    },
+    topVideos: {},
+    subcategories: {},
+    geo: {},
+    devices: {},
+    syndication: {},
+  },
   entryLive: {
     export: {},
     userMode: {},

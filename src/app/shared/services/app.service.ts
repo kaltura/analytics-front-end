@@ -39,6 +39,8 @@ export class AppService implements OnDestroy {
     no: 'No',
     ok: 'OK'
   };
+  
+  private readonly supportedLanguages = ['de', 'en', 'es', 'fr', 'ja', 'nl', 'pt_br', 'ru', 'zh_hans', 'zh_hant'];
 
   constructor(private _logger: KalturaLogger,
               private _kalturaServerClient: KalturaClient,
@@ -123,12 +125,25 @@ export class AppService implements OnDestroy {
           this._authService.restoreParentIfNeeded();
         }
 
-        this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute));
+        this._router.navigateByUrl(mapRoutes(url, queryParams, prevRoute), { replaceUrl: true });
       });
 
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
+    
+    this._frameEventManager.listen(FrameEvents.SetLanguage)
+      .pipe(cancelOnDestroy(this), filter(payload => payload && this.supportedLanguages.indexOf(payload) > -1))
+      .subscribe(( locale ) => {
+        this._translate.use(locale).subscribe(
+          success => {
+            this._logger.info(`New localization loaded: ${locale}`);
+          },
+          error => {
+            this._logger.error(`Localization loading failed: ${locale}, error message: ${error}`);
+          }
+        );
+      });
 
     this._frameEventManager.listen(FrameEvents.UpdateMultiAccount)
       .pipe(cancelOnDestroy(this), filter(Boolean))
@@ -144,7 +159,8 @@ export class AppService implements OnDestroy {
 
     // load localization
     this._logger.info('Loading permissions and localization...');
-    this._translate.setDefaultLang(analyticsConfig.locale);
+    this._translate.setDefaultLang('en');
+    this._translate.use(analyticsConfig.locale);
     this._loadPermissions()
       .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
       .subscribe(

@@ -43,6 +43,18 @@ export interface Node {
   prefetchNodeIds?: string[];
   deleted?: boolean;
   deletedDate?: string;
+  hotspots?: HotSpot[];
+}
+
+export interface HotSpot {
+  id?: string;
+  destinationId?: string;
+  destination?: string;
+  name?: string;
+  behavior?: string;
+  hyperlinkUrl?: string;
+  hotspot_clicked?: number;
+  type?: 'link' | 'hyperlink' | 'pause' | 'none';
 }
 
 @Component({
@@ -68,7 +80,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     searchInAdminTags: false
   });
   protected _componentId = 'path-content';
-  
+
   public topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
@@ -81,7 +93,8 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   public _currentDates: string;
   public _compareDates: string;
   public _reportType = reportTypeMap(KalturaReportType.interactiveVideoTopNodes);
-  
+  public drillDown: Node = null;
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
@@ -94,9 +107,9 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnInit() {}
-  
+
   private loadIVData(): Observable<Node[]> {
     const fileAssetsListFilter: KalturaFileAssetFilter = new KalturaFileAssetFilter();
     fileAssetsListFilter.fileAssetObjectTypeEqual = KalturaFileAssetObjectType.entry;
@@ -123,11 +136,11 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         return Observable.forkJoin(this.http.get(`${responses[0].url}&rnd=${Math.random()}`), this.http.get(`${responses[1].url}&rnd=${Math.random()}`));
       }))
       .pipe(map(dataArray => {
-        return this.parseIVData(dataArray[0]).concat(this.parseIVDeletedNodes(dataArray[1]));
+        return this.parseIVData(dataArray[0], dataArray[1]).concat(this.parseIVDeletedNodes(dataArray[1]));
       }));
   }
-  
-  private parseIVData(data): Node[] {
+
+  private parseIVData(data, metadata): Node[] {
     let nodes: Node[] = [];   // the returned nodes array
     let currentLevel = 1;     // initial level. We use this variable to increment the level for each pass on the nodes array
     let nextLevelNodes = [];  // array holding all the found next level nodes to be scanned for
@@ -141,12 +154,50 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           isHome: node.id === startNodeId,
           name: node.name,
           entryId: node.entryId,
-          prefetchNodeIds: node.prefetchNodeIds
+          prefetchNodeIds: node.prefetchNodeIds,
+          hotspots: []
         };
         if (node.id === startNodeId) {
           newNode.level = currentLevel; // set level 0
           levelsNodeFound++;            // increment found nodes with levels counter
           nextLevelNodes = [...nextLevelNodes, ...new Set(node.prefetchNodeIds)]; // set the array to scan next with the found node children nodes
+        }
+        // add hotspots
+        if (data.hotspots) {
+          data.hotspots.forEach(hotspot => {
+            if (hotspot.nodeId === node.id) {
+              let newHotspot: HotSpot = {
+                id: hotspot.id,
+                name: hotspot.name,
+                type: 'none'
+              };
+              // add hotspot properties from metadata json
+              if (metadata.hotspots) {
+                metadata.hotspots.forEach(metadataHotspot => {
+                  if (metadataHotspot.id === hotspot.id) {
+                    if (metadataHotspot.behavior === "instant_jump" && metadataHotspot.destinationId) {
+                      newHotspot.type = 'link';
+                      // use the destinationId to find the destination node and set its name to the destination property
+                      data.nodes.forEach(node => {
+                        if (node.id === metadataHotspot.destinationId) {
+                          newHotspot.destination = node.name;
+                        }
+                      });
+                    }
+                    if (metadataHotspot.behavior === "non_clickable" && metadataHotspot.hyperlinkUrl) {
+                      newHotspot.destination = metadataHotspot.hyperlinkUrl;
+                      newHotspot.type = 'hyperlink';
+                    }
+                    if (metadataHotspot.behavior === "pause_video") {
+                      newHotspot.destination = metadataHotspot.hyperlinkUrl ? metadataHotspot.hyperlinkUrl : '';
+                      newHotspot.type = 'pause';
+                    }
+                  }
+                });
+              }
+              newNode.hotspots.push(newHotspot);
+            }
+          });
         }
         nodes.push(newNode); // save the found node with level to the returned nodes array
       });
@@ -180,7 +231,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       return [];    // if no nodes were found - return an empty array
     }
   }
-  
+
   private parseIVDeletedNodes(data): Node[] {
     let nodes: Node[] = [];   // the returned nodes array
     if (data.deletedNodes) {
@@ -197,7 +248,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     }
     return nodes;
   }
-  
+
   private loadIVReport(): Observable<{report: Report, compare: any}> {
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     reportConfig.filter.rootEntryIdIn = this.playlistId;
@@ -212,15 +263,15 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           .pipe(map(compare => ({ report, compare })));
       }));
   }
-  
+
   protected _loadReport(): void {
     this.topVideos$.next({table: null, compare: null, busy: true, error: null});
     this._isBusy = true;
     this._blockerMessage = null;
-  
+
     const loadIVData$ = this.loadIVData();
     const loadIVReport$ = this.loadIVReport();
-  
+
     Observable.forkJoin(loadIVData$, loadIVReport$)
       .subscribe(( value: [ Node[], {report: Report, compare: any} ] ) => {
         const nodes: Node[] = value[0];
@@ -252,7 +303,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -273,7 +324,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       this._compareFirstTimeLoading = true;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -281,7 +332,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private appendMissingNodes(table: any[], nodes: Node[]) {
     // add nodes with no data: missing from the report, available in the IV JSON data
     nodes.forEach(node => {
@@ -290,11 +341,11 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       }
     });
   }
-  
+
   private getThumbnailUrl(node: Node): string {
     return `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${node.entryId}/width/256/height/144?rnd=${Math.random()}`;
   }
-  
+
   private _handleTable(nodes: Node[], table: KalturaReportTable, compare?: Report): void {
     const extendTableRow = (item) => {
       nodes.forEach(node => {
@@ -310,7 +361,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     }
     this.appendMissingNodes(this._tableData, nodes);
     this._currentDates = this._compareDates = null;
-  
+
     if (compare && compare.table) {
       if (compare.table.header && compare.table.data) {  // we have data for the compare table nodes
         const {tableData: compareTableData} = this._reportService.parseTableData(compare.table, this._dataConfig.table);
@@ -321,7 +372,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
     }
   }
-  
+
   private updateLayout(): void {
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
@@ -329,7 +380,15 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
       }, 0);
     }
   }
-  
+
+  public _drillDown(node: Node): void {
+    this.drillDown = node;
+  }
+
+  public _drillUp(): void {
+    this.drillDown = null;
+  }
+
   ngOnDestroy() {
     this.topVideos$.complete();
   }

@@ -16,8 +16,8 @@ export type TreeSelectionMode = 'single' | 'multiple';
 })
 export class CategoriesTreeComponent implements OnInit, OnChanges {
   
+  @Input() rootCategoryId: number;
   @Input() public disablePropagation = true;
-  
   @Input() public selectedCategories: number[];
   @Input() public selectedCategory: number;
   @Input() selectionMode: TreeSelectionMode = 'multiple';
@@ -141,7 +141,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
   private _loadCategories(): void {
     this._loading = true;
     this._blockerMessage = null;
-    this._categoriesTreeService.getCategories()
+    this._categoriesTreeService.getCategories(this.rootCategoryId)
       .subscribe(result => {
           this._loading = false;
           this._categories = result.categories;

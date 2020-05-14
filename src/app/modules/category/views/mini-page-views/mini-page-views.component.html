@@ -1,0 +1,94 @@
+<div data-aid="report-category-mini-page-views" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters" [class.kCompare]="_isCompareMode">
+    <div class="kCol">
+      <div class="kTitleRow">
+        <span class="kTitle" [kTooltip]="'app.category.pageViews' | translate" [showOnEllipsis]="true">{{'app.category.pageViews' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.category.pageViews_tt' | translate}}</span>
+        </kInputHelper>
+        <a (click)="openFilter()" class="kDetails" [class.disabled]="subCategoriesSelected">{{'app.filters.filter' | translate}}</a>
+      </div>
+      <span class="kLabel" *ngIf="!_isCompareMode">{{'app.category.pageViewLabel' | translate}}</span>
+    </div>
+  </div>
+
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
+      <div class="kReportRow">
+        <span class="contextLabel">{{_contextCurrentValues[0]?.value}}</span>
+        <span class="separator">/</span>
+        <span>{{_currentValues[0]?.value}}</span>
+        <span class="title">{{_currentValues[0]?.title}}</span>
+      </div>
+      <div class="kReportRow">
+        <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null"></app-bullet>
+      </div>
+      <div class="kReportRow kMargin">
+        <span class="contextLabel">{{_contextCurrentValues[1]?.value}}</span>
+        <span class="separator">/</span>
+        <span>{{_currentValues[1]?.value}}</span>
+        <span class="title">{{_currentValues[1]?.title}}</span>
+      </div>
+      <div class="kReportRow">
+        <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null"></app-bullet>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && (!_currentValues.length || !_contextCurrentValues.length)">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+    <div class="kReportContent kCompare" *ngIf="_isCompareMode">
+      <div class="kReportRow">
+        <span class="title">{{_currentValues[0]?.title}}</span>
+        <div class="kCol">
+          <div class="kRow">
+            <span class="contextLabel">{{_contextCurrentValues[0]?.value}}</span>
+            <span class="separator">/</span>
+            <span>{{_currentValues[0]?.value}}</span>
+            <app-bullet [value]="_contextCurrentValues[0]?.value /_currentValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="90"></app-bullet>
+          </div>
+          <div class="kRow">
+            <span class="contextLabel">{{_contextCompareValues[0]?.value}}</span>
+            <span class="separator">/</span>
+            <span>{{_compareValues[0]?.value}}</span>
+            <app-bullet [value]="_contextCompareValues[0]?.value /_compareValues[0]?.value * 100" [colorScheme]="'default'" [formatter]="null" [colorPercent]="20"></app-bullet>
+          </div>
+        </div>
+      </div>
+
+      <div class="kReportRow">
+        <span class="title">{{_currentValues[1]?.title}}</span>
+        <div class="kCol">
+          <div class="kRow">
+            <span class="contextLabel">{{_contextCurrentValues[1]?.value}}</span>
+            <span class="separator">/</span>
+            <span>{{_currentValues[1]?.value}}</span>
+            <app-bullet [value]="_contextCurrentValues[1]?.value /_currentValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="90"></app-bullet>
+          </div>
+          <div class="kRow">
+            <span class="contextLabel">{{_contextCompareValues[1]?.value}}</span>
+            <span class="separator">/</span>
+            <span>{{_compareValues[1]?.value}}</span>
+            <app-bullet [value]="_contextCompareValues[1]?.value /_compareValues[1]?.value * 100" [colorScheme]="'viewers'" [formatter]="null" [colorPercent]="35"></app-bullet>
+          </div>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="circle" style="background-color: #2655b0"></div>
+        <div class="circle whiteBorder" style="background-color: #1b8271"></div>
+        <span>{{_currentDates}}</span>
+      </div>
+      <div class="legend">
+        <div class="circle" style="background-color: #b5cdfc"></div>
+        <div class="circle whiteBorder" style="background-color: #60e4cc"></div>
+        <span>{{_compareDates}}</span>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy &&  (!_compareValues.length || !_contextCompareValues.length)">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

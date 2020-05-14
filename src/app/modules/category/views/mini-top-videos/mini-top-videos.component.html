@@ -1,0 +1,76 @@
+<div data-aid="report-insight-top-videos" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.engagement.topVideos_tt' | translate}}</span>
+    </kInputHelper>
+    <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" *ngIf="!_isCompareMode">
+      <div class="kReportRow" *ngFor="let item of _tableData">
+        <div class="kReportRowIndex kFirst" *ngIf="item.index.toString() === '1'">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{item.index}}</span>
+        </div>
+        <div class="kReportRowIndex" *ngIf="item.index.toString() !== '1'">{{item.index}}</div>
+        <thumb-loader [thumbnailUrl]="item.thumbnailUrl"></thumb-loader>
+        <div class="kReportRowDetails">
+          <span class="kTitle"
+                [kTooltip]="item.entry_name"
+                [showOnEllipsis]="true"
+                >{{item.entry_name}}</span>
+          <span class="kScore">{{item.engagement_ranking}}/10</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+
+    <div class="kReportContent" *ngIf="_isCompareMode">
+      <span class="kDates">{{_currentDates}}</span>
+      <div class="kReportRow" *ngIf="_tableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_tableData[0].index}}</span>
+        </div>
+
+        <thumb-loader [thumbnailUrl]="_tableData[0].thumbnailUrl" (onClick)="_drillDown(_tableData[0])"></thumb-loader>
+        <div class="kReportRowDetails">
+          <span class="kTitle"
+                [kTooltip]="_tableData[0].entry_name"
+                (click)="_drillDown(_tableData[0])">
+            {{_tableData[0].entry_name}}
+          </span>
+          <span class="kScore">{{_tableData[0].engagement_ranking}}/10</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_tableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+      <span class="kDates">{{_compareDates}}</span>
+      <div class="kReportRow" *ngIf="_compareTableData[0]">
+        <div class="kReportRowIndex kFirst">
+          <img src="assets/images/ribbon_small.svg">
+          <span>{{_compareTableData[0].index}}</span>
+        </div>
+
+        <thumb-loader [thumbnailUrl]="_compareTableData[0].thumbnailUrl" (onClick)="_drillDown(_compareTableData[0])"></thumb-loader>
+        <div class="kReportRowDetails">
+          <span class="kTitle"
+                [kTooltip]="_compareTableData[0].entry_name"
+                (click)="_drillDown(_compareTableData[0])">
+            {{_compareTableData[0].entry_name}}
+          </span>
+          <span class="kScore">{{_compareTableData[0].engagement_ranking}}/10</span>
+        </div>
+      </div>
+      <div class="kReportRow kNoResults" *ngIf="!_isBusy && !_compareTableData[0]">
+        {{'app.common.noResults' | translate}}
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

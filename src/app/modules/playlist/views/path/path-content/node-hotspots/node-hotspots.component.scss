@@ -1,0 +1,85 @@
+@import '../../../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  height: 100%;
+}
+.kTotalCount {
+  margin-left: 24px;
+  margin-bottom: 24px;
+  display: block;
+}
+.kTableContainer {
+  overflow: visible !important;
+  .kIconppv {
+    display: block;
+    font-size: 24px;
+  }
+  .kDestination {
+    display: flex;
+    align-items: center;
+    i {
+      margin-right: 8px;
+      font-family: 'icomoon';
+      font-size: 16px;
+      font-style: normal;
+      cursor: default;
+    }
+    .link:before {
+      content: "\e927";
+    }
+    .hyperlink:before {
+      content: "\e926";
+    }
+  }
+  .kName {
+    font-size: 15px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+
+:host ::ng-deep .kRowExpansion {
+  padding: 0 !important;
+  text-align: center;
+}
+
+:host ::ng-deep .ui-autocomplete-input-token input:focus {
+  outline: 5px auto rgba(0, 150, 255, 1) !important;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    &.ui-state-highlight span {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+  ::ng-deep {
+    .ui-autocomplete-input-token input::placeholder {
+      color: $kGrayscale1;
+    }
+
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
+}

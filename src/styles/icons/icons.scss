@@ -1,13 +1,14 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('./icons/icomoon.eot?hdfi0l');
-  src:  url('./icons/icomoon.eot?hdfi0l#iefix') format('embedded-opentype'),
-    url('./icons/icomoon.woff2?hdfi0l') format('woff2'),
-    url('./icons/icomoon.ttf?hdfi0l') format('truetype'),
-    url('./icons/icomoon.woff?hdfi0l') format('woff'),
-    url('./icons/icomoon.svg?hdfi0l#icomoon') format('svg');
+  src:  url('./icons/icomoon.eot?fbiefc');
+  src:  url('./icons/icomoon.eot?fbiefc#iefix') format('embedded-opentype'),
+  url('./icons/icomoon.woff2?fbiefc') format('woff2'),
+  url('./icons/icomoon.ttf?fbiefc') format('truetype'),
+  url('./icons/icomoon.woff?fbiefc') format('woff'),
+  url('./icons/icomoon.svg?fbiefc#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="icon-"], [class*=" icon-"] {
@@ -25,6 +26,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ic_interaction:before {
+  content: "\e925";
+}
+.icon-player-version:before {
+  content: "\e924";
+}
+.icon-cdn:before {
+  content: "\e921";
+}
+.icon-location:before {
+  content: "\e922";
+}
+.icon-layer:before {
+  content: "\e923";
+}
 .icon-devices:before {
   content: "\e91c";
 }
@@ -81,6 +97,12 @@
 }
 .icon-bolt:before {
   content: "\e902";
+}
+.icon-globe-small:before {
+  content: "\e926";
+}
+.icon-ic_nodes:before {
+  content: "\e927";
 }
 .icon-captions:before {
   content: "\e913";

@@ -1,4 +1,4 @@
-<div class="kColumn">
+<div class="kColumn" [class.kDisabled]="disabled">
   <div class="kColumnLabel">{{label}}</div>
   <div class="kColumnContent">
     <a tabindex="0" *ngIf="!_selectedValue.length"
@@ -29,7 +29,7 @@
               data-aid="categories-filter"
               class="kCategoriesFilterPopup"
               [popupWidth]="560"
-              [popupHeight]="586"
+              [popupHeight]="594"
               [closeBtn]="false"
               [modal]="true"
               (onOpen)="_updateHost(true)"
@@ -37,6 +37,7 @@
   <ng-template>
     <app-categories-selector [parentPopupWidget]="categoriesPopup"
                              [title]="popupTitle"
+                             [rootCategoryId]="_rootCategoryId"
                              [filterPlaceholder]="popupFilterPlaceholder"
                              [value]="_selectedValue"
                              (valueChange)="_updateCategories($event)"></app-categories-selector>

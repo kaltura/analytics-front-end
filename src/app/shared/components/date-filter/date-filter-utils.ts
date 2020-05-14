@@ -38,6 +38,7 @@ export class DateFilterUtils {
   // March 2019
   static formatMonthString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -84,6 +85,7 @@ export class DateFilterUtils {
   // Mar 18
   static formatDayString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -105,6 +107,7 @@ export class DateFilterUtils {
   // March
   static formatMonthOnlyString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
@@ -149,6 +152,7 @@ export class DateFilterUtils {
   // Mar 18, 2019 or March 18, 2019
   static formatMonthDayString(value: string | number | Date, locale = analyticsConfig.locale, monthFormat = 'short'): string {
     let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
     if (typeof value === 'string') {
       const year: string = value.substring(0, 4);
       const month: string = value.substring(4, 6);
