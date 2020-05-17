@@ -35,11 +35,11 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   }
   @ViewChild('table', { static: false }) _table: Table;
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
-  
+
   private _mapCenter = [0, 10];
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;
-  
+
   public _entry: KalturaExtendedLiveEntry = null;
   public _mapChartData: any = {};
   public _mapZoom = 1.2;
@@ -69,10 +69,10 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
         this._isAuthUsersMode = mode === EntryLiveUsersMode.Authenticated;
       });
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   ngOnInit() {
     // load works map data
     this._http.get('assets/world.json')
@@ -80,7 +80,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
         echarts.registerMap('world', data);
         this._mapDataReady = true;
       });
-    
+
     this._liveGeoWidget.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(state => {
@@ -98,7 +98,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._liveGeoWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveGeoWidgetData) => {
@@ -111,7 +111,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
         }, 0);
       });
   }
-  
+
   private _updateMap(mapCenter: number[]): void {
     const isAuthUsersMode = this._userModeService.usersMode === EntryLiveUsersMode.Authenticated;
     const key = isAuthUsersMode ? 'view_unique_audience' : 'distribution';
@@ -121,21 +121,23 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     let maxValue = 0;
     this._tableData.forEach(data => {
       const coords = data['coordinates'].split('/');
-      let value = [coords[1], coords[0]];
-      value.push(parseFormattedValue(data[key]));
-      mapConfig.series[0].data.push({
-        name: this._drillDown.length === 0
-          ? getCountryName(data.country, false)
-          : this._drillDown.length === 1
-            ? data.region
-            : data.city,
-        value
-      });
-      if (parseInt(data[key]) > maxValue) {
-        maxValue = parseFormattedValue(data[key]);
+      if (coords.length === 2) {
+        let value = [coords[1], coords[0]];
+        value.push(parseFormattedValue(data[key]));
+        mapConfig.series[0].data.push({
+          name: this._drillDown.length === 0
+            ? getCountryName(data.country, false)
+            : this._drillDown.length === 1
+              ? data.region
+              : data.city,
+          value
+        });
+        if (parseInt(data[key]) > maxValue) {
+          maxValue = parseFormattedValue(data[key]);
+        }
       }
     });
-    
+
     mapConfig.visualMap.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
     mapConfig.visualMap.max = maxValue;
     const map = this._drillDown.length > 0 && this._canMapDrillDown ? mapConfig.geo : mapConfig.series[0];
@@ -162,13 +164,13 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   public _onChartClick(event): void {
     if (event.data && event.data.name && this._drillDown.length < 2) {
       this._onDrillDown(event.data.name);
     }
   }
-  
+
   public _onDrillDown(country: string, reload = true): void {
     let drillDown = [...this._drillDown];
     if (country === null) {
@@ -178,30 +180,30 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     } else if (drillDown.length === 2) {
       drillDown.pop();
     }
-    
+
     this._canMapDrillDown = canDrillDown(drillDown[0]);
-    
+
     if (this._table) {
       this._table.reset();
     }
-    
+
     this._mapZoom = drillDown.length === 0 || !this._canMapDrillDown ? 1.2 : this._mapZoom;
-    
+
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
-    
+
     this._liveGeoWidget.updatePollsFilter(this._drillDown, reload);
-    
+
     if (reload) {
       this._isBusy = true;
     }
     const reportType = this._drillDown.length === 2 ? liveReportTypeMap(KalturaReportType.mapOverlayCity) : this._drillDown.length === 1 ? liveReportTypeMap(KalturaReportType.mapOverlayRegion) : liveReportTypeMap(KalturaReportType.mapOverlayCountry);
     this.onDrillDown.emit({ reportType: reportType, drillDown: this._drillDown });
   }
-  
+
   public _onChartInit(ec) {
     this._echartsIntance = ec;
   }
-  
+
   public _zoom(direction: string): void {
     if (direction === 'in') {
       this._mapZoom = this._mapZoom * 2;
@@ -217,10 +219,10 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       this._echartsIntance.setOption({ series: [{ roam: roam }] }, false);
     }
   }
-  
+
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-  
+
     this._liveGeoWidget.updateLayout();
   }
 }
