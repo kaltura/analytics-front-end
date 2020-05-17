@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcasting Analytics</title>
+</head>
+<style>
+  body {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: #2D2A2A;
+    color: white;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  h1{
+    margin-left: 24px;
+  }
+  iframe {
+    border: 0;
+    transition: height 0.3s;
+    background-color: black;
+  }
+  .container {
+    width: 100%;
+    display: flex;
+  }
+  .container .stream{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .container .separator{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid grey;
+    padding-top: 42px;
+  }
+  .container .separator .icon{
+    width: 24px;
+    height: 24px;
+    border: 1px solid white;
+    background-color: #666666;
+    border-radius: 3px;
+    margin: 8px;
+    cursor: pointer;
+  }
+  .container .snapshots{
+    flex: 0 0 auto;
+    width: 400px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+<script>
+  const snapshotConfig = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 38524931,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: "djJ8MTY0NTE2MXzqAxEKs6lmHYT1JwQAthJp2MEG7dwW9ow0IdLApTYv-soluJSBu1o79y1iR7gIyB2lgtpxqv9clrJBTjZiamNNyE6KuI2N4_TXyHNAYlZjWaXVOGj18HVDmcSY2lHtfdZv0Qn03JZ_E0XZNpmQ5MgG-TcyWTdGn4GZyZRjOgqjYQ==",
+    pid: "1645161",
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: false,
+    },
+    customStyle: {
+      baseClassName: 'webcasting',
+      css: `
+            body.webcasting {
+                background: black;
+                background-color: black;
+            }
+            .webcasting .kMain .kReportView {
+                min-height: 400px;
+            }
+            .webcasting .kMain .kReportView .kReport {
+                background: transparent;
+                background-color: black !important;
+            }
+            .webcasting .kMain .kReportView .kContent, .webcasting .kMain .kReportView .kLiveUsers, .webcasting .kMain .kReportView .kUsersBandwidth  {
+                padding: 0px !important;
+            }
+            .webcasting .kMain .kReportView .kReport .kWideColumn {
+                width: 100%;
+                padding: 20px;
+            }
+            .webcasting .kMain .kReportView .kReport .kEntryWidgets, .webcasting .kMain .kReportView .kReport app-live-bandwidth {
+                margin-bottom: 0px;
+            }
+            /* Margins */
+            .webcasting .kContent {
+                width: 100% !important;
+            }
+            /* Colors */
+            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, .kMain .kReportView .kReport .kReportHeader .kTitle, .kMain .kReportView .kReport {
+              color: white !important;
+            }
+            .kLiveUsers .kHeader .kValue, .kUsersBandwidth .kHeader .kValue {
+              font-size: 28px !important;
+            }
+            .kLiveUsers .kHeader .kTitle, .kUsersBandwidth .kHeader .kTitle {
+              font-size: 15px !important;
+            }
+            .kLiveUsers .kHeader .kTimePeriodLabel, .kUsersBandwidth .kHeader .kTimePeriodLabel {
+              display: none;
+            }
+            `
+    }
+  };
+  const streamConfig = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 38524931,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: "djJ8MTY0NTE2MXzqAxEKs6lmHYT1JwQAthJp2MEG7dwW9ow0IdLApTYv-soluJSBu1o79y1iR7gIyB2lgtpxqv9clrJBTjZiamNNyE6KuI2N4_TXyHNAYlZjWaXVOGj18HVDmcSY2lHtfdZv0Qn03JZ_E0XZNpmQ5MgG-TcyWTdGn4GZyZRjOgqjYQ==",
+    pid: "1645161",
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: false,
+    },
+    customStyle: {
+      baseClassName: 'webcasting',
+      css: `
+            body.webcasting {
+                background: black;
+                background-color: black;
+            }
+            .webcasting .kMain .kReportView {
+                min-height: 350px;
+            }
+            .webcasting .kMain .kReportView .kReport {
+                background: transparent;
+                background-color: black !important;
+            }
+            .webcasting .kMain .kReportView .kContent, .webcasting .kMain .kReportView .kLiveUsers, .webcasting .kMain .kReportView .kUsersBandwidth  {
+                padding: 0px !important;
+            }
+            .webcasting .kMain .kReportView .kReport .kNarrowColumn {
+                width: 100%;
+                flex-direction: row;
+                margin: 0px;
+            }
+            .webcasting .kMain .kReportView .kReport .kNarrowColumn .kPreview {
+                width: 500px;
+                flex: 0 0 auto;
+            }
+            .webcasting app-live-stream-health {
+                width: 100%;
+                flex: 1 1 auto;
+                height: 360px;
+            }
+            .webcasting .kMain .kReportView .kReport .kNarrowColumn .kPreview .kLivePlayer{
+                height: 300px;
+            }
+            .webcasting .kMain .kReportView .kReport .kEntryWidgets {
+                margin-bottom: 0px;
+            }
+            /* Margins */
+            .webcasting .kContent {
+                width: 100% !important;
+            }
+            /* Colors */
+            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, .kMain .kReportView .kReport .kReportHeader .kTitle, .kMain .kReportView .kReport {
+              color: white !important;
+            }
+            .kLineCover{
+              background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 62%, rgba(0,0,0,1) 100%) !important;
+              background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
+              background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
+            }
+            kScrollToTopContainer, .kChartContainer, p-table .ui-table .ui-table-tbody > tr {
+              background-color: black !important;
+            }`
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const streamApp = document.getElementById('stream');
+    const snapshotsApp = document.getElementById('snapshots');
+
+    const sendStreamMessage = message => {
+      if (streamApp && streamApp.contentWindow && streamApp.contentWindow.postMessage) {
+        streamApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+    const sendSnapshotsMessage = message => {
+      if (snapshotsApp && snapshotsApp.contentWindow && snapshotsApp.contentWindow.postMessage) {
+        snapshotsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          const viewsConfig = postMessageData.payload.viewsConfig;
+          if (e.source === streamApp.contentWindow) {
+            viewsConfig.entryLive.header = null;
+            viewsConfig.entryLive.details = null;
+            viewsConfig.entryLive.users = null;
+            viewsConfig.entryLive.bandwidth = null;
+            viewsConfig.entryLive.geo = null;
+            viewsConfig.entryLive.devices = null;
+            viewsConfig.entryLive.discovery = null;
+            sendStreamMessage({ messageType: 'init', payload: { ...streamConfig, viewsConfig } });
+          }
+          if (e.source === snapshotsApp.contentWindow) {
+            viewsConfig.entryLive.header = null;
+            viewsConfig.entryLive.details = null;
+            viewsConfig.entryLive.player = null;
+            viewsConfig.entryLive.status = null;
+            viewsConfig.entryLive.streamHealth = null;
+            viewsConfig.entryLive.geo = null;
+            viewsConfig.entryLive.devices = null;
+            viewsConfig.entryLive.discovery = null;
+            sendSnapshotsMessage({ messageType: 'init', payload: { ...snapshotConfig, viewsConfig } });
+          }
+          break;
+
+        case 'analyticsInitComplete':
+          sendStreamMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
+          sendStreamMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          sendSnapshotsMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
+          sendSnapshotsMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          if (e.source === streamApp.contentWindow) {
+            streamApp.style.height = `${postMessageData.payload.height}px`;
+          }
+          if (e.source === snapshotsApp.contentWindow) {
+            snapshotsApp.style.height = `${postMessageData.payload.height}px`;
+          }
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendStreamMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendStreamMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          sendSnapshotsMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendSnapshotsMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
+</script>
+<body>
+  <h1>Webcasting Analytics</h1>
+  <div class="container">
+    <div class="stream">
+      <div style="width: 100%; display: flex; justify-content: center; align-items: flex-end; border: 1px solid grey; border-right: none; height: 40px">
+        <span style="padding: 12px; padding-top: 0px">Stage</span>
+        <span style="padding: 12px; padding-top: 0px">Details</span>
+        <span style="padding: 12px; padding-top: 0px">Monitoring</span>
+      </div>
+      <iframe width="100%" height="380" id="stream" src="http://localhost:4200"></iframe>
+    </div>
+    <div class="separator">
+      <div class="icon"></div>
+      <div class="icon"></div>
+      <div class="icon"></div>
+      <div class="icon"></div>
+    </div>
+    <div class="snapshots">
+      <span style="line-height: 40px; border: 1px solid grey; width: 398px; text-align: center; border-left: none">Watching Now</span>
+      <iframe width="400" height="570" id="snapshots" src="http://localhost:4200"></iframe>
+    </div>
+  </div>
+</body>
+</html>

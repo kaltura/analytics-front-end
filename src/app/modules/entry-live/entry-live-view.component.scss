@@ -66,6 +66,10 @@
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     overflow: hidden;
+    .kPreview{
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
 

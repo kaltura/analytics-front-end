@@ -151,6 +151,7 @@ export const viewsConfig = {
   },
   entryLive: {
     export: {},
+    header: {},
     userMode: {},
     toggleLive: {},
     details: {},
