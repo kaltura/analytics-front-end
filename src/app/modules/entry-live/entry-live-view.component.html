@@ -2,12 +2,12 @@
   <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
     <div class="kReportView">
       <div *ngIf="_entry" class="kReport kContent kOverrideFAIcons">
-        <div class="kReportHeader">
+        <div class="kReportHeader" *ngIf="_entryLiveViewConfig.header">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entryLive.back' | translate" [placement]="'bottom'"></button>
           <span class="kTitle">{{_entry?.name}}</span>
           <div class="kControls">
-            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
+            <app-toggle-users-mode (modeChanges)="_onUsersModeChange()" *ngIf="_entryLiveViewConfig.userMode"></app-toggle-users-mode>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
                             name="entry"
                             [width]="380"
@@ -22,30 +22,32 @@
         <app-entry-details *ngIf="_entryLiveViewConfig.details"
                            [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
         <div class="kEntryWidgets">
-          <div class="kWideColumn">
-            <app-live-users [entry]="_entry"></app-live-users>
-            <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
+          <div class="kWideColumn" *ngIf="_entryLiveViewConfig.users || _entryLiveViewConfig.bandwidth">
+            <app-live-users [entry]="_entry" *ngIf="_entryLiveViewConfig.users"></app-live-users>
+            <app-live-bandwidth [entry]="_entry" *ngIf="_entryLiveViewConfig.bandwidth"></app-live-bandwidth>
           </div>
-          <div class="kNarrowColumn">
-            <app-live-status [entry]="_entry"></app-live-status>
-            <app-live-player [entryId]="_entry?.id"></app-live-player>
-            <app-live-stream-health></app-live-stream-health>
+          <div class="kNarrowColumn" *ngIf="_entryLiveViewConfig.status || _entryLiveViewConfig.player || _entryLiveViewConfig.streamHealth">
+            <div class="kPreview">
+              <app-live-status [entry]="_entry" *ngIf="_entryLiveViewConfig.status"></app-live-status>
+              <app-live-player [entryId]="_entry?.id" *ngIf="_entryLiveViewConfig.player"></app-live-player>
+            </div>
+            <app-live-stream-health *ngIf="_entryLiveViewConfig.streamHealth"></app-live-stream-health>
           </div>
         </div>
 
-        <div class="kFilters kLiveFilters kOverrideFAIcons">
+        <div class="kFilters kLiveFilters kOverrideFAIcons" *ngIf="_entryLiveViewConfig.geo || _entryLiveViewConfig.devices || _entryLiveViewConfig.discovery">
           <span class="kTitle">{{'app.entryLive.discovery.title' | translate}}</span>
 
           <app-time-selector [dateRange]="_selectedDateRange" (filterChange)="_onDateFilterChange($event)"></app-time-selector>
 
         </div>
-        <div class="kEntryWidgets">
-          <div class="kWideColumn">
+        <div class="kEntryWidgets" *ngIf="_entryLiveViewConfig.deo || _entryLiveViewConfig.devices">
+          <div class="kWideColumn" *ngIf="_entryLiveViewConfig.geo">
             <div class="kReport kNoBottomMargin">
               <app-live-geo (onDrillDown)="_onGeoDrilldown($event)"></app-live-geo>
             </div>
           </div>
-          <div class="kNarrowColumn">
+          <div class="kNarrowColumn" *ngIf="_entryLiveViewConfig.devices">
             <div class="kReport kNoBottomMargin">
               <app-live-devices></app-live-devices>
             </div>

@@ -35,169 +35,131 @@
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
-    const config = {
-        kalturaServer: {
-            uri: 'www.kaltura.com',
-            previewUIConf: 38524931,
-        },
-        cdnServers: {
-            serverUri: 'http://cdnapi.kaltura.com',
-            securedServerUri: 'https://cdnapisec.kaltura.com'
-        },
-        ks: "",
-        pid: "",
-        locale: 'en',
-        live: {
-            pollInterval: 30,
-            healthNotificationsCount: 50,
-        },
-        menuConfig: {
-            showMenu: true,
-        },
-        customStyle: {
-            baseClassName: 'kms',
-            css: `
-            body.kms {
+  const config = {
+    kalturaServer: {
+      uri: 'www.kaltura.com',
+      previewUIConf: 38524931,
+    },
+    cdnServers: {
+      serverUri: 'http://cdnapi.kaltura.com',
+      securedServerUri: 'https://cdnapisec.kaltura.com'
+    },
+    ks: "",
+    pid: "",
+    locale: 'en',
+    live: {
+      pollInterval: 30,
+      healthNotificationsCount: 50,
+    },
+    menuConfig: {
+      showMenu: true,
+    },
+    customStyle: {
+        baseClassName: 'webcasting',
+        css: `
+            body.webcasting {
+                background: black;
+                background-color: black;
+            }
+            .webcasting .kMain .kReportView .kReport {
                 background: transparent;
-                background-color: white;
+                background-color: black !important;
             }
-            .kms .kMain .kReportView .kReport, .kms .kMain .kReportView .kReport .kDivider {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport .kTotalsRow,  .kms .kMain .kReportView .kReport .kTotalsContainer {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport .kFilters {
-                background-color: white;
-            }
-            .kms .kMain .kReportView .kReport .kReportHeader {
+            .webcasting .kMain .kReportView .kReport .kReportHeader {
                 background: transparent;
             }
-            .kms .kMain .kReportView .kReport .kReportContainer {
+            .webcasting .kMain .kReportView .kReport .kEntryDetails {
                 background: transparent;
-            }
-            .kms .kMain .kReportView .kReport .kEntryDetails {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport.kImageReport {
-                background: transparent;
-            }
-            .kms .kMain .kReportView .kReport .kRefineFiltersHost {
-                background: transparent;
+                color: white;
             }
             /* Margins */
-            .kms .kContent {
+            .webcasting .kContent {
                 width: 100% !important;
             }
-            .kms .kReportView .kContent {
+            .webcasting .kReportView .kContent {
                 padding-left: 20px !important;
                 padding-right: 20px !important;
                 box-sizing: border-box;
             }
-            /* Borders */
-            .kms .kTotalContainer, .kms .kSocialHighlights {
-                border: 1px solid #cccccc !important;
+            /* Colors */
+            .kLiveUsers .kHeader, .kUsersBandwidth .kHeader, .webcasting .kMain .kReportView .kReport .kFilters .kTitle, .kMain .kReportView .kReport .kReportHeader .kTitle, .kMain .kReportView .kReport {
+              color: white !important;
             }
-            .kms .kTotalContainer:first-child {
-                border-top-left-radius: 3px;
-                border-bottom-left-radius: 3px;
+            .kLineCover{
+              background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 62%, rgba(0,0,0,1) 100%) !important;
+              background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
+              background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 62%,rgba(0,0,0,1) 100%) !important;
             }
-            .kms .kTotalContainer:last-child {
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
-                border-left: none !important;
+            kScrollToTopContainer, .kChartContainer, p-table .ui-table .ui-table-tbody > tr {
+              background-color: black !important;
             }
-            .kms .kTotalContainer:not(:first-child):not(:last-child) {
-                border-left: none !important;
+            .webcasting .kMain .kReportView .kReport .kEntryDetails .link {
+                color: #1c94c4;
             }
-            .kms .kEntryPreview app-video-entry-preview .kReport {
-                border: 1px solid #cccccc !important;
-                border-bottom: none !important;
-                border-radius: 0px;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }
-            .kms .kEntryPreview app-video-entry-user-engagement .kReport {
-                border: 1px solid #cccccc !important;
-                border-top: none !important;
-                border-radius: 0px;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-            }
+            `
+    }
+  };
 
-            .kms .kReportContainer .kFilters {
-                border: 1px solid #cccccc !important;
-                border-bottom: none !important;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }
-            .kms .kReportContainer .kReportContent {
-                border: 1px solid #cccccc !important;
-                border-top: none !important;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-            }
-            .kms .kReportContainer .kReportContent.kNoTitle {
-                border-top: 1px solid #cccccc !important;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }`
-        }
+  document.addEventListener('DOMContentLoaded', () => {
+    const analyticsApp = document.getElementById('analytics');
+    const toggleContrastBtn = document.getElementById('btn');
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const analyticsApp = document.getElementById('analytics');
-        const toggleContrastBtn = document.getElementById('btn');
-
-        const sendMessage = message => {
-            if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
-                analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
-            }
-        };
-
-        toggleContrastBtn.addEventListener('click', e => {
-            sendMessage({ messageType: 'toggleContrastTheme' });
-        });
-
-        window.addEventListener('message', e => {
-            if (!e.data) {
-                return;
-            }
-
-            const postMessageData = e.data;
-
-            switch (postMessageData.messageType) {
-                case 'analyticsInit':
-                    sendMessage({ messageType: 'init', payload: config });
-                    break;
-
-                case 'analyticsInitComplete':
-                    sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
-                    sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
-                    break;
-
-                case 'updateLayout':
-                    analyticsApp.style.height = `${postMessageData.payload.height}px`;
-                    break;
-
-                case 'navigateTo':
-                    const [url, params] = postMessageData.payload.split('?');
-                    const queryParams = params.split('&').reduce((acc, val) => {
-                        const [key, value] = val.split('=');
-                        acc[key] = value;
-                        return acc;
-                    }, {});
-
-                    sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
-                    sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
-                    break;
-
-                default:
-                    console.log(`${postMessageData.messageType} event is not implemented`);
-                    break;
-            }
-        })
+    toggleContrastBtn.addEventListener('click', e => {
+        sendMessage({ messageType: 'toggleContrastTheme' });
     });
+
+    window.addEventListener('message', e => {
+      if (!e.data) {
+        return;
+      }
+
+      const postMessageData = e.data;
+
+      switch (postMessageData.messageType) {
+        case 'analyticsInit':
+          const viewsConfig = postMessageData.payload.viewsConfig;
+          viewsConfig.entryLive.export = null;
+          viewsConfig.entryLive.userMode = null;
+          viewsConfig.entryLive.toggleLive = null;
+          viewsConfig.entryLive.geo = null;
+          viewsConfig.entryLive.devices = null;
+          viewsConfig.entryLive.discovery = null;
+          sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
+          break;
+
+        case 'analyticsInitComplete':
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
+          sendMessage({ messageType: 'updateFilters', payload: { queryParams: { dateBy: 'last30days' } } });
+          break;
+
+        case 'updateLayout':
+          analyticsApp.style.height = `${postMessageData.payload.height}px`;
+          break;
+
+        case 'navigateTo':
+          const [url, params] = postMessageData.payload.split('?');
+          const queryParams = params.split('&').reduce((acc, val) => {
+            const [key, value] = val.split('=');
+            acc[key] = value;
+            return acc;
+          }, {});
+
+          sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+          sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+          break;
+
+        default:
+          console.log(`${postMessageData.messageType} event is not implemented`);
+          break;
+      }
+    })
+  });
 </script>
 </body>
 </html>

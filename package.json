@@ -15,6 +15,7 @@
     "example:menu": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderMenu.html\" \"npm start\"",
     "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\"",
     "example:kms": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderKMS.html\" \"npm start\"",
+    "example:webcast": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/webcastingAnalytics.html\" \"npm start\"",
     "example:friendly": "concurrently --kill-others \"node scripts/run-friendly.js --path=src/dev/analyticsLoaderFriendly.html\" \"npm run ws\""
   },
   "private": true,
