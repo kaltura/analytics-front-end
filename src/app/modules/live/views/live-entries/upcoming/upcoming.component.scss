@@ -67,7 +67,7 @@
     }
 
     ::ng-deep .ui-table {
-      min-height: calc(100vh - 310px);
+      min-height: calc(100vh - 260px);
     }
 
     k-area-blocker {
@@ -116,12 +116,10 @@
 }
 
 .kEntriesLiveRow {
-  cursor: pointer;
   height: 72px;
 }
 
 .kEntryLink {
-  cursor: pointer;
   font-weight: bold;
   color: $kGrayscale1;
   line-height: 48px;

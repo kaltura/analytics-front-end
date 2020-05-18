@@ -20,6 +20,7 @@ import { DVRStatusPipe } from "./views/live-entries/pipes/dvr-status.pipe";
 import { BroadcastStatusPipe } from "./views/live-entries/pipes/broadcast-status.pipe";
 import {EndedPollsService} from "./views/live-entries/ended/ended-polls.service";
 import {EndedDataConfig} from "./views/live-entries/ended/ended-data.config";
+import {UpcomingComponent} from "./views/live-entries/upcoming/upcoming.component";
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {EndedDataConfig} from "./views/live-entries/ended/ended-data.config";
     LiveEntriesComponent,
     BroadcastingComponent,
     EndedComponent,
+    UpcomingComponent,
     EntryDetailsOverlayComponent,
     EntriesLiveNoDataIconComponent,
     RecordingStatusPipe,

@@ -38,6 +38,7 @@ export interface BroadcastingEntries {
   redundancy?: boolean;
   conversionProfileId?: number;
   previewUrl?: string;
+  partnerId?: string;
 }
 
 @Injectable()
@@ -195,6 +196,7 @@ export class BroadcastingEntriesService implements OnDestroy {
                 broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
                 broadcastingEntry.recording = entry.recordingStatus;
                 broadcastingEntry.conversionProfileId = entry.conversionProfileId;
+                broadcastingEntry.partnerId = entry.partnerId.toString();
               }
             });
             this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: this._forceRefresh});

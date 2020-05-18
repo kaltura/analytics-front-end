@@ -6,16 +6,22 @@
            (click)="_selectTab(_reportTabs.broadcasting)">
            <span>{{'app.entriesLive.broadcasting' | translate}}</span>
         </a>
-        <a class="kReportTabsItem kEnded"
-           [class.kEndedActive]="_currentTab === _reportTabs.ended"
+        <a class="kReportTabsItem kBroadcasting"
+           [class.kBroadcastingActive]="_currentTab === _reportTabs.ended"
            (click)="_selectTab(_reportTabs.ended)">
            <span>{{'app.entriesLive.ended' | translate}}</span>
+        </a>
+        <a class="kReportTabsItem kBroadcasting"
+           [class.kBroadcastingActive]="_currentTab === _reportTabs.upcoming"
+           (click)="_selectTab(_reportTabs.upcoming)">
+           <span>{{'app.entriesLive.upcoming' | translate}}</span>
         </a>
       </div>
     </div>
 
     <app-live-entries-broadcasting *ngIf="_currentTab === _reportTabs.broadcasting"></app-live-entries-broadcasting>
     <app-live-entries-ended *ngIf="_currentTab === _reportTabs.ended"></app-live-entries-ended>
+    <app-live-entries-upcoming *ngIf="_currentTab === _reportTabs.upcoming"></app-live-entries-upcoming>
 
 </div>
 

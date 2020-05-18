@@ -9,7 +9,8 @@
   border-bottom: 1px solid $kGrayscale4;
 
   .kReportTabsItem {
-    width: 160px;
+    margin-left: 24px;
+    margin-right: 24px;
     height: 49px;
     display: flex;
     align-items: center;
@@ -20,28 +21,13 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: bold;
-
-    &:last-child {
-      margin-left: 40px;
-    }
+    white-space: nowrap;
 
     &.kBroadcasting:hover {
       color: #1d4694;
     }
 
-    &.kEnded:hover {
-      color: #1d4694;
-    }
-
     &.kBroadcastingActive {
-      color: #1d4694;
-      border-bottom: 4px solid #1d4694;
-      i, span {
-        margin-top: 4px;
-      }
-    }
-
-    &.kEndedActive {
       color: #1d4694;
       border-bottom: 4px solid #1d4694;
       i, span {

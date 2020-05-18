@@ -19,7 +19,7 @@ export class EndedRequestFactory implements RequestFactory<KalturaMultiRequest, 
       toDate: moment().unix(),
       fromDate: this._getFromTime(),
     }),
-    pager: new KalturaFilterPager({ pageSize: 25, pageIndex: 1 }),
+    pager: new KalturaFilterPager({ pageSize: 10, pageIndex: 1 }),
     order: '-entry_name',
     responseOptions: this._responseOptions
   };

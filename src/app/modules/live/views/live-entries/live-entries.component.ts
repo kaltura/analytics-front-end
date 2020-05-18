@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 export enum LiveReportTabs {
   broadcasting = 'broadcasting',
   ended = 'ended',
+  upcoming = 'upcoming'
 }
 
 @Component({

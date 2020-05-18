@@ -907,6 +907,7 @@
     "entriesLive": {
       "broadcasting": "Broadcasting Now",
       "ended": "Broadcast Ended",
+      "upcoming": "Upcoming Broadcasts",
       "full": "Full Dashboard",
       "owner": "Owner:",
       "dvr": "DVR:",
@@ -948,8 +949,11 @@
       "thumbnail": "Thumbnail",
       "entry_name": "Name",
       "creator_name": "Creator",
+      "startDate": "Start Date",
+      "endDate": "End Date",
       "live": "Live",
       "noBroadcastingEntriesTitle": "No Broadcasting Entries",
+      "noUpcomingEntriesTitle": "No Upcoming Broadcasts",
       "noLiveEntriesTitle": "No Live Entries",
       "noLiveEntriesMessage": "In the last 7 days, there were no live broadcasts",
       "entryDetails": {

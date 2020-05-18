@@ -14,7 +14,7 @@
           <div class="details">
             <div class="header">
               <span>Name: {{entry.name}}</span>
-              <a>{{'app.entriesLive.full' | translate}}</a>
+              <a (click)="_drillDown(entry)">{{'app.entriesLive.full' | translate}}</a>
             </div>
             <div class="entryData">
               <span>{{'app.entriesLive.owner' | translate}} {{entry.owner}}</span>

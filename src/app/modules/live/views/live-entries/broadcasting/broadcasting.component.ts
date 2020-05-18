@@ -2,11 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {BroadcastingEntries, BroadcastingEntriesService} from "./broadcasting-entries.service";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {ErrorsManagerService} from "shared/services";
+import {ErrorsManagerService, NavigationDrillDownService} from "shared/services";
 import {ISubscription} from "rxjs/Subscription";
 import {KalturaFilterPager, KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
 import * as moment from "moment";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {UpcomingBroadcast} from "../upcoming/upcoming.service";
 
 @Component({
   selector: 'app-live-entries-broadcasting',
@@ -29,6 +30,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   private dataChangeSubscription: ISubscription = null;
 
   constructor(private _broadcastingEntriesService: BroadcastingEntriesService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _errorsManager: ErrorsManagerService) {
   }
 
@@ -132,6 +134,10 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
         }
       });
     }, 1000);
+  }
+
+  public _drillDown(entry: BroadcastingEntries): void {
+    this._navigationDrillDownService.drilldown('entry-live', entry.id, false, entry.partnerId);
   }
 
   public paginate(event) {

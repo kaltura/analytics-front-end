@@ -23,7 +23,7 @@ export class EndedComponent implements OnInit, OnDestroy {
   @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
 
   public _tableData: TableRow[] = [];
-  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 25 });
+  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 10 });
   public _totalCount = 0;
   public _columns: string[] = [];
   public _isBusy = false;

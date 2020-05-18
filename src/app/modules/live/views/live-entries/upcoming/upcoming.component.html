@@ -1,0 +1,58 @@
+<div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
+  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length">
+    <div class="kEntriesTableFilters kContent">
+      <span class="kSelectedEntriesNum" *ngIf="_totalCount">
+        {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
+      </span>
+    </div>
+    <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+      <p-table class="kEntriesTable"
+               [value]="_tableData"
+               [sortField]="'entry_name'"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1"
+               [rowTrackBy]="_rowTrackBy">
+        <ng-template pTemplate="header">
+          <tr class="kEntriesLiveHeaderRow">
+            <th [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
+            </th>
+            <th>{{'app.entriesLive.entry_name' | translate}}</th>
+            <th>{{'app.entriesLive.creator_name' | translate}}</th>
+            <th>{{'app.entriesLive.startDate' | translate}}</th>
+            <th>{{'app.entriesLive.endDate' | translate}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr class="kEntriesLiveRow">
+            <td [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
+              <thumb-loader [thumbnailUrl]="data.thumbnailUrl"></thumb-loader>
+            </td>
+            <td>
+              <span>{{data.name}}</span>
+            </td>
+            <td>
+              <span>{{data.creator}}</span>
+            </td>
+            <td>
+              <span>{{data.startDate | date:'MM/d/yy H:mm'}}</span>
+            </td>
+            <td>
+              <span>{{data.endDate | date:'MM/d/yy H:mm'}}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-paginator [rows]="_pager.pageSize"
+                   [first]="(_pager.pageIndex - 1) * _pager.pageSize"
+                   [totalRecords]="_totalCount"
+                   (onPageChange)="_onPaginationChange($event)"></p-paginator>
+    </k-area-blocker>
+  </div>
+  <div *ngIf="!_firstTimeLoading && !_tableData.length" class="kNoData">
+    <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
+    <span class="kNoDataTitle">{{'app.entriesLive.noUpcomingEntriesTitle' | translate}}</span>
+  </div>
+</div>
+
+
