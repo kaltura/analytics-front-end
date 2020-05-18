@@ -949,6 +949,7 @@
       "entry_name": "Name",
       "creator_name": "Creator",
       "live": "Live",
+      "noBroadcastingEntriesTitle": "No Broadcasting Entries",
       "noLiveEntriesTitle": "No Live Entries",
       "noLiveEntriesMessage": "In the last 7 days, there were no live broadcasts",
       "entryDetails": {
