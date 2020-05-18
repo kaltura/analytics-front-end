@@ -4,14 +4,14 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EntriesLiveDataConfig extends ReportDataBaseConfig {
+export class EndedDataConfig extends ReportDataBaseConfig {
   private translate: TranslateService;
-  
+
   constructor(_translate: TranslateService) {
     super(_translate);
     this.translate = _translate;
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {

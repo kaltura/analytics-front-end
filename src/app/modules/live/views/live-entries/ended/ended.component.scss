@@ -1,1 +1,153 @@
 @import '../../../../../../styles/variables';
+
+.kEntries {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+
+  .kEntriesHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 24px;
+
+    .kTitle {
+      font-size: 24px;
+      font-weight: bold;
+      color: $kGrayscale1;
+    }
+
+    .kTimePeriodLabel {
+      background-color: #ffffff;
+      margin: 0;
+      margin-left: auto;
+    }
+  }
+
+  .kEntriesHolder {
+    height: 100%;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+
+    .kEntriesTableFilters {
+      color: $kGrayscale1;
+      z-index: 502;
+      height: 66px;
+      background-color: white;
+      flex: 0 0 auto;
+      align-items: center;
+      margin-left: 0;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      display: flex;
+
+      .kSelectedEntriesNum {
+        margin-left: 16px;
+      }
+
+      .kFilters {
+        display: flex;
+        margin-left: auto;
+
+        .kSearchInput {
+          background: $kMagnifyingGlassBkg;
+          padding-left: 38px;
+          margin-right: 16px;
+          width: 250px;
+        }
+      }
+    }
+
+    ::ng-deep .ui-table {
+      min-height: calc(100vh - 185px);
+    }
+
+    k-area-blocker {
+      display: block !important;
+    }
+  }
+
+  .kEntriesTable {
+    background-color: white;
+    height: auto;
+    padding: 0;
+    width: 100%;
+    border: none;
+    position: relative;
+    flex: 1 1 auto;
+    .emptymessage {
+      display: table-row;
+      border: 0;
+      height: 200px;
+      .kEmptyMessage {
+        position: absolute;
+        width: 100%;
+        height: 200px;
+        border-bottom: 1px solid $kGrayscale4;
+      }
+    }
+  }
+}
+
+.kStatus {
+  display: flex;
+  align-items: center;
+
+  .kCircle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: $kDandger;
+  }
+
+  .kStatusName {
+    margin-left: 8px;
+    color: $kGrayscale1;
+  }
+}
+
+.kEntriesLiveRow {
+  cursor: pointer;
+  height: 72px;
+}
+
+.kEntryLink {
+  cursor: pointer;
+  font-weight: bold;
+  color: $kGrayscale1;
+  line-height: 48px;
+}
+
+.kNoData {
+  width: 100%;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+
+  .kNoDataIcon {
+    margin-bottom: 24px;
+  }
+
+  .kNoDataTitle {
+    color: $kGrayscale1;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .kNoDataMessage {
+    color: $kGrayscale2;
+    font-weight: normal;
+  }
+}

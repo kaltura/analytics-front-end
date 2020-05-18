@@ -938,11 +938,10 @@
       "view_unique_audience": "Active Users",
       "avg_view_engagement": "Engaged Users",
       "avg_view_buffering": "Users Buffering",
-      "avg_view_downstream_bandwidth": "Downstream Bandwidth",
+      "avg_view_downstream_bandwidth": "Avg. Downstream BW",
       "stream_health": "Stream Health",
       "redundancy": "Redundancy",
-
-      "title": "Live Entries",
+      "endTime": "Ending Time",
       "entriesCount": "{{0}} Entries",
       "period": "Last 7 days",
       "searchEntries": "Search Entries",

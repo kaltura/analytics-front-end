@@ -6,12 +6,12 @@ import * as moment from 'moment';
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
-export class EntriesLiveRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
+export class EndedRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
-  
+
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: reportTypeMap(KalturaReportType.contentRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
@@ -23,25 +23,25 @@ export class EntriesLiveRequestFactory implements RequestFactory<KalturaMultiReq
     order: '-entry_name',
     responseOptions: this._responseOptions
   };
-  
+
   private _getFromTime(): number {
     return moment().subtract(6, 'days').unix();
   }
-  
+
   public set pager(pager: KalturaFilterPager) {
     this._getTableActionArgs.pager = pager;
   }
-  
+
   public set order(order: string) {
     this._getTableActionArgs.order = order;
   }
-  
-  
+
+
   public onPollTickSuccess(): void {
     this._getTableActionArgs.reportInputFilter.toDate = moment().unix();
     this._getTableActionArgs.reportInputFilter.fromDate = this._getFromTime();
   }
-  
+
   public create(): KalturaMultiRequest {
     return new KalturaMultiRequest(
       new ReportGetTableAction(this._getTableActionArgs),

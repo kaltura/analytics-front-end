@@ -14,7 +14,7 @@ export enum LiveReportTabs {
 export class LiveEntriesComponent {
 
   public _reportTabs = LiveReportTabs;
-  public _currentTab = LiveReportTabs.broadcasting;
+  public _currentTab = LiveReportTabs.ended;
 
   constructor() {
   }
