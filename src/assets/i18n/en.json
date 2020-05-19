@@ -951,6 +951,7 @@
       "creator_name": "Creator",
       "startDate": "Start Date",
       "endDate": "End Date",
+      "noEndDate": "Not Set",
       "live": "Live",
       "noBroadcastingEntriesTitle": "No Broadcasting Entries",
       "noUpcomingEntriesTitle": "No Upcoming Broadcasts",
