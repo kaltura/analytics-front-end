@@ -1,14 +1,25 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { KalturaAPIException, KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaLiveStreamEntryFilter,
-  KalturaRequestOptions, KalturaResponseProfileType, KalturaUserFilter, LiveStreamListAction, UserListAction } from 'kaltura-ngx-client';
+import {
+  KalturaAPIException,
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaFilterPager,
+  KalturaLiveStreamEntryFilter, KalturaLiveStreamScheduleEvent, KalturaLiveStreamScheduleEventFilter,
+  KalturaRequestOptions,
+  KalturaResponseProfileType, KalturaScheduleEventFilter,
+  KalturaUserFilter,
+  LiveStreamListAction,
+  ScheduleEventListAction,
+  UserListAction
+} from 'kaltura-ngx-client';
 
 export interface UpcomingBroadcast {
   id: string;
-  partnerId: string;
-  thumbnailUrl: string;
-  name: string;
-  creator: string;
+  partnerId?: string;
+  thumbnailUrl?: string;
+  name?: string;
+  creator?: string;
   startDate: number | Date;
   endDate: number | Date;
 }
@@ -32,12 +43,54 @@ export class UpcomingService implements OnDestroy {
   constructor(private _kalturaClient: KalturaClient) {
   }
 
-  public loadEntries(): void {
+  public loadScheduledEvents(): void {
     this._state.next({ isBusy: true });
     this._kalturaClient
       .request(
+        new ScheduleEventListAction({
+          filter: new KalturaLiveStreamScheduleEventFilter({ startDateGreaterThanOrEqual: new Date() }),
+          pager: this._pager
+        }).setRequestOptions(
+          new KalturaRequestOptions({
+            responseProfile: new KalturaDetachedResponseProfile({
+              type: KalturaResponseProfileType.includeFields,
+              fields: 'templateEntryId,startDate,endDate'
+            })
+          })
+        )
+      )
+      .subscribe(result => {
+          this._totalCount = result.totalCount;
+          this._entries = [];
+          let entryIDs = '';
+          result.objects.forEach((event: KalturaLiveStreamScheduleEvent, index) => {
+            this._entries.push({
+              id: event.templateEntryId,
+              startDate: event.startDate ? event.startDate : 0,
+              endDate: event.endDate ? event.endDate : 0
+            });
+            entryIDs += event.templateEntryId;
+            if (index < result.objects.length - 1) {
+              entryIDs += ',';
+            }
+          });
+          if (this._totalCount > 0) {
+            this.loadEntries(entryIDs);
+          } else {
+            this._data.next({table: [], totalCount: 0});
+            this._state.next({ isBusy: false });
+          }
+        },
+        error => {
+          this._state.next({ isBusy: false, error });
+        });
+  }
+
+  private loadEntries(idIn: string): void {
+    this._kalturaClient
+      .request(
         new LiveStreamListAction({
-          filter: new KalturaLiveStreamEntryFilter({ startDateGreaterThanOrEqual: new Date() }),
+          filter: new KalturaLiveStreamEntryFilter({ idIn }),
           pager: this._pager
         }).setRequestOptions(
           new KalturaRequestOptions({
@@ -49,29 +102,21 @@ export class UpcomingService implements OnDestroy {
         )
       )
       .subscribe(result => {
-        this._totalCount = result.totalCount;
-          this._entries = [];
           result.objects.forEach(entry => {
-            this._entries.push({
-              id: entry.id,
-              thumbnailUrl: entry.thumbnailUrl,
-              name: entry.name,
-              creator: entry.creatorId ? entry.creatorId : entry.userId ? entry.userId : '',
-              startDate: entry.startDate ? entry.startDate : 0,
-              endDate: entry.endDate ? entry.endDate : 0,
-              partnerId: entry.partnerId.toString()
+            this._entries.forEach(scheduledEntry => {
+              if (scheduledEntry.id === entry.id) {
+                scheduledEntry.thumbnailUrl = entry.thumbnailUrl;
+                scheduledEntry.name = entry.name;
+                scheduledEntry.creator = entry.creatorId ? entry.creatorId : entry.userId ? entry.userId : '';
+                scheduledEntry.partnerId = entry.partnerId.toString();
+              }
             });
           });
-          if (this._entries.length) {
-            this.loadCreators();
-          } else {
-            this._data.next({table: [], totalCount: 0});
-            this._state.next({ isBusy: false });
-          }
-      },
-      error => {
-        this._state.next({ isBusy: false, error });
-      });
+          this.loadCreators();
+        },
+        error => {
+          this._state.next({ isBusy: false, error });
+        });
   }
 
   private loadCreators(): void {
@@ -126,6 +171,6 @@ export class UpcomingService implements OnDestroy {
 
   public paginationChange(pager: KalturaFilterPager): void {
     this._pager = pager;
-    this.loadEntries();
+    this.loadScheduledEvents();
   }
 }

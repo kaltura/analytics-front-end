@@ -46,14 +46,14 @@ export class UpcomingComponent implements OnInit, OnDestroy {
               this._blockerMessage = null;
             },
             'retry': () => {
-              this._upcomingService.loadEntries();
+              this._upcomingService.loadScheduledEvents();
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
 
-    this._upcomingService.loadEntries();
+    this._upcomingService.loadScheduledEvents();
   }
 
   public _rowTrackBy(index: number, item: UpcomingBroadcast): string {

@@ -322,7 +322,7 @@ export class BroadcastingEntriesService implements OnDestroy {
     const baseUrl = buildCDNUrl('');
     this._broadcastingEntries.forEach(entry => {
       // tslint:disable-next-line:max-line-length
-      entry.previewUrl = `${baseUrl}/p/${pid}/embedPlaykitJs/uiconf_id/${uiconfId}/partner_id/${pid}?iframeembed=true&entry_id=${entry.id}&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}&config[playback]={"autoplay":true,"muted":true}&config[abr]={"capLevelToPlayerSize":true}`;
+      entry.previewUrl = `${baseUrl}/p/${pid}/embedPlaykitJs/uiconf_id/${uiconfId}/partner_id/${pid}?iframeembed=true&entry_id=${entry.id}&ks=${ks}&config[plugins]={"kava":{"disable":true}}&config[playback]={"autoplay":true,"muted":true}&config[abr]={"capLevelToPlayerSize":true}`;
     });
   }
 
