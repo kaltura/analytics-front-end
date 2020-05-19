@@ -20,7 +20,7 @@ export class UpcomingComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _tableData: UpcomingBroadcast[] = [];
   public  _totalCount = 0;
-  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 25 });
+  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 10 });
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _upcomingService: UpcomingService) {

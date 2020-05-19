@@ -38,7 +38,8 @@
               <span>{{data.startDate | date:'MM/d/yy H:mm'}}</span>
             </td>
             <td>
-              <span>{{data.endDate | date:'MM/d/yy H:mm'}}</span>
+              <span *ngIf="data.endDate > 0">{{data.endDate | date:'MM/d/yy H:mm'}}</span>
+              <span *ngIf="data.endDate === 0">{{'app.entriesLive.noEndDate' | translate}}</span>
             </td>
           </tr>
         </ng-template>
