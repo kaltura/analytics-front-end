@@ -12,7 +12,11 @@
   margin-left: 24px;
   margin-bottom: 24px;
 }
-
+.nameLink{
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
 .kIconfile-small {
   overflow: visible !important;
   margin-top: 8px;
