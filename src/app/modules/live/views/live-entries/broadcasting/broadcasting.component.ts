@@ -2,12 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {BroadcastingEntries, BroadcastingEntriesService} from "./broadcasting-entries.service";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {ErrorsManagerService, NavigationDrillDownService} from "shared/services";
+import {AuthService, ErrorsManagerService, NavigationDrillDownService} from "shared/services";
 import {ISubscription} from "rxjs/Subscription";
 import {KalturaFilterPager, KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
 import * as moment from "moment";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {UpcomingBroadcast} from "../upcoming/upcoming.service";
+import {analyticsConfig} from "configuration/analytics-config";
 
 @Component({
   selector: 'app-live-entries-broadcasting',
@@ -24,6 +25,9 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   public _loadingEntries = false;
   public _totalCount = 0;
 
+  public uiconfid: number;
+  public ks: string;
+
   private reportIntervalId = null;
   private timeUpdateIntervalId = null;
   private statusChangeSubscription: ISubscription = null;
@@ -31,7 +35,10 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   constructor(private _broadcastingEntriesService: BroadcastingEntriesService,
               private _navigationDrillDownService: NavigationDrillDownService,
+              private _authService: AuthService,
               private _errorsManager: ErrorsManagerService) {
+    this.ks = this._authService.ks;
+    this.uiconfid = analyticsConfig.kalturaServer.previewUIConfV7;
   }
 
   ngOnInit(): void {
@@ -102,7 +109,6 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
       .subscribe((data: {entries: BroadcastingEntries[], totalCount: number, update: boolean, forceReload: boolean}) => {
         this._totalCount = data.totalCount;
         if (data.forceReload) {
-          this.clearSubscriptions();
           this.startPolling();
         } else if (data.update) { // no need to create new entries - only update existing ones
           data.entries.forEach((entry: BroadcastingEntries) => {
@@ -122,7 +128,6 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
             this.setTimeUpdateInterval();
           }
         }
-
       });
   }
 

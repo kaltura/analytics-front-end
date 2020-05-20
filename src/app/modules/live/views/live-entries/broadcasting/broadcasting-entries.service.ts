@@ -37,7 +37,6 @@ export interface BroadcastingEntries {
   streamHealthClassName?: string;
   redundancy?: boolean;
   conversionProfileId?: number;
-  previewUrl?: string;
   partnerId?: string;
 }
 
@@ -112,7 +111,6 @@ export class BroadcastingEntriesService implements OnDestroy {
             if (refresh) { // no need to reload entries data if entries returned from the report were not changed
               this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
               this.loadAdditionalEntriesData();
-              this.loadPreviews();
             }
 
             this.loadStreamDetails();
@@ -313,17 +311,6 @@ export class BroadcastingEntriesService implements OnDestroy {
         error => {
           console.log("LiveEntries::Error loading entries stream health: " + error.message);
         });
-  }
-
-  private loadPreviews(): void {
-    const pid = this._authService.pid;
-    const uiconfId = analyticsConfig.kalturaServer.previewUIConfV7;
-    const ks = this._authService.ks;
-    const baseUrl = buildCDNUrl('');
-    this._broadcastingEntries.forEach(entry => {
-      // tslint:disable-next-line:max-line-length
-      entry.previewUrl = `${baseUrl}/p/${pid}/embedPlaykitJs/uiconf_id/${uiconfId}/partner_id/${pid}?iframeembed=true&entry_id=${entry.id}&ks=${ks}&config[plugins]={"kava":{"disable":true}}&config[playback]={"autoplay":true,"muted":true}&config[abr]={"capLevelToPlayerSize":true}`;
-    });
   }
 
   private clearAllSubscriptions(): void {

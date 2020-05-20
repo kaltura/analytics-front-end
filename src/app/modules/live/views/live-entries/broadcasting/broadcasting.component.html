@@ -9,7 +9,7 @@
               <span class="status">{{entry.status | broadcastStatus}}</span>
               <span>{{entry.broadcastTime | appStreamDuration}}</span>
             </div>
-            <iframe allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="entry.previewUrl | safe" width="290" height="152"></iframe>
+            <app-k-player-v7 [width]="290" [height]="152" [autoPlay]="true" [muted]="true" [pid]="entry.partnerId" [uiconfid]="uiconfid" [id]="entry.id" [entryid]="entry.id" [ks]="ks"></app-k-player-v7>
           </div>
           <div class="details">
             <div class="header">
