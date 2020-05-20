@@ -7,7 +7,7 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -17,6 +17,9 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
           },
           'view_unique_audience': {
             format: value => value,
+          },
+          'sum_view_time': {
+            format: value => value,
           }
         }
       },
@@ -24,6 +27,9 @@ export class LiveDevicesConfig extends ReportDataBaseConfig {
         preSelected: 'view_unique_audience',
         fields: {
           'view_unique_audience': {
+            format: value => value,
+          },
+          'sum_view_time': {
             format: value => value,
           }
         }
