@@ -15,7 +15,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 import { DateFiltersChangedEvent } from '../live-discovery-chart/filters/filters.component';
 import { DateRange, FiltersService } from '../live-discovery-chart/filters/filters.service';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
-import { EntryLiveUsersMode } from 'configuration/analytics-config';
+import { analyticsConfig, EntryLiveUsersMode } from 'configuration/analytics-config';
 
 export interface LiveDevicesData {
   data: BarChartRow[];
@@ -51,10 +51,11 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
               protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
     this._dataConfig = _dataConfigService.getConfig();
-    this._selectedMetric = this._dataConfig.totals.preSelected;
+    this._selectedMetric = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All ? 'sum_view_time' : 'view_unique_audience';
   }
 
   protected _onRestart(): void {
+    this._selectedMetric = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All ? 'sum_view_time' : 'view_unique_audience';
     this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs.entryId);
     this._applyFilters();
   }
