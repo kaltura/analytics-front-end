@@ -1,18 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  KalturaAPIException,
-  KalturaClient,
-  KalturaDetachedResponseProfile,
-  KalturaFilterPager,
-  KalturaLiveStreamEntryFilter, KalturaLiveStreamScheduleEvent, KalturaLiveStreamScheduleEventFilter,
-  KalturaRequestOptions,
-  KalturaResponseProfileType, KalturaScheduleEventFilter,
-  KalturaUserFilter,
-  LiveStreamListAction,
-  ScheduleEventListAction,
-  UserListAction
-} from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaLiveStreamEntryFilter,
+  KalturaLiveStreamScheduleEvent, KalturaLiveStreamScheduleEventFilter, KalturaRequestOptions, KalturaResponseProfileType,
+  KalturaUserFilter, LiveStreamListAction, ScheduleEventListAction, UserListAction } from 'kaltura-ngx-client';
 
 export interface UpcomingBroadcast {
   id: string;
@@ -36,6 +26,7 @@ export class UpcomingService implements OnDestroy {
   private _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   private _entries: UpcomingBroadcast[] = [];
   private _totalCount = 0;
+  private _orderBy = '+startDate';
 
   public readonly data$ = this._data.asObservable();
   public readonly state$ = this._state.asObservable();
@@ -48,7 +39,7 @@ export class UpcomingService implements OnDestroy {
     this._kalturaClient
       .request(
         new ScheduleEventListAction({
-          filter: new KalturaLiveStreamScheduleEventFilter({ startDateGreaterThanOrEqual: new Date() }),
+          filter: new KalturaLiveStreamScheduleEventFilter({ startDateGreaterThanOrEqual: new Date(), orderBy: this._orderBy}),
           pager: this._pager
         }).setRequestOptions(
           new KalturaRequestOptions({
@@ -173,4 +164,12 @@ export class UpcomingService implements OnDestroy {
     this._pager = pager;
     this.loadScheduledEvents();
   }
+
+  public sortOrderChange(order: string): void {
+    if (order !== this._orderBy) {
+      this._orderBy = order;
+      this.loadScheduledEvents();
+    }
+  }
+
 }

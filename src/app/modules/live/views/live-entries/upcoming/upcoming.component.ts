@@ -4,6 +4,7 @@ import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { ErrorsManagerService } from "shared/services";
 import { KalturaFilterPager } from "kaltura-ngx-client";
+import {SortEvent} from "primeng/api";
 
 @Component({
   selector: 'app-live-entries-upcoming',
@@ -67,6 +68,13 @@ export class UpcomingComponent implements OnInit, OnDestroy {
       this._upcomingService.paginationChange(this._pager);
     }
   }
+  public _onSortChanged(event: SortEvent): void {
+    if (event.data.length && event.field && event.order) {
+      const order = event.order === 1 ? '+' + event.field : '-' + event.field;
+      this._upcomingService.sortOrderChange(order);
+    }
+  }
+
 
   ngOnDestroy(): void {
   }

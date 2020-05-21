@@ -8,19 +8,24 @@
     <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
       <p-table class="kEntriesTable"
                [value]="_tableData"
-               [sortField]="'entry_name'"
+               [sortField]="'startDate'"
                [customSort]="true"
-               [defaultSortOrder]="-1"
-               [sortOrder]="-1"
-               [rowTrackBy]="_rowTrackBy">
+               [defaultSortOrder]="+1"
+               [sortOrder]="+1"
+               [rowTrackBy]="_rowTrackBy"
+               (sortFunction)="_onSortChanged($event)">
         <ng-template pTemplate="header">
           <tr class="kEntriesLiveHeaderRow">
             <th [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
             </th>
             <th>{{'app.entriesLive.entry_name' | translate}}</th>
             <th>{{'app.entriesLive.creator_name' | translate}}</th>
-            <th>{{'app.entriesLive.startDate' | translate}}</th>
-            <th>{{'app.entriesLive.endDate' | translate}}</th>
+            <th [pSortableColumn]="'startDate'">{{'app.entriesLive.startDate' | translate}}
+              <p-sortIcon [field]="'startDate'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'endDate'">{{'app.entriesLive.endDate' | translate}}
+              <p-sortIcon [field]="'endDate'"></p-sortIcon>
+            </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
