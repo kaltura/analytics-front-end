@@ -21,6 +21,7 @@ export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   recording: boolean;
   transcoding: boolean;
   redundancy: boolean;
+  isManual: boolean;
   serverType: KalturaEntryServerNodeType;
   streamStatus: KalturaStreamStatus;
   owner: string;
@@ -35,12 +36,12 @@ export class EntryLiveService {
         new KalturaRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,dvrStatus,recordStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode'
+            fields: 'id,name,sourceType,dvrStatus,recordStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode'
           })
         })
       );
   }
-  
+
   private _getConversionProfileAssetParamsListAction(): ConversionProfileAssetParamsListAction {
     return new ConversionProfileAssetParamsListAction({
       filter: new KalturaConversionProfileAssetParamsFilter({ conversionProfileIdEqual: 0 })
@@ -51,18 +52,18 @@ export class EntryLiveService {
       })
     );
   }
-  
+
   private _getEntryServerNodeListAction(entryIdEqual: string): EntryServerNodeListAction {
     return new EntryServerNodeListAction({ filter: new KalturaLiveEntryServerNodeFilter({ entryIdEqual }) });
   }
-  
+
   public getRedundancyStatus(serverNodeList: KalturaEntryServerNode[]): boolean {
     if (serverNodeList.length > 1) {
       return serverNodeList.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
     }
     return false;
   }
-  
+
   // Possible scenarios for streamStatus:
   // (1) If only primary -> StreamStatus equals primary status
   // (2) If only secondary -> StreamStatus equals secondary status
@@ -73,7 +74,7 @@ export class EntryLiveService {
       status: getStreamStatus(KalturaEntryServerNodeStatus.stopped),
       serverType: null,
     };
-    
+
     if (liveEntry.redundancy) {
       if (!liveEntry.serverType || (KalturaEntryServerNodeType.livePrimary === liveEntry.serverType)) {
         result = {
@@ -97,7 +98,7 @@ export class EntryLiveService {
         }
       }
     }
-    
+
     liveEntry.streamStatus = result.status;
     liveEntry.serverType = result.serverType;
   }
@@ -114,7 +115,7 @@ export class EntryLiveService {
         })
       );
   }
-  
+
   public getEntryDateRequest(entryId): KalturaMultiRequest {
     return new KalturaMultiRequest(
       this._getLiveStreamAction(entryId),
