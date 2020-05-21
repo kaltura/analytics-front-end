@@ -24,6 +24,8 @@
       font-size: 16px;
       font-style: normal;
       cursor: default;
+      text-decoration: none;
+      color: $kGrayscale3;
     }
     .link:before {
       content: "\e927";
