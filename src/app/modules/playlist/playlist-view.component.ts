@@ -10,7 +10,8 @@ import {
   KalturaResponseProfileType,
   KalturaUser,
   PlaylistGetAction,
-  UserGetAction
+  UserGetAction,
+  KalturaPlaylistType
 } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -44,7 +45,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
               private _navigationDrillDownService: NavigationDrillDownService,
               private _authService: AuthService) {
   }
-  
+
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
     this._route.params
@@ -56,14 +57,14 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   private _loadPlaylistDetails(): void {
     this._loadingPlaylist = true;
     this._blockerMessage = null;
-    
+
     const request = new KalturaMultiRequest(
       new PlaylistGetAction({ id: this._playlistId })
         .setRequestOptions({
@@ -83,7 +84,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
           })
         )
     );
-    
+
     this._kalturaClient
       .multiRequest(request)
       .pipe(
@@ -96,7 +97,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
               throw err;
             }
           }
-          
+
           return [
             responses[0].result,
             responses[1].result,
@@ -106,7 +107,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ([playlist, user]) => {
           this._playlist = playlist;
-          this._interactiveVideo = playlist.adminTags ? playlist.adminTags.split(',').indexOf('raptentry') > -1 : false;
+          this._interactiveVideo = (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') > -1) || playlist.playlistType === KalturaPlaylistType.path ? true : false;
           this._owner = user && user.fullName ? user.fullName : playlist.userId; // fallback for deleted users
           this._loadingPlaylist = false;
         },
@@ -123,9 +124,9 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
-  
+
 }

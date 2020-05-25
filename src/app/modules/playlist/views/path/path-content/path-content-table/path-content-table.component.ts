@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { Subject } from 'rxjs';
 import { SortEvent } from "primeng/api";
-import { Node } from '../path-content.component';
+import { Node } from '../path-content.service';
 
 @Component({
   selector: 'app-path-content-table',
@@ -15,26 +15,26 @@ export class PathContentTableComponent implements OnDestroy {
     this._tableData = value;
     this._totalCount = value.length;
   }
-  
+
   @Input() showDivider = false;
   @Input() dates: string;
   @Input() isCompareMode: boolean;
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
-  
+
   @Output() drillDown: EventEmitter<Node> = new EventEmitter();
-  
+
   private _paginationChanged = new Subject<void>();
-  
+
   public _totalCount = 0;
   public _tableData: TableRow<string>[] = [];
-  
+
   constructor() { }
-  
+
   ngOnDestroy(): void {
     this._paginationChanged.complete();
   }
-  
+
   public customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
       const numericFields = ['level', 'count_node_plays', 'unique_known_users', 'avg_completion_rate'];
@@ -53,7 +53,7 @@ export class PathContentTableComponent implements OnDestroy {
       return (event.order * result);
     });
   }
-  
+
   public _drillDown(data: Node): void {
     this.drillDown.emit(data);
   }
