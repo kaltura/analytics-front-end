@@ -72,7 +72,7 @@ export class EndedService implements OnDestroy {
         row['type'] = relevantEntry.mediaType;
         row['created_at'] = ReportHelper.format('serverDate', String(+relevantEntry.createdAt));
         row['stream_started'] = relevantEntry.currentBroadcastStartTime;
-        row['stream_ended'] = DateFilterUtils.getMomentDate(relevantEntry.lastBroadcastEndTime);
+        row['stream_ended'] = relevantEntry.lastBroadcastEndTime ? DateFilterUtils.getMomentDate(relevantEntry.lastBroadcastEndTime) : 0;
         row['creator'] = relevantEntry.creatorId ? relevantEntry.creatorId : relevantEntry.userId ? relevantEntry.userId : '';
       }
     });

@@ -57,7 +57,7 @@
                     (mouseleave)="_hideOverlay()"
                     (mouseenter)="_showOverlay($event, data['entry_id'])">{{data[col]}}</span>
             </td>
-            <td [ngStyle]="{'width': '15%'}">{{data['stream_ended'] | date:'MM/d/yy H:mm'}}</td>
+            <td [ngStyle]="{'width': '15%'}">{{data['stream_ended'] ? (data['stream_ended'] | date:'MM/d/yy H:mm') : ('app.common.na' | translate)}}</td>
             <!--td [ngStyle]="{'width': '100px'}">
               <span class="kStatus" *ngIf="_displayLiveStatus && data['liveStatus']">
                 <span class="kCircle"></span>
