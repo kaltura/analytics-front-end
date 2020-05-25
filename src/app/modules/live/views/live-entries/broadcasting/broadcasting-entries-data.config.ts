@@ -24,12 +24,17 @@ export class BroadcastingEntriesDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'creator_name': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
+          },
           'partner_id': {
             format: value => value,
             nonComparable: true,
             hidden: true,
           },
-          'view_unique_audience': {
+          'views': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },

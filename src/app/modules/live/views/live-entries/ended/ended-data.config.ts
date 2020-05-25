@@ -29,7 +29,7 @@ export class EndedDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
-          'view_unique_audience': {
+          'viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },

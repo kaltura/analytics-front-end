@@ -84,11 +84,11 @@ export class BroadcastingEntriesService implements OnDestroy {
     }
     // load report
     const tableActionArgs: ReportGetTableActionArgs = {
-      reportType: reportTypeMap(KalturaReportType.contentRealtime),
+      reportType: reportTypeMap(KalturaReportType.topEntriesLiveNow),
       reportInputFilter: new KalturaEndUserReportInputFilter({
         timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
-        toDate: moment().unix(),
-        fromDate: moment().subtract(6, 'days').unix()
+        toDate: moment().subtract(30, 'seconds').unix(),
+        fromDate: moment().subtract(40, 'seconds').unix()
       }),
       pager: new KalturaFilterPager({ pageSize: 5, pageIndex: this._pageIndex }),
       order: '-entry_name',
@@ -134,7 +134,8 @@ export class BroadcastingEntriesService implements OnDestroy {
       entries.forEach((entry, index) => {
         this._broadcastingEntries.push({
           id: entry.entry_id,
-          activeUsers: entry.view_unique_audience,
+          activeUsers: entry.views,
+          owner: entry.creator_name,
           engagedUsers: entry.avg_view_engagement,
           buffering: entry.avg_view_buffering,
           downstream: entry.avg_view_downstream_bandwidth
@@ -189,7 +190,6 @@ export class BroadcastingEntriesService implements OnDestroy {
             this._broadcastingEntries.forEach((broadcastingEntry: BroadcastingEntries) => {
               if (broadcastingEntry.id === entry.id) {
                 broadcastingEntry.name = entry.name;
-                broadcastingEntry.owner = entry.userId;
                 broadcastingEntry.dvr = entry.dvrStatus;
                 broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
                 broadcastingEntry.recording = entry.recordingStatus;

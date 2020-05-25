@@ -13,7 +13,7 @@ export class EndedRequestFactory implements RequestFactory<KalturaMultiRequest, 
   });
 
   private _getTableActionArgs: ReportGetTableActionArgs = {
-    reportType: reportTypeMap(KalturaReportType.contentRealtime),
+    reportType: reportTypeMap(KalturaReportType.topEntriesEndedBroadcast),
     reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: moment().unix(),

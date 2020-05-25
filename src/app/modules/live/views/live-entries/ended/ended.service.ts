@@ -76,7 +76,6 @@ export class EndedService implements OnDestroy {
         row['creator'] = relevantEntry.creatorId ? relevantEntry.creatorId : relevantEntry.userId ? relevantEntry.userId : '';
       }
     });
-    data.columns.unshift('entry_name');
 
     return data;
   }

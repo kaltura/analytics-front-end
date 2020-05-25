@@ -936,7 +936,8 @@
         "secondary_poor": "Poor Secondary Stream",
         "secondary_fair": "Fair Secondary Stream"
       },
-      "view_unique_audience": "Active Users",
+      "viewers": "Active Users",
+      "views": "Active Users",
       "avg_view_engagement": "Engaged Users",
       "avg_view_buffering": "Users Buffering",
       "avg_view_downstream_bandwidth": "Avg. Downstream BW",
