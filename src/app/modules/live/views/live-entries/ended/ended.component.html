@@ -4,7 +4,7 @@
       {{'app.entriesLive.period' | translate}}
     </span>
   </div>
-  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length">
+  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length || _blockerMessage">
     <div class="kEntriesTableFilters kContent">
       <span class="kSelectedEntriesNum" *ngIf="_totalCount">
         {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
@@ -73,7 +73,7 @@
                    (onPageChange)="_onPaginationChange($event)"></p-paginator>
     </k-area-blocker>
   </div>
-  <div *ngIf="!_firstTimeLoading && !_tableData.length" class="kNoData">
+  <div *ngIf="!_isBusy && !_tableData.length" class="kNoData">
     <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
     <span class="kNoDataTitle">{{'app.entriesLive.noLiveEntriesTitle' | translate}}</span>
     <span class="kNoDataMessage">{{'app.entriesLive.noLiveEntriesMessage' | translate}}</span>
