@@ -107,6 +107,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _renderer: Renderer2) {
     this.localeData = DateFilterUtils.getLocalData(analyticsConfig.locale);
+    let momentLocale = analyticsConfig.locale;
+    momentLocale = momentLocale === "zh_hans" ? "zh-cn" : momentLocale === "zh_hant" ? "zh-tw" : momentLocale; // fix for Chinese locales
+    moment.locale(momentLocale);
   }
 
   ngOnInit() {
