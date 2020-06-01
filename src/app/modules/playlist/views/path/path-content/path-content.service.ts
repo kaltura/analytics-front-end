@@ -177,7 +177,6 @@ export class PathContentService implements  OnDestroy {
           return self.indexOf(item) === pos;
         });
       }
-      debugger;
       return nodes; // return the found nodes with levels
     } else {
       return [];    // if no nodes were found - return an empty array
