@@ -1,13 +1,17 @@
 @import '../../../../../styles/variables';
-
+:host {
+  width: 100%;
+  height: 100%;
+}
 k-area-blocker {
   display: block;
 }
 app-bullet {
   padding-right: 24px;
 }
-.kReport {
-  margin-bottom: 0px !important;
+.kReport.kContent.kOverrideFAIcons.kSubCategoriesReport {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 .kIconfolder_large{
   font-size: 18px;
