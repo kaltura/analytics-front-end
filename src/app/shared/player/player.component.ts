@@ -32,6 +32,9 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	lazy = false;
 
 	@Input()
+	disableAnalytics = true;
+
+	@Input()
 	id = "";
 
 	@Output()
@@ -47,7 +50,7 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	public Embed(): void{
+	public Embed(): void {
 		// validation
 		if (!this.pid || !this.uiconfid || !this.entryid) {
 			console.warn("Kaltura Player::Missing parameters. Please provide pid, uiconfid and entryid.");
@@ -75,6 +78,11 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	}
 
 	private doEmbed(): void {
+	  if (this.disableAnalytics) {
+      this.flashvars['kAnalony'] = {"plugin": false};
+      this.flashvars['liveAnalytics'] = {"plugin": false};
+      this.flashvars['statistics'] = {"plugin": false};
+    }
 		window['kWidget'].embed({
 			"targetId": "kaltura_player_" + this.id,
 			"wid": "_" + this.pid,

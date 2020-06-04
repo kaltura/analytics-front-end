@@ -15,7 +15,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { SortEvent } from 'primeng/api';
 import { QueryBase } from "shared/components/query-base/query-base";
-import { HotSpot } from "../path-content.component";
+import { HotSpot } from "../path-content.service";
 
 @Component({
   selector: 'app-node-hotspots',

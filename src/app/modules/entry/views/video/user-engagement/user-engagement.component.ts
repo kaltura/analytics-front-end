@@ -34,7 +34,7 @@ import { SortEvent } from 'primeng/api';
 export class VideoEntryUserEngagementComponent extends EntryBase {
   @Input() entryId = '';
   @Input() duration = 0;
-  
+
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -44,15 +44,15 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       };
     }
   }
-  
+
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _ignoreFirstSortEvent = true;
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'user-engagement';
-  
+
   public _viewConfig: ViewConfig = {
     userFilter: {},
   };
@@ -74,11 +74,11 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
@@ -88,26 +88,26 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
               private _dataConfigService: UserEngagementConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
-    
+
     if (this.entryId) {
       reportConfig.objectIds = this.entryId;
     }
-    
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         if (this.entryId) {
           compareReportConfig.objectIds = this.entryId;
@@ -142,7 +142,7 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._heatMapStore.clearCache();
     this._refineFilterToServerValue(this._filter);
@@ -150,7 +150,7 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._heatMapStore.clearCache();
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
@@ -168,14 +168,14 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       this._compareFilter = null;
     }
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
@@ -195,7 +195,7 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       this._tableData = tableData;
     }
   }
-  
+
   public _toggleTable(): void {
     if (this._isBusy) {
       return;
@@ -211,14 +211,14 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
     }, 0);
   }
-  
+
   public _onPaginationChanged(event: any): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
       this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
     }
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (event.field && event.order && !this._isCompareMode && !this._ignoreFirstSortEvent) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
@@ -229,33 +229,33 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     }
     this._ignoreFirstSortEvent = false;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     const userIds = event.length
       ? event
         .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
         .join(analyticsConfig.valueSeparator)
       : null;
-    
+
     if (userIds) {
       this._filter.userIds = userIds;
-  
+
       if (this._compareFilter) {
         this._compareFilter.userIds = userIds;
       }
     } else {
       delete this._filter.userIds;
-      
+
       if (this._compareFilter) {
         delete this._compareFilter.userIds;
       }
     }
-  
+
     this._loadReport();
   }
-  
+
   public _drillDown(row: TableRow): void {
-    if (!row['name'] || row['name'] === 'Unknown') {
+    if (!row['name'] || row['name'] === 'Unknown' || row['name'] === 'Error') {
       return; // ignore unknown user drill-down
     }
     this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
