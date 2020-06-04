@@ -7,7 +7,7 @@
     <div *ngIf="!_isCompareMode" class="kReportContent">
       <div class="kReportRow">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
+          <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>
@@ -31,7 +31,7 @@
 
       <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
         <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _compareTopSourceLabel + '/favicon.ico'"
+          <img [src]="'//' + _compareTopSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>
@@ -51,7 +51,7 @@
 
       <div class="kReportRow kDomain">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'http://' + _topSourceLabel + '/favicon.ico'"
+          <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
                onError="this.onerror=null;this.style.display='none'"
                (error)="holder.classList.add('kIconfile-small')">
         </div>

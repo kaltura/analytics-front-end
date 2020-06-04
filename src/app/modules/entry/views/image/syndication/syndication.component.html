@@ -75,7 +75,7 @@
                 <td><span>{{data['index']}}</span></td>
                 <td [ngStyle]="{'padding': '0'}">
                   <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
-                    <img [src]="'http://' + data['domain_name'] + '/favicon.ico'"
+                    <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
                          onError="this.onerror=null;this.style.display='none'"
                          (error)="holder.classList.add('kIconfile-small')">
                   </div>
