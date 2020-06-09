@@ -105,15 +105,19 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
         },
         error => {
           this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          if (error.code === "NO_INTERACTIVITY_DATA") {
+            this._firstTimeLoading = false;
+          } else {
+            const actions = {
+              'close': () => {
+                this._blockerMessage = null;
+              },
+              'retry': () => {
+                this._loadReport();
+              },
+            };
+            this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          }
         });
   }
 
