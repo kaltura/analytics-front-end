@@ -38,6 +38,13 @@
     font-size: 15px;
     font-weight: bold;
     color: $kGrayscale1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+  }
+  .kCursor {
+    cursor: pointer;
   }
 }
 

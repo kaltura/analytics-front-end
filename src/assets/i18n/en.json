@@ -858,6 +858,8 @@
       "vidCount": "{{0}} Videos",
       "hotspotsCount": "{{0}} Interactions",
       "pause": "Pause Video",
+      "noName": "No name",
+      "noName_tt": "Interaction ID: {{0}}",
       "exportLabels": {
         "highlights": "Highlights",
         "videoPerformance": "Video Performance",

@@ -212,7 +212,7 @@ export class PathContentService implements  OnDestroy {
             if (hotspot.nodeId === node.id) {
               let newHotspot: HotSpot = {
                 id: hotspot.id,
-                name: hotspot.name,
+                name: hotspot.name ? hotspot.name : '',
                 type: 'none'
               };
               // add hotspot properties from metadata json
