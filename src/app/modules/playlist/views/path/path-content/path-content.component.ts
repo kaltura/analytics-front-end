@@ -194,7 +194,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
-      }, 0);
+      }, 200);
     }
   }
 

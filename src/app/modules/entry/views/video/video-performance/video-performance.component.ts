@@ -135,7 +135,7 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
   private _updateTableData(): void {
     const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
     const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
-  
+
     if (tableData === null) {
       if (this._tableMode === TableModes.dates && !this._isCompareMode && this._rawGraphData.length) {
         this._handleDatesTable(this._rawGraphData);
@@ -457,7 +457,7 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
-      }, 0);
+      }, 200);
     }
   }
 
