@@ -38,6 +38,7 @@ export class HotspotHeatMapStoreService {
   }
 
   public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
+    // TODO: determine service by heatmap type
     if (!this._cache[`${userId}_${entryId}`]) {
       const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
       userFilter.userIds = userId;
