@@ -7,7 +7,7 @@
            {{'app.playlist.hotspotsCount' | translate: {'0': _totalCount} }}
         </span>
         <p-table dataKey="name"
-                 aria-label="Hotspots Per Node Table"
+                 aria-label="Interactivity Per Node Table"
                  [sortField]="'count_hotspot_clicked'"
                  [value]="_tableData"
                  [customSort]="true"
@@ -18,6 +18,7 @@
                  (sortFunction)="_onSortChanged($event)">
           <ng-template pTemplate="header">
             <tr>
+              <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
               <th [ngStyle]="{'width': '45px'}"></th>
               <th>{{'app.playlist.name' | translate}}</th>
               <th>{{'app.playlist.destination' | translate}}</th>
@@ -27,8 +28,14 @@
               </th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-data>
+          <ng-template pTemplate="body" let-data let-expanded="expanded">
             <tr>
+              <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
+                <a tabindex="0" href="#" [pRowToggler]="data" role="button" aria-label="Expand Row">
+                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
+                     style="font-size: 1.25em"></i>
+                </a>
+              </td>
               <td [ngStyle]="{'width': '45px'}">
                 <i class="kIconppv"></i>
               </td>
@@ -59,6 +66,20 @@
               <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
               <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
             </div>
+          </ng-template>
+          <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
+            <tr *ngIf="!_isCompareMode">
+              <td [attr.colspan]="_columns.length + 3" class="kRowExpansion">
+                <div style="width: 100%;height: 40px; background-color: #1d4694">
+                  <span style="color: white">{{data.type}}</span>
+                </div>
+                <!--app-heat-map [attr.data-aid]="'heat-map-' + index"
+                              [userId]="data['name']"
+                              [entryId]="entryId"
+                              [duration]="duration"
+                              [filter]="_filter"></app-heat-map-->
+              </td>
+            </tr>
           </ng-template>
         </p-table>
       </div>

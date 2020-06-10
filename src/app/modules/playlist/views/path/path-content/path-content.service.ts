@@ -38,7 +38,7 @@ export interface HotSpot {
   behavior?: string;
   hyperlinkUrl?: string;
   hotspot_clicked?: number;
-  type?: 'link' | 'hyperlink' | 'pause' | 'none';
+  type?: 'nodeSwitch' | 'hyperlink' | 'pause' | 'none';
 }
 
 @Injectable()
@@ -124,7 +124,7 @@ export class PathContentService implements  OnDestroy {
               };
               switch (interaction.data.behavior.type) {
                 case "GoToNode":
-                  newHotspot.type = 'link';
+                  newHotspot.type = 'nodeSwitch';
                   data.nodes.forEach(node => {
                     if (node.id === interaction.data.behavior.nodeId) {
                       newHotspot.destination = node.name;
@@ -220,7 +220,7 @@ export class PathContentService implements  OnDestroy {
                 metadata.hotspots.forEach(metadataHotspot => {
                   if (metadataHotspot.id === hotspot.id) {
                     if (metadataHotspot.behavior === "instant_jump" && metadataHotspot.destinationId) {
-                      newHotspot.type = 'link';
+                      newHotspot.type = 'nodeSwitch';
                       // use the destinationId to find the destination node and set its name to the destination property
                       data.nodes.forEach(node => {
                         if (node.id === metadataHotspot.destinationId) {
