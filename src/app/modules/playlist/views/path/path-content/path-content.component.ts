@@ -54,6 +54,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   public _compareDates: string;
   public _reportType = reportTypeMap(KalturaReportType.interactiveVideoTopNodes);
   public drillDown: Node = null;
+  public _duration = 0;
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -204,6 +205,10 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
 
   public _drillUp(): void {
     this.drillDown = null;
+  }
+
+  public onUpdateDuration(duration: number): void {
+    this._duration = duration;
   }
 
   ngOnDestroy() {

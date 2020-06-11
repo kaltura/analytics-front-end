@@ -7,7 +7,7 @@ import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
 
 export interface HeatMapItem {
   color: string;
-  plays: number;
+  clicks: number;
   count: number;
   width: string;
   tooltip: string;
@@ -16,16 +16,15 @@ export interface HeatMapItem {
 @Component({
   selector: 'app-hotspot-heat-map',
   templateUrl: './hotspot-heat-map.component.html',
-  styleUrls: ['./hotspot-heat-map.component.scss'],
-  providers: [HotspotHeatMapStoreService]
+  styleUrls: ['./hotspot-heat-map.component.scss']
 })
 export class HotspotHeatMapComponent implements OnInit, OnDestroy {
   @Input() hotspotType: string;
-  @Input() entryId: string;
+  @Input() hotspotId: string;
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
 
-  private _heatMapColorScheme = ['#dfe9ff', '#487adf', '#2655b0', '#1d4694'];
+  private _heatMapColorScheme = ['#ffffff', '#b5cdfc', '#487adf', '#3567ca', '#1d4694'];
 
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
@@ -56,7 +55,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
         this._zone.runOutsideAngular(() => { // run outside of angular to prevent unwanted change detections
           const progressPercent = Math.round((mouseX + threshold) / el.offsetWidth * 100) / 100;
           const progressValue = ReportHelper.time(String(progressPercent * this.duration));
-          durationTooltipElement.innerHTML = this._translate.instant('app.entry.heatMap.duration', [progressValue]);
+          durationTooltipElement.innerHTML = this._translate.instant('app.playlist.heatMap.duration', [progressValue]);
         });
       }
     }, 0);
@@ -78,7 +77,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.hotspotType && this.filter && this.entryId) {
+    if (this.hotspotType && this.filter && this.hotspotId) {
       this._prepare();
     }
   }
@@ -90,7 +89,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
   private _prepare(): void {
     this._isBusy = true;
 
-    this._heatMapStore.getHeatMap(this.hotspotType, this.entryId, this.filter)
+    this._heatMapStore.getHeatMap(this.hotspotType, this.hotspotId, this.filter)
       .pipe(cancelOnDestroy(this))
       .subscribe(
         points => {
@@ -108,7 +107,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
         if (acc.length === 0 || acc[acc.length - 1].plays !== value) {
           acc.push({
             color: this._getColor(value),
-            plays: value,
+            clicks: value,
             count: 1,
           });
         } else {
@@ -120,15 +119,15 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
       .map((item, index, array) => {
         item.width = `${item.count / array.length * 100}%`;
 
-        const message = this._translate.instant(`app.entry.heatMap.tooltip.${item.plays > 2 ? 'n' : item.plays}`);
-        item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}"></i><span class="kMessage">${message}</span></div></div>`;
+        const message = this._translate.instant(`app.playlist.heatMap.tooltip.${item.clicks > 3 ? 'n' : item.clicks}`);
+        item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}; border: ${item.clicks === 0 ? '1px solid #88acf6' : 'none'}"></i><span class="kMessage">${message}</span></div></div>`;
         return item;
       });
   }
 
   private _getColor(countPlays: number): string {
-    if (countPlays > 2) {
-      return this._heatMapColorScheme[3];
+    if (countPlays > 3) {
+      return this._heatMapColorScheme[4];
     }
 
     return this._heatMapColorScheme[countPlays];

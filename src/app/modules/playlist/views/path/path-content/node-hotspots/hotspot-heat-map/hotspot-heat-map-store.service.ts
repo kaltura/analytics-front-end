@@ -21,7 +21,10 @@ export class HotspotHeatMapStoreService {
         'percentile': {
           format: value => value,
         },
-        'count_viewers': {
+        'count_node_switch': {
+          format: value => value,
+        },
+        'count_hotspot_clicked': {
           format: value => value,
         },
       }
@@ -37,19 +40,17 @@ export class HotspotHeatMapStoreService {
     this._cache = {};
   }
 
-  public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
-    // TODO: determine service by heatmap type
-    if (!this._cache[`${userId}_${entryId}`]) {
-      const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
-      userFilter.userIds = userId;
+  public getHeatMap(hotspotType: string, hotspotId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
+    if (!this._cache[`${hotspotId}`]) {
+      const hotspotFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
+      hotspotFilter.hotspotIdIn = hotspotId;
       const reportConfig: ReportConfig = {
-        filter: userFilter,
-        reportType: reportTypeMap(KalturaReportType.percentiles),
+        filter: hotspotFilter,
+        reportType: hotspotType === 'nodeSwitch' ? reportTypeMap(KalturaReportType.interactiveVideoNodeSwitchHotspotClickedPercentiles) : reportTypeMap(KalturaReportType.interactiveVideoHotspotClickedPercentiles),
         pager: this._pager,
-        objectIds: entryId,
         order: null,
       };
-      this._cache[`${userId}_${entryId}`] = this._reportService.getReport(reportConfig, this._localConfig, false)
+      this._cache[`${hotspotId}`] = this._reportService.getReport(reportConfig, this._localConfig, false)
         .pipe(
           map(report => {
             if (!report.table || !report.table.data || !report.table.header) {
@@ -58,20 +59,20 @@ export class HotspotHeatMapStoreService {
 
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
 
-            // if we get 101 data points, remove the first data point as it always contains 0
+            // if we get 101 data points, remove the last data point
             if (report.table.totalCount === 101 && tableData.length) {
-              tableData.shift();
+              tableData.pop();
             }
 
+            const field = hotspotType === 'nodeSwitch' ?  'count_node_switch' : 'count_hotspot_clicked';
             return tableData
               .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-              .map(item => Number(item['count_viewers']));
+              .map(item => Number(item[field]));
           }),
           publishReplay(1),
           refCount()
         );
     }
-
-    return this._cache[`${userId}_${entryId}`];
+    return this._cache[`${hotspotId}`];
   }
 }

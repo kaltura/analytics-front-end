@@ -864,6 +864,16 @@
         "highlights": "Highlights",
         "videoPerformance": "Video Performance",
         "videos": "Videos Overview"
+      },
+      "heatMap": {
+        "duration": "Duration {{0}}",
+        "tooltip": {
+          "0": "Not clicked",
+          "1": "Clicked once",
+          "2": "Clicked twice",
+          "3": "Clicked 3 times",
+          "n": "Clicked more than 3 times"
+        }
       }
     },
     "context": {

@@ -22,6 +22,7 @@ import { PathContentComponent } from './views/path/path-content/path-content.com
 import { PathContentTableComponent } from './views/path/path-content/path-content-table/path-content-table.component';
 import { NodePreviewComponent } from './views/path/path-content/node-preview/node-preview.component';
 import { NodeHotspotsComponent } from "./views/path/path-content/node-hotspots/node-hotspots.component";
+import { HotspotHeatMapComponent } from "./views/path/path-content/node-hotspots/hotspot-heat-map/hotspot-heat-map.component";
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { NodeHotspotsComponent } from "./views/path/path-content/node-hotspots/n
     PathContentComponent,
     PathContentTableComponent,
     NodePreviewComponent,
-    NodeHotspotsComponent
+    NodeHotspotsComponent,
+    HotspotHeatMapComponent
   ],
   exports: [],
   providers: []

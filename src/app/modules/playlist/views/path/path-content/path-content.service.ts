@@ -38,6 +38,8 @@ export interface HotSpot {
   behavior?: string;
   hyperlinkUrl?: string;
   hotspot_clicked?: number;
+  startTime?: number;
+  endTime?: number;
   type?: 'nodeSwitch' | 'hyperlink' | 'pause' | 'none';
 }
 
@@ -119,6 +121,8 @@ export class PathContentService implements  OnDestroy {
             if (interaction.data && interaction.data.behavior && supportedInteractionTypes.indexOf(interaction.data.behavior.type) !== -1 ) {
               let newHotspot: HotSpot = {
                 id: interaction.id,
+                startTime: interaction.startTime,
+                endTime: interaction.endTime,
                 name: interaction.data.text ? interaction.data.text.label : '',
                 type: 'none'
               };
@@ -212,6 +216,8 @@ export class PathContentService implements  OnDestroy {
             if (hotspot.nodeId === node.id) {
               let newHotspot: HotSpot = {
                 id: hotspot.id,
+                startTime: hotspot.showAt,
+                endTime: hotspot.hideAt,
                 name: hotspot.name ? hotspot.name : '',
                 type: 'none'
               };
