@@ -4,6 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportHelper } from 'shared/services';
 import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
+import { HotSpot } from "../../path-content.service";
 
 export interface HeatMapItem {
   color: string;
@@ -19,15 +20,16 @@ export interface HeatMapItem {
   styleUrls: ['./hotspot-heat-map.component.scss']
 })
 export class HotspotHeatMapComponent implements OnInit, OnDestroy {
-  @Input() hotspotType: string;
-  @Input() hotspotId: string;
+  @Input() hotspot: HotSpot;
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
 
-  private _heatMapColorScheme = ['#ffffff', '#b5cdfc', '#487adf', '#3567ca', '#1d4694'];
+  private _heatMapColorScheme = ['rgba(0,0,0,0)', '#b5cdfc', '#487adf', '#3567ca', '#1d4694'];
 
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
+  public _leftOffsetWidth = 0;
+  public _rightOffsetWidth = 0;
 
   @ViewChild('follower', { static: false }) _follower: ElementRef;
 
@@ -77,7 +79,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.hotspotType && this.filter && this.hotspotId) {
+    if (this.hotspot.type && this.filter && this.hotspot.id) {
       this._prepare();
     }
   }
@@ -88,8 +90,9 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
     this._isBusy = true;
-
-    this._heatMapStore.getHeatMap(this.hotspotType, this.hotspotId, this.filter)
+    this._leftOffsetWidth = this.hotspot.startTime * 100;
+    this._rightOffsetWidth = (1 - this.hotspot.endTime) * 100;
+    this._heatMapStore.getHeatMap(this.hotspot.type, this.hotspot.id, this.filter)
       .pipe(cancelOnDestroy(this))
       .subscribe(
         points => {
@@ -118,9 +121,10 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
       }, [])
       .map((item, index, array) => {
         item.width = `${item.count / array.length * 100}%`;
-
-        const message = this._translate.instant(`app.playlist.heatMap.tooltip.${item.clicks > 3 ? 'n' : item.clicks}`);
-        item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}; border: ${item.clicks === 0 ? '1px solid #88acf6' : 'none'}"></i><span class="kMessage">${message}</span></div></div>`;
+        if (item.clicks > 0 || (index > this.hotspot.startTime * 100 && index < this.hotspot.endTime * 100)) {
+          const message = this._translate.instant(`app.playlist.heatMap.tooltip.${item.clicks > 3 ? 'n' : item.clicks}`);
+          item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}; border: ${item.clicks === 0 ? '1px solid #88acf6' : 'none'}"></i><span class="kMessage">${message}</span></div></div>`;
+        }
         return item;
       });
   }

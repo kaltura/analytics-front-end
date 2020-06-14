@@ -70,7 +70,7 @@
           <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
             <tr *ngIf="!_isCompareMode">
               <td [attr.colspan]="_columns.length + 3" class="kRowExpansion">
-                <app-hotspot-heat-map [hotspotType]="data.type" [hotspotId]="data.id" [duration]="duration" [filter]="_filter" [attr.data-aid]="'hotspot-heat-map-' + index"></app-hotspot-heat-map>
+                <app-hotspot-heat-map [hotspot]="data" [duration]="duration" [filter]="_filter" [attr.data-aid]="'hotspot-heat-map-' + index"></app-hotspot-heat-map>
               </td>
             </tr>
           </ng-template>

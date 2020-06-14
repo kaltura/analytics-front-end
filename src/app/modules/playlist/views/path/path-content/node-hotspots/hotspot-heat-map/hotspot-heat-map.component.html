@@ -1,5 +1,7 @@
 <h5 *ngIf="_isBusy" class="mini-loader"><span></span><span></span></h5>
 <div *ngIf="!_isBusy" class="kHeatMap">
+  <div class="leftOffset grey" [ngStyle]="{width: _leftOffsetWidth + '%'}"></div>
+  <div class="rightOffset grey" [ngStyle]="{width: _rightOffsetWidth + '%'}"></div>
   <div *ngFor="let item of _heatMap" class="kHeatMapItem"
        [kTooltip]="item.tooltip" [escape]="false" [maxWidth]="800"
        [ngStyle]="{'width': item.width, 'background-color': item.color}">&nbsp;</div>
