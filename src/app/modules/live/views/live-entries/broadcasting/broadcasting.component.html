@@ -1,0 +1,76 @@
+<div data-aid="report-group-user" class="kMain">
+  <div class="kReportView">
+    <k-area-blocker [showLoader]="_loadingEntries" [message]="_blockerMessage">
+    <div class="kReport kContent kOverrideFAIcons">
+        <div *ngFor="let entry of broadcastingEntries" class="entry">
+          <div class="preview">
+            <div class="header" [class.previewColor]="entry.status===2" [class.offlineColor]="entry.status===1">
+              <i [class.icon-preview]="entry.status===2" [class.icon-stream_offline]="entry.status===1" [class.kStatusActive]="entry.status===0"></i>
+              <span class="status">{{entry.status | broadcastStatus}}</span>
+              <span>{{entry.broadcastTime | appStreamDuration}}</span>
+            </div>
+            <app-k-player-v7 [width]="290" [height]="152" [autoPlay]="true" [muted]="true" [pid]="entry.partnerId" [uiconfid]="uiconfid" [id]="entry.id" [entryid]="entry.id" [ks]="ks"></app-k-player-v7>
+          </div>
+          <div class="details">
+            <div class="header">
+              <span>Name: {{entry.name}}</span>
+              <a (click)="_drillDown(entry)">{{'app.entriesLive.full' | translate}}</a>
+            </div>
+            <div class="entryData">
+              <span>{{'app.entriesLive.owner' | translate}} {{entry.owner}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.dvr' | translate}} {{entry.dvr | liveDvrStatus}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.recording' | translate}} {{entry.recording | liveRecordingStatus}}</span>
+              <div class="separator"></div>
+              <span>{{'app.entriesLive.transcoding' | translate}}</span>
+              <span *ngIf="entry.transcoding !== undefined" style="margin-left: 4px">{{entry.transcoding ? ('app.entryLive.on' | translate) : ('app.entryLive.off' | translate) }}</span>
+            </div>
+            <div class="reportData">
+              <div class="col">
+                <div class="row">
+                  <span class="value">{{entry.activeUsers}}</span>
+                  <span class="label">{{'app.entriesLive.views' | translate}}</span>
+                </div>
+                <div class="row">
+                  <span class="value">{{entry.engagedUsers}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_engagement' | translate}}</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <span class="value">{{entry.buffering}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_buffering' | translate}}</span>
+                </div>
+                <div class="row">
+                  <span class="value">{{entry.downstream}}</span>
+                  <span class="label">{{'app.entriesLive.avg_view_downstream_bandwidth' | translate}}</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="healthIcon" [ngClass]="entry.streamHealthClassName"></div>
+                  <span class="value">{{entry.streamHealth}}</span>
+                  <span class="label">{{'app.entriesLive.stream_health' | translate}}</span>
+                </div>
+                <div class="row" *ngIf="entry.redundancy">
+                  <i class="kIconcheck-medium"></i>
+                  <span class="label">{{'app.entriesLive.redundancy' | translate}}</span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <p-paginator [class.kHidden]="broadcastingEntries.length === 0" [rows]="5" [totalRecords]="_totalCount" (onPageChange)="paginate($event)"></p-paginator>
+
+        <div class="noResults" *ngIf="!_loadingEntries && broadcastingEntries.length === 0">
+          <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
+          <span class="kNoDataTitle">{{'app.entriesLive.noBroadcastingEntriesTitle' | translate}}</span>
+        </div>
+    </div>
+    </k-area-blocker>
+  </div>
+</div>
+
