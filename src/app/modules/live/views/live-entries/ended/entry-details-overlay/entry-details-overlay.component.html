@@ -16,14 +16,15 @@
       </div>
 
       <div class="kDetailsRow">
+        <div class="kLabel">{{'app.entriesLive.entryDetails.creator' | translate}}</div>
+        <div class="kValue">{{_creator}}</div>
+      </div>
+
+      <div class="kDetailsRow">
         <div class="kLabel">{{'app.entriesLive.entryDetails.creationDate' | translate}}</div>
         <div class="kValue">{{_entryData['created_at']}}</div>
       </div>
 
-      <div class="kDetailsRow">
-        <div class="kLabel">{{'app.entriesLive.entryDetails.elapsedTime' | translate}}</div>
-        <div class="kValue">{{_elapsedTime | appStreamDuration}}</div>
-      </div>
     </div>
   </ng-container>
 </div>

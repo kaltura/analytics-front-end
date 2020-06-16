@@ -4,14 +4,14 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class EntriesLiveDataConfig extends ReportDataBaseConfig {
+export class BroadcastingEntriesDataConfig extends ReportDataBaseConfig {
   private translate: TranslateService;
-  
+
   constructor(_translate: TranslateService) {
     super(_translate);
     this.translate = _translate;
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -24,12 +24,17 @@ export class EntriesLiveDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 1,
           },
+          'creator_name': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
+          },
           'partner_id': {
             format: value => value,
             nonComparable: true,
             hidden: true,
           },
-          'view_unique_audience': {
+          'views': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },

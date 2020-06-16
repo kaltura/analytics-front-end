@@ -919,18 +919,57 @@
       }
     },
     "entriesLive": {
-      "title": "Live Entries",
+      "broadcasting": "Broadcasting Now",
+      "ended": "Broadcast Ended",
+      "upcoming": "Upcoming Broadcasts",
+      "full": "Full Dashboard",
+      "owner": "Owner:",
+      "dvr": "DVR:",
+      "recording": "Recording:",
+      "transcoding": "Transcoding:",
+      "recordingStatus": {
+        "active": "Active",
+        "disabled": "Disabled",
+        "paused":  "Paused",
+        "stopped": "Stopped"
+      },
+      "dvrStatus": {
+        "enabled": "ON",
+        "disabled": "OFF"
+      },
+      "broadcastStatus": {
+        "live": "Live",
+        "offline": "Offline",
+        "preview": "Preview"
+      },
+      "health": {
+        "primary_good": "Good Primary Stream",
+        "primary_poor": "Poor Primary Stream",
+        "primary_fair": "Fair Primary Stream",
+        "secondary_good": "Good Secondary Stream",
+        "secondary_poor": "Poor Secondary Stream",
+        "secondary_fair": "Fair Secondary Stream"
+      },
+      "viewers": "Active Users",
+      "views": "Active Users",
+      "avg_view_engagement": "Engaged Users",
+      "avg_view_buffering": "Users Buffering",
+      "avg_view_downstream_bandwidth": "Avg. Downstream BW",
+      "stream_health": "Stream Health",
+      "redundancy": "Redundancy",
+      "endTime": "Ending Time",
       "entriesCount": "{{0}} Entries",
       "period": "Last 7 days",
       "searchEntries": "Search Entries",
       "thumbnail": "Thumbnail",
       "entry_name": "Name",
       "creator_name": "Creator",
-      "view_unique_audience": "Active Users",
-      "avg_view_engagement": "Engaged Users",
-      "avg_view_buffering": "Users Buffering",
-      "avg_view_downstream_bandwidth": "Avg. Dowstream BW",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "noEndDate": "Not Set",
       "live": "Live",
+      "noBroadcastingEntriesTitle": "No Broadcasting Entries",
+      "noUpcomingEntriesTitle": "No Upcoming Broadcasts",
       "noLiveEntriesTitle": "No Live Entries",
       "noLiveEntriesMessage": "In the last 7 days, there were no live broadcasts",
       "entryDetails": {

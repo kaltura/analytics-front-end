@@ -1,9 +1,8 @@
-@import '../../../../../styles/variables';
+@import '../../../../../../styles/variables';
 
 .kEntries {
   font-size: 15px;
   background-color: $appBkgColor;
-  padding-top: 24px;
   width: 100%;
   min-width: $minAppWidth;
   box-sizing: border-box;
@@ -26,6 +25,7 @@
     .kTimePeriodLabel {
       background-color: #ffffff;
       margin: 0;
+      margin-left: auto;
     }
   }
 
@@ -67,7 +67,7 @@
     }
 
     ::ng-deep .ui-table {
-      min-height: calc(100vh - 185px);
+      min-height: calc(100vh - 310px);
     }
 
     k-area-blocker {
@@ -124,11 +124,12 @@
   cursor: pointer;
   font-weight: bold;
   color: $kGrayscale1;
+  line-height: 48px;
 }
 
 .kNoData {
   width: 100%;
-  min-height: calc(100vh - 54px);
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
   font-size: 15px;

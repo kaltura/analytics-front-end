@@ -1,8 +1,8 @@
 import { Route } from '@angular/router';
-import { EntriesLiveComponent } from './views/entries-live/entries-live.component';
+import { LiveEntriesComponent } from './views/live-entries/live-entries.component';
 
 export const routing: Route[] = [
   {
-    path: '', component: EntriesLiveComponent,
+    path: '', component: LiveEntriesComponent,
   }
 ];

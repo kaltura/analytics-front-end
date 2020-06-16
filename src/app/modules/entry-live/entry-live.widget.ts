@@ -5,7 +5,7 @@ import { WidgetsActivationArgs } from './widgets/widgets-manager';
 import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
 import { EntryLiveRequestFactory } from './entry-live-request-factory';
 import { KalturaStreamStatus } from './utils/get-stream-status';
-import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus } from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, KalturaRecordStatus, KalturaSourceType } from 'kaltura-ngx-client';
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
@@ -14,23 +14,23 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   protected _widgetId = 'main';
   protected _pollsFactory = null;
-  
+
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
               private _entryLiveService: EntryLiveService) {
     super(_serverPolls, _frameEventManager);
   }
-  
+
   protected _onRestart(): void {
     this._pollsFactory = new EntryLiveRequestFactory(this._activationArgs.entryId, this._entryLiveService);
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new EntryLiveRequestFactory(widgetsArgs.entryId, this._entryLiveService);
-    
+
     return ObservableOf(null);
   }
-  
+
   protected _responseMapping(responses: KalturaMultiResponse): KalturaExtendedLiveEntry {
     const entry = responses[0].result;
     const profiles = responses[1].result.objects;
@@ -43,11 +43,12 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
       owner: responses[3].result.fullName,
+      isManual: entry.sourceType === KalturaSourceType.manualLiveStream,
       displayCreatedAt: DateFilterUtils.formatFullDateString(entry.createdAt),
     });
-    
+
     this._entryLiveService.setStreamStatus(liveEntry, nodes);
-    
+
     return liveEntry;
   }
 }

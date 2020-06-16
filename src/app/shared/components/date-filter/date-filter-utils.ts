@@ -227,6 +227,7 @@ export class DateFilterUtils {
       dateFormat: 'mm/dd/yy',
       weekHeader: 'Wk'
     };
+    /*
     switch (locale) {
       case "de" :
         localData.firstDayOfWeek = 1;
@@ -302,6 +303,7 @@ export class DateFilterUtils {
         localData.dateFormat = 'yy/mm/dd';
         break;
     }
+    */
     return localData;
   }
 }

@@ -1,11 +1,10 @@
 <div [attr.data-aid]="'table-entries-live'" class="kEntries kOverrideFAIcons">
   <div class="kEntriesHeader kContent" *ngIf="_isBusy || _tableData.length">
-    <span class="kTitle">{{'app.entriesLive.title' | translate}}</span>
     <span class="kTimePeriodLabel" [kTooltip]="_periodTooltip" placement="left">
       {{'app.entriesLive.period' | translate}}
     </span>
   </div>
-  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length">
+  <div class="kEntriesHolder kContent" *ngIf="_isBusy || _tableData.length || _blockerMessage">
     <div class="kEntriesTableFilters kContent">
       <span class="kSelectedEntriesNum" *ngIf="_totalCount">
         {{'app.entriesLive.entriesCount' | translate: { '0': _totalCount } }}
@@ -30,17 +29,17 @@
         <ng-template pTemplate="header">
           <tr class="kEntriesLiveHeaderRow" *ngIf="_columns.length">
             <th [ngStyle]="{'width': '100px', 'padding-left': '16px'}">
-              {{'app.entriesLive.thumbnail' | translate}}
             </th>
             <th *ngFor="let col of _columns"
                 [pSortableColumn]="col"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}"
+                [ngStyle]="{'width': col === 'entry_name' ? '25%' : '15%'}"
                 [kTooltip]="'app.entriesLive.' + col | translate"
                 [showOnEllipsis]="true">
               {{'app.entriesLive.' + col | translate}}
               <p-sortIcon [field]="col"></p-sortIcon>
             </th>
-            <th *ngIf="_displayLiveStatus" [ngStyle]="{'width': '100px'}"></th>
+            <th [ngStyle]="{'width': '15%'}">{{'app.entriesLive.endTime' | translate}}</th>
+            <!--th *ngIf="_displayLiveStatus" [ngStyle]="{'width': '100px'}"></th-->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
@@ -49,7 +48,7 @@
               <thumb-loader [thumbnailUrl]="data.thumbnailUrl"></thumb-loader>
             </td>
             <td *ngFor="let col of _columns; let i = index"
-                [ngStyle]="{'width': col === 'entry_name' ? '40%' : '20%'}">
+                [ngStyle]="{'width': col === 'entry_name' ? '25%' : '15%'}">
               <span *ngIf="col !== 'entry_name'">{{data[col]}}</span>
               <span class="kEntryLink kTableColumn"
                     *ngIf="col === 'entry_name'"
@@ -58,12 +57,13 @@
                     (mouseleave)="_hideOverlay()"
                     (mouseenter)="_showOverlay($event, data['entry_id'])">{{data[col]}}</span>
             </td>
-            <td [ngStyle]="{'width': '100px'}">
+            <td [ngStyle]="{'width': '15%'}">{{data['stream_ended'] ? (data['stream_ended'] | date:'MM/d/yy H:mm') : ('app.common.na' | translate)}}</td>
+            <!--td [ngStyle]="{'width': '100px'}">
               <span class="kStatus" *ngIf="_displayLiveStatus && data['liveStatus']">
                 <span class="kCircle"></span>
                 <span class="kStatusName">{{'app.entriesLive.live' | translate}}</span>
               </span>
-            </td>
+            </td-->
           </tr>
         </ng-template>
       </p-table>
@@ -73,7 +73,7 @@
                    (onPageChange)="_onPaginationChange($event)"></p-paginator>
     </k-area-blocker>
   </div>
-  <div *ngIf="!_firstTimeLoading && !_tableData.length" class="kNoData">
+  <div *ngIf="!_isBusy && !_tableData.length && !_blockerMessage" class="kNoData">
     <app-entries-live-no-data-icon class="kNoDataIcon"></app-entries-live-no-data-icon>
     <span class="kNoDataTitle">{{'app.entriesLive.noLiveEntriesTitle' | translate}}</span>
     <span class="kNoDataMessage">{{'app.entriesLive.noLiveEntriesMessage' | translate}}</span>

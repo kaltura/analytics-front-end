@@ -75,6 +75,7 @@ import { ContextFilterComponent } from 'shared/components/context-table-filter/u
 import { DevicesOverviewComponent } from "shared/components/devices-report/devices-overview.component";
 import { GeoComponent } from "shared/components/top-countries-report/geo/geo.component";
 import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
+import { KalturaPlayerV7Component } from "shared/player-v7";
 
 @NgModule({
   imports: [
@@ -132,6 +133,7 @@ import { TopCountriesComponent } from "shared/components/top-countries-report/to
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     KalturaPlayerComponent,
+    KalturaPlayerV7Component,
     ImpressionsComponent,
     SyndicationComponent,
     CompareMetricComponent,
@@ -178,6 +180,7 @@ import { TopCountriesComponent } from "shared/components/top-countries-report/to
     OverlayComponent,
     TrendValueComponent,
     KalturaPlayerComponent,
+    KalturaPlayerV7Component,
     MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,

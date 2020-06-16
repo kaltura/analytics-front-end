@@ -3,7 +3,7 @@ import { AnalyticsServerPollsBase } from 'shared/services/server-polls-base.serv
 import { KalturaClient } from 'kaltura-ngx-client';
 
 @Injectable()
-export class EntriesLivePollsService extends AnalyticsServerPollsBase {
+export class EndedPollsService extends AnalyticsServerPollsBase {
   constructor(protected _kalturaClient: KalturaClient) {
     super(_kalturaClient);
   }
