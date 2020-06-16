@@ -464,6 +464,8 @@
       "downstreamBandwidth": "Downstream Bandwidth",
       "downstreamBW": "Downstream BW",
       "downstreamBandwidthHelpTip": "The size of the downloaded media divided by seconds",
+      "bitrate": "Avg. Bitrate",
+      "bitrateHelpTip": "The average bitrate reported by the Kaltura players",
       "now": "Now",
       "m180s": "-180s",
       "ms": "-{{0}}s",
