@@ -84,7 +84,7 @@ export class BroadcastingEntriesService implements OnDestroy {
     }
     // load report
     const tableActionArgs: ReportGetTableActionArgs = {
-      reportType: reportTypeMap(KalturaReportType.topEntriesLiveNow),
+      reportType: reportTypeMap(KalturaReportType.topLiveNowEntries),
       reportInputFilter: new KalturaEndUserReportInputFilter({
         timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
         toDate: moment().subtract(30, 'seconds').unix(),
