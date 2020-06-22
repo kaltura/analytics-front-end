@@ -38,7 +38,9 @@ export interface HotSpot {
   behavior?: string;
   hyperlinkUrl?: string;
   hotspot_clicked?: number;
-  type?: 'link' | 'hyperlink' | 'pause' | 'none';
+  startTime?: number;
+  endTime?: number;
+  type?: 'nodeSwitch' | 'hyperlink' | 'pause' | 'none';
 }
 
 @Injectable()
@@ -119,12 +121,14 @@ export class PathContentService implements  OnDestroy {
             if (interaction.data && interaction.data.behavior && supportedInteractionTypes.indexOf(interaction.data.behavior.type) !== -1 ) {
               let newHotspot: HotSpot = {
                 id: interaction.id,
+                startTime: interaction.startTime,
+                endTime: interaction.endTime,
                 name: interaction.data.text ? interaction.data.text.label : '',
                 type: 'none'
               };
               switch (interaction.data.behavior.type) {
                 case "GoToNode":
-                  newHotspot.type = 'link';
+                  newHotspot.type = 'nodeSwitch';
                   data.nodes.forEach(node => {
                     if (node.id === interaction.data.behavior.nodeId) {
                       newHotspot.destination = node.name;
@@ -212,6 +216,8 @@ export class PathContentService implements  OnDestroy {
             if (hotspot.nodeId === node.id) {
               let newHotspot: HotSpot = {
                 id: hotspot.id,
+                startTime: hotspot.showAt,
+                endTime: hotspot.hideAt,
                 name: hotspot.name ? hotspot.name : '',
                 type: 'none'
               };
@@ -220,7 +226,7 @@ export class PathContentService implements  OnDestroy {
                 metadata.hotspots.forEach(metadataHotspot => {
                   if (metadataHotspot.id === hotspot.id) {
                     if (metadataHotspot.behavior === "instant_jump" && metadataHotspot.destinationId) {
-                      newHotspot.type = 'link';
+                      newHotspot.type = 'nodeSwitch';
                       // use the destinationId to find the destination node and set its name to the destination property
                       data.nodes.forEach(node => {
                         if (node.id === metadataHotspot.destinationId) {

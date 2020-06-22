@@ -16,6 +16,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 import { SortEvent } from 'primeng/api';
 import { QueryBase } from "shared/components/query-base/query-base";
 import { HotSpot } from "../path-content.service";
+import { HotspotHeatMapStoreService } from "./hotspot-heat-map/hotspot-heat-map-store.service";
 
 @Component({
   selector: 'app-node-hotspots',
@@ -23,7 +24,8 @@ import { HotSpot } from "../path-content.service";
   styleUrls: ['./node-hotspots.component.scss'],
   providers: [
     NodeHotspotsConfig,
-    ReportService
+    ReportService,
+    HotspotHeatMapStoreService
   ]
 })
 export class NodeHotspotsComponent extends QueryBase {

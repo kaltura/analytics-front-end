@@ -27,7 +27,7 @@
       text-decoration: none;
       color: $kGrayscale3;
     }
-    .link:before {
+    .nodeSwitch:before {
       content: "\e927";
     }
     .hyperlink:before {
@@ -64,6 +64,7 @@
 :host ::ng-deep .kRowExpansion {
   padding: 0 !important;
   text-align: center;
+  height: 36px !important;
 }
 
 :host ::ng-deep .ui-autocomplete-input-token input:focus {

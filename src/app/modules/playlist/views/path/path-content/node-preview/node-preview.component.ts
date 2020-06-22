@@ -1,4 +1,4 @@
-import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -28,6 +28,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class NodePreviewComponent extends QueryBase implements OnInit {
   @Input() entryId = '';
   @Input() nodeId = '';
+  @Output() updateDuration = new EventEmitter<number>();
 
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
@@ -38,7 +39,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
-  
+
   public _currentDatePeriodLabel: string = null;
   public _compareDatePeriodLabel: string = null;
   public _isBusy: boolean;
@@ -64,7 +65,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private zone: NgZone,
@@ -80,7 +81,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   ngOnInit() {
     this._initPlayer();
   }
-  
+
   private _getGraphData(yData1: number[], yData2: number[], compareYData1: number[] = null, compareYData2: number[] = null) {
     let graphData = {
       color: [getPrimaryColor(), getSecondaryColor()],
@@ -119,7 +120,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
           if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
             const compareValue1 = params[2].value;
             const compareValue2 = params[3].value;
-            
+
             tooltip = `
               <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
               <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0; margin-bottom: 12px">
@@ -239,7 +240,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     }
     return graphData;
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     // skip first report load due to refine filter set
     if (this._firstTimeLoading) {
@@ -248,11 +249,11 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     }
     this._isBusy = true;
     this._blockerMessage = null;
-  
+
     if (this.nodeId) {
       this._filter.nodeIdsIn = this.nodeId;
     }
-  
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     sections = { ...sections }; // make local copy
 
@@ -272,18 +273,18 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
           this._chartOptions = {};
-    
+
           if (this._isCompareMode) {
             const dateFormat = 'MMM DD YYYY';
             this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
             this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
           }
-    
+
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
             const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
-            
+
             if (compare && compare.table) {
               let compareYAxisData1 = [];
               let compareYAxisData2 = [];
@@ -319,14 +320,14 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -347,14 +348,14 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     const percent = event.offsetX / event.currentTarget.clientWidth;
     this._seekTo(percent, true);
   }
-  
+
   private _getAxisData(tableData: TableRow[], key: string): number[] {
     const result = tableData
       .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
       .map(item => Number(item[key] || 0));
-    
+
     result[0] = result[1];
-    
+
     return result;
   }
 
@@ -424,7 +425,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
       }, 0);
     }
   }
-  
+
   private _seekTo(percent: number, forcePlay = false): void {
     this._playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
     if (forcePlay) {
@@ -436,6 +437,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     this._playerInstance = player;
     setTimeout(() => {
       this._duration = parseFloat(this._playerInstance.evaluate('{duration}')) * 1000;
+      this.updateDuration.emit(this._duration);
     }, 0);
 
     // register to playhead update event to update our scrubber
