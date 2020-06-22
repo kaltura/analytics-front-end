@@ -227,7 +227,6 @@ export class DateFilterUtils {
       dateFormat: 'mm/dd/yy',
       weekHeader: 'Wk'
     };
-    /*
     switch (locale) {
       case "de" :
         localData.firstDayOfWeek = 1;
@@ -249,18 +248,18 @@ export class DateFilterUtils {
         break;
       case "es" :
         localData.firstDayOfWeek = 1;
-        localData.dayNames = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", 	"domingo"];
-        localData.dayNamesShort = ["lu.", "ma.", "mi.", "ju.", "vi.", "sá.", "do."];
-        localData.dayNamesMin = ["L", "M", "X",  "J",  "V", "S", "D"];
+        localData.dayNames = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        localData.dayNamesShort = ["do.", "lu.", "ma.", "mi.", "ju.", "vi.", "sá."];
+        localData.dayNamesMin = ["D", "L", "M", "X",  "J",  "V", "S"];
         localData.monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
         localData.monthNamesShort = ["en.", "febr.", "mzo.", "abr.", "my.", "jun.", "jul.", "ag.", "sept.", "oct.", "nov.", "dic."];
         localData.dateFormat = 'dd/mm/yy';
         break;
       case "fr" :
         localData.firstDayOfWeek = 1;
-        localData.dayNames = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
-        localData.dayNamesShort = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
-        localData.dayNamesMin = ["L", "M", "M", "J", "V", "S", "D"];
+        localData.dayNames = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+        localData.dayNamesShort = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
+        localData.dayNamesMin = ["D", "L", "M", "M", "J", "V", "S"];
         localData.monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
         localData.monthNamesShort = ["JAN", "FÉV", "MAR", "AVR", "MAI", "JUN", "JUL", "AOÛ", "SEP", "OCT", "NOV", "DÉC"];
         localData.dateFormat = 'dd/mm/yy';
@@ -295,15 +294,14 @@ export class DateFilterUtils {
         break;
       case "ja" :
         localData.firstDayOfWeek = 0;
-        localData.dayNames = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"];
-        localData.dayNamesShort = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜", "日曜"];
-        localData.dayNamesMin = ["月", "火", "水", "木", "金", "土", "日"];
+        localData.dayNames = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"];
+        localData.dayNamesShort = ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"];
+        localData.dayNamesMin = ["日", "月", "火", "水", "木", "金", "土"];
         localData.monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
         localData.monthNamesShort = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
         localData.dateFormat = 'yy/mm/dd';
         break;
     }
-    */
     return localData;
   }
 }
