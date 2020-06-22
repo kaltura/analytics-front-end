@@ -942,7 +942,7 @@
         "secondary_poor": "Poor Secondary Stream",
         "secondary_fair": "Fair Secondary Stream"
       },
-      "viewers": "Active Users",
+      "viewers": "Peak Users",
       "views": "Active Users",
       "avg_view_engagement": "Engaged Users",
       "avg_view_buffering": "Users Buffering",
