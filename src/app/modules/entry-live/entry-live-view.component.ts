@@ -56,7 +56,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _canShowToggleLive = false;
   public _selectedDateRange = defaultDateRange;
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
               private _dateFilter: FiltersService,
@@ -137,27 +137,27 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       const widgetArgs = { entryId: this._entryId };
       const widgets = [];
       const silentWidgets = [];
-      
+
       if (this._entryLiveViewConfig.users) {
         widgets.push(this._liveUsers);
       }
-  
+
       if (this._entryLiveViewConfig.bandwidth) {
         widgets.push(this._liveBandwidth);
       }
-  
+
       if (this._entryLiveViewConfig.streamHealth) {
         widgets.push(this._liveStreamHealth);
       }
-  
+
       if (this._entryLiveViewConfig.geo) {
         widgets.push(this._liveGeo);
       }
-  
+
       if (this._entryLiveViewConfig.devices) {
         widgets.push(this._liveDevices);
       }
-      
+
       if (this._entryLiveViewConfig.discovery) {
         widgets.push(this._liveDiscovery);
         silentWidgets.push(this._liveDiscoveryTable);
@@ -174,7 +174,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
 
   public _back(): void {
-    this._navigationDrillDownService.navigateBack('live/entries-live', false);
+    this._navigationDrillDownService.navigateBack('live/', false);
   }
 
   public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {

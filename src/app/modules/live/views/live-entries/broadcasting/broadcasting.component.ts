@@ -1,14 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {BroadcastingEntries, BroadcastingEntriesService} from "./broadcasting-entries.service";
-import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {AuthService, ErrorsManagerService, NavigationDrillDownService} from "shared/services";
-import {ISubscription} from "rxjs/Subscription";
-import {KalturaFilterPager, KalturaLiveStreamBroadcastStatus} from "kaltura-ngx-client";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
+import { BroadcastingEntries, BroadcastingEntriesService } from "./broadcasting-entries.service";
+import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { AuthService, ErrorsManagerService, NavigationDrillDownService } from "shared/services";
+import { ISubscription } from "rxjs/Subscription";
+import { KalturaLiveStreamBroadcastStatus } from "kaltura-ngx-client";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { analyticsConfig } from "configuration/analytics-config";
+import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import * as moment from "moment";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {UpcomingBroadcast} from "../upcoming/upcoming.service";
-import {analyticsConfig} from "configuration/analytics-config";
 
 @Component({
   selector: 'app-live-entries-broadcasting',
@@ -35,6 +35,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   constructor(private _broadcastingEntriesService: BroadcastingEntriesService,
               private _navigationDrillDownService: NavigationDrillDownService,
+              private _frameEventManager: FrameEventManagerService,
               private _authService: AuthService,
               private _errorsManager: ErrorsManagerService) {
     this.ks = this._authService.ks;
@@ -128,7 +129,16 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
             this.setTimeUpdateInterval();
           }
         }
+        this.updateLayout();
       });
+  }
+
+  private updateLayout(): void {
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
+      }, 200);
+    }
   }
 
   private setTimeUpdateInterval(): void {

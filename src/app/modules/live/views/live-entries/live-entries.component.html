@@ -11,11 +11,12 @@
            (click)="_selectTab(_reportTabs.ended)">
            <span>{{'app.entriesLive.ended' | translate}}</span>
         </a>
-        <a class="kReportTabsItem kBroadcasting"
+        <!-- currently removed due to issues on KMS scheduled events saving in metadata. TODO: restore when fixed in KMS -->
+        <!--a class="kReportTabsItem kBroadcasting"
            [class.kBroadcastingActive]="_currentTab === _reportTabs.upcoming"
            (click)="_selectTab(_reportTabs.upcoming)">
            <span>{{'app.entriesLive.upcoming' | translate}}</span>
-        </a>
+        </a-->
       </div>
     </div>
 

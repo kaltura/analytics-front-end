@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AuthService, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { analyticsConfig, buildCDNUrl } from 'configuration/analytics-config';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
 import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient,
   KalturaDVRStatus, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveStreamAdminEntry, KalturaLiveStreamDetails,
@@ -149,7 +149,7 @@ export class BroadcastingEntriesService implements OnDestroy {
       entries.forEach((entry, index) => {
         this._broadcastingEntries.forEach(broadcastingEntry => {
           if (broadcastingEntry.id === entry.entry_id) {
-            broadcastingEntry.activeUsers = entry.view_unique_audience;
+            broadcastingEntry.activeUsers = entry.views;
             broadcastingEntry.engagedUsers = entry.avg_view_engagement;
             broadcastingEntry.buffering = entry.avg_view_buffering;
             broadcastingEntry.downstream = entry.avg_view_downstream_bandwidth;
@@ -165,13 +165,17 @@ export class BroadcastingEntriesService implements OnDestroy {
     if (entries.length !== this._broadcastingEntries.length) {
       refresh = true;
     } else {
+      refresh = false;
       entries.forEach(entry => {
-        refresh = true;
+        let idFound = false;
         this._broadcastingEntries.forEach(broadcastingEntry => {
           if (entry.entry_id === broadcastingEntry.id) {
-            refresh = false;
+            idFound = true;
           }
         });
+        if (!idFound) {
+          refresh = true;
+        }
       });
     }
     if (this._forceRefresh) {
