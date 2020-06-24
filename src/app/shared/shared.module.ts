@@ -214,7 +214,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
 })
 
 export class SharedModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
       providers: <any[]>[

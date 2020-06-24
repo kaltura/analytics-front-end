@@ -45,7 +45,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
-  @ViewChild(TimeSelectorComponent, { static: false }) _timeSelector: TimeSelectorComponent;
+  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
 
   public _isBusy = true;

@@ -1,4 +1,4 @@
-import { EventEmitter, Inject, InjectionToken, Input, OnDestroy, Output } from '@angular/core';
+import { EventEmitter, Inject, InjectionToken, Input, OnDestroy, Output, Directive } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -19,6 +19,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
+@Directive()
 export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Input() devicesList: { value: string, label: string }[] = [];
   @Input() allowedDevices: string[] = [];

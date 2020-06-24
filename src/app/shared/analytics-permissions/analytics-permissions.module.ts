@@ -10,7 +10,7 @@ import { AnalyticsPermissionsService } from './analytics-permissions.service';
   exports: []
 })
 export class AnalyticsPermissionsModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<AnalyticsPermissionsModule> {
     return {
       ngModule: AnalyticsPermissionsModule,
       providers: [

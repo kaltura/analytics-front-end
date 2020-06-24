@@ -25,7 +25,7 @@ import { EntryLiveUsersMode } from 'configuration/analytics-config';
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   @Output() dateFilterChange = new EventEmitter<DateFiltersChangedEvent>();
-  @ViewChild(DiscoveryChartComponent, { static: false }) _discoveryChart: DiscoveryChartComponent;
+  @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveDiscoveryData;

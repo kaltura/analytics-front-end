@@ -42,8 +42,8 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   @Input() categoryId: string = null;
   @Input() entryId: string = null;
   
-  @ViewChild('categoryGeo', { static: false }) _categoryGeo: GeoComponent;
-  @ViewChild('categoryCompareGeo', { static: false }) _categoryCompareGeo: GeoComponent;
+  @ViewChild('categoryGeo') _categoryGeo: GeoComponent;
+  @ViewChild('categoryCompareGeo') _categoryCompareGeo: GeoComponent;
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
   

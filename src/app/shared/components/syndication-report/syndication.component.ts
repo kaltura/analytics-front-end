@@ -101,7 +101,7 @@ export class SyndicationComponent implements OnDestroy {
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
   public _distributionColorScheme: string;
   
-  @ViewChild(NgxEchartsDirective, { static: false }) _chart: NgxEchartsDirective;
+  @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
   
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,

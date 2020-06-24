@@ -20,7 +20,7 @@ import { skip } from 'rxjs/operators';
   ]
 })
 export class EndedComponent implements OnInit, OnDestroy {
-  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayComponent;
 
   public _tableData: TableRow[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 10 });

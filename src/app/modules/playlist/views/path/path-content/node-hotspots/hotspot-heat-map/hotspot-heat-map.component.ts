@@ -31,7 +31,7 @@ export class HotspotHeatMapComponent implements OnInit, OnDestroy {
   public _leftOffsetWidth = 0;
   public _rightOffsetWidth = 0;
 
-  @ViewChild('follower', { static: false }) _follower: ElementRef;
+  @ViewChild('follower') _follower: ElementRef;
 
   @HostListener('mousemove', ['$event'])
   public onMouseMove(event: MouseEvent): void {

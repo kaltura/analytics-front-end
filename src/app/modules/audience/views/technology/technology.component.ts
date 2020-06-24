@@ -20,7 +20,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
   ]
 })
 export class TechnologyComponent implements OnInit {
-  @ViewChild('overview', { static: false }) _overview: TechDevicesOverviewComponent;
+  @ViewChild('overview') _overview: TechDevicesOverviewComponent;
 
   public _selectedMetric: string;
   public _dateRange = DateRanges.Last30D;

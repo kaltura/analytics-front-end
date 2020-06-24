@@ -37,7 +37,7 @@ export class GeoComponent {
 
   @Output() onDrillDown = new EventEmitter<{ drillDown: string[], reload: boolean }>();
 
-  @ViewChild('table', { static: false }) _table: Table;
+  @ViewChild('table') _table: Table;
 
   private _echartsIntance: any; // echart instance
   private _canMapDrillDown = true;

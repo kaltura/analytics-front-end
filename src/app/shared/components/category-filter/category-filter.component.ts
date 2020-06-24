@@ -29,7 +29,7 @@ export class CategoryFilterComponent implements OnInit, OnDestroy {
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
   
-  @ViewChild('categoriesPopup', { static: false }) _categoriesPopup: PopupWidgetComponent;
+  @ViewChild('categoriesPopup') _categoriesPopup: PopupWidgetComponent;
   
   public _rootCategoryId: number = null;
   public _selectedValue: CategoryData[] = [];

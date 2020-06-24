@@ -30,7 +30,7 @@ export class UserMediaUploadTableComponent {
   @Output() sortChanged = new EventEmitter<SortEvent>();
   @Output() paginationChanged = new EventEmitter<{ page: number, pageCount: number, rows: TableRow<string>, first: number }>();
   
-  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _timeoutId = null;

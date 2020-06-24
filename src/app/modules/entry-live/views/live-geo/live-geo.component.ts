@@ -33,7 +33,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
       this._entry = value;
     }
   }
-  @ViewChild('table', { static: false }) _table: Table;
+  @ViewChild('table') _table: Table;
   @Output() onDrillDown = new EventEmitter<{reportType: string, drillDown: string[]}>();
 
   private _mapCenter = [0, 10];

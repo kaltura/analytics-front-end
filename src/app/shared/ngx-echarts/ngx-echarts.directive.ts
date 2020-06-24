@@ -1,7 +1,4 @@
-import {
-  Directive, ElementRef, Renderer, Input, Output, HostListener, EventEmitter,
-  OnChanges, OnDestroy, SimpleChanges, NgZone, DoCheck, AfterViewInit
-} from '@angular/core';
+import { Directive, ElementRef, Input, Output, HostListener, EventEmitter, OnChanges, OnDestroy, SimpleChanges, NgZone, DoCheck, AfterViewInit, Renderer2 } from '@angular/core';
 import { ChangeFilter } from './change-filter';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

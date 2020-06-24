@@ -30,7 +30,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
 
   private _isSelfServe = false;
 
-  @ViewChild(ScrollToTopContainerComponent, { static: false }) _listContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent) _listContainer: ScrollToTopContainerComponent;
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];

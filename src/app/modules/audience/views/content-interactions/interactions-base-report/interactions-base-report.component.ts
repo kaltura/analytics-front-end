@@ -1,9 +1,10 @@
-import { Input } from '@angular/core';
+import { Input, Directive } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { KalturaReportInputFilter } from 'kaltura-ngx-client';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 
+@Directive()
 export abstract class InteractionsBaseReportComponent {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {

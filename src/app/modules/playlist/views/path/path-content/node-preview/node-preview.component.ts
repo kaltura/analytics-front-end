@@ -60,7 +60,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
 
   public _chartOptions = {};
 
-  @ViewChild('player', { static: false }) player: KalturaPlayerComponent;
+  @ViewChild('player') player: KalturaPlayerComponent;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;

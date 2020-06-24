@@ -49,7 +49,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
 
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
 
-  @ViewChild('datesBtn', { static: false }) set datesBtn(elRef: ElementRef) {
+  @ViewChild('datesBtn') set datesBtn(elRef: ElementRef) {
     if (elRef && elRef.nativeElement) {
       this._datesBtnElement = elRef.nativeElement;
     }

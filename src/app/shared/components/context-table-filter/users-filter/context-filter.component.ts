@@ -29,7 +29,7 @@ export class ContextFilterComponent implements OnDestroy {
   
   @Output() itemSelected = new EventEmitter();
   
-  @ViewChild('searchContext', { static: false }) _autoComplete: AutoComplete = null;
+  @ViewChild('searchContext') _autoComplete: AutoComplete = null;
   
   private _selectedContext: KalturaCategory[] = [];
   private _searchCategorySubscription: Unsubscribable;
