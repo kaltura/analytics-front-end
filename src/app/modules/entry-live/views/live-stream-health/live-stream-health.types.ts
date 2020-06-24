@@ -98,5 +98,5 @@ export interface LiveEntryDiagnosticsInfo {
   dynamicInfoPrimary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo };
   dynamicInfoSecondary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo };
   streamHealth?: { updatedTime?: number, data?: DiagnosticsHealthInfo };
-  selfServe:  { updatedTime?: number, data?: boolean };
+  selfServe?:  { updatedTime?: number, data?: boolean };
 }

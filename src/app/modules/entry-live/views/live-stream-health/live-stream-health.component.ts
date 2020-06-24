@@ -38,7 +38,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
   constructor(private _liveStreamHealth: LiveStreamHealthWidget,
               private _errorsManager: ErrorsManagerService) {
   }
-  
+
   ngOnInit() {
     this._liveStreamHealth.state$
       .pipe(cancelOnDestroy(this))
@@ -57,10 +57,10 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._liveStreamHealth.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(data => {
+      .subscribe((data: any) => {
         this._isBusy = false;
         this._data = this._parseData(data);
         if (this._listContainer) {
@@ -71,7 +71,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
   }
-  
+
   private _parseData(response: LiveEntryDiagnosticsInfo): StreamHealth[] {
     const sortHealthNotifications = (a: StreamHealth, b: StreamHealth) => {
       if (a.updatedTime > b.updatedTime) {

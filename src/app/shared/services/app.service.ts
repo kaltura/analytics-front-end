@@ -39,7 +39,7 @@ export class AppService implements OnDestroy {
     no: 'No',
     ok: 'OK'
   };
-  
+
   private readonly supportedLanguages = ['de', 'en', 'es', 'fr', 'ja', 'nl', 'pt_br', 'ru', 'zh_hans', 'zh_hant'];
 
   constructor(private _logger: KalturaLogger,
@@ -113,7 +113,7 @@ export class AppService implements OnDestroy {
 
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe(config => setConfig(config, true));
+      .subscribe((config: any) => setConfig(config, true));
 
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
@@ -131,7 +131,7 @@ export class AppService implements OnDestroy {
     this._frameEventManager.listen(FrameEvents.SetLogsLevel)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this._logger.isValidLogLevel(payload.level)))
       .subscribe(({ level }) => this._logger.setOptions({ level }));
-    
+
     this._frameEventManager.listen(FrameEvents.SetLanguage)
       .pipe(cancelOnDestroy(this), filter(payload => payload && this.supportedLanguages.indexOf(payload) > -1))
       .subscribe(( locale ) => {

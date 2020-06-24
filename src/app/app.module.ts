@@ -8,8 +8,8 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { KalturaClientModule } from 'kaltura-ngx-client';
-import { analyticsConfig } from '../configuration/analytics-config';
+import {KalturaClientModule, KalturaClientOptions, KalturaRequestOptionsArgs} from 'kaltura-ngx-client';
+import {analyticsConfig, getKalturaServerUri} from '../configuration/analytics-config';
 import { BrowserService, ErrorsManagerService, AuthService } from './shared/services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
@@ -29,6 +29,18 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + analyticsConfig.appVersion);
 }
 
+export function kalturaClientOptionsFactory(): KalturaClientOptions {
+
+  return  {
+    endpointUrl: getKalturaServerUri(),
+    clientTag: 'kmcng',
+    chunkFileSize: 5 * 1024 * 1024
+  };
+}
+export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs {
+  return  {};
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    KalturaClientModule.forRoot(),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory, kalturaClientDefaultOptionsFactory),
     AnalyticsPermissionsModule.forRoot(),
     FrameEventManagerModule.forRoot(),
     TranslateModule.forRoot({
