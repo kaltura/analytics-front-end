@@ -121,8 +121,8 @@ export class PathContentService implements  OnDestroy {
             if (interaction.data && interaction.data.behavior && supportedInteractionTypes.indexOf(interaction.data.behavior.type) !== -1 ) {
               let newHotspot: HotSpot = {
                 id: interaction.id,
-                startTime: interaction.startTime,
-                endTime: interaction.endTime,
+                startTime: interaction.startTime / node.pathData.msDuration,
+                endTime: interaction.endTime / node.pathData.msDuration,
                 name: interaction.data.text ? interaction.data.text.label : '',
                 type: 'none'
               };
