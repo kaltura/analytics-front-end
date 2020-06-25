@@ -46,7 +46,7 @@
     "ngx-echarts": "^4.2.1",
     "ngx-page-scroll": "^5.0.1",
     "normalize.css": "^8.0.1",
-    "primeng": "^9.1.0",
+    "primeng": "^9.0.6",
     "rxjs": "^6.5.3",
     "rxjs-compat": "^6.5.3",
     "seamless-immutable": "~7.1.2",
