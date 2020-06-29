@@ -48,7 +48,7 @@ export class TopVideosTableComponent implements OnDestroy {
   
   @Output() sortChanged = new EventEmitter<SortEvent>();
 
-  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];

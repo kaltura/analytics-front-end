@@ -29,7 +29,7 @@ export class HeatMapComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
   
-  @ViewChild('follower', { static: false }) _follower: ElementRef;
+  @ViewChild('follower') _follower: ElementRef;
   
   @HostListener('mousemove', ['$event'])
   public onMouseMove(event: MouseEvent): void {

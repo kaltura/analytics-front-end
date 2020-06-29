@@ -45,7 +45,10 @@ import { CategoriesSelectorComponent } from 'shared/components/category-filter/c
 import { AutocompleteFilterComponent } from 'shared/components/autocomplete-filter/autocomplete-filter.component';
 import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropdown-filter.component';
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
-import { components as FilterComponentsList } from 'shared/components/filter/components-list';
+import { FilterComponent } from './components/filter/filter.component';
+import { TagsFilterComponent } from './components/filter/tags-filter/tags-filter.component';
+import { OwnersFilterComponent } from './components/filter/owners-filter/owners-filter.component';
+import { LocationFilterComponent } from './components/filter/location-filter/location-filter.component';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
@@ -143,7 +146,10 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     TableModeIconPipe,
     StreamDurationPipe,
     EvenTableHeightDirective,
-    ...FilterComponentsList,
+    FilterComponent,
+    TagsFilterComponent,
+    OwnersFilterComponent,
+    LocationFilterComponent,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
     HeatMapComponent,
@@ -198,7 +204,10 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     TableModeIconPipe,
     StreamDurationPipe,
     EvenTableHeightDirective,
-    ...FilterComponentsList,
+    FilterComponent,
+    TagsFilterComponent,
+    OwnersFilterComponent,
+    LocationFilterComponent,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
     HeatMapComponent,
@@ -214,7 +223,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
 })
 
 export class SharedModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
       providers: <any[]>[

@@ -34,7 +34,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class EndUserStorageComponent implements OnInit, OnDestroy {
 
-  @ViewChild('userFilter', { static: false }) private userFilter: UsersFilterComponent;
+  @ViewChild('userFilter') private userFilter: UsersFilterComponent;
   
   private _paginationChanged = new Subject<void>();
   

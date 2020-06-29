@@ -33,12 +33,12 @@ import * as moment from "moment";
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
   @ViewChild('categoryFilter', {static: true}) categoryFilter: CatFilterComponent;
-  @ViewChild('topVideos', {static: false}) set topVideos(comp: CategoryTopContentComponent) {
+  @ViewChild('topVideos') set topVideos(comp: CategoryTopContentComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
       this._categoryTopContentComponent = comp;
     }, 0);
   }
-  @ViewChild('topCountries', {static: false}) set topCountries(comp: TopCountriesComponent) {
+  @ViewChild('topCountries') set topCountries(comp: TopCountriesComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
       this._topCountriesComponent = comp;
     }, 0);

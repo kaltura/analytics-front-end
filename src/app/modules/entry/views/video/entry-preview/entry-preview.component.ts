@@ -57,7 +57,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
 
   public _chartOptions = {};
 
-  @ViewChild('player', { static: false }) player: KalturaPlayerComponent;
+  @ViewChild('player') player: KalturaPlayerComponent;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;

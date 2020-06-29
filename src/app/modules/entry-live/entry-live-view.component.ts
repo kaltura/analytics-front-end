@@ -45,7 +45,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
   ]
 })
 export class EntryLiveViewComponent implements OnInit, OnDestroy {
-  @ViewChild(TimeSelectorComponent, { static: false }) _timeSelector: TimeSelectorComponent;
+  @ViewChild(TimeSelectorComponent) _timeSelector: TimeSelectorComponent;
   private _widgetsRegistered = false;
 
   public _isBusy = true;
@@ -113,7 +113,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe(data => {
         this._isBusy = false;
-        this._entry = data;
+        this._entry = data as KalturaExtendedLiveEntry;
         this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive === KalturaNullableBoolean.trueValue;
         this._registerWidgets();
 

@@ -18,7 +18,7 @@ export class UsersFilterComponent implements OnInit {
 
   @Output() filterChange: EventEmitter<KalturaUser[]> = new EventEmitter();
   
-  @ViewChild('autocomplete', { static: false }) _autoComplete: AutoComplete;
+  @ViewChild('autocomplete') _autoComplete: AutoComplete;
 
   private _selectedUsers: KalturaUser[] = [];
   private _searchUsersSubscription: ISubscription;

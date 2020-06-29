@@ -45,7 +45,7 @@ export enum GeoTableModes {
   ]
 })
 export class GeoLocationComponent implements OnInit, OnDestroy {
-  @ViewChild('table', { static: false }) _table: Table;
+  @ViewChild('table') _table: Table;
 
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });

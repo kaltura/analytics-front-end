@@ -26,7 +26,7 @@ import { OverlayComponent } from "shared/components/overlay/overlay.component";
 })
 export class SubcategoriesComponent extends CategoryBase implements OnDestroy {
   @Input() categoryId: string = null;
-  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayComponent;
   
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,

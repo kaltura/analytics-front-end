@@ -33,7 +33,7 @@ export class TimeSelectorComponent implements OnDestroy {
   
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
   
-  @ViewChild(PopupWidgetComponent, { static: false }) _popupWidget: PopupWidgetComponent;
+  @ViewChild(PopupWidgetComponent) _popupWidget: PopupWidgetComponent;
   
   private _lastSelectedDateRange: DateRange; // used for revert selection
   private _startDate: Date;

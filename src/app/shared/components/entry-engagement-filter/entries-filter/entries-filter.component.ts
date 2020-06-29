@@ -29,7 +29,7 @@ export class EntriesEngagementFilterComponent implements OnDestroy {
   
   @Output() itemSelected = new EventEmitter();
   
-  @ViewChild('searchEntries', { static: false }) _autoComplete: AutoComplete = null;
+  @ViewChild('searchEntries') _autoComplete: AutoComplete = null;
   
   private _selectedEntries: KalturaMediaEntry[] = [];
   private _searchEntriesSubscription: Unsubscribable;

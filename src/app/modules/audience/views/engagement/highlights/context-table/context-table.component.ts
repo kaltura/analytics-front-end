@@ -31,7 +31,7 @@ export class ContextTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   
-  @ViewChild('overlay', { static: false }) _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayComponent;
   
   private _reportType = reportTypeMap(KalturaReportType.topPlaybackContext);
   private _dataConfig: ReportDataConfig;

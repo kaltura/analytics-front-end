@@ -18,7 +18,7 @@ export class DevicesTableComponent implements OnDestroy {
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
   
-  @ViewChild('table', { static: false }) _table: Table;
+  @ViewChild('table') _table: Table;
   
   public _pageSize = liveDiscoveryTablePageSize;
   

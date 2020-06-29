@@ -8,7 +8,7 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
   providers: []
 })
 export class FrameEventManagerModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<FrameEventManagerModule> {
     return {
       ngModule: FrameEventManagerModule,
       providers: [
