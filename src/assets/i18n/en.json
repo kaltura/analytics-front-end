@@ -475,6 +475,7 @@
       "from": "From:",
       "invalidFromTime": "Invalid start time",
       "invalidToTime": "Invalid end time",
+      "manual": "Health Monitoring is available only while the ingestion was made via Kaltura",
       "generalErrorMessage": "That’s a lot of data, please reduce the date range and try again",
       "streamStatus": {
         "live": "Live",
