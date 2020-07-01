@@ -6,6 +6,7 @@ import { ErrorsManagerService } from 'shared/services';
 import { filter } from 'rxjs/operators';
 import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 import { KalturaStreamStatus } from '../../utils/get-stream-status';
+import {KalturaSourceType} from "kaltura-ngx-client";
 
 @Component({
   selector: 'app-live-users',
@@ -16,8 +17,8 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   @Input() set entry(value: KalturaExtendedLiveEntry) {
     if (value) {
       this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing].indexOf(value.streamStatus) === -1;
-      
-      if (!this._isLive) {
+      this._isManual = value.sourceType === KalturaSourceType.manualLiveStream;
+      if (!this._isLive && !this._isManual) {
         this._resetGraph();
       } else if (this._data) {
         this._updateGraphPoints(this._data);
@@ -26,23 +27,24 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
       this._resetGraph();
     }
   }
-  
+
   private _graphPoints: GraphPoint[][];
   private _echartsIntance: any;
   private _isLive = false;
-  
+  private _isManual = false;
+
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage;
   public _data: LiveUsersData;
   public _graphData: { [key: string]: any } = {};
   public _activeUsersCount = '0';
   public _engagedUsersCount = '0%';
-  
+
   constructor(private _liveUsersWidget: LiveUsersWidget,
               private _errorsManager: ErrorsManagerService) {
     this._resetGraph();
   }
-  
+
   ngOnInit() {
     this._liveUsersWidget.state$
       .pipe(cancelOnDestroy(this))
@@ -61,22 +63,22 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
       });
-    
+
     this._liveUsersWidget.data$
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((data: LiveUsersData) => {
         this._data = data;
-        
-        if (this._isLive) {
+
+        if (this._isLive || this._isManual) {
           this._updateGraphPoints(this._data);
         }
       });
     this._graphData = this._liveUsersWidget.getGraphConfig(this._graphPoints[0], this._graphPoints[1]);
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   private _resetGraph(): void {
     this._updateGraphPoints({
       activeUsers: Array.from({ length: 18 }, () => ({ value: 0 })),
@@ -90,18 +92,18 @@ export class LiveUsersComponent implements OnInit, OnDestroy {
   private _updateGraphPoints(data: LiveUsersData): void {
     const { dates, activeUsers, engagedUsers, currentEngagedUsers, currentActiveUsers } = data;
     this._graphPoints = [activeUsers, engagedUsers];
-    
+
     if (this._echartsIntance) {
       this._echartsIntance.setOption({
         series: [{ data: activeUsers }, { data: engagedUsers }],
         xAxis: [{ data: dates }],
       });
     }
-  
+
     this._activeUsersCount = currentActiveUsers;
     this._engagedUsersCount = currentEngagedUsers;
   }
-  
+
   public _onChartInit(ec: any): void {
     this._echartsIntance = ec;
   }
