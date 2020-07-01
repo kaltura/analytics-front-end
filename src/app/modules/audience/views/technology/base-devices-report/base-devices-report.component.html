@@ -56,6 +56,7 @@
                 <th [ngStyle]="{'width': '50px', 'padding-left': '16px'}" *ngIf="_showIcon"></th>
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="col !== 'plays_trend' && col !== 'plays_distribution' && col !== 'os_family' && col !== 'os' && col !== 'browser' && col !== 'browser_family' ? col : null"
+                    [class.nonSortable]="col === 'plays_trend' || col === 'plays_distribution' || col === 'os_family' || col === 'os' || col === 'browser' || col === 'browser_family'"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.technology.' + col | translate" [showOnEllipsis]="true">

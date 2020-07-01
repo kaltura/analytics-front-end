@@ -21,16 +21,16 @@
             <tr>
               <th [ngStyle]="{'width': '52px'}"></th>
               <th>{{'app.entry.name' | translate}}</th>
-              <th [pSortableColumn]="_isCompareMode ? null : 'count_plays'">
+              <th [pSortableColumn]="_isCompareMode ? null : 'count_plays'" [class.nonSortable]="_isCompareMode">
                 {{'app.entry.count_plays' | translate}}
                 <p-sortIcon [field]="'count_plays'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
               <th *ngIf="!_isCompareMode">{{'app.entry.plays_distribution' | translate}}</th>
-              <th [pSortableColumn]="_isCompareMode ? null : 'unique_viewers'">
+              <th [pSortableColumn]="_isCompareMode ? null : 'unique_viewers'" [class.nonSortable]="_isCompareMode">
                 {{'app.entry.unique_viewers' | translate}}
                 <p-sortIcon [field]="'unique_viewers'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
-              <th [pSortableColumn]="_isCompareMode ? null : 'sum_time_viewed'">
+              <th [pSortableColumn]="_isCompareMode ? null : 'sum_time_viewed'" [class.nonSortable]="_isCompareMode">
                 {{'app.entry.sum_time_viewed' | translate}}
                 <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
