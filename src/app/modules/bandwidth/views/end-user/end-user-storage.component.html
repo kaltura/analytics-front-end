@@ -65,7 +65,7 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="(isCompareMode || col === 'name') ? null : col">
+                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'name' ? null : col" [class.nonSortable]="isCompareMode || col === 'name'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.bandwidth.enduser_table.' + col | translate" [showOnEllipsis]="true">
                       {{'app.bandwidth.enduser_table.' + col | translate}}

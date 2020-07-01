@@ -28,7 +28,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
-              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
+              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [class.nonSortable]="_isCompareMode || col === 'name'" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
                 <span>{{'app.entry.' + col | translate}}</span>
                 <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
               </th>

@@ -519,7 +519,15 @@ button, a, tr, td, th, li, [role=button], [role=link], [role=tab], div, p-radiob
 .ui-table p-sorticon {
   vertical-align: unset;
 }
-
+.ui-table th.nonSortable {
+  cursor: default;
+  &:hover {
+    color: $kGrayscale3 !important;
+  }
+  &:focus {
+    outline: none !important;
+  }
+}
 k-area-blocker {
   .kErrorMessageContainer {
     width: 100%;

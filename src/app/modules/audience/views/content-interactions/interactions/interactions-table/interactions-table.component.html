@@ -16,7 +16,7 @@
             <th
               [ngStyle]="{'width': '60px', 'text-align': 'center'}">{{'app.contentInteractions.index' | translate}}</th>
             <th *ngIf="!isCompareMode" [ngStyle]="{'width': '100px', 'padding-left': '10px'}"></th>
-            <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col"
+            <th *ngFor="let col of columns" [pSortableColumn]="isCompareMode ? null : col" [class.nonSortable]="isCompareMode"
                 [ngStyle]="{'width': col === 'entry_name' ? '40%' : '15%'}"
                 [kTooltip]="'app.contentInteractions.' + col | translate"
                 [showOnEllipsis]="true">

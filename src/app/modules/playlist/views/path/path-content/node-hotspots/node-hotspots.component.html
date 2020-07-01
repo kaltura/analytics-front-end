@@ -22,7 +22,7 @@
               <th [ngStyle]="{'width': '45px'}"></th>
               <th>{{'app.playlist.name' | translate}}</th>
               <th>{{'app.playlist.destination' | translate}}</th>
-              <th [pSortableColumn]="_isCompareMode ? null :'count_hotspot_clicked'">
+              <th [pSortableColumn]="_isCompareMode ? null :'count_hotspot_clicked'" [class.nonSortable]="_isCompareMode">
                 {{'app.playlist.clicks' | translate}}
                 <p-sortIcon *ngIf="!_isCompareMode" [field]="'count_hotspot_clicked'"></p-sortIcon>
               </th>

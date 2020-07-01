@@ -9,7 +9,7 @@
          (sortFunction)="_onSortChanged($event)">
   <ng-template pTemplate="header">
     <tr [ngStyle]="{'width': '100%'}">
-      <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col" [ngStyle]="{'width': '100%'}">
+      <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col" [class.nonSortable]="isCompareMode" [ngStyle]="{'width': '100%'}">
         {{'app.engagement.highlightsReport.' + col | translate}}
         <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
       </th>
