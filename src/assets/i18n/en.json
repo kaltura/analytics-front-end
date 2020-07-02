@@ -793,6 +793,7 @@
       "count_loads": "Player Impressions",
       "loads_distribution": "Player Impressions Distribution",
       "avg_time_viewed": "Avg. View Time",
+      "full_name": "Name",
       "name": "Name",
       "avg_view_drop_off": "Avg. Drop Off Rate",
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
