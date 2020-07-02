@@ -23,11 +23,13 @@ export class DatesTableComponent implements OnInit {
 
   @Input() set data(value: { current: Report, compare?: Report }) {
     if (value) {
-      if (value.compare) {
-        this._handleCompare(value.current, value.compare);
-      } else if (value.current) {
-        this._handleTable(value.current);
-      }
+      setTimeout(() => {
+        if (value.compare) {
+          this._handleCompare(value.current, value.compare);
+        } else if (value.current) {
+          this._handleTable(value.current);
+        }
+      }, 200); // use a timeout to verify currentPeriod and comparePeriod bindings update properly
     }
   }
 
