@@ -10,7 +10,7 @@
         <div class="kColumns">
           <div class="kDeviceLabel">
             <i class="kIcon" [ngClass]="_topDeviceLabel | appDeviceIcon"></i>
-            <span class="topDevice">{{('app.audience.technology.devices.' + _topDeviceLabel) | translate}}</span>
+            <span class="topDevice">{{(_topDeviceLabel ? 'app.audience.technology.devices.' + _topDeviceLabel : '') | translate}}</span>
           </div>
           <span class="kDevice">{{'app.category.popularDevice' | translate}}</span>
         </div>

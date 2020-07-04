@@ -37,7 +37,7 @@ export class BrowserService {
   private _renderer: Renderer2;
   private _contrastThemeChange = new Subject<boolean>();
   private _currentQueryParams: Params = {}; // keep current query params since they're not accessible under host app
-  
+
   public contrastThemeChange$ = this._contrastThemeChange.asObservable();
 
   public get isContrasTheme(): boolean {
@@ -73,11 +73,11 @@ export class BrowserService {
                 @Inject(DOCUMENT) private _document) {
       this._renderer = _rendererFactory.createRenderer(null, null);
     }
-    
+
     public updateCurrentQueryParams(params: Params): void {
       this._currentQueryParams = params;
     }
-  
+
   public getCurrentQueryParams(format: 'string' = null, params?: { [key: string]: string }): Params | string {
     let currentQueryParams = { ...this._currentQueryParams };
     if (params) {
@@ -88,7 +88,7 @@ export class BrowserService {
         .map(key => `${key}=${currentQueryParams[key]}`)
         .join('&');
     }
-    
+
     return currentQueryParams;
   }
 
@@ -134,9 +134,10 @@ export class BrowserService {
     }
 
     public alert(confirmation: Confirmation) {
+        /*
         if (analyticsConfig.isHosted) {
           this._frameEventManager.publish(FrameEvents.ScrollTo, '0');
-        }
+        } */
         confirmation.key = 'alert';
         this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
@@ -205,7 +206,7 @@ export class BrowserService {
       xhr.send();
     });
   }
-  
+
   public toggleContrastTheme(): void {
     const themeClass = 'kHighContrast';
     const body = this._document.body;

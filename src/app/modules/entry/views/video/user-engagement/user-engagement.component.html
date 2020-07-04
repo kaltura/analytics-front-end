@@ -28,7 +28,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode"></th>
-              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
+              <th *ngFor="let col of _columns" [pSortableColumn]="_isCompareMode || col === 'name' ? null : col" [class.nonSortable]="_isCompareMode || col === 'name'" [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true">
                 <span>{{'app.entry.' + col | translate}}</span>
                 <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'name'"></p-sortIcon>
               </th>
@@ -44,7 +44,7 @@
                 </a>
               </td>
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-                <span *ngIf="_isCompareMode && data[col]?.value && col !== 'name'"
+                <span *ngIf="_isCompareMode && data[col]?.value && col !== 'full_name'"
                       class="kTrend">
                   <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                     <app-trend-value [value]="data[col].value"
@@ -52,16 +52,16 @@
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
                 </span>
-                <ng-container *ngIf="!_isCompareMode || col === 'name'">
-                  <span *ngIf="col !== 'avg_completion_rate' && col !== 'name' && col !== 'total_completion_rate'">{{data[col]}}</span>
+                <ng-container *ngIf="!_isCompareMode || col === 'full_name'">
+                  <span *ngIf="col !== 'avg_completion_rate' && col !== 'full_name' && col !== 'total_completion_rate'">{{data[col]}}</span>
                   <a class="kTableColumn"
                      tabindex="0"
                      role="link"
-                     *ngIf="col === 'name'"
-                     [kTooltip]="data[col]"
+                     *ngIf="col === 'full_name'"
+                     [kTooltip]="data[col].length ? data[col] : data['name']"
                      [showOnEllipsis]="true"
                      (keydown.enter)="_drillDown(data)"
-                     (click)="_drillDown(data)">{{data[col]}}</a>
+                     (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
                   <app-bullet *ngIf="col === 'avg_completion_rate'"
                               colorScheme="dropoff"
                               [value]="data['avg_completion_rate']"></app-bullet>

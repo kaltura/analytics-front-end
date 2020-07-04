@@ -60,6 +60,7 @@
                 <th [ngStyle]="{'width': '30px'}"></th>
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="_isCompareMode || col === 'plays_distribution'  || col === 'domain_name' ? null : col"
+                    [class.nonSortable]="_isCompareMode || col === 'plays_distribution'  || col === 'domain_name'"
                     [ngStyle]="{
                       'width': col === 'plays_distribution' || col === 'domain_name' || col === 'referrer'
                         ? '20%'

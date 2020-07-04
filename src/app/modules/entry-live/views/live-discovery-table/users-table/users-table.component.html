@@ -8,7 +8,7 @@
          (onPage)="_onPaginationChange($event)">
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let col of columns; let i = index" [pSortableColumn]="_isSortable(col)">
+      <th *ngFor="let col of columns; let i = index" [pSortableColumn]="_isSortable(col)"  [class.nonSortable]="!_isSortable(col)">
         {{'app.entryLive.discovery.tables.users.' + col | translate}}
         <p-sortIcon [field]="_isSortable(col)"></p-sortIcon>
       </th>

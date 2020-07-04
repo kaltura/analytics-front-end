@@ -8,6 +8,7 @@
 <p-confirmDialog #confirm
                 header="Confirmation"
                 width="440"
+                [position]="'top'"
                 [key]="'confirm'"
                 [closeOnEscape]="false"
                 [class.kAlignToLeft]="_appService.confirmDialogAlignLeft"
@@ -15,6 +16,7 @@
                 [rejectLabel]="_appService.confirmationLabels.no"></p-confirmDialog>
 
 <p-confirmDialog #alert
+                 [position]="'top'"
                  header="Alert"
                  width="440"
                  [key]="'alert'"
