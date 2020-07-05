@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class StreamStatePipe implements PipeTransform {
   constructor(private _appLocalization: TranslateService) {
   }
-  
-  transform(status: KalturaStreamStatus, icon = false): string {
+
+  transform(status: KalturaStreamStatus | string, icon = false): string {
     let result = {
       icon: '',
       status: ''
@@ -42,8 +42,8 @@ export class StreamStatePipe implements PipeTransform {
       default:
         break;
     }
-  
+
     return icon ? result.icon : result.status;
   }
-  
+
 }

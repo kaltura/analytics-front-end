@@ -1,4 +1,4 @@
-<div class="kLiveStatus"
+<div class="kLiveStatus" *ngIf="!_isManual"
      [ngClass]="{'kInitializing': _initializing, 'kPreview': _isPreview, 'kOffline': !_isLive && !_initializing && !_isPreview}">
   <div class="kStatus">
     <i class="kStatusIcon" [ngClass]="_entry?.streamStatus | appStreamState:true"></i>
@@ -8,5 +8,12 @@
   <div *ngIf="_isLive" class="kRedundancy">
     <i class="kIcon" [ngClass]="_entry?.redundancy ? 'kIconcheck_small' : 'kIconclose_small'"></i>
     {{'app.entryLive.redundancy' | translate}}
+  </div>
+</div>
+
+<div class="kLiveStatus" *ngIf="_isManual" [ngClass]="{'kOffline': !_isLive}">
+  <div class="kStatus">
+    <i class="kStatusIcon" [ngClass]="(_isLive ? 'Live' : 'Offline') | appStreamState:true"></i>
+    <span class="kStreamStatus">{{(_isLive ? 'Live' : 'Offline') | appStreamState}}</span>
   </div>
 </div>

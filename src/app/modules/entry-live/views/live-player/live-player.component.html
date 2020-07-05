@@ -1,2 +1,6 @@
-<iframe [src]="_frameSrc | safe" width="100%" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0" allow="autoplay *; fullscreen *; encrypted-media *"></iframe>
-
+<div class="kPlayer" aria-label="Live-Player">
+  <app-k-player #player [id]="'analytics-live-player'" [cdnUrl]="serverUri" [pid]="partnerID" *ngIf="entryId.length"
+              [uiconfid]="UIConfID" [entryid]="entryId"
+              [flashvars]="flashvars" [fillWidth]="true" [fillHeight]="true"
+              (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player>
+</div>

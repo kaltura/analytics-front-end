@@ -57,6 +57,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _selectedDateRange = defaultDateRange;
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
   public _isManual = false;
+  public _manualLiveOnline = false;
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -250,5 +251,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
   public _onUsersModeChange(): void {
     this._widgetsManager.restartAll();
+  }
+
+  public onLiveStatusChange(isLive: boolean): void {
+    if (this._isManual) {
+      this._manualLiveOnline = isLive;
+    }
   }
 }

@@ -30,6 +30,12 @@ export class LiveStatusComponent implements OnDestroy {
     }
   }
 
+  @Input() set manualLiveOnline(isLive: boolean) {
+    if (this._isManual) {
+      this._isLive = isLive;
+    }
+  }
+
   private _timer: Unsubscribable;
 
   public _entry: KalturaExtendedLiveEntry;
