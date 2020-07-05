@@ -1,31 +1,28 @@
 @import '../../../../../styles/variables';
 
-:host {
-  margin-bottom: -2px;
+.kPlayer {
+  position: relative;
+  width: 100%;
 }
-
 /* player height according to screen resolution */
 @media (max-width: 991px) {
-  iframe {
+  .kPlayer {
     height: 160px;
   }
 }
 @media screen and (min-width: 992px) {
-  iframe {
+  .kPlayer {
     height: 200px;
   }
 }
 @media screen and (min-width: 1280px) {
-  iframe {
+  .kPlayer {
     height: 240px;
   }
 }
 @media screen and (min-width: 1610px) {
-  iframe {
+  .kPlayer {
     height: 280px;
   }
 }
 
-iframe {
-  background: $kGrayscale1;
-}

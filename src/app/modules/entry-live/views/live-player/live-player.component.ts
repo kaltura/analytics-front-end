@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri } from "configuration/analytics-config";
 import { AuthService } from "shared/services";
 
@@ -7,36 +7,45 @@ import { AuthService } from "shared/services";
   templateUrl: './live-player.component.html',
   styleUrls: ['./live-player.component.scss']
 })
-export class LivePlayerComponent implements AfterViewInit {
+export class LivePlayerComponent {
   @Input() entryId = '';
-  public _frameSrc = '';
+  @Output() liveStatusChange = new EventEmitter<boolean>();
 
-  constructor(private _authService: AuthService) {}
+  public serverUri = getKalturaServerUri();
+  public partnerID = this._authService.pid;
+  public UIConfID = analyticsConfig.kalturaServer.previewUIConf;
+  public flashvars = {
+    "autoPlay": true,
+    "autoMute": true,
+    "ks": this._authService.ks || '',
+    "disableEntryRedirect": true,
+    "SkipKSOnIsLiveRequest": false,
+    "kAnalony": {
+      "plugin": false
+    }
+  };
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this._frameSrc = this._createUrl();
-    }, 200); // safari needs it
+  constructor(private _authService: AuthService, private zone: NgZone) {}
+
+  public _onPlayerReady(player): void {
+    const playerInstance = player;
+
+    playerInstance.kBind('liveOnline', (event) => {
+      this.zone.run(() => {
+        this.liveStatusChange.emit(true);
+      });
+    });
+    playerInstance.kBind('firstPlay', (event) => {
+      this.zone.run(() => {
+        this.liveStatusChange.emit(true);
+      });
+    });
+    playerInstance.kBind('liveOffline', (event) => {
+      this.zone.run(() => {
+        this.liveStatusChange.emit(false);
+      });
+    });
 
   }
-
-  private _createUrl(): string {
-
-    let result = "";
-
-    // create preview embed code
-
-    const entryId = this.entryId;
-    const UIConfID = analyticsConfig.kalturaServer.previewUIConf;
-    const partnerID = this._authService.pid;
-    const ks = this._authService.ks || '';
-    const serverUri = getKalturaServerUri();
-
-    let flashVars = `flashvars[autoPlay]=true&flashvars[autoMute]=true&flashvars[kAnalony.plugin]=false&flashvars[ks]=${ks}&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false`;
-    result = `${serverUri}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}`;
-
-    return result;
-  }
-
 
 }

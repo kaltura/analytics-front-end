@@ -37,6 +37,12 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	@Input()
 	id = "";
 
+	@Input()
+	fillWidth = false;
+
+	@Input()
+	fillHeight = false;
+
 	@Output()
 	kalturaPlayerReady = new EventEmitter<any>();
 

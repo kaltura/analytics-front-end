@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaNullableBoolean, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaNullableBoolean, KalturaReportType, KalturaSourceType } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -56,6 +56,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _canShowToggleLive = false;
   public _selectedDateRange = defaultDateRange;
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
+  public _isManual = false;
+  public _manualLiveOnline = false;
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -114,6 +116,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._isBusy = false;
         this._entry = data as KalturaExtendedLiveEntry;
+        this._isManual = this._entry.sourceType === KalturaSourceType.manualLiveStream;
         this._canShowToggleLive = this._entryLiveViewConfig.toggleLive && this._entry.explicitLive === KalturaNullableBoolean.trueValue;
         this._registerWidgets();
 
@@ -248,5 +251,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
   public _onUsersModeChange(): void {
     this._widgetsManager.restartAll();
+  }
+
+  public onLiveStatusChange(isLive: boolean): void {
+    if (this._isManual) {
+      this._manualLiveOnline = isLive;
+    }
   }
 }
