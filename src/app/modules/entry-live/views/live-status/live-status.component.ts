@@ -19,13 +19,15 @@ export class LiveStatusComponent implements OnDestroy {
       this._entry = value;
       this._isPreview = KalturaStreamStatus.preview === value.streamStatus;
       this._initializing = KalturaStreamStatus.initializing === value.streamStatus;
-      this._isManual = value.sourceType === KalturaSourceType.manualLiveStream,
-      this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing, KalturaStreamStatus.preview].indexOf(value.streamStatus) === -1;
-
-      if (this._isLive) {
-        this._startTimer();
-      } else {
-        this._stopTimer();
+      this._isManual = value.sourceType === KalturaSourceType.manualLiveStream;
+      // manual live will get the isLive status from the player as we currently don't support it in the backend
+      if (!this._isManual) {
+        this._isLive = [KalturaStreamStatus.offline, KalturaStreamStatus.initializing, KalturaStreamStatus.preview].indexOf(value.streamStatus) === -1;
+        if (this._isLive) {
+          this._startTimer();
+        } else {
+          this._stopTimer();
+        }
       }
     }
   }
