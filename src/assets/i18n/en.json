@@ -798,7 +798,7 @@
       "name": "Name",
       "avg_view_drop_off": "Avg. Drop Off Rate",
       "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
-      "totalViewersCount": "{{0}} Viewers",
+      "totalViewersCount": "{{0}} Users",
       "totalEntriesCount": "{{0}} Entries",
       "totalContextCount": "{{0}} Contexts",
       "avg_completion_rate": "Avg. Completion Rate",
