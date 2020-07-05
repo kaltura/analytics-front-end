@@ -24,6 +24,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _loadingEntries = false;
   public _totalCount = 0;
+  public _polling = false;
 
   public uiconfid: number;
   public ks: string;
@@ -49,12 +50,17 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   }
 
   private startPolling(): void {
+    this._polling = false;
     this.clearIntervals();
     const DATA_LOAD_INTERVAL = 60 * 1000; // 60 seconds interval
     this._broadcastingEntriesService.loadData();
     this.reportIntervalId = setInterval(() => {
       this._broadcastingEntriesService.loadData();
     }, DATA_LOAD_INTERVAL);
+    // use a timeout to reload the players as switching entry ID in a playing v7 player doesn't trigger media change
+    setTimeout(() => {
+      this._polling = true;
+    }, 200);
   }
 
   ngOnDestroy(): void {
