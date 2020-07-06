@@ -134,10 +134,9 @@ export class BrowserService {
     }
 
     public alert(confirmation: Confirmation) {
-        /*
         if (analyticsConfig.isHosted) {
           this._frameEventManager.publish(FrameEvents.ScrollTo, '0');
-        } */
+        }
         confirmation.key = 'alert';
         this._fixConfirmation(confirmation);
         this._onConfirmationFn(confirmation);
