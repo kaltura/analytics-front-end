@@ -10,7 +10,7 @@ export class CategoryExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
     super();
   }
-  
+
   public getConfig(viewConfig?: ViewConfig): ExportItem[] {
     const config: ExportItem[] = [
      /* {
@@ -61,14 +61,14 @@ export class CategoryExportConfig extends ExportConfigService {
         label: this._translate.instant('app.category.exportLabels.user'),
         reportType: reportTypeMap(KalturaReportType.userTopContent),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
+        order: '-count_loads',
       },
       {
         id: 'performance',
         label: this._translate.instant('app.category.exportLabels.media'),
         reportType: reportTypeMap(KalturaReportType.topContentCreator),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
+        order: '-count_loads',
       },
       {
         id: 'geo',
@@ -91,7 +91,7 @@ export class CategoryExportConfig extends ExportConfigService {
         order: '-count_plays',
       }
     ];
-  
+
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;
   }
 

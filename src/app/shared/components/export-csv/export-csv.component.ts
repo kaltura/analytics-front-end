@@ -28,11 +28,11 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() rootEntryIdIn: string = null;
   @Input() userId: string = null;
   @Input() width = 240;
-  
+
   @Input() set reports(value: ExportItem[]) {
     if (Array.isArray(value)) {
       this._showComponent = true;
-      
+
       if (value.length > 1) { // show dropdown
         this._singleMode = false;
         this._options = this._getNodes(value);
@@ -47,25 +47,25 @@ export class ExportCsvComponent implements OnDestroy {
       this._showComponent = false;
     }
   }
-  
+
   @ViewChild('popupWidgetComponent') _popup: PopupWidgetComponent;
-  
+
   public _opened = false;
   public _options: TreeNode[] = [];
   public _selected: TreeNode[] = [];
   public _singleMode = false;
   public _showComponent = false;
   public _exportingCsv = false;
-  
+
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
               private _kalturaClient: KalturaClient) {
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   private _focusSelectAll(): void {
     setTimeout(() => {
       const node = document.querySelector('.kExportPanel .ui-treenode-content') as HTMLElement;
@@ -74,40 +74,40 @@ export class ExportCsvComponent implements OnDestroy {
       }
     });
   }
-  
+
   private _getFilter(): KalturaEndUserReportInputFilter {
     let filter = new KalturaEndUserReportInputFilter();
-    
+
     if (this.dateFilter) {
       filter.timeZoneOffset = this.dateFilter.timeZoneOffset;
       filter.fromDate = this.dateFilter.startDate;
       filter.toDate = this.dateFilter.endDate;
       filter.interval = this.dateFilter.timeUnits;
     }
-    
+
     if (this.refineFilter) {
       refineFilterToServerValue(this.refineFilter, filter);
     }
-    
+
     if (this.entryId) {
       filter.entryIdIn = this.entryId;
     }
-    
+
     if (this.categoryId && !filter.categoriesIdsIn && !filter.playbackContextIdsIn) {
       filter.categoriesIdsIn = this.categoryId;
     }
-    
+
     if (this.rootEntryIdIn) {
       filter.rootEntryIdIn = this.rootEntryIdIn;
     }
-    
+
     if (this.userId) {
       filter.userIds = this.userId;
     }
-    
+
     return filter;
   }
-  
+
   private _getNodes(reports: ExportItem[]): TreeNode[] {
     return [{
       label: this._translate.instant('app.common.all'),
@@ -121,29 +121,36 @@ export class ExportCsvComponent implements OnDestroy {
       })),
     }];
   }
-  
+
   public _onPopupOpen(): void {
     this._opened = true;
+    this._selected = [];
     this._focusSelectAll();
   }
-  
+
   public _onPopupClose(): void {
     this._opened = false;
     this._selected = [];
-    
+
     if (this._options[0]) {
       this._options[0].partialSelected = false;
     }
   }
-  
-  public _export(): void {
+
+  public _export(selected = [], additionalFilters = null): void {
+    if (!this._selected.length && selected.length) { // allow external override of selection
+      this._selected = selected;
+    }
     if (!this._selected.length) {
       return;
     }
-    
+
     const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     const reportItems = [];
-    const filter = this._getFilter();
+    let filter = this._getFilter();
+    if (additionalFilters) {
+      filter = Object.assign(filter, additionalFilters);
+    }
     const responseOptions = new KalturaReportResponseOptions({
       delimiter: analyticsConfig.valueSeparator,
       skipEmptyDates: analyticsConfig.skipEmptyBuckets
@@ -151,7 +158,7 @@ export class ExportCsvComponent implements OnDestroy {
     const selection: ExportItem[] = this._selected
       .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
       .map(({ data }) => data);
-    
+
     const mapReportItem = (item, label = null) => {
       const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
       if (item.startDate && item.endDate) {
@@ -170,25 +177,25 @@ export class ExportCsvComponent implements OnDestroy {
           filter: itemFilter,
           responseOptions,
         });
-        
+
         if (item.order) {
           reportItem.order = item.order;
         }
-        
+
         if (item.objectIds) {
           reportItem.objectIds = item.objectIds;
         }
-        
+
         if (item.additionalFilters) {
           Object.keys(item.additionalFilters).forEach(key => {
             reportItem.filter[key] = item.additionalFilters[key];
           });
         }
-        
+
         reportItems.push(reportItem);
       });
     };
-    
+
     selection.forEach(item => {
       if (Array.isArray(item.items)) {
         item.items.forEach(i => mapReportItem(i, item.label));
@@ -196,17 +203,17 @@ export class ExportCsvComponent implements OnDestroy {
         mapReportItem(item);
       }
     });
-    
+
     const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportItems }) });
-    
+
     this._exportingCsv = true;
-    
+
     this._kalturaClient.request(exportAction)
       .pipe(
         cancelOnDestroy(this),
         finalize(() => {
           this._exportingCsv = false;
-          
+
           if (this._popup) {
             this._popup.close();
           }

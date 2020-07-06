@@ -23,6 +23,7 @@ import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-even
 import { CategoryTopContentComponent } from "./views/category-top-content";
 import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
 import { CatFilterComponent } from "./filter/filter.component";
+import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
 
 @Component({
@@ -33,6 +34,7 @@ import * as moment from "moment";
 })
 export class CategoryViewComponent implements OnInit, OnDestroy {
   @ViewChild('categoryFilter', {static: true}) categoryFilter: CatFilterComponent;
+  @ViewChild('export', {static: true}) export: ExportCsvComponent;
   @ViewChild('topVideos') set topVideos(comp: CategoryTopContentComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
       this._categoryTopContentComponent = comp;
@@ -61,7 +63,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     this._viewConfig.miniPageViews,
     this._viewConfig.miniHighlights
   ].filter(Boolean).length;
-  
+
   public _loadingCategory = false;
   public _categoryLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -95,11 +97,11 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }
@@ -155,25 +157,52 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   public _onGeoDrillDown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
     let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
-    
+
     if (event.drillDown && event.drillDown.length > 0) {
       update.additionalFilters.countryIn = event.drillDown[0];
     }
-    
+
     if (event.drillDown && event.drillDown.length > 1) {
       update.additionalFilters.regionIn = event.drillDown[1];
     }
-    
+
     this._exportConfig = CategoryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
   }
-  
+
+  public exportReport(event: { type: string, id: string }): void {
+    if (event.type === 'user') {
+      this.export._export([{
+        parent: true,
+        data: {
+          id: "performance",
+          label: "User Engagement",
+          order: "-count_loads",
+          reportType: "47",
+          sections: [1]
+        }
+      }], { userIds: event.id });
+    }
+    if (event.type === 'entry') {
+      this.export._export([{
+        parent: true,
+        data: {
+          id: "performance",
+          label: "Media Engagement",
+          order: "-count_loads",
+          reportType: "13",
+          sections: [1]
+        }
+      }], { entryIdIn: event.id });
+    }
+  }
+
   public openContextFilter(): void {
     this.categoryFilter.openFilter('context');
   }
-  
+
   public _navigateToParent(parentId: number): void {
     if (analyticsConfig.isHosted) {
       const params = this._browserService.getCurrentQueryParams('string', { id: parentId.toString() });
@@ -186,5 +215,5 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
-  
+
 }

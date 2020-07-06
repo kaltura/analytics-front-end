@@ -8,9 +8,9 @@
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle">{{_category?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-            <app-export-csv aria-label="Export"
+            <app-export-csv aria-label="Export" #export
                             role="button"
-                            *ngIf="_viewConfig.export" name="entry"
+                            [class.kHidden]="!_viewConfig.export" name="entry"
                             [reports]="_exportConfig"
                             [refineFilter]="_refineFilter"
                             [dateFilter]="_dateFilter"
@@ -135,6 +135,7 @@
                 [categoryId]="_category?.id.toString()"
                 [dateFilter]="_dateFilter"
                 [dateFilterComponent]="dateFilter"
+                (export)="exportReport($event)"
                 [refineFilter]="_refineFilter"></app-category-performance>
         </div>
 

@@ -26,10 +26,20 @@
   margin-top: 3px;
   cursor: pointer;
 }
-.kTotalCount {
+.kTableHeader {
   padding-left: 24px;
   margin-bottom: 16px;
-  display: block;
+  display: flex;
+  align-items: center;
+  .kTotalCount {
+    margin-right: 14px;
+  }
+  .kLink {
+    font-size: 15px;
+    font-weight: 700;
+    color: $menuBkgColor;
+    cursor: pointer;
+  }
 }
 .kNoResults {
   display: flex;

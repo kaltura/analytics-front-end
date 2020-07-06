@@ -118,7 +118,10 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="_tableModes.user">
-              <span class="kTotalCount">{{'app.entry.totalEntriesCount' | translate: { '0': entriesTableComponentDrilldown.totalCount } }}</span>
+              <div class="kTableHeader">
+                <span class="kTotalCount">{{'app.entry.totalEntriesCount' | translate: { '0': entriesTableComponentDrilldown.totalCount } }}</span>
+                <span class="kLink" (click)="exportReport()">{{'app.common.exportReport' | translate}}</span>
+              </div>
               <app-entries-table #entriesTableComponentDrilldown
                                  [filterChange]="_filterChange$"
                                  [filter]="_filter"
@@ -130,8 +133,10 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="_tableModes.entry">
-              <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': usersTableComponentDrilldown.totalCount } }}</span>
-
+              <div class="kTableHeader">
+                <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': usersTableComponentDrilldown.totalCount } }}</span>
+                <span class="kLink" (click)="exportReport()">{{'app.common.exportReport' | translate}}</span>
+              </div>
               <app-users-table #usersTableComponentDrilldown
                                [filterChange]="_filterChange$"
                                [filter]="_filter"
