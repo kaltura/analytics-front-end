@@ -37,7 +37,11 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	@Input()
 	id = "";
 
-	constructor() {}
+	constructor() {
+	  if (!this.id.length) {
+	    this.id = Math.random().toString().split('.')[1];
+    }
+  }
 
 	ngAfterViewInit() {
 	  this.Embed();
@@ -91,7 +95,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
       });
       kalturaPlayer.loadMedia({entryId: this.entryid});
     } catch (e) {
-      console.error(e.message)
+      console.error(e.message);
     }
 	}
 
