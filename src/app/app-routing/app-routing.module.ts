@@ -50,6 +50,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry-live/entry-live.module').then(m => m.EntryLiveModule)
       },
       {
+        path: 'entry-webcast/:id',
+        loadChildren: () => import('../modules/entry-webcast/entry-webcast.module').then(m => m.EntryWebcastModule)
+      },
+      {
+        path: 'entry-webcast',
+        loadChildren: () => import('../modules/entry-webcast/entry-webcast.module').then(m => m.EntryWebcastModule)
+      },
+      {
         path: 'audience',
         loadChildren: () => import('../modules/audience/audience.module').then(m => m.AudienceModule)
       },
