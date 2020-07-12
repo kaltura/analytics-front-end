@@ -162,6 +162,18 @@ export const viewsConfig = {
     devices: {},
     discovery: {},
   },
+  entryWebcast: {
+    export: {},
+    title: {},
+    details: {},
+    highlights: {},
+    geo: {},
+    refineFilter: {
+      geo: {},
+      owners: {},
+      categories: {},
+    }
+  },
   playlist: {
     title: {},
     export: {},

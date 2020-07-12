@@ -4,9 +4,9 @@ import {
   BaseEntryGetAction,
   KalturaAPIException,
   KalturaClient,
-  KalturaDetachedResponseProfile, KalturaLiveEntry,
+  KalturaDetachedResponseProfile, KalturaEntryDisplayInSearchType, KalturaLiveEntry,
   KalturaMultiRequest,
-  KalturaMultiResponse,
+  KalturaMultiResponse, KalturaReportInterval,
   KalturaRequestOptions,
   KalturaResponseProfileType,
   KalturaUser,
@@ -19,23 +19,47 @@ import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
+import {EntryExportConfig} from "../entry/views/video/entry-export.config";
+import {EntryWebcastExportConfig} from "./entry-webcast-export.config";
+import {ExportItem} from "shared/components/export-csv/export-config-base.service";
+import {RefineFilter} from "shared/components/filter/filter.component";
+import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
+import * as moment from "moment";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-entry-webcast',
   templateUrl: './entry-webcast-view.component.html',
   styleUrls: ['./entry-webcast-view.component.scss'],
+  providers: [EntryWebcastExportConfig]
 })
 export class EntryWebcastViewComponent implements OnInit, OnDestroy {
-  public _entryViewConfig = analyticsConfig.viewsConfig.entry;
+  public _viewConfig = analyticsConfig.viewsConfig.entryWebcast;
   public _loadingEntry = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _entry: KalturaLiveEntry;
   public _entryId = '';
   public _owner = '';
+  public _displayCreatedAt = '';
   public _isChildAccount = false;
+  public _showViewDetails = false;
+  public _exportConfig: ExportItem[] = [];
+
+  public _dateFilter: DateChangeEvent = null;
+  public _dateRange = DateRanges.Last30D;
+  public _timeUnit = KalturaReportInterval.days;
+
+  public _creationDate: moment.Moment = null;
+  public _firstBroadcastDate: moment.Moment = null;
+  public _lastBroadcastDate: moment.Moment = null;
+
+  public _refineFilter: RefineFilter = null;
+  public _refineFilterOpened = false;
+  public _selectedRefineFilters: RefineFilter = null;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
+              private _exportConfigService: EntryWebcastExportConfig,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -46,6 +70,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._isChildAccount = this._authService.isChildAccount;
+    this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
@@ -59,6 +84,14 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  public _onDateFilterChange(event: DateChangeEvent): void {
+    this._dateFilter = event;
+  }
+
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+  }
+
   private _loadEntryDetails(): void {
     this._loadingEntry = true;
     this._blockerMessage = null;
@@ -68,7 +101,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,displayInSearch'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,displayInSearch,lastBroadcastEndTime,broadcastTime'
           })
         }),
       new UserGetAction({ userId: null })
@@ -105,7 +138,16 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ([entry, user]) => {
           this._entry = entry;
+          this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
+          if (entry.broadcastTime) {
+            this._firstBroadcastDate = DateFilterUtils.getMomentDate(entry.broadcastTime);
+          }
+          if (entry.lastBroadcastEndTime) {
+            this._lastBroadcastDate = DateFilterUtils.getMomentDate(entry.lastBroadcastEndTime);
+          }
           this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
+          this._showViewDetails = entry.displayInSearch !== KalturaEntryDisplayInSearchType.system;
+          this._displayCreatedAt = DateFilterUtils.formatFullDateString(entry.createdAt);
           this._loadingEntry = false;
         },
         error => {
