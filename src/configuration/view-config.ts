@@ -139,6 +139,7 @@ export const viewsConfig = {
     },
     performance: {
       userDrilldown: {},
+      userFilter: {},
       userLink: {},
       entryDrilldown: {},
       entryLink: {}

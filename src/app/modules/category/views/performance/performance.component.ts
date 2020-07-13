@@ -79,7 +79,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _filterChange$ = this._filterChange.asObservable();
 
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
-  private _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   public _showExternalLink = true;
   public _showCustomLegend = false;
 
