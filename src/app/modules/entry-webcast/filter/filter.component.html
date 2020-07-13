@@ -20,34 +20,29 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
           <div class="kFilterContainerCol">
-            <app-country-filter *ngIf="_viewConfig.geo"
-                                [dateFilter]="_dateFilter"
-                                [selectedFilters]="_selectedValues['countries']"
-                                (itemSelected)="_onItemSelected($event, 'countries')"
-                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
-
-
-            <app-category-filter *ngIf="_viewConfig.categories"
-                                 [label]="'app.filters.playbackContext' | translate"
-                                 [selectedFilters]="_selectedValues['context']"
-                                 [linkLabel]="'app.filters.selectPlaybackContext' | translate"
-                                 [popupTitle]="'app.filters.selectPlaybackContext' | translate"
-                                 [popupFilterPlaceholder]="'app.filters.findContext' | translate"
-                                 (itemSelected)="_onItemSelected($event, 'context')"
-                                 (itemUnselected)="_onItemUnselected($event, 'context')"></app-category-filter>
-
-            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
-                                <!--[selectedFilters]="_selectedValues['domains']"-->
-                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
-                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
-
+            <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType"
+                                        [label]="'app.filters.playbackType.title' | translate"
+                                        [options]="_playbackTypes"
+                                        [selectedFilters]="_selectedValues['playbackType']"
+                                        (itemSelected)="_onItemSelected($event, 'playbackType')"
+                                        (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-checkboxes-list-filter>
           </div>
+
           <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
             <app-owners-filter [selectedFilters]="_selectedValues['users']"
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
           </div>
+
+          <div class="kFilterContainerCol">
+            <app-country-filter *ngIf="_viewConfig.geo"
+                                [dateFilter]="_dateFilter"
+                                [selectedFilters]="_selectedValues['countries']"
+                                (itemSelected)="_onItemSelected($event, 'countries')"
+                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+          </div>
+
         </div>
       </div>
       <div class="kRefineFiltersFooter">

@@ -169,9 +169,9 @@ export const viewsConfig = {
     highlights: {},
     geo: {},
     refineFilter: {
-      geo: {},
+      playbackType: {},
       owners: {},
-      categories: {},
+      geo: {}
     }
   },
   playlist: {

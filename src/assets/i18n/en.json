@@ -19,6 +19,13 @@
         "Audio": "Audio",
         "Image": "Images"
       },
+      "playbackType": {
+        "title": "Playback Type",
+        "all": "All Playback Types",
+        "live": "Live",
+        "dvr": "DVR",
+        "vod": "VOD"
+      },
       "applications": {
         "title": "Applications",
         "mediaSpace": "Media Space",

@@ -3,7 +3,7 @@ import { LocationsFilterService } from 'shared/components/filter/location-filter
 import { DomainsFilterService } from 'shared/components/domain-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
-import { FilterComponent } from 'shared/components/filter/filter.component';
+import {FilterComponent, OptionItem} from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
@@ -40,10 +40,18 @@ export class EntryWebcastFilterComponent extends FilterComponent {
       this._viewConfig = value;
     } else {
       this._viewConfig = {
-        geo: {},
+        playbackType: {},
         owners: {},
-        categories: {},
+        geo: {}
       };
     }
   }
+
+  public _playbackTypes: OptionItem[] = [
+    { value: 'dvr', label: 'app.filters.playbackType.dvr' },
+    { value: 'live', label: 'app.filters.playbackType.live' },
+    { value: 'vod', label: 'app.filters.playbackType.vod' }
+  ];
 }
+
+
