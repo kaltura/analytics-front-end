@@ -33,7 +33,7 @@
     "@kaltura-ng/kaltura-primeng-ui": "^4.0.1",
     "@kaltura-ng/kaltura-ui": "^8.0.1",
     "@kaltura-ng/mc-shared": "^6.0.1",
-    "@kaltura-ng/mc-theme": "^4.0.1",
+    "@kaltura-ng/mc-theme": "^4.0.3",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^3.2.1",
