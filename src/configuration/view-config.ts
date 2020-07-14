@@ -173,6 +173,7 @@ export const viewsConfig = {
       owners: {},
       devices: {},
       browsers: {},
+      os: {},
       geo: {}
     }
   },

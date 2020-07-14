@@ -188,6 +188,7 @@ export class FilterComponent {
       'tags': [],
       'devices': [],
       'browser': [],
+      'os': [],
       'owners': [],
       'users': [],
       'location': [],
@@ -208,10 +209,8 @@ export class FilterComponent {
           tooltip = this._translate.instant(`app.filters.${type}.title`) + `: ${label}`;
           return { value, type, label, tooltip };
         case 'devices':
-          label = value.name;
-          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value.name}`;
-          return { value, type, label, tooltip };
         case 'browser':
+        case 'os':
           label = value.name;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value.name}`;
           return { value, type, label, tooltip };

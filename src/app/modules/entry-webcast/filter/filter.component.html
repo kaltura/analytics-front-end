@@ -47,6 +47,12 @@
               [selectedFilters]="_selectedValues['browser']"
               (itemSelected)="_onItemSelected($event, 'browser')"
               (itemUnselected)="_onItemUnselected($event, 'browser')"></app-webcast-browser-filter>
+
+            <app-webcast-os-filter *ngIf="_viewConfig.os"
+              [dateFilter]="_dateFilter"
+              [selectedFilters]="_selectedValues['os']"
+              (itemSelected)="_onItemSelected($event, 'os')"
+              (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
           </div>
 
           <div class="kFilterContainerCol">

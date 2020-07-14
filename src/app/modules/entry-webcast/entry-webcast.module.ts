@@ -17,6 +17,7 @@ import { EntryWebcastFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { DeviceFilterComponent } from "./filter/device-filter/device-filter.component";
 import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.component";
+import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.c
     EntryWebcastViewComponent,
     EntryWebcastFilterComponent,
     DeviceFilterComponent,
-    BrowserFilterComponent
+    BrowserFilterComponent,
+    OsFilterComponent
   ],
   exports: [],
   providers: []

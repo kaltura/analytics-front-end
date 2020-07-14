@@ -11,7 +11,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
-  let categories = [], mediaType = [], sourceType = [], playbackType = [], devices = [], browsers = [],
+  let categories = [], mediaType = [], sourceType = [], playbackType = [], devices = [], browsers = [], os = [],
     tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [], context = [];
 
   refineFilter.forEach(item => {
@@ -24,6 +24,9 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
         break;
       case 'browser':
         browsers.push(item.value.name);
+        break;
+      case 'os':
+        os.push(item.value.name);
         break;
       case 'mediaType':
         const value = item.value === 'Live'
@@ -103,6 +106,12 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
     serverFilter.browserFamilyIn = browsers.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.browserFamilyIn;
+  }
+
+  if (os.length) {
+    serverFilter.operatingSystemFamilyIn = os.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.operatingSystemFamilyIn;
   }
 
   if (sourceType.length) {
