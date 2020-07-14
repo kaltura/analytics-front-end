@@ -171,6 +171,7 @@ export const viewsConfig = {
     refineFilter: {
       playbackType: {},
       owners: {},
+      devices: {},
       geo: {}
     }
   },

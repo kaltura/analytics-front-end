@@ -186,6 +186,7 @@ export class FilterComponent {
       'entrySources': [],
       'categories': [],
       'tags': [],
+      'devices': [],
       'owners': [],
       'users': [],
       'location': [],
@@ -204,6 +205,10 @@ export class FilterComponent {
         case 'entrySources':
           label = this._translate.instant(`app.filters.${type}.${value}`);
           tooltip = this._translate.instant(`app.filters.${type}.title`) + `: ${label}`;
+          return { value, type, label, tooltip };
+        case 'devices':
+          label = value.name;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value.name}`;
           return { value, type, label, tooltip };
         case 'categories':
           const category = value as CategoryData;

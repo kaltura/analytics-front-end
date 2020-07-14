@@ -36,6 +36,14 @@
           </div>
 
           <div class="kFilterContainerCol">
+            <app-webcast-device-filter *ngIf="_viewConfig.devices"
+              [dateFilter]="_dateFilter"
+              [selectedFilters]="_selectedValues['devices']"
+              (itemSelected)="_onItemSelected($event, 'devices')"
+              (itemUnselected)="_onItemUnselected($event, 'devices')"></app-webcast-device-filter>
+          </div>
+
+          <div class="kFilterContainerCol">
             <app-country-filter *ngIf="_viewConfig.geo"
                                 [dateFilter]="_dateFilter"
                                 [selectedFilters]="_selectedValues['countries']"
