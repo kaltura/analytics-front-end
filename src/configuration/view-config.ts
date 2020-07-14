@@ -172,6 +172,7 @@ export const viewsConfig = {
       playbackType: {},
       owners: {},
       devices: {},
+      browsers: {},
       geo: {}
     }
   },
