@@ -57,7 +57,16 @@
                           [selectedFilters]="_selectedRefineFilters"
                           (closeFilters)="_refineFilterOpened = false"
                           (filterChange)="_onRefineFilterChange($event)"></app-entry-webcast-filter>
+
+        <div class="kReportContainer">
+          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer">
+            <app-webcast-mini-highlights [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-webcast-mini-highlights>
+          </div>
+        </div>
+
       </div>
+
     </div>
+
   </k-area-blocker>
 </div>

@@ -463,6 +463,9 @@
         "openLink": "Open page URL in a new browser tab"
       }
     },
+    "entryWebcast": {
+      "knownUsers": "Known Viewers"
+    },
     "entryLive": {
       "changeDate": "Change Date",
       "createdOn": "Created On: {{0}}",

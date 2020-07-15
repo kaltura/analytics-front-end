@@ -39,6 +39,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _entry: KalturaLiveEntry;
   public _entryId = '';
+  public _recordedEntryId = '';
   public _owner = '';
   public _displayCreatedAt = '';
   public _isChildAccount = false;
@@ -144,6 +145,9 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
           }
           if (entry.lastBroadcastEndTime) {
             this._lastBroadcastDate = DateFilterUtils.getMomentDate(entry.lastBroadcastEndTime);
+          }
+          if (entry.recordedEntryId) {
+            this._recordedEntryId = entry.recordedEntryId;
           }
           this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
           this._showViewDetails = entry.displayInSearch !== KalturaEntryDisplayInSearchType.system;

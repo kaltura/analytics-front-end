@@ -18,6 +18,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { DeviceFilterComponent } from "./filter/device-filter/device-filter.component";
 import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.component";
 import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
+import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
     EntryWebcastFilterComponent,
     DeviceFilterComponent,
     BrowserFilterComponent,
-    OsFilterComponent
+    OsFilterComponent,
+    WebcastMiniHighlightsComponent
   ],
   exports: [],
   providers: []

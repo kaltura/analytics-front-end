@@ -166,6 +166,7 @@ export const viewsConfig = {
     export: {},
     title: {},
     details: {},
+    miniHighlights: {},
     highlights: {},
     geo: {},
     refineFilter: {
