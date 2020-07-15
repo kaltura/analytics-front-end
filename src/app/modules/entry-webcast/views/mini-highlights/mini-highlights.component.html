@@ -65,6 +65,15 @@
         </div>
       </div>
 
+      <div class="kVal">
+        <i *ngIf="_topCountries.length" class="kFlag flag1" [ngClass]="'kFlag-' + _topCountries[0]['object_id']"></i>
+        <i *ngIf="_topCountries.length > 1" class="kFlag flag2" [ngClass]="'kFlag-' + _topCountries[1]['object_id']"></i>
+        <div class="kLabels kCountriesLables" [ngStyle]="_topCountries.length > 1 ? {'paddingLeft': '12px'} : {}">
+          <span *ngIf="!_isCompareMode" class="value">{{_countriesCount}}</span>
+          <span class="title">{{'app.entryWebcast.countries' | translate}}</span>
+        </div>
+      </div>
+
     </div>
 
   </k-area-blocker>

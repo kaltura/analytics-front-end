@@ -1,0 +1,179 @@
+<div data-aid="report-geo" class="kReport kContent kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span *ngIf="!_drillDown.length" class="kTitle">
+      {{('app.audience.geo.tableMode.' + _currentTableLevel) | translate}}
+    </span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown('')">
+        {{('app.audience.geo.tableMode.' + _tableMode) | translate}}
+      </a>
+      <span class="separator">/</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0], true)">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
+    </div>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kMap">
+        <div *ngIf="_mapDataReady" echarts class="kChart"
+             [options]="_mapChartData[_selectedMetrics]"
+             (chartClick)="_onChartClick($event)"
+             (chartInit)="_onChartInit($event)"></div>
+        <div class="kZoomWidget">
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+        </div>
+      </div>
+      <div class="kTable">
+        <div class="kTableContainer">
+          <div class="kTableModeSelector">
+            <p-dropdown [style]="{'width': '172px'}"
+                        [options]="_tableModeOptions"
+                        (onChange)="_onTableModeChange($event.value)"
+                        [(ngModel)]="_tableMode">
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                <div class="kOptionsLabelWrapper">
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <span *ngIf="_totalCount" class="kEntitiesCount">
+              {{('app.audience.geo.' + _currentTableLevel) | translate: { '0': _totalCount } }}
+            </span>
+          </div>
+          <p-table #table
+                   appScrollTopOnPaging
+                   sortField="count_plays"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortOrder]="-1"
+                   [paginator]="true"
+                   [rows]="10"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th [ngStyle]="{'width': '50px'}">
+                  <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+                </th>
+                <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='count_plays'" [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.count_plays' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='count_plays'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.distribution' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='unique_known_users'" [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.unique_known_users' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.unique_known_users' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='unique_known_users'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.distribution2' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.distribution2' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.avg_view_drop_off' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.avg_view_drop_off' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th [ngStyle]="{'paddingLeft': '0px'}">{{'app.audience.geo.trend' | translate}}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td>
+                  <span>{{rowIndex + 1}}</span>
+                </td>
+                <td class="kFlagColumn" *ngIf="_currentTableLevel === _tableModes.countries">
+                  <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
+                </td>
+                <td class="kHighlight">
+                  <a *ngIf="_currentTableLevel === _tableModes.countries"
+                     (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
+                  <a *ngIf="_currentTableLevel === _tableModes.regions"
+                     (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+                  <span *ngIf="_currentTableLevel === _tableModes.cities">{{data['city']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='count_plays'">
+                  <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.valuee">
+                  <div>
+                    <app-bullet [value]="data['plays_distribution']"></app-bullet>
+                  </div>
+                </td>
+                <td *ngIf="_selectedMetrics==='unique_known_users'">
+                  <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
+                </td>
+                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value">
+                  <div>
+                    <app-bullet [value]="data['unique_users_distribution']"></app-bullet>
+                  </div>
+                </td>
+                <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
+                  <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
+                </td>
+                <td [ngStyle]="{'paddingLeft': '0px'}">
+                  <span>
+                    <h5 class="mini-loader"
+                        *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
+                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend"
+                          [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
+                      <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
+                                       [units]="data[_selectedMetrics+'_trend']?.units"
+                                       [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+
+</div>
+

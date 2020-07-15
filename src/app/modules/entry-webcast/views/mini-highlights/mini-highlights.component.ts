@@ -1,18 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import {
+  KalturaAPIException,
   KalturaEndUserReportInputFilter,
   KalturaFilterPager,
   KalturaObjectBaseFactory,
-  KalturaReportInterval,
+  KalturaReportInterval, KalturaReportTable,
   KalturaReportTotal,
   KalturaReportType
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import {BehaviorSubject, of as ObservableOf} from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,6 +21,7 @@ import { MiniHighlightsConfig } from './mini-highlights.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {reportTypeMap} from "shared/utils/report-type-map";
+import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'app-webcast-mini-highlights',
@@ -37,6 +39,20 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   protected _componentId = 'webcast-mini-highlights';
 
+  public _topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }>;
+
+  @Input() set topCountries(topCountries$: any) {
+    if (topCountries$) {
+      this._topCountries$ = topCountries$;
+      this._topCountries$
+        .pipe(cancelOnDestroy(this))
+        .subscribe((data: { topCountries: any[], totalCount: number }) => {
+          this._topCountries = data.topCountries;
+          this._countriesCount = data.totalCount;
+        });
+    }
+  }
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -49,6 +65,9 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     searchInTags: true,
     searchInAdminTags: false
   });
+
+  public _topCountries: {country: string, flag: string}[] = [];
+  public _countriesCount = 0;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;

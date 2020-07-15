@@ -19,6 +19,7 @@ import { DeviceFilterComponent } from "./filter/device-filter/device-filter.comp
 import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.component";
 import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
 import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
+import { WebcastGeoComponent } from "./views/geo/geo-location.component";
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-hig
     DeviceFilterComponent,
     BrowserFilterComponent,
     OsFilterComponent,
-    WebcastMiniHighlightsComponent
+    WebcastMiniHighlightsComponent,
+    WebcastGeoComponent
   ],
   exports: [],
   providers: []

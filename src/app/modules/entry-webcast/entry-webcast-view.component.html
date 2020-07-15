@@ -25,6 +25,7 @@
             </div>
             <app-date-filter #dateFilter
                              name="entry"
+                             [showCompare]="false"
                              [dateRange]="_dateRange"
                              [selectedTimeUnit]="_timeUnit"
                              [creationDate]="_creationDate"
@@ -60,8 +61,16 @@
 
         <div class="kReportContainer">
           <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer">
-            <app-webcast-mini-highlights [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-webcast-mini-highlights>
+            <app-webcast-mini-highlights
+              [topCountries]="geo.topCountries$"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter">
+            </app-webcast-mini-highlights>
           </div>
+        </div>
+
+        <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">
+          <app-webcast-geo #geo [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-webcast-geo>
         </div>
 
       </div>

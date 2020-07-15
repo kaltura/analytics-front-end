@@ -464,7 +464,8 @@
       }
     },
     "entryWebcast": {
-      "knownUsers": "Known Viewers"
+      "knownUsers": "Known Viewers",
+      "countries": "Countries"
     },
     "entryLive": {
       "changeDate": "Change Date",
