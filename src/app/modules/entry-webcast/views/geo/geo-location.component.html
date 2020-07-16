@@ -112,6 +112,24 @@
                 </th>
                 <th [ngStyle]="{'paddingLeft': '0px'}">{{'app.audience.geo.trend' | translate}}</th>
               </tr>
+
+              <tr *ngIf="_tableData?.length" class="kSummaryRow">
+                <th [ngStyle]="{'width': '50px'}"></th>
+                <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <span>{{'app.entryWebcast.worldwide' | translate}}</span>
+                </th>
+                <th *ngIf="_selectedMetrics==='count_plays'" [ngStyle]="{'width': '100%'}">
+                  <span>{{_tabsData[0].value}}</span>
+                </th>
+                <th [ngStyle]="{'width': '100%'}">
+                  <div>
+                    <app-bullet [value]="100"></app-bullet>
+                  </div>
+                </th>
+                <th [ngStyle]="{'paddingLeft': '0px'}">N/A</th>
+              </tr>
+
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>

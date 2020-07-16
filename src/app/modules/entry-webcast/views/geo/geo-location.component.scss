@@ -16,7 +16,16 @@
 .kFlagColumn {
   padding-left: 18px !important;
 }
+.kSummaryRow {
+  height: 48px;
+  border-top: 1px solid $kGrayscale6;
 
+  th {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
 .kMap {
   position: relative;
 
