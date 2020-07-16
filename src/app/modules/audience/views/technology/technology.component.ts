@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { TechDevicesOverviewComponent } from './devices-overview/devices-overview.component';
 import { KalturaReportType } from 'kaltura-ngx-client';
@@ -9,6 +9,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { EngagementExportConfig } from '../engagement/engagement-export.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { DateRanges } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-technology',
@@ -33,32 +34,32 @@ export class TechnologyComponent implements OnInit {
   public _reportType = reportTypeMap(KalturaReportType.platforms);
   public _exportConfig: ExportItem[] = [];
   public _technologyViewConfig = analyticsConfig.viewsConfig.audience.technology;
-  
+
   constructor(private _exportConfigService: TechnologyExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
-  
+
   ngOnInit() {
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._filterEvent = event;
   }
-  
+
   public _onDeviceFilterChange(event: string[]): void {
     this._devicesFilter = event;
   }
-  
+
   public _onDevicesListChange(event: { value: string, label: string; }[]): void {
     this._devicesList = event;
   }
-  
+
   public _onReportDeviceFilterChange(): void {
     if (this._overview) {
       this._overview.resetDeviceFilters();
     }
   }
-  
+
   public _onDrillDown(event: { drillDown: string, reportType: KalturaReportType, name: string }): void {
     const { drillDown, reportType, name } = event;
     let update: Partial<ExportItem> = { reportType: reportType };

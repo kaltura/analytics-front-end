@@ -4,6 +4,7 @@
        tabindex="0" role="button" aria-label="Date filter"
        (keydown.enter)="datesPopup.toggle()">
     <i *ngIf="comparing" class="compareIcon icon-bolt"></i>
+    <span class="kDateRangePrefix">{{_dateRangePrefix}}</span>
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
@@ -17,7 +18,7 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="_creationDate ? {'x':-333, 'y': 42} : {'x':-233, 'y': 42}"
+              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="_creationDate ? {'x':0, 'y': 42} : {'x':0, 'y': 42}"
               (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">

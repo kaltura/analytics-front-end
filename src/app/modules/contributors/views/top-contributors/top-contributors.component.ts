@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -7,6 +7,7 @@ import { TopContributorsExportConfig } from './top-contributors-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { DateRanges } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-top-contributors',
@@ -16,7 +17,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
     TopContributorsExportConfig,
     KalturaLogger.createLogger('TopContributorsComponent'),
   ]
-  
+
 })
 export class TopContributorsComponent {
   public _contributorsViewConfig = analyticsConfig.viewsConfig.contributors;
@@ -42,15 +43,15 @@ export class TopContributorsComponent {
       searchInAdminTags: false
     }
   );
-  
+
   constructor(private _exportConfigService: TopContributorsExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }

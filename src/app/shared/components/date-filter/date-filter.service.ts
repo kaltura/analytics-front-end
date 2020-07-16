@@ -3,22 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-
-export enum DateRanges {
-  Last7D = 'last7days',
-  Last30D = 'last30days',
-  Last3M = 'last3months',
-  Last12M = 'last12months',
-  CurrentWeek = 'currentWeek',
-  CurrentMonth = 'currentMonth',
-  CurrentQuarter = 'currentQuarter',
-  CurrentYear = 'currentYear',
-  PreviousMonth = 'previousMonth',
-  SinceCreation = 'sinceCreation',
-  SinceFistBroadcast = 'sinceFistBroadcast',
-  SinceLastBroadcast = 'sinceLastBroadcast',
-}
+import { DateFilterUtils, DateRanges } from 'shared/components/date-filter/date-filter-utils';
 
 export enum DateFilterQueryParams {
   dateBy = 'dateBy',
@@ -88,7 +73,7 @@ export class DateFilterService {
       case 'sinceCreation':
         return DateRanges.SinceCreation;
      case 'sinceFirstBroadcast':
-        return DateRanges.SinceFistBroadcast;
+        return DateRanges.SinceFirstBroadcast;
      case 'sinceLastBroadcast':
         return DateRanges.SinceLastBroadcast;
       default:
@@ -116,8 +101,8 @@ export class DateFilterService {
             selectItemArr.push({
               label: this._translate.instant('app.dateFilter.firstBroadcast'),
               value: {
-                val: DateRanges.SinceFistBroadcast,
-                tooltip: this.getDateRangeDetails(DateRanges.SinceFistBroadcast, firstBroadcastDate).label
+                val: DateRanges.SinceFirstBroadcast,
+                tooltip: this.getDateRangeDetails(DateRanges.SinceFirstBroadcast, firstBroadcastDate).label
               }
             });
           }
@@ -224,7 +209,7 @@ export class DateFilterService {
         endDate = today;
         break;
       case DateRanges.SinceCreation:
-      case DateRanges.SinceFistBroadcast:
+      case DateRanges.SinceFirstBroadcast:
       case DateRanges.SinceLastBroadcast:
         if (customDate) {
           startDate = customDate.startOf('day').toDate();

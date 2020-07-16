@@ -6,14 +6,14 @@ import {
   KalturaReportInterval,
   KalturaReportType
 } from 'kaltura-ngx-client';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { ErrorsManagerService } from 'shared/services';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import {DateFilterUtils, DateRanges} from 'shared/components/date-filter/date-filter-utils';
 import { EntryExportConfig } from './entry-export.config';
 import { ViewConfig, viewsConfig } from 'configuration/view-config';
 import { isEmptyObject } from 'shared/utils/is-empty-object';

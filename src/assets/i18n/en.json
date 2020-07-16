@@ -158,6 +158,17 @@
       "last3m": "3 Months",
       "last12m": "12 Months",
       "monthly": "Monthly",
+      "prefix": {
+        "week": "Current Week",
+        "month": "Current Month",
+        "quarter": "Current Quarter",
+        "year": "Current Year",
+        "last7d": "Last 7 Days",
+        "last30d": "Last 30 Days",
+        "last3m": "Last 3 Months",
+        "last12m": "Last 12 Months",
+        "specific": "{{0}} Days"
+      },
       "daily": "Daily",
       "sinceCreation": "Creation",
       "lastBroadcast": "Last Broadcast",

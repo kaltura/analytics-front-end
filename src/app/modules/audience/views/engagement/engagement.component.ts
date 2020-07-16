@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -7,6 +7,7 @@ import { EngagementExportConfig } from './engagement-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { DateRanges } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-engagement',
@@ -40,20 +41,20 @@ export class EngagementComponent {
       searchInAdminTags: false
     }
   );
-  
+
   constructor(private _exportConfigService: EngagementExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
   }
-  
-  
+
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }
-  
+
   public _onDrillDown(event: string): void {
     let update: Partial<ExportItem> = {};
     if (event) {

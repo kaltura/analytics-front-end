@@ -2,19 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KalturaClient, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { filter } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { UserExportConfig } from './user-export.config';
-import { Unsubscribable } from 'rxjs';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { DateFilterUtils, DateRanges } from 'shared/components/date-filter/date-filter-utils';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
 export enum UserReportTabs {
@@ -53,7 +51,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _reportTabs = UserReportTabs;
   public _userViewConfig = analyticsConfig.viewsConfig.user;
   public _currentTab = !this._userViewConfig.viewer && this._userViewConfig.contributor ? UserReportTabs.contributor : UserReportTabs.viewer;
-  
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _translate: TranslateService,
@@ -63,7 +61,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: UserExportConfig) {
   }
-  
+
   ngOnInit() {
     this._route.params
       .pipe(cancelOnDestroy(this))
@@ -78,23 +76,23 @@ export class UserViewComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
     this._isCompare = this._dateFilter.compare.active;
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }
-  
+
   private loadUserDetails(): void {
     this._loadingUser = true;
     this._blockerMessage = null;
-    
+
     this._kalturaClient
       .request(new UserGetAction({ userId: this._userId }))
       .pipe(cancelOnDestroy(this))
@@ -119,11 +117,11 @@ export class UserViewComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   public _back(): void {
     this._navigationDrillDownService.navigateBack('contributors', true);
   }
-  
+
   public _selectTab(tab: UserReportTabs): void {
     if (this._dateFilter) { // reset applyIn
       delete this._dateFilter.applyIn;

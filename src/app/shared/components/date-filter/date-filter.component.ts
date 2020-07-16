@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
-import { DateFilterUtils } from './date-filter-utils';
+import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRangeType } from './date-filter.service';
+import { DateFilterUtils, DateRanges } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
@@ -95,6 +95,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public selectedView = 'preset';
   public selectedComparePeriod = 'lastYear';
 
+  public _dateRangePrefix = '';
   public _dateRangeLabel = '';
   public specificStart: Date = new Date();
   public specificEnd: Date = new Date();
@@ -175,7 +176,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
     if (dateBy) {
       this.selectedView = 'preset';
-      this._dateRange = dateBy === DateRanges.SinceCreation && !this._creationDate ? DateRanges.Last30D : dateBy;
+      this._dateRange = dateBy;
+      if ((dateBy === DateRanges.SinceCreation && !this._creationDate) ||
+          (dateBy === DateRanges.SinceLastBroadcast && !this._lastBroadcastDate) ||
+          (dateBy === DateRanges.SinceFirstBroadcast && !this._firstBroadcastDate)) {
+        this._dateRange = DateRanges.Last30D;
+      }
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
       const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
       const dateTo = moment(params[DateFilterQueryParams.dateTo]);
@@ -258,7 +264,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
         case DateRanges.SinceLastBroadcast:
           customDate = this._lastBroadcastDate;
           break;
-        case DateRanges.SinceFistBroadcast:
+        case DateRanges.SinceFirstBroadcast:
           customDate = this._firstBroadcastDate;
           break;
       }
@@ -266,10 +272,13 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       this.startDate = dates.startDate;
       this.endDate = dates.endDate;
       this._dateRangeLabel = dates.label;
+      this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(this.lastSelectedDateRange, null));
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];
       this._dateRangeLabel = DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY');
+      const diff = moment(this.endDate).diff(moment(this.startDate), 'days') + 1;
+      this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(null, {startDate: this.startDate, endDate: this.endDate}), {0: diff});
     }
     this.updateCompareMax();
     if (this.selectedComparePeriod === 'lastYear') {

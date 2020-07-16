@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRanges } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import {
   KalturaAPIException,
@@ -21,7 +21,7 @@ import { SelectItem, SortEvent } from 'primeng/api';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { DateFilterUtils, DateRanges } from 'shared/components/date-filter/date-filter-utils';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -34,9 +34,8 @@ import { canDrillDown } from 'shared/utils/can-drill-down-country';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import {WebcastBaseReportComponent} from "../webcast-base-report/webcast-base-report.component";
-import {BehaviorSubject} from "rxjs";
-import {TableModes} from "shared/pipes/table-mode-icon.pipe";
+import { WebcastBaseReportComponent } from "../webcast-base-report/webcast-base-report.component";
+import { BehaviorSubject } from "rxjs";
 
 export enum GeoTableModes {
   countries = 'countries',
@@ -58,7 +57,6 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
   protected _componentId = 'webcast-geo';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  private _selectedTab: Tab;
   private _echartsIntance: any; // echart instance
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _trendFilter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
@@ -178,14 +176,6 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
     this._currentTableLevel = this._tableMode = GeoTableModes.countries;
 
     this._onDrillDown('');
-  }
-
-  public _onTabChange(tab: Tab): void {
-    this._logger.trace('Handle tab change action by user', { tab });
-    this._selectedTab = tab;
-    this._selectedMetrics = tab.key;
-    this._updateMap();
-    this._onSortChanged({ data: this._tableData, field: tab.key, order: -1 });
   }
 
   public _onSortChanged(event: SortEvent): void {
@@ -345,7 +335,6 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-    this._selectedTab = this._tabsData[0];
   }
 
   private _getName(data: TableRow): string {

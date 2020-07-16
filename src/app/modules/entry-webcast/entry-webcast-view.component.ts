@@ -23,9 +23,9 @@ import {EntryExportConfig} from "../entry/views/video/entry-export.config";
 import {EntryWebcastExportConfig} from "./entry-webcast-export.config";
 import {ExportItem} from "shared/components/export-csv/export-config-base.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
-import {DateChangeEvent, DateRanges} from "shared/components/date-filter/date-filter.service";
+import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
 import * as moment from "moment";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-entry-webcast',
