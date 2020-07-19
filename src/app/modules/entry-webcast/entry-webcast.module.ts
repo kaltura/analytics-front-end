@@ -20,6 +20,7 @@ import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.c
 import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
 import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
 import { WebcastGeoComponent } from "./views/geo/geo-location.component";
+import { WebcastMiniQualityComponent } from "./views/mini-quality/mini-quality.component";
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { WebcastGeoComponent } from "./views/geo/geo-location.component";
     BrowserFilterComponent,
     OsFilterComponent,
     WebcastMiniHighlightsComponent,
+    WebcastMiniQualityComponent,
     WebcastGeoComponent
   ],
   exports: [],

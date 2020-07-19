@@ -477,7 +477,13 @@
     "entryWebcast": {
       "knownUsers": "Known Viewers",
       "countries": "Countries",
-      "worldwide": "Worldwide"
+      "worldwide": "Worldwide",
+      "quality": {
+        "title": "Quality",
+        "buffer": "Avg. Buffering Rate",
+        "bitrate": "Avg. Bitrate",
+        "minutes": "Minutes Broadcasted"
+      }
     },
     "entryLive": {
       "changeDate": "Change Date",

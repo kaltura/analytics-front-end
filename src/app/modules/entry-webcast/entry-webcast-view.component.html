@@ -68,6 +68,14 @@
               [refineFilter]="_refineFilter">
             </app-webcast-mini-highlights>
           </div>
+
+          <div *ngIf="_viewConfig.miniQuality" class="kMiniReportContainer">
+            <app-webcast-mini-quality
+              [entryIdIn]="_entryIdIn"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter">
+            </app-webcast-mini-quality>
+          </div>
         </div>
 
         <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">
