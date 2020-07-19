@@ -1,27 +1,19 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaAPIException,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval, KalturaReportTable,
-  KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import {BehaviorSubject, of as ObservableOf} from 'rxjs';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniHighlightsConfig } from './mini-highlights.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import {reportTypeMap} from "shared/utils/report-type-map";
-import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import { reportTypeMap } from "shared/utils/report-type-map";
+import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'app-webcast-mini-highlights',
@@ -36,9 +28,7 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent implements OnDestroy, OnInit {
 
   private _dataConfig: ReportDataConfig;
-
   protected _componentId = 'webcast-mini-highlights';
-
   public _topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }>;
 
   @Input() set topCountries(topCountries$: any) {
@@ -52,6 +42,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
         });
     }
   }
+  @Input() entryIdIn = '';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

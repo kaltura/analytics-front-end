@@ -1,17 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import {
-  KalturaAPIException,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaReportInterval,
-  KalturaReportTable,
-  KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
@@ -54,6 +46,7 @@ export enum GeoTableModes {
 })
 export class WebcastGeoComponent extends WebcastBaseReportComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: Table;
+  @Input() entryIdIn = '';
   protected _componentId = 'webcast-geo';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });

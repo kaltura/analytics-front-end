@@ -1,7 +1,7 @@
 <div data-aid="report-group-entry-webcast" class="kMain">
   <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
     <div class="kReportView kVideoMedia" #entryView>
-      <div class="kReport kContent kOverrideFAIcons">
+      <div class="kReport kContent kOverrideFAIcons" *ngIf="_entry?.id">
         <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
           <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
@@ -13,7 +13,7 @@
                             [reports]="_exportConfig"
                             [refineFilter]="_refineFilter"
                             [dateFilter]="_dateFilter"
-                            [entryId]="_entryId"></app-export-csv>
+                            [entryId]="_entry?.id"></app-export-csv>
             <div class="kFilter kOverrideFAIcons">
               <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
                    (click)="_refineFilterOpened = !_refineFilterOpened"
@@ -63,6 +63,7 @@
           <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer">
             <app-webcast-mini-highlights
               [topCountries]="geo.topCountries$"
+              [entryIdIn]="_entryIdIn"
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter">
             </app-webcast-mini-highlights>
@@ -70,7 +71,11 @@
         </div>
 
         <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">
-          <app-webcast-geo #geo [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-webcast-geo>
+          <app-webcast-geo #geo
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [entryIdIn]="_entryIdIn">
+          </app-webcast-geo>
         </div>
 
       </div>
