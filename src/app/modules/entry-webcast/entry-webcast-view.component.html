@@ -71,7 +71,9 @@
 
           <div *ngIf="_viewConfig.miniQuality" class="kMiniReportContainer">
             <app-webcast-mini-quality
-              [entryIdIn]="_entryIdIn"
+              [entryIdIn]="_entry.id"
+              [lastBroadcastDuration]="_lastBroadcastDuration"
+              [isLive]="_isLive"
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter">
             </app-webcast-mini-quality>

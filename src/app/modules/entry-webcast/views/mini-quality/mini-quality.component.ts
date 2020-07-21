@@ -29,15 +29,16 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
 
   private _dataConfig: ReportDataConfig;
   protected _componentId = 'webcast-mini-quality';
-  public _topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }>;
 
   @Input() entryIdIn = '';
+  @Input() lastBroadcastDuration = '';
+  @Input() isLive = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
+  private _reportType = reportTypeMap(KalturaReportType.qualityWebcast);
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
@@ -45,8 +46,6 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
     searchInTags: true,
     searchInAdminTags: false
   });
-
-  public _countriesCount = 0;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -75,7 +74,7 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-
+    this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {

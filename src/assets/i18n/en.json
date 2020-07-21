@@ -482,7 +482,8 @@
         "title": "Quality",
         "buffer": "Avg. Buffering Rate",
         "bitrate": "Avg. Bitrate",
-        "minutes": "Minutes Broadcasted"
+        "minutes": "Last Broadcast Duration",
+        "live": "Broadcast is currently live"
       }
     },
     "entryLive": {

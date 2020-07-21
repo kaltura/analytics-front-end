@@ -22,12 +22,6 @@ export class MiniQualityConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entryWebcast.quality.bitrate`),
             sortOrder: 2,
-          },
-          'sum_time_viewed': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entryWebcast.quality.minutes`),
-            units: value => 'min',
-            sortOrder: 3,
           }
         }
       }

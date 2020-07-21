@@ -10,38 +10,16 @@
       <div class="kVal">
         <div class="kMiniIcon orange"><i class="icon-ic_spinner"></i></div>
           <div class="kLabels">
-            <span *ngIf="!_isCompareMode" class="value">{{_tabsData[0]?.value}}</span>
-            <span *ngIf="_isCompareMode" class="kTrend"
-                  [kTooltip]="_tabsData[0]?.tooltip"
-                  [maxWidth]="500"
-                  [escape]="false">
-              <app-trend-value valueStyleClass="kValue"
-                               unitsStyleClass="kUnits"
-                               [value]="_tabsData[0]?.value"
-                               [units]="_tabsData[0]?.units"
-                               [trend]="_tabsData[0]?.trend"></app-trend-value>
-            </span>
+            <span class="value">{{_tabsData[0]?.value}}</span>
             <span class="title">{{_tabsData[0]?.title}}</span>
           </div>
-          <!--span class="kPlayedEntries" *ngIf="!_isCompareMode && videosCount$ | async as videosCount">
-          {{'app.engagement.playedEntries' | translate: { '0': videosCount } }}
-        </span-->
+
       </div>
 
       <div class="kVal">
         <div class="kMiniIcon blue"><i class="icon-ic_bitrate"></i></div>
         <div class="kLabels">
-          <span *ngIf="!_isCompareMode" class="value">{{_tabsData[1]?.value}}</span>
-          <span *ngIf="_isCompareMode" class="kTrend"
-                [kTooltip]="_tabsData[1]?.tooltip"
-                [maxWidth]="500"
-                [escape]="false">
-            <app-trend-value valueStyleClass="kValue"
-                             unitsStyleClass="kUnits"
-                             [value]="_tabsData[1]?.value"
-                             [units]="_tabsData[1]?.units"
-                             [trend]="_tabsData[1]?.trend"></app-trend-value>
-          </span>
+          <span class="value">{{_tabsData[1]?.value}}</span>
           <span class="title">{{_tabsData[1]?.title}}</span>
         </div>
       </div>
@@ -49,18 +27,9 @@
       <div class="kVal">
         <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
         <div class="kLabels">
-          <span *ngIf="!_isCompareMode" class="value">{{_tabsData[2]?.value}}</span>
-          <span *ngIf="_isCompareMode" class="kTrend"
-                [kTooltip]="_tabsData[2]?.tooltip"
-                [maxWidth]="500"
-                [escape]="false">
-            <app-trend-value valueStyleClass="kValue"
-                             unitsStyleClass="kUnits"
-                             [value]="_tabsData[2]?.value"
-                             [units]="_tabsData[2]?.units"
-                             [trend]="_tabsData[2]?.trend"></app-trend-value>
-          </span>
-          <span class="title">{{_tabsData[2]?.title}}</span>
+          <span class="value">{{lastBroadcastDuration.length ? lastBroadcastDuration : 'app.common.na' | translate }}</span>
+          <span *ngIf="lastBroadcastDuration.length && !isLive" class="title">{{'app.entryWebcast.quality.minutes' | translate}}</span>
+          <span *ngIf="!lastBroadcastDuration.length && isLive" class="title">{{'app.entryWebcast.quality.live' | translate}}</span>
         </div>
       </div>
 

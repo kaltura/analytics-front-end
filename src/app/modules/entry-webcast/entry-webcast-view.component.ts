@@ -4,12 +4,18 @@ import {
   BaseEntryGetAction,
   KalturaAPIException,
   KalturaClient,
-  KalturaDetachedResponseProfile, KalturaEntryDisplayInSearchType, KalturaLiveEntry,
+  KalturaDetachedResponseProfile,
+  KalturaEntryDisplayInSearchType,
+  KalturaLiveEntry,
+  KalturaLiveStreamBroadcastStatus,
+  KalturaLiveStreamDetails,
   KalturaMultiRequest,
-  KalturaMultiResponse, KalturaReportInterval,
+  KalturaMultiResponse,
+  KalturaReportInterval,
   KalturaRequestOptions,
   KalturaResponseProfileType,
   KalturaUser,
+  LiveStreamGetDetailsAction,
   UserGetAction
 } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -17,9 +23,8 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { analyticsConfig } from 'configuration/analytics-config';
 import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import {AuthService, ErrorsManagerService, NavigationDrillDownService, ReportHelper} from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
-import {EntryExportConfig} from "../entry/views/video/entry-export.config";
 import {EntryWebcastExportConfig} from "./entry-webcast-export.config";
 import {ExportItem} from "shared/components/export-csv/export-config-base.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
@@ -40,6 +45,8 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
   public _entry: KalturaLiveEntry;
   public _entryId = '';
   public _entryIdIn = '';
+  public _lastBroadcastDuration = '';
+  public _isLive = false;
   public _owner = '';
   public _displayCreatedAt = '';
   public _isChildAccount = false;
@@ -102,7 +109,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,thumbnailUrl,displayInSearch,lastBroadcastEndTime,broadcastTime'
+            fields: 'id,name,mediaType,createdAt,msDuration,userId,displayInSearch,lastBroadcastEndTime,firstBroadcast,lastBroadcast,recordedEntryId,liveStatus,'
           })
         }),
       new UserGetAction({ userId: null })
@@ -114,7 +121,8 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
               fields: 'id,fullName'
             })
           })
-        )
+        ),
+      new LiveStreamGetDetailsAction({id: this._entryId})
     );
 
     this._kalturaClient
@@ -132,27 +140,35 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
 
           return [
             responses[0].result,
-            responses[1].result
-          ] as [KalturaLiveEntry, KalturaUser];
+            responses[1].result,
+            responses[2].result
+          ] as [KalturaLiveEntry, KalturaUser, KalturaLiveStreamDetails];
         })
       )
       .subscribe(
-        ([entry, user]) => {
+        ([entry, user, liveStramDetails]) => {
           this._entry = entry;
           this._entryIdIn = entry.id;
+          // this._isLive = entry.liveStatus
           this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
-          if (entry.broadcastTime) {
-            this._firstBroadcastDate = DateFilterUtils.getMomentDate(entry.broadcastTime);
+          if (entry.firstBroadcast) {
+            this._firstBroadcastDate = DateFilterUtils.getMomentDate(entry.firstBroadcast);
           }
-          if (entry.lastBroadcastEndTime) {
-            this._lastBroadcastDate = DateFilterUtils.getMomentDate(entry.lastBroadcastEndTime);
+          if (entry.lastBroadcast) {
+            this._lastBroadcastDate = DateFilterUtils.getMomentDate(entry.lastBroadcast);
           }
           if (entry.recordedEntryId) {
             this._entryIdIn += `,${entry.recordedEntryId}`;
           }
+          if (entry.lastBroadcastEndTime && entry.lastBroadcast && entry.lastBroadcastEndTime > entry.lastBroadcast) {
+            const lastBroadcastEndTime = new Date(entry.lastBroadcastEndTime * 1000);
+            const lastBroadcast = new Date(entry.lastBroadcast * 1000);
+            this._lastBroadcastDuration = ReportHelper.numberWithCommas(moment(lastBroadcastEndTime).diff(moment(lastBroadcast), 'minutes'));
+          }
           this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
           this._showViewDetails = entry.displayInSearch !== KalturaEntryDisplayInSearchType.system;
           this._displayCreatedAt = DateFilterUtils.formatFullDateString(entry.createdAt);
+          this._isLive = liveStramDetails.broadcastStatus === KalturaLiveStreamBroadcastStatus.live;
           this._loadingEntry = false;
         },
         error => {
