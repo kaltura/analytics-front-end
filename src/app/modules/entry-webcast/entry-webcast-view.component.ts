@@ -149,7 +149,6 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         ([entry, user, liveStramDetails]) => {
           this._entry = entry;
           this._entryIdIn = entry.id;
-          // this._isLive = entry.liveStatus
           this._creationDate = DateFilterUtils.getMomentDate(entry.createdAt);
           if (entry.firstBroadcast) {
             this._firstBroadcastDate = DateFilterUtils.getMomentDate(entry.firstBroadcast);
@@ -158,7 +157,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
             this._lastBroadcastDate = DateFilterUtils.getMomentDate(entry.lastBroadcast);
           }
           if (entry.recordedEntryId) {
-            this._entryIdIn += `,${entry.recordedEntryId}`;
+            this._entryIdIn += `${analyticsConfig.valueSeparator}${entry.recordedEntryId}`;
           }
           if (entry.lastBroadcastEndTime && entry.lastBroadcast && entry.lastBroadcastEndTime > entry.lastBroadcast) {
             const lastBroadcastEndTime = new Date(entry.lastBroadcastEndTime * 1000);

@@ -18,6 +18,9 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'coordinates': {
+            format: value => value
+          },
           'country': {
             format: value => value,
             nonComparable: true,
@@ -33,14 +36,17 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value)
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrNA(value)
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true)
+          'sum_view_period': {
+            format: value => ReportHelper.numberOrNA(value)
           },
-          'coordinates': {
-            format: value => value
+          'avg_live_buffer_time': {
+            format: value => ReportHelper.percents(value, false, true)
+          },
+          'avg_vod_completion_rate': {
+            format: value => ReportHelper.percents(value, false, true)
           }
         }
       },
@@ -50,17 +56,23 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         fields: {
           'count_plays': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.audience.geo.count_plays`),
+            title: this._translate.instant(`app.entryWebcast.geo.count_plays`),
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.audience.geo.unique_known_users`),
-            tooltip: this._translate.instant(`app.audience.geo.unique_known_users_tt`),
+            title: this._translate.instant(`app.entryWebcast.geo.unique_viewers`)
           },
-          'avg_view_drop_off': {
+          'sum_view_period': {
+            format: value => ReportHelper.numberOrNA(value),
+            title: this._translate.instant(`app.entryWebcast.geo.sum_view_period`)
+          },
+          'avg_live_buffer_time': {
             format: value => ReportHelper.percents(value, true, true),
-            title: this._translate.instant(`app.audience.geo.avg_view_drop_off`),
-            tooltip: this._translate.instant(`app.audience.geo.avg_view_drop_off_tt`),
+            title: this._translate.instant(`app.entryWebcast.geo.avg_live_buffer_time`)
+          },
+          'avg_vod_completion_rate': {
+            format: value => ReportHelper.percents(value, true, true),
+            title: this._translate.instant(`app.entryWebcast.geo.avg_vod_completion_rate`)
           }
         }
       }

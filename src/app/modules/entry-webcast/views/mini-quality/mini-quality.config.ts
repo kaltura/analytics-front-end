@@ -13,13 +13,13 @@ export class MiniQualityConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.integerOrZero(value),
+          'avg_live_buffer_time': {
+            format: value => ReportHelper.percents(value, false, true),
             title: this._translate.instant(`app.entryWebcast.quality.buffer`),
             sortOrder: 1,
           },
-          'unique_known_users': {
-            format: value => ReportHelper.integerOrZero(value),
+          'avg_bitrate': {
+            format: value => `${ReportHelper.numberOrZero(value)} Kbps`,
             title: this._translate.instant(`app.entryWebcast.quality.bitrate`),
             sortOrder: 2,
           }

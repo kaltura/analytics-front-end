@@ -1,7 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaAPIException,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaObjectBaseFactory,
+  KalturaReportInterval,
+  KalturaReportTotal,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -10,7 +18,6 @@ import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniHighlightsConfig } from './mini-highlights.config';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
@@ -29,7 +36,10 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   private _dataConfig: ReportDataConfig;
   protected _componentId = 'webcast-mini-highlights';
+
+  public insights$: BehaviorSubject<{ minutesViewed: {total: number, live: number}, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ minutesViewed: null, busy: false, error: null });
   public _topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }>;
+  public _livePercent = '';
 
   @Input() set topCountries(topCountries$: any) {
     if (topCountries$) {
@@ -48,7 +58,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
+  private _reportType = reportTypeMap(KalturaReportType.highlightsWebcast);
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
@@ -64,8 +74,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     return this._compareFilter !== null;
   }
 
-  constructor(private _frameEventManager: FrameEventManagerService,
-              private _translate: TranslateService,
+  constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
@@ -78,16 +87,17 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
   }
 
   ngOnInit(): void {
-
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
+    this.insights$.complete();
   }
 
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
+    this.insights$.next({minutesViewed: null, busy: true, error: null});
     this._blockerMessage = null;
-
+    this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
@@ -102,7 +112,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
       }))
       .subscribe(({ report, compare }) => {
 
-          if (report.totals && !this._tabsData.length) {
+          if (report.totals) {
             this._handleTotals(report.totals); // handle totals
           }
 
@@ -113,6 +123,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
         },
         error => {
           this._isBusy = false;
+          this.insights$.next({minutesViewed: null, busy: false, error: error});
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -167,6 +178,10 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+    this.insights$.next({minutesViewed: {total: parseFloat(this._tabsData[3].rawValue.toString()), live: parseFloat(this._tabsData[2].rawValue.toString())}, busy: false, error: null});
+    if (parseFloat(this._tabsData[3].rawValue.toString()) && parseFloat(this._tabsData[2].rawValue.toString())) {
+      this._livePercent = (parseFloat(this._tabsData[3].rawValue.toString()) / parseFloat(this._tabsData[2].rawValue.toString()) * 100).toFixed(2);
+    }
   }
 
 }

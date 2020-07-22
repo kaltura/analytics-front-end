@@ -18,16 +18,20 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             sortOrder: 1,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entryWebcast.knownUsers`),
+            title: this._translate.instant(`app.entryWebcast.highlights.knownUsers`),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             units: value => 'min',
             sortOrder: 3,
+          },
+          'sum_live_view_period': {
+            format: value => ReportHelper.integerOrZero(value),
+            sortOrder: 4,
           }
         }
       }

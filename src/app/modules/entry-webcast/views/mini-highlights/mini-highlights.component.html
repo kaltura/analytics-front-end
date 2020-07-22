@@ -31,7 +31,7 @@
         <div class="kLabels">
           <span class="value">{{_tabsData[2]?.value}}</span>
           <span class="title">{{_tabsData[2]?.title}}</span>
-          <span class="title percentLive">65% Live</span>
+          <span *ngIf="_livePercent.length" class="title percentLive">{{'app.entryWebcast.highlights.percentLive' | translate: { '0': _livePercent} }}</span>
         </div>
       </div>
 
@@ -40,7 +40,7 @@
         <i *ngIf="_topCountries.length > 1" class="kFlag flag2" [ngClass]="'kFlag-' + _topCountries[1]['object_id']"></i>
         <div class="kLabels kCountriesLables" [ngStyle]="_topCountries.length > 1 ? {'paddingLeft': '12px'} : {}">
           <span class="value">{{_countriesCount}}</span>
-          <span class="title">{{'app.entryWebcast.countries' | translate}}</span>
+          <span class="title">{{'app.entryWebcast.highlights.countries' | translate }}</span>
         </div>
       </div>
 

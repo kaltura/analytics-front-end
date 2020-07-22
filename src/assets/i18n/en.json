@@ -475,15 +475,25 @@
       }
     },
     "entryWebcast": {
-      "knownUsers": "Known Viewers",
-      "countries": "Countries",
-      "worldwide": "Worldwide",
+      "highlights": {
+        "knownUsers": "Known Viewers",
+        "countries": "Countries",
+        "percentLive": "{{0}}% Live"
+      },
       "quality": {
         "title": "Quality",
         "buffer": "Avg. Buffering Rate",
         "bitrate": "Avg. Bitrate",
         "minutes": "Last Broadcast Duration",
         "live": "Broadcast is currently live"
+      },
+      "geo": {
+        "worldwide": "Worldwide",
+        "count_plays": "Plays",
+        "unique_viewers": "Known Users",
+        "sum_view_period": "Minutes Viewed",
+        "avg_live_buffer_time": "Live Avg. Buffer Rate",
+        "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       }
     },
     "entryLive": {

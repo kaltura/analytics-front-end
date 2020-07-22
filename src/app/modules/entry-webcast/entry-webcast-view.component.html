@@ -60,8 +60,8 @@
                           (filterChange)="_onRefineFilterChange($event)"></app-entry-webcast-filter>
 
         <div class="kReportContainer">
-          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer">
-            <app-webcast-mini-highlights
+          <div [class.kHidden]="!_viewConfig.miniHighlights" class="kMiniReportContainer">
+            <app-webcast-mini-highlights #miniHighlights
               [topCountries]="geo.topCountries$"
               [entryIdIn]="_entryIdIn"
               [dateFilter]="_dateFilter"
@@ -77,6 +77,12 @@
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter">
             </app-webcast-mini-quality>
+          </div>
+        </div>
+
+        <div class="kReportContainer">
+          <div *ngIf="_viewConfig.insights" class="kMiniReportContainer">
+            <app-webcast-mini-insights [insights]="miniHighlights.insights$"></app-webcast-mini-insights>
           </div>
         </div>
 

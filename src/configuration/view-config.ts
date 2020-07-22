@@ -169,6 +169,7 @@ export const viewsConfig = {
     miniHighlights: {},
     miniQuality: {},
     highlights: {},
+    insights: {},
     geo: {},
     refineFilter: {
       playbackType: {},

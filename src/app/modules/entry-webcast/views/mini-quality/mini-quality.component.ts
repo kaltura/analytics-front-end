@@ -5,15 +5,13 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseF
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniQualityConfig } from './mini-quality.config';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'app-webcast-mini-quality',
@@ -51,8 +49,7 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
     return this._compareFilter !== null;
   }
 
-  constructor(private _frameEventManager: FrameEventManagerService,
-              private _translate: TranslateService,
+  constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
@@ -89,7 +86,7 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
       }))
       .subscribe(({ report, compare }) => {
 
-          if (report.totals && !this._tabsData.length) {
+          if (report.totals) {
             this._handleTotals(report.totals); // handle totals
           }
 

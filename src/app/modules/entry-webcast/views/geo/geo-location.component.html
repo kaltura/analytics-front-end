@@ -75,59 +75,76 @@
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'" [ngStyle]="{'width': '20%'}">
+                <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.count_plays' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.count_plays' | translate}}
+                    <span [kTooltip]="'app.entryWebcast.geo.count_plays' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.count_plays' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'">
+                <th [ngStyle]="{'width': '25%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.distribution' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.distribution' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='unique_known_users'" [ngStyle]="{'width': '20%'}">
+                <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.unique_known_users' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.unique_known_users' | translate}}
+                    <span [kTooltip]="'app.entryWebcast.geo.unique_viewers' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.unique_viewers' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='unique_known_users'">
+                <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.distribution2' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.distribution2' | translate}}
+                    <span [kTooltip]="'app.entryWebcast.geo.sum_view_period' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.sum_view_period' | translate}}
                     </span>
                   </div>
                 </th>
-                <th *ngIf="_selectedMetrics==='avg_view_drop_off'" [ngStyle]="{'width': '20%'}">
+                <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
-                    <span [kTooltip]="'app.audience.geo.avg_view_drop_off' | translate" [showOnEllipsis]="true">
-                      {{'app.audience.geo.avg_view_drop_off' | translate}}
+                    <span [kTooltip]="'app.entryWebcast.geo.avg_live_buffer_time' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.avg_live_buffer_time' | translate}}
                     </span>
                   </div>
                 </th>
-                <th [ngStyle]="{'paddingLeft': '0px'}">{{'app.audience.geo.trend' | translate}}</th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.entryWebcast.geo.avg_vod_completion_rate' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.avg_vod_completion_rate' | translate}}
+                    </span>
+                  </div>
+                </th>
               </tr>
 
               <tr *ngIf="_tableData?.length" class="kSummaryRow">
                 <th [ngStyle]="{'width': '50px'}"></th>
                 <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '20%'}">
-                  <span>{{'app.entryWebcast.worldwide' | translate}}</span>
+                  <span>{{'app.entryWebcast.geo.worldwide' | translate}}</span>
                 </th>
-                <th *ngIf="_selectedMetrics==='count_plays'" [ngStyle]="{'width': '100%'}">
+                <th [ngStyle]="{'width': '20%'}">
                   <span>{{_tabsData[0].value}}</span>
                 </th>
-                <th [ngStyle]="{'width': '100%'}">
+                <th [ngStyle]="{'width': '25%'}">
                   <div>
                     <app-bullet [value]="100"></app-bullet>
                   </div>
                 </th>
-                <th [ngStyle]="{'paddingLeft': '0px'}">N/A</th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <span>{{_tabsData[1].value}}</span>
+                </th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <span>{{_tabsData[2].value}}</span>
+                </th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <span>{{_tabsData[3].value}}</span>
+                </th>
+                <th [ngStyle]="{'width': '20%'}">
+                  <span>{{_tabsData[4].value}}</span>
+                </th>
               </tr>
 
             </ng-template>
@@ -146,36 +163,25 @@
                      (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                   <span *ngIf="_currentTableLevel === _tableModes.cities">{{data['city']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='count_plays'">
-                  <span *ngIf="!data['count_plays']?.value">{{data['count_plays']}}</span>
+                <td>
+                  <span>{{data['count_plays']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='count_plays' && !data['count_plays']?.valuee">
+                <td>
                   <div>
                     <app-bullet [value]="data['plays_distribution']"></app-bullet>
                   </div>
                 </td>
-                <td *ngIf="_selectedMetrics==='unique_known_users'">
-                  <span *ngIf="!data['unique_known_users']?.value">{{data['unique_known_users']}}</span>
+                <td>
+                  <span>{{data['unique_viewers']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='unique_known_users' && !data['unique_known_users']?.value">
-                  <div>
-                    <app-bullet [value]="data['unique_users_distribution']"></app-bullet>
-                  </div>
+                <td>
+                  <span>{{data['sum_view_period']}}</span>
                 </td>
-                <td *ngIf="_selectedMetrics==='avg_view_drop_off'">
-                  <span *ngIf="!data['count_plays']?.value">{{data['avg_view_drop_off']}}</span>
+                <td>
+                  <span>{{data['avg_live_buffer_time']}}</span>
                 </td>
-                <td [ngStyle]="{'paddingLeft': '0px'}">
-                  <span>
-                    <h5 class="mini-loader"
-                        *ngIf="!data[_selectedMetrics+'_trend']?.trend"><span></span><span></span></h5>
-                    <span *ngIf="data[_selectedMetrics+'_trend']?.trend" class="kTrend"
-                          [kTooltip]="data[_selectedMetrics+'_trend']?.tooltip" [maxWidth]="500" [escape]="false">
-                      <app-trend-value [value]="data[_selectedMetrics+'_trend']?.trend"
-                                       [units]="data[_selectedMetrics+'_trend']?.units"
-                                       [trend]="data[_selectedMetrics+'_trend']?.trendDirection"></app-trend-value>
-                    </span>
-                  </span>
+                <td>
+                  <span>{{data['avg_vod_completion_rate']}}</span>
                 </td>
               </tr>
             </ng-template>

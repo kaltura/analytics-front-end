@@ -53,7 +53,7 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
   private _echartsIntance: any; // echart instance
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _trendFilter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
+  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.mapOverlayCountryWebcast);
   private _mapCenter = [0, 10];
   private _canMapDrillDown = true;
   private order = '-count_plays';
@@ -121,13 +121,13 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
     let reportType: KalturaReportType;
     switch (mode) {
       case GeoTableModes.cities:
-        reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
+        reportType = reportTypeMap(KalturaReportType.mapOverlayCityWebcast);
         break;
       case GeoTableModes.regions:
-        reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
+        reportType = reportTypeMap(KalturaReportType.mapOverlayRegionWebcast);
         break;
       case GeoTableModes.countries:
-        reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
+        reportType = reportTypeMap(KalturaReportType.mapOverlayCountryWebcast);
         break;
       default:
         reportType = null;
@@ -212,32 +212,32 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
         if (drillDown === '') {
           this._drillDown = [];
           this._currentTableLevel = GeoTableModes.countries;
-          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCountry);
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCountryWebcast);
         } else if (this._drillDown.length === 0 || goBack) {
           this._currentTableLevel = GeoTableModes.regions;
           this._drillDown = [getCountryName(drillDown, true)];
-          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegionWebcast);
         } else if (this._drillDown.length === 1) {
           this._currentTableLevel = GeoTableModes.cities;
           this._drillDown.push(getCountryName(drillDown, true));
-          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCityWebcast);
         }
         break;
       case GeoTableModes.regions:
         if (drillDown === '') {
           this._drillDown = [];
           this._currentTableLevel = GeoTableModes.regions;
-          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegion);
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayRegionWebcast);
         } else if (this._drillDown.length === 0) {
           this._currentTableLevel = GeoTableModes.cities;
           this._drillDown = [getCountryName(drillDown, true)];
-          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
+          this._reportType = reportTypeMap(KalturaReportType.mapOverlayCityWebcast);
         }
         break;
       case GeoTableModes.cities:
         this._drillDown = [];
         this._currentTableLevel = GeoTableModes.cities;
-        this._reportType = reportTypeMap(KalturaReportType.mapOverlayCity);
+        this._reportType = reportTypeMap(KalturaReportType.mapOverlayCityWebcast);
         break;
     }
 
@@ -261,6 +261,7 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
     if (this._drillDown.length === 0 && this._tableMode === GeoTableModes.countries) {
       this.topCountries$.next({topCountries: [], totalCount: 0});
     }
+    this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
     this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections)
@@ -313,10 +314,8 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
         return significantDigits((rowValue / total) * 100);
       };
       const playsDistribution = calculateDistribution('count_plays');
-      const usersDistribution = calculateDistribution('unique_known_users');
 
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-      row['unique_users_distribution'] = ReportHelper.numberWithCommas(usersDistribution);
 
       return row;
     });
@@ -400,17 +399,8 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
               return sameCountry && sameRegion && sameCity;
             });
             let compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
-            this._setPlaysTrend(row, 'count_plays', compareValue, currentPeriodTitle, comparePeriodTitle);
             compareValue = relevantCompareRow ? relevantCompareRow['unique_known_users'] : 0;
-            this._setPlaysTrend(row, 'unique_known_users', compareValue, currentPeriodTitle, comparePeriodTitle);
             compareValue = relevantCompareRow ? relevantCompareRow['avg_view_drop_off'] : 0;
-            this._setPlaysTrend(row, 'avg_view_drop_off', compareValue, currentPeriodTitle, comparePeriodTitle, '%');
-          });
-        } else {
-          this._tableData.forEach(row => {
-            this._setPlaysTrend(row, 'count_plays', 0, currentPeriodTitle, comparePeriodTitle);
-            this._setPlaysTrend(row, 'unique_known_users', 0, currentPeriodTitle, comparePeriodTitle);
-            this._setPlaysTrend(row, 'avg_view_drop_off', 0, currentPeriodTitle, comparePeriodTitle, '%');
           });
         }
       }, error => {
@@ -435,19 +425,6 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
           });
         }
       });
-  }
-
-  private _setPlaysTrend(row: any, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
-    const currentValue = parseFormattedValue(row[field]);
-    compareValue = parseFormattedValue(compareValue.toString());
-    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
-    const tooltip = `${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue), units)}${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue), units)}`;
-    row[field + '_trend'] = {
-      trend: value !== null ? value : '–',
-      trendDirection: direction,
-      tooltip: tooltip,
-      units: value !== null ? '%' : '',
-    };
   }
 
   private _updateReportConfig(reportConfig: ReportConfig): void {
