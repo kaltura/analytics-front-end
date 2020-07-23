@@ -10,7 +10,9 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
 })
 export class UserEngagementFilterComponent extends FilterComponent {
   public _totalCount = 0;
-  
+
+  @Input() showUserFilter = true;
+
   @Input() set totalCount(val) {
     if (val !== undefined) {
       this._totalCount = val;
@@ -23,7 +25,7 @@ export class UserEngagementFilterComponent extends FilterComponent {
     super._onItemSelected(item, type);
     this._apply();
   }
-  
+
   public _apply(forceApply = false): void {
     super._apply(forceApply);
     this._bottomPadding = '0';

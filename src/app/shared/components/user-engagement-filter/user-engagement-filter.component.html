@@ -2,7 +2,7 @@
   <span class="kTotalCount">
     {{'app.entry.totalViewersCount' | translate: { '0': _totalCount } }}
   </span>
-  <div class="kSearch">
+  <div class="kSearch" *ngIf="showUserFilter">
     <app-engagement-users-filter [selectedUsers]="_selectedValues['users']"
                                  (itemSelected)="_onItemSelected($event, 'users')"></app-engagement-users-filter>
   </div>

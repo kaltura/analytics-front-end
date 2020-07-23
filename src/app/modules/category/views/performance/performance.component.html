@@ -89,6 +89,7 @@
               <app-user-engagement-filter *ngIf="!_isMultiAccount"
                                           [totalCount]="usersTableComponent.totalCount"
                                           [dateFilter]="_dateFilter"
+                                          [showUserFilter]="_viewConfig.userFilter"
                                           (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
               <app-users-table #usersTableComponent
