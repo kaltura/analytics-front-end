@@ -1,17 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaAPIException,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval,
-  KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -21,6 +13,8 @@ import { MiniHighlightsConfig } from './mini-highlights.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import {analyticsConfig} from "configuration/analytics-config";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-webcast-mini-highlights',
@@ -76,6 +70,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
+              private _browserService: BrowserService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
@@ -182,6 +177,18 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     if (parseFloat(this._tabsData[3].rawValue.toString()) && parseFloat(this._tabsData[2].rawValue.toString())) {
       this._livePercent = (parseFloat(this._tabsData[3].rawValue.toString()) / parseFloat(this._tabsData[2].rawValue.toString()) * 100).toFixed(2);
     }
+  }
+
+  public export(): void {
+    this._browserService.exportToCsv(`${this._authService.pid}-Report_export-${this.entryIdIn.split(analyticsConfig.valueSeparator)[0]}.csv`,[
+      ["# ------------------------------------"],
+      ["Report: Highlights"],
+      ["Please note that the data below is filtered based on the filter applied in the report"],
+      ["Filtered dates: " + moment.unix(this._filter.fromDate).toDate() + " - " + moment.unix(this._filter.toDate).toDate()],
+      ["Plays", "Known Users", "Total minutes viewed", "Live minutes viewed (percentage)", "Countries"],
+      [this._tabsData[0].rawValue, this._tabsData[1].rawValue, this._tabsData[2].rawValue, parseFloat(this._livePercent), this._countriesCount ],
+      ["# ------------------------------------"],
+    ]);
   }
 
 }

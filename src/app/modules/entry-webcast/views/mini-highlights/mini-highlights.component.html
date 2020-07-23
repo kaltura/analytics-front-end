@@ -1,6 +1,7 @@
 <div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
+    <a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -13,9 +14,6 @@
             <span class="value">{{_tabsData[0]?.value}}</span>
             <span class="title">{{_tabsData[0]?.title}}</span>
           </div>
-          <!--span class="kPlayedEntries" *ngIf="!_isCompareMode && videosCount$ | async as videosCount">
-          {{'app.engagement.playedEntries' | translate: { '0': videosCount } }}
-        </span-->
       </div>
 
       <div class="kVal">
