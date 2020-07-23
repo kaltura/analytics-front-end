@@ -3,7 +3,7 @@ import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -12,6 +12,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniQualityConfig } from './mini-quality.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
+import { analyticsConfig } from "configuration/analytics-config";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-webcast-mini-quality',
@@ -51,6 +53,7 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
 
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
+              private _browserService: BrowserService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
@@ -153,4 +156,15 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
   }
 
+  public export(): void {
+    this._browserService.exportToCsv(`${this._authService.pid}-Report_export-${this.entryIdIn.split(analyticsConfig.valueSeparator)[0]}.csv`,[
+      ["# ------------------------------------"],
+      ["Report: Quality"],
+      ["Please note that the data below is filtered based on the filter applied in the report"],
+      ["Filtered dates: " + moment.unix(this._filter.fromDate).toDate() + " - " + moment.unix(this._filter.toDate).toDate()],
+      ["Avg. buffering rate (%)", "Avg. Bitrate (Kbps)", "Minutes broadcasted"],
+      [(parseFloat(this._tabsData[0].rawValue.toString()) * 100).toFixed(2), (parseFloat(this._tabsData[1].rawValue.toString())).toFixed(2), this.lastBroadcastDuration.length ? parseFloat(this.lastBroadcastDuration.replace(/,/g, '')).toFixed(2) : this._translate.instant('app.common.na') ],
+      ["# ------------------------------------"],
+    ]);
+  }
 }

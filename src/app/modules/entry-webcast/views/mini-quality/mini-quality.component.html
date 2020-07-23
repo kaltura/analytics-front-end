@@ -1,6 +1,7 @@
 <div data-aid="report-engagement-mini-quality" class="kReport kMini kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.entryWebcast.quality.title' | translate}}</span>
+    <a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
