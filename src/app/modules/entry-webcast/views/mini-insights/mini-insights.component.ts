@@ -36,12 +36,18 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
             const { live, total } = data.minutesViewed;
             const vod = total - live;
             this._options = {
+              grid: {
+                top: 1, left: 1, bottom: 1, right: 1
+              },
               xAxis: {
-                type: 'category'
+                type: 'category',
               },
               yAxis: {
                 type: 'value',
                 axisTick: {
+                  show: false
+                },
+                axisLine: {
                   show: false
                 },
                 axisLabel: {
@@ -51,7 +57,7 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
               color: ['#d06e1b', '#e1962e'],
               tooltip: {
                 trigger: 'item',
-                formatter: '{a}: {c} Minutes Viewed'
+                formatter: '{a}: {c}'
               },
               series: [{
                 data: [live],

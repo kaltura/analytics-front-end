@@ -475,6 +475,8 @@
       }
     },
     "entryWebcast": {
+      "live": "Live",
+      "vod": "VOD",
       "highlights": {
         "knownUsers": "Known Viewers",
         "countries": "Countries",
@@ -494,6 +496,10 @@
         "sum_view_period": "Minutes Viewed",
         "avg_live_buffer_time": "Live Avg. Buffer Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
+      },
+      "insights": {
+        "title": "Insights",
+        "label": "Minutes Viewed"
       }
     },
     "entryLive": {

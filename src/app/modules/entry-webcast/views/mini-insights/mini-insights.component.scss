@@ -3,4 +3,44 @@
 .kMini{
   height: 100%;
 }
+.kFilters .kTitle {
+  line-height: 70px;
+}
+.kLabel{
+  color: $kGrayscale1;
+  padding-left: 24px;
+}
 
+.chartContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  padding-top: 12px;
+  .kChart {
+    height: 160px;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    .circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      margin-right: 8px;
+      &.live {
+        background-color: #d06e1b;
+      }
+      &.vod {
+        background-color: #e1962e;
+      }
+    }
+    .label {
+      font-size: 12px;
+      font-weight: 700;
+      color: $kGrayscale1;
+      margin-right: 12px;
+    }
+  }
+}

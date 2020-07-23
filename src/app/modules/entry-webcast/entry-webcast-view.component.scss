@@ -130,12 +130,15 @@
     }
   }
   .kMiniReportContainer{
-    height: 308px;
+    height: 270px;
     width: 30%;
     flex: 1 1 auto;
     margin-right: 24px;
     &:last-child {
       margin-right: 0;
+    }
+    &.kHigh {
+      height: 322px;
     }
   }
 }
