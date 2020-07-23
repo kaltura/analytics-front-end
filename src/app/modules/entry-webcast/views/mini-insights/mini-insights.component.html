@@ -2,7 +2,7 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
-    <span>Insights report</span>
+    <div echarts class="kChart" [options]="_options" *ngIf="_options"></div>
 
   </k-area-blocker>
 </div>

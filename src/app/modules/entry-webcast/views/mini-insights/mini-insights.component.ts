@@ -35,7 +35,41 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
           } else if (data.minutesViewed) {
             const { live, total } = data.minutesViewed;
             const vod = total - live;
-            // render bar graph
+            this._options = {
+              xAxis: {
+                type: 'category'
+              },
+              yAxis: {
+                type: 'value',
+                axisTick: {
+                  show: false
+                },
+                axisLabel: {
+                  show: false
+                }
+              },
+              color: ['#d06e1b', '#e1962e'],
+              tooltip: {
+                trigger: 'item',
+                formatter: '{a}: {c} Minutes Viewed'
+              },
+              series: [{
+                data: [live],
+                type: 'bar',
+                name: 'Live',
+                itemStyle: {
+                  barBorderRadius: [3, 3, 0, 0]
+                }
+              },
+                {
+                  data: [vod],
+                  type: 'bar',
+                  name: 'VOD',
+                  itemStyle: {
+                    barBorderRadius: [3, 3, 0, 0]
+                  }
+                }]
+            };
           }
         },
         error => {
@@ -52,6 +86,7 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _options = null;
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
