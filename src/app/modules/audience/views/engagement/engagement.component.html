@@ -72,6 +72,7 @@
   <div [class.kHidden]="!_engagementViewConfig.highlights"
        id="highlights-report" class="kReportContainer">
     <app-engagement-highlights #highlights
+                               [viewConfig]="_engagementViewConfig.highlights"
                                [dateFilterComponent]="dateFilter"
                                [dateFilter]="_dateFilter"
                                [refineFilter]="_refineFilter"></app-engagement-highlights>

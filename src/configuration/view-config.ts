@@ -18,7 +18,9 @@ export const viewsConfig = {
       miniTopVideos: {},
       miniPeakDay: {},
       topVideos: {},
-      highlights: {},
+      highlights: {
+        userFilter: {}
+      },
       impressions: {},
       syndication: {},
     },
@@ -107,7 +109,7 @@ export const viewsConfig = {
     },
     entryPreview: {},
     userEngagement: {
-      userFilter: {},
+      userFilter: {}
     },
     performance: {},
     impressions: {},
