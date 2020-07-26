@@ -69,6 +69,15 @@
             </app-webcast-mini-highlights>
           </div>
 
+          <div *ngIf="_viewConfig.miniEngagement" class="kMiniReportContainer">
+            <app-webcast-mini-engagement [showDownload]="_viewConfig.miniEngagement.download"
+                                         [entryIdIn]="_entryIdIn"
+                                         [entryId]="_entryId"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter">
+            </app-webcast-mini-engagement>
+          </div>
+
           <div *ngIf="_viewConfig.miniQuality" class="kMiniReportContainer">
             <app-webcast-mini-quality
               [entryIdIn]="_entry.id"

@@ -168,6 +168,9 @@ export const viewsConfig = {
     title: {},
     details: {},
     miniHighlights: {},
+    miniEngagement: {
+      // download: {} // used by KMS only
+    },
     miniQuality: {},
     highlights: {},
     insights: {},

@@ -1,0 +1,51 @@
+<div data-aid="report-engagement-mini-quality" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.engagement.title' | translate}}</span>
+    <a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+
+      <div class="kVal">
+        <div class="kMiniIcon green"><i class="icon-small-impressions"></i></div>
+          <div class="kLabels">
+            <span class="value">N/A</span>
+            <!--span class="value">{{_tabsData[0]?.value}}</span>
+            <span class="title">{{_tabsData[0]?.title}}</span-->
+          </div>
+
+      </div>
+
+      <div class="kVal">
+        <div class="kMiniIcon green"><i class="icon-small-Completion-Rate"></i></div>
+        <div class="kLabels">
+          <span class="value">{{_tabsData[0]?.value}}</span>
+          <span class="title">{{_tabsData[0]?.title}}</span>
+        </div>
+      </div>
+
+      <div class="kVal">
+        <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
+        <div class="kLabels">
+          <!--span class="value">{{_tabsData[0]?.value}}</span>
+          <span class="title">{{_tabsData[0]?.title}}</span-->
+        </div>
+
+      </div>
+
+      <div class="kVal">
+        <div class="kMiniIcon blue"><i class="icon-ic_registration"></i></div>
+        <div class="kLabels">
+          <span class="value">{{_tabsData[1]?.value}}</span>
+          <span class="title">{{_tabsData[1]?.title}}</span>
+          <a class="link" *ngIf="showDownload" [class.disabled]="_isBusy" (click)="download()">{{'app.entryWebcast.engagement.download' | translate}}</a>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

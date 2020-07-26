@@ -482,11 +482,20 @@
         "countries": "Countries",
         "percentLive": "{{0}}% Live"
       },
+      "engagement": {
+        "title": "Engagement",
+        "live": "Live engagement rate",
+        "vod": "VOD Avg. completion rate",
+        "questions": "Users asked {{0}} questions",
+        "view": "View",
+        "registered": "Users registered",
+        "download": "Download"
+      },
       "quality": {
         "title": "Quality",
         "buffer": "Avg. Buffering Rate",
         "bitrate": "Avg. Bitrate",
-        "minutes": "Last Broadcast Duration",
+        "minutes": "Last Broadcast Duration (Min.)",
         "live": "Broadcast is currently live"
       },
       "geo": {

@@ -22,6 +22,7 @@ import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-hig
 import { WebcastGeoComponent } from "./views/geo/geo-location.component";
 import { WebcastMiniQualityComponent } from "./views/mini-quality/mini-quality.component";
 import { WebcastMinInsightsComponent } from "./views/mini-insights/mini-insights.component";
+import { WebcastMiniEngagementComponent } from "./views/mini-engagement/mini-engagement.component";
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { WebcastMinInsightsComponent } from "./views/mini-insights/mini-insights
     BrowserFilterComponent,
     OsFilterComponent,
     WebcastMiniHighlightsComponent,
+    WebcastMiniEngagementComponent,
     WebcastMiniQualityComponent,
     WebcastMinInsightsComponent,
     WebcastGeoComponent

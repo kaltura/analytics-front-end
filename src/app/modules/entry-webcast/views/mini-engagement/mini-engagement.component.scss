@@ -1,0 +1,103 @@
+@import '../../../../../styles/variables';
+:host ::ng-deep .kValue{
+  font-size: 24px;
+  font-weight: 700;
+}
+:host ::ng-deep .kUnits{
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kMini{
+  height: 100%;
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0px;
+    }
+    .link {
+      margin-left: auto;
+      margin-right: 24px;
+      &.disabled {
+        pointer-events: none;
+      }
+    }
+  }
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+  .kVal{
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    position: relative;
+    height: 48px;
+    .kLabels {
+      display: flex;
+      align-items: flex-end;
+      a {
+        margin-left: 8px;
+      }
+    }
+    .kCountriesLables{
+      margin-left: 12px;
+    }
+    .kMiniIcon{
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 12px;
+      &.blue{
+        background-color: rgba(72,122,223,0.2);
+        color: #487ADF;
+      }
+      &.green{
+        background-color: rgba(49,190,166,0.2);
+        color: #31BEA6;
+
+      }
+      &.aqua {
+        background-color: rgba(22, 168, 215, 0.2);
+        color: #16a8d7;
+      }
+      &.orange{
+        background-color: rgba(225,150,46,0.2);
+        color: #E1962E;
+      }
+    }
+    .value{
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 700;
+      color: $kGrayscale1;
+    }
+    .title{
+      font-size: 15px;
+      color: $kGrayscale1;
+      margin-left: 8px;
+    }
+    .kFlag {
+      width: 30px;
+      height: 30px;
+    }
+    .flag1 {
+      z-index: 1;
+    }
+    .flag2 {
+      z-index: 0;
+      position: absolute;
+      margin-left: 12px;
+    }
+  }
+
+}
+
