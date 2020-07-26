@@ -11,7 +11,7 @@ import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './entry-webcast.routes';
 import { EntryWebcastViewComponent } from './entry-webcast-view.component';
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule, PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { EntryWebcastFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -37,6 +37,7 @@ import { WebcastMiniEngagementComponent } from "./views/mini-engagement/mini-eng
     SharedModule,
     TableModule,
     TooltipModule,
+    PopupWidgetModule,
     NgxEchartsModule,
     RouterModule.forChild(routing),
     AutoCompleteModule,

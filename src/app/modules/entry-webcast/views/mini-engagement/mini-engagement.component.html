@@ -29,8 +29,9 @@
       <div class="kVal">
         <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
         <div class="kLabels">
-          <!--span class="value">{{_tabsData[0]?.value}}</span>
-          <span class="title">{{_tabsData[0]?.title}}</span-->
+          <span class="value">{{_usersCount}}</span>
+          <span class="title">{{'app.entryWebcast.engagement.questions' | translate: { '1': _questions.length} }}</span>
+          <a class="link" [class.disabled]="!_questions.length" (click)="questionsPopup.open()">{{'app.entryWebcast.engagement.view' | translate}}</a>
         </div>
 
       </div>
@@ -47,5 +48,39 @@
     </div>
 
   </k-area-blocker>
+  <kPopupWidget data-aid="webcast-questions" #questionsPopup
+                class="kPopup"
+                [popupWidth]="586"
+                [popupHeight]="560"
+                [closeBtn]="false"
+                [modal]="true">
+    <ng-template>
+      <div class="kQuestions">
+        <div class="kHeader">
+          <span class="kTitle">{{'app.entryWebcast.engagement.users' | translate}}</span>
+        </div>
+        <div class="kMain">
+          <div class="questionsHeader">
+            <span class="title" [innerHTML]="'app.entryWebcast.engagement.questionsPercent' | translate: { '0': _usersCount, '1': _questions.length}"></span>
+            <a class="link" [class.disabled]="!_questions.length" (click)="exportQuestions()">{{'app.common.exportCsv' | translate}}</a>
+          </div>
+          <div class="questionsList">
+              <div class="question" *ngFor="let question of _questions">
+                <span class="text" [kTooltip]="question.text" [showOnEllipsis]="true">{{question.text}}</span>
+                <span class="date">{{question.updated | date: 'MM/d/yy h:mm a'}}</span>
+              </div>
+
+          </div>
+        </div>
+        <div class="kFooter">
+          <div class="kActions">
+            <button class="kButtonBranded" pButton [label]="'app.common.close' | translate" (click)="questionsPopup.close()"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </kPopupWidget>
 </div>
+
+
 

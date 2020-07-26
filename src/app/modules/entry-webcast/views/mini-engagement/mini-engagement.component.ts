@@ -2,14 +2,25 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import {
-  CuePointListAction, KalturaAnnotationFilter, KalturaCategory, KalturaClient, KalturaCuePointType, KalturaCuePoint,
+  CuePointListAction,
+  KalturaAnnotationFilter,
+  KalturaCategory,
+  KalturaClient,
+  KalturaCuePointType,
+  KalturaCuePoint,
   KalturaCuePointListResponse,
   KalturaEndUserReportInputFilter,
-  KalturaFilterPager, KalturaNullableBoolean, KalturaObjectBase,
+  KalturaFilterPager,
+  KalturaNullableBoolean,
+  KalturaObjectBase,
   KalturaObjectBaseFactory,
   KalturaReportInterval,
   KalturaReportTotal,
-  KalturaReportType, KalturaRequestOptions, KalturaResponseProfileHolder, KalturaResponseProfileType,
+  KalturaReportType,
+  KalturaRequestOptions,
+  KalturaResponseProfileHolder,
+  KalturaResponseProfileType,
+  KalturaMetadataListResponse, KalturaAnnotation,
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -25,6 +36,11 @@ import { analyticsConfig } from "configuration/analytics-config";
 import * as moment from "moment";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 
+export interface Question {
+  text: string;
+  userId: string;
+  updated: Date;
+}
 
 @Component({
   selector: 'app-webcast-mini-engagement',
@@ -59,6 +75,9 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
     searchInAdminTags: false
   });
 
+  public _questions: Question[] = [];
+  public _usersCount = 0;
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -78,17 +97,12 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   }
 
   ngOnInit(): void {
-    // const xml = '<metadata><State>Pending</State><ThreadId>1_khzqkybn</ThreadId><Type>Question</Type><ThreadCreatorId>ilanit.schreiber</ThreadCreatorId></metadata>';
-    // const parser = new DOMParser();
-    // const xmlDoc = parser.parseFromString(xml,"text/xml");
-    // const type = xmlDoc.getElementsByTagName("Type")[0].childNodes[0].nodeValue;
-
     this._kalturaClient
       .request(this.getEntryCuePoints())
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (data: KalturaCuePointListResponse) => {
-          debugger;
+          this._parseCuePointsResponse(data);
         },
         error => {
           const actions = {
@@ -109,7 +123,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       cuePointTypeEqual: KalturaCuePointType.annotation,
       tagsLike: 'qna',
       entryIdEqual: this.entryId,
-      orderBy: '+updatedAt',
+      orderBy: '+createdAt',
       isPublicEqual: KalturaNullableBoolean.trueValue
     });
 
@@ -123,6 +137,32 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
           })
         })
       );
+  }
+
+  private _parseCuePointsResponse(data: KalturaCuePointListResponse): void {
+    if (data.objects) {
+      const parser = new DOMParser();
+      data.objects.forEach((cuePoint: KalturaAnnotation) => {
+        if (cuePoint.relatedObjects && cuePoint.relatedObjects.QandA_ResponseProfile && cuePoint.relatedObjects.QandA_ResponseProfile_user) {
+          if (cuePoint.relatedObjects.QandA_ResponseProfile['objects'] && cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0] && cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0]['xml'] ){
+            const xml = cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0]['xml'];
+            const xmlDoc = parser.parseFromString(xml,"text/xml");
+            const type = xmlDoc.getElementsByTagName("Type")[0].childNodes[0].nodeValue;
+            if (type === "Question") {
+              this._questions.push({ text: cuePoint.text, userId: cuePoint.userId, updated: cuePoint.createdAt });
+            }
+          }
+        }
+      });
+      // calculate unique users count
+      let uniqueUsers = [];
+      this._questions.forEach(question => {
+        if (uniqueUsers.indexOf(question.userId) === -1) {
+          uniqueUsers.push(question.userId);
+        }
+      });
+      this._usersCount = uniqueUsers.length;
+    }
   }
 
   protected _loadReport(sections = this._dataConfig): void {
@@ -225,4 +265,20 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   public download(): void {
     alert("Download!")
   }
+
+  public exportQuestions(): void {
+    let rows = [
+      ["# ------------------------------------"],
+      ["Report: Engagement - Users' Questions"],
+      [this._translate.instant('app.entryWebcast.engagement.questionsPercent2', { '0': this._usersCount, '1': this._questions.length})],
+      ["# ------------------------------------"],
+      ["Question", "Date & Time"]
+    ];
+    this._questions.forEach(question => {
+      rows.push([question.text, moment(question.updated).format('MM/DD/YYYY h:mm a')]);
+    });
+    rows.push(["# ------------------------------------"]);
+    this._browserService.exportToCsv(`${this._authService.pid}-Report_export-${this.entryIdIn.split(analyticsConfig.valueSeparator)[0]}.csv`,rows);
+  }
+
 }

@@ -486,10 +486,13 @@
         "title": "Engagement",
         "live": "Live engagement rate",
         "vod": "VOD Avg. completion rate",
-        "questions": "Users asked {{0}} questions",
+        "questions": "Users asked {{1}} questions",
         "view": "View",
         "registered": "Users registered",
-        "download": "Download"
+        "download": "Download",
+        "users": "Users’ Questions",
+        "questionsPercent": "<b>{{0}}</b> Users asked <b>{{1}}</b> questions",
+        "questionsPercent2": "{{0}} Users asked {{1}} questions"
       },
       "quality": {
         "title": "Quality",
