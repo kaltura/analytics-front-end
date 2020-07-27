@@ -34,7 +34,7 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
             this._blockerMessage = this._errorsManager.getErrorMessage(data.error, actions);
           } else if (data.minutesViewed) {
             const { live, total } = data.minutesViewed;
-            const vod = total - live;
+            const vod = (total - live).toFixed(2);
             this._options = {
               grid: {
                 top: 1, left: 1, bottom: 1, right: 1

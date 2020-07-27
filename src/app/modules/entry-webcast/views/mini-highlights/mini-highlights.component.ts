@@ -173,7 +173,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this.insights$.next({minutesViewed: {total: parseFloat(this._tabsData[3].rawValue.toString()), live: parseFloat(this._tabsData[2].rawValue.toString())}, busy: false, error: null});
+    this.insights$.next({minutesViewed: {total: parseFloat(Number(this._tabsData[2].rawValue).toFixed(2)), live: parseFloat(Number(this._tabsData[3].rawValue).toFixed(2))}, busy: false, error: null});
     if (parseFloat(this._tabsData[3].rawValue.toString()) && parseFloat(this._tabsData[2].rawValue.toString())) {
       this._livePercent = (parseFloat(this._tabsData[3].rawValue.toString()) / parseFloat(this._tabsData[2].rawValue.toString()) * 100).toFixed(2);
     }
