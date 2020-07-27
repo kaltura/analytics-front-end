@@ -173,6 +173,7 @@ export const viewsConfig = {
     },
     miniQuality: {},
     highlights: {},
+    tools: {},
     insights: {},
     geo: {},
     refineFilter: {

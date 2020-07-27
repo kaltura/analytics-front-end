@@ -511,6 +511,13 @@
         "avg_live_buffer_time": "Live Avg. Buffer Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       },
+      "tools": {
+        "title": "Engagement Tools",
+        "slides": "Slides",
+        "polls": "Polls",
+        "announcements": "Announcements",
+        "answer": "Answer On Air"
+      },
       "insights": {
         "title": "Insights",
         "label": "Minutes Viewed"
