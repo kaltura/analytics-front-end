@@ -46,7 +46,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false, true)
           },
           'avg_vod_completion_rate': {
-            format: value => ReportHelper.percents(value, false, true)
+            format: value => ReportHelper.percents(value / 100, false, true)
           }
         }
       },
@@ -71,7 +71,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entryWebcast.geo.avg_live_buffer_time`)
           },
           'avg_vod_completion_rate': {
-            format: value => ReportHelper.percents(value, true, true),
+            format: value => ReportHelper.percents(value / 100, true, true),
             title: this._translate.instant(`app.entryWebcast.geo.avg_vod_completion_rate`)
           }
         }

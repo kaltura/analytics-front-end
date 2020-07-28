@@ -521,6 +521,20 @@
       "insights": {
         "title": "Insights",
         "label": "Minutes Viewed"
+      },
+      "domains": {
+        "title": "Top Domains",
+        "title_tt": "The Top Domains report shows the webcast’s performance per each domain that the webcast has been embedded",
+        "domains": "{{0}} Domains",
+        "all": "All Domains",
+        "index": "#",
+        "count_plays": "Plays",
+        "domain_name": "Domain Name",
+        "plays_distribution": "Plays Distribution",
+        "unique_viewers": "Known Viewers",
+        "sum_view_period": "Minutes Viewed",
+        "avg_live_buffer_time": "Live Avg. Buffering Rate",
+        "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       }
     },
     "entryLive": {

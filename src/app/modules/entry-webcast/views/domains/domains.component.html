@@ -1,0 +1,124 @@
+<div data-aid="report-geo" class="kReport kContent kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.domains.title' | translate}}</span>
+    <kInputHelper>
+      <span>{{'app.entryWebcast.domains.title_tt' | translate}}</span>
+    </kInputHelper>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" aria-labelledby="kWebcastDomains">
+
+      <span *ngIf="_totalCount !== undefined" class="kTotalCount">
+          {{'app.entryWebcast.domains.domains' | translate: { '0': _totalCount } }}
+      </span>
+
+    <div class="kTable">
+      <div class="kTableContainer">
+        <p-table aria-label="Syndication Table"
+                 [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"
+                 sortField="count_plays" [sortOrder]="-1" [defaultSortOrder]="-1">
+          <ng-template pTemplate="header">
+            <tr>
+              <th [ngStyle]="{'width': '60px'}">
+                <span *ngIf="_tableData?.length">{{'app.entryWebcast.domains.index' | translate}}</span>
+              </th>
+              <th [ngStyle]="{'width': '30px'}"></th>
+              <th *ngFor="let col of _columns"
+                  [pSortableColumn]="col === 'plays_distribution'  || col === 'domain_name' ? null : col"
+                  [class.nonSortable]="col === 'plays_distribution'  || col === 'domain_name'"
+                  [ngStyle]="{
+                      'width': col === 'plays_distribution' || col === 'domain_name' || col === 'referrer'
+                        ? '20%'
+                        : 'auto'
+                }">
+                <div class="kColumnHeader">
+                    <span [kTooltip]="'app.entryWebcast.domains.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.domains.' + col | translate}}
+                    </span>
+                  <p-sortIcon [field]="col" *ngIf="col !== 'plays_distribution'"></p-sortIcon>
+                </div>
+              </th>
+            </tr>
+            <tr *ngIf="_tableData?.length" class="kSummaryRow">
+              <th [ngStyle]="{'width': '60px'}"></th>
+              <th [ngStyle]="{'width': '30px'}"></th>
+              <th [ngStyle]="{'width': '20%'}">
+                <span>{{'app.entryWebcast.domains.all' | translate}}</span>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[0].value}}</span>
+              </th>
+              <th [ngStyle]="{'width': '20%'}">
+                <div>
+                  <app-bullet [value]="100"></app-bullet>
+                </div>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[1].value}}</span>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[2].value}}</span>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[3].value}}</span>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[4].value}}</span>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td><span>{{data['index']}}</span></td>
+              <td [ngStyle]="{'padding': '0'}">
+                <div class="kDomainIcon" #holder>
+                  <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
+                       onError="this.onerror=null;this.style.display='none'"
+                       (error)="holder.classList.add('kIconfile-small')">
+                </div>
+              </td>
+              <td *ngFor="let col of _columns; let i = index"
+                  [class.kHighlight]="i===0"
+                  [kTooltip]="data[col]"
+                  [showOnEllipsis]="col !== 'referrer'">
+                <ng-container *ngIf="data[col]?.value === undefined">
+                  <div *ngIf="col === 'plays_distribution'">
+                    <app-bullet [value]="data[col]" [colorScheme]="_distributionColorScheme"
+                                [formatter]="null"></app-bullet>
+                  </div>
+
+                  <span *ngIf="col !== 'plays_distribution' && col !== 'domain_name' && col !== 'referrer'">
+                      {{data[col]}}
+                    </span>
+
+                  <span *ngIf="col === 'referrer'" [appMiddleEllipsis]="data[col]"></span>
+
+                  <span *ngIf="col === 'domain_name'" tabindex="0" class="nameLink" role="link" [kTooltip]="data[col]" [showOnEllipsis]="true">
+                    {{data[col]}}
+                  </span>
+
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+        <p-paginator aria-label="Pagination"
+                     [rows]="_pager.pageSize"
+                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                     [totalRecords]="_totalCount"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

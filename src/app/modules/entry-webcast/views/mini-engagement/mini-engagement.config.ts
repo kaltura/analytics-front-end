@@ -14,7 +14,7 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'avg_vod_completion_rate': {
-            format: value => ReportHelper.percents(value, false, true),
+            format: value => ReportHelper.percents(value / 100, false, true),
             title: this._translate.instant(`app.entryWebcast.engagement.vod`),
             sortOrder: 1,
           },

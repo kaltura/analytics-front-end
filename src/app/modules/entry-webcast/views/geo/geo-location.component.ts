@@ -264,7 +264,7 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
     this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
     this._updateReportConfig(reportConfig);
-    this._reportService.getReport(reportConfig, sections)
+    this._reportService.getReport(reportConfig, sections, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
           if (report.totals) {
@@ -385,7 +385,7 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
       order: this.order
     };
     this._updateReportConfig(reportConfig);
-    this._reportService.getReport(reportConfig, this._dataConfig)
+    this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
         if (report.table && report.table.header && report.table.data) {
