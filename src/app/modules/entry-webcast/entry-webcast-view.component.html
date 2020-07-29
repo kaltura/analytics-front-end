@@ -108,6 +108,14 @@
           </app-webcast-geo>
         </div>
 
+        <div *ngIf="_viewConfig.devices" class="kReportContainer">
+          <app-webcast-devices
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [entryIdIn]="_entryIdIn">
+          </app-webcast-devices>
+        </div>
+
         <div *ngIf="_viewConfig.domains" class="kReportContainer">
           <app-webcast-domains
                            [dateFilter]="_dateFilter"

@@ -505,6 +505,8 @@
       },
       "geo": {
         "worldwide": "Worldwide",
+        "regions": "All Regions",
+        "cities": "All Cities",
         "count_plays": "Plays",
         "unique_viewers": "Known Users",
         "sum_view_period": "Minutes Viewed",
@@ -535,6 +537,16 @@
         "sum_view_period": "Minutes Viewed",
         "avg_live_buffer_time": "Live Avg. Buffering Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
+      },
+      "devices": {
+        "title": "Top Devices",
+        "live": "Live",
+        "vod": "VOD",
+        "count_plays": "Plays",
+        "liveUsers": "Live Users: {{0}}",
+        "vodUsers": "VOD Users: {{0}}",
+        "sum_view_period": "Minutes Viewed",
+        "avg_vod_completion_rate": "Avg. Completion Rate"
       }
     },
     "entryLive": {

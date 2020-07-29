@@ -5,57 +5,54 @@ import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportSe
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { DomainsDataConfig } from './domains-data.config';
+import { DevicesDataConfig } from './devices-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateRanges } from 'shared/components/date-filter/date-filter-utils';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
-import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { WebcastBaseReportComponent } from "../webcast-base-report/webcast-base-report.component";
 
 @Component({
-  selector: 'app-webcast-domains',
-  templateUrl: './domains.component.html',
-  styleUrls: ['./domains.component.scss'],
+  selector: 'app-webcast-devices',
+  templateUrl: './devices.component.html',
+  styleUrls: ['./devices.component.scss'],
   providers: [
-    DomainsDataConfig,
-    KalturaLogger.createLogger('WebcastDomainsComponent')
+    DevicesDataConfig,
+    KalturaLogger.createLogger('WebcastDevicesComponent')
   ]
 })
-export class WebcastDomainsComponent extends WebcastBaseReportComponent implements OnInit, OnDestroy {
+export class WebcastDevicesComponent extends WebcastBaseReportComponent implements OnInit, OnDestroy {
 
   @Input() entryIdIn = '';
-  protected _componentId = 'webcast-domains';
+  protected _componentId = 'webcast-devices';
   private _dataConfig: ReportDataConfig;
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.topDomainsWebcast);
+  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.platformsWebcast);
   private order = '-count_plays';
-  private _totalPlaysCount = 0;
   public _selectedMetrics: string;
+  public _selectedTotal: number;
+  public _animate = true;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   public _dateRange = DateRanges.Last30D;
-  public _tableData: TableRow<any>[] = [];
+  public _devicesData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _columns: string[] = [];
-  public _totalCount: number;
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _exportConfig: ExportItem[] = [];
-  public _distributionColorScheme = 'default';
 
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
-              private _dataConfigService: DomainsDataConfig,
+              private _dataConfigService: DevicesDataConfig,
               private _logger: KalturaLogger) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
@@ -82,30 +79,8 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
     refineFilterToServerValue(this._refineFilter, this._filter);
   }
 
-  public _onPaginationChanged(event): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
-      this._pager.pageIndex = event.page + 1;
-      this._loadReport({ table: this._dataConfig.table });
-    }
-  }
-
-  public _onSortChanged(event) {
-    const field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
-    if (event.data.length && field && event.order) {
-      const order = event.order === 1 ? '+' + field : '-' + field;
-      if (order !== this.order) {
-        this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
-        this.order = order;
-        this._pager.pageIndex = 1;
-        this._loadReport({ table: this._dataConfig.table });
-      }
-    }
-  }
-
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
-    this._tableData = [];
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
@@ -135,37 +110,59 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
   }
 
   private _handleTable(table: KalturaReportTable): void {
+    this._devicesData = [];
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._insertColumnAfter('plays_distribution', 'count_plays', columns);
-    this._totalCount = table.totalCount;
-    this._columns = columns;
-    this._columns.shift();
-    this._tableData = tableData.map((row, index) => {
-      let playsDistribution = 0;
-      if (this._totalPlaysCount !== 0) {
-        const countPlays = parseFloat(row['count_plays']) || 0;
-        playsDistribution = (countPlays / this._totalPlaysCount) * 100;
-      }
-      playsDistribution = significantDigits(playsDistribution);
-      row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
-      row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-
-      return row;
+    tableData.forEach(row => {
+      this._devicesData.push({
+        name: row.device,
+        avg_vod_completion_rate: parseFloat(row.avg_vod_completion_rate.toString()),
+        plays_count: {
+          live: parseFloat(row.live_plays_count.toString()),
+          vod: parseFloat(row.vod_plays_count.toString()),
+          total: ReportHelper.numberWithCommas(parseFloat(row.live_plays_count.toString()) + parseFloat(row.vod_plays_count.toString())),
+          tooltip: this.getTooltip('plays_count', parseFloat(row.live_plays_count.toString()), parseFloat(row.vod_plays_count.toString()))
+        },
+        view_period: {
+          live: Math.round(parseFloat(row.sum_live_view_period.toString()) * 100) / 100,
+          vod: Math.round((parseFloat(row.sum_view_period.toString()) - parseFloat(row.sum_live_view_period.toString())) * 100) / 100 ,
+          total: ReportHelper.numberWithCommas(Math.round(parseFloat(row.sum_view_period.toString()) * 100 ) / 100),
+          tooltip: this.getTooltip('view_period', Math.round(parseFloat(row.sum_live_view_period.toString()) * 100) / 100, Math.round((parseFloat(row.sum_view_period.toString()) - parseFloat(row.sum_live_view_period.toString())) * 100) / 100)
+        }
+      })
     });
+    setTimeout(() => this._animate = false);
   }
 
-  private _insertColumnAfter(column: string, after: string, columns: string[]): void {
-    const countPlaysIndex = columns.indexOf(after);
-    if (countPlaysIndex !== -1) {
-      columns.splice(countPlaysIndex + 1, 0, column);
+  private getTooltip(metric: string, live: number, vod: number): string {
+    let tooltip = '';
+    const liveUsers = this._translate.instant('app.entryWebcast.devices.liveUsers', {'0': live});
+    const vodUsers = this._translate.instant('app.entryWebcast.devices.vodUsers', {'0': vod});
+    if (metric === 'plays_count'){
+      tooltip = `<div style="padding: 8px"><div style="display: flex; align-items: center"><div class="circle" style="background-color: #2655b0"></div><span style="font-weight: 700; color: #333333; margin-left: 12px">${liveUsers}</span></div><br><div style="display: flex; align-items: center"><div class="circle" style="background-color: #88acf6"></div><span style="font-weight: 700; color: #333333; margin-left: 12px">${vodUsers}</span></div></div>`;
     }
+    if (metric === 'view_period'){
+      tooltip = `<div style="padding: 8px"><div style="display: flex; align-items: center"><div class="circle" style="background-color: #d06e1b"></div><span style="font-weight: 700; color: #333333; margin-left: 12px">${liveUsers}</span></div><br><div style="display: flex; align-items: center"><div class="circle" style="background-color: #e1962e"></div><span style="font-weight: 700; color: #333333; margin-left: 12px">${vodUsers}</span></div></div>`;
+    }
+    return tooltip;
   }
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-    if (this._tabsData.length) {
-      this._totalPlaysCount = Number(this._tabsData[0].rawValue);
-    }
+    // remove live minutes viewed
+    this._tabsData.splice(3, 1);
+    // merge plays count of live and VOD
+    this._tabsData[0].rawValue = parseFloat(this._tabsData[0].rawValue.toString()) + parseFloat(this._tabsData[1].rawValue.toString());
+    // remove live plays count
+    this._tabsData.splice(1, 1);
+    this._selectedTotal = parseFloat(this._tabsData.find(el => el.key === this._selectedMetrics).rawValue.toString());
+  }
+
+  public _onTabChange(tab: Tab): void {
+    this._animate = true;
+    this._logger.trace('Handle tab change action by user', { tab });
+    this._selectedMetrics = tab.key;
+    this._selectedTotal = parseFloat(this._tabsData.find(el => el.key === this._selectedMetrics).rawValue.toString());
+    setTimeout(() => this._animate = false);
   }
 
 }

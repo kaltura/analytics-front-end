@@ -123,7 +123,9 @@
                 <th [ngStyle]="{'width': '50px'}"></th>
                 <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '20%'}">
-                  <span>{{'app.entryWebcast.geo.worldwide' | translate}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.countries">{{'app.entryWebcast.geo.worldwide' | translate}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.regions">{{'app.entryWebcast.geo.regions' | translate}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.cities">{{'app.entryWebcast.geo.cities' | translate}}</span>
                 </th>
                 <th [ngStyle]="{'width': '20%'}">
                   <span>{{_tabsData[0].value}}</span>

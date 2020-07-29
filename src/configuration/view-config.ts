@@ -176,6 +176,7 @@ export const viewsConfig = {
     tools: {},
     insights: {},
     geo: {},
+    devices: {},
     domains: {},
     refineFilter: {
       playbackType: {},
