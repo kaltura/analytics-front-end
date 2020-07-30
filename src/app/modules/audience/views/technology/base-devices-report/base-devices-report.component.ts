@@ -30,7 +30,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       case 'sum_time_viewed':
         this._distributionColorScheme = 'default'; // 'time' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
-      case 'unique_known_users':
+      case 'unique_viewers':
         this._distributionColorScheme = 'default'; // 'viewers' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
       case 'count_plays':
@@ -39,16 +39,16 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         break;
     }
   }
-  
+
   @Input() set deviceFilter(value: string[]) {
     const hasChanges = !isArrayEquals(this._devices, value);
 
     this._devicesSelectActive = true;
-    
+
     if (!Array.isArray(value)) {
       return;
     }
-    
+
     if (value.length) {
       this._devices = value;
       this._selectedDevices = value;
@@ -60,12 +60,12 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     }
     this._tags = this.devicesList.filter(({ value }) => this._selectedDevices.indexOf(value) > -1);
     this._pager.pageIndex = 1;
-    
+
     if (hasChanges) {
       this._loadReport();
     }
   }
-  
+
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
       this._chartDataLoaded = false;
@@ -78,12 +78,12 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._loadReport();
     }
   }
-  
+
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() onDrillDown = new EventEmitter<{ drillDown: string, reportType: KalturaReportType, name: string }>();
-  
+
   private _paginationChanged = new Subject<void>();
-  
+
   public abstract _name: string;
   protected abstract _defaultReportType: KalturaReportType;
   protected abstract _drillDownReportType: KalturaReportType;
@@ -93,9 +93,9 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   protected _totalPlaysCount = 0;
   protected _devices: string[] = [];
   protected _reportType: KalturaReportType;
-  
+
   public abstract _title: string;
-  
+
   public _paginationChanged$ = this._paginationChanged.asObservable();
   public _distributionColorScheme: string;
   public _drillDown: string = null;
@@ -118,14 +118,14 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
-  
+
   protected _showIcon = false;
   protected get showIcon(): boolean {
     return false;
   }
-  
+
   protected abstract getRelevantCompareRow(tableData: { [key: string]: string }[], row: { [key: string]: string }): { [key: string]: string };
-  
+
   constructor(private _reportService: ReportService,
               private _trendService: TrendService,
               private _translate: TranslateService,
@@ -134,23 +134,23 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
               private _logger: KalturaLogger,
               @Inject(BaseDevicesReportConfig) _configService: ReportDataBaseConfig) {
     this._dataConfig = _configService.getConfig();
-    
+
     setTimeout(() => {
       this._reportType = this._defaultReportType;
     });
   }
-  
+
   ngOnDestroy() {
     this._paginationChanged.complete();
   }
-  
+
   private _insertColumnAfter(column: string, after: string, columns: string[]): void {
     const countPlaysIndex = columns.indexOf(after);
     if (countPlaysIndex !== -1) {
       columns.splice(countPlaysIndex + 1, 0, column);
     }
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._insertColumnAfter('plays_distribution', 'count_plays', columns);
@@ -167,22 +167,22 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       row['count_plays_raw'] = row['count_plays'];
       row['count_plays'] = ReportHelper.numberOrZero(row['count_plays']);
       row['plays_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
-      
+
       return row;
     });
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
     if (tabsData.length) {
       this._totalPlaysCount = Number(tabsData[0].value);
     }
   }
-  
+
   private _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: this._filter,
@@ -203,11 +203,11 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
           }
-          
+
           this._isBusy = false;
           this._firstTimeLoading = false;
           this._showIcon = !this._drillDown;
-          
+
           this._loadTrendData();
         },
         error => {
@@ -223,7 +223,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _setPlaysTrend(row: any, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string): void {
     const currentValue = parseFloat(row['count_plays_raw']) || 0;
     compareValue = parseFloat(compareValue) || 0;
@@ -236,16 +236,16 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       units: value !== null ? '%' : '',
     };
   }
-  
+
   private _loadTrendData(): void {
     const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
-    
+
     const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
     compareFilter.fromDate = startDate;
     compareFilter.toDate = endDate;
-    
+
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: compareFilter,
@@ -257,7 +257,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       .subscribe(report => {
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig.table);
-            
+
             this._tableData.forEach(row => {
               const relevantCompareRow = this.getRelevantCompareRow(tableData, row);
               const compareValue = relevantCompareRow ? relevantCompareRow['count_plays'] : 0;
@@ -289,7 +289,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
         }
       });
   }
-  
+
   private _getDrillDownFilterPropByReportType(): string {
     if ([reportTypeMap(KalturaReportType.browsers), reportTypeMap(KalturaReportType.browsersFamilies)].indexOf(this._reportType) > -1) {
       return 'browserFamilyIn';
@@ -299,7 +299,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       return 'operatingSystemFamilyIn';
     }
   }
-  
+
   public _onSortChanged(event) {
     const field = event.field === 'plays_distribution' ? 'count_plays' : event.field;
     if (event.data.length && field && event.order) {
@@ -312,7 +312,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       }
     }
   }
-  
+
   public _onPaginationChanged(event): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._paginationChanged.next();
@@ -321,25 +321,25 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._loadReport();
     }
   }
-  
+
   public _onDeviceFilterChange(): void {
     this._logger.trace('Handle device filter apply action by user', { selectedFilters: this._selectedDevices });
     this.deviceFilter = this._selectedDevices;
     this.deviceFilterChange.emit(this._selectedDevices);
   }
-  
+
   public _onRemoveTag(item: { value: string, label: string }): void {
     this._logger.trace('Handle remove filter action by user', { item });
     this._selectedDevices = this._selectedDevices.filter(device => device !== item.value);
     this._onDeviceFilterChange();
   }
-  
+
   public _onRemoveAllTags(): void {
     this._logger.trace('Handle remove all filters action by user');
     this._selectedDevices = [];
     this._onDeviceFilterChange();
   }
-  
+
   public _onDrillDown(family: string): void {
     this._logger.trace(
       'Handle drill down to family action by user, reset page index to 1',
@@ -348,7 +348,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._drillDown = family;
     this._reportType = family ? this._drillDownReportType : this._defaultReportType;
     this._pager.pageIndex = 1;
-  
+
     this.onDrillDown.emit({
       drillDown: this._drillDown,
       reportType: this._reportType,
@@ -361,7 +361,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     } else {
       delete this._filter[prop];
     }
-    
+
     this._loadReport();
   }
 }

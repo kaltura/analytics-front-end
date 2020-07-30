@@ -20,7 +20,7 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             icon: 'icon-small-impressions',
             iconColor: 'aqua',
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entry.viewers`),
             tooltip: this._translate.instant('app.entry.viewers_tt'),

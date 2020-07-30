@@ -18,7 +18,7 @@
               {{'app.user.topContentReport.count_plays' | translate}}
             </th>
             <th [ngStyle]="{'width': '20%'}">
-              {{'app.user.topContentReport.unique_known_users' | translate}}
+              {{'app.user.topContentReport.unique_viewers' | translate}}
             </th>
             <th [ngStyle]="{'width': '20%'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
           </ng-container>
@@ -49,7 +49,7 @@
           </td>
           <ng-container *ngIf="!isCompareMode">
             <td [ngStyle]="{'width': '170px'}">{{data['count_plays']}}</td>
-            <td [ngStyle]="{'width': '220px'}">{{data['unique_known_users']}}</td>
+            <td [ngStyle]="{'width': '220px'}">{{data['unique_viewers']}}</td>
             <td [ngStyle]="{'width': '220px'}">{{data['avg_completion_rate']}}</td>
           </ng-container>
           <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">

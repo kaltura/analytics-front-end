@@ -46,7 +46,7 @@ export interface Summary {
 })
 export class TechDevicesOverviewComponent implements OnDestroy {
   @Input() allowedDevices: string[] = [];
-  
+
   @Input() set filter(value: DateChangeEvent) {
     if (value) {
       this._chartDataLoaded = false;
@@ -60,14 +60,14 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       this.resetDeviceFilters(true, false);
     }
   }
-  
+
   @Output() metricChanged = new EventEmitter<string>();
   @Output() deviceFilterChange = new EventEmitter<string[]>();
   @Output() devicesListChange = new EventEmitter<{ value: string, label: string; }[]>();
-  
+
   private _fractions = 1;
   private _devicesDataLoaded = new BehaviorSubject<boolean>(false);
-  
+
   public _colorScheme = 'default';
   public _selectedValues = [];
   public _blockerMessage: AreaBlockerMessage = null;
@@ -85,7 +85,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       searchInAdminTags: false
     }
   );
-  
+
   constructor(private _reportService: ReportService,
               private _trendService: TrendService,
               private _translate: TranslateService,
@@ -97,15 +97,15 @@ export class TechDevicesOverviewComponent implements OnDestroy {
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this.metricChanged.emit(this._selectedMetrics);
   }
-  
+
   ngOnDestroy() {
     this._devicesDataLoaded.complete();
   }
-  
+
   private loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = {
       reportType: reportTypeMap(KalturaReportType.platforms),
       filter: this._filter,
@@ -117,18 +117,18 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       .subscribe(report => {
           this._tabsData = [];
           this._summaryData = {};
-          
+
           // IMPORTANT to handle totals first, summary rely on totals
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
-          
+
           if (report.table && report.table.header && report.table.data) {
             this.handleOverview(report.table); // handle overview
           }
-          
+
           this._isBusy = false;
-          
+
           this._devicesDataLoaded.next(true);
         },
         error => {
@@ -143,10 +143,10 @@ export class TechDevicesOverviewComponent implements OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-    
+
     this._loadTrendData();
   }
-  
+
   private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
     const currentValue = device.rawValue;
     const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
@@ -156,23 +156,23 @@ export class TechDevicesOverviewComponent implements OnDestroy {
     device['tooltip'] = tooltip;
     device['compareUnits'] = value !== null ? '%' : '';
   }
-  
+
   private _loadTrendData(): void {
     const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
-    
+
     const compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
     compareFilter.fromDate = startDate;
     compareFilter.toDate = endDate;
-    
+
     const reportConfig: ReportConfig = {
       reportType: reportTypeMap(KalturaReportType.platforms),
       filter: compareFilter,
       pager: this._pager,
       order: null
     };
-    
+
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe(report => {
@@ -184,7 +184,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
               if (waitForDevicesData) {
                 waitForDevicesData.unsubscribe();
               }
-              
+
               if (report.table && report.table.header && report.table.data) {
                 const relevantFields = Object.keys(this._dataConfig.totals.fields);
                 const { data } = this._getOverviewData(report.table, relevantFields);
@@ -231,7 +231,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
           }
         });
   }
-  
+
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
@@ -250,16 +250,16 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       }
       return data;
     }, []);
-    
+
     // move other devices in the end
     const otherDevicesIndex = data.findIndex(({ device }) => device === 'OTHER');
     if (otherDevicesIndex !== -1) {
       data.push(data.splice(otherDevicesIndex, 1)[0]);
     }
-    
+
     return { data, columns };
   }
-  
+
   private _handleDevicesListChange(data: { [key: string]: string }[]): void {
     const devices = data.map(item => ({
       value: item.device,
@@ -267,11 +267,11 @@ export class TechDevicesOverviewComponent implements OnDestroy {
     }));
     this.devicesListChange.emit(devices);
   }
-  
+
   private _getSummaryData(data: { [key: string]: string }[], relevantFields: string[]): Summary {
     return relevantFields.reduce((summaryData, key) => {
-      const relevantTotal = key === 'unique_known_users'
-        ? { value: String(data.reduce((acc, val) => acc + parseFloat(val['unique_known_users']), 0)) }
+      const relevantTotal = key === 'unique_viewers'
+        ? { value: String(data.reduce((acc, val) => acc + parseFloat(val['unique_viewers']), 0)) }
         : this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
@@ -308,53 +308,53 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       return summaryData;
     }, {});
   }
-  
+
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data, columns } = this._getOverviewData(table, relevantFields);
-    
+
     this._summaryData = this._getSummaryData(data, relevantFields);
-    
+
     this._handleDevicesListChange(data);
   }
-  
+
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-  
+
   private _updateGraphStyle(): void {
     this._colorScheme = this._dataConfig.totals.fields[this._selectedMetrics].colors[0];
   }
-  
+
   public _onSelectionChange(updateGraph = true): void {
     this._logger.trace('Handle device filter apply action by user', { selectedFilters: this._selectedValues, updateGraph });
     if (updateGraph) {
       this._updateGraphStyle();
     }
-    
+
     this.deviceFilterChange.emit(this._selectedValues);
   }
-  
+
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
     this.metricChanged.emit(this._selectedMetrics);
     this._updateGraphStyle();
   }
-  
+
   public resetDeviceFilters(emit = false, updateGraph = true): void {
     this._logger.trace('Handle reset device filters action by user', { emit, updateGraph });
     this._selectedValues = [];
-    
+
     if (updateGraph) {
       this._updateGraphStyle();
     }
-    
+
     if (emit) {
       this._onSelectionChange(updateGraph);
     }
   }
-  
+
   public _tooltipFormatter(value: string, label: string): string {
     return `<div class="kDevicesGraphTooltip"><div class="kTitle">${label}</div><div class="kValue">${value}</div></div>`;
   }

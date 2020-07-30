@@ -24,9 +24,9 @@
               {{'app.engagement.topVideosReport.count_plays' | translate}}
               <p-sortIcon field="count_plays"></p-sortIcon>
             </th>
-            <th [ngStyle]="{'width': '220px'}" pSortableColumn="unique_known_users">
-              {{'app.engagement.topVideosReport.unique_known_users' | translate}}
-              <p-sortIcon field="unique_known_users"></p-sortIcon>
+            <th [ngStyle]="{'width': '220px'}" pSortableColumn="unique_viewers">
+              {{'app.engagement.topVideosReport.unique_viewers' | translate}}
+              <p-sortIcon field="unique_viewers"></p-sortIcon>
             </th>
             <th [ngStyle]="{'width': '220px'}" pSortableColumn="avg_view_drop_off">
               {{'app.engagement.topVideosReport.avg_completion_rate' | translate}}
@@ -79,7 +79,7 @@
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
-                <span class="kCellValue">{{data['unique_known_users']}}</span>&nbsp;
+                <span class="kCellValue">{{data['unique_viewers']}}</span>&nbsp;
               </div>
             </td>
             <td [ngStyle]="{'width': '220px'}">

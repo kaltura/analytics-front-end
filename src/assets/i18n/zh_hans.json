@@ -277,6 +277,7 @@
         "count_plays": "播放次数",
         "count_loads": "展示次数",
         "unique_known_users": "唯一查看者数",
+        "unique_viewers": "唯一查看者数",
         "unique_known_users_tt": "经验证的唯一查看者。所有匿名查看者都会计为 1 位唯一查看者",
         "avg_view_drop_off": "平均减少率",
         "avg_view_drop_off_tt": "依照查看者达到播放四分位数所测量的平均减少率",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "已查看分钟数",
         "avg_time_viewed": "平均已查看分钟数",
         "unique_known_users": "唯一查看者数",
+        "unique_viewers": "唯一查看者数",
         "unique_known_users_tt": "经验证的唯一查看者。所有匿名查看者都会计为 1 位唯一查看者",
         "plays_distribution": "播放次数分布",
         "plays_trend": "播放趋势",
@@ -330,7 +332,8 @@
           "count_plays": "播放次数 {{0}}",
           "sum_time_viewed": "已查看分钟数 {{0}}",
           "avg_time_viewed": "平均已查看分钟数 {{0}}",
-          "unique_known_users": "唯一查看者数 {{0}}"
+          "unique_known_users": "唯一查看者数 {{0}}",
+          "unique_viewers": "唯一查看者数 {{0}}"
         },
         "devices": {
           "Computer": "桌面系统",
@@ -385,6 +388,7 @@
         "count_loads": "播放器展示次数",
         "sum_time_viewed": "已查看分钟数",
         "unique_known_users": "唯一查看者数",
+        "unique_viewers": "唯一查看者数",
         "avg_view_drop_off": "平均减少率",
         "avg_completion_rate": "平均完成率",
         "unique_known_users_tt": "经验证的唯一查看者。所有匿名查看者都会计为 1 位唯一查看者",
@@ -395,6 +399,7 @@
         "entry_name": "名称",
         "count_plays": "播放次数",
         "unique_known_users": "唯一查看者数",
+        "unique_viewers": "唯一查看者数",
         "avg_view_drop_off": "平均查看时长",
         "avg_completion_rate": "平均完成率",
         "sum_time_viewed": "已查看分钟数",
@@ -800,6 +805,7 @@
       "total_completion_rate": "总完成率",
       "total_completion_rate_tt": "总完成率",
       "unique_known_users": "唯一查看者数",
+      "unique_viewers": "唯一查看者数",
       "unique_auth_known_users": "经验证的唯一查看者",
       "unique_known_users_tt": "经验证的唯一查看者。所有匿名查看者都会计为 1 位唯一查看者",
       "likes": "赞",
@@ -989,6 +995,7 @@
         "name": "名称",
         "count_plays": "播放次数",
         "unique_known_users": "唯一查看者数",
+        "unique_viewers": "唯一查看者数",
         "avg_completion_rate": "平均完成率",
         "score": "分数"
       },

@@ -50,7 +50,7 @@ export class TopVideosDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },

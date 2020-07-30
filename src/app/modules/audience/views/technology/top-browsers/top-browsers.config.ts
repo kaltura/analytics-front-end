@@ -8,7 +8,7 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -25,7 +25,7 @@ export class TopBrowsersConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 2,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },

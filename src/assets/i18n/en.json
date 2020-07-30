@@ -280,6 +280,7 @@
         "count_plays": "Plays",
         "count_loads": "Impressions",
         "unique_known_users": "Unique Viewers",
+        "unique_viewers": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
         "avg_view_drop_off": "Avg. Drop Off Rate",
         "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
@@ -314,6 +315,7 @@
         "sum_time_viewed": "Minutes Viewed",
         "avg_time_viewed": "Avg. Min Viewed",
         "unique_known_users": "Unique Viewers",
+        "unique_viewers": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
         "plays_distribution": "Plays Distribution",
         "plays_trend": "Play Trend",
@@ -333,7 +335,8 @@
           "count_plays": "Plays   {{0}}",
           "sum_time_viewed": "Minutes Viewed   {{0}}",
           "avg_time_viewed": "Avg. Min Viewed   {{0}}",
-          "unique_known_users": "Unique Viewers   {{0}}"
+          "unique_known_users": "Unique Viewers   {{0}}",
+          "unique_viewers": "Unique Viewers   {{0}}"
         },
         "devices": {
           "Computer": "Desktop",
@@ -388,6 +391,7 @@
         "count_loads": "Player Impressions",
         "sum_time_viewed": "Minutes Viewed",
         "unique_known_users": "Unique Viewers",
+        "unique_viewers": "Unique Viewers",
         "avg_view_drop_off": "Avg. Drop Off Rate",
         "avg_completion_rate": "Avg. Completion Rate",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
@@ -398,6 +402,7 @@
         "entry_name": "Name",
         "count_plays": "Plays",
         "unique_known_users": "Unique Viewers",
+        "unique_viewers": "Unique Viewers",
         "avg_view_drop_off": "Avg. View Period",
         "avg_completion_rate": "Avg. Completion Rate",
         "sum_time_viewed": "Minutes Viewed",
@@ -807,6 +812,7 @@
       "total_completion_rate": "Total Completion Rate",
       "total_completion_rate_tt": "Total Completion Rate",
       "unique_known_users": "Unique Viewers",
+      "unique_viewers": "Unique Viewers",
       "unique_auth_known_users": "Unique Authenticated  Views",
       "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
       "likes": "Likes",
@@ -1047,6 +1053,7 @@
         "name": "Name",
         "count_plays": "Plays",
         "unique_known_users": "Unique Viewers",
+        "unique_viewers": "Unique Viewers",
         "avg_completion_rate": "Avg. Completion Rate",
         "score": "Score"
       },
