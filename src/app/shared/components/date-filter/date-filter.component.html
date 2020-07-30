@@ -18,7 +18,7 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="_creationDate ? {'x':0, 'y': 42} : {'x':0, 'y': 42}"
+              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
               (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
@@ -53,7 +53,7 @@
                          [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
       </div>
-      <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
+      <div class="kFilters kSpecific" [class.kWide]="_creationDate" *ngIf="selectedView==='specific'">
         <div class="kStartEnd">
           <span>{{'app.dateFilter.from' | translate}}</span>
           <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>

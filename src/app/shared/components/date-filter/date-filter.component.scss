@@ -118,6 +118,9 @@
       justify-content: center;
       flex-direction: column;
       padding-left: 22px;
+      &.kWide {
+        padding-left: 68px;
+      }
       .kStartEnd{
         display: flex;
         align-items: center;
