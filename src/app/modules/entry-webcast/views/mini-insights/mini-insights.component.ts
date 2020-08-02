@@ -41,6 +41,13 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
               },
               xAxis: {
                 type: 'category',
+                axisTick: {
+                  show: false
+                },
+                axisLabel: {
+                  show: false
+                },
+                data: [this._translate.instant('app.entryWebcast.live'), this._translate.instant('app.entryWebcast.vod')]
               },
               yAxis: {
                 type: 'value',
@@ -56,25 +63,21 @@ export class WebcastMinInsightsComponent implements OnDestroy, OnInit {
               },
               color: ['#d06e1b', '#e1962e'],
               tooltip: {
-                trigger: 'item',
-                formatter: '{a}: {c}'
+                trigger: 'axis'
               },
               series: [{
-                data: [live],
-                type: 'bar',
-                name: 'Live',
-                itemStyle: {
-                  barBorderRadius: [3, 3, 0, 0]
-                }
-              },
-                {
-                  data: [vod],
-                  type: 'bar',
-                  name: 'VOD',
-                  itemStyle: {
-                    barBorderRadius: [3, 3, 0, 0]
+                data: [
+                  {
+                    value: live,
+                    itemStyle: {color: '#d06e1b'},
+                  },
+                  {
+                    value: vod,
+                    itemStyle: {color: '#e1962e'},
                   }
-                }]
+                ],
+                type: 'bar'
+              }],
             };
           }
         },
