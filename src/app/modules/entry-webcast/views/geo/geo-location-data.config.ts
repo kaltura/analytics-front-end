@@ -67,11 +67,11 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entryWebcast.geo.sum_view_period`)
           },
           'avg_live_buffer_time': {
-            format: value => ReportHelper.percents(value, true, true),
+            format: value => ReportHelper.percents(value, false, true),
             title: this._translate.instant(`app.entryWebcast.geo.avg_live_buffer_time`)
           },
           'avg_vod_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, true, true),
+            format: value => ReportHelper.percents(value / 100, false, true),
             title: this._translate.instant(`app.entryWebcast.geo.avg_vod_completion_rate`)
           }
         }
