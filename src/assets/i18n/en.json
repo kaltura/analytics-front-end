@@ -547,6 +547,11 @@
         "vodUsers": "VOD Users: {{0}}",
         "sum_view_period": "Minutes Viewed",
         "avg_vod_completion_rate": "Avg. Completion Rate"
+      },
+      "exportLabels": {
+        "geo": "Top Countries",
+        "devices": "Top Devices",
+        "domains": "Top Domains"
       }
     },
     "entryLive": {
