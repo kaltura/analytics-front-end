@@ -176,6 +176,8 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     this.insights$.next({minutesViewed: {total: parseFloat(Number(this._tabsData[2].rawValue).toFixed(2)), live: parseFloat(Number(this._tabsData[3].rawValue).toFixed(2))}, busy: false, error: null});
     if (parseFloat(this._tabsData[3].rawValue.toString()) && parseFloat(this._tabsData[2].rawValue.toString())) {
       this._livePercent = (parseFloat(this._tabsData[3].rawValue.toString()) / parseFloat(this._tabsData[2].rawValue.toString()) * 100).toFixed(2);
+    } else {
+      this._livePercent = "0";
     }
   }
 

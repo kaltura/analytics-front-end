@@ -1,27 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  CuePointListAction,
-  KalturaAnnotationFilter,
-  KalturaCategory,
-  KalturaClient,
-  KalturaCuePointType,
-  KalturaCuePoint,
-  KalturaCuePointListResponse,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaNullableBoolean,
-  KalturaObjectBase,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval,
-  KalturaReportTotal,
-  KalturaReportType,
-  KalturaRequestOptions,
-  KalturaResponseProfileHolder,
-  KalturaResponseProfileType,
-  KalturaMetadataListResponse, KalturaAnnotation,
-} from 'kaltura-ngx-client';
+import { CuePointListAction, KalturaAnnotationFilter, KalturaClient, KalturaCuePointType, KalturaCuePointListResponse, KalturaEndUserReportInputFilter,
+  KalturaFilterPager, KalturaNullableBoolean, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType, KalturaRequestOptions, KalturaResponseProfileHolder, KalturaAnnotation } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -97,21 +78,6 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   }
 
   ngOnInit(): void {
-    this._kalturaClient
-      .request(this.getEntryCuePoints())
-      .pipe(cancelOnDestroy(this))
-      .subscribe(
-        (data: KalturaCuePointListResponse) => {
-          this._parseCuePointsResponse(data);
-        },
-        error => {
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            }
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
   }
 
   ngOnDestroy(): void {
@@ -124,6 +90,8 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       tagsLike: 'qna',
       entryIdEqual: this.entryId,
       orderBy: '+createdAt',
+      createdAtGreaterThanOrEqual: new Date(this._dateFilter.startDate * 1000),
+      createdAtLessThanOrEqual: new Date(this._dateFilter.endDate * 1000),
       isPublicEqual: KalturaNullableBoolean.trueValue
     });
 
@@ -141,6 +109,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
 
   private _parseCuePointsResponse(data: KalturaCuePointListResponse): void {
     if (data.objects) {
+      this._questions = [];
       const parser = new DOMParser();
       data.objects.forEach((cuePoint: KalturaAnnotation) => {
         if (cuePoint.relatedObjects && cuePoint.relatedObjects.QandA_ResponseProfile && cuePoint.relatedObjects.QandA_ResponseProfile_user) {
@@ -165,9 +134,27 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
     }
   }
 
+  private loadCuePoints(): void {
+    this._kalturaClient
+      .request(this.getEntryCuePoints())
+      .pipe(cancelOnDestroy(this))
+      .subscribe(
+        (data: KalturaCuePointListResponse) => {
+          this._parseCuePointsResponse(data);
+        },
+        error => {
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            }
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        });
+  }
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this.loadCuePoints();
     this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections, false)
