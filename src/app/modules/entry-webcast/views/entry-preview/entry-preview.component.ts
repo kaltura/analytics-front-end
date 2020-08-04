@@ -27,6 +27,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent implements OnInit {
   @Input() entryId = '';
+  @Input() isLive = false;
 
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
@@ -419,6 +420,12 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           },
           "quiz": {
             "plugin": true
+          },
+          "liveAnalytics": {
+            "plugin": false
+          },
+          "kAnalony": {
+            "plugin": false
           }
         }
       };

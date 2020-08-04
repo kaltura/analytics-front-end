@@ -14,6 +14,13 @@ export class EntryWebcastExportConfig extends ExportConfigService {
   public getConfig(viewConfig?: ViewConfig): ExportItem[] {
     const config: ExportItem[] = [
       {
+        id: 'userEngagement',
+        label: this._translate.instant('app.entryWebcast.exportLabels.userEngagement'),
+        reportType: reportTypeMap(KalturaReportType.topUsersWebcast),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
+      },
+      {
         id: 'geo',
         label: this._translate.instant('app.entryWebcast.exportLabels.geo'),
         reportType: reportTypeMap(KalturaReportType.mapOverlayCountryWebcast),

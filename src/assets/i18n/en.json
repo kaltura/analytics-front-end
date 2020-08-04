@@ -550,9 +550,20 @@
         "avg_vod_completion_rate": "Avg. Completion Rate"
       },
       "users": {
-        "toggle": "View Known Users Breakdown"
+        "viewDetails": "View Known Users Breakdown",
+        "hideDetails": "Hide Known Users Breakdown",
+        "all": "All Known Users",
+        "user_name": "Name",
+        "registered": "Registration",
+        "count_loads": "Impressions",
+        "count_plays": "Plays",
+        "sum_view_period": "Minutes Viewed",
+        "sum_live_view_period": "Live Minutes Ratio",
+        "avg_live_buffer_time": "Live Avg. Buffer Rate",
+        "total_completion_rate": "VOD Total Completion Rate"
       },
       "exportLabels": {
+        "userEngagement": "User Engagement",
         "geo": "Top Countries",
         "devices": "Top Devices",
         "domains": "Top Domains"
