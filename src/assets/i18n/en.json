@@ -477,6 +477,7 @@
     "entryWebcast": {
       "live": "Live",
       "vod": "VOD",
+      "noRecording": "No Recording Found",
       "highlights": {
         "knownUsers": "Known Viewers",
         "countries": "Countries",
@@ -547,6 +548,9 @@
         "vodUsers": "VOD Users: {{0}}",
         "sum_view_period": "Minutes Viewed",
         "avg_vod_completion_rate": "Avg. Completion Rate"
+      },
+      "users": {
+        "toggle": "View Known Users Breakdown"
       },
       "exportLabels": {
         "geo": "Top Countries",

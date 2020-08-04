@@ -90,7 +90,6 @@
         </div>
 
         <div class="kReportContainer">
-
           <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh">
             <app-webcast-mini-engagement-tools [entryId]="_entry.id"></app-webcast-mini-engagement-tools>
           </div>
@@ -98,6 +97,19 @@
           <div *ngIf="_viewConfig.insights" class="kMiniReportContainer kHigh">
             <app-webcast-mini-insights [insights]="miniHighlights.insights$"></app-webcast-mini-insights>
           </div>
+        </div>
+
+        <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
+          <app-webcast-entry-preview *ngIf="_viewConfig.entryPreview"
+                                   [dateFilter]="_dateFilter"
+                                   [entryId]="_entry.recordedEntryId ? _entry.recordedEntryId : ''"
+                                   [refineFilter]="_refineFilter"></app-webcast-entry-preview>
+          <!--app-video-entry-user-engagement *ngIf="_viewConfig.userEngagement"
+                                           [viewConfig]="_viewConfig.userEngagement"
+                                           [dateFilter]="_dateFilter"
+                                           [duration]="_duration"
+                                           [refineFilter]="_refineFilter"
+                                           [entryId]="_entryId"></app-video-entry-user-engagement-->
         </div>
 
         <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">

@@ -175,6 +175,10 @@ export const viewsConfig = {
     highlights: {},
     tools: {},
     insights: {},
+    entryPreview: {},
+    userEngagement: {
+      userFilter: {},
+    },
     geo: {},
     devices: {},
     domains: {},
