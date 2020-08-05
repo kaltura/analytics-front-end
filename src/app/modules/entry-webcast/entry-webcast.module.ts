@@ -28,6 +28,7 @@ import { WebcastDomainsComponent } from "./views/domains/domains.component";
 import { WebcastDevicesComponent } from "./views/devices/devices.component";
 import { WebcastEntryPreviewComponent } from "./views/entry-preview/entry-preview.component";
 import { WebcastEntryUserEngagementComponent } from "./views/user-engagement/user-engagement.component";
+import { WebcastMiniLiveEngagementComponent } from "./views/mini-live-engagement/mini-live-engagement.component";
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { WebcastEntryUserEngagementComponent } from "./views/user-engagement/use
     WebcastMiniHighlightsComponent,
     WebcastMiniEngagementComponent,
     WebcastMiniQualityComponent,
+    WebcastMiniLiveEngagementComponent,
     WebcastMiniEngagementToolsComponent,
     WebcastMinInsightsComponent,
     WebcastEntryPreviewComponent,

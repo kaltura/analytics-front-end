@@ -173,6 +173,7 @@ export const viewsConfig = {
     },
     miniQuality: {},
     highlights: {},
+    liveEngagement: {},
     tools: {},
     insights: {},
     entryPreview: {},

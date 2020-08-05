@@ -59,6 +59,15 @@
                           (closeFilters)="_refineFilterOpened = false"
                           (filterChange)="_onRefineFilterChange($event)"></app-entry-webcast-filter>
 
+        <div *ngIf="_isLive" class="kReportContainer">
+          <div class="kLiveBanner">
+            <i class="kStatusActive"></i>
+            <span class="live">{{'app.entryWebcast.live' | translate}}</span>
+            <span class="liveLink" (click)="_navigateToLive()">{{'app.entryWebcast.liveLink' | translate}}</span>
+            <i class="kIcondropdown_arrow_right"></i>
+          </div>
+        </div>
+
         <div class="kReportContainer">
           <div [class.kHidden]="!_viewConfig.miniHighlights" class="kMiniReportContainer">
             <app-webcast-mini-highlights #miniHighlights
@@ -90,11 +99,20 @@
         </div>
 
         <div class="kReportContainer">
-          <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh">
+          <div *ngIf="_viewConfig.liveEngagement" class="kMiniReportContainer kHigh" [class.wide]="_viewConfig.tools && _viewConfig.insights">
+            <app-webcast-mini-live-engagement
+              [entryIdIn]="_entry.id"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter"
+              (viewKnownUsers)="_viewKnownUsers()">
+            </app-webcast-mini-live-engagement>
+          </div>
+
+          <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.insights && _viewConfig.liveEngagement">
             <app-webcast-mini-engagement-tools [entryId]="_entry.id"></app-webcast-mini-engagement-tools>
           </div>
 
-          <div *ngIf="_viewConfig.insights" class="kMiniReportContainer kHigh">
+          <div *ngIf="_viewConfig.insights" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.tools && _viewConfig.liveEngagement">
             <app-webcast-mini-insights [insights]="miniHighlights.insights$"></app-webcast-mini-insights>
           </div>
         </div>
@@ -105,7 +123,7 @@
                                    [isLive]="_isLive"
                                    [entryId]="_entry.recordedEntryId ? _entry.recordedEntryId : ''"
                                    [refineFilter]="_refineFilter"></app-webcast-entry-preview>
-          <app-webcast-user-engagement *ngIf="_viewConfig.userEngagement"
+          <app-webcast-user-engagement *ngIf="_viewConfig.userEngagement" id="userEngagement" #userEngagement
                                            [viewConfig]="_viewConfig.userEngagement"
                                            [dateFilter]="_dateFilter"
                                            [refineFilter]="_refineFilter"

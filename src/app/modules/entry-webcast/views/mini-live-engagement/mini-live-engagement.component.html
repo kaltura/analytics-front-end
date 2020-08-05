@@ -1,0 +1,54 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.liveEngagement.title' | translate}}</span>
+    <!--a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a-->
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+
+      <div class="kRow">
+        <span>{{'app.entryWebcast.liveEngagement.none' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.entryWebcast.liveEngagement.none_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kRow">
+        <span>{{'app.entryWebcast.liveEngagement.low' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.entryWebcast.liveEngagement.low_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kRow">
+        <span>{{'app.entryWebcast.liveEngagement.fair' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.entryWebcast.liveEngagement.fair_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kRow">
+        <span>{{'app.entryWebcast.liveEngagement.good' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.entryWebcast.liveEngagement.good_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kRow">
+        <span>{{'app.entryWebcast.liveEngagement.high' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.entryWebcast.liveEngagement.high_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kFooter">
+        <i class="kIcondropdown_arrow_bottom"></i>
+        <a class="kLink" (click)="viewUsers()">{{'app.entryWebcast.liveEngagement.view' | translate}}</a>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

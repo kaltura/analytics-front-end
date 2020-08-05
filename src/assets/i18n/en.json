@@ -477,11 +477,29 @@
     "entryWebcast": {
       "live": "Live",
       "vod": "VOD",
-      "noRecording": "This webcast doesn’t have a recording associated with it,\neither the recording was archived or the entry was never broadcasted",
+      "noRecording": "No Recording Found",
+      "noRecordingText": "This webcast doesn’t have a recording associated with it.\nEither the recording was archived or the entry was never broadcasted.",
+      "webcastLive": "The webcast is currently live",
+      "webcastLiveText": "Once the webcast ends, refresh the page\nand the webcast recording will be available.",
+      "liveLink": "Go to Real Time Dashboard",
       "highlights": {
         "knownUsers": "Known Viewers",
         "countries": "Countries",
         "percentLive": "{{0}}% Live"
+      },
+      "liveEngagement": {
+        "title": "Live Engagement Rate Breakdown",
+        "none": "Non Engaged",
+        "none_tt": "Tab is not in focus, Player is on Mute",
+        "low": "Low Engagement",
+        "low_tt": "Tab is in focus, Player is on Mute",
+        "fair": "Fair Engagement",
+        "fair_tt": "Tab is not in focus, SOund is On",
+        "good": "Good Engagement",
+        "good_tt": "Tab is in focus and Sound is  On",
+        "high": "High Engagement",
+        "high_tt": "Tab is in focus, Player is in fullscreen mode, Sound is On",
+        "view": "View Known Users"
       },
       "engagement": {
         "title": "Engagement",

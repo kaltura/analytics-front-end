@@ -1,0 +1,45 @@
+@import '../../../../../styles/variables';
+:host ::ng-deep .kValue{
+  font-size: 24px;
+  font-weight: 700;
+}
+:host ::ng-deep .kUnits{
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kMini{
+  height: 100%;
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0px;
+    }
+  }
+  .kRow{
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    position: relative;
+    height: 40px;
+    font-weight: 700;
+    color: $kGrayscale1;
+    .kValue {
+      text-align: right;
+    }
+  }
+  .kFooter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    width: 100%;
+    i {
+      color: $kTertiary;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+  }
+}
+

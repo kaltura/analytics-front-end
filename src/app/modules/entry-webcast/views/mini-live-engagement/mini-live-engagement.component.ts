@@ -1,15 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaAPIException, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
+import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
-import { MiniHighlightsConfig } from './mini-highlights.config';
+import { MiniLiveEngagementConfig } from './mini-live-engagement.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
@@ -17,36 +17,22 @@ import {analyticsConfig} from "configuration/analytics-config";
 import * as moment from "moment";
 
 @Component({
-  selector: 'app-webcast-mini-highlights',
-  templateUrl: './mini-highlights.component.html',
-  styleUrls: ['./mini-highlights.component.scss'],
+  selector: 'app-webcast-mini-live-engagement',
+  templateUrl: './mini-live-engagement.component.html',
+  styleUrls: ['./mini-live-engagement.component.scss'],
   providers: [
-    KalturaLogger.createLogger('WebcastMiniHighlightsComponent'),
-    MiniHighlightsConfig,
+    KalturaLogger.createLogger('WebcastMiniLiveEngagementComponent'),
+    MiniLiveEngagementConfig,
     ReportService,
   ]
 })
-export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent implements OnDestroy, OnInit {
+export class WebcastMiniLiveEngagementComponent extends WebcastBaseReportComponent implements OnDestroy, OnInit {
 
   private _dataConfig: ReportDataConfig;
-  protected _componentId = 'webcast-mini-highlights';
+  protected _componentId = 'webcast-mini-live-engagement';
 
-  public insights$: BehaviorSubject<{ minutesViewed: {total: number, live: number}, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ minutesViewed: null, busy: false, error: null });
-  public _topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }>;
-  public _livePercent = '';
-
-  @Input() set topCountries(topCountries$: any) {
-    if (topCountries$) {
-      this._topCountries$ = topCountries$;
-      this._topCountries$
-        .pipe(cancelOnDestroy(this))
-        .subscribe((data: { topCountries: any[], totalCount: number }) => {
-          this._topCountries = data.topCountries;
-          this._countriesCount = data.totalCount;
-        });
-    }
-  }
   @Input() entryIdIn = '';
+  @Output() viewKnownUsers = new EventEmitter();
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -61,9 +47,6 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     searchInAdminTags: false
   });
 
-  public _topCountries: {country: string, flag: string}[] = [];
-  public _countriesCount = 0;
-
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
@@ -74,7 +57,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: MiniHighlightsConfig,
+              private _dataConfigService: MiniLiveEngagementConfig,
               private _logger: KalturaLogger) {
     super();
 
@@ -85,12 +68,10 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
   }
 
   ngOnDestroy() {
-    this.insights$.complete();
   }
 
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
-    this.insights$.next({minutesViewed: null, busy: true, error: null});
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
@@ -118,7 +99,6 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
         },
         error => {
           this._isBusy = false;
-          this.insights$.next({minutesViewed: null, busy: false, error: error});
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -173,22 +153,20 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this.insights$.next({minutesViewed: {total: parseFloat(Number(this._tabsData[2].rawValue).toFixed(2)), live: parseFloat(Number(this._tabsData[3].rawValue).toFixed(2))}, busy: false, error: null});
-    if (parseFloat(this._tabsData[3].rawValue.toString()) && parseFloat(this._tabsData[2].rawValue.toString())) {
-      this._livePercent = (parseFloat(this._tabsData[3].rawValue.toString()) / parseFloat(this._tabsData[2].rawValue.toString()) * 100).toFixed(2);
-    } else {
-      this._livePercent = "0";
-    }
+  }
+
+  public viewUsers(): void {
+    this.viewKnownUsers.emit();
   }
 
   public export(): void {
     this._browserService.exportToCsv(`${this._authService.pid}-Report_export-${this.entryIdIn.split(analyticsConfig.valueSeparator)[0]}.csv`,[
       ["# ------------------------------------"],
-      ["Report: Highlights"],
+      ["Report: Live Engagement Rate Breakdown"],
       ["Please note that the data below is filtered based on the filter applied in the report"],
       ["Filtered dates: " + moment.unix(this._filter.fromDate).toDate() + " - " + moment.unix(this._filter.toDate).toDate()],
-      ["Plays", "Known Users", "Total minutes viewed", "Live minutes viewed (percentage)", "Countries"],
-      [this._tabsData[0].rawValue, this._tabsData[1].rawValue, this._tabsData[2].rawValue, parseFloat(this._livePercent), this._countriesCount ],
+      ["Non Engaged", "Low Engagement", "Fair Engagement", "Good Engagement", "High Engagement"],
+      [this._tabsData[0].rawValue, this._tabsData[1].rawValue, this._tabsData[2].rawValue, this._tabsData[3].rawValue, this._tabsData[4].rawValue ],
       ["# ------------------------------------"],
     ]);
   }

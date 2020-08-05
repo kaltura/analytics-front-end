@@ -174,14 +174,22 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding-bottom: 180px;
-        span {
+        padding-bottom: 150px;
+        &.live {
+          padding-bottom: 40px;
+        }
+        .label {
           font-size: 24px;
           color: rgba(255, 255, 255, 0.5);
           margin-top: 16px;
+        }
+        .text {
+          font-size: 15px;
+          color: rgba(255, 255, 255, 0.5);
+          margin-top: 16px;
+          line-height: 18px;
           white-space: pre;
           text-align: center;
-          line-height: 32px;
         }
         .icon {
           width: 292px;

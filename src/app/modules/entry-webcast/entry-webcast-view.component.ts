@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BaseEntryGetAction,
@@ -31,6 +31,8 @@ import {RefineFilter} from "shared/components/filter/filter.component";
 import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
 import * as moment from "moment";
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
+import {WebcastEntryUserEngagementComponent} from "./views/user-engagement/user-engagement.component";
+import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
 
 @Component({
   selector: 'app-entry-webcast',
@@ -39,6 +41,12 @@ import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-fi
   providers: [EntryWebcastExportConfig]
 })
 export class EntryWebcastViewComponent implements OnInit, OnDestroy {
+  private _userEngagement: WebcastEntryUserEngagementComponent;
+  @ViewChild('userEngagement') set content(content: WebcastEntryUserEngagementComponent) {
+    if(content) { // initially setter gets called with undefined
+      this._userEngagement = content;
+    }
+  }
   public _viewConfig = analyticsConfig.viewsConfig.entryWebcast;
   public _loadingEntry = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -71,6 +79,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
+              private pageScrollService: PageScrollService,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService,
               private _authService: AuthService) {
@@ -184,6 +193,25 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         });
   }
 
+  private scrollTo(target: string): void {
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
+      if (targetEl) {
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
+      this.pageScrollService.start(pageScrollInstance);
+    }
+  }
+
+  public _viewKnownUsers(): void {
+    this._userEngagement._showTable = true;
+    this._userEngagement._onSortChanged({order: -1, field: 'sum_live_view_period'}); // TODO change field to live engagement rate
+    this.scrollTo('#userEngagement');
+  }
+
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
@@ -192,5 +220,9 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/entries/entry/' + this._entryId);
     }
+  }
+
+  public _navigateToLive(): void {
+    this._navigationDrillDownService.drilldown('entry-live', this._entryId, false, this._authService.pid);
   }
 }
