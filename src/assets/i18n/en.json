@@ -477,7 +477,7 @@
     "entryWebcast": {
       "live": "Live",
       "vod": "VOD",
-      "noRecording": "No Recording Found",
+      "noRecording": "This webcast doesn’t have a recording associated with it,\neither the recording was archived or the entry was never broadcasted",
       "highlights": {
         "knownUsers": "Known Viewers",
         "countries": "Countries",
