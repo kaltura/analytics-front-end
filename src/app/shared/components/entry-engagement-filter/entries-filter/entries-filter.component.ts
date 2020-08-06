@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-engagement-entries-filter',
   template: `
-      <kAutoComplete #searchEntries
+      <kAutoComplete #searchEntries *ngIf="_showEntryFilter"
                      appendTo="body"
                      suggestionItemField="item"
                      suggestionLabelField="name"
@@ -26,32 +26,33 @@ export class EntriesEngagementFilterComponent implements OnDestroy {
       this._selectedEntries = value;
     }
   }
-  
+  @Input() _showEntryFilter = true;
+
   @Output() itemSelected = new EventEmitter();
-  
+
   @ViewChild('searchEntries') _autoComplete: AutoComplete = null;
-  
+
   private _selectedEntries: KalturaMediaEntry[] = [];
   private _searchEntriesSubscription: Unsubscribable;
-  
+
   public _entriesProvider = new Subject<SuggestionsProviderData>();
-  
+
   constructor(private _kalturaServerClient: KalturaClient) {
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   public _searchEntries(event, formControl?): void {
     this._entriesProvider.next({ suggestions: [], isLoading: true });
-    
+
     if (this._searchEntriesSubscription) {
       // abort previous request
       this._searchEntriesSubscription.unsubscribe();
       this._searchEntriesSubscription = null;
     }
-    
+
     this._searchEntriesSubscription = this._searchEntriesRequest(event.query).subscribe(data => {
         const suggestions = [];
         (data || []).forEach((suggestedEntry: KalturaMediaEntry) => {
@@ -72,19 +73,19 @@ export class EntriesEngagementFilterComponent implements OnDestroy {
         this._entriesProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
   }
-  
+
   public _onSuggestionSelected(): void {
-    
+
     const selectedItem = this._autoComplete.getValue() as KalturaMediaEntry;
     // clear entry text from component
     this._autoComplete.clearValue();
-    
+
     if (selectedItem && !(this._selectedEntries || []).find(entry => entry.id === selectedItem.id)) {
       this._selectedEntries.push(selectedItem);
       this.itemSelected.emit(selectedItem);
     }
   }
-  
+
   private _searchEntriesRequest(text: string): Observable<KalturaMediaEntry[]> {
     const request = new ESearchSearchEntryAction({
       searchParams: new KalturaESearchEntryParams({

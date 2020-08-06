@@ -106,6 +106,7 @@
               <app-entry-engagement-filter *ngIf="!_isMultiAccount"
                                           [totalCount]="entriesTableComponent.totalCount"
                                           [dateFilter]="_dateFilter"
+                                           [viewConfig]="_viewConfig"
                                           (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>
 
               <app-entries-table #entriesTableComponent

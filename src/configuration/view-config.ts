@@ -144,6 +144,7 @@ export const viewsConfig = {
       userFilter: {},
       userLink: {},
       entryDrilldown: {},
+      entryFilter: {},
       entryLink: {}
     },
     topVideos: {},
