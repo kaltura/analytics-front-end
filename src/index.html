@@ -3,13 +3,35 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="./">
+  <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+  <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+  <script type="text/javascript">
+    var analyticsConfig = {
+      kalturaServer: {
+        uri : "pa-front-stg.kaltura.com",
+        "previewUIConf": 38524931,
+      },
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      ks: "djJ8MTY0NTE2MXyTtUnSkTvBRkztoWVwsZCgRUap8xKWGeNKy0jI0UC4c-HD2ON0CZKLHgzfdiZLWkcmqGlDbKXgZYb56i0asXMlZ08eB8TQ2Dpq1UY-0mNcL_-CUwVIFajAuIjhig1xqPfEstykxwHg2FM_TTysPkmVPoFoV5VkQGqci3IXXStE1g==",
+      pid: "1645161",
+      locale: "en",
+      multiAccount: false,
+      live: {
+        "pollInterval": 30,
+        "healthNotificationsCount": 50,
+      },
+    }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>
