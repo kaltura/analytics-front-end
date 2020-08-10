@@ -45,7 +45,8 @@
           </td>
           <td [ngStyle]="{'width': '35%', 'padding-left': 0}">
             <div class="kNameColumn">
-              <a class="kTableColumn" (click)="_drillDown(data)">{{data['name']}}</a>
+              <a *ngIf="!data['deleted']" class="kTableColumn" (click)="_drillDown(data)">{{data['name']}}</a>
+              <span *ngIf="data['deleted']" class="kName">{{data['name']}}</span>
               <i *ngIf="data['isHome']" class="kIcon kIconhouse"></i>
               <span *ngIf="data['deleted']" class="kDeleted" [class.kDeletedDate]="data['deletedDate']" [kTooltip]="data['deletedDate']">{{'app.playlist.deleted' | translate}}</span>
             </div>

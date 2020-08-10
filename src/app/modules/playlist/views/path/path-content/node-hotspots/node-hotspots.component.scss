@@ -34,6 +34,10 @@
       content: "\e926";
     }
   }
+  .kNameContainer {
+    display: flex;
+    align-items: center;
+  }
   .kName {
     font-size: 15px;
     font-weight: bold;
@@ -45,6 +49,16 @@
   }
   .kCursor {
     cursor: pointer;
+  }
+  .kDeleted{
+    flex: 0 0 auto;
+    color: $kGrayscale3;
+    font-weight: bold;
+    font-style: italic;
+    margin-left: 8px;
+    &.kDeletedDate {
+      cursor: pointer;
+    }
   }
 }
 

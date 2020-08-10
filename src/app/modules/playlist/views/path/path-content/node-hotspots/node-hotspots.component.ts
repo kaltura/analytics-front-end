@@ -17,6 +17,7 @@ import { SortEvent } from 'primeng/api';
 import { QueryBase } from "shared/components/query-base/query-base";
 import { HotSpot } from "../path-content.service";
 import { HotspotHeatMapStoreService } from "./hotspot-heat-map/hotspot-heat-map-store.service";
+import { Node } from "../path-content.service";
 
 @Component({
   selector: 'app-node-hotspots',
@@ -32,6 +33,7 @@ export class NodeHotspotsComponent extends QueryBase {
   @Input() nodeId = '';
   @Input() duration = 0;
   @Input() hotspots: HotSpot[] = [];
+  @Input() nodes: Node[] = [];
 
   private _order = '-count_hotspot_clicked';
   private _reportTypeTopHotspots = reportTypeMap(KalturaReportType.interactiveVideoNodeTopHotspots);
@@ -209,6 +211,14 @@ export class NodeHotspotsComponent extends QueryBase {
       this.hotspots.forEach(hotspot => {
         if (hotspot.id === tableRow.hotspot_id) {
           Object.assign(tableRow, hotspot);
+          // fix destination name for deleted hotspots
+          if (hotspot.deleted) {
+            this.nodes.forEach(node => {
+              if (tableRow.destination === node.id) {
+                tableRow.destination = node.name;
+              }
+            });
+          }
         }
       });
     });
@@ -220,7 +230,6 @@ export class NodeHotspotsComponent extends QueryBase {
     this._columns = columns;
     this._tableData = tableData;
     this.extendHotspotsData();
-    // TODO: handle deleted hotspots
   }
 
   private _handleCompare(current: Report, compare: Report): void {
