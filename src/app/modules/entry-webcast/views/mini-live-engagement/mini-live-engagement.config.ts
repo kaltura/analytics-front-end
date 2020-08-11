@@ -13,25 +13,35 @@ export class MiniLiveEngagementConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
+          'live_no_eng_view_period_play_time_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entryWebcast.liveEngagement.none`),
+            tooltip: this._translate.instant(`app.entryWebcast.liveEngagement.none_tt`),
             sortOrder: 1,
           },
-          'unique_viewers': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.entryWebcast.highlights.knownUsers`),
+          'live_low_eng_view_period_play_time_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entryWebcast.liveEngagement.low`),
+            tooltip: this._translate.instant(`app.entryWebcast.liveEngagement.low_tt`),
             sortOrder: 2,
           },
-          'sum_view_period': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            units: value => 'min',
+          'live_fair_eng_view_period_play_time_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entryWebcast.liveEngagement.fair`),
+            tooltip: this._translate.instant(`app.entryWebcast.liveEngagement.fair_tt`),
             sortOrder: 3,
           },
-          'sum_live_view_period': {
-            format: value => ReportHelper.integerOrZero(value),
+          'live_good_eng_view_period_play_time_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entryWebcast.liveEngagement.good`),
+            tooltip: this._translate.instant(`app.entryWebcast.liveEngagement.good_tt`),
             sortOrder: 4,
+          },
+          'live_high_eng_view_period_play_time_rate': {
+            format: value => ReportHelper.percents(value / 100, false, true),
+            title: this._translate.instant(`app.entryWebcast.liveEngagement.high`),
+            tooltip: this._translate.instant(`app.entryWebcast.liveEngagement.high_tt`),
+            sortOrder: 5,
           }
         }
       }

@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MiniLiveEngagementConfig } from './mini-live-engagement.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { getColorPalette } from 'shared/utils/colors';
 import {analyticsConfig} from "configuration/analytics-config";
 import * as moment from "moment";
 
@@ -37,8 +37,9 @@ export class WebcastMiniLiveEngagementComponent extends WebcastBaseReportCompone
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
+  public _colors = getColorPalette('dropoff').slice(3, 8);
   private _order = '-date_id';
-  private _reportType = reportTypeMap(KalturaReportType.highlightsWebcast);
+  private _reportType = reportTypeMap(KalturaReportType.engagementBreakdownWebcast);
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });

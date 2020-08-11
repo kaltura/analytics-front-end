@@ -8,39 +8,12 @@
 
     <div class="kReportContent">
 
-      <div class="kRow">
-        <span>{{'app.entryWebcast.liveEngagement.none' | translate}}</span>
+      <div class="kRow" *ngFor="let tab of _tabsData; let i = index">
+        <span>{{tab.title}}</span>
         <kInputHelper>
-          <span>{{'app.entryWebcast.liveEngagement.none_tt' | translate}}</span>
+          <span>{{tab.tooltip}}</span>
         </kInputHelper>
-      </div>
-
-      <div class="kRow">
-        <span>{{'app.entryWebcast.liveEngagement.low' | translate}}</span>
-        <kInputHelper>
-          <span>{{'app.entryWebcast.liveEngagement.low_tt' | translate}}</span>
-        </kInputHelper>
-      </div>
-
-      <div class="kRow">
-        <span>{{'app.entryWebcast.liveEngagement.fair' | translate}}</span>
-        <kInputHelper>
-          <span>{{'app.entryWebcast.liveEngagement.fair_tt' | translate}}</span>
-        </kInputHelper>
-      </div>
-
-      <div class="kRow">
-        <span>{{'app.entryWebcast.liveEngagement.good' | translate}}</span>
-        <kInputHelper>
-          <span>{{'app.entryWebcast.liveEngagement.good_tt' | translate}}</span>
-        </kInputHelper>
-      </div>
-
-      <div class="kRow">
-        <span>{{'app.entryWebcast.liveEngagement.high' | translate}}</span>
-        <kInputHelper>
-          <span>{{'app.entryWebcast.liveEngagement.high_tt' | translate}}</span>
-        </kInputHelper>
+        <app-horizontal-bar-row class="kBar" [color]="_colors[i]" [value]="tab.rawValue"></app-horizontal-bar-row>
       </div>
 
       <div class="kFooter">

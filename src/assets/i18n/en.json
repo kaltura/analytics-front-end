@@ -494,7 +494,7 @@
         "low": "Low Engagement",
         "low_tt": "Tab is in focus, Player is on Mute",
         "fair": "Fair Engagement",
-        "fair_tt": "Tab is not in focus, SOund is On",
+        "fair_tt": "Tab is not in focus, Sound is On",
         "good": "Good Engagement",
         "good_tt": "Tab is in focus and Sound is  On",
         "high": "High Engagement",

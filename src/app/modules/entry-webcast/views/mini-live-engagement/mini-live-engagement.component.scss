@@ -21,12 +21,16 @@
     display: flex;
     align-items: center;
     margin-left: 24px;
+    margin-right: 24px;
     position: relative;
     height: 40px;
     font-weight: 700;
     color: $kGrayscale1;
     .kValue {
       text-align: right;
+      margin-left: auto;
+      font-size: 15px;
+      font-weight: 700;
     }
   }
   .kFooter {
@@ -40,6 +44,26 @@
       font-size: 12px;
       margin-right: 8px;
     }
+  }
+}
+.kBar {
+  width: 60%;
+  margin-left: auto;
+}
+@media (max-width: 1280px) {
+  .kBar {
+    width: 45%;
+  }
+}
+::ng-deep app-horizontal-bar-row {
+  .kValue {
+    margin-right: 12px !important;
+  }
+  .kLabel {
+    display: none !important;
+  }
+  .kBarWrapper {
+    width: 100% !important;
   }
 }
 
