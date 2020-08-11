@@ -40,7 +40,6 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
       this._viewConfig = value;
     } else {
       this._viewConfig = {
-        userFilter: {},
       };
     }
   }

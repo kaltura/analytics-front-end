@@ -11,9 +11,9 @@
 
     <k-area-blocker *ngIf="_showTable" [message]="_blockerMessage" [showLoader]="_isBusy">
       <div class="kTableContainer">
-        <app-user-engagement-filter *ngIf="_viewConfig.userFilter"
-                                    [totalCount]="_totalCount"
+        <app-user-engagement-filter [totalCount]="_totalCount"
                                     [dateFilter]="_dateFilter"
+                                    [showUserFilter]="_viewConfig.userFilter"
                                     [selectedFilters]="_selectedRefineFilters"
                                     (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 

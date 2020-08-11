@@ -6,7 +6,7 @@
         <span class="kTotalCount">
            {{'app.playlist.hotspotsCount' | translate: {'0': _totalCount} }}
         </span>
-        <p-table dataKey="name"
+        <p-table dataKey="id"
                  aria-label="Interactivity Per Node Table"
                  [sortField]="'count_hotspot_clicked'"
                  [value]="_tableData"
@@ -31,17 +31,19 @@
           <ng-template pTemplate="body" let-data let-expanded="expanded">
             <tr>
               <td [ngStyle]="{'width':'40px'}" *ngIf="!_isCompareMode">
-                <a tabindex="0" href="#" [pRowToggler]="data" role="button" aria-label="Expand Row">
-                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'"
-                     style="font-size: 1.25em"></i>
+                <a tabindex="0" href="#" [pRowToggler]="data" role="button" aria-label="Expand Row" *ngIf="data.deleted !== true">
+                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-pw pi-chevron-circle-right'" style="font-size: 1.25em"></i>
                 </a>
               </td>
               <td [ngStyle]="{'width': '45px'}">
                 <i class="kIconppv"></i>
               </td>
               <td>
-                <span class="kName" *ngIf="data.name!==''">{{data.name}}</span>
-                <span class="kName kCursor" *ngIf="data.name===''" [kTooltip]="'app.playlist.noName_tt' | translate:{'0': data.id}">{{'app.playlist.noName' | translate}}</span>
+                <div class="kNameContainer">
+                  <span class="kName" *ngIf="data.name!==''">{{data.name}}</span>
+                  <span class="kName kCursor" *ngIf="data.name===''" [kTooltip]="'app.playlist.noName_tt' | translate:{'0': data.id}">{{'app.playlist.noName' | translate}}</span>
+                  <span *ngIf="data.deleted === true" class="kDeleted" [class.kDeletedDate]="data.deleteDate" [kTooltip]="data.deleteDate">{{'app.playlist.deleted' | translate}}</span>
+                </div>
               </td>
               <td>
                 <div class="kDestination" *ngIf="data.destination && data.destination.length">

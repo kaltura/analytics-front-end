@@ -1,18 +1,12 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from "rxjs";
-import {
-  FileAssetListAction, FileAssetServeAction, InteractivityGetAction, KalturaClient, KalturaFileAsset,
-  KalturaFileAssetFilter,
-  KalturaFileAssetListResponse,
-  KalturaFileAssetObjectType, KalturaInteractivity
-} from "kaltura-ngx-client";
-import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {map, switchMap} from "rxjs/operators";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {analyticsConfig} from "configuration/analytics-config";
-import {AuthService} from "shared/services";
-import {HttpClient} from "@angular/common/http";
-import {TranslateService} from "@ngx-translate/core";
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable } from "rxjs";
+import { FileAssetListAction, FileAssetServeAction, InteractivityGetAction, KalturaClient, KalturaFileAsset, KalturaFileAssetFilter, KalturaFileAssetListResponse, KalturaFileAssetObjectType, KalturaInteractivity } from "kaltura-ngx-client";
+import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { map, switchMap } from "rxjs/operators";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { AuthService } from "shared/services";
+import { HttpClient } from "@angular/common/http";
+import { TranslateService } from "@ngx-translate/core";
 
 export interface Node {
   id?: string;
@@ -40,6 +34,8 @@ export interface HotSpot {
   hotspot_clicked?: number;
   startTime?: number;
   endTime?: number;
+  deleted?: boolean;
+  deleteDate?: string;
   type?: 'nodeSwitch' | 'hyperlink' | 'pause' | 'none';
 }
 
@@ -86,7 +82,7 @@ export class PathContentService implements  OnDestroy {
     return this._kalturaClient.request(new InteractivityGetAction({entryId: playlistId}))
       .pipe(cancelOnDestroy(this))
       .pipe(map((result: KalturaInteractivity) => {
-        return this.parsePathData(result.data);
+        return this.parsePathData(result.data).concat(this.parsePathDeletedNodes(result.data));
       }));
   }
 
@@ -110,6 +106,26 @@ export class PathContentService implements  OnDestroy {
           hotspots: []
         };
         // add hotspots
+        const setBehaviorType = (hotspot: HotSpot, behavior: any) => {
+          switch (behavior.type) {
+            case "GoToNode":
+              hotspot.type = 'nodeSwitch';
+              data.nodes.forEach(node => {
+                if (node.id === behavior.nodeId) {
+                  hotspot.destination = node.name;
+                }
+              });
+              break;
+            case "GoToUrl":
+              hotspot.type = 'hyperlink';
+              hotspot.destination = behavior.url;
+              break;
+            case "Pause":
+              hotspot.type = 'pause';
+              hotspot.destination = '';
+              break;
+          }
+        }
         if (node.interactions) {
           node.interactions.forEach(interaction => {
             if (interaction.pathData && interaction.pathData.preBuffer && interaction.pathData.preBuffer.length) {
@@ -126,25 +142,24 @@ export class PathContentService implements  OnDestroy {
                 name: interaction.data.text ? interaction.data.text.label : '',
                 type: 'none'
               };
-              switch (interaction.data.behavior.type) {
-                case "GoToNode":
-                  newHotspot.type = 'nodeSwitch';
-                  data.nodes.forEach(node => {
-                    if (node.id === interaction.data.behavior.nodeId) {
-                      newHotspot.destination = node.name;
-                    }
-                  });
-                  break;
-                case "GoToUrl":
-                  newHotspot.type = 'hyperlink';
-                  newHotspot.destination = interaction.data.behavior.url;
-                  break;
-                case "Pause":
-                  newHotspot.type = 'pause';
-                  newHotspot.destination = '';
-                  break;
-              }
-              // add hotspot properties from metadata json
+              setBehaviorType(newHotspot, interaction.data.behavior);
+              newNode.hotspots.push(newHotspot);
+            }
+          });
+        }
+        // add deleted hotspots
+        if (data.analyticsData && data.analyticsData.deletedHotspots) {
+          Object.keys(data.analyticsData.deletedHotspots).forEach(key => {
+            const deletedHotspot = data.analyticsData.deletedHotspots[key];
+            if (deletedHotspot.sourceNodeId === node.id) {
+              let newHotspot: HotSpot = {
+                id: deletedHotspot.id,
+                deleted: true,
+                deleteDate: deletedHotspot.deleteDate ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(new Date(deletedHotspot.deleteDate)) : '',
+                name: deletedHotspot.label,
+                type: 'none'
+              };
+              setBehaviorType(newHotspot, deletedHotspot.behavior);
               newNode.hotspots.push(newHotspot);
             }
           });
@@ -292,6 +307,25 @@ export class PathContentService implements  OnDestroy {
           deleted: true,
           entryId: node.entry_id,
           deletedDate: node.delete_date ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(node.delete_date) : ''
+        };
+        nodes.push(newNode);
+      });
+    }
+    return nodes;
+  }
+
+  private parsePathDeletedNodes(pathData): Node[] {
+    let nodes: Node[] = [];   // the returned nodes array
+    const data = JSON.parse(pathData);
+    if (data.analyticsData && data.analyticsData.deletedNodes) {
+      Object.keys(data.analyticsData.deletedNodes).forEach(key => {
+      const deletedNode = data.analyticsData.deletedNodes[key];
+        const newNode: Node = {
+          id: deletedNode.id,
+          name: deletedNode.label,
+          deleted: true,
+          entryId: deletedNode.entryId,
+          deletedDate: deletedNode.deleteDate ? this._translate.instant('app.playlist.deletionDate') + ' ' + DateFilterUtils.formatFullDateString(new Date(deletedNode.deleteDate)) : ''
         };
         nodes.push(newNode);
       });

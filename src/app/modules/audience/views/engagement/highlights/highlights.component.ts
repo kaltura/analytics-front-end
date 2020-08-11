@@ -19,6 +19,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {ViewConfig} from "configuration/view-config";
 
 @Component({
   selector: 'app-engagement-highlights',
@@ -32,16 +33,24 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
-  
+  @Input() set viewConfig(value: ViewConfig) {
+    if (!isEmptyObject(value)) {
+      this._viewConfig = value;
+    } else {
+      this._viewConfig = {
+      };
+    }
+  }
+
   private _order = '-date_id';
   private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
   private _filterChange = new Subject();
-  
+
   protected _componentId = 'highlights';
-  
+
   public highlights$ = new BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>({ current: null, compare: null, busy: false, error: null });
-  
+
   public _tableModes = TableModes;
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
@@ -74,11 +83,13 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
   public _filterChange$ = this._filterChange.asObservable();
-  
+  public _viewConfig: ViewConfig = {
+    userFilter: {},
+  };
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -93,48 +104,48 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
-  
+
   ngOnDestroy() {
     this._filterChange.complete();
     this.highlights$.complete();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this.highlights$.next({ current: null, compare: null, busy: true, error: null });
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
-        
+
         return this._reportService.getReport(compareReportConfig, sections, false)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-          
+
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
-          
+
           if (report.totals && !this._tabsData.length) {
             this._handleTotals(report.totals); // handle totals
           }
-          
+
           if (compare) {
             this._datesTableData = { current: report, compare: compare };
             this._handleCompare(report, compare);
           } else {
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
-              
+
               this._datesTableData = { current: report };
             }
           }
@@ -155,7 +166,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
           this.highlights$.next({ current: null, compare: null, busy: false, error: error });
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -172,33 +183,33 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     } else {
       this._compareFilter = null;
     }
-    
+
     this._filterChange.next();
   }
-  
+
   protected _updateRefineFilter(): void {
     const userIds = this._filter.userIds;
 
     this._refineFilterToServerValue(this._filter);
-    
+
     if (userIds) {
       this._filter.userIds = userIds;
     }
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
-  
+
       if (userIds) {
         this._compareFilter.userIds = userIds;
       }
     }
-    
+
     this._filterChange.next();
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
+
     if (current.graphs.length && compare.graphs.length) {
       const { lineChartData } = this._compareService.compareGraphData(
         this._currentPeriod,
@@ -211,11 +222,11 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
     }
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-  
+
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
@@ -223,19 +234,19 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-    
+
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
   }
-  
+
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
   }
-  
+
   public _toggleTable(): void {
     this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
-    
+
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
@@ -244,7 +255,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
       }, 0);
     }
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     const userIds = event.length
       ? event
@@ -264,59 +275,59 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         .map(filter => filter.value.id)
         .join(analyticsConfig.valueSeparator)
       : null;
-    
+
     if (userIds) {
       this._filter.userIds = userIds;
-      
+
       if (this._compareFilter) {
         this._compareFilter.userIds = userIds;
       }
     } else {
       delete this._filter.userIds;
-      
+
       if (this._compareFilter) {
         delete this._compareFilter.userIds;
       }
     }
-    
+
     if (entriesIds) {
       this._filter.entryIdIn = entriesIds;
-      
+
       if (this._compareFilter) {
         this._compareFilter.entryIdIn = entriesIds;
       }
     } else {
       delete this._filter.entryIdIn;
-  
+
       if (this._compareFilter) {
         delete this._compareFilter.entryIdIn;
       }
     }
-    
+
     if (contextIds) {
       this._filter.playbackContextIdsIn = contextIds;
-      
+
       if (this._compareFilter) {
         this._compareFilter.playbackContextIdsIn = contextIds;
       }
     } else {
       delete this._filter.playbackContextIdsIn;
-  
+
       if (this._compareFilter) {
         delete this._compareFilter.playbackContextIdsIn;
       }
     }
-    
+
     this._filterChange.next();
   }
-  
+
   public _onChangeMode(): void {
     this._firstTimeLoading = true;
 
     // clean up users and entries filters
     delete this._filter.userIds;
     delete this._filter.entryIdIn;
-    
+
     if (this._compareFilter) {
       delete this._compareFilter.userIds;
       delete this._compareFilter.entryIdIn;

@@ -1,20 +1,20 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { KalturaAPIException, KalturaClient, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import * as moment from 'moment';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ReportDataConfig} from 'shared/services/storage-data-base.config';
-import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
-import {PathContentDataConfig} from './path-content-data.config';
-import {analyticsConfig} from 'configuration/analytics-config';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {PlaylistBase} from "../../shared/playlist-base/playlist-base";
-import {reportTypeMap} from "shared/utils/report-type-map";
-import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
-import { PathContentService , Node } from "./path-content.service";
+import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { Observable } from 'rxjs';
+import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { PathContentDataConfig } from './path-content-data.config';
+import { analyticsConfig } from 'configuration/analytics-config';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { PlaylistBase } from "../../shared/playlist-base/playlist-base";
+import { reportTypeMap } from "shared/utils/report-type-map";
+import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { PathContentService, Node } from "./path-content.service";
 
 @Component({
   selector: 'app-path-content',
@@ -30,6 +30,7 @@ import { PathContentService , Node } from "./path-content.service";
 export class PathContentComponent extends PlaylistBase implements OnInit, OnDestroy {
   @Input() playlistId: string;
   @Input() isPath: boolean;
+
   private _partnerId = this._authService.pid;
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http') ? analyticsConfig.kalturaServer.uri : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private _order = '-count_node_plays';
