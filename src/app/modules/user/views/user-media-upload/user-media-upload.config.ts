@@ -11,7 +11,7 @@ export class UserMediaUploadConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
@@ -91,7 +91,7 @@ export class UserMediaUploadConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 6,
           },

@@ -277,6 +277,7 @@
         "count_plays": "Reproduções",
         "count_loads": "Impressões",
         "unique_known_users": "Espectadores Únicos",
+        "unique_viewers": "Espectadores Únicos",
         "unique_known_users_tt": "Espectadores autenticados únicos. Todos os espectadores anônimos serão contados como 1 único espectador",
         "avg_view_drop_off": "Méd. Taxa de Abandono",
         "avg_view_drop_off_tt": "Taxa média de abandono medida por espectador que atinge quartis de reprodução",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "Minutos Visualizados",
         "avg_time_viewed": "Méd. Min. Visualizado",
         "unique_known_users": "Espectadores Únicos",
+        "unique_viewers": "Espectadores Únicos",
         "unique_known_users_tt": "Espectadores autenticados únicos. Todos os espectadores anônimos serão contados como 1 único espectador",
         "plays_distribution": "Distribuição de Reproduções",
         "plays_trend": "Tendência de Reprodução",
@@ -330,7 +332,8 @@
           "count_plays": "Reproduções {{0}}",
           "sum_time_viewed": "Minutos Visualizados {{0}}",
           "avg_time_viewed": "Méd. Min Visualizado {{0}}",
-          "unique_known_users": "Espectadores Únicos {{0}}"
+          "unique_known_users": "Espectadores Únicos {{0}}",
+          "unique_viewers": "Espectadores Únicos {{0}}"
         },
         "devices": {
           "Computer": "Desktop",
@@ -385,6 +388,7 @@
         "count_loads": "Impressões do reprodutor",
         "sum_time_viewed": "Minutos Visualizados",
         "unique_known_users": "Espectadores Únicos",
+        "unique_viewers": "Espectadores Únicos",
         "avg_view_drop_off": "Méd. Taxa de Abandono",
         "avg_completion_rate": "Méd. Taxa de Conclusão",
         "unique_known_users_tt": "Espectadores autenticados únicos. Todos os espectadores anônimos serão contados como 1 único espectador",
@@ -395,6 +399,7 @@
         "entry_name": "Nome",
         "count_plays": "Reproduções",
         "unique_known_users": "Espectadores Únicos",
+        "unique_viewers": "Espectadores Únicos",
         "avg_view_drop_off": "Méd. Período de Visualização",
         "avg_completion_rate": "Méd. Taxa de Conclusão",
         "sum_time_viewed": "Minutos Visualizados",
@@ -800,6 +805,7 @@
       "total_completion_rate": "Taxa de Conclusão Total",
       "total_completion_rate_tt": "Taxa de Conclusão Total",
       "unique_known_users": "Espectadores Únicos",
+      "unique_viewers": "Espectadores Únicos",
       "unique_auth_known_users": "Espectadores Autenticados Únicos",
       "unique_known_users_tt": "Espectadores autenticados únicos. Todos os espectadores anônimos serão contados como 1 único espectador",
       "likes": "Curtidas",
@@ -989,6 +995,7 @@
         "name": "Nome",
         "count_plays": "Reproduções",
         "unique_known_users": "Espectadores Únicos",
+        "unique_viewers": "Espectadores Únicos",
         "avg_completion_rate": "Méd. Taxa de Conclusão",
         "score": "Pontuação"
       },

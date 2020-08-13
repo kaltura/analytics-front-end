@@ -9,7 +9,7 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -26,7 +26,7 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'sum_time_viewed': {
             format: value => value,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => value,
           }
         }
@@ -40,9 +40,9 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
             sortOrder: 1,
             colors: ['default'],
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => value,
-            title: this._translate.instant(`app.audience.technology.unique_known_users`),
+            title: this._translate.instant(`app.audience.technology.unique_viewers`),
             tooltip: this._translate.instant(`app.audience.technology.unique_known_users_tt`),
             sortOrder: 2,
             colors: ['viewers'],

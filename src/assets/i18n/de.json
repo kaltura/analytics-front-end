@@ -277,6 +277,7 @@
         "count_plays": "Wiedergabe",
         "count_loads": "Impressionen",
         "unique_known_users": "Individuelle Zuschauer",
+        "unique_viewers": "Individuelle Zuschauer",
         "unique_known_users_tt": "Individuelle authentifizierte Zuschauer Alle anonymen Zuschauer werden als 1 individueller Zuschauer gezählt",
         "avg_view_drop_off": "Durchschn. Abbruchrate",
         "avg_view_drop_off_tt": "Die durchschnittliche Abbruchrate, gemessen durch das Erreichen der Wiedergabequartile durch den Zuschauer",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "Minuten angesehen",
         "avg_time_viewed": "Durchschn. Min. angesehen",
         "unique_known_users": "Individuelle Zuschauer",
+        "unique_viewers": "Individuelle Zuschauer",
         "unique_known_users_tt": "Individuelle authentifizierte Zuschauer Alle anonymen Zuschauer werden als 1 individueller Zuschauer gezählt",
         "plays_distribution": "Wiedergabe-Verteilung",
         "plays_trend": "Wiedergabe-Trend",
@@ -330,7 +332,8 @@
           "count_plays": "{{0}} wird wiedergegeben",
           "sum_time_viewed": "Minuten angesehen {{0}}",
           "avg_time_viewed": "Durchschn. Min. angesehen {{0}}",
-          "unique_known_users": "Individuelle Zuschauer {{0}}"
+          "unique_known_users": "Individuelle Zuschauer {{0}}",
+          "unique_viewers": "Individuelle Zuschauer {{0}}"
         },
         "devices": {
           "Computer": "Desktop",
@@ -385,6 +388,7 @@
         "count_loads": "Spielereindrücke",
         "sum_time_viewed": "Minuten angesehen",
         "unique_known_users": "Individuelle Zuschauer",
+        "unique_viewers": "Individuelle Zuschauer",
         "avg_view_drop_off": "Durchschn. Abbruchrate",
         "avg_completion_rate": "Durchschn. Abschlussquote",
         "unique_known_users_tt": "Individuelle authentifizierte Zuschauer Alle anonymen Zuschauer werden als 1 individueller Zuschauer gezählt",
@@ -395,6 +399,7 @@
         "entry_name": "Name",
         "count_plays": "Wiedergabe",
         "unique_known_users": "Individuelle Zuschauer",
+        "unique_viewers": "Individuelle Zuschauer",
         "avg_view_drop_off": "Durchschn. Zeitraum anzeigen",
         "avg_completion_rate": "Durchschn. Abschlussquote",
         "sum_time_viewed": "Minuten angesehen",
@@ -800,6 +805,7 @@
       "total_completion_rate": "Abschlussquote 100 %",
       "total_completion_rate_tt": "Abschlussquote 100 %",
       "unique_known_users": "Individuelle Zuschauer",
+      "unique_viewers": "Individuelle Zuschauer",
       "unique_auth_known_users": "Individuelle authentifizierte Ansichten",
       "unique_known_users_tt": "Individuelle authentifizierte Zuschauer Alle anonymen Zuschauer werden als 1 individueller Zuschauer gezählt",
       "likes": "Likes",
@@ -989,6 +995,7 @@
         "name": "Name",
         "count_plays": "Wiedergabe",
         "unique_known_users": "Individuelle Zuschauer",
+        "unique_viewers": "Individuelle Zuschauer",
         "avg_completion_rate": "Durchschn. Abschlussquote",
         "score": "Punktzahl"
       },

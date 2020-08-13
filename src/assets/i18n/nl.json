@@ -277,6 +277,7 @@
         "count_plays": "Afgespeeld",
         "count_loads": "Indrukken",
         "unique_known_users": "Unieke bezoekers",
+        "unique_viewers": "Unieke bezoekers",
         "unique_known_users_tt": "Unieke geverifieerde bezoekers Alle anonieme kijkers worden geteld als 1 unieke kijker",
         "avg_view_drop_off": "Gem. Uitvalsnelheid",
         "avg_view_drop_off_tt": "Gemiddelde uitvalsnelheid die wordt gemeten door kijkers die kwartielen bereiken",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "Minuten weergegeven",
         "avg_time_viewed": "Gem. Min. weergegeven",
         "unique_known_users": "Unieke bezoekers",
+        "unique_viewers": "Unieke bezoekers",
         "unique_known_users_tt": "Unieke geverifieerde bezoekers Alle anonieme kijkers worden geteld als 1 unieke kijker",
         "plays_distribution": "Speelt verdeling af",
         "plays_trend": "Trend afspelen",
@@ -330,7 +332,8 @@
           "count_plays": "Speelt {{0}} af",
           "sum_time_viewed": "{{0}} minuten weergegeven",
           "avg_time_viewed": "Gem. {{0}} min. weergegeven",
-          "unique_known_users": "{{0}} unieke bezoekers"
+          "unique_known_users": "{{0}} unieke bezoekers",
+          "unique_viewers": "{{0}} unieke bezoekers"
         },
         "devices": {
           "Computer": "Desktop",
@@ -385,6 +388,7 @@
         "count_loads": "Spelerindrukken",
         "sum_time_viewed": "Minuten weergegeven",
         "unique_known_users": "Unieke bezoekers",
+        "unique_viewers": "Unieke bezoekers",
         "avg_view_drop_off": "Gem. Uitvalsnelheid",
         "avg_completion_rate": "Gem. Voltooiingssnelheid",
         "unique_known_users_tt": "Unieke geverifieerde bezoekers Alle anonieme kijkers worden geteld als 1 unieke kijker",
@@ -395,6 +399,7 @@
         "entry_name": "Naam",
         "count_plays": "Afgespeeld",
         "unique_known_users": "Unieke bezoekers",
+        "unique_viewers": "Unieke bezoekers",
         "avg_view_drop_off": "Gem. Weergaveperiode",
         "avg_completion_rate": "Gem. Voltooiingssnelheid",
         "sum_time_viewed": "Minuten weergegeven",
@@ -800,6 +805,7 @@
       "total_completion_rate": "Totale voltooiingssnelheid",
       "total_completion_rate_tt": "Totale voltooiingssnelheid",
       "unique_known_users": "Unieke bezoekers",
+      "unique_viewers": "Unieke bezoekers",
       "unique_auth_known_users": "Unieke geverifieerde weergaven",
       "unique_known_users_tt": "Unieke geverifieerde bezoekers Alle anonieme kijkers worden geteld als 1 unieke kijker",
       "likes": "Likes",
@@ -989,6 +995,7 @@
         "name": "Naam",
         "count_plays": "Afgespeeld",
         "unique_known_users": "Unieke bezoekers",
+        "unique_viewers": "Unieke bezoekers",
         "avg_completion_rate": "Gem. Voltooiingssnelheid",
         "score": "Score"
       },
