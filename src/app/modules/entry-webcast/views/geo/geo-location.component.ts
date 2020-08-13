@@ -309,7 +309,7 @@ export class WebcastGeoComponent extends WebcastBaseReportComponent implements O
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
         const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFormattedValue(tab.rawValue) : 0;
+        const total = tab ? parseFormattedValue(tab.value) : 0;
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };

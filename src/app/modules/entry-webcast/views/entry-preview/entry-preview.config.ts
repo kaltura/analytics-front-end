@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
+import {ReportHelper} from "shared/services";
 
 @Injectable()
 export class EntryPreviewConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -15,12 +16,15 @@ export class EntryPreviewConfig extends ReportDataBaseConfig {
           'percentile': {
             format: value => value,
           },
+          'position': {
+            format: value => value,
+          },
           'count_viewers': {
             format: value => value,
           },
-          'unique_known_users': {
-            format: value => value,
-          },
+          'live_engaged_users_ratio': {
+            format: value => value * 100,
+          }
         }
       }
     };

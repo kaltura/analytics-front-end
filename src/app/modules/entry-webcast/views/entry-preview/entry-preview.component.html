@@ -35,38 +35,14 @@
           <span class="kDuration">{{_duration | appDuration}}</span>
         </div>
         <div aria-label="Legend" class="kLegend" [class.kCompare]="_isCompareMode">
-          <ng-container *ngIf="!_isCompareMode">
+          <ng-container>
             <div class="kValue">
               <span class="kBullet kViews">&bull;</span>
               <span class="kLabel">{{'app.entry.views' | translate}}</span>
             </div>
             <div class="kValue">
               <span class="kBullet kUsers">&bull;</span>
-              <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="_isCompareMode">
-            <div class="kValue">
-              <div style="display: flex; margin-right: 32px">
-                <span class="kPeriod">{{_compareDatePeriodLabel}}</span>
-                <span class="kBullet kCompareViews">&bull;</span>
-                <span class="kLabel">{{'app.entry.views' | translate}}</span>
-              </div>
-              <div style="display: flex">
-                <span class="kBullet kCompareUsers">&bull;</span>
-                <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
-              </div>
-            </div>
-            <div class="kValue">
-              <div style="display: flex; margin-right: 32px">
-                <span class="kPeriod">{{_currentDatePeriodLabel}}</span>
-                <span class="kBullet kViews">&bull;</span>
-                <span class="kLabel">{{'app.entry.views' | translate}}</span>
-              </div>
-              <div style="display: flex">
-                <span class="kBullet kUsers">&bull;</span>
-                <span class="kLabel">{{'app.entry.unique_auth_known_users' | translate}}</span>
-              </div>
+              <span class="kLabel">{{'app.entryWebcast.engagement.live' | translate}}</span>
             </div>
           </ng-container>
         </div>

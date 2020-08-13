@@ -170,8 +170,8 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
           }
           if (entry.lastBroadcastEndTime && entry.lastBroadcast && entry.lastBroadcastEndTime > entry.lastBroadcast) {
             const lastBroadcastEndTime = new Date(entry.lastBroadcastEndTime * 1000);
-            const lastBroadcast = new Date(entry.lastBroadcast * 1000);
-            this._lastBroadcastDuration = ReportHelper.numberWithCommas(moment(lastBroadcastEndTime).diff(moment(lastBroadcast), 'minutes'));
+            const firstBroadcast = new Date(entry.firstBroadcast * 1000);
+            this._lastBroadcastDuration = ReportHelper.numberWithCommas(moment(lastBroadcastEndTime).diff(moment(firstBroadcast), 'minutes'));
           }
           this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
           this._showViewDetails = entry.displayInSearch !== KalturaEntryDisplayInSearchType.system;

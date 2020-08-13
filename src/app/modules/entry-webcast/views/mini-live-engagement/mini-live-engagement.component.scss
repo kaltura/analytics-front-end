@@ -55,7 +55,7 @@
     width: 45%;
   }
 }
-::ng-deep app-horizontal-bar-row {
+:host ::ng-deep app-horizontal-bar-row {
   .kValue {
     margin-right: 12px !important;
   }

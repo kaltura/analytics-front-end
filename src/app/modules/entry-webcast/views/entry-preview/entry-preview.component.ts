@@ -14,7 +14,7 @@ import { KalturaPlayerComponent } from 'shared/player';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import {map, switchMap} from "rxjs/operators";
-import {of as ObservableOf} from "rxjs";
+import {Observable, of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
@@ -27,6 +27,9 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent implements OnInit {
   @Input() entryId = '';
+  @Input() liveEntryId = '';
+  @Input() broadcastStartTime: number;
+  @Input() broadcastEndTime: number;
   @Input() isLive = false;
 
   private _dataConfig: ReportDataConfig;
@@ -34,6 +37,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
   private _playerInstance: any = null;
   private _playerInitialized = false;
   private _reportType = reportTypeMap(KalturaReportType.percentiles);
+  private _liveReportType = reportTypeMap(KalturaReportType.engagmentTimelineWebcast);
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
@@ -46,6 +50,10 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _filter = new KalturaEndUserReportInputFilter({
+    searchInTags: true,
+    searchInAdminTags: false
+  });
+  public _liveFilter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -82,7 +90,8 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
     }
   }
 
-  private _getGraphData(yData1: number[], yData2: number[], compareYData1: number[] = null, compareYData2: number[] = null) {
+  private _getGraphData(yData1: number[], yData2: number[], pointsCount: number = 101) {
+    // TODO - handle secondary yAxis by percentage
     let graphData = {
       color: [getPrimaryColor(), getSecondaryColor()],
       backgroundColor: '#333333',
@@ -96,14 +105,14 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
         show: false,
         boundaryGap: false,
         type: 'category',
-        data: Array.from({ length: 100 }, (_, i) => i + 1),
+        data: Array.from({ length: pointsCount }, (_, i) => i),
       },
       tooltip: {
         confine: true,
         formatter: params => {
           const { value: value1, dataIndex } = params[0];
-          const value2 = params[1].value;
-          const progressValue = ReportHelper.time(String(dataIndex / 99 * this._duration)); // empirically found formula, closest result to expected so far
+          const value2 = params[1].value.toFixed(2) + '%';
+          const progressValue = ReportHelper.time(String(dataIndex / (pointsCount -1) * this._duration)); // empirically found formula, closest result to expected so far
           let tooltip = `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>
@@ -113,40 +122,10 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
               </div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
-                ${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}
+                ${this._translate.instant('app.entryWebcast.engagement.live')}:&nbsp;${value2}
               </div>
             </div>
           `;
-          if (this._isCompareMode && Array.isArray(params) && params.length > 1) {
-            const compareValue1 = params[2].value;
-            const compareValue2 = params[3].value;
-
-            tooltip = `
-              <div style="font-size: 15px; margin-left: 5px; font-weight: bold; color: #999999">${progressValue}</div>
-              <div class="kEntryCompareGraphTooltip" style="padding-bottom: 0; margin-bottom: 12px">
-                <span class="kPeriodLabel">${this._compareDatePeriodLabel}</span>
-                <div class="kValue">
-                  <span class="kBullet" style="color: ${getSecondaryColor()}">&bull;</span>
-                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${compareValue1}</span>
-                </div>
-                <div class="kValue">
-                  <span class="kBullet" style="color: ${getSecondaryColor('viewers')}">&bull;</span>
-                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${compareValue2}</span>
-                </div>
-              </div>
-              <div class="kEntryCompareGraphTooltip" style="padding-top: 0">
-                <span class="kPeriodLabel">${this._currentDatePeriodLabel}</span>
-                <div class="kValue">
-                  <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                  <span>${this._translate.instant('app.entry.views')}:&nbsp;${value1}</span>
-                </div>
-                <div class="kValue">
-                  <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
-                  <span>${this._translate.instant('app.entry.unique_auth_known_users')}:&nbsp;${value2}</span>
-                </div>
-              </div>
-           `;
-          }
           return tooltip;
         },
         trigger: 'axis',
@@ -166,10 +145,33 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           z: 1
         }
       },
-      yAxis: {
+      yAxis: [{
+        zlevel: 0,
+        type: 'value',
+        position: 'left',
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          inside: true,
+          margin: 4,
+          fontWeight: 'bold',
+          verticalAlign: 'top',
+          padding: [8, 0, 0, 0],
+          color: '#FFFFFF'
+        }
+      },{
         zlevel: 0,
         type: 'value',
         position: 'right',
+        min: 0,
+        max: 100,
         axisLine: {
           show: false
         },
@@ -183,13 +185,15 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           }
         },
         axisLabel: {
+          formatter: '{value}%',
           inside: true,
           margin: 4,
+          fontWeight: 'bold',
           verticalAlign: 'top',
           padding: [8, 0, 0, 0],
           color: '#FFFFFF'
         }
-      },
+      }],
       series: [
         {
           data: yData1,
@@ -199,7 +203,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           type: 'line',
           lineStyle: {
             color: '#487adf',
-            width: 2
+            width: 3
           }
         },
         {
@@ -207,37 +211,14 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           symbol: 'circle',
           symbolSize: 4,
           showSymbol: false,
+          yAxisIndex: 1,
           type: 'line',
           lineStyle: {
-            color: '#1b8271',
-            width: 2
+            color: '#81cc6f',
+            width: 3
           }
         }]
     };
-    if (compareYData1 !== null && compareYData2 !== null) {
-      graphData.series.push({
-        data: compareYData1,
-        symbol: 'circle',
-        symbolSize: 4,
-        showSymbol: false,
-        type: 'line',
-        lineStyle: {
-          color: '#88acf6',
-          width: 2
-        }
-      });
-      graphData.series.push({
-        data: compareYData2,
-        symbol: 'circle',
-        symbolSize: 4,
-        showSymbol: false,
-        type: 'line',
-        lineStyle: {
-          color: '#60e4cc',
-          width: 2
-        }
-      });
-    }
     return graphData;
   }
 
@@ -249,66 +230,49 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
       return;
     }
 
+    if (this.liveEntryId) {
+      this._liveFilter.entryIdIn = this.liveEntryId;
+      const roundSeconds = (epoc: number) => {
+        let date = new Date(epoc * 1000);
+        return date.setSeconds(0) / 1000;
+      }
+      this._liveFilter.fromDate = roundSeconds(this.broadcastStartTime);
+      this._liveFilter.toDate = roundSeconds(this.broadcastEndTime);
+    }
+
     this._isBusy = true;
     this._blockerMessage = null;
-
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = this.entryId;
     sections = { ...sections }; // make local copy
 
-    this._reportService.getReport(reportConfig, sections)
+    // create 2 report calls and use forkJoin to get them both
+    const reportConfigViewers: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
+    const viewers = this._reportService.getReport(reportConfigViewers, sections, false)
       .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
+        return ObservableOf({ report, compare: null });
+      }));
 
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
-        if (compareReportConfig['objectIds__null']) {
-          delete compareReportConfig['objectIds__null'];
-        }
-        compareReportConfig.objectIds = this.entryId;
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          this._isBusy = false;
+    const reportConfigEngagement: ReportConfig = { reportType: this._liveReportType, filter: this._liveFilter, pager: this._pager, order: null };
+    const engagement = this._reportService.getReport(reportConfigEngagement, sections, false)
+      .pipe(switchMap(report => {
+        return ObservableOf({ report, compare: null });
+      }));
+
+    // once both reports return, we need to merge the results and then generate the table and compare data
+    Observable.forkJoin(viewers, engagement)
+      .subscribe(([viewers, engagement]) => {
           this._chartOptions = {};
-
-          if (this._isCompareMode) {
-            const dateFormat = 'MMM DD YYYY';
-            this._currentDatePeriodLabel = DateFilterUtils.getMomentDate(this._filter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format(dateFormat);
-            this._compareDatePeriodLabel = DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format(dateFormat) + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format(dateFormat);
-          }
-
-          if (report.table && report.table.header && report.table.data) {
-            const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
-            const yAxisData1 = this._getAxisData(tableData, 'count_viewers');
-            const yAxisData2 = this._getAxisData(tableData, 'unique_known_users');
-
-            if (compare && compare.table) {
-              let compareYAxisData1 = [];
-              let compareYAxisData2 = [];
-              if (compare.table.header && compare.table.data) {
-                const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig[ReportDataSection.table]);
-                compareYAxisData1 = this._getAxisData(compareTableData, 'count_viewers');
-                compareYAxisData2 = this._getAxisData(compareTableData, 'unique_known_users');
-              } else {
-                compareYAxisData1 = Array.from({ length: 100 }, () => 0);
-                compareYAxisData2 = Array.from({ length: 100 }, () => 0);
-              }
-              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, compareYAxisData1, compareYAxisData2);
-            } else {
-              this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
-            }
+          if (viewers.report.table && viewers.report.table.header && viewers.report.table.data) {
+            const { tableData } = this._reportService.parseTableData(viewers.report.table, this._dataConfig[ReportDataSection.table]);
+            const liveTableData = this._reportService.parseTableData(engagement.report.table, this._dataConfig[ReportDataSection.table]).tableData;
+            const pointCount = Math.max(tableData.length, liveTableData.length) -1;
+            const yAxisData1 = this._getViewersAxisData(tableData, pointCount);
+            const yAxisData2 = this._getLiveAxisData(liveTableData, liveTableData.length);
+            this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, pointCount );
           } else {
             const emptyLine = Array.from({ length: 100 }, () => 0);
-            this._chartOptions = this._isCompareMode
-              ? this._getGraphData(emptyLine, emptyLine, emptyLine, emptyLine)
-              : this._getGraphData(emptyLine, emptyLine);
+            this._chartOptions = this._getGraphData(emptyLine, emptyLine);
           }
+          this._isBusy = false;
         },
         error => {
           this._isBusy = false;
@@ -326,9 +290,6 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
 
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
-    if (this._compareFilter) {
-      this._refineFilterToServerValue(this._compareFilter);
-    }
   }
 
   protected _updateFilter(): void {
@@ -337,14 +298,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
-    if (this._dateFilter.compare.active) {
-      const compare = this._dateFilter.compare;
-      this._compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
-      this._compareFilter.fromDate = compare.startDate;
-      this._compareFilter.toDate = compare.endDate;
-    } else {
-      this._compareFilter = null;
-    }
+    this._compareFilter = null;
   }
 
   public _onChartClick(event): void {
@@ -352,13 +306,37 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
     this._seekTo(percent, true);
   }
 
-  private _getAxisData(tableData: TableRow[], key: string): number[] {
-    const result = tableData
+  private _getViewersAxisData(tableData: TableRow[], pointsCount: number): number[] {
+    let result = tableData
       .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-      .map(item => Number(item[key] || 0));
+      .map(item => Number(item['count_viewers'] || 0));
 
     result[0] = result[1];
+    if (pointsCount > 101) {
+      let updatedData = [];
+      for (let i = 0; i < pointsCount; i++) {
+        const indexMap = Math.round(i * 101 / pointsCount);
+        updatedData.push(result[indexMap]);
+      }
+      updatedData[pointsCount -1 ] = updatedData[pointsCount - 2];
+      result = updatedData;
+    }
+    return result;
+  }
 
+  private _getLiveAxisData(tableData: TableRow[], pointsCount: number): number[] {
+    let result = tableData
+      .sort((a, b) => Number(a['position']) - Number(b['position']))
+      .map(item => Number(item['live_engaged_users_ratio'] || 0));
+
+    if (pointsCount < 101) {
+      let updatedData = [];
+      for (let i = 0; i < 101; i++) {
+        const indexMap = Math.round(i * pointsCount / 101);
+        updatedData.push(result[indexMap]);
+      }
+      result = updatedData;
+    }
     return result;
   }
 
