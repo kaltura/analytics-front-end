@@ -224,7 +224,10 @@ export class BrowserService {
       return finalVal + '\n';
     };
 
-    let csvFile = '';
+    // adding universal BOM (Byte Order Mark) at the beginning of the CSV file to force Excel to use UTF-8 encoding
+    const universalBOM = "\uFEFF";
+    let csvFile = universalBOM;
+
     for (let i = 0; i < rows.length; i++) {
       csvFile += processRow(rows[i]);
     }
