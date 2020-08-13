@@ -10,6 +10,9 @@ $appBkgColor: #f2f2f2;
 body {
   background-color: $appBkgColor;
   overflow-y: hidden;
+  kpopupwidget[data-aid="webcast-questions"] {
+    margin-top: 100px !important;
+  }
 }
 
 // Spinner positioning for area-blocker
