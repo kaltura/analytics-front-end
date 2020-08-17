@@ -44,7 +44,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
@@ -82,12 +82,12 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => value,
-            title: this._translate.instant(`app.entry.unique_known_users`),
+            title: this._translate.instant(`app.entry.unique_viewers`),
             sortOrder: 2,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.unique_known_users`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.unique_viewers`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'sum_time_viewed': {
             format: value => value,
@@ -125,9 +125,9 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.count_plays`),
             sortOrder: 2,
           },
-          'unique_known_users': {
+          'unique_viewers': {
             format: value => value,
-            title: this._translate.instant(`app.entry.unique_known_users`),
+            title: this._translate.instant(`app.entry.unique_viewers`),
             tooltip: this._translate.instant('app.entry.unique_known_users_tt'),
             sortOrder: 3,
           },

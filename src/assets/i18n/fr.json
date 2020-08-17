@@ -277,6 +277,7 @@
         "count_plays": "Lectures",
         "count_loads": "Impressions",
         "unique_known_users": "Spectateurs uniques",
+        "unique_viewers": "Spectateurs uniques",
         "unique_known_users_tt": "Spectateurs uniques authentifiés. Tous les spectateurs anonymes seront comptés comme 1 spectateur unique.",
         "avg_view_drop_off": "Classement Taux d'abandon",
         "avg_view_drop_off_tt": "Taux d'abandon moyen mesuré par spectateur atteignant chaque quartile de lecture.",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "Minutes visionnées",
         "avg_time_viewed": "Classement Minutes",
         "unique_known_users": "visionnées Spectateurs uniques",
+        "unique_viewers": "visionnées Spectateurs uniques",
         "unique_known_users_tt": "Spectateurs uniques authentifiés. Tous les spectateurs anonymes seront comptés comme 1 spectateur unique.",
         "plays_distribution": "Distribution des lectures",
         "plays_trend": "Tendance de lecture",
@@ -330,7 +332,8 @@
           "count_plays": "Lectures {{0}}",
           "sum_time_viewed": "Minutes visionnées {{0}}",
           "avg_time_viewed": "Classement Minutes",
-          "unique_known_users": "visionnéesSpectateurs uniques {{0}}"
+          "unique_known_users": "visionnéesSpectateurs uniques {{0}}",
+          "unique_viewers": "visionnéesSpectateurs uniques {{0}}"
         },
         "devices": {
           "Computer": "Ordinateur de bureau",
@@ -385,6 +388,7 @@
         "count_loads": "Impressions de lecteur",
         "sum_time_viewed": "Minutes visionnées",
         "unique_known_users": "Spectateurs uniques",
+        "unique_viewers": "Spectateurs uniques",
         "avg_view_drop_off": "Classement Taux d'abandon",
         "avg_completion_rate": "Classement Taux d'achèvement",
         "unique_known_users_tt": "Spectateurs uniques authentifiés. Tous les spectateurs anonymes seront comptés comme 1 spectateur unique.",
@@ -395,6 +399,7 @@
         "entry_name": "Nom",
         "count_plays": "Lectures",
         "unique_known_users": "Spectateurs uniques",
+        "unique_viewers": "Spectateurs uniques",
         "avg_view_drop_off": "Classement Période",
         "avg_completion_rate": "visionnageClassement Taux d'achèvement",
         "sum_time_viewed": "Minutes visionnées",
@@ -800,6 +805,7 @@
       "total_completion_rate": "Taux d'achèvement total",
       "total_completion_rate_tt": "Taux d'achèvement total",
       "unique_known_users": "Spectateurs uniques",
+      "unique_viewers": "Spectateurs uniques",
       "unique_auth_known_users": "Lectures uniques authentifiées",
       "unique_known_users_tt": "Spectateurs uniques authentifiés. Tous les spectateurs anonymes seront comptés comme 1 spectateur unique.",
       "likes": "J’aime",
@@ -989,6 +995,7 @@
         "name": "Nom",
         "count_plays": "Lectures",
         "unique_known_users": "Spectateurs uniques",
+        "unique_viewers": "Spectateurs uniques",
         "avg_completion_rate": "Classement Taux d'achèvement",
         "score": "Score"
       },

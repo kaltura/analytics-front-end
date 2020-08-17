@@ -277,6 +277,7 @@
         "count_plays": "再生",
         "count_loads": "インプレッション",
         "unique_known_users": "ユニーク視聴者",
+        "unique_viewers": "ユニーク視聴者",
         "unique_known_users_tt": "ユニーク認証済み視聴者匿名視聴者は1ユニーク視聴者としてはカウントされません",
         "avg_view_drop_off": "平均離脱率",
         "avg_view_drop_off_tt": "プレイバック四分位に達した視聴者毎に測定される平均離脱率",
@@ -311,6 +312,7 @@
         "sum_time_viewed": "視聴時間（分）",
         "avg_time_viewed": "平均視聴時間（分）",
         "unique_known_users": "ユニーク視聴者",
+        "unique_viewers": "ユニーク視聴者",
         "unique_known_users_tt": "ユニーク認証済み視聴者匿名視聴者は1ユニーク視聴者としてはカウントされません",
         "plays_distribution": "再生の分布",
         "plays_trend": "再生の傾向",
@@ -330,7 +332,8 @@
           "count_plays": "再生回数 {{0}}",
           "sum_time_viewed": "視聴時間（分）{{0}}",
           "avg_time_viewed": "平均視聴時間（分）{{0}}",
-          "unique_known_users": "ユニーク視聴者{{0}}"
+          "unique_known_users": "ユニーク視聴者{{0}}",
+          "unique_viewers": "ユニーク視聴者{{0}}"
         },
         "devices": {
           "Computer": "デスクトップ",
@@ -385,6 +388,7 @@
         "count_loads": "プレイヤーインプレッション",
         "sum_time_viewed": "視聴時間（分）",
         "unique_known_users": "ユニーク視聴者",
+        "unique_viewers": "ユニーク視聴者",
         "avg_view_drop_off": "平均離脱率",
         "avg_completion_rate": "平均:完全再生率",
         "unique_known_users_tt": "重複なしの認証済み視聴者匿名視聴者は1ユニーク視聴者としてはカウントされません",
@@ -395,6 +399,7 @@
         "entry_name": "名前",
         "count_plays": "再生",
         "unique_known_users": "ユニーク視聴者",
+        "unique_viewers": "ユニーク視聴者",
         "avg_view_drop_off": "平均視聴期間",
         "avg_completion_rate": "平均:完全再生率",
         "sum_time_viewed": "視聴時間（分）",
@@ -800,6 +805,7 @@
       "total_completion_rate": "完全再生率",
       "total_completion_rate_tt": "完全再生率",
       "unique_known_users": "重複なしの視聴者数",
+      "unique_viewers": "重複なしの視聴者数",
       "unique_auth_known_users": "ユニーク認証済み視聴者",
       "unique_known_users_tt": "ユニーク認証済み視聴者匿名視聴者は1ユニーク視聴者としてはカウントされません",
       "likes": "いいね",
@@ -989,6 +995,7 @@
         "name": "名前",
         "count_plays": "再生",
         "unique_known_users": "ユニーク視聴者",
+        "unique_viewers": "ユニーク視聴者",
         "avg_completion_rate": "平均完全再生率",
         "score": "スコア"
       },
