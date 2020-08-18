@@ -19,7 +19,7 @@
 
         <p-table dataKey="name"
                  aria-label="Engagement Per User Table"
-                 [sortField]="'count_plays'"
+                 [sortField]="_sortField"
                  [value]="_tableData"
                  [customSort]="true"
                  [defaultSortOrder]="-1"
@@ -28,7 +28,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th *ngFor="let col of _columns" [pSortableColumn]="col === 'user_name' || col === 'sum_live_view_period' ? null : col" [class.nonSortable]="col === 'user_name' || col === 'sum_live_view_period'"
-                  [ngStyle]="{'width': col === 'name' ? '40%' : '20%'}" [kTooltip]="'app.entryWebcast.users.' + col | translate" [showOnEllipsis]="true">
+                  [ngStyle]="{'width': col === 'user_name' ? '30%' : ['registered','count_loads','count_plays','sum_view_period'].indexOf(col) > -1 ? '15%' : '20%'}" [kTooltip]="'app.entryWebcast.users.' + col | translate" [showOnEllipsis]="true">
                 <span>{{'app.entryWebcast.users.' + col | translate}}</span>
                 <p-sortIcon [field]="col" *ngIf="col !== 'user_name' && col !== 'sum_live_view_period'"></p-sortIcon>
               </th>

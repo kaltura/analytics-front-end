@@ -206,7 +206,9 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
 
   public _viewKnownUsers(): void {
     this._userEngagement._showTable = true;
-    this._userEngagement._onSortChanged({order: -1, field: 'sum_live_view_period'}); // TODO change field to live engagement rate
+    setTimeout(() => {
+      this._userEngagement._onSortChanged({order: -1, field: 'live_engaged_users_play_time_ratio'});
+    }, 100);
     this.scrollTo('#userEngagement');
   }
 

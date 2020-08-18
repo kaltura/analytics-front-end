@@ -60,6 +60,7 @@ export class WebcastEntryUserEngagementComponent extends WebcastBaseReportCompon
   }
 
   private _order = '-count_plays';
+  public _sortField = 'count_plays';
   private _reportType = reportTypeMap(KalturaReportType.topUsersWebcast);
   private _dataConfig: ReportDataConfig;
   private _ignoreFirstSortEvent = true;
@@ -243,6 +244,7 @@ export class WebcastEntryUserEngagementComponent extends WebcastBaseReportCompon
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
+        this._sortField = event.field;
         this._pager.pageIndex = 1;
         this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
       }

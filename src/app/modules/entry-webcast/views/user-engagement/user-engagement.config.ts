@@ -46,9 +46,13 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false, true),
             sortOrder: 7
           },
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
+            sortOrder: 8
+          },
           'total_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
-            sortOrder: 8
+            sortOrder: 9
           }
         }
       },
@@ -74,8 +78,8 @@ export class UserEngagementConfig extends ReportDataBaseConfig {
           'avg_live_buffer_time': {
             format: value => ReportHelper.percents(value, false, true),
           },
-          'total_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, false, true),
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
           }
         }
       }
