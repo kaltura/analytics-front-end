@@ -29,6 +29,9 @@ export class DevicesDataConfig extends ReportDataBaseConfig {
           'sum_live_view_period': {
             format: value => value
           },
+          'live_engaged_users_play_time_ratio': {
+            format: value => value
+          },
           'avg_vod_completion_rate': {
             format: value => value
           }
@@ -53,6 +56,10 @@ export class DevicesDataConfig extends ReportDataBaseConfig {
           'sum_live_view_period': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.entryWebcast.devices.sum_view_period`)
+          },
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.numberOrNA(value),
+            title: this._translate.instant(`app.entryWebcast.devices.live_engaged_users_play_time_ratio`)
           },
           'avg_vod_completion_rate': {
             format: value => ReportHelper.percents(value / 100, true, true),

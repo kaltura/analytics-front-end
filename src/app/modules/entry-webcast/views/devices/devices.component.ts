@@ -116,6 +116,7 @@ export class WebcastDevicesComponent extends WebcastBaseReportComponent implemen
       this._devicesData.push({
         name: row.device,
         avg_vod_completion_rate: parseFloat(row.avg_vod_completion_rate.toString()),
+        live_engaged_users_play_time_ratio: parseFloat(row.live_engaged_users_play_time_ratio.toString()) * 100,
         plays_count: {
           live: parseFloat(row.live_plays_count.toString()),
           vod: parseFloat(row.vod_plays_count.toString()),
@@ -154,6 +155,8 @@ export class WebcastDevicesComponent extends WebcastBaseReportComponent implemen
     this._tabsData[0].rawValue = parseFloat(this._tabsData[0].rawValue.toString()) + parseFloat(this._tabsData[1].rawValue.toString());
     // remove live plays count
     this._tabsData.splice(1, 1);
+    // switch placed between "Avg. Completion rate" and "Live engagement rate" tabs
+    this._tabsData.splice(2, 0, this._tabsData.pop());
     this._selectedTotal = parseFloat(this._tabsData.find(el => el.key === this._selectedMetrics).rawValue.toString());
   }
 
@@ -162,6 +165,9 @@ export class WebcastDevicesComponent extends WebcastBaseReportComponent implemen
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
     this._selectedTotal = parseFloat(this._tabsData.find(el => el.key === this._selectedMetrics).rawValue.toString());
+    if (tab.key === 'live_engaged_users_play_time_ratio') {
+      this._selectedTotal = this._selectedTotal * 100;
+    }
     setTimeout(() => this._animate = false);
   }
 
