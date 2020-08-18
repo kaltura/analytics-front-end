@@ -118,7 +118,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,msDuration,userId,displayInSearch,lastBroadcastEndTime,firstBroadcast,lastBroadcast,recordedEntryId,liveStatus,'
+            fields: 'id,name,mediaType,createdAt,duration,userId,displayInSearch,lastBroadcastEndTime,firstBroadcast,lastBroadcast,recordedEntryId,liveStatus,'
           })
         }),
       new UserGetAction({ userId: null })
@@ -168,10 +168,8 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
           if (entry.recordedEntryId) {
             this._entryIdIn += `${analyticsConfig.valueSeparator}${entry.recordedEntryId}`;
           }
-          if (entry.lastBroadcastEndTime && entry.lastBroadcast && entry.lastBroadcastEndTime > entry.lastBroadcast) {
-            const lastBroadcastEndTime = new Date(entry.lastBroadcastEndTime * 1000);
-            const firstBroadcast = new Date(entry.firstBroadcast * 1000);
-            this._lastBroadcastDuration = ReportHelper.numberWithCommas(moment(lastBroadcastEndTime).diff(moment(firstBroadcast), 'minutes'));
+          if (entry.duration) {
+            this._lastBroadcastDuration = ReportHelper.numberWithCommas((entry.duration / 60).toFixed(2));
           }
           this._owner = user && user.fullName ? user.fullName : entry.userId; // fallback for deleted users
           this._showViewDetails = entry.displayInSearch !== KalturaEntryDisplayInSearchType.system;
