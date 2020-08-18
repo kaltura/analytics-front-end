@@ -535,6 +535,7 @@
         "unique_viewers": "Known Users",
         "sum_view_period": "Minutes Viewed",
         "avg_live_buffer_time": "Live Avg. Buffer Rate",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       },
       "tools": {
@@ -560,6 +561,7 @@
         "unique_viewers": "Known Viewers",
         "sum_view_period": "Minutes Viewed",
         "avg_live_buffer_time": "Live Avg. Buffering Rate",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       },
       "devices": {
@@ -570,6 +572,7 @@
         "liveUsers": "Live Users: {{0}}",
         "vodUsers": "VOD Users: {{0}}",
         "sum_view_period": "Minutes Viewed",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
         "avg_vod_completion_rate": "Avg. Completion Rate"
       },
       "users": {

@@ -13,15 +13,22 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'avg_vod_completion_rate': {
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
+            title: this._translate.instant(`app.entryWebcast.engagement.live`),
+            tooltip: this._translate.instant(`app.entryWebcast.engagement.live_tt`),
+            sortOrder: 1,
+          },
+         'avg_vod_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
             title: this._translate.instant(`app.entryWebcast.engagement.vod`),
-            sortOrder: 1,
+            tooltip: this._translate.instant(`app.entryWebcast.engagement.vod_tt`),
+            sortOrder: 2,
           },
           'registered': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entryWebcast.engagement.registered`),
-            sortOrder: 2,
+            sortOrder: 3,
           }
         }
       }

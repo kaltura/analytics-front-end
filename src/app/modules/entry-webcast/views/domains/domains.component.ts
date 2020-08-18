@@ -136,7 +136,11 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
 
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    // fix columns order according to requirements
+    columns.pop();
     this._insertColumnAfter('plays_distribution', 'count_plays', columns);
+    this._insertColumnAfter('live_engaged_users_play_time_ratio', 'avg_live_buffer_time', columns);
+
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._columns.shift();

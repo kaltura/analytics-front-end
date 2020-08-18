@@ -110,6 +110,13 @@
                     </span>
                   </div>
                 </th>
+                 <th [ngStyle]="{'width': '20%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.entryWebcast.geo.live_engaged_users_play_time_ratio' | translate" [showOnEllipsis]="true">
+                      {{'app.entryWebcast.geo.live_engaged_users_play_time_ratio' | translate}}
+                    </span>
+                  </div>
+                </th>
                 <th [ngStyle]="{'width': '20%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.entryWebcast.geo.avg_vod_completion_rate' | translate" [showOnEllipsis]="true">
@@ -145,6 +152,9 @@
                   <span>{{_tabsData[3].value}}</span>
                 </th>
                 <th [ngStyle]="{'width': '20%'}">
+                  <span>{{_tabsData[5].value}}</span>
+                </th>
+               <th [ngStyle]="{'width': '20%'}">
                   <span>{{_tabsData[4].value}}</span>
                 </th>
               </tr>
@@ -181,6 +191,9 @@
                 </td>
                 <td>
                   <span>{{data['avg_live_buffer_time']}}</span>
+                </td>
+               <td>
+                  <span>{{data['live_engaged_users_play_time_ratio']}}</span>
                 </td>
                 <td>
                   <span>{{data['avg_vod_completion_rate']}}</span>

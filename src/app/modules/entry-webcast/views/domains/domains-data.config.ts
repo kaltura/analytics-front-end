@@ -34,6 +34,9 @@ export class DomainsDataConfig extends ReportDataBaseConfig {
           'avg_live_buffer_time': {
             format: value => ReportHelper.percents(value, false, true)
           },
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false, true)
+          },
           'avg_vod_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true)
           }
@@ -58,6 +61,10 @@ export class DomainsDataConfig extends ReportDataBaseConfig {
           'avg_live_buffer_time': {
             format: value => ReportHelper.percents(value, true, true),
             title: this._translate.instant(`app.entryWebcast.geo.avg_live_buffer_time`)
+          },
+          'live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
+            title: this._translate.instant(`app.entryWebcast.geo.live_engaged_users_play_time_ratio`)
           },
           'avg_vod_completion_rate': {
             format: value => ReportHelper.percents(value / 100, true, true),

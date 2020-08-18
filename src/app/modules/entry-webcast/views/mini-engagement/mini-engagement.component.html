@@ -11,11 +11,10 @@
       <div class="kVal">
         <div class="kMiniIcon green"><i class="icon-small-impressions"></i></div>
           <div class="kLabels">
-            <span class="value">N/A</span>
-            <!--span class="value">{{_tabsData[0]?.value}}</span>
-            <span class="title">{{_tabsData[0]?.title}}</span-->
+            <span class="value">{{_tabsData[0]?.value}}</span>
+            <span class="title">{{_tabsData[0]?.title}}</span>
             <kInputHelper>
-              <span>{{'app.entryWebcast.engagement.live_tt' | translate}}</span>
+              <span>{{_tabsData[0]?.tooltip}}</span>
             </kInputHelper>
           </div>
 
@@ -24,10 +23,10 @@
       <div class="kVal">
         <div class="kMiniIcon green"><i class="icon-small-Completion-Rate"></i></div>
         <div class="kLabels">
-          <span class="value">{{_tabsData[0]?.value}}</span>
-          <span class="title">{{_tabsData[0]?.title}}</span>
+          <span class="value">{{_tabsData[1]?.value}}</span>
+          <span class="title">{{_tabsData[1]?.title}}</span>
           <kInputHelper>
-            <span>{{'app.entryWebcast.engagement.vod_tt' | translate}}</span>
+            <span>{{_tabsData[1]?.tooltip}}</span>
           </kInputHelper>
         </div>
       </div>
@@ -45,8 +44,8 @@
       <div class="kVal">
         <div class="kMiniIcon blue"><i class="icon-ic_registration"></i></div>
         <div class="kLabels">
-          <span class="value">{{_tabsData[1]?.value}}</span>
-          <span class="title">{{_tabsData[1]?.title}}</span>
+          <span class="value">{{_tabsData[2]?.value}}</span>
+          <span class="title">{{_tabsData[2]?.title}}</span>
           <a class="link" *ngIf="showDownload" [class.disabled]="_isBusy" (click)="download()">{{'app.entryWebcast.engagement.download' | translate}}</a>
         </div>
       </div>
