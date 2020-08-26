@@ -511,7 +511,7 @@
         "live": "Live engagement rate",
         "live_tt": "Live engagement rate",
         "vod": "VOD Avg. completion rate",
-        "vod_tt": "VOD Avg. completion rate",
+        "vod_tt": "The Avg. completion rate of all the viewers that watched the associated VOD of the webcast entry",
         "questions": "Users asked {{1}} questions",
         "view": "View",
         "registered": "Users registered",
