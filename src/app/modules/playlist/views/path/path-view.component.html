@@ -5,7 +5,7 @@
               [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-        <app-export-csv *ngIf="_viewConfig.export" name="entry"
+        <app-export-csv *ngIf="_viewConfig.export" name="Interactive Video"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"

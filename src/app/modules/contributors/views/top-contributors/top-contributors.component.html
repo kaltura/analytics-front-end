@@ -2,7 +2,7 @@
   <div class="kReportHeader">
     <span class="kTitle">{{'app.contributors.title' | translate}}</span>
     <app-export-csv *ngIf="_contributorsViewConfig.export"
-                    name="top-contributors"
+                    name="Top Contributors"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>

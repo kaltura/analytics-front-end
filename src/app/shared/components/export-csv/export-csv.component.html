@@ -11,7 +11,7 @@
       </div>
 
       <kPopupWidget #popupWidgetComponent
-                    [attr.data-aid]="'export-csv-' + name"
+                    [attr.data-aid]="'export-csv-' + name.split(' ').join('-').toLowerCase()"
                     [popupWidth]="width"
                     [closeBtn]="false"
                     [targetRef]="toggle"

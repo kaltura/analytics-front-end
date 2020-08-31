@@ -9,7 +9,7 @@
           <div class="kControls">
             <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
-                            name="entry"
+                            name="Live Entry"
                             [width]="380"
                             [reports]="_exportConfig"
                             [entryId]="_entryId"></app-export-csv>

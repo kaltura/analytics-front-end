@@ -2,7 +2,7 @@
   <div class="kReportHeader">
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
     <app-export-csv *ngIf="_endUserViewConfig.export"
-                    name="end-user"
+                    name="End User Storage"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_endUserViewConfig.refineFilter"
