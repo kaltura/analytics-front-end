@@ -92,6 +92,8 @@ export class WebcastDevicesComponent extends WebcastBaseReportComponent implemen
           }
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
+          } else {
+            this._devicesData = [];
           }
           this._isBusy = false;
         },

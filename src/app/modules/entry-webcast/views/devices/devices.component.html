@@ -45,12 +45,14 @@
 
         </ng-container>
       </div>
-      <div class="legend" [class.hidden]="_selectedMetrics !== 'vod_plays_count' && _selectedMetrics !== 'sum_view_period'">
+      <div class="kEmptyMessage" *ngIf="!_devicesData.length">{{'app.common.noResults' | translate}}</div>
+      <div class="legend" [class.hidden]="(_selectedMetrics !== 'vod_plays_count' && _selectedMetrics !== 'sum_view_period') || !_devicesData.length">
         <div class="circle" [class.playsLive]="_selectedMetrics==='vod_plays_count'" [class.minutesLive]="_selectedMetrics==='sum_view_period'"></div>
         <span class="label">{{'app.entryWebcast.live' | translate}}</span>
         <div class="circle" [class.playsVod]="_selectedMetrics==='vod_plays_count'" [class.minutesVod]="_selectedMetrics==='sum_view_period'"></div>
         <span class="label">{{'app.entryWebcast.vod' | translate}}</span>
       </div>
+
     </div>
   </k-area-blocker>
 
