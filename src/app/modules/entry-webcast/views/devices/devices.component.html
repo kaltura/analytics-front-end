@@ -15,31 +15,31 @@
 
           <div class="kHorizontalBar" *ngSwitchCase="'vod_plays_count'">
             <span class="kName kValue">{{device.plays_count.total}}</span>
-            <div class="kBarContainer">
-              <div class="kBar playsLive" [kTooltip]="device.plays_count.tooltip" [escape]="false" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.live /_selectedTotal * 100) + '%' : '0px'}"></div>
-              <div class="kBar playsVod" [kTooltip]="device.plays_count.tooltip" [escape]="false" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
+            <div class="kBarContainer" [kTooltip]="device.plays_count.tooltip" [escape]="false">
+              <div class="kBar playsLive" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.live /_selectedTotal * 100) + '%' : '0px'}"></div>
+              <div class="kBar playsVod" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
             </div>
           </div>
 
           <div class="kHorizontalBar" *ngSwitchCase="'sum_view_period'">
             <span class="kName kValue">{{device.view_period.total}}</span>
-            <div class="kBarContainer">
-              <div class="kBar minutesLive" [kTooltip]="device.view_period.tooltip" [escape]="false" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.live /_selectedTotal * 100) + '%' : '0px'}"></div>
-              <div class="kBar minutesVod" [kTooltip]="device.view_period.tooltip" [escape]="false" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
+            <div class="kBarContainer" [kTooltip]="device.view_period.tooltip" [escape]="false">
+              <div class="kBar minutesLive" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.live /_selectedTotal * 100) + '%' : '0px'}"></div>
+              <div class="kBar minutesVod" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
             </div>
           </div>
 
           <div class="kHorizontalBar" *ngSwitchCase="'live_engaged_users_play_time_ratio'">
             <span class="kName kValue">{{device.live_engaged_users_play_time_ratio.toFixed(2)}}%</span>
-            <div class="kBarContainer">
-              <div [kTooltip]="device.live_engaged_users_play_time_ratio.toFixed(2) + '%'" [ngStyle]="{'width': _animate ? '0px' : device.live_engaged_users_play_time_ratio + '%'}" class="kBar minutesVod"></div>
+            <div class="kBarContainer" [kTooltip]="device.live_engaged_users_play_time_ratio.toFixed(2) + '%'">
+              <div [ngStyle]="{'width': _animate ? '0px' : device.live_engaged_users_play_time_ratio + '%'}" class="kBar minutesVod"></div>
             </div>
           </div>
 
           <div class="kHorizontalBar" *ngSwitchCase="'avg_vod_completion_rate'">
             <span class="kName kValue">{{device.avg_vod_completion_rate.toFixed(2)}}%</span>
-            <div class="kBarContainer">
-              <div [kTooltip]="device.avg_vod_completion_rate.toFixed(2) + '%'" [ngStyle]="{'width': _animate ? '0px' : device.avg_vod_completion_rate + '%'}" class="kBar vodCompletion"></div>
+            <div class="kBarContainer" [kTooltip]="device.avg_vod_completion_rate.toFixed(2) + '%'">
+              <div [ngStyle]="{'width': _animate ? '0px' : device.avg_vod_completion_rate + '%'}" class="kBar vodCompletion"></div>
             </div>
           </div>
 

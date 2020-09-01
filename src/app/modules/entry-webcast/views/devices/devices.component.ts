@@ -115,8 +115,8 @@ export class WebcastDevicesComponent extends WebcastBaseReportComponent implemen
     tableData.forEach(row => {
       this._devicesData.push({
         name: row.device,
-        avg_vod_completion_rate: parseFloat(row.avg_vod_completion_rate.toString()),
-        live_engaged_users_play_time_ratio: parseFloat(row.live_engaged_users_play_time_ratio.toString()) * 100,
+        avg_vod_completion_rate: parseFloat(row.avg_vod_completion_rate.toString()) > 100 ? 100 : parseFloat(row.avg_vod_completion_rate.toString()),
+        live_engaged_users_play_time_ratio: parseFloat(row.live_engaged_users_play_time_ratio.toString()) * 100 > 100 ? 100 : parseFloat(row.live_engaged_users_play_time_ratio.toString()) * 100,
         plays_count: {
           live: parseFloat(row.live_plays_count.toString()),
           vod: parseFloat(row.vod_plays_count.toString()),
