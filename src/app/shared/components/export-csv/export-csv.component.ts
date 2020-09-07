@@ -146,6 +146,7 @@ export class ExportCsvComponent implements OnDestroy {
     }
 
     const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+    const reportsItemsGroup = this.name;
     const reportItems = [];
     let filter = this._getFilter();
     if (additionalFilters) {
@@ -204,7 +205,7 @@ export class ExportCsvComponent implements OnDestroy {
       }
     });
 
-    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportItems }) });
+    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems }) });
 
     this._exportingCsv = true;
 
