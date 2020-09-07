@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateChangeEvent, DateRanges, DateRangeType } from 'shared/components/date-filter/date-filter.service';
+import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUser } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -21,6 +21,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { DateRanges } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-publisher-storage',
@@ -35,9 +36,9 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class EndUserStorageComponent implements OnInit, OnDestroy {
 
   @ViewChild('userFilter') private userFilter: UsersFilterComponent;
-  
+
   private _paginationChanged = new Subject<void>();
-  
+
   public _refineFilterOpened = false;
   public _refineFilter: RefineFilter = null;
   public _selectedRefineFilters: RefineFilter = null;
@@ -98,11 +99,11 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._isBusy = false;
   }
-  
+
   ngOnDestroy(): void {
     this._paginationChanged.complete();
   }
-  
+
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
@@ -158,7 +159,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
             delete this.compareFilter.userIds;
           }
         }
-        
+
       }
 
       this._updateExportConfig();
@@ -166,14 +167,14 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
       this.loadReport();
     }
   }
-  
+
   private _updateExportConfig(): void {
     let update: Partial<ExportItem> = { reportType: this.reportType, order: this.order, additionalFilters: {} };
-  
+
     if (this._drillDown) {
       update.additionalFilters.userIds = this._drillDown;
     }
-  
+
     this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'end-user', update);
   }
 
@@ -349,15 +350,15 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
-    
+
     refineFilterToServerValue(this._refineFilter, this.filter);
     if (this.compareFilter) {
       refineFilterToServerValue(this._refineFilter, this.compareFilter);
     }
-    
+
     this.loadReport();
   }
 }

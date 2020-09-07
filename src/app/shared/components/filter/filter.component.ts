@@ -62,13 +62,13 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
-  
+
   @Input() name = 'default';
-  
+
   @Input() locationFiltersWarning: string;
-  
+
   @Input() showAutocompleteGroup = true;
-  
+
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -87,12 +87,12 @@ export class FilterComponent {
 
   @Input() set opened(value: boolean) {
     const isOpened = !!value;
-  
+
     this._bottomPadding = isOpened || this._tags.length ? '24px' : '0';
-    
+
     if (this.showFilters !== isOpened) {
       this.showFilters = !!value;
-      
+
       if (this.showFilters) {
         this._onPopupOpen();
       } else {
@@ -100,16 +100,16 @@ export class FilterComponent {
       }
     }
   }
-  
+
   @Input() set selectedFilters(value: RefineFilter) {
     this._updateSelectedValues(value);
   }
-  
+
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value !== undefined) {
       this._logger.debug('Update date filter', () => value);
       this._dateFilter = value;
-      
+
       if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
         setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
           if (this._currentFilters.find(({ type }) => type === 'location')) {
@@ -121,14 +121,14 @@ export class FilterComponent {
       this._toggleDisclaimer();
     }
   }
-  
+
   @Output() filterChange = new EventEmitter<RefineFilter>();
   @Output() closeFilters = new EventEmitter<void>();
-  
+
   protected _currentFilters: FilterItem[] = []; // local state
   protected _appliedFilters: FilterItem[] = [];
   protected _showFilters: boolean;
-  
+
   public _showDisclaimer = false;
   public _dateFilter: DateChangeEvent;
   public _selectedValues: { [key: string]: string[]; }; // local state
@@ -143,11 +143,11 @@ export class FilterComponent {
     categories: {},
     geo: {},
   };
-  
+
   get showFilters() {
     return this._showFilters;
   }
-  
+
   set showFilters(val: boolean) {
     if (val) {
       this._state = 'visible';
@@ -157,13 +157,13 @@ export class FilterComponent {
     }
     this._updateLayout();
   }
-  
+
   constructor(public _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _logger: KalturaLogger) {
     this._clearAll();
   }
-  
+
   public _mediaTypes: OptionItem[] = [
     { value: 'Video', label: 'app.filters.mediaType.Video' },
     // { value: 'Live', label: 'app.filters.mediaType.Live' }, // remove live for now
@@ -171,20 +171,24 @@ export class FilterComponent {
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
-  
+
   public _entrySources: OptionItem[] = [ // TODO determine valid values
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
     { value: 'Kaltura Webcast', label: 'app.filters.entrySources.Webcasting' },
     { value: 'Kaltura Capture', label: 'app.filters.entrySources.Kaltura Capture' },
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
   ];
-  
+
   protected _clearSelectedValues(): void {
     this._selectedValues = {
       'mediaType': [],
+      'playbackType': [],
       'entrySources': [],
       'categories': [],
       'tags': [],
+      'devices': [],
+      'browser': [],
+      'os': [],
       'owners': [],
       'users': [],
       'location': [],
@@ -193,15 +197,22 @@ export class FilterComponent {
       'context': [],
     };
   }
-  
+
   protected _prepareFilterTags(): FilterTagItem[] {
     let label, tooltip;
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
+        case 'playbackType':
         case 'entrySources':
           label = this._translate.instant(`app.filters.${type}.${value}`);
           tooltip = this._translate.instant(`app.filters.${type}.title`) + `: ${label}`;
+          return { value, type, label, tooltip };
+        case 'devices':
+        case 'browser':
+        case 'os':
+          label = value.name;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${value.name}`;
           return { value, type, label, tooltip };
         case 'categories':
           const category = value as CategoryData;
@@ -249,14 +260,14 @@ export class FilterComponent {
       }
     }).filter(Boolean);
   }
-  
+
   protected _clearAll(): void {
     this._logger.trace('Clear all tags called');
     this._clearSelectedValues();
     this._currentFilters = [];
     this._appliedFilters = [];
   }
-  
+
   protected _updateSelectedValues(values: FilterItem[]): void {
     this._clearSelectedValues();
 
@@ -272,7 +283,7 @@ export class FilterComponent {
       });
     }
   }
-  
+
   protected _toggleDisclaimer(): void {
     if (this._dateFilter) {
       const disclaimerDate = DateFilterUtils.getMomentDate('04/01/2018');
@@ -292,7 +303,7 @@ export class FilterComponent {
       }, 350);
     }
   }
-  
+
   public _onItemSelected(item: any, type: string): void {
     this._logger.trace('Item selected by user', { item, type });
     const value = { value: item, type };
@@ -308,7 +319,7 @@ export class FilterComponent {
       this._updateLayout();
     }
   }
-  
+
   public _onItemUnselected(item: any, type: string): void {
     this._logger.trace('Item removed by user', { item, type });
     let unselectedItemIndex = -1;
@@ -326,21 +337,21 @@ export class FilterComponent {
       this._currentFilters.splice(unselectedItemIndex, 1);
     }
   }
-  
+
   public _onPopupOpen(): void {
     this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
     this._updateLayout();
   }
-  
+
   public _onPopupClose(): void {
     this._logger.trace('Filters is closed by user, update selected values');
     this._currentFilters = [];
     this._updateSelectedValues(this._currentFilters);
     this._updateLayout();
   }
-  
+
   public _apply(forceApply = false): void {
     if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
       this._logger.trace('User applied filters, emit update event and close filters');
@@ -351,28 +362,28 @@ export class FilterComponent {
       this.filterChange.emit([...this._appliedFilters]);
       this._tags = this._prepareFilterTags();
       this._toggleDisclaimer();
-  
+
       this._bottomPadding = this._tags.length ? '24px' : '0';
     } else {
       this._logger.info(`Filters weren't changed. Do nothing and close filters`);
     }
-  
+
     this.closeFilters.emit();
   }
-  
+
   public _filtersAnimationDone(event: AnimationEvent): void {
     if (event.fromState === 'visible' && event.toState === 'hidden') {
       this._showFilters = false;
     }
     this._updateLayout();
   }
-  
+
   public _removeFilter(item: { value: string, label: string, type: string }): void {
     this._logger.trace('Item remove action is selected by user', { item });
     this._onItemUnselected(item.value, item.type);
     this._apply(true);
   }
-  
+
   public _removeAll(): void {
     this._logger.trace('Remove all filters action is selected by user');
     this._clearAll();

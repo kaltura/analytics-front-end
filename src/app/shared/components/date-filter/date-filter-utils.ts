@@ -1,6 +1,21 @@
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
 
+export enum DateRanges {
+  Last7D = 'last7days',
+  Last30D = 'last30days',
+  Last3M = 'last3months',
+  Last12M = 'last12months',
+  CurrentWeek = 'currentWeek',
+  CurrentMonth = 'currentMonth',
+  CurrentQuarter = 'currentQuarter',
+  CurrentYear = 'currentYear',
+  PreviousMonth = 'previousMonth',
+  SinceCreation = 'sinceCreation',
+  SinceFirstBroadcast = 'sinceFirstBroadcast',
+  SinceLastBroadcast = 'sinceLastBroadcast',
+}
+
 export class DateFilterUtils {
   static getTimeZoneOffset(): number {
     const today: Date = new Date();
@@ -214,6 +229,49 @@ export class DateFilterUtils {
     return ('0' + date.getDate()).slice(-2);
   }
 
+  static getDatesLabelPrefix(preset: DateRanges, custom: {startDate: Date, endDate: Date}): string {
+    let key = '';
+    if (preset !== null) {
+      switch (preset) {
+        case DateRanges.CurrentMonth:
+          key = 'app.dateFilter.prefix.month';
+          break;
+        case DateRanges.CurrentQuarter:
+          key = 'app.dateFilter.prefix.quarter';
+          break;
+        case DateRanges.CurrentWeek:
+          key = 'app.dateFilter.prefix.week';
+          break;
+        case DateRanges.CurrentYear:
+          key = 'app.dateFilter.prefix.year';
+          break;
+        case DateRanges.Last3M:
+          key = 'app.dateFilter.prefix.last3m';
+          break;
+        case DateRanges.Last7D:
+          key = 'app.dateFilter.prefix.last7d';
+          break;
+        case DateRanges.Last12M:
+          key = 'app.dateFilter.prefix.last12m';
+          break;
+        case DateRanges.Last30D:
+          key = 'app.dateFilter.prefix.last30d';
+          break;
+        case DateRanges.SinceCreation:
+          key = 'app.dateFilter.sinceCreation';
+          break;
+        case DateRanges.SinceFirstBroadcast:
+          key = 'app.dateFilter.firstBroadcast';
+          break;
+        case DateRanges.SinceLastBroadcast:
+          key = 'app.dateFilter.lastBroadcast';
+          break;
+      }
+    } else {
+      key = 'app.dateFilter.prefix.specific';
+    }
+    return key;
+  }
   static getLocalData(locale: string): any {
     let localData = {
       firstDayOfWeek: 0,

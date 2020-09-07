@@ -19,6 +19,13 @@
         "Audio": "Audio",
         "Image": "Images"
       },
+      "playbackType": {
+        "title": "Playback Type",
+        "all": "All Playback Types",
+        "live": "Live",
+        "dvr": "DVR",
+        "vod": "VOD"
+      },
       "applications": {
         "title": "Applications",
         "mediaSpace": "Media Space",
@@ -51,8 +58,19 @@
       "citiesSelected": "{0} Cities Selected",
       "filterCountries": "Filter Countries",
       "filterDomains": "Filter Domains",
+      "filterDevices": "Device",
+      "filterBrowsers": "Browser",
       "domainPlaceholder": "Select Domain",
+      "devicePlaceholder": "Select Device",
+      "browserPlaceholder": "Select Browser",
+      "osPlaceholder": "Select Operating System",
       "domainsSelected": "{0} Domains Selected",
+      "devicesSelected": "{0} Devices Selected",
+      "browsersSelected": "{0} Browsers Selected",
+      "osSelected": "{0} Operating Systems Selected",
+      "devices": "Device",
+      "browser": "Browser",
+      "os": "Operating System",
       "filterUsers": "Filter Users",
       "filterEntries": "Filter Entries",
       "filterContext": "Filter Contexts",
@@ -129,6 +147,7 @@
       "preset": "Preset",
       "specific": "Specific Date Range",
       "last": "Last",
+      "since": "since",
       "current": "Current",
       "week": "Week",
       "month": "Month",
@@ -139,8 +158,21 @@
       "last3m": "3 Months",
       "last12m": "12 Months",
       "monthly": "Monthly",
+      "prefix": {
+        "week": "Current Week",
+        "month": "Current Month",
+        "quarter": "Current Quarter",
+        "year": "Current Year",
+        "last7d": "Last 7 Days",
+        "last30d": "Last 30 Days",
+        "last3m": "Last 3 Months",
+        "last12m": "Last 12 Months",
+        "specific": "{{0}} Days"
+      },
       "daily": "Daily",
-      "sinceCreation": "Since Creation",
+      "sinceCreation": "Creation",
+      "lastBroadcast": "Last Broadcast",
+      "firstBroadcast": "First Broadcast",
       "error": "'From' date must be before 'To' date",
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
@@ -445,6 +477,123 @@
         "load_play_ratio_tt": "Play Impression Ratio",
         "avg_view_drop_off_tt": "Avg. Drop Off Rate",
         "openLink": "Open page URL in a new browser tab"
+      }
+    },
+    "entryWebcast": {
+      "live": "Live",
+      "vod": "VOD",
+      "noRecording": "No Recording Found",
+      "noRecordingText": "This webcast doesn’t have a recording associated with it.\nEither the recording was archived or the entry was never broadcasted.",
+      "webcastLive": "The webcast is currently live",
+      "webcastLiveText": "Once the webcast ends, refresh the page\nand the webcast recording will be available.",
+      "liveLink": "Go to Real Time Dashboard",
+      "highlights": {
+        "knownUsers": "Known Viewers",
+        "countries": "Countries",
+        "percentLive": "{{0}}% Live"
+      },
+      "liveEngagement": {
+        "title": "Live Engagement Rate Breakdown",
+        "none": "Non Engaged",
+        "none_tt": "Tab is not in focus, Player is on Mute",
+        "low": "Low Engagement",
+        "low_tt": "Tab is in focus, Player is on Mute",
+        "fair": "Fair Engagement",
+        "fair_tt": "Tab is not in focus, Sound is On",
+        "good": "Good Engagement",
+        "good_tt": "Tab is in focus and Sound is  On",
+        "high": "High Engagement",
+        "high_tt": "Tab is in focus, Player is in fullscreen mode, Sound is On",
+        "view": "View Known Users"
+      },
+      "engagement": {
+        "title": "Engagement",
+        "live": "Live engagement rate",
+        "live_tt": "Live engagement rate",
+        "vod": "VOD Avg. completion rate",
+        "vod_tt": "The Avg. completion rate of all the viewers that watched the associated VOD of the webcast entry",
+        "questions": "Users asked {{1}} questions",
+        "view": "View",
+        "registered": "Users registered",
+        "download": "Download",
+        "users": "Users’ Questions",
+        "questionsPercent": "<b>{{0}}</b> Users asked <b>{{1}}</b> questions",
+        "questionsPercent2": "{{0}} Users asked {{1}} questions"
+      },
+      "quality": {
+        "title": "Quality",
+        "buffer": "Avg. Buffering Rate",
+        "bitrate": "Avg. Bitrate",
+        "minutes": "Last Broadcast Duration (Min.)",
+        "live": "Broadcast is currently live"
+      },
+      "geo": {
+        "worldwide": "Worldwide",
+        "regions": "All Regions",
+        "cities": "All Cities",
+        "count_plays": "Plays",
+        "unique_viewers": "Known Users",
+        "sum_view_period": "Minutes Viewed",
+        "avg_live_buffer_time": "Live Avg. Buffer Rate",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
+        "avg_vod_completion_rate": "VOD Avg. Completion Rate"
+      },
+      "tools": {
+        "title": "Engagement Tools",
+        "slides": "Slides",
+        "polls": "Polls",
+        "announcements": "Announcements",
+        "answer": "Answer On Air"
+      },
+      "insights": {
+        "title": "Insights",
+        "label": "Minutes Viewed"
+      },
+      "domains": {
+        "title": "Top Domains",
+        "title_tt": "The Top Domains report shows the webcast’s performance per each domain that the webcast has been embedded",
+        "domains": "{{0}} Domains",
+        "all": "All Domains",
+        "index": "#",
+        "count_plays": "Plays",
+        "domain_name": "Domain Name",
+        "plays_distribution": "Plays Distribution",
+        "unique_viewers": "Known Viewers",
+        "sum_view_period": "Minutes Viewed",
+        "avg_live_buffer_time": "Live Avg. Buffering Rate",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
+        "avg_vod_completion_rate": "VOD Avg. Completion Rate"
+      },
+      "devices": {
+        "title": "Top Devices",
+        "live": "Live",
+        "vod": "VOD",
+        "count_plays": "Plays",
+        "liveUsers": "Live Users: {{0}}",
+        "vodUsers": "VOD Users: {{0}}",
+        "sum_view_period": "Minutes Viewed",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
+        "avg_vod_completion_rate": "Avg. Completion Rate"
+      },
+      "users": {
+        "viewDetails": "View Known Users Breakdown",
+        "hideDetails": "Hide Known Users Breakdown",
+        "all": "All Known Users",
+        "user_name": "Name",
+        "registered": "Registration",
+        "count_loads": "Impressions",
+        "count_plays": "Plays",
+        "sum_view_period": "Minutes Viewed",
+        "sum_live_view_period": "Live Minutes Ratio",
+        "avg_live_buffer_time": "Live Avg. Buffer Rate",
+        "live_engaged_users_play_time_ratio": "Live Engagement Rate",
+        "total_completion_rate": "VOD Total Completion Rate"
+      },
+      "exportLabels": {
+        "userEngagement": "User Engagement",
+        "geo": "Top Countries",
+        "devices": "Top Devices",
+        "domains": "Top Domains"
       }
     },
     "entryLive": {

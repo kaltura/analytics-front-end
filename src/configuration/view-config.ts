@@ -166,6 +166,35 @@ export const viewsConfig = {
     devices: {},
     discovery: {},
   },
+  entryWebcast: {
+    export: {},
+    title: {},
+    details: {},
+    miniHighlights: {},
+    miniEngagement: {
+      // download: {} // used by KMS only
+    },
+    miniQuality: {},
+    highlights: {},
+    liveEngagement: {},
+    tools: {},
+    insights: {},
+    entryPreview: {},
+    userEngagement: {
+      userFilter: {},
+    },
+    geo: {},
+    devices: {},
+    domains: {},
+    refineFilter: {
+      playbackType: {},
+      owners: {},
+      devices: {},
+      browsers: {},
+      os: {},
+      geo: {}
+    }
+  },
   playlist: {
     title: {},
     export: {},

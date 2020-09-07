@@ -1,0 +1,278 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+
+.kReport {
+  background-color: $appBkgColor;
+
+  .kBackBtn {
+    margin-top: 4px;
+    margin-left: -40px;
+    margin-right: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $kGrayscale3;
+    height: 20px;
+    width: 18px;
+    font-size: 24px;
+    overflow: hidden;
+
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+  }
+
+  .kReportHeader {
+    height: 80px;
+    position: relative;
+  }
+
+  .kFloatingDetails{
+    position: absolute;
+    top: 32px;
+  }
+
+  .kEntryDetails {
+    display: flex;
+    font-size: 14px;
+    color: $kGrayscale2;
+    height: 36px;
+    background-color: $appBkgColor;
+    .kIconMediaType {
+      margin-right: 8px;
+    }
+
+    .kOwner {
+      margin-left: 8px;
+    }
+
+    .kSeparator {
+      width: 1px;
+      height: 12px;
+      margin-top: 2px;
+      background-color: $kGrayscale4;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+    .link {
+      font-size: 14px;
+      height: 15px;
+    }
+  }
+}
+
+.kFilter {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  .kDropDown {
+    background-color: white;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
+}
+
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+  .kLiveBanner {
+    width: 100%;
+    height: 60px;
+    background-color: #487adf;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    padding-right: 24px;
+    box-sizing: border-box;
+    .kStatusActive {
+      font-size: 24px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #FFFFFF;
+      border-radius: 50%;
+      box-shadow: 0 0 0 rgba(255,255,255, .2);
+      animation: pulse 1.5s infinite;
+      margin-right: 18px;
+    }
+    .kIcondropdown_arrow_right {
+      font-size: 10px;
+      margin-left: 8px;
+    }
+    .live {
+      text-transform: uppercase;
+    }
+    .liveLink {
+      margin-left: auto;
+      cursor: pointer;
+    }
+  }
+  .kSmallReportContainer{
+    width: 60%;
+    height: 444px;
+    &:nth-child(even){
+      width: 40%;
+      padding-left: 24px;
+    }
+  }
+  .kMiniReportContainer{
+    height: 270px;
+    width: 30%;
+    flex: 1 1 auto;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+    &.kHigh {
+      height: 322px;
+    }
+    &.wide {
+      width: 48%;
+    }
+    &.narrow {
+      width: 22%;
+    }
+  }
+}
+
+:host ::ng-deep .kErrorMessageContainer {
+  top: 200px !important;
+  position: absolute;
+}
+
+:host ::ng-deep {
+  ktags {
+    margin: 0 !important;
+  }
+}
+
+:host ::ng-deep .kReport {
+  margin-bottom: 0px !important;
+}
+
+/* responsive design */
+.kHeaderRight{
+  display: flex;
+  margin-left: auto;
+  z-index: 1;
+}
+@media (max-width: 991px) {
+  .kHeaderRight{
+    position: absolute;
+    top: 110px;
+    left: 0px;
+  }
+  .kReport .kEntryDetails{
+    height: 86px;
+  }
+
+  .kReport .kReportHeader.noTitle{
+    height: 32px;
+  }
+
+  .kHeaderRight.noTitle{
+    top: 64px;
+  }
+
+  .kReport .kFloatingDetails{
+    position: relative;
+    top: 0px;
+  }
+
+  .kVideoMedia {
+    ::ng-deep .kReportTabs .kTab {
+      padding: 8px !important;
+
+      .kTabTitle {
+        font-size: 14px !important;
+      }
+
+      &.active {
+        padding-bottom: 4px !important;
+      }
+    }
+
+    ::ng-deep .kMain .kReportView .kReport .kFilters {
+      height: 60px !important;
+    }
+
+    ::ng-deep .kPlaythrough.compare {
+      p-dropdown {
+        position: absolute !important;
+        left: -8px !important;
+        top: 34px !important;
+      }
+
+      .kLabel.block {
+        position: absolute !important;
+        top: 40px !important;
+        display: inline-block !important;
+        left: 92px !important;
+      }
+    }
+  }
+}
+
+.kHighContrast :host {
+  .kEntryDetails, .kBackBtn {
+    color: $kGrayscale1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, .2);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, .2);
+  }
+}

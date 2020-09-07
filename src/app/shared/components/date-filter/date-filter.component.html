@@ -4,6 +4,7 @@
        tabindex="0" role="button" aria-label="Date filter"
        (keydown.enter)="datesPopup.toggle()">
     <i *ngIf="comparing" class="compareIcon icon-bolt"></i>
+    <span class="kDateRangePrefix">{{_dateRangePrefix}}</span>
     <span>{{_dateRangeLabel}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
@@ -17,7 +18,7 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':-233, 'y': 42}"
+              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
               (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
@@ -27,6 +28,14 @@
                         (ngModelChange)="resetCompare()"></p-selectButton>
       </div>
       <div class="kFilters kPreset" *ngIf="selectedView==='preset'">
+        <div class="col" *ngIf="_creationDate || _firstBroadcastDate || _lastBroadcastDate">
+          <span class="kTitle">{{'app.dateFilter.since' | translate | uppercase}}</span>
+          <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeSince.value.val)"
+                         *ngFor="let _dateRangeSince of sinceDateRangeItems" name="dates" [label]="_dateRangeSince.label"
+                         [value]="_dateRangeSince.value.val" [kTooltip]="_dateRangeSince.value.tooltip"
+                         [(ngModel)]="selectedDateRange"
+                         (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
+        </div>
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.last' | translate | uppercase}}</span>
           <p-radioButton tabindex="0" (keydown.enter)="triggerClick(_dateRangeLast.value.val)"
@@ -44,7 +53,7 @@
                          [(ngModel)]="selectedDateRange" (onClick)="updateCompareMax(); resetCompare()"></p-radioButton>
         </div>
       </div>
-      <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
+      <div class="kFilters kSpecific" [class.kWide]="_creationDate" *ngIf="selectedView==='specific'">
         <div class="kStartEnd">
           <span>{{'app.dateFilter.from' | translate}}</span>
           <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>

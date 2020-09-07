@@ -11,11 +11,23 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
-  let categories = [], mediaType = [], sourceType = [],
+  let categories = [], mediaType = [], sourceType = [], playbackType = [], devices = [], browsers = [], os = [],
     tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [], context = [];
-  
+
   refineFilter.forEach(item => {
     switch (item.type) {
+      case 'playbackType':
+        playbackType.push(item.value);
+        break;
+      case 'devices':
+        devices.push(item.value.name);
+        break;
+      case 'browser':
+        browsers.push(item.value.name);
+        break;
+      case 'os':
+        os.push(item.value.name);
+        break;
       case 'mediaType':
         const value = item.value === 'Live'
           ? 'Live stream,Live stream windows media,Live stream real media,Live stream quicktime'
@@ -65,25 +77,49 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   } else {
     delete serverFilter.categoriesIdsIn;
   }
-  
+
   if (context.length) {
     serverFilter.playbackContextIdsIn = context.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.playbackContextIdsIn;
   }
-  
+
   if (mediaType.length) {
     serverFilter.mediaTypeIn = mediaType.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.mediaTypeIn;
   }
-  
+
+  if (playbackType.length) {
+    serverFilter.playbackTypeIn = playbackType.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.playbackTypeIn;
+  }
+
+  if (devices.length) {
+    serverFilter.deviceIn = devices.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.deviceIn;
+  }
+
+  if (browsers.length) {
+    serverFilter.browserFamilyIn = browsers.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.browserFamilyIn;
+  }
+
+  if (os.length) {
+    serverFilter.operatingSystemFamilyIn = os.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.operatingSystemFamilyIn;
+  }
+
   if (sourceType.length) {
     serverFilter.sourceTypeIn = sourceType.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.sourceTypeIn;
   }
-  
+
   if (owners.length) {
     serverFilter.ownerIdsIn = owners.join(analyticsConfig.valueSeparator);
   } else {
@@ -101,13 +137,13 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   } else {
     delete serverFilter.countryIn;
   }
-  
+
   if (region.length) {
     serverFilter.regionIn = region.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.regionIn;
   }
-  
+
   if (city.length) {
     serverFilter.citiesIn = city.join(analyticsConfig.valueSeparator);
   } else {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {DateChangeEvent, DateRanges, DateRangeType} from 'shared/components/date-filter/date-filter.service';
+import {DateChangeEvent, DateRangeType} from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -20,6 +20,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { DateRanges } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-publisher-storage',
@@ -33,7 +34,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class PublisherStorageComponent implements OnInit {
   private _dataConfig: ReportDataConfig;
-  
+
   public _refineFilter: RefineFilter = null;
   public _selectedRefineFilters: RefineFilter = null;
   public _refineFilterOpened = false;
@@ -56,7 +57,7 @@ export class PublisherStorageComponent implements OnInit {
   public _totalCount: number;
 
   public _accumulativeStorage: any[] = [];
-  
+
   public _pageSize = analyticsConfig.defaultPageSize;
   public reportType: KalturaReportType = reportTypeMap(KalturaReportType.partnerUsage);
   public _exportConfig: ExportItem[] = [];
@@ -119,7 +120,7 @@ export class PublisherStorageComponent implements OnInit {
     this._selectedMetrics = tab.key;
     this.updateChartType();
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     this._logger.trace('Handle local sort changed action by user', { field: event.field, order: event.order });
     this._order = tableLocalSortHandler(event, this._order, this.isCompareMode);
@@ -141,7 +142,7 @@ export class PublisherStorageComponent implements OnInit {
     this._isBusy = true;
     this._tableData = [];
     this._blockerMessage = null;
-  
+
     sections = { ...sections }; // make local copy
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
 
@@ -221,7 +222,7 @@ export class PublisherStorageComponent implements OnInit {
        );
        this._lineChartData = lineChartData;
        this._barChartData = barChartData;
-  
+
        const compareTableData = this._compareService.compareTableFromGraph(
          currentPeriod,
          comparePeriod,
@@ -230,7 +231,7 @@ export class PublisherStorageComponent implements OnInit {
          this._dataConfig.table,
          this._reportInterval,
        );
-  
+
        if (compareTableData) {
          const { columns, tableData, totalCount } = compareTableData;
          this._totalCount = totalCount;
@@ -239,7 +240,7 @@ export class PublisherStorageComponent implements OnInit {
        }
      }
    }
-  
+
   private _handleTable(graphs: KalturaReportGraph[]): void {
     const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
       graphs,
@@ -271,7 +272,7 @@ export class PublisherStorageComponent implements OnInit {
   private updateChartType(): void {
     this._chartType = ((this._selectedMetrics === 'added_storage' || this._selectedMetrics === 'deleted_storage') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
   }
-  
+
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
 
@@ -279,7 +280,7 @@ export class PublisherStorageComponent implements OnInit {
     if (this.compareFilter) {
       refineFilterToServerValue(this._refineFilter, this.compareFilter);
     }
-  
+
     this.loadReport();
   }
 }

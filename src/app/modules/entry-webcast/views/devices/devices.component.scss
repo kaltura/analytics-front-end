@@ -1,0 +1,96 @@
+@import '../../../../../styles/variables';
+
+.kTitle{
+  width: auto !important;
+  padding-right: 0px !important;
+}
+app-report-tabs {
+  margin-bottom: 12px;
+}
+.kEmptyMessage {
+  width: 100%;
+  height: 200px;
+  border-bottom: 1px solid $kGrayscale4;
+  text-align: center;
+  line-height: 200px;
+  font-size: 28px;
+  color: $kGrayscale3;
+}
+.kDeviceRow {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  box-sizing: border-box;
+  .kIcon {
+    font-size: 22px;
+    color: $kGrayscale3;
+    margin: 0 17px 0 11px;
+  }
+  .kName {
+    width: 20%;
+    font-size: 15px;
+    font-weight: 700;
+    color: $kGrayscale1;
+  }
+  .kHorizontalBar{
+    height: 24px;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    .kValue {
+      width: 74px;
+    }
+    .kBarContainer {
+      width: 100%;
+      height: 100%;
+      flex: 1 1 auto;
+      display: flex;
+      border-radius: 3px;
+      background-color: $kGrayscale7;
+      overflow: hidden;
+      .kBar {
+        transition: width 0.35s ease-out;
+      }
+    }
+  }
+}
+.legend {
+  display: flex;
+  align-items: center;
+  margin-left: 36px;
+  margin-bottom: 24px;
+  margin-top: 24px;
+  .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 8px;
+  }
+  .label {
+    font-size: 12px;
+    font-weight: 700;
+    color: $kGrayscale1;
+    margin-right: 12px;
+  }
+  &.hidden {
+    opacity: 0;
+  }
+}
+.playsLive {
+  background-color: #2655b0;
+}
+.playsVod {
+  background-color: #88acf6;
+}
+.minutesLive {
+  background-color: #d06e1b;
+}
+.minutesVod {
+  background-color: #e1962e;
+}
+.vodCompletion {
+  background-color: #81cc6f;
+}

@@ -26,6 +26,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ic_registration:before {
+  content: "\e928";
+}
+.icon-ic_bitrate:before {
+  content: "\e929";
+}
+.icon-ic_questions:before {
+  content: "\e92a";
+}
+.icon-ic_spinner:before {
+  content: "\e92b";
+}
+.icon-ic_slide:before {
+  content: "\e92c";
+}
+.icon-ic_poll:before {
+  content: "\e92d";
+}
+.icon-ic_annoucements:before {
+  content: "\e92e";
+}
 .icon-ic_interaction:before {
   content: "\e925";
 }

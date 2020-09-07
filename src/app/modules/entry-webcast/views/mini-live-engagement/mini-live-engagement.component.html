@@ -1,0 +1,27 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.liveEngagement.title' | translate}}</span>
+    <!--a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a-->
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+
+      <div class="kRow" *ngFor="let tab of _tabsData; let i = index">
+        <span>{{tab.title}}</span>
+        <kInputHelper>
+          <span>{{tab.tooltip}}</span>
+        </kInputHelper>
+        <app-horizontal-bar-row class="kBar" [color]="_colors[i]" [value]="tab.rawValue * 100"></app-horizontal-bar-row>
+      </div>
+
+      <div class="kFooter">
+        <i class="kIcondropdown_arrow_bottom"></i>
+        <a class="kLink" (click)="viewUsers()">{{'app.entryWebcast.liveEngagement.view' | translate}}</a>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

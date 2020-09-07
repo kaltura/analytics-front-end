@@ -1,0 +1,109 @@
+@import '../../../../../styles/variables';
+
+.kTitle{
+  width: auto !important;
+  padding-right: 0px !important;
+}
+
+.kTotalCount {
+  font-size: 15px;
+  font-weight: normal;
+  margin-left: 24px;
+  margin-bottom: 24px;
+}
+.kIconfile-small {
+  overflow: visible !important;
+  margin-top: 8px;
+}
+
+.kOpenLink {
+  color: $kGrayscale3;
+  font-size: 24px;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+.kDomainIcon {
+  overflow: hidden;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  white-space: nowrap;
+  text-align: center;
+  border-radius: 3px;
+  margin-right: 10px;
+  font-size: 24px;
+  line-height: 24px;
+
+  &.error{
+    border: 1px solid $kGrayscale4;
+  }
+  img {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
+    width: 24px;
+    height: auto;
+    border-radius: 3px;
+  }
+}
+
+td span {
+  white-space: nowrap;
+}
+
+.kTitle{
+  width: auto !important;
+  padding-right: 0px !important;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    &.ui-state-highlight span {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .kOpenLink, .kBreadcrumbsLink {
+    color: $kGrayscale1 !important;
+  }
+
+  ::ng-deep {
+    .kTabTitle {
+      color: $kGrayscale1 !important;
+    }
+
+    .kUnits {
+      color: $kGrayscale1 !important;
+    }
+
+    p-selectButton .ui-state-active {
+      background-color: #00866a !important;
+      border: 1px solid #00866a !important;
+    }
+
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
+}
+.kSummaryRow {
+  height: 48px;
+  border-top: 1px solid $kGrayscale6;
+
+  th {
+    color: $kGrayscale1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}

@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRanges, DateRangeType } from './date-filter.service';
-import { DateFilterUtils } from './date-filter-utils';
+import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRangeType } from './date-filter.service';
+import { DateFilterUtils, DateRanges } from './date-filter-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { BrowserService } from 'shared/services';
+import {DateRange} from "../../../modules/entry-live/views/live-discovery-chart/filters/filters.service";
 
 @Component({
   selector: 'app-date-filter',
@@ -43,7 +44,21 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() set creationDate( value: moment.Moment) {
     if (value) {
       this._creationDate = value;
-      this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this._creationDate);
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+    }
+  }
+
+  @Input() set firstBroadcastDate( value: moment.Moment) {
+    if (value) {
+      this._firstBroadcastDate = value;
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+    }
+  }
+
+  @Input() set lastBroadcastDate( value: moment.Moment) {
+    if (value) {
+      this._lastBroadcastDate = value;
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
     }
   }
 
@@ -56,7 +71,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   private _datesBtnElement: HTMLElement;
-  private _creationDate: moment.Moment = null;
+  public _creationDate: moment.Moment = null;
+  private _firstBroadcastDate: moment.Moment = null;
+  private _lastBroadcastDate: moment.Moment = null;
 
   public _defaultDateRageType = DateRangeType.LongTerm;
   public _defaultDateRange = DateRanges.CurrentYear;
@@ -64,6 +81,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public _dateRange = this._defaultDateRange;
   public _dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'mm/dd/yy' : 'dd/mm/yy';
 
+  public sinceDateRangeItems: SelectItem[] = [];
   public lastDateRangeItems: SelectItem[] = [];
   public currDateRangeItems: SelectItem[] = [];
   public selectedDateRange: DateRanges;
@@ -77,6 +95,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public selectedView = 'preset';
   public selectedComparePeriod = 'lastYear';
 
+  public _dateRangePrefix = '';
   public _dateRangeLabel = '';
   public specificStart: Date = new Date();
   public specificEnd: Date = new Date();
@@ -137,7 +156,8 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const params = this._dateFilterService.currentFilters || queryParams;
     this._browserService.updateCurrentQueryParams(params);
     this._initCurrentFilterFromEventParams(params);
-    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this._creationDate);
+    this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last');
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
@@ -156,7 +176,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const dateBy = this._dateFilterService.getDateRangeByString(params[DateFilterQueryParams.dateBy]);
     if (dateBy) {
       this.selectedView = 'preset';
-      this._dateRange = dateBy === DateRanges.SinceCreation && !this._creationDate ? DateRanges.Last30D : dateBy;
+      this._dateRange = dateBy;
+      if ((dateBy === DateRanges.SinceCreation && !this._creationDate) ||
+          (dateBy === DateRanges.SinceLastBroadcast && !this._lastBroadcastDate) ||
+          (dateBy === DateRanges.SinceFirstBroadcast && !this._firstBroadcastDate)) {
+        this._dateRange = DateRanges.Last30D;
+      }
     } else if (params[DateFilterQueryParams.dateFrom] && params[DateFilterQueryParams.dateTo]) {
       const dateFrom = moment(params[DateFilterQueryParams.dateFrom]);
       const dateTo = moment(params[DateFilterQueryParams.dateTo]);
@@ -231,14 +256,29 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   public updateDataRanges(isUserAction = true): void {
     this.lastSelectedDateRange = this.selectedDateRange;
     if (this.selectedView === 'preset') {
-      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, this._creationDate);
+      let customDate = null;
+      switch (this.lastSelectedDateRange) {
+        case DateRanges.SinceCreation:
+          customDate = this._creationDate;
+          break;
+        case DateRanges.SinceLastBroadcast:
+          customDate = this._lastBroadcastDate;
+          break;
+        case DateRanges.SinceFirstBroadcast:
+          customDate = this._firstBroadcastDate;
+          break;
+      }
+      const dates = this._dateFilterService.getDateRangeDetails(this.selectedDateRange, customDate);
       this.startDate = dates.startDate;
       this.endDate = dates.endDate;
       this._dateRangeLabel = dates.label;
+      this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(this.lastSelectedDateRange, null));
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];
       this._dateRangeLabel = DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY');
+      const diff = moment(this.endDate).diff(moment(this.startDate), 'days') + 1;
+      this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(null, {startDate: this.startDate, endDate: this.endDate}), {0: diff});
     }
     this.updateCompareMax();
     if (this.selectedComparePeriod === 'lastYear') {

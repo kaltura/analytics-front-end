@@ -1,0 +1,21 @@
+<div data-aid="report-engagement-mini-insights" class="kReport kMini kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.insights.title' | translate}}</span>
+  </div>
+  <span class="kLabel">{{'app.entryWebcast.insights.label' | translate}}</span>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="chartContainer" *ngIf="_options">
+      <div echarts class="kChart" [options]="_options"></div>
+      <div class="legend">
+        <div class="circle live"></div>
+        <span class="label">{{'app.entryWebcast.live' | translate}}</span>
+        <div class="circle vod"></div>
+        <span class="label">{{'app.entryWebcast.vod' | translate}}</span>
+      </div>
+    </div>
+
+
+  </k-area-blocker>
+</div>
+

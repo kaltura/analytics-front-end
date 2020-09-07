@@ -1,0 +1,165 @@
+<div data-aid="report-group-entry-webcast" class="kMain">
+  <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
+    <div class="kReportView kVideoMedia" #entryView>
+      <div class="kReport kContent kOverrideFAIcons" *ngIf="_entry?.id">
+        <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
+          <h1 *ngIf="_viewConfig.title" class="kTitle">{{_entry?.name}}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+            <app-export-csv aria-label="Export"
+                            role="button"
+                            *ngIf="_viewConfig.export" name="entry"
+                            [reports]="_exportConfig"
+                            [refineFilter]="_refineFilter"
+                            [dateFilter]="_dateFilter"
+                            [entryId]="_entry?.id"></app-export-csv>
+            <div class="kFilter kOverrideFAIcons">
+              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+                   (click)="_refineFilterOpened = !_refineFilterOpened"
+                   (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
+                <span>{{'app.filters.filter' | translate}}</span>
+                <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+                <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+              </div>
+            </div>
+            <app-date-filter #dateFilter
+                             name="entry"
+                             [showCompare]="false"
+                             [dateRange]="_dateRange"
+                             [selectedTimeUnit]="_timeUnit"
+                             [creationDate]="_creationDate"
+                             [firstBroadcastDate]="_firstBroadcastDate"
+                             [lastBroadcastDate]="_lastBroadcastDate"
+                             (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+          </div>
+        </div>
+
+        <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Video Entry Details" [class.kFloatingDetails]="!_viewConfig.title">
+          <div class="kIconMediaType" [ngClass]="_entry?.mediaType | mediaType: false"></div>
+          <span>{{_entry?.mediaType | mediaType: true}}</span>
+          <div class="kSeparator"></div>
+          <span>{{'app.entry.owner' | translate}}</span>
+          <span class="kOwner">{{_owner}}</span>
+          <div class="kSeparator"></div>
+          <span class="kLabel">{{'app.entryLive.createdOn' | translate: {'0': _displayCreatedAt } }}</span>
+          <div *ngIf="!_isChildAccount && _viewConfig.title && _showViewDetails" class="kSeparator"></div>
+          <a tabindex="0" *ngIf="!_isChildAccount && _viewConfig.title && _showViewDetails" class="link" role="link" aria-label="See All Details" #link
+             (click)="_navigateToEntry()"
+             (keydown.enter)="_navigateToEntry()">
+            <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
+          </a>
+        </div>
+
+        <app-entry-webcast-filter class="kRefineFiltersHost"
+                          [viewConfig]="_viewConfig.refineFilter"
+                          [opened]="_refineFilterOpened"
+                          [dateFilter]="_dateFilter"
+                          [selectedFilters]="_selectedRefineFilters"
+                          (closeFilters)="_refineFilterOpened = false"
+                          (filterChange)="_onRefineFilterChange($event)"></app-entry-webcast-filter>
+
+        <div *ngIf="_isLive" class="kReportContainer">
+          <div class="kLiveBanner">
+            <i class="kStatusActive"></i>
+            <span class="live">{{'app.entryWebcast.live' | translate}}</span>
+            <span class="liveLink" (click)="_navigateToLive()">{{'app.entryWebcast.liveLink' | translate}}</span>
+            <i class="kIcondropdown_arrow_right"></i>
+          </div>
+        </div>
+
+        <div class="kReportContainer">
+          <div [class.kHidden]="!_viewConfig.miniHighlights" class="kMiniReportContainer">
+            <app-webcast-mini-highlights #miniHighlights
+              [topCountries]="geo.topCountries$"
+              [entryIdIn]="_entryIdIn"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter">
+            </app-webcast-mini-highlights>
+          </div>
+
+          <div *ngIf="_viewConfig.miniEngagement" class="kMiniReportContainer">
+            <app-webcast-mini-engagement [showDownload]="_viewConfig.miniEngagement.download"
+                                         [entryIdIn]="_entryIdIn"
+                                         [entryId]="_entryId"
+                                         [dateFilter]="_dateFilter"
+                                         [refineFilter]="_refineFilter">
+            </app-webcast-mini-engagement>
+          </div>
+
+          <div *ngIf="_viewConfig.miniQuality" class="kMiniReportContainer">
+            <app-webcast-mini-quality
+              [entryIdIn]="_entry.id"
+              [lastBroadcastDuration]="_lastBroadcastDuration"
+              [isLive]="_isLive"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter">
+            </app-webcast-mini-quality>
+          </div>
+        </div>
+
+        <div class="kReportContainer">
+          <div *ngIf="_viewConfig.liveEngagement" class="kMiniReportContainer kHigh" [class.wide]="_viewConfig.tools && _viewConfig.insights">
+            <app-webcast-mini-live-engagement
+              [entryIdIn]="_entry.id"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter"
+              (viewKnownUsers)="_viewKnownUsers()">
+            </app-webcast-mini-live-engagement>
+          </div>
+
+          <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.insights && _viewConfig.liveEngagement">
+            <app-webcast-mini-engagement-tools [entryId]="_entry.id"></app-webcast-mini-engagement-tools>
+          </div>
+
+          <div *ngIf="_viewConfig.insights" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.tools && _viewConfig.liveEngagement">
+            <app-webcast-mini-insights [insights]="miniHighlights.insights$"></app-webcast-mini-insights>
+          </div>
+        </div>
+
+        <div *ngIf="_viewConfig.entryPreview || _viewConfig.userEngagement" class="kReportContainer kEntryPreview">
+          <app-webcast-entry-preview *ngIf="_viewConfig.entryPreview"
+                                   [dateFilter]="_dateFilter"
+                                   [isLive]="_isLive"
+                                   [liveEntryId]="_entry.id"
+                                   [broadcastStartTime]="_entry.firstBroadcast"
+                                   [broadcastEndTime]="_entry.lastBroadcastEndTime"
+                                   [entryId]="_entry.recordedEntryId ? _entry.recordedEntryId : ''"
+                                   [refineFilter]="_refineFilter"></app-webcast-entry-preview>
+          <app-webcast-user-engagement *ngIf="_viewConfig.userEngagement" id="userEngagement" #userEngagement
+                                           [viewConfig]="_viewConfig.userEngagement"
+                                           [dateFilter]="_dateFilter"
+                                           [refineFilter]="_refineFilter"
+                                           [entryId]="_entryIdIn"></app-webcast-user-engagement>
+        </div>
+
+        <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">
+          <app-webcast-geo #geo
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [entryIdIn]="_entryIdIn">
+          </app-webcast-geo>
+        </div>
+
+        <div *ngIf="_viewConfig.devices" class="kReportContainer">
+          <app-webcast-devices
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [entryIdIn]="_entryIdIn">
+          </app-webcast-devices>
+        </div>
+
+        <div *ngIf="_viewConfig.domains" class="kReportContainer">
+          <app-webcast-domains
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [entryIdIn]="_entryIdIn">
+          </app-webcast-domains>
+        </div>
+
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>

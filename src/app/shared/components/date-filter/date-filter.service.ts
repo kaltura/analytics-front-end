@@ -3,20 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportInterval } from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-
-export enum DateRanges {
-  Last7D = 'last7days',
-  Last30D = 'last30days',
-  Last3M = 'last3months',
-  Last12M = 'last12months',
-  CurrentWeek = 'currentWeek',
-  CurrentMonth = 'currentMonth',
-  CurrentQuarter = 'currentQuarter',
-  CurrentYear = 'currentYear',
-  PreviousMonth = 'previousMonth',
-  SinceCreation = 'sinceCreation',
-}
+import { DateFilterUtils, DateRanges } from 'shared/components/date-filter/date-filter-utils';
 
 export enum DateFilterQueryParams {
   dateBy = 'dateBy',
@@ -51,18 +38,18 @@ export type DateChangeEvent = {
 @Injectable()
 export class DateFilterService {
   private _currentFilters: { [key: string]: string } = null;
-  
+
   public get currentFilters(): { [key: string]: string } {
     return this._currentFilters;
   }
 
   constructor(private _translate: TranslateService) {
   }
-  
+
   public updateCurrentFilters(value: { [key: string]: string }): void {
     this._currentFilters = value;
   }
-  
+
   public getDateRangeByString(value: string): DateRanges {
     switch (value) {
       case 'last7days':
@@ -85,17 +72,50 @@ export class DateFilterService {
         return DateRanges.PreviousMonth;
       case 'sinceCreation':
         return DateRanges.SinceCreation;
+     case 'sinceFirstBroadcast':
+        return DateRanges.SinceFirstBroadcast;
+     case 'sinceLastBroadcast':
+        return DateRanges.SinceLastBroadcast;
       default:
         return null;
     }
   }
-  
 
-  public getDateRange(dateRangeType: DateRangeType, period: string, creationDate?: moment.Moment): SelectItem[] {
+
+  public getDateRange(dateRangeType: DateRangeType, period: string, creationDate?: moment.Moment, firstBroadcastDate?: moment.Moment, lastBroadcastDate?: moment.Moment): SelectItem[] {
     let selectItemArr: SelectItem[] = [];
 
     switch (dateRangeType) {
       case DateRangeType.LongTerm:
+        if (period === 'since') {
+          if (lastBroadcastDate) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.lastBroadcast'),
+              value: {
+                val: DateRanges.SinceLastBroadcast,
+                tooltip: this.getDateRangeDetails(DateRanges.SinceLastBroadcast, lastBroadcastDate).label
+              }
+            });
+          }
+          if (firstBroadcastDate) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.firstBroadcast'),
+              value: {
+                val: DateRanges.SinceFirstBroadcast,
+                tooltip: this.getDateRangeDetails(DateRanges.SinceFirstBroadcast, firstBroadcastDate).label
+              }
+            });
+          }
+          if (creationDate) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.sinceCreation'),
+              value: {
+                val: DateRanges.SinceCreation,
+                tooltip: this.getDateRangeDetails(DateRanges.SinceCreation, creationDate).label
+              }
+            });
+          }
+        }
         if (period === 'last') {
           selectItemArr.push({
             label: this._translate.instant('app.dateFilter.last7d'),
@@ -149,7 +169,7 @@ export class DateFilterService {
     return selectItemArr;
   }
 
-  public getDateRangeDetails(selectedDateRange: DateRanges, creationDate?: moment.Moment): { startDate: Date,  endDate: Date, label: string} {
+  public getDateRangeDetails(selectedDateRange: DateRanges, customDate?: moment.Moment): { startDate: Date,  endDate: Date, label: string} {
     const today: Date = new Date();
     const m = moment();
     const yesterday = moment().subtract(1, 'days').toDate();
@@ -189,11 +209,11 @@ export class DateFilterService {
         endDate = today;
         break;
       case DateRanges.SinceCreation:
-        if (creationDate) {
-          startDate = creationDate.startOf('day').toDate();
+      case DateRanges.SinceFirstBroadcast:
+      case DateRanges.SinceLastBroadcast:
+        if (customDate) {
+          startDate = customDate.startOf('day').toDate();
           endDate = today;
-        } else {
-          throw Error('creationDate is not provided!');
         }
         break;
     }

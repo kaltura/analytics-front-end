@@ -10,6 +10,9 @@ $appBkgColor: #f2f2f2;
 body {
   background-color: $appBkgColor;
   overflow-y: hidden;
+  kpopupwidget[data-aid="webcast-questions"] {
+    margin-top: 100px !important;
+  }
 }
 
 // Spinner positioning for area-blocker
@@ -442,7 +445,6 @@ p-multiselect ::ng-deep {
   align-items: center;
   height: 40px;
 }
-
 .ui-widget-header {
   border: 0;
 }
@@ -729,4 +731,8 @@ ui-carousel {
     margin-left: 5px;
   }
 }
-
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}

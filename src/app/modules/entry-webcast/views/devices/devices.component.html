@@ -1,0 +1,60 @@
+<div data-aid="report-geo" class="kReport kContent kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.devices.title' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" aria-labelledby="kWebcastDdevices">
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDeviceRow" *ngFor="let device of _devicesData">
+        <i class="kIcon" [ngClass]="device.name | appDeviceIcon"></i>
+        <span class="kName">{{device.name}}</span>
+
+        <ng-container [ngSwitch]="_selectedMetrics">
+
+          <div class="kHorizontalBar" *ngSwitchCase="'vod_plays_count'">
+            <span class="kName kValue">{{device.plays_count.total}}</span>
+            <div class="kBarContainer" [kTooltip]="device.plays_count.tooltip" [escape]="false">
+              <div class="kBar playsLive" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.live /_selectedTotal * 100) + '%' : '0px'}"></div>
+              <div class="kBar playsVod" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.plays_count.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
+            </div>
+          </div>
+
+          <div class="kHorizontalBar" *ngSwitchCase="'sum_view_period'">
+            <span class="kName kValue">{{device.view_period.total}}</span>
+            <div class="kBarContainer" [kTooltip]="device.view_period.tooltip" [escape]="false">
+              <div class="kBar minutesLive" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.live /_selectedTotal * 100) + '%' : '0px'}"></div>
+              <div class="kBar minutesVod" [ngStyle]="{'width': _selectedTotal && !_animate ? (device.view_period.vod / _selectedTotal * 100) + '%' : '0px'}"></div>
+            </div>
+          </div>
+
+          <div class="kHorizontalBar" *ngSwitchCase="'live_engaged_users_play_time_ratio'">
+            <span class="kName kValue">{{device.live_engaged_users_play_time_ratio.toFixed(2)}}%</span>
+            <div class="kBarContainer" [kTooltip]="device.live_engaged_users_play_time_ratio.toFixed(2) + '%'">
+              <div [ngStyle]="{'width': _animate ? '0px' : device.live_engaged_users_play_time_ratio + '%'}" class="kBar minutesVod"></div>
+            </div>
+          </div>
+
+          <div class="kHorizontalBar" *ngSwitchCase="'avg_vod_completion_rate'">
+            <span class="kName kValue">{{device.avg_vod_completion_rate.toFixed(2)}}%</span>
+            <div class="kBarContainer" [kTooltip]="device.avg_vod_completion_rate.toFixed(2) + '%'">
+              <div [ngStyle]="{'width': _animate ? '0px' : device.avg_vod_completion_rate + '%'}" class="kBar vodCompletion"></div>
+            </div>
+          </div>
+
+        </ng-container>
+      </div>
+      <div class="kEmptyMessage" *ngIf="!_devicesData.length">{{'app.common.noResults' | translate}}</div>
+      <div class="legend" [class.hidden]="(_selectedMetrics !== 'vod_plays_count' && _selectedMetrics !== 'sum_view_period') || !_devicesData.length">
+        <div class="circle" [class.playsLive]="_selectedMetrics==='vod_plays_count'" [class.minutesLive]="_selectedMetrics==='sum_view_period'"></div>
+        <span class="label">{{'app.entryWebcast.live' | translate}}</span>
+        <div class="circle" [class.playsVod]="_selectedMetrics==='vod_plays_count'" [class.minutesVod]="_selectedMetrics==='sum_view_period'"></div>
+        <span class="label">{{'app.entryWebcast.vod' | translate}}</span>
+      </div>
+
+    </div>
+  </k-area-blocker>
+
+</div>
+

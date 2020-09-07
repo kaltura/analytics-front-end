@@ -50,6 +50,10 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
     case '/analytics/entry-live':
       analyticsRoute = `/entry-live${idPostfix}`;
       break;
+    case 'entry-webcast':
+    case '/analytics/entry-webcast':
+      analyticsRoute = `/entry-webcast${idPostfix}`;
+      break;
     case 'user':
     case '/analytics/user':
       const showContributions = prevRoute && prevRoute.indexOf('contributor') !== -1;

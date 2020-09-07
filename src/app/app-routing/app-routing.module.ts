@@ -50,6 +50,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry-live/entry-live.module').then(m => m.EntryLiveModule)
       },
       {
+        path: 'entry-webcast/:id',
+        loadChildren: () => import('../modules/entry-webcast/entry-webcast.module').then(m => m.EntryWebcastModule)
+      },
+      {
+        path: 'entry-webcast',
+        loadChildren: () => import('../modules/entry-webcast/entry-webcast.module').then(m => m.EntryWebcastModule)
+      },
+      {
         path: 'audience',
         loadChildren: () => import('../modules/audience/audience.module').then(m => m.AudienceModule)
       },
@@ -74,7 +82,8 @@ export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation)
   // we use a factory since production build is compiled AOT and useClass cannot be conditional in AOT
   // the "loadInFriendlyIframe" global variable must be injected by the host app to the Analytics window scope (see example in analyticsLoaderFriendly.html)
   return window["loadInFriendlyIframe"] ? new VoidPathLocationStrategy(_platformLocation) : new PathLocationStrategy(_platformLocation);
-}
+};
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes)

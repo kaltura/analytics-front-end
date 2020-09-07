@@ -1,0 +1,84 @@
+<div data-aid="report-entry-user-engagement" class="kReport">
+  <div class="kTable">
+    <div class="kToggle">
+      <span role="button" tabindex="0"
+            (keydown.enter)="_toggleTable()"
+            (click)="_toggleTable()">
+        <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+        <a>{{(_showTable ? 'app.entryWebcast.users.hideDetails' : 'app.entryWebcast.users.viewDetails') | translate}}</a>
+      </span>
+    </div>
+
+    <k-area-blocker *ngIf="_showTable" [message]="_blockerMessage" [showLoader]="_isBusy">
+      <div class="kTableContainer">
+        <app-user-engagement-filter *ngIf="_viewConfig.userFilter"
+                                    [totalCount]="_totalCount"
+                                    [dateFilter]="_dateFilter"
+                                    [selectedFilters]="_selectedRefineFilters"
+                                    (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+
+        <p-table dataKey="name"
+                 aria-label="Engagement Per User Table"
+                 [sortField]="_sortField"
+                 [value]="_tableData"
+                 [customSort]="true"
+                 [defaultSortOrder]="-1"
+                 [sortOrder]="-1"
+                 (sortFunction)="_onSortChanged($event)">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _columns" [pSortableColumn]="col === 'user_name' || col === 'sum_live_view_period' ? null : col" [class.nonSortable]="col === 'user_name' || col === 'sum_live_view_period'"
+                  [ngStyle]="{'width': col === 'user_name' ? '30%' : ['registered','count_loads','count_plays','sum_view_period'].indexOf(col) > -1 ? '15%' : '20%'}" [kTooltip]="'app.entryWebcast.users.' + col | translate" [showOnEllipsis]="true">
+                <span>{{'app.entryWebcast.users.' + col | translate}}</span>
+                <p-sortIcon [field]="col" *ngIf="col !== 'user_name' && col !== 'sum_live_view_period'"></p-sortIcon>
+              </th>
+            </tr>
+
+            <tr *ngIf="_tabsData?.length" class="kSummaryRow">
+              <th [ngStyle]="{'width': '40%'}">
+                <span>{{'app.entryWebcast.users.all' | translate}}</span>
+              </th>
+              <th *ngFor="let tab of _tabsData; let i = index" [ngStyle]="{'width': tab.key === 'name' ? '40%' : '20%'}">
+                <span *ngIf="tab.key !== 'sum_live_view_period'">{{_tabsData[i].value}}</span>
+                <app-bullet *ngIf="tab.key === 'sum_live_view_period'" colorScheme="time"
+                            [value]="_tabsData[i].value"></app-bullet>
+              </th>
+              <th [ngStyle]="{'width': '20%'}">
+                <span>{{'app.common.na' | translate}}</span>
+              </th>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-data let-expanded="expanded">
+            <tr>
+              <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                <ng-container>
+                  <span *ngIf="col !== 'registered' && col !== 'user_name' && col !== 'sum_live_view_period'">{{data[col]}}</span>
+                  <i class="kIconcheck_small" *ngIf="col === 'registered' && data[col] && data[col] !== '0'"></i>
+                  <a class="kTableColumn" tabindex="0" role="link" *ngIf="col === 'user_name'"
+                     [kTooltip]="data[col].length ? data[col] : data['user_name']" [showOnEllipsis]="true"
+                     (keydown.enter)="_drillDown(data)" (click)="_drillDown(data)">{{data[col].length ? data[col] : data['user_name']}}</a>
+                  <app-bullet *ngIf="col === 'sum_live_view_period'" colorScheme="time"
+                              [value]="data['sum_live_view_period']/data['sum_view_period']*100"></app-bullet>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+              <div class="kEmptyMessage" *ngIf="!_firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_firstTimeLoading">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        <p-paginator aria-label="Pagination"
+                     [rows]="_pager.pageSize"
+                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                     [totalRecords]="_totalCount"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </k-area-blocker>
+  </div>
+
+</div>

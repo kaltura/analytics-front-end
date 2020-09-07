@@ -31,7 +31,7 @@ export class HorizontalBarRowComponent {
   @Input() comparePeriod: string;
   @Input() tooltipFormatter = this._getTooltipString;
   @Input() animate = true;
-  
+
   @Input() set trend(value: TrendValue) {
     if (value) {
       this._trend = value;
@@ -40,7 +40,7 @@ export class HorizontalBarRowComponent {
       this._calculateTrend = true;
     }
   }
-  
+
   @Input() set tooltip(value: BarRowTooltip | BarRowTooltip[]) {
     if (this.animate) {
       setTimeout(() => {
@@ -49,9 +49,9 @@ export class HorizontalBarRowComponent {
     } else {
       this._setTooltip(value);
     }
-    
+
   }
-  
+
   @Input() set value(value: BarRowValue | BarRowValue[]) {
     if (Array.isArray(value)) {
       this._rawValue = value[0];
@@ -62,7 +62,7 @@ export class HorizontalBarRowComponent {
       this._compareValue = null;
       this._trend = null;
     }
-    
+
     if (this.animate) {
       setTimeout(() => {
         this._setValue();
@@ -70,13 +70,18 @@ export class HorizontalBarRowComponent {
     } else {
       this._setValue();
     }
-    
+
   }
-  
+
   @Input() set colorScheme(type: string) {
     this._colors = [getPrimaryColor(type), getSecondaryColor(type)];
   }
-  
+
+  // used to override colors palette if we need s ingle color
+  @Input() set color(value: string) {
+    this._colors = [value, value];
+  }
+
   private _calculateTrend = true;
   public _trend: TrendValue = null;
   public _value: BarRowValue = 0;
@@ -86,15 +91,15 @@ export class HorizontalBarRowComponent {
   public _tooltip: string = null;
   public _compareTooltip: string = null;
   public _colors = [getPrimaryColor(), getSecondaryColor()];
-  
+
   constructor(private _trendService: TrendService) {
-  
+
   }
-  
+
   private _getTooltipString(value: string, label: string, color?: string): string {
     return `<div class="kHorizontalBarGraphTooltip"><span class="kBullet" style="color: ${color}">&bull;</span><span>${label}: ${value}</span></div>`;
   }
-  
+
   private _setTooltip(value: BarRowTooltip | BarRowTooltip[]): void {
     if (Array.isArray(value)) {
       this._tooltip = this.tooltipFormatter(value[0].value, value[0].label, value[0].color || this._colors[0]);
@@ -104,12 +109,12 @@ export class HorizontalBarRowComponent {
       this._compareTooltip = null;
     }
   }
-  
+
   private _setValue(): void {
     this._value = typeof this.formatter === 'function' ? this.formatter(this._rawValue) : this._rawValue;
     if (this._rawCompareValue !== null && this.currentPeriod && this.comparePeriod) {
       this._compareValue = typeof this.formatter === 'function' ? this.formatter(this._rawCompareValue) : this._rawCompareValue;
-    
+
       if (this._calculateTrend) {
         const { value, direction } = this._trendService.calculateTrend(Number(this._rawValue), Number(this._rawCompareValue));
         this._trend = {

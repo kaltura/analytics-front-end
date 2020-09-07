@@ -206,6 +206,52 @@ export class BrowserService {
     });
   }
 
+  public exportToCsv(filename, rows): void {
+    const processRow = row => {
+      let finalVal = '';
+      for (let j = 0; j < row.length; j++) {
+        let innerValue = row[j] === null ? '' : row[j].toString();
+        if (row[j] instanceof Date) {
+          innerValue = row[j].toLocaleString();
+        };
+        let result = innerValue.replace(/"/g, '""');
+        if (result.search(/("|,|\n)/g) >= 0)
+          result = '"' + result + '"';
+        if (j > 0)
+          finalVal += ',';
+        finalVal += result;
+      }
+      return finalVal + '\n';
+    };
+
+    // adding universal BOM (Byte Order Mark) at the beginning of the CSV file to force Excel to use UTF-8 encoding
+    const universalBOM = "\uFEFF";
+    let csvFile = universalBOM;
+
+    for (let i = 0; i < rows.length; i++) {
+      csvFile += processRow(rows[i]);
+    }
+
+    const blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      const link = document.createElement("a");
+      if (link.download !== undefined) { // feature detection
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.warn("Export to CSV failed. Browser not supported.");
+      }
+    }
+  }
+
   public toggleContrastTheme(): void {
     const themeClass = 'kHighContrast';
     const body = this._document.body;
