@@ -8,7 +8,7 @@
 }
 .kLabel{
   color: $kGrayscale1;
-  padding-left: 24px;
+  margin-bottom: 16px;
 }
 
 .chartContainer {
@@ -17,9 +17,9 @@
   display: flex;
   flex-direction: column;
   padding: 24px;
-  padding-top: 12px;
+  padding-top: 0px;
   .kChart {
-    height: 160px;
+    height: 154px;
   }
   .legend {
     display: flex;

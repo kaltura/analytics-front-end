@@ -10,7 +10,7 @@
     </div>
 
     <k-area-blocker *ngIf="_showTable" [message]="_blockerMessage" [showLoader]="_isBusy">
-      <div class="kTableContainer">
+      <div class="kTableContainer kReportContent kNoTitle">
         <app-user-engagement-filter *ngIf="_viewConfig.userFilter"
                                     [totalCount]="_totalCount"
                                     [dateFilter]="_dateFilter"
