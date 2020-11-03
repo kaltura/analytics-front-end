@@ -1,5 +1,7 @@
 @import '../../../../../styles/variables';
-
+:host {
+  width: 100%;
+}
 .kTitle{
   width: auto !important;
   padding-right: 0px !important;

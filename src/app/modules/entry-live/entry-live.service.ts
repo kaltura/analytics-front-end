@@ -36,7 +36,7 @@ export class EntryLiveService {
         new KalturaRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,sourceType,dvrStatus,recordStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode'
+            fields: 'id,name,sourceType,dvrStatus,recordStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode,liveStatus'
           })
         })
       );
@@ -71,7 +71,7 @@ export class EntryLiveService {
   public setStreamStatus(liveEntry: KalturaExtendedLiveEntry, serverNodeList: KalturaEntryServerNode[]): void {
     const viewMode = liveEntry.explicitLive ? liveEntry.viewMode : null;
     let result: { status: KalturaStreamStatus, serverType: KalturaEntryServerNodeType } = {
-      status: getStreamStatus(KalturaEntryServerNodeStatus.stopped),
+      status: liveEntry.explicitLive ? KalturaStreamStatus.offline : getStreamStatus(liveEntry.liveStatus),
       serverType: null,
     };
 
