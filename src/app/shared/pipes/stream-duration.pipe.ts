@@ -8,10 +8,10 @@ import * as moment from 'moment';
 export class StreamDurationPipe implements PipeTransform {
   constructor(private _translate: TranslateService) {
   }
-  
-  transform(duration: moment.Duration): string {
-    let timeString = '00:00:00';
-    
+
+  transform(duration: moment.Duration, showWhenEmpty = true): string {
+    let timeString = showWhenEmpty ? '00:00:00' : '';
+
     if (duration) {
       if (duration.months() > 0) {
         timeString = this._translate.instant('app.entryLive.stream_duration_in_months', { months: duration.months(), days: duration.days() });
@@ -21,10 +21,10 @@ export class StreamDurationPipe implements PipeTransform {
         timeString = this._padTo2Digits(duration.hours()) + ':' + this._padTo2Digits(duration.minutes()) + ':' + this._padTo2Digits(duration.seconds());
       }
     }
-    
+
     return timeString;
   }
-  
+
   private _padTo2Digits(number: number): string {
     return ((0 <= number && number < 10) ? '0' : '') + number;
   }

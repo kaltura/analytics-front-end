@@ -3,7 +3,7 @@
   <div class="kStatus">
     <i class="kStatusIcon" [ngClass]="_entry?.streamStatus | appStreamState:true"></i>
     <span class="kStreamStatus">{{_entry?.streamStatus | appStreamState}}</span>
-    <span *ngIf="_isLive">{{_streamDuration | appStreamDuration}}</span>
+    <span *ngIf="_isLive">{{_streamDuration | appStreamDuration:false}}</span>
   </div>
   <div *ngIf="_isLive" class="kRedundancy">
     <i class="kIcon" [ngClass]="_entry?.redundancy ? 'kIconcheck_small' : 'kIconclose_small'"></i>
