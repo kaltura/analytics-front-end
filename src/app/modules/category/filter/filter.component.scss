@@ -34,6 +34,10 @@
         .kLastItem {
           margin-right: 18px !important;
         }
+        .kFiltersGroup {
+          display: flex;
+          flex-direction: column;
+        }
       }
 
       .kMiscFilters {

@@ -19,13 +19,23 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kListFilters" *ngIf="_viewConfig?.mediaType || _viewConfig?.entrySource">
-            <app-checkboxes-list-filter *ngIf="_viewConfig?.mediaType"
-                                        [label]="'app.filters.mediaType.title' | translate"
-                                        [options]="_mediaTypes"
-                                        [selectedFilters]="_selectedValues['mediaType']"
-                                        (itemSelected)="_onItemSelected($event, 'mediaType')"
-                                        (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
+          <div class="kListFilters" *ngIf="_viewConfig?.mediaType || _viewConfig?.entrySource || _viewConfig?.playbackType">
+
+            <div class="kFiltersGroup"  *ngIf="_viewConfig?.mediaType || _viewConfig?.playbackType">
+              <app-checkboxes-list-filter *ngIf="_viewConfig?.mediaType"
+                                          [label]="'app.filters.mediaType.title' | translate"
+                                          [options]="_mediaTypes"
+                                          [selectedFilters]="_selectedValues['mediaType']"
+                                          (itemSelected)="_onItemSelected($event, 'mediaType')"
+                                          (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
+
+              <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType"
+                                          [label]="'app.filters.playbackType.title' | translate"
+                                          [options]="_playbackTypes"
+                                          [selectedFilters]="_selectedValues['playbackType']"
+                                          (itemSelected)="_onItemSelected($event, 'playbackType')"
+                                          (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-checkboxes-list-filter>
+            </div>
 
             <app-checkboxes-list-filter *ngIf="_viewConfig?.entrySource"
                                         class="kLastItem"
