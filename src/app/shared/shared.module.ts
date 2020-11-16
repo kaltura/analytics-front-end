@@ -47,6 +47,7 @@ import { DropdownFilterComponent } from 'shared/components/dropdown-filter/dropd
 import { MiddleEllipsisDirective } from 'shared/directives/middle-ellipsis.directive';
 import { FilterComponent } from './components/filter/filter.component';
 import { TagsFilterComponent } from './components/filter/tags-filter/tags-filter.component';
+import { PlaybackFilterComponent } from './components/filter/playback-filter/playback-filter.component';
 import { OwnersFilterComponent } from './components/filter/owners-filter/owners-filter.component';
 import { LocationFilterComponent } from './components/filter/location-filter/location-filter.component';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
@@ -148,6 +149,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     EvenTableHeightDirective,
     FilterComponent,
     TagsFilterComponent,
+    PlaybackFilterComponent,
     OwnersFilterComponent,
     LocationFilterComponent,
     UserEngagementUsersFilterComponent,
@@ -206,6 +208,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     EvenTableHeightDirective,
     FilterComponent,
     TagsFilterComponent,
+    PlaybackFilterComponent,
     OwnersFilterComponent,
     LocationFilterComponent,
     UserEngagementUsersFilterComponent,

@@ -23,7 +23,7 @@ export class TopVideosTableComponent implements OnDestroy {
     this._tableData = value.slice(0, this._pageSize);
     this._totalCount = value.length;
   }
-  
+
   @Input() entryDetails: EntryDetailsOverlayData[] = [];
   @Input() showDivider = false;
   @Input() dates: string;
@@ -31,25 +31,25 @@ export class TopVideosTableComponent implements OnDestroy {
   @Input() columns: string[] = [];
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
-  
+
   @Input() set order(value: string) {
     if (value) {
       const sortOrder = value[0] === '-' ? -1 : 1;
       if (sortOrder !== this._sortOrder) {
         this._sortOrder = sortOrder;
       }
-  
+
       const sortField = value.slice(1);
       if (sortField !== this._sortField) {
         this._sortField = sortField;
       }
     }
   }
-  
+
   @Output() sortChanged = new EventEmitter<SortEvent>();
 
   @ViewChild('overlay') _overlay: OverlayComponent;
-  
+
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];
   private _pageSize = 5;
@@ -69,11 +69,11 @@ export class TopVideosTableComponent implements OnDestroy {
               private _navigationDrillDownService: NavigationDrillDownService,
               private _browserService: BrowserService) {
   }
-  
+
   ngOnDestroy(): void {
     this._paginationChanged.complete();
   }
-  
+
   public _onPaginationChanged(event: { page: number, first: number, rows: number, pageCount: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._paginationChanged.next();
@@ -81,7 +81,7 @@ export class TopVideosTableComponent implements OnDestroy {
       this._tableData = this._originalTable.slice(event.first, event.first + event.rows);
     }
   }
-  
+
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
       this._entryData = this.entryDetails.find(({object_id}) => entryId === object_id);
@@ -95,7 +95,7 @@ export class TopVideosTableComponent implements OnDestroy {
       }
     }
   }
-  
+
   public _hideOverlay(): void {
     if (this._overlay) {
       this._entryData = null;
@@ -109,9 +109,9 @@ export class TopVideosTableComponent implements OnDestroy {
 
   public _drillDown({ object_id: entryId, status, partner_id, entry_source }: { object_id: string, status: string, partner_id: string, entry_source: string }): void {
     if (status === '') { // status is already being transformed by formatter function
-      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      const path = entry_source === 'Interactive Video' ? 'playlist' : entry_source === 'Kaltura Webcast' ? 'entry-webcast' : 'entry';
       this._navigationDrillDownService.drilldown(path, entryId, true, partner_id);
     }
   }
-  
+
 }

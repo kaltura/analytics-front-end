@@ -17,7 +17,13 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   refineFilter.forEach(item => {
     switch (item.type) {
       case 'playbackType':
-        playbackType.push(item.value);
+        if (item.value === 'all') {
+          playbackType.push('live');
+          playbackType.push('dvr');
+          playbackType.push('vod');
+        } else {
+          playbackType.push(item.value);
+        }
         break;
       case 'devices':
         devices.push(item.value.name);

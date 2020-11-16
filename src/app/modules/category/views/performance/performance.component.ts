@@ -430,7 +430,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       this._navigationDrillDownService.drilldown('user', this._drillDown.id, true, this._drillDown.pid);
     }
     if (this._tableMode === TableModes.entry) {
-      const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : 'entry';
+      const path = this._drillDown.source === 'Interactive Video' ? 'playlist' : this._drillDown.source === 'Kaltura Webcast' ? 'entry-webcast' : 'entry';
       this._navigationDrillDownService.drilldown(path, this._drillDown.id, true, this._drillDown.pid);
     }
   }

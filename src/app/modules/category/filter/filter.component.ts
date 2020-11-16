@@ -44,6 +44,7 @@ export class CatFilterComponent extends FilterComponent {
     } else {
       this._viewConfig = {
         mediaType: {},
+        playbackType: {},
         entrySource: {},
         tags: {},
         owners: {},
@@ -56,21 +57,21 @@ export class CatFilterComponent extends FilterComponent {
   @Input() set category(value: KalturaCategory) {
     this._contextTypes[1].value = [{...value}];
   }
-  
+
   public contextSelected = false;
   public subCategoriesSelected = false;
-  
+
   public _contextTypes: OptionItem[] = [
     { value: [], label: 'app.category.contextAll' },
     { value: [], label: 'app.category.contextCategory' }
   ];
-  
+
   constructor(_translate: TranslateService,
               _frameEventManager: FrameEventManagerService,
               _logger: KalturaLogger) {
     super(_translate, _frameEventManager, _logger);
   }
-  
+
   public openFilter(filter: string): void {
     if (filter === "context") {
       this._onItemSelected(this._contextTypes[1].value[0], filter);
@@ -78,18 +79,18 @@ export class CatFilterComponent extends FilterComponent {
       this._apply();
     }
   }
-  
+
   public _apply(forceApply = false): void {
     super._apply(forceApply);
     this.contextSelected = this._appliedFilters.filter(filter => filter.type === 'context').length > 0;
     this.subCategoriesSelected = this._appliedFilters.filter(filter => filter.type === 'categories').length > 0;
   }
-  
+
   public _onItemSelected(item: any, type: string): void {
     if (type === 'context') {
       item.name = this._translate.instant('app.category.contextCategory');
     }
     super._onItemSelected(item, type);
   }
-  
+
 }

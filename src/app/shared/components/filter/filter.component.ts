@@ -172,6 +172,18 @@ export class FilterComponent {
     { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
 
+  public _playbackTypes: OptionItem[] = [
+    { value: 'dvr', label: 'app.filters.playbackType.dvr' },
+    { value: 'live', label: 'app.filters.playbackType.live' },
+    { value: 'vod', label: 'app.filters.playbackType.vod' }
+  ];
+  public _playbackTypesAll: OptionItem[] = [
+    { value: ['vod'], label: 'app.filters.playbackType.vod' },
+    { value: ['dvr'], label: 'app.filters.playbackType.dvr' },
+    { value: ['live'], label: 'app.filters.playbackType.live' },
+    { value: ['all'], label: 'app.filters.playbackType.all' }
+  ];
+
   public _entrySources: OptionItem[] = [ // TODO determine valid values
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
     { value: 'Kaltura Webcast', label: 'app.filters.entrySources.Webcasting' },

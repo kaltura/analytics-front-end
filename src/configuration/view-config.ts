@@ -8,6 +8,7 @@ export const viewsConfig = {
       export: {},
       refineFilter: {
         mediaType: {},
+        playbackType: {},
         entrySource: {},
         tags: {},
         owners: {},
@@ -122,6 +123,7 @@ export const viewsConfig = {
     export: {},
     refineFilter: {
       mediaType: {},
+      playbackType: {},
       entrySource: {},
       tags: {},
       owners: {},

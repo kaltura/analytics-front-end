@@ -30,9 +30,9 @@ import {Router} from "@angular/router";
 })
 export class MiniTopVideosComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
-  
+
   @Input() topVideos$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }>;
-  
+
   protected _componentId = 'mini-top-videos';
   private _dataConfig: ReportDataConfig;
   private _partnerId = this._authService.pid;
@@ -40,7 +40,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private subscription: ISubscription = null;
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow<string>[] = [];
@@ -55,11 +55,11 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -74,7 +74,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnInit() {
     if (this.topVideos$) {
       this.topVideos$
@@ -111,7 +111,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -130,7 +130,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
     this._tableData = tableData.map(extendTableRow).splice(0, 3);
     this._currentDates = null;
     this._compareDates = null;
-    
+
     if (compare && compare.header && compare.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
@@ -139,7 +139,7 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.compare.endDate).format('MMM D, YYYY');
     }
   }
-  
+
   public scrollTo(target: string): void {
     this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
@@ -157,10 +157,10 @@ export class MiniTopVideosComponent extends EngagementBaseReportComponent implem
 
   ngOnDestroy() {
   }
-  
+
   public _drillDown({ object_id, status, partner_id, entry_source }: { object_id: string, status: KalturaEntryStatus, partner_id: string, entry_source: string }): void {
     if (status === KalturaEntryStatus.ready) {
-      const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
+      const path = entry_source === 'Interactive Video' ? 'playlist' : entry_source === 'Kaltura Webcast' ? 'entry-webcast' : 'entry';
       this._navigationDrillDownService.drilldown(path, object_id, true, partner_id);
     }
   }
