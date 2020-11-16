@@ -25,7 +25,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
           },
           'sum_view_period': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
+            title: this._translate.instant(`app.entryWebcast.insights.label`),
             units: value => 'min',
             sortOrder: 3,
           },
