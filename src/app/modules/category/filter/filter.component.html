@@ -28,12 +28,13 @@
                                           (itemSelected)="_onItemSelected($event, 'mediaType')"
                                           (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-              <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType"
-                                          [label]="'app.filters.playbackType.title' | translate"
-                                          [options]="_playbackTypes"
-                                          [selectedFilters]="_selectedValues['playbackType']"
-                                          (itemSelected)="_onItemSelected($event, 'playbackType')"
-                                          (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-checkboxes-list-filter>
+              <app-playback-filter [class.kHidden]="!_viewConfig?.playbackType"
+                                           [label]="'app.filters.playbackType.title' | translate"
+                                           [options]="_playbackTypesAll"
+                                           [selectedFilters]="_selectedValues['playbackType']"
+                                           (itemSelected)="_onItemSelected($event, 'playbackType')"
+                                           (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-playback-filter>
+
             </div>
 
             <app-checkboxes-list-filter *ngIf="_viewConfig?.entrySource"

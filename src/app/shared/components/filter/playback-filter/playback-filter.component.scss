@@ -1,0 +1,56 @@
+@import '../../../../../styles/variables';
+
+:host {
+  min-width: 195px;
+  margin-right: 24px;
+}
+
+.kColumn {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  &.kDisabled {
+    cursor: default;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .kColumnLabel {
+    font-weight: bold;
+  }
+
+  .kColumnLabel {
+    margin-bottom: 16px;
+  }
+
+  .kCheckboxGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .kLabel {
+      font-size: 15px;
+      line-height: 22px;
+      color: $kGrayscale1;
+    }
+
+    .kIcon {
+      font-size: 22px;
+      color: $kGrayscale3;
+      margin: 0 17px 0 11px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+    }
+
+  }
+}
+
+p-radioButton.selected ::ng-deep .ui-radiobutton-box {
+  background-color: #ffffff;
+  border: 6px solid #00a784;
+  color: #ffffff;
+}

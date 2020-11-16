@@ -9,7 +9,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
@@ -37,9 +37,9 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
           },
           'avg_completion_rate': {
             format: value => Math.min(value, 100),
-            title: this._translate.instant(`app.entry.avg_completion_rate`),
+            title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
           },
         }
       },
@@ -109,7 +109,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false, true),
-            title: this._translate.instant(`app.entry.watched`),
+            title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             tooltip: this._translate.instant('app.entry.watched_tt'),
             sortOrder: 5,
           }
