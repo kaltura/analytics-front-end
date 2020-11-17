@@ -171,6 +171,7 @@ export const viewsConfig = {
   entryWebcast: {
     export: {},
     title: {},
+    linkToLive: {},
     details: {},
     miniHighlights: {},
     miniEngagement: {

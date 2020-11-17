@@ -49,8 +49,8 @@
              (keydown.enter)="_navigateToEntry()">
             <span class="link" (click)="_navigateToEntry()">{{'app.entry.seeAll' | translate}}</span>
           </a>
-          <div *ngIf="_viewConfig.title" class="kSeparator"></div>
-          <a tabindex="0" *ngIf="_viewConfig.title" class="link" role="link" aria-label="Real Time Dashboard" #link
+          <div *ngIf="_viewConfig.linkToLive" class="kSeparator"></div>
+          <a tabindex="0" *ngIf="_viewConfig.linkToLive" class="link" role="link" aria-label="Real Time Dashboard" #link
              (click)="_navigateToLive()"
              (keydown.enter)="_navigateToLive()">
             <span class="link" (click)="_navigateToLive()">{{'app.entryWebcast.livaDashboard' | translate}}</span>
