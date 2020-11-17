@@ -7,7 +7,7 @@
             <div class="header" [class.previewColor]="entry.status===2" [class.offlineColor]="entry.status===1">
               <i [class.icon-preview]="entry.status===2" [class.icon-stream_offline]="entry.status===1" [class.kStatusActive]="entry.status===0"></i>
               <span class="status">{{entry.status | broadcastStatus}}</span>
-              <span>{{entry.broadcastTime | appStreamDuration}}</span>
+              <span>{{entry.broadcastTime | appStreamDuration:false}}</span>
             </div>
             <app-k-player-v7 *ngIf="_polling" [width]="290" [height]="152" [autoPlay]="true" [muted]="true" [pid]="entry.partnerId" [uiconfid]="uiconfid" [entryid]="entry.id" [ks]="ks"></app-k-player-v7>
           </div>
