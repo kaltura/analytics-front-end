@@ -1,5 +1,5 @@
 <kScrollToTopContainer>
-  <div data-aid="report-stream-health" class="kReport kOverrideFAIcons kStreamHealth">
+  <div data-aid="report-stream-health" class="kReport kOverrideFAIcons kStreamHealth" [class.hiddenStatus]="_hideStatus">
     <div *ngIf="!_data?.length" class="kNoResults">
       <span>{{'app.entryLive.noHistory' | translate}}</span>
     </div>

@@ -9,6 +9,7 @@ import { KalturaAssetParamsOrigin, KalturaDVRStatus, KalturaMultiResponse, Kaltu
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { analyticsConfig } from "configuration/analytics-config";
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
@@ -32,9 +33,10 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   }
 
   protected _responseMapping(responses: KalturaMultiResponse): KalturaExtendedLiveEntry {
+    const showStatus = analyticsConfig.viewsConfig.entryLive.status;
     const entry = responses[0].result;
-    const profiles = responses[1].result.objects;
-    const nodes = responses[2].result.objects;
+    const profiles = showStatus ? responses[2].result.objects : [];
+    const nodes = showStatus ? responses[3].result.objects : [];
     const liveEntry = Object.assign(entry, {
       dvr: entry.dvrStatus === KalturaDVRStatus.enabled,
       recording: entry.recordStatus !== KalturaRecordStatus.disabled,
@@ -42,7 +44,7 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       redundancy: this._entryLiveService.getRedundancyStatus(nodes),
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
-      owner: responses[3].result.fullName,
+      owner: responses[1].result.fullName,
       isManual: entry.sourceType === KalturaSourceType.manualLiveStream,
       displayCreatedAt: DateFilterUtils.formatFullDateString(entry.createdAt),
     });
