@@ -49,7 +49,12 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       displayCreatedAt: DateFilterUtils.formatFullDateString(entry.createdAt),
     });
 
-    this._entryLiveService.setStreamStatus(liveEntry, nodes);
+    if (showStatus) {
+      this._entryLiveService.setStreamStatus(liveEntry, nodes);
+    } else {
+      const isLive = responses[2].result;
+      liveEntry.streamStatus = isLive ? KalturaStreamStatus.live : KalturaStreamStatus.offline;
+    }
 
     return liveEntry;
   }

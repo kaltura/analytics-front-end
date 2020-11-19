@@ -12,6 +12,7 @@ import {
   KalturaRequestOptions,
   KalturaResponseProfileType,
   LiveStreamGetAction,
+  LiveStreamIsLiveAction,
   UserGetAction
 } from 'kaltura-ngx-client';
 import { getStreamStatus, KalturaStreamStatus } from './utils/get-stream-status';
@@ -41,6 +42,10 @@ export class EntryLiveService {
           })
         })
       );
+  }
+
+  private _getLiveStreamIsLiveAction(id): LiveStreamIsLiveAction {
+    return new LiveStreamIsLiveAction({ id });
   }
 
   private _getConversionProfileAssetParamsListAction(): ConversionProfileAssetParamsListAction {
@@ -128,7 +133,8 @@ export class EntryLiveService {
     ) :
     new KalturaMultiRequest(
       this._getLiveStreamAction(entryId),
-      this._getUserAction().setDependency(['userId', 0, 'userId'])
+      this._getUserAction().setDependency(['userId', 0, 'userId']),
+      this._getLiveStreamIsLiveAction(entryId)
     )
     return multiRequest;
   }
