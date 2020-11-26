@@ -69,8 +69,8 @@
           <div class="kLiveBanner">
             <i class="kStatusActive"></i>
             <span class="live">{{'app.entryWebcast.live' | translate}}</span>
-            <span class="liveLink" (click)="_navigateToLive()">{{'app.entryWebcast.liveLink' | translate}}</span>
-            <i class="kIcondropdown_arrow_right"></i>
+            <span *ngIf="_viewConfig.linkToLive" class="liveLink" (click)="_navigateToLive()">{{'app.entryWebcast.liveLink' | translate}}</span>
+            <i *ngIf="_viewConfig.linkToLive" class="kIcondropdown_arrow_right"></i>
           </div>
         </div>
 
