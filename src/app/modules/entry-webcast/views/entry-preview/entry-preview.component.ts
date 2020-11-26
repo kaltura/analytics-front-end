@@ -111,7 +111,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
         confine: true,
         formatter: params => {
           const { value: value1, dataIndex } = params[0];
-          const value2 = params[1].value.toFixed(2) + '%';
+          const value2 = params[1] ? params[1].value.toFixed(2) + '%' : this._translate.instant('app.common.na');
           const progressValue = ReportHelper.time(String(dataIndex / (pointsCount -1) * this._duration)); // empirically found formula, closest result to expected so far
           let tooltip = `
             <div class="kEntryGraphTooltip">
@@ -414,9 +414,11 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
   }
 
   private _seekTo(percent: number, forcePlay = false): void {
-    this._playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
-    if (forcePlay) {
-      this._playerInstance.sendNotification("doPlay");
+    if (this._playerInstance) {
+      this._playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+      if (forcePlay) {
+        this._playerInstance.sendNotification("doPlay");
+      }
     }
   }
 
