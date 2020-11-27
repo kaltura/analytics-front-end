@@ -224,10 +224,10 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
 
   protected _loadReport(sections = this._dataConfig): void {
 
-    if (this.entryId) {
+    let recordedEntryAvailable = this.entryId ? true : false;
+
+    if (recordedEntryAvailable) {
       this._filter.entryIdIn = this.entryId;
-    } else {
-      return;
     }
 
     if (this.liveEntryId) {
@@ -246,10 +246,12 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
 
     // create 2 report calls and use forkJoin to get them both
     const reportConfigViewers: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
-    const viewers = this._reportService.getReport(reportConfigViewers, sections, false)
+
+    // prevent calling the report if no recorded entry is available
+    const viewers = recordedEntryAvailable ? this._reportService.getReport(reportConfigViewers, sections, false)
       .pipe(switchMap(report => {
         return ObservableOf({ report, compare: null });
-      }));
+      })) : ObservableOf({ report: null, compare: null });
 
     const reportConfigEngagement: ReportConfig = { reportType: this._liveReportType, filter: this._liveFilter, pager: this._pager, order: null };
     const engagement = this._reportService.getReport(reportConfigEngagement, sections, false)
@@ -261,17 +263,27 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
     Observable.forkJoin(viewers, engagement)
       .subscribe(([viewers, engagement]) => {
           this._chartOptions = {};
-          if (viewers.report.table && viewers.report.table.header && viewers.report.table.data) {
-            const { tableData } = this._reportService.parseTableData(viewers.report.table, this._dataConfig[ReportDataSection.table]);
+          let yAxisData1 = Array.from({ length: 100 }, () => 0); // assume no VOD data (no recorded entry)
+          let yAxisData2 = Array.from({ length: 100 }, () => 0); // assume no live data (no live views)
+          let pointCount = 100; // default for percentiles
+
+          // check if we have live data first and update yAxisData2 if we have it
+          if (engagement.report && engagement.report.table && engagement.report.table.header && engagement.report.table.data) {
             const liveTableData = this._reportService.parseTableData(engagement.report.table, this._dataConfig[ReportDataSection.table]).tableData;
-            const pointCount = Math.max(tableData.length, liveTableData.length) -1;
-            const yAxisData1 = this._getViewersAxisData(tableData, pointCount);
-            const yAxisData2 = this._getLiveAxisData(liveTableData, liveTableData.length);
-            this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, pointCount );
-          } else {
-            const emptyLine = Array.from({ length: 100 }, () => 0);
-            this._chartOptions = this._getGraphData(emptyLine, emptyLine);
+            yAxisData2 = this._getLiveAxisData(liveTableData, liveTableData.length);
+            if (liveTableData.length > pointCount) {
+              pointCount = liveTableData.length; // update pointCount if value is larger than 100
+            }
           }
+
+          // check if we have VOD data from recorded entry and update yAxisData1 if we have it
+          if (viewers.report && viewers.report.table && viewers.report.table.header && viewers.report.table.data) {
+            const {tableData} = this._reportService.parseTableData(viewers.report.table, this._dataConfig[ReportDataSection.table]);
+            yAxisData1 = this._getViewersAxisData(tableData, pointCount);
+          }
+
+          // set chart data with both live and vod data series
+          this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, pointCount );
           this._isBusy = false;
         },
         error => {
