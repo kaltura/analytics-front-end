@@ -224,7 +224,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
 
   protected _loadReport(sections = this._dataConfig): void {
 
-    let recordedEntryAvailable = this.entryId ? true : false;
+    let recordedEntryAvailable = !!this.entryId;
 
     if (recordedEntryAvailable) {
       this._filter.entryIdIn = this.entryId;
