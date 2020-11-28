@@ -111,7 +111,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
         confine: true,
         formatter: params => {
           const { value: value1, dataIndex } = params[0];
-          const value2 = params[1] ? params[1].value.toFixed(2) + '%' : this._translate.instant('app.common.na');
+          const value2 = params[1] !== null && params[1] !== undefined ? params[1].value.toFixed(2) + '%' : this._translate.instant('app.common.na');
           const progressValue = ReportHelper.time(String(dataIndex / (pointsCount -1) * this._duration)); // empirically found formula, closest result to expected so far
           let tooltip = `
             <div class="kEntryGraphTooltip">
@@ -280,6 +280,8 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
           if (viewers.report && viewers.report.table && viewers.report.table.header && viewers.report.table.data) {
             const {tableData} = this._reportService.parseTableData(viewers.report.table, this._dataConfig[ReportDataSection.table]);
             yAxisData1 = this._getViewersAxisData(tableData, pointCount);
+          } else if (pointCount !== 100) {
+            yAxisData1 = Array.from({ length: pointCount }, () => 0);
           }
 
           // set chart data with both live and vod data series
