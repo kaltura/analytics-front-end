@@ -118,7 +118,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
               <div class="kCurrentTime">${progressValue}</div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor()}">&bull;</span>
-                ${this._translate.instant('app.entry.views')}:&nbsp;${value1}
+                ${this._translate.instant('app.entryWebcast.vodViews')}:&nbsp;${value1}
               </div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>

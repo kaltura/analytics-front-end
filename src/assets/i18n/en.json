@@ -482,6 +482,7 @@
     "entryWebcast": {
       "live": "Live",
       "vod": "VOD",
+      "vodViews": "Views (VOD)",
       "livaDashboard": "Real Time Dashboard",
       "noRecording": "No Recording Found",
       "noRecordingText": "This webcast doesn’t have a recording associated with it.\nEither the recording was archived or the entry was never broadcasted.",
