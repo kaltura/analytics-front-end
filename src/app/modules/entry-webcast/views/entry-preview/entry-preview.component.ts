@@ -274,6 +274,9 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
             if (liveTableData.length > pointCount) {
               pointCount = liveTableData.length; // update pointCount if value is larger than 100
             }
+            if (!this.isLive && !recordedEntryAvailable) {
+              this._duration = (parseInt(liveTableData[liveTableData.length - 1].position) - parseInt(liveTableData[0].position)) * 1000;
+            }
           }
 
           // check if we have VOD data from recorded entry and update yAxisData1 if we have it
@@ -286,6 +289,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
 
           // set chart data with both live and vod data series
           this._chartOptions = this._getGraphData(yAxisData1, yAxisData2, pointCount );
+
           this._isBusy = false;
         },
         error => {
