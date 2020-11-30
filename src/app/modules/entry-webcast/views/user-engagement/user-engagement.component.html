@@ -53,9 +53,9 @@
             <tr>
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
                 <ng-container>
-                  <span *ngIf="col !== 'registered' && col !== 'user_name' && col !== 'sum_live_view_period'">{{data[col]}}</span>
+                  <span *ngIf="(col !== 'registered' && col !== 'user_name' && col !== 'sum_live_view_period') || (col === 'user_name' && !_viewConfig.userFilter)">{{data[col]}}</span>
                   <i class="kIconcheck_small" *ngIf="col === 'registered' && data[col] && data[col] !== '0'"></i>
-                  <a class="kTableColumn" tabindex="0" role="link" *ngIf="col === 'user_name'"
+                  <a class="kTableColumn" tabindex="0" role="link" *ngIf="col === 'user_name' && _viewConfig.userFilter"
                      [kTooltip]="data[col].length ? data[col] : data['user_name']" [showOnEllipsis]="true"
                      (keydown.enter)="_drillDown(data)" (click)="_drillDown(data)">{{data[col].length ? data[col] : data['user_name']}}</a>
                   <app-bullet *ngIf="col === 'sum_live_view_period'" colorScheme="time"
