@@ -1,5 +1,8 @@
 @import '../../../../../styles/variables';
 
+:host {
+  width: 100%;
+}
 
 .kReportContainer {
   padding-bottom: 24px;
