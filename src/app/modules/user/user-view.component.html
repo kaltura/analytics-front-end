@@ -13,7 +13,7 @@
               <i class="icon-viewer-contributor"></i>
             </div>
           </div>
-          <span class="kTitle">{{_userName}}</span>
+          <span class="kTitle kTruncateTitle" [kTooltip]="_userName" [showOnEllipsis]="true">{{_userName}}</span>
           <app-export-csv *ngIf="_userViewConfig.export"
                           name="User"
                           [userId]="_userId"
