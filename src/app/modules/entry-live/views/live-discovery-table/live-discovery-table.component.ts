@@ -22,6 +22,7 @@ import { EntryLiveUsersMode } from 'configuration/analytics-config';
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
   @Input() rangeLabel: string;
+  @Input() _usersTotalCount = 0;
 
   @Output() tableChange = new EventEmitter<KalturaReportType>();
 
