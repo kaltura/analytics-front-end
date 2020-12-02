@@ -385,7 +385,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
 
   public onDrillDown(type: 'user' | 'entry', event): void {
     if (type === 'user') {
-      this._drillDown = {label: event.user, id: event.user, pid: event.pid};
+      this._drillDown = {label: event.fullname.length ? event.fullname : event.user, id: event.user, pid: event.pid};
       this._filter.userIds = event.id;
       if (this._isCompareMode) {
         this._compareFilter.userIds = event.id;
