@@ -6,7 +6,7 @@ import { AuthService, ErrorsManagerService, NavigationDrillDownService } from "s
 import { ISubscription } from "rxjs/Subscription";
 import { KalturaLiveStreamBroadcastStatus } from "kaltura-ngx-client";
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
-import { analyticsConfig } from "configuration/analytics-config";
+import { analyticsConfig, buildCDNUrl } from "configuration/analytics-config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import * as moment from "moment";
 
@@ -28,6 +28,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
 
   public uiconfid: number;
   public ks: string;
+  public cdnUrl: string;
 
   private reportIntervalId = null;
   private timeUpdateIntervalId = null;
@@ -41,6 +42,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService) {
     this.ks = this._authService.ks;
     this.uiconfid = analyticsConfig.kalturaServer.previewUIConfV7;
+    this.cdnUrl = buildCDNUrl('');
   }
 
   ngOnInit(): void {

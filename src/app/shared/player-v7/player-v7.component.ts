@@ -26,7 +26,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	ks: string;
 
 	@Input()
-	cdnUrl = 'https://cdnapisec.kaltura.com';
+	cdnUrl: string;
 
 	@Input()
 	autoPlay = false;
