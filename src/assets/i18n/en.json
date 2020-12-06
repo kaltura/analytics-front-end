@@ -1082,7 +1082,7 @@
     },
     "entriesLive": {
       "broadcasting": "Broadcasting Now",
-      "ended": "Broadcast Ended",
+      "ended": "Previous Broadcasts",
       "upcoming": "Upcoming Broadcasts",
       "full": "Full Dashboard",
       "owner": "Owner:",
