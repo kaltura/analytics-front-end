@@ -27,6 +27,7 @@
     width: 18px;
     font-size: 24px;
     overflow: hidden;
+    flex: 0 0 auto;
 
     &:active {
       box-shadow: none;
@@ -40,6 +41,13 @@
   .kReportHeader {
     height: 80px;
     position: relative;
+  }
+
+  .kTruncateTitle {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 8px;
   }
 
   .kFloatingDetails{

@@ -10,16 +10,18 @@
   background-color: $appBkgColor !important;
 
   .kBackBtn {
-    width: 34px;
     margin-top: 4px;
     margin-left: -40px;
     margin-right: 22px;
     border: none;
-    //outline: none;
+    // outline: none;
     background-color: transparent;
     color: $kGrayscale3;
     height: 20px;
+    width: 18px;
     font-size: 24px;
+    overflow: hidden;
+    flex: 0 0 auto;
 
     &:active {
       box-shadow: none;
@@ -28,6 +30,12 @@
     &:hover {
       color: $kPrimary;
     }
+  }
+
+  .kTruncateTitle {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .kReportHeader {

@@ -31,6 +31,7 @@
     width: 18px;
     font-size: 24px;
     overflow: hidden;
+    flex: 0 0 auto;
 
     &:active {
       box-shadow: none;
@@ -140,7 +141,11 @@
 :host ::ng-deep .kReport {
   margin-bottom: 0px !important;
 }
-
+.kTruncateTitle {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 /* responsive design */
 .kHeaderRight{
   display: flex;
