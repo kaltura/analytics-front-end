@@ -491,42 +491,45 @@
       "liveLink": "Go to Real Time Dashboard",
       "highlights": {
         "knownUsers": "Known Viewers",
+        "knownUsers_tt": "The number of viewers that are logged in",
         "countries": "Countries",
         "percentLive": "{{0}}% Live"
       },
       "liveEngagement": {
-        "title": "Live Engagement Rate Breakdown",
+        "title": "Live Engagement Levels",
         "none": "Non Engaged",
         "none_tt": "Tab is not in focus, Player is on Mute",
-        "low": "Low Engagement",
+        "low": "Low",
         "low_tt": "Tab is in focus, Player is on Mute",
-        "fair": "Fair Engagement",
+        "fair": "Fair",
         "fair_tt": "Tab is not in focus, Sound is On",
-        "good": "Good Engagement",
+        "good": "Good",
         "good_tt": "Tab is in focus and Sound is  On",
-        "high": "High Engagement",
+        "high": "High",
         "high_tt": "Tab is in focus, Player is in fullscreen mode, Sound is On",
-        "view": "View Known Users"
+        "view": "Per Known Viewer"
       },
       "engagement": {
         "title": "Engagement",
-        "live": "Live engagement rate",
+        "live": "Live Engagement Rate",
         "live_tt": "Live engagement rate",
-        "vod": "VOD Avg. completion rate",
+        "vod": "VOD Avg. Completion Rate",
         "vod_tt": "The Avg. completion rate of all the viewers that watched the associated VOD of the webcast entry",
         "questions": "Users asked {{1}} questions",
         "view": "View",
-        "registered": "Users registered",
+        "registered": "Registered Viewers",
         "download": "Download",
         "users": "Users’ Questions",
         "questionsPercent": "<b>{{0}}</b> Users asked <b>{{1}}</b> questions",
         "questionsPercent2": "{{0}} Users asked {{1}} questions"
       },
       "quality": {
-        "title": "Quality",
-        "buffer": "Avg. Buffering Rate",
+        "title": "Quality of Service",
+        "buffer": "Avg. Buffer Rate",
+        "buffer_tt": "The time viewers buffered / total viewed time",
         "bitrate": "Avg. Bitrate",
-        "minutes": "Last Broadcast Duration (Min.)",
+        "minutes": "Last broadcast duration (Min)",
+        "minutes_tt": "The total duration of the last broadcast in minutes, this metric resets upon each new broadcast",
         "live": "Broadcast is currently live"
       },
       "geo": {
@@ -541,7 +544,7 @@
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       },
       "tools": {
-        "title": "Engagement Tools",
+        "title": "Tools",
         "slides": "Slides",
         "polls": "Polls",
         "announcements": "Announcements",
@@ -562,7 +565,7 @@
         "plays_distribution": "Plays Distribution",
         "unique_viewers": "Known Viewers",
         "sum_view_period": "Minutes Viewed",
-        "avg_live_buffer_time": "Live Avg. Buffering Rate",
+        "avg_live_buffer_time": "Live Avg. Buffer Rate",
         "live_engaged_users_play_time_ratio": "Live Engagement Rate",
         "avg_vod_completion_rate": "VOD Avg. Completion Rate"
       },
@@ -578,8 +581,8 @@
         "avg_vod_completion_rate": "Avg. Completion Rate"
       },
       "users": {
-        "viewDetails": "View Known Users Breakdown",
-        "hideDetails": "Hide Known Users Breakdown",
+        "viewDetails": "View Known Users",
+        "hideDetails": "Hide Known Users",
         "all": "All Known Users",
         "user_name": "Name",
         "registered": "Registration",

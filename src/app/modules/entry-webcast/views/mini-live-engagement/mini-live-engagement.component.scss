@@ -47,12 +47,17 @@
   }
 }
 .kBar {
-  width: 60%;
+  width: 70%;
   margin-left: auto;
 }
 @media (max-width: 1280px) {
   .kBar {
-    width: 45%;
+    width: 65%;
+  }
+}
+@media (max-width: 991px) {
+  .kBar {
+    width: 55%;
   }
 }
 :host ::ng-deep app-horizontal-bar-row {

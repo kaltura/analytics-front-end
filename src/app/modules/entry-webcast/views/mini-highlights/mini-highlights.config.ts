@@ -21,6 +21,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
           'unique_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entryWebcast.highlights.knownUsers`),
+            tooltip: this._translate.instant(`app.entryWebcast.highlights.knownUsers_tt`),
             sortOrder: 2,
           },
           'sum_view_period': {
