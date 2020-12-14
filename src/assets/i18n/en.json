@@ -497,7 +497,7 @@
       },
       "liveEngagement": {
         "title": "Live Engagement Levels",
-        "none": "Non Engaged",
+        "none": "Not Engaged",
         "none_tt": "Tab is not in focus, Player is on Mute",
         "low": "Low",
         "low_tt": "Tab is in focus, Player is on Mute",
