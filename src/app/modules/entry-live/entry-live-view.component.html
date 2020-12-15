@@ -5,7 +5,7 @@
         <div class="kReportHeader">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entryLive.back' | translate" [placement]="'bottom'"></button>
-          <span class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true">{{_entry?.name}}</span>
+          <span class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_entry?.name}}</span>
           <div class="kControls">
             <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
