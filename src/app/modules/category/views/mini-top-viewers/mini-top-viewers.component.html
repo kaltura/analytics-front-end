@@ -19,8 +19,8 @@
           <i class="icon-small-viewer-contributor"></i>
         </div>
         <div class="kReportRowDetails">
-          <span class="kTitle" [kTooltip]="item.name" [showOnEllipsis]="true">
-            {{item.name}}
+          <span class="kTitle" [kTooltip]="item.full_name || item.name" [showOnEllipsis]="true">
+            {{item.full_name || item.name}}
           </span>
           <span class="kScore">{{'app.category.plays' | translate: { '0': item['count_plays'] } }}</span>
         </div>
@@ -73,4 +73,3 @@
   </k-area-blocker>
 
 </div>
-

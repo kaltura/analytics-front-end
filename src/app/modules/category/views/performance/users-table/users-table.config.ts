@@ -8,7 +8,7 @@ export class UsersTableConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -18,10 +18,15 @@ export class UsersTableConfig extends ReportDataBaseConfig {
             nonComparable: true,
             hidden: true,
           },
-          'name': {
+          'full_name': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,
+          },
+          'name': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true,
           },
           'count_loads': {
             format: value => ReportHelper.numberOrZero(value),

@@ -8,7 +8,7 @@ export class MiniTopViewersConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -19,6 +19,11 @@ export class MiniTopViewersConfig extends ReportDataBaseConfig {
             hidden: true,
           },
           'name': {
+            format: value => value,
+            nonComparable: true,
+            hidden: true
+          },
+          'full_name': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,

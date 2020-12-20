@@ -30,22 +30,22 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   @Input() entryDrilldown = false;
-  
-  @Output() drillDown: EventEmitter<{user: string, pid: string}> = new EventEmitter();
-  
+
+  @Output() drillDown: EventEmitter<{user: string, fullname: string, pid: string}> = new EventEmitter();
+
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
-  
+
   public totalCount = 0;
-  
+
   public _tableData: TableRow[] = [];
   public _columns: string[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: analyticsConfig.defaultPageSize });
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
-  
+
   constructor(private _reportService: ReportService,
               private _browserService: BrowserService,
               private _frameEventManager: FrameEventManagerService,
@@ -56,10 +56,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
               private _dataConfigService: UsersTableConfig) {
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnInit() {
     this._loadReport();
-    
+
     if (this.filterChange) {
       this.filterChange
         .pipe(cancelOnDestroy(this))
@@ -71,10 +71,10 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         });
     }
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   private _loadReport(): void {
     this._isBusy = true;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
@@ -89,9 +89,9 @@ export class UsersTableComponent implements OnInit, OnDestroy {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig = { reportType: this._reportType, filter: this.compareFilter, order: this._order, pager: this._pager };
-        
+
         return this._reportService.getReport(compareReportConfig, this._dataConfig, false)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -103,7 +103,7 @@ export class UsersTableComponent implements OnInit, OnDestroy {
           } else if (report.table && report.table.data && report.table.header) {
             this._handleTable(report.table); // handle graphs
           }
-    
+
           this.firstTimeLoading = false;
           this._isBusy = false;
           this._blockerMessage = null;
@@ -121,11 +121,11 @@ export class UsersTableComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this.filter.fromDate, to: this.filter.toDate };
     const comparePeriod = { from: this.compareFilter.fromDate, to: this.compareFilter.toDate };
-    
+
     if (current.table && compare.table) {
       const { columns, tableData } = this._compareService.compareTableData(
         currentPeriod,
@@ -141,21 +141,21 @@ export class UsersTableComponent implements OnInit, OnDestroy {
       this._tableData = tableData;
     }
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this.totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData;
   }
-  
+
   public _onPaginationChanged(event: { page: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
       this._loadReport();
     }
   }
-  
+
   public _onSortChanged(event: SortEvent): void {
     if (event.data.length && event.field && event.order && !this.isCompareMode) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
@@ -165,11 +165,11 @@ export class UsersTableComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   public _drillDown(row: TableRow): void {
     if (row['name'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }
-    this.drillDown.emit({user: row['name'], pid: row['partner_id']});
+    this.drillDown.emit({user: row['name'], fullname: row['full_name'] || '', pid: row['partner_id']});
   }
 }
