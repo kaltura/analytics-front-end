@@ -109,6 +109,9 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(state.error, actions);
         }
+        if (state.forceRefresh) {
+          this.startPolling();
+        }
       });
   }
 

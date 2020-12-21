@@ -46,7 +46,7 @@ export class BroadcastingEntriesService implements OnDestroy {
   private _broadcastingEntries: BroadcastingEntries[] = [];
   private _broadcastingEntriesIDs = '';
   private _data = new BehaviorSubject<{entries: BroadcastingEntries[], totalCount: number, update: boolean, forceReload: boolean}>({entries: this._broadcastingEntries, totalCount: 0, update: false, forceReload: false});
-  private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException }>({ isBusy: false });
+  private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException, forceRefresh?: boolean }>({ isBusy: false });
   private _firstTimeLoading = true;
   private _forceRefresh = false;
   private _totalCount = 0;
@@ -117,9 +117,15 @@ export class BroadcastingEntriesService implements OnDestroy {
             this.loadRedundancy();
             this.loadStreamHealth();
           } else {
-            this._broadcastingEntries = [];
-            this._state.next({ isBusy: false, error: null });
-            this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: false});
+            if (this._pageIndex > 1) {
+              // no entries on this page - go to previous page
+              this.paginationChange(this._pageIndex - 1);
+              this._state.next({ isBusy: false, error: null, forceRefresh: true });
+            } else {
+              this._broadcastingEntries = [];
+              this._state.next({ isBusy: false, error: null });
+              this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: false});
+            }
           }
         },
         error => {
