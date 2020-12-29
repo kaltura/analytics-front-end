@@ -111,6 +111,8 @@ export class BroadcastingEntriesService implements OnDestroy {
             if (refresh) { // no need to reload entries data if entries returned from the report were not changed
               this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
               this.loadAdditionalEntriesData();
+            } else {
+              this._state.next({ isBusy: false });
             }
 
             this.loadStreamDetails();
@@ -119,7 +121,7 @@ export class BroadcastingEntriesService implements OnDestroy {
           } else {
             if (this._pageIndex > 1) {
               // no entries on this page - go to previous page
-              this.paginationChange(this._pageIndex - 1);
+              this.paginationChange(this._pageIndex - 1, false);
               this._state.next({ isBusy: false, error: null, forceRefresh: true });
             } else {
               this._broadcastingEntries = [];
@@ -213,6 +215,7 @@ export class BroadcastingEntriesService implements OnDestroy {
           this.loadTranscodingData(); // we load transcoding data after we get entry data since we need the conversionProfileId for each entry. Not using multi-request for better user experience as this data load only once
         },
         error => {
+          this._state.next({ isBusy: false });
           console.log("LiveEntries::Error loading additional entries data: " + error.message);
         });
   }
@@ -373,8 +376,8 @@ export class BroadcastingEntriesService implements OnDestroy {
     return { health: this._translate.instant(localizationKey), className };
   }
 
-  public paginationChange(newPageIndex: number): void {
-    this._firstTimeLoading = true;
+  public paginationChange(newPageIndex: number, firstTime = true): void {
+    this._firstTimeLoading = firstTime;
     this._pageIndex = newPageIndex;
   }
 }
