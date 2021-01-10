@@ -26,7 +26,11 @@ export class DateFilterUtils {
 
     let dateClone = new Date(value.getTime());    // clone date to prevent changing the date passed by reference
     if (startDate) {
-      dateClone.setHours(0, 0, 0);     // force start of day
+      const currentOffset = this.getTimeZoneOffset();
+      const dateOffset = dateClone.getTimezoneOffset();
+      const hoursDiff = (currentOffset - dateOffset) / 60;
+      const updatedHours =  hoursDiff > 0 ? hoursDiff : 0;
+      dateClone.setHours(updatedHours, 0, 0);     // force start of day
     } else {
       const currentOffset = this.getTimeZoneOffset();
       const dateOffset = dateClone.getTimezoneOffset();
