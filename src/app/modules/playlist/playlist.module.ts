@@ -12,7 +12,8 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { PlaylistViewComponent } from './playlist-view.component';
-import { PlaylistComponent } from './views/playlist/playlist.component';
+import { ManualPlaylistComponent } from './views/playlist/manual/manual-playlist.component';
+import { RulebasedPlaylistComponent } from './views/playlist/rule-based/rulebased-playlist.component';
 import { PathViewComponent } from './views/path/path-view.component';
 import { PlaylistFilterComponent } from './filter/filter.component';
 import { PathEntryTotalsComponent } from './views/path/path-totals/path-totals.component';
@@ -43,7 +44,8 @@ import { HotspotHeatMapComponent } from "./views/path/path-content/node-hotspots
   ],
   declarations: [
     PlaylistViewComponent,
-    PlaylistComponent,
+    ManualPlaylistComponent,
+    RulebasedPlaylistComponent,
     PathViewComponent,
     PlaylistFilterComponent,
     PathEntryTotalsComponent,

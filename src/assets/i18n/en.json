@@ -1039,7 +1039,11 @@
           "3": "Clicked 3 times",
           "n": "Clicked more than 3 times"
         }
-      }
+      },
+      "manual": "Playlist type:  Manual",
+      "id": "ID:",
+      "creator": "Creator:",
+      "creation": "Creation Date:"
     },
     "context": {
       "name": "Name",

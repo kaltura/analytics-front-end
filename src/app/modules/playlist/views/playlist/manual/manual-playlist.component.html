@@ -1,0 +1,54 @@
+<div class="kReportView">
+  <div class="kReport kContent kOverrideFAIcons">
+    <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+      <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+              [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
+      <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
+      <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+        <app-export-csv *ngIf="_viewConfig.export" name="Interactive Video"
+                        [reports]="_exportConfig"
+                        [refineFilter]="_refineFilter"
+                        [dateFilter]="_dateFilter"
+                        [rootEntryIdIn]="_playlistId"></app-export-csv>
+
+
+        <div class="kFilter kOverrideFAIcons">
+          <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+               (click)="_refineFilterOpened = !_refineFilterOpened"
+               (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
+            <span>{{'app.filters.filter' | translate}}</span>
+            <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+            <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+          </div>
+        </div>
+
+        <app-date-filter #dateFilter
+                         name="entry"
+                         [dateRange]="_dateRange"
+                         [selectedTimeUnit]="_timeUnit"
+                         [creationDate]="_creationDate"
+                         (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+      </div>
+    </div>
+
+    <div *ngIf="_viewConfig.details" class="kEntryDetails" [class.kFloatingDetails]="!_viewConfig.title">
+      <span>{{'app.playlist.manual' | translate}}</span>
+      <div class="kSeparator"></div>
+      <span>{{'app.playlist.id' | translate}}</span>
+      <span class="kProp">{{_playlistId}}</span>
+      <div class="kSeparator"></div>
+      <span>{{'app.playlist.creator' | translate}}</span>
+      <span class="kProp">{{owner}}</span>
+      <div class="kSeparator"></div>
+      <span>{{'app.playlist.creation' | translate}}</span>
+      <span class="kProp">{{_creationDate | date:'MM/dd/yyyy'}}</span>
+      <div *ngIf="!isChildAccount && _viewConfig.title" class="kSeparator"></div>
+      <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title" class="link" role="link" aria-label="See All Details" #link
+         (click)="navigateToPlaylist.emit()"
+         (keydown.enter)="navigateToPlaylist.emit()">
+        <span class="link" (click)="navigateToPlaylist.emit()">{{'app.entry.seeAll' | translate}}</span>
+      </a>
+    </div>
+
+  </div>
+</div>
