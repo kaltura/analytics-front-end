@@ -76,7 +76,30 @@
     }
   }
 }
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
 
+  .kSmallReportContainer{
+    width: 60%;
+    height: 444px;
+    &:nth-child(even){
+      width: 40%;
+      padding-left: 24px;
+    }
+  }
+  .kMiniReportContainer{
+    height: 308px;
+    width: 30%;
+    flex: 1 1 auto;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
 .kFilter {
   display: flex;
   align-items: center;
@@ -114,14 +137,6 @@
       color: $kGrayscale3;
     }
   }
-}
-
-
-.kReportContainer {
-  padding-bottom: 24px;
-  background-color: $appBkgColor;
-  display: flex;
-  flex-wrap: wrap;
 }
 
 :host ::ng-deep .kErrorMessageContainer {
