@@ -81,7 +81,28 @@
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
-
+  .kMiniTopReportSmall {
+    width: 40%;
+  }
+  .kMiniReportContainer{
+    height: 248px;
+    width: 30%;
+    flex: 1 1 auto;
+    margin-right: 24px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .kMiniTopReportWide {
+    width: 60% !important;
+    height: 248px !important;
+  }
+  .hideOnTablet {
+    display: none;
+  }
+  .showOnTablet {
+    display: block;
+  }
   .kSmallReportContainer{
     width: 60%;
     height: 444px;
@@ -90,16 +111,8 @@
       padding-left: 24px;
     }
   }
-  .kMiniReportContainer{
-    height: 308px;
-    width: 30%;
-    flex: 1 1 auto;
-    margin-right: 24px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
 }
+
 .kFilter {
   display: flex;
   align-items: center;

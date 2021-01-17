@@ -12,6 +12,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { PlaylistViewComponent } from './playlist-view.component';
+import { ManualPlaylistMiniHighlightsComponent } from './views/playlist/manual/views/mini-highlights/mini-highlights.component';
 import { ManualPlaylistComponent } from './views/playlist/manual/manual-playlist.component';
 import { RulebasedPlaylistComponent } from './views/playlist/rule-based/rulebased-playlist.component';
 import { PathViewComponent } from './views/path/path-view.component';
@@ -24,6 +25,7 @@ import { PathContentTableComponent } from './views/path/path-content/path-conten
 import { NodePreviewComponent } from './views/path/path-content/node-preview/node-preview.component';
 import { NodeHotspotsComponent } from "./views/path/path-content/node-hotspots/node-hotspots.component";
 import { HotspotHeatMapComponent } from "./views/path/path-content/node-hotspots/hotspot-heat-map/hotspot-heat-map.component";
+import { ManualPlaylistMiniViewersEngagementComponent } from './views/playlist/manual/views/mini-viewers-engagement/mini-viewers-engagement.component';
 
 @NgModule({
   imports: [
@@ -47,6 +49,8 @@ import { HotspotHeatMapComponent } from "./views/path/path-content/node-hotspots
     ManualPlaylistComponent,
     RulebasedPlaylistComponent,
     PathViewComponent,
+    ManualPlaylistMiniHighlightsComponent,
+    ManualPlaylistMiniViewersEngagementComponent,
     PlaylistFilterComponent,
     PathEntryTotalsComponent,
     BasePlaylistTotalsComponent,

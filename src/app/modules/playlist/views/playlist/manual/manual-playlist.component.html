@@ -57,5 +57,20 @@
                        [selectedFilters]="_selectedRefineFilters"
                        (closeFilters)="_refineFilterOpened = false"
                        (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+
+    <div *ngIf="_miniViewsCount" class="kReportContainer">
+      <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide">
+        <app-manual-playlist-mini-highlights [dateFilter]="_dateFilter"
+                                      [playlistId]="_playlistId"
+                                      [refineFilter]="_refineFilter"></app-manual-playlist-mini-highlights>
+      </div>
+
+      <div *ngIf="_viewConfig.miniViewersEngagement" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
+        <app-manual-playlist-mini-viewers-engagement [dateFilter]="_dateFilter"
+                                      [playlistId]="_playlistId"
+                                      [refineFilter]="_refineFilter"></app-manual-playlist-mini-viewers-engagement>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -1043,7 +1043,13 @@
       "manual": "Playlist type:  Manual",
       "id": "ID:",
       "creator": "Creator:",
-      "creation": "Creation Date:"
+      "creation": "Creation Date:",
+      "impressions": "Playlist Impressions",
+      "plays": "{{0}} Playlists played",
+      "played": "Played Entries",
+      "viewersEng": "Viewer’s Engagement",
+      "videosPlayed": "Videos played on avg.",
+      "avgTime": "Avg. minutes viewed"
     },
     "context": {
       "name": "Name",

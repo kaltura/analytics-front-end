@@ -51,6 +51,14 @@ export class ManualPlaylistComponent implements OnInit {
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
 
+  public _miniViewsCount = [
+    this._viewConfig.miniHighlights,
+    this._viewConfig.miniViewersEngagement,
+    this._viewConfig.miniTopVideos,
+    this._viewConfig.miniTopViewers,
+    this._viewConfig.miniInsights
+  ].filter(Boolean).length;
+
   constructor(private _exportConfigService: ManualExportConfig) {
   }
 
