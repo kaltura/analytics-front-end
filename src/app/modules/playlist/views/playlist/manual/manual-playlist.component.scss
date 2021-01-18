@@ -4,6 +4,9 @@
   display: block;
   width: 100%;
   height: 100%;
+  app-refine-filter {
+    background-color: $appBkgColor;
+  }
 }
 
 @media screen and (max-width: 1060px) {
