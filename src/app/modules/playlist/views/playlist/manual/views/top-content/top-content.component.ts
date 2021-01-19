@@ -84,8 +84,8 @@ export class ManualPlaylistTopContentComponent extends ManualPlaylistBase implem
     this._isBusy = true;
     this._blockerMessage = null;
 
-    if (this.playlistId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
-      this._filter.categoriesIdsIn = this.playlistId;
+    if (this.playlistId && !this._filter.playlistIdIn) {
+      this._filter.playlistIdIn = this.playlistId;
     }
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -95,8 +95,8 @@ export class ManualPlaylistTopContentComponent extends ManualPlaylistBase implem
           return ObservableOf({ report, compare: null });
         }
 
-        if (this.playlistId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
-          this._compareFilter.categoriesIdsIn = this.playlistId;
+        if (this.playlistId && !this._compareFilter.playlistIdIn) {
+          this._compareFilter.playlistIdIn = this.playlistId;
         }
 
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };

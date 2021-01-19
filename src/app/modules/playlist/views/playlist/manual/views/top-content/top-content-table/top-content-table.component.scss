@@ -10,14 +10,36 @@
   margin-bottom: 16px;
   display: inline-block;
 }
-
-.kEntryName {
-  font-size: 15px;
+.kTopVideoEntryColumn {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
   font-weight: bold;
-  color: $kGrayscale1;
+  margin-top: -24px;
+
+  .kEntryName {
+    font-size: 18px;
+    color: $kGrayscale1;
+    margin-bottom: 12px;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 375px);
+    &.noCreator{
+      margin-top: -12px;
+    }
+  }
+
+  .kEntryDetails {
+    color: $kGrayscale3;
+    margin-top: 32px;
+  }
 }
 
 .kTopVideoRow {
+  height: 100px;
+
   .kReportRowIndex {
     position: relative;
     font-size: 18px;
@@ -26,7 +48,7 @@
 
     span {
       position: absolute;
-      top: -11px;
+      top: -35px;
       left: 4px;
     }
 
@@ -36,14 +58,14 @@
       img {
         z-index: 1;
         position: absolute;
-        top: -24px;
+        top: -50px;
         left: -7px;
       }
 
       span {
         z-index: 2;
         position: absolute;
-        top: -11px;
+        top: -35px;
         left: 4px;
         color: $kGrayscale1
       }
@@ -52,12 +74,38 @@
   }
 }
 
+.kTableCell {
+  color: $kGrayscale1;
+  display: flex;
+  align-items: center;
+
+  i {
+    margin-right: 10px;
+  }
+
+  .icon-small-play {
+    color: #487ADF;
+  }
+
+  .icon-viewer-contributor {
+    color: #31BEA6
+  }
+
+  .icon-small-time {
+    color: #E1962E;
+  }
+
+  .kCellValue {
+    font-weight: bold;
+  }
+}
+
 .kScore {
   text-align: right;
-
-  div {
+  div{
     display: flex;
     flex-direction: column;
+    height: 80px;
     padding-top: 6px;
     align-items: flex-end;
   }
@@ -72,8 +120,7 @@
     font-size: 18px;
     font-weight: bold;
     padding-right: 24px;
-
-    &.kEntryStatus {
+    &.kEntryStatus{
       white-space: nowrap;
       font-size: 15px;
       font-weight: bold;
@@ -86,6 +133,7 @@
 
 .kDividerWrapper {
   display: flex;
+  height: 532px;
 
   .kDivider {
     border-left: 1px solid #d9d9d9;
@@ -93,6 +141,7 @@
 }
 
 .emptymessage {
+  height: 532px;
 
   .kEmptyMessage {
     top: 115px;
