@@ -78,7 +78,7 @@
       <div class="separator showOnTablet"></div>
 
       <div *ngIf="_viewConfig.miniTopVideos" class="kMiniReportContainer kMiniTopReportSmall">
-        <app-manual-playlist-mini-top-videos [dateFilter]="_dateFilter" [topVideos]="[]"
+        <app-manual-playlist-mini-top-videos [dateFilter]="_dateFilter"  [topVideos]="_playlistTopContentComponent?.topVideos$"
                                       [refineFilter]="_refineFilter"></app-manual-playlist-mini-top-videos>
       </div>
 
@@ -121,6 +121,15 @@
                                           [refineFilter]="_refineFilter"></app-manual-playlist-insight-domains>
           </ui-carousel-item>
         </ui-carousel>
+      </div>
+
+      <div class="divider hideOnTablet"></div>
+      <div class="separator showOnTablet"></div>
+
+      <div *ngIf="_viewConfig.topVideos" class="kReportContainer" id="top-videos">
+        <app-manual-playlist-top-content [playlistId]="_playlistId" #topVideos
+                                  [dateFilter]="_dateFilter"
+                                  [refineFilter]="_refineFilter"></app-manual-playlist-top-content>
       </div>
 
     </div>

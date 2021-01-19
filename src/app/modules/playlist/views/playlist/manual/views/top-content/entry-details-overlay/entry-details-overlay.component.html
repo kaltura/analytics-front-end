@@ -1,0 +1,32 @@
+<div data-aid="overlay-entry-details" class="kEntryDetailsOverlay">
+  <ng-container *ngIf="entryData">
+    <div class="kEntryThumbnail" #holder>
+      <thumb-loader [thumbnailUrl]="entryData.thumbnailUrl" [width]="300" [height]="140"></thumb-loader>
+      <div class="kProtector"></div>
+      <div class="kEntryName">
+        <span>{{entryData.entry_name}}</span>
+      </div>
+    </div>
+    <div class="kEntryDetails">
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.type' | translate}}</div>
+        <div class="kValue">{{entryData.media_type | mediaType: true}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.user.content_source' | translate}}</div>
+        <div class="kValue">{{entryData.entry_source}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.user.created_at' | translate}}</div>
+        <div class="kValue">{{entryData.created_at}}</div>
+      </div>
+
+      <div class="kDetailsRow">
+        <div class="kLabel">{{'app.engagement.topVideosReport.duration' | translate}}</div>
+        <div class="kValue">{{entryData.duration_msecs}}</div>
+      </div>
+    </div>
+  </ng-container>
+</div>

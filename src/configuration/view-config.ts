@@ -223,7 +223,10 @@ export const viewsConfig = {
     },
     totals: {},
     performance: {},
-    videos: {},
+    topVideos: {},
+    geo: {},
+    devices: {},
+    syndication: {}
   },
   user: {
     export: {},

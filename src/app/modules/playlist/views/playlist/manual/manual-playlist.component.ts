@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {KalturaPlaylist, KalturaReportInterval} from "kaltura-ngx-client";
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 import {ViewConfig, viewsConfig} from "configuration/view-config";
@@ -7,8 +7,8 @@ import * as moment from "moment";
 import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
 import {ExportItem} from "shared/components/export-csv/export-config-base.service";
-import {PathExportConfig} from "../../path/path-export.config";
 import {ManualExportConfig} from "./manual-export.config";
+import {ManualPlaylistTopContentComponent} from "./views/top-content";
 
 @Component({
   selector: 'app-manual-playlist-view',
@@ -37,6 +37,13 @@ export class ManualPlaylistComponent implements OnInit {
 
   @Output() back = new EventEmitter<void>();
   @Output() navigateToPlaylist = new EventEmitter<void>();
+
+  @ViewChild('topVideos') set topVideos(comp: ManualPlaylistTopContentComponent) {
+    setTimeout(() => { // use timeout to prevent check after init error
+      this._playlistTopContentComponent = comp;
+    }, 0);
+  }
+  public _playlistTopContentComponent: ManualPlaylistTopContentComponent;
 
   public _playlistId = '';
   public _playlistName = '';

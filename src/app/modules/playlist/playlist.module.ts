@@ -33,6 +33,7 @@ import { ManualPlaylistInsightGeoComponent } from './views/playlist/manual/views
 import { ManualPlaylistInsightDevicesComponent } from './views/playlist/manual/views/insight-devices/insight-devices.component';
 import { ManualPlaylistInsightDomainsComponent } from './views/playlist/manual/views/insight-domains/insight-domains.component';
 import { ManualPlaylistInsightPeakDayComponent } from './views/playlist/manual/views/insight-peak-day/insight-peak-day.component';
+import { ManualPlaylistTopContentComponent, ManualPlaylistEntryDetailsOverlayComponent, ManualPlaylistTopContentTableComponent } from './views/playlist/manual/views/top-content';
 
 @NgModule({
   imports: [
@@ -63,8 +64,11 @@ import { ManualPlaylistInsightPeakDayComponent } from './views/playlist/manual/v
     ManualPlaylistInsightDevicesComponent,
     ManualPlaylistInsightDomainsComponent,
     ManualPlaylistInsightPeakDayComponent,
+    ManualPlaylistTopContentComponent,
     MiniManualPlaylistTopVideosComponent,
     ManualPlaylistMiniTopViewersComponent,
+    ManualPlaylistEntryDetailsOverlayComponent,
+    ManualPlaylistTopContentTableComponent,
     PlaylistFilterComponent,
     PathEntryTotalsComponent,
     BasePlaylistTotalsComponent,
