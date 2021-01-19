@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './playlist.routes';
+import { UICarouselModule } from 'ng-carousel-iuno';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
@@ -26,11 +27,18 @@ import { NodePreviewComponent } from './views/path/path-content/node-preview/nod
 import { NodeHotspotsComponent } from "./views/path/path-content/node-hotspots/node-hotspots.component";
 import { HotspotHeatMapComponent } from "./views/path/path-content/node-hotspots/hotspot-heat-map/hotspot-heat-map.component";
 import { ManualPlaylistMiniViewersEngagementComponent } from './views/playlist/manual/views/mini-viewers-engagement/mini-viewers-engagement.component';
+import { MiniManualPlaylistTopVideosComponent } from './views/playlist/manual/views/mini-top-videos/mini-top-videos.component';
+import { ManualPlaylistMiniTopViewersComponent } from './views/playlist/manual/views/mini-top-viewers/mini-top-viewers.component';
+import { ManualPlaylistInsightGeoComponent } from './views/playlist/manual/views/insight-geo/insight-geo.component';
+import { ManualPlaylistInsightDevicesComponent } from './views/playlist/manual/views/insight-devices/insight-devices.component';
+import { ManualPlaylistInsightDomainsComponent } from './views/playlist/manual/views/insight-domains/insight-domains.component';
+import { ManualPlaylistInsightPeakDayComponent } from './views/playlist/manual/views/insight-peak-day/insight-peak-day.component';
 
 @NgModule({
   imports: [
     AreaBlockerModule,
     TagsModule,
+    UICarouselModule,
     CommonModule,
     FormsModule,
     TranslateModule,
@@ -51,6 +59,12 @@ import { ManualPlaylistMiniViewersEngagementComponent } from './views/playlist/m
     PathViewComponent,
     ManualPlaylistMiniHighlightsComponent,
     ManualPlaylistMiniViewersEngagementComponent,
+    ManualPlaylistInsightGeoComponent,
+    ManualPlaylistInsightDevicesComponent,
+    ManualPlaylistInsightDomainsComponent,
+    ManualPlaylistInsightPeakDayComponent,
+    MiniManualPlaylistTopVideosComponent,
+    ManualPlaylistMiniTopViewersComponent,
     PlaylistFilterComponent,
     PathEntryTotalsComponent,
     BasePlaylistTotalsComponent,

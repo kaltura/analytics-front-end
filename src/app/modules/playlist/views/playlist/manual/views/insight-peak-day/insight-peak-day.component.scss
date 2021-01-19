@@ -1,0 +1,68 @@
+@import '../../../../../../../../styles/variables';
+:host{
+  height: 100%;
+}
+
+.kFilters {
+  height: 93px !important;
+}
+
+.kReport{
+  height: 100%;
+  .peakDayHolder{
+    padding-top: 24px;
+    margin-bottom: 24px;
+    .peakDay{
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: bold;
+      margin-left: 24px;
+      margin-right: 8px;
+      margin-top: 24px;
+    }
+    .peakDayLable{
+      font-size: 18px;
+      font-weight: normal;
+    }
+  }
+  .kValueHolder{
+    display: flex;
+    margin-top: 12px;
+    margin-left: 24px;
+    .kVal{
+      font-size: 15px;
+      font-weight: bold;
+      margin-right: 8px;
+      margin-left: 8px;
+    }
+    .kLabel{
+      font-size: 15px;
+      font-weight: normal;
+    }
+    .kBlue{
+      color: #487ADF;
+    }
+    .kAqua {
+      color: #16a8d7;
+    }
+    .kGreen{
+      color: #31BEA6;
+    }
+    .kOrange{
+      color: #E1962E;
+    }
+  }
+
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}

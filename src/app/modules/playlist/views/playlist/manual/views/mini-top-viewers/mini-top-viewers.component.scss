@@ -1,0 +1,169 @@
+@import '../../../../../../../../styles/variables';
+:host ::ng-deep .kValue{
+  font-size: 24px;
+  font-weight: 700;
+}
+:host ::ng-deep .kUnits{
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kMini{
+  height: 100%;
+
+  .kFilters {
+    height: 93px !important;
+    .kTitle{
+      width: auto;
+      padding-right: 0;
+    }
+  }
+
+  .kDetails {
+    margin-left: auto;
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+  .kVal{
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    .kMiniIcon{
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-right: 20px;
+      &.blue{
+        background-color: rgba(72,122,223,0.2);
+        color: #487ADF;
+      }
+      &.green{
+        background-color: rgba(49,190,166,0.2);
+        color: #31BEA6;
+
+      }
+      &.orange{
+        background-color: rgba(225,150,46,0.2);
+        color: #E1962E;
+      }
+    }
+    .value{
+      font-size: 24px;
+      line-height: 24px;
+      font-weight: 700;
+      color: $kGrayscale1;
+    }
+    .title{
+      font-size: 18px;
+      line-height: 18px;
+      color: $kGrayscale1;
+      margin-left: 14px;
+    }
+  }
+
+  .kDates {
+    font-size: 15px;
+    margin-left: 24px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  .kReportRow {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 30px;
+
+    &.kNoResults {
+      font-size: 28px;
+      height: 100%;
+      color: $kGrayscale3;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .kReportRowIndex {
+      font-size: 18px;
+      font-weight: bold;
+      color: $kGrayscale3;
+      margin-right: 18px;
+
+      &.kFirst {
+        position: relative;
+        margin-right: 28px;
+
+        img {
+          z-index: 1;
+          position: absolute;
+          top: -15px;
+          left: -7px;
+        }
+
+        span {
+          z-index: 2;
+          position: absolute;
+          top: -10px;
+          left: -1px;
+          color: $kGrayscale1
+        }
+
+      }
+    }
+
+    .kUser {
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(49,190,166,0.2);
+      margin-right: 10px;
+      flex: 0 1 auto;
+
+      i {
+        display: inline-block;
+        font-size: 22px;
+        color: #31BEA6;
+      }
+    }
+
+    .kReportRowDetails {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+
+      .kTitle {
+        color: $kGrayscale1;
+        font-weight: bold;
+        margin-bottom: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .kScore {
+        color: $kGrayscale3;
+        .kIconhelp_full{
+          font-size: 15px;
+          &:hover{
+            color: $kSecondary;
+          }
+        }
+      }
+
+    }
+  }
+}
+

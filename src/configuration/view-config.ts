@@ -215,7 +215,12 @@ export const viewsConfig = {
     miniViewersEngagement: {},
     miniTopVideos: {},
     miniTopViewers: {},
-    miniInsights: {},
+    miniInsights: {
+      peakDay: {},
+      domains: {},
+      geo: {},
+      devices: {}
+    },
     totals: {},
     performance: {},
     videos: {},
