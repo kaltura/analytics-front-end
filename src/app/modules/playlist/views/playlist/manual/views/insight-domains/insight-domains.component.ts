@@ -71,8 +71,8 @@ export class ManualPlaylistInsightDomainsComponent extends ManualPlaylistBase im
     this._isBusy = true;
     this._blockerMessage = null;
 
-    if (!this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
-      this._filter.categoriesIdsIn = this.playlistId;
+    if (!this._filter.playlistIdIn) {
+      this._filter.playlistIdIn = this.playlistId;
     }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
@@ -80,8 +80,8 @@ export class ManualPlaylistInsightDomainsComponent extends ManualPlaylistBase im
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        if (!this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
-          this._compareFilter.categoriesIdsIn = this.playlistId;
+        if (!this._compareFilter.playlistIdIn) {
+          this._compareFilter.playlistIdIn = this.playlistId;
         }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
 

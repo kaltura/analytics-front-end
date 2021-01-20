@@ -102,7 +102,10 @@
       height: 15px;
     }
     .kLabel{
-      margin-right: 8px;
+      white-space: nowrap;
+    }
+    .kProp {
+      margin-left: 4px;
       white-space: nowrap;
     }
     .kSeparator {
@@ -110,8 +113,9 @@
       height: 12px;
       margin-top: 2px;
       background-color: $kGrayscale4;
-      margin-left: 16px;
-      margin-right: 16px;
+      margin-left: 8px;
+      margin-right: 8px;
+      flex: 0 0 auto;
     }
 
   }

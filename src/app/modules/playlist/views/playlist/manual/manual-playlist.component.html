@@ -32,15 +32,15 @@
     </div>
 
     <div *ngIf="_viewConfig.details" class="kEntryDetails" [class.kFloatingDetails]="!_viewConfig.title">
-      <span>{{'app.playlist.manual' | translate}}</span>
+      <span class="kLabel">{{'app.playlist.manual' | translate}}</span>
       <div class="kSeparator"></div>
-      <span>{{'app.playlist.id' | translate}}</span>
+      <span class="kLabel">{{'app.playlist.id' | translate}}</span>
       <span class="kProp">{{_playlistId}}</span>
       <div class="kSeparator"></div>
-      <span>{{'app.playlist.creator' | translate}}</span>
+      <span class="kLabel">{{'app.playlist.creator' | translate}}</span>
       <span class="kProp">{{owner}}</span>
       <div class="kSeparator"></div>
-      <span>{{'app.playlist.creation' | translate}}</span>
+      <span class="kLabel">{{'app.playlist.creation' | translate}}</span>
       <span class="kProp">{{_creationDate | date:'MM/dd/yyyy'}}</span>
       <div *ngIf="!isChildAccount && _viewConfig.title" class="kSeparator"></div>
       <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title" class="link" role="link" aria-label="See All Details" #link
