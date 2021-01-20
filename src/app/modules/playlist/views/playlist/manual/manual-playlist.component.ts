@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {KalturaPlaylist, KalturaReportInterval} from "kaltura-ngx-client";
+import {KalturaPlaylist, KalturaReportInterval, KalturaReportType} from "kaltura-ngx-client";
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 import {ViewConfig, viewsConfig} from "configuration/view-config";
 import {isEmptyObject} from "shared/utils/is-empty-object";
@@ -9,6 +9,7 @@ import {RefineFilter} from "shared/components/filter/filter.component";
 import {ExportItem} from "shared/components/export-csv/export-config-base.service";
 import {ManualExportConfig} from "./manual-export.config";
 import {ManualPlaylistTopContentComponent} from "./views/top-content";
+import {TopCountriesComponent} from "shared/components/top-countries-report/top-countries.component";
 
 @Component({
   selector: 'app-manual-playlist-view',
@@ -45,6 +46,13 @@ export class ManualPlaylistComponent implements OnInit {
   }
   public _playlistTopContentComponent: ManualPlaylistTopContentComponent;
 
+  @ViewChild('topCountries') set topCountries(comp: TopCountriesComponent) {
+    setTimeout(() => { // use timeout to prevent check after init error
+      this._topCountriesComponent = comp;
+    }, 0);
+  }
+  public _topCountriesComponent: TopCountriesComponent;
+
   public _playlistId = '';
   public _playlistName = '';
   public _creationDate: moment.Moment = null;
@@ -79,6 +87,20 @@ export class ManualPlaylistComponent implements OnInit {
 
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
+  }
+
+  public _onGeoDrillDown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
+    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+
+    if (event.drillDown && event.drillDown.length > 0) {
+      update.additionalFilters.countryIn = event.drillDown[0];
+    }
+
+    if (event.drillDown && event.drillDown.length > 1) {
+      update.additionalFilters.regionIn = event.drillDown[1];
+    }
+
+    this._exportConfig = ManualExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
   }
 
 }

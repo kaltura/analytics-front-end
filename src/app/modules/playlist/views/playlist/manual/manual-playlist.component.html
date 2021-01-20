@@ -105,7 +105,7 @@
           </ui-carousel-item>
 
           <ui-carousel-item *ngIf="_viewConfig.miniInsights.geo">
-            <app-manual-playlist-insight-geo [topCountries]="[]"
+            <app-manual-playlist-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"
                                       [dateFilter]="_dateFilter"
                                       [refineFilter]="_refineFilter"></app-manual-playlist-insight-geo>
           </ui-carousel-item>
@@ -123,13 +123,35 @@
         </ui-carousel>
       </div>
 
-      <div class="divider hideOnTablet"></div>
-      <div class="separator showOnTablet"></div>
+      <div class="divider"></div>
 
       <div *ngIf="_viewConfig.topVideos" class="kReportContainer" id="top-videos">
         <app-manual-playlist-top-content [playlistId]="_playlistId" #topVideos
                                   [dateFilter]="_dateFilter"
                                   [refineFilter]="_refineFilter"></app-manual-playlist-top-content>
+      </div>
+
+      <div *ngIf="_viewConfig.geo" class="kReportContainer" id="top-geo">
+        <app-top-countries [dateFilter]="_dateFilter" #topCountries
+                           [_distributionKey]="'plays_distribution'"
+                           [_distributionCalculationKey]="'count_plays'"
+                           [refineFilter]="_refineFilter"
+                           [playlistId]="_playlistId"
+                           (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
+      </div>
+
+      <div *ngIf="_viewConfig.devices" class="kReportContainer" id="top-devices">
+        <app-devices-overview [dateFilter]="_dateFilter"
+                              [refineFilter]="_refineFilter"
+                              [colorScheme]="'plays'"
+                              [playlistId]="_playlistId"></app-devices-overview>
+      </div>
+
+      <div *ngIf="_viewConfig.syndication" class="kReportContainer" id="top-domains">
+        <app-syndication [dateFilterComponent]="dateFilter"
+                         [dateFilter]="_dateFilter"
+                         [playlistId]="_playlistId"
+                         [refineFilter]="_refineFilter"></app-syndication>
       </div>
 
     </div>

@@ -49,18 +49,19 @@ export interface Summary {
 })
 export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
   @Input() categoryId: string = null;
+  @Input() playlistId: string = null;
   @Input() entryId: string = null;
   @Input() colorScheme = 'default';
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'devices-overview';
-  
+
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
   private _reportType = reportTypeMap(KalturaReportType.platforms);
   private _tabsData: Tab[] = [];
   private _compareTabsData: Tab[] = [];
-  
+
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedMetrics: string;
   public _barChartData: { [key: string]: any; } = {};
@@ -78,11 +79,11 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
   public _currentPeriodLabel: string;
   public _comparePeriodLabel: string;
   public _deviceIconPipe = new DeviceIconPipe();
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -92,21 +93,21 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
               private _dataConfigService: DevicesOverviewConfig,
               private _trendService: TrendService) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -123,29 +124,33 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
       this._compareFilter = null;
     }
   }
-  
+
   protected _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
-    
-    
+
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
-    
+
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
-    
+
+    if (this.playlistId && !this._filter.playlistIdIn) {
+      this._filter.playlistIdIn = this.playlistId;
+    }
+
     const reportConfig: ReportConfig = {
       reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
       order: null
     };
-    
+
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(
         cancelOnDestroy(this),
@@ -153,22 +158,26 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           if (!this._isCompareMode) {
             return ObservableOf({ report, compare: null });
           }
-          
+
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
           }
-          
+
           if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
             this._compareFilter.categoriesIdsIn = this.categoryId;
           }
-          
+
+          if (this.playlistId && !this._compareFilter.playlistIdIn) {
+            this._compareFilter.playlistIdIn = this.playlistId;
+          }
+
           const compareReportConfig: ReportConfig = {
             reportType: this._reportType,
             filter: this._compareFilter,
             pager: this._pager,
             order: null
           };
-          
+
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         }))
@@ -176,7 +185,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           this._tabsData = [];
           this._compareTabsData = [];
           this._summaryData = [];
-          
+
           if (compare) {
             this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
             this._comparePeriodLabel = this._getPeriodLabel(this._comparePeriod);
@@ -185,17 +194,17 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           } else {
             this._comparePeriod = null;
             this._comparePeriodLabel = null;
-            
+
             // IMPORTANT to handle totals first, summary rely on totals
             if (report.totals) {
               this._handleTotals(report.totals); // handle totals
             }
-            
+
             if (report.table && report.table.header && report.table.data) {
               this._handleOverview(report.table); // handle overview
             }
           }
-          
+
           this._isBusy = false;
         },
         error => {
@@ -211,7 +220,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
     const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
@@ -230,10 +239,10 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
       }
       return data;
     }, []);
-    
+
     return { data, columns };
   }
-  
+
   private _getSummaryData(data: { [key: string]: string }[], compareData?: { [key: string]: string }[]): BarChartRow[] {
     const key = this._selectedMetric;
     const getValue = (itemValue, totalValue) => {
@@ -246,23 +255,23 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
       }
       return value;
     };
-    
+
     const relevantCurrentTotal = this._tabsData.find(total => total.key === key);
     if (relevantCurrentTotal) {
       const totalValue = parseFloat(relevantCurrentTotal.value);
-      
+
       const relevantCompareTotal = this._compareTabsData.find(total => total.key === key);
       const compareTotalValue = relevantCompareTotal ? parseFloat(relevantCompareTotal.value) : 0;
-      
+
       return data.map((item) => {
         const rawValue = parseFloat(item[key]);
         const currentValue = getValue(rawValue, totalValue);
-        
+
         if (compareData) {
           const compareDevice = compareData.filter(compareItem => compareItem.device === item.device)
           const compareRawValue = compareDevice.length ? parseFloat(compareDevice[0][key]) : 0;
           const compareValue = getValue(compareRawValue, compareTotalValue);
-  
+
           const { value, direction } = this._trendService.calculateTrend(Number(rawValue), Number(compareRawValue));
           const trend = {
             value: value !== null ? value : '–',
@@ -282,7 +291,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
             icon: this._deviceIconPipe.transform(item.device),
           };
         }
-        
+
         return {
           value: currentValue,
           tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
@@ -291,41 +300,41 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
         };
       });
     }
-    
+
     return [];
   }
-  
+
   private _handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
     const { data } = this._getOverviewData(table, relevantFields);
-    
+
     this._totalCount = table.totalCount;
     this._summaryData = this._getSummaryData(data);
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal, compare?: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
-    
+
     if (compare) {
       this._compareTabsData = this._reportService.parseTotals(compare, this._dataConfig.totals, this._selectedMetric);
     }
   }
-  
+
   private _getPeriodLabel(period: { from: number, to: number }): string {
     return `${DateFilterUtils.formatMonthDayString(period.from, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(period.to, analyticsConfig.locale)}`;
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     if (current.totals) {
       this._handleTotals(current.totals, compare.totals); // handle totals
     }
-    
+
     if (current.table && current.table.data) {
       const compareTable = compare.table && compare.table.data ? compare.table : Object.assign({}, current.table, { data: '' });
       const relevantFields = Object.keys(this._dataConfig.totals.fields);
       const { data: currentData } = this._getOverviewData(current.table, relevantFields);
       const { data: compareData } = this._getOverviewData(compareTable, relevantFields);
-      
+
       const uniqueKeys = Array.from(new Set([...currentData, ...compareData].map(({ device }) => device)));
       const updateCollection = collection => key => {
         if (!collection.find(({ device }) => key === device)) {
@@ -339,18 +348,18 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           data.push(data.splice(otherDevicesIndex, 1)[0]);
         }
       };
-      
+
       const updateCurrentData = updateCollection(currentData);
       const updateCompareData = updateCollection(compareData);
-      
+
       uniqueKeys.forEach(key => {
         updateCurrentData(key);
         updateCompareData(key);
       });
-      
+
       arrangeKeys(currentData);
       arrangeKeys(compareData);
-      
+
       this._summaryData = this._getSummaryData(currentData, compareData);
     }
   }

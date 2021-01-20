@@ -18,7 +18,9 @@
   padding-bottom: 24px;
   background-color: $appBkgColor;
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
+
   .kMiniReportContainer{
     height: 308px;
     flex: 1 1 auto;
