@@ -32,11 +32,11 @@
     <div class="kReportContent">
 
       <div class="kFilters">
-        <span class="kTitle" *ngIf="!_drillDown.length">{{'app.bandwidth.allUsers' | translate}}</span>
-        <div class="kBreadcrumbs" *ngIf="_drillDown.length">
-          <a (click)="_onDrillDown('')">{{'app.bandwidth.allUsers' | translate}}</a>
+        <span class="kTitle" *ngIf="!_drillDownName.length">{{'app.bandwidth.allUsers' | translate}}</span>
+        <div class="kBreadcrumbs" *ngIf="_drillDownName.length">
+          <a (click)="_onDrillDown({})">{{'app.bandwidth.allUsers' | translate}}</a>
           <span class="separator">/</span>
-          <span>{{_drillDown}}</span>
+          <span>{{_drillDownName}}</span>
         </div>
       </div>
 
@@ -65,12 +65,12 @@
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'name' ? null : col" [class.nonSortable]="isCompareMode || col === 'name'">
+                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.bandwidth.enduser_table.' + col | translate" [showOnEllipsis]="true">
                       {{'app.bandwidth.enduser_table.' + col | translate}}
                     </span>
-                    <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'name'"></p-sortIcon>
+                    <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
                   </div>
                 </th>
 
@@ -79,16 +79,16 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index">
-                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'name' && col !== 'month_id' && col !== 'date_id'"
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'full_name' && col !== 'month_id' && col !== 'date_id'"
                         class="kTrend"
                         [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                     <app-trend-value [value]="data[col].value"
                                      [units]="data[col].units"
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
-                  <ng-container *ngIf="!isCompareMode || col === 'name' || col === 'month_id' || col === 'date_id'">
-                    <span *ngIf="col !== 'name' || data[col]==='anonymous'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
-                    <a *ngIf="col === 'name' && data[col]!=='anonymous'" (click)="_onDrillDown(data[col], data)" class="nameLink" [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</a>
+                  <ng-container *ngIf="!isCompareMode || col === 'full_name' || col === 'month_id' || col === 'date_id'">
+                    <span *ngIf="col !== 'full_name' || data[col]==='anonymous'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
+                    <a *ngIf="col === 'full_name' && data[col]!=='anonymous'" (click)="_onDrillDown(data)" class="nameLink" [kTooltip]="data[col].length ? data[col] : data['name']" [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</a>
                   </ng-container>
                 </td>
               </tr>
