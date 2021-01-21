@@ -48,9 +48,24 @@
                     (mouseenter)="_showOverlay($event, data['object_id'])">{{data['entry_name']}}</span>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td [ngStyle]="{'width': '170px'}">{{data['count_plays']}}</td>
-            <td [ngStyle]="{'width': '220px'}">{{data['unique_viewers']}}</td>
-            <td [ngStyle]="{'width': '220px'}">{{data['avg_completion_rate']}}</td>
+            <td [ngStyle]="{'width': '170px'}">
+              <div class="kTableCell">
+                <i class="icon-small-play"></i>
+                <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
+              </div>
+            </td>
+            <td [ngStyle]="{'width': '220px'}">
+              <div class="kTableCell">
+                <i class="icon-viewer-contributor"></i>
+                <span class="kCellValue">{{data['unique_viewers']}}</span>&nbsp;
+              </div>
+            </td>
+            <td [ngStyle]="{'width': '220px'}">
+              <div class="kTableCell">
+                <i class="icon-small-Completion-Rate"></i>
+                <span class="kCellValue">{{data['avg_completion_rate']}}</span>&nbsp;
+              </div>
+            </td>
           </ng-container>
           <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
             <div *ngIf="data['status']?.length">

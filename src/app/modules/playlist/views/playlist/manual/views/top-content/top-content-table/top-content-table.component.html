@@ -7,17 +7,17 @@
         <tr class="kTopVideoHeader">
           <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
           <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
-          <th [ngStyle]="{'width': '60%', 'padding-left': '0'}">
+          <th [ngStyle]="{'width': '100%', 'padding-left': '0'}">
             {{'app.engagement.topVideosReport.viewDetails' | translate}}
           </th>
           <ng-container *ngIf="!isCompareMode">
-            <th [ngStyle]="{'width': '20%'}">
+            <th [ngStyle]="{'width': '170px'}">
               {{'app.user.topContentReport.count_plays' | translate}}
             </th>
-            <th [ngStyle]="{'width': '20%'}">
+            <th [ngStyle]="{'width': '220px'}">
               {{'app.user.topContentReport.unique_viewers' | translate}}
             </th>
-            <th [ngStyle]="{'width': '20%'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
+            <th [ngStyle]="{'width': '220px'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
           </ng-container>
           <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}">
             {{'app.user.topContentReport.score' | translate}}
@@ -66,7 +66,7 @@
             </td>
             <td [ngStyle]="{'width': '220px'}">
               <div class="kTableCell">
-                <i class="icon-small-time"></i>
+                <i class="icon-small-Completion-Rate"></i>
                 <span class="kCellValue">{{data['avg_completion_rate']}}</span>&nbsp;
               </div>
             </td>
