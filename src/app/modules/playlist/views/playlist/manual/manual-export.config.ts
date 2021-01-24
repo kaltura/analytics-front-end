@@ -14,24 +14,59 @@ export class ManualExportConfig extends ExportConfigService {
   public getConfig(viewConfig?: ViewConfig): ExportItem[] {
     const config: ExportItem[] = [
       {
-        id: "totals",
-        label: this._translate.instant('app.playlist.exportLabels.highlights'),
-        reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
+        id: 'miniHighlights',
+        label: this._translate.instant('app.category.highlights'),
+        reportType: reportTypeMap(KalturaReportType.categoryHighlights),
         sections: [KalturaReportExportItemType.total],
+        order: '-count_plays',
+      },
+      {
+        id: 'topVideos',
+        label: this._translate.instant('app.engagement.exportLabels.topVideos'),
+        reportType: reportTypeMap(KalturaReportType.topContentCreator),
+        sections: [KalturaReportExportItemType.table],
+        order: '-engagement_ranking',
       },
       {
         id: 'performance',
-        label: this._translate.instant('app.playlist.exportLabels.videoPerformance'),
-        reportType: reportTypeMap(KalturaReportType.userInteractiveVideo),
+        label: this._translate.instant('app.category.exportLabels.metrics'),
+        reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
       },
       {
-        id: 'videos',
-        label: this._translate.instant('app.playlist.exportLabels.videos'),
-        reportType: reportTypeMap(KalturaReportType.interactiveVideoTopNodes),
+        id: 'performance',
+        label: this._translate.instant('app.category.exportLabels.user'),
+        reportType: reportTypeMap(KalturaReportType.userTopContent),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_node_plays',
+        order: '-count_loads',
+      },
+      {
+        id: 'performance',
+        label: this._translate.instant('app.category.exportLabels.media'),
+        reportType: reportTypeMap(KalturaReportType.topContentCreator),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_loads',
+      },
+      {
+        id: 'geo',
+        label: this._translate.instant('app.entry.exportLabels.topCountries'),
+        reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
+      },
+      {
+        id: 'devices',
+        label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
+        reportType: reportTypeMap(KalturaReportType.platforms),
+        sections: [KalturaReportExportItemType.table],
+      },
+      {
+        id: 'syndication',
+        label: this._translate.instant('app.entry.exportLabels.syndication'),
+        reportType: reportTypeMap(KalturaReportType.topSyndication),
+        sections: [KalturaReportExportItemType.table],
+        order: '-count_plays',
       }
     ];
     return viewConfig ? config.filter((item: ExportItem) => viewConfig[item.id]) : config;
