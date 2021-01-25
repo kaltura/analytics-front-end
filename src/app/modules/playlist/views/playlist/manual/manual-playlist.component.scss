@@ -37,6 +37,7 @@
   }
   .kMiniTopReportWide{
     width: calc(60% + 48px);
+    height: 187px !important;
   }
   .showOnTablet {
     display: none;
@@ -198,7 +199,7 @@
     }
     .kMiniTopReportWide {
       width: 80%;
-      height: 248px !important;
+      height: 187px !important;
     }
     .hideOnTablet {
       display: none;

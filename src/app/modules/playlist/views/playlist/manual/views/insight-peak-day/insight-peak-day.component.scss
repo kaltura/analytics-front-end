@@ -10,8 +10,7 @@
 .kReport{
   height: 100%;
   .peakDayHolder{
-    padding-top: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 4px;
     .peakDay{
       color: $kGrayscale1;
       font-size: 24px;
@@ -52,7 +51,38 @@
       color: #E1962E;
     }
   }
-
+  .kSpinnerAnim {
+    margin-top: 36px;
+  }
+  .topEntry {
+    margin-top: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    .topEntryDetails {
+      overflow: hidden;
+      white-space: nowrap;
+      padding-left: 8px;
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 15px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+      .entryName {
+        font-size: 15px;
+        font-weight: normal;
+        color: $kGrayscale3;
+        margin-top: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
 }
 
 .kNoResults {

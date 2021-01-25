@@ -9,11 +9,11 @@
         <span class="peakDay">{{_peakDayData?.date_id}}</span>
         <span class="peakDayLable" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">{{'app.engagement.peak' | translate}}</span>
       </div>
-      <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
+      <!--div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
         <i class="icon-small-impressions kAqua"></i>
         <span class="kVal">{{_peakDayData?.count_loads}}</span>
         <span class="kLabel">{{'app.user.impressions' | translate}}</span>
-      </div>
+      </div-->
       <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
         <i class="icon-small-play kBlue"></i>
         <span class="kVal">{{_peakDayData?.count_plays}}</span>
@@ -29,6 +29,15 @@
         <span class="kVal">{{_peakDayData?.sum_time_viewed}}</span>
         <span class="kLabel">{{'app.engagement.highlightsReport.sum_time_viewed' | translate}}</span>
       </div>
+      <div class="topEntry" *ngIf="_peakDayData?.thumbnailUrl">
+        <thumb-loader [thumbnailUrl]="_peakDayData?.thumbnailUrl"></thumb-loader>
+        <div class="topEntryDetails">
+          <span class="title">{{'app.playlist.videoOfTheDay' | translate}}</span>
+          <span class="entryName" [kTooltip]="_peakDayData?.entry_name"
+                [showOnEllipsis]="true">{{_peakDayData?.entry_name}}</span>
+        </div>
+      </div>
+      <div class="k-spinner-animation kSpinnerAnim" *ngIf="_loadingTopEntry"></div>
     </div>
     <div class="kReportContent kNoResults" *ngIf="!_isBusy && !_peakDayData">
       <span>{{'app.common.noResults' | translate}}</span>

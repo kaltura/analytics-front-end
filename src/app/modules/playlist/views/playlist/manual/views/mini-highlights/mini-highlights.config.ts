@@ -13,22 +13,16 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'unique_videos': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.dimensions.entries`),
-            tooltip: this._translate.instant(`app.engagement.dimensions.entries_tt`),
-            sortOrder: 3,
-          },
-          'count_loads': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.playlist.impressions`),
-            tooltip: this._translate.instant(`app.playlist.impressions`),
-            sortOrder: 1,
-          },
           'count_plays': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
+            sortOrder: 1,
+          },
+          'unique_viewers': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.engagement.highlightsReport.unique_viewers`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 2,
           },
           'sum_time_viewed': {
@@ -36,9 +30,9 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
             units: value => 'min',
-            sortOrder: 5,
+            sortOrder: 3,
           },
-          'unique_viewers': {
+          'unique_videos': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.playlist.played`),
             tooltip: this._translate.instant(`app.playlist.played`),
@@ -46,9 +40,9 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
           },
           'unique_owners': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.unique_viewers`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
-            sortOrder: 6,
+            title: this._translate.instant(`app.playlist.avgPlays`),
+            tooltip: this._translate.instant(`app.playlist.avgPlays`),
+            sortOrder: 5,
           }
         }
       }

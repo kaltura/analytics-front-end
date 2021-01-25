@@ -212,7 +212,6 @@ export const viewsConfig = {
     },
     details: {},
     miniHighlights: {},
-    miniViewersEngagement: {},
     miniTopVideos: {},
     miniTopViewers: {},
     miniInsights: {

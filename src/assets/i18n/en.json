@@ -1047,9 +1047,11 @@
       "impressions": "Playlist Impressions",
       "plays": "{{0}} Playlists played",
       "played": "Played Entries",
+      "avgPlays": "Avg. played entries per user",
       "viewersEng": "Viewer’s Engagement",
       "videosPlayed": "Videos played on avg.",
-      "avgTime": "Avg. minutes viewed"
+      "avgTime": "Avg. minutes viewed",
+      "videoOfTheDay": "Video of the day"
     },
     "context": {
       "name": "Name",

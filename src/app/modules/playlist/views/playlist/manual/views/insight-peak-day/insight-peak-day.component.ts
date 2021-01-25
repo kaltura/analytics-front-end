@@ -13,6 +13,7 @@ import { DateFilterComponent } from 'shared/components/date-filter/date-filter.c
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {analyticsConfig} from "configuration/analytics-config";
 
 
 @Component({
@@ -27,14 +28,20 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
   @Input() dateFilterComponent: DateFilterComponent;
+  @Input() playlistId: string = null;
 
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
+  private _partnerId = this._authService.pid;
+  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
+    ? analyticsConfig.kalturaServer.uri
+    : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
 
   protected _componentId = 'manual-playlist-insight-peak-day';
 
   public _isBusy: boolean;
+  public _loadingTopEntry = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportInterval = KalturaReportInterval.days;
   public _compareFilter: KalturaEndUserReportInputFilter = null;
@@ -56,6 +63,7 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
+              private _logger: KalturaLogger,
               private _dataConfigService: InsightPeakDayConfig) {
     super();
 
@@ -66,6 +74,9 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
     this._isBusy = true;
     this._blockerMessage = null;
 
+    if (!this._filter.playlistIdIn) {
+      this._filter.playlistIdIn = this.playlistId;
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -74,6 +85,10 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
         }
 
         const pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
+
+        if (!this._compareFilter.playlistIdIn) {
+          this._compareFilter.playlistIdIn = this.playlistId;
+        }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: pager, order: this._order };
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
@@ -129,7 +144,43 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     if (tableData.length) {
       this._peakDayData = tableData[0];
+      this._loadTopEntry();
     }
+  }
+
+  private _loadTopEntry(): void {
+    this._loadingTopEntry = true;
+    const startDate = new Date(this._peakDayData.date_id).setHours(0, 0, 0);
+    const endDate = new Date(this._peakDayData.date_id).setHours(23, 59, 59);
+    const filter = new KalturaEndUserReportInputFilter({
+      searchInTags: true,
+      searchInAdminTags: false,
+      playlistIdIn: this.playlistId,
+      fromDate: startDate / 1000,
+      toDate: endDate / 1000
+    });
+    const pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
+    const reportType = KalturaReportType.topContentCreator;
+    const reportConfig: ReportConfig = { reportType, filter, pager, order: '-engagement_ranking' };
+    this._reportService.getReport(reportConfig, this._dataConfig)
+      .pipe(switchMap(report => {
+          return ObservableOf({ report, compare: null });
+      }))
+      .subscribe(({ report, compare }) => {
+          if (report.table && report.table.header && report.table.data) {
+            const { columns, tableData } = this._reportService.parseTableData(report.table, this._dataConfig.entryDetails);
+            if (tableData.length) {
+              const topEntry = tableData[0];
+              this._peakDayData['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${topEntry['object_id']}/width/256/height/144?rnd=${Math.random()}` || '';
+              this._peakDayData['entry_name'] = topEntry['entry_name'] || '';
+            }
+          }
+          this._loadingTopEntry = false;
+        },
+        error => {
+          this._loadingTopEntry = false;
+          this._logger.error(error); // don't show error message as this is a secondary load
+        });
   }
 
 }

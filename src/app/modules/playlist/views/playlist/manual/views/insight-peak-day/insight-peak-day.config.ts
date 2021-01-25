@@ -32,6 +32,34 @@ export class InsightPeakDayConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
           }
         }
+      },
+      entryDetails: {
+        fields: {
+          'object_id': {
+            format: value => value,
+            hidden: true,
+          },
+          'entry_name': {
+            format: value => value,
+          },
+          'status': {
+            format: value => value,
+          },
+          'entry_source': {
+            format: value => value,
+            hidden: true,
+            nonComparable: true
+          },
+          'created_at': {
+            format: value => ReportHelper.format('serverDate', value),
+          },
+          'media_type': {
+            format: value => Number(value),
+          },
+          'duration_msecs': {
+            format: value => ReportHelper.time(value),
+          }
+        }
       }
     };
   }

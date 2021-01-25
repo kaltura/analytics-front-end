@@ -65,17 +65,17 @@
                                       [refineFilter]="_refineFilter"></app-manual-playlist-mini-highlights>
       </div>
 
-      <div class="separator hideOnTablet" *ngIf="_viewConfig.miniViewersEngagement"></div>
+<!--      <div class="separator hideOnTablet" *ngIf="_viewConfig.miniViewersEngagement"></div>-->
       <div class="divider showOnTablet"></div>
 
-      <div *ngIf="_viewConfig.miniViewersEngagement" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
+      <!--div *ngIf="_viewConfig.miniViewersEngagement" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">
         <app-manual-playlist-mini-viewers-engagement [dateFilter]="_dateFilter"
                                       [playlistId]="_playlistId"
                                       [refineFilter]="_refineFilter"></app-manual-playlist-mini-viewers-engagement>
-      </div>
+      </div-->
 
       <div class="divider hideOnTablet"></div>
-      <div class="separator showOnTablet"></div>
+<!--      <div class="separator showOnTablet"></div>-->
 
       <div *ngIf="_viewConfig.miniTopVideos" class="kMiniReportContainer kMiniTopReportSmall">
         <app-manual-playlist-mini-top-videos [dateFilter]="_dateFilter"  [topVideos]="_playlistTopContentComponent?.topVideos$"
@@ -100,7 +100,7 @@
                      [fade]="false"
                      [speed]="200">
           <ui-carousel-item *ngIf="_viewConfig.miniInsights.peakDay">
-            <app-manual-playlist-insight-peak-day [dateFilter]="_dateFilter"
+            <app-manual-playlist-insight-peak-day [dateFilter]="_dateFilter" [playlistId]="_playlistId"
                                           [refineFilter]="_refineFilter"></app-manual-playlist-insight-peak-day>
           </ui-carousel-item>
 
