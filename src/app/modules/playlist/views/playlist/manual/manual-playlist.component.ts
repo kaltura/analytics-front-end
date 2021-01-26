@@ -3,13 +3,14 @@ import {KalturaPlaylist, KalturaReportInterval, KalturaReportType} from "kaltura
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 import {ViewConfig, viewsConfig} from "configuration/view-config";
 import {isEmptyObject} from "shared/utils/is-empty-object";
-import * as moment from "moment";
 import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
 import {RefineFilter} from "shared/components/filter/filter.component";
 import {ExportItem} from "shared/components/export-csv/export-config-base.service";
 import {ManualExportConfig} from "./manual-export.config";
 import {ManualPlaylistTopContentComponent} from "./views/top-content";
 import {TopCountriesComponent} from "shared/components/top-countries-report/top-countries.component";
+import {ExportCsvComponent} from "shared/components/export-csv/export-csv.component";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-manual-playlist-view',
@@ -39,6 +40,7 @@ export class ManualPlaylistComponent implements OnInit {
   @Output() back = new EventEmitter<void>();
   @Output() navigateToPlaylist = new EventEmitter<void>();
 
+  @ViewChild('export', {static: true}) export: ExportCsvComponent;
   @ViewChild('topVideos') set topVideos(comp: ManualPlaylistTopContentComponent) {
     setTimeout(() => { // use timeout to prevent check after init error
       this._playlistTopContentComponent = comp;
@@ -101,6 +103,33 @@ export class ManualPlaylistComponent implements OnInit {
     }
 
     this._exportConfig = ManualExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
+  }
+
+  public exportReport(event: { type: string, id: string }): void {
+    if (event.type === 'user') {
+      this.export._export([{
+        parent: true,
+        data: {
+          id: "performance",
+          label: "User Engagement",
+          order: "-count_loads",
+          reportType: "47",
+          sections: [1]
+        }
+      }], { userIds: event.id });
+    }
+    if (event.type === 'entry') {
+      this.export._export([{
+        parent: true,
+        data: {
+          id: "performance",
+          label: "Media Engagement",
+          order: "-count_loads",
+          reportType: "13",
+          sections: [1]
+        }
+      }], { entryIdIn: event.id });
+    }
   }
 
 }

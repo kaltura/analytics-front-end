@@ -1,0 +1,40 @@
+<p-table [sortField]="sortField"
+         [value]="_tableData"
+         [customSort]="true"
+         [paginator]="true"
+         [rows]="_pageSize"
+         [defaultSortOrder]="-1"
+         [sortOrder]="-1"
+         (sortFunction)="_onSortChanged($event)">
+  <ng-template pTemplate="header">
+    <tr [ngStyle]="{'width': '100%'}">
+      <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col" [class.nonSortable]="isCompareMode" [ngStyle]="{'width': '100%'}">
+        {{'app.engagement.highlightsReport.' + col | translate}}
+        <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
+      </th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr [ngStyle]="{'width': '100%'}">
+      <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'width': '100%'}">
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
+                    <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+                      <app-trend-value [value]="data[col].value"
+                                       [units]="data[col].units"
+                                       [trend]="data[col].trend"></app-trend-value>
+                    </span>
+                  </span>
+        <ng-container *ngIf="!isCompareMode || col === 'month_id' || col === 'date_id'">
+          <span>{{data[col]}}</span>
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <div class="emptymessage">
+      <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+      <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+    </div>
+  </ng-template>
+</p-table>

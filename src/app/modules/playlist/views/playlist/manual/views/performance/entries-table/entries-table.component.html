@@ -1,5 +1,5 @@
 <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-  <p-table dataKey="name"
+  <p-table dataKey="object_id"
            [sortField]="'count_loads'"
            [value]="_tableData"
            [customSort]="true"
@@ -8,9 +8,9 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
+        <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'entry_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'entry_name'">
           {{'app.entry.' + col | translate}}
-          <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
+          <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'name'"></p-sortIcon>
         </th>
 
       </tr>
@@ -18,7 +18,7 @@
     <ng-template pTemplate="body" let-data>
       <tr>
         <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-          <span *ngIf="isCompareMode && data[col]?.value && col !== 'full_name'"
+          <span *ngIf="isCompareMode && data[col]?.value && col !== 'entry_name'"
                 class="kTrend">
             <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
               <app-trend-value [value]="data[col].value"
@@ -26,18 +26,19 @@
                                [trend]="data[col].trend"></app-trend-value>
             </span>
           </span>
-          <ng-container *ngIf="!isCompareMode || col === 'full_name'">
-            <span *ngIf="col !== 'full_name' && col !== 'total_completion_rate'">{{data[col]}}</span>
-            <a class="kTableColumn"
-               *ngIf="col === 'full_name' && !entryDrilldown && _viewConfig.userDrilldown"
-               [kTooltip]="data[col].length ? data[col] : data['name']"
+          <ng-container *ngIf="!isCompareMode || col === 'entry_name'">
+            <span *ngIf="col !== 'entry_name' && col !== 'total_completion_rate' && (col !== 'avg_completion_rate' || (col == 'avg_completion_rate' && userDrilldown))">{{data[col]}}</span>
+            <span class="kEntryLink kTableColumn"
+                  *ngIf="col === 'entry_name' && (userDrilldown || !_viewConfig.entryDrilldown)"
+                  [kTooltip]="data[col]"
+                  [showOnEllipsis]="true"
+                  >{{data[col]}}</span>
+            <a class="kEntryLink kTableColumn"
+               *ngIf="col === 'entry_name' && !userDrilldown && _viewConfig.entryDrilldown"
+               [kTooltip]="data[col]"
                [showOnEllipsis]="true"
-               (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
-            <span class="kTableColumn"
-               *ngIf="col === 'full_name' && (entryDrilldown || !_viewConfig.userDrilldown)"
-               [kTooltip]="data[col].length ? data[col] : data['name']"
-               [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</span>
-            <app-bullet *ngIf="col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+               (click)="_drillDown(data)">{{data[col]}}</a>
+            <app-bullet *ngIf="(col === 'avg_completion_rate' && !userDrilldown) || col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
           </ng-container>
         </td>
       </tr>

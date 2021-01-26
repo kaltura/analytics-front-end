@@ -34,6 +34,7 @@ import { ManualPlaylistInsightDevicesComponent } from './views/playlist/manual/v
 import { ManualPlaylistInsightDomainsComponent } from './views/playlist/manual/views/insight-domains/insight-domains.component';
 import { ManualPlaylistInsightPeakDayComponent } from './views/playlist/manual/views/insight-peak-day/insight-peak-day.component';
 import { ManualPlaylistTopContentComponent, ManualPlaylistEntryDetailsOverlayComponent, ManualPlaylistTopContentTableComponent } from './views/playlist/manual/views/top-content';
+import { ManualPlaylistPerformanceComponent, ManualPlylistDatesTableComponent, ManualPlaylistUsersTableComponent, ManualPlaylistEntriesTableComponent } from "./views/playlist/manual/views/performance";
 
 @NgModule({
   imports: [
@@ -65,6 +66,10 @@ import { ManualPlaylistTopContentComponent, ManualPlaylistEntryDetailsOverlayCom
     ManualPlaylistInsightDomainsComponent,
     ManualPlaylistInsightPeakDayComponent,
     ManualPlaylistTopContentComponent,
+    ManualPlaylistPerformanceComponent,
+    ManualPlylistDatesTableComponent,
+    ManualPlaylistUsersTableComponent,
+    ManualPlaylistEntriesTableComponent,
     MiniManualPlaylistTopVideosComponent,
     ManualPlaylistMiniTopViewersComponent,
     ManualPlaylistEntryDetailsOverlayComponent,

@@ -221,7 +221,14 @@ export const viewsConfig = {
       devices: {}
     },
     totals: {},
-    performance: {},
+    performance: {
+      userDrilldown: {},
+      userFilter: {},
+      userLink: {},
+      entryDrilldown: {},
+      entryFilter: {},
+      entryLink: {}
+    },
     topVideos: {},
     geo: {},
     devices: {},

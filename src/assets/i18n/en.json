@@ -1051,7 +1051,8 @@
       "viewersEng": "Viewer’s Engagement",
       "videosPlayed": "Videos played on avg.",
       "avgTime": "Avg. minutes viewed",
-      "videoOfTheDay": "Video of the day"
+      "videoOfTheDay": "Video of the day",
+      "performance": "Playlist Performance Over Time"
     },
     "context": {
       "name": "Name",

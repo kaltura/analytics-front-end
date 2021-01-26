@@ -5,12 +5,13 @@
               [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-        <app-export-csv *ngIf="_viewConfig.export" name="Interactive Video"
+        <app-export-csv *ngIf="_viewConfig.export" name="Manual Playlist" #export
+                        aria-label="Export"
+                        role="button"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
                         [rootEntryIdIn]="_playlistId"></app-export-csv>
-
 
         <div class="kFilter kOverrideFAIcons">
           <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
@@ -124,6 +125,15 @@
       </div>
 
       <div class="divider"></div>
+
+      <div *ngIf="_viewConfig.performance" class="kReportContainer" id="performance" >
+        <app-manual-playlist-performance
+          [playlistId]="_playlistId"
+          [dateFilter]="_dateFilter"
+          [dateFilterComponent]="dateFilter"
+          (export)="exportReport($event)"
+          [refineFilter]="_refineFilter"></app-manual-playlist-performance>
+      </div>
 
       <div *ngIf="_viewConfig.topVideos" class="kReportContainer" id="top-videos">
         <app-manual-playlist-top-content [playlistId]="_playlistId" #topVideos
