@@ -186,7 +186,6 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
           } else {
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
-
               this._datesTableData = { current: report };
             }
           }
@@ -247,7 +246,7 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
     this._filterChange.next();
   }
 
-  private _handleCompare(current: Report, compare: Report, secondSeries = false): void {
+  private _handleCompare(current: Report, compare: Report): void {
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
 
@@ -260,18 +259,11 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
         this._dataConfig.graph,
         this._reportInterval,
       );
-      if (secondSeries && this._lineChartData) {
-        setTimeout(() => {
-          this.compareEchartsIntance.setOption({ legend: [{ show: false }] }, false);
-        }, 100);
-
-      } else {
-        this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
-        if (this._metricsCompareTo) {
-          this._onCompareTo(this._metricsCompareTo);
-        }
-        this._showCustomLegend = false;
+      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      if (this._metricsCompareTo) {
+        this._onCompareTo(this._metricsCompareTo);
       }
+      this._showCustomLegend = false;
     }
 
     if (current.totals && compare.totals) {
@@ -290,20 +282,20 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
 
-  private _handleGraphs(graphs: KalturaReportGraph[], secondSeries = false): void {
+  private _handleGraphs(graphs: KalturaReportGraph[]): void {
     const { lineChartData } = this._reportService.parseGraphs(
       graphs,
       this._dataConfig.graph,
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._reportInterval,
     );
-    if (secondSeries && this._lineChartData) {
-    } else {
-      this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
-      if (this._metricsCompareTo) {
-        this._onCompareTo(this._metricsCompareTo);
-      }
-      this._showCustomLegend = false;
+    this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+    if (this._metricsCompareTo) {
+      this._onCompareTo(this._metricsCompareTo);
+    }
+    this._showCustomLegend = false;
+    if (!this._lineChartData || !this._lineChartData[this._selectedMetrics] || !this._lineChartData[this._selectedMetrics]?.series[0]?.data?.length) {
+      this._metricsLineChartData = null;
     }
   }
 
