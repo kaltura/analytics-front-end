@@ -10,14 +10,22 @@
     <div class="kReportContent">
       <app-report-tabs [tabs]="_tabsData" [showValue]="_filter.userIds" [compareMode]="_isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
+        <app-compare-metric [metric]="_selectedMetricsLabel"
+                            [colors]="_metricsColors"
+                            [options]="_metricsOptions"
+                            [class.kDisabled]="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+                            (compareTo)="_onCompareTo($event)"></app-compare-metric>
         <app-time-units applyIn="performance"
                         [dateFilter]="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
         <div echarts class="kChart" (chartInit)="onCompareChartInit($event)"
-             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             *ngIf="!_metricsLineChartData && _lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
              [options]="_lineChartData[_selectedMetrics]"></div>
+        <div echarts class="kChart" (chartInit)="onCompareChartInit($event)"
+             *ngIf="_metricsLineChartData"
+             [options]="_metricsLineChartData"></div>
         <div
           *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
           class="kNoResults">

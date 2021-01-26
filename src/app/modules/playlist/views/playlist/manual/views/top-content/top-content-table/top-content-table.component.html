@@ -7,19 +7,19 @@
         <tr class="kTopVideoHeader">
           <th [ngStyle]="{'width': '60px', 'text-align': 'center'}"></th>
           <th [ngStyle]="{'width': '155px', 'padding-left': '10px'}"></th>
-          <th [ngStyle]="{'width': '100%', 'padding-left': '0'}">
+          <th [ngStyle]="{'width': '25%', 'padding-left': '0'}">
             {{'app.engagement.topVideosReport.viewDetails' | translate}}
           </th>
           <ng-container *ngIf="!isCompareMode">
-            <th [ngStyle]="{'width': '170px'}">
+            <th [ngStyle]="{'width': '20%'}">
               {{'app.user.topContentReport.count_plays' | translate}}
             </th>
-            <th [ngStyle]="{'width': '220px'}">
+            <th [ngStyle]="{'width': '20%'}">
               {{'app.user.topContentReport.unique_viewers' | translate}}
             </th>
-            <th [ngStyle]="{'width': '220px'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
+            <th [ngStyle]="{'width': '20%'}">{{'app.user.topContentReport.avg_completion_rate' | translate}}</th>
           </ng-container>
-          <th [ngStyle]="{'width': '110px', 'overflow': 'visible'}">
+          <th [ngStyle]="{'width': '15%', 'overflow': 'visible'}">
             {{'app.user.topContentReport.score' | translate}}
           </th>
         </tr>
@@ -38,7 +38,7 @@
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
             <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" [width]="128" [height]="72"></thumb-loader>
           </td>
-          <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
+          <td [ngStyle]="{'width': '25%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"
                  (click)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
@@ -52,26 +52,26 @@
             </div>
           </td>
           <ng-container *ngIf="!isCompareMode">
-            <td [ngStyle]="{'width': '170px'}">
+            <td [ngStyle]="{'width': '20%'}">
               <div class="kTableCell">
                 <i class="icon-small-play"></i>
                 <span class="kCellValue">{{data['count_plays']}}</span>&nbsp;
               </div>
             </td>
-            <td [ngStyle]="{'width': '220px'}">
+            <td [ngStyle]="{'width': '20%'}">
               <div class="kTableCell">
                 <i class="icon-viewer-contributor"></i>
                 <span class="kCellValue">{{data['unique_viewers']}}</span>&nbsp;
               </div>
             </td>
-            <td [ngStyle]="{'width': '220px'}">
+            <td [ngStyle]="{'width': '20%'}">
               <div class="kTableCell">
                 <i class="icon-small-Completion-Rate"></i>
                 <span class="kCellValue">{{data['avg_completion_rate']}}</span>&nbsp;
               </div>
             </td>
           </ng-container>
-          <td class="kScore" [ngStyle]="{'width': '110px', 'overflow': 'visible', 'height': '80px'}">
+          <td class="kScore" [ngStyle]="{'width': '15%', 'overflow': 'visible', 'height': '80px'}">
             <div *ngIf="data['status']?.length">
               <span class="kEntryStatus">{{data['status']}}</span>
               <span>{{data['engagement_ranking']}}<span class="kTop">/10</span></span>

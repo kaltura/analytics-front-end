@@ -79,6 +79,11 @@
     }
   }
 }
+.kDisabled{
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
 .kLegend {
   display: flex;
   align-items: center;

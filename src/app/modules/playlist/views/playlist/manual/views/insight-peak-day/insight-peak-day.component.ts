@@ -143,8 +143,12 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     if (tableData.length) {
-      this._peakDayData = tableData[0];
-      this._loadTopEntry();
+      const data = tableData[0];
+      // we might get data with 0 plays if there were impressions which we do not display. Force "No Data Found" if plays = 0
+      if (data.count_plays && parseInt(data.count_plays) !== 0) {
+        this._peakDayData = data;
+        this._loadTopEntry();
+      }
     }
   }
 

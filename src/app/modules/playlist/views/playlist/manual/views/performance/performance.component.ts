@@ -20,6 +20,8 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { ManualPlaylistBase } from "../manual-playlist-base/manual-playlist-base";
 import { ViewConfig } from "configuration/view-config";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {SelectItem} from "primeng/api";
 
 @Component({
   selector: 'app-manual-playlist-performance',
@@ -76,12 +78,19 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
   ];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
+  public _currentDatePeriod = '';
+  public _compareDatePeriod = '';
+  public _metricsColors: { [key: string]: string; } = {};
+  public _metricsOptions: SelectItem[] = [];
   public _filterChange$ = this._filterChange.asObservable();
 
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   public _showExternalLink = true;
   public _showCustomLegend = false;
+  public _selectedMetricsLabel: string;
+  public _metricsLineChartData: { [key: string]: any } = null;
+  public _metricsCompareTo: string = null;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -102,6 +111,18 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
     this._isMultiAccount = analyticsConfig.multiAccount;
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+
+    const totalsConfig = this._dataConfig[ReportDataSection.totals].fields;
+    const graphConfig = this._dataConfig[ReportDataSection.graph].fields;
+    Object.keys(totalsConfig).forEach(field => {
+      this._metricsOptions.push({
+        label: this._translate.instant(`app.entry.${field}`),
+        value: field
+      });
+
+      this._metricsColors[field] = graphConfig[field].colors ? graphConfig[field].colors[0] : null;
+    });
   }
 
   ngOnDestroy() {
@@ -171,13 +192,7 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
           }
 
           this._firstTimeLoading = false;
-
-          if (this._filter.playbackContextIdsIn) {
-            // need to load non-context graph
-            this.loadNoContextData();
-          } else {
-            this._isBusy = false;
-          }
+          this._isBusy = false;
         },
         error => {
           this._isBusy = false;
@@ -246,13 +261,15 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
         this._reportInterval,
       );
       if (secondSeries && this._lineChartData) {
-        this.addNoContextSeries(lineChartData, true);
         setTimeout(() => {
           this.compareEchartsIntance.setOption({ legend: [{ show: false }] }, false);
         }, 100);
 
       } else {
         this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+        if (this._metricsCompareTo) {
+          this._onCompareTo(this._metricsCompareTo);
+        }
         this._showCustomLegend = false;
       }
     }
@@ -281,9 +298,11 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
       this._reportInterval,
     );
     if (secondSeries && this._lineChartData) {
-      this.addNoContextSeries(lineChartData);
     } else {
       this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData : null;
+      if (this._metricsCompareTo) {
+        this._onCompareTo(this._metricsCompareTo);
+      }
       this._showCustomLegend = false;
     }
   }
@@ -291,6 +310,8 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
   public _onTabChange(tab: Tab): void {
     this._logger.trace('Handle tab change action by user', { tab });
     this._selectedMetrics = tab.key;
+    this._selectedMetricsLabel = this._translate.instant(`app.entry.${this._selectedMetrics}`);
+    this._metricsLineChartData = null;
   }
 
   public _toggleTable(): void {
@@ -316,12 +337,6 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
     const entriesIds = event.length
       ? event
         .filter(filter => filter.type === 'entries')
-        .map(filter => filter.value.id)
-        .join(analyticsConfig.valueSeparator)
-      : null;
-    const contextIds = event.length
-      ? event
-        .filter(filter => filter.type === 'context')
         .map(filter => filter.value.id)
         .join(analyticsConfig.valueSeparator)
       : null;
@@ -354,19 +369,6 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
       }
     }
 
-    if (contextIds) {
-      this._filter.playbackContextIdsIn = contextIds;
-
-      if (this._compareFilter) {
-        this._compareFilter.playbackContextIdsIn = contextIds;
-      }
-    } else {
-      delete this._filter.playbackContextIdsIn;
-
-      if (this._compareFilter) {
-        delete this._compareFilter.playbackContextIdsIn;
-      }
-    }
     this._filterChange.next();
   }
 
@@ -439,131 +441,51 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
     this.compareEchartsIntance = ec;
   }
 
-  private loadNoContextData(sections = this._dataConfig): void {
-    delete sections.table;
-    delete sections.totals;
-    this._showCustomLegend = false;
-    const replaceFilter = (filter: KalturaEndUserReportInputFilter) => {
-      let noContextFilter = new KalturaEndUserReportInputFilter({
-        searchInTags: true,
-        searchInAdminTags: false
-      });
-      noContextFilter = Object.assign(noContextFilter, filter);
-      noContextFilter.categoriesIdsIn = noContextFilter.playbackContextIdsIn;
-      delete noContextFilter.playbackContextIdsIn;
-      return noContextFilter;
-    };
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: replaceFilter(this._filter), order: this._order };
-    this._reportService.getReport(reportConfig, sections, false)
-      .pipe(switchMap(report => {
-        if (!this._isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-        const compareReportConfig = { reportType: this._reportType, filter: replaceFilter(this._compareFilter), order: this._order };
-        return this._reportService.getReport(compareReportConfig, sections, false)
-          .pipe(map(compare => ({ report, compare })));
-      }))
-      .subscribe(({ report, compare }) => {
-          if (compare) {
-            this._handleCompare(report, compare, true);
-          } else {
-            if (report.graphs.length) {
-              this._handleGraphs(report.graphs, true); // handle graphs
-            }
-          }
-          this._isBusy = false;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
-  }
-
-  private addNoContextSeries(lineChartData, isCompare = false): void {
-    Object.keys(lineChartData).forEach(key => {
-      if (this._lineChartData[key] && this._lineChartData[key].series) {
-        let secondSeries = lineChartData[key]['series'][0];
-        let thirdSeries;
-        secondSeries['lineStyle']['type'] = 'dotted';
-        if (isCompare) {
-          thirdSeries = lineChartData[key]['series'][1];
-          thirdSeries['lineStyle']['type'] = 'dotted';
-        }
-        const round = value => Math.round(value * 100) / 100;
-        const getFormatter = colors => params => {
-          return isCompare ? `
-            <div class="kGraphTooltip">
-              ${params[1].seriesName}<br/>
-              <div class="row">
-                  <div class="line" style="background-color: ${colors[1]}"></div>
-                  <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
-                  <span class="value">${round(params[1].value)}</span>
-              </div>
-              <div class="row">
-                  <div class="dashed" style="border-top: 3px dotted ${colors[1]}"></div>
-                  <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
-                  <span class="value">${round(params[3].value)}</span>
-              </div>
-              ${params[0].seriesName}<br/>
-              <div class="row">
-                  <div class="line" style="background-color: ${colors[0]}"></div>
-                  <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
-                  <span class="value">${round(params[0].value)}</span>
-              </div>
-              <div class="row">
-                  <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
-                  <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
-                  <span class="value">${round(params[2].value)}</span>
-              </div>
-            </div>
-            ` : `
-          <div class="kGraphTooltip">
-            ${params[0].name}<br/>
-            <div class="row">
-                <div class="line" style="background-color: ${colors[0]}"></div>
-                <span class="label">${this._translate.instant('app.category.graphs.category_' + this._selectedMetrics)}:</span>
-                <span class="value">${round(params[0].value)}</span>
-            </div>
-            <div class="row">
-                <div class="dashed" style="border-top: 3px dotted ${colors[0]}"></div>
-                <span class="label">${this._translate.instant('app.category.graphs.context_' + this._selectedMetrics)}:</span>
-                <span class="value">${round(params[1].value)}</span>
-            </div>
-          </div>
-        `;
-        };
-        this._lineChartData[key].tooltip.formatter = getFormatter(this._lineChartData[key].color);
-        this._lineChartData[key].color.push(this._lineChartData[key].color[0]);
-        this._lineChartData[key].series.push(secondSeries);
-        if (isCompare) {
-          this._lineChartData[key].color.push(this._lineChartData[key].color[1]);
-          this._lineChartData[key].series.push(thirdSeries);
-        }
-        this._showCustomLegend = true;
-      }
-    });
-
-    // hack to refresh the selected metrics data
-    const saveMetrics = this._selectedMetrics;
-    this._selectedMetrics = null;
-    setTimeout(() => {
-      this._selectedMetrics = saveMetrics;
-    }, 0);
-  }
-
   public exportReport(): void {
     if (this._tableMode === TableModes.user) {
       this.export.emit({type: 'user', id: this._drillDown.id});
     } else {
       this.export.emit({type: 'entry', id: this._drillDown.id});
+    }
+  }
+
+  public _onCompareTo(field: string): void {
+    if (field) {
+      this._metricsCompareTo = field;
+      this._currentDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._filter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._filter.toDate).format('MMM D, YYYY') : '';
+      this._compareDatePeriod = this._compareFilter ? DateFilterUtils.getMomentDate(this._compareFilter.fromDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._compareFilter.toDate).format('MMM D, YYYY') : '';
+      this._metricsLineChartData = this._compareService.compareToMetric(
+        this._dataConfig.graph,
+        this._lineChartData,
+        this._selectedMetrics,
+        field,
+        this._selectedMetricsLabel,
+        this._translate.instant(`app.entry.${field}`),
+        this._currentDatePeriod,
+        this._compareDatePeriod
+      );
+      // Normalize yAxis if metrics are comparable and max values of both y-axis are close enough
+      const comparableUnitsMetrics = ['count_plays', 'count_loads', 'unique_viewers', 'sum_time_viewed'];
+      const comparablePercentMetrics = ['avg_completion_rate', 'avg_view_drop_off'];
+      const allowNormalize = (comparableUnitsMetrics.indexOf(field) > -1 && comparableUnitsMetrics.indexOf(this._selectedMetrics) > -1) ||
+        (comparablePercentMetrics.indexOf(field) > -1 && comparablePercentMetrics.indexOf(this._selectedMetrics) > -1);
+      if (allowNormalize && this._metricsLineChartData.yAxis && this._metricsLineChartData.yAxis.length === 2) {
+        const max1 = this._metricsLineChartData.yAxis[0].max;
+        const max2 = this._metricsLineChartData.yAxis[1].max;
+        const maxValue = Math.max(max1, max2);
+        if (maxValue && maxValue > 0 && maxValue / Math.min(max1, max2) < 10) {
+          const interval = parseFloat((maxValue / 5).toFixed(2));
+          this._metricsLineChartData.yAxis[0].min = 0;
+          this._metricsLineChartData.yAxis[1].min = 0;
+          this._metricsLineChartData.yAxis[0].max = maxValue;
+          this._metricsLineChartData.yAxis[1].max = maxValue;
+          this._metricsLineChartData.yAxis[0].interval = interval;
+          this._metricsLineChartData.yAxis[1].interval = interval;
+        }
+      }
+    } else {
+      this._metricsLineChartData = null;
+      this._metricsCompareTo = null;
     }
   }
 }
