@@ -8,7 +8,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -33,29 +33,25 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_loads': {
+          'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'count_plays': {
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 5,
-          },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 6,
+            sortOrder: 5,
           },
           'avg_completion_rate': {
             format: value =>  ReportHelper.percents(value / 100, false, true),
-            sortOrder: 7,
+            sortOrder: 6,
           }
         }
       }

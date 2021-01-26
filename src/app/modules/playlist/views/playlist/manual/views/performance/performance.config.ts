@@ -9,7 +9,7 @@ export class PerformanceConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
@@ -18,11 +18,6 @@ export class PerformanceConfig extends ReportDataBaseConfig {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
-          },
-          'count_loads': {
-            format: value => value,
-            colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'sum_time_viewed': {
             format: value => value,
@@ -50,41 +45,36 @@ export class PerformanceConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_loads',
+        preSelected: 'count_plays',
         fields: {
-          'count_loads': {
-            format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
-            sortOrder: 0,
-          },
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.count_plays`),
-            sortOrder: 1,
+            sortOrder: 0,
           },
           'unique_known_users': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
-            sortOrder: 2,
+            sortOrder: 1,
           },
           'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             units: value => 'min',
-            sortOrder: 3,
+            sortOrder: 2,
           },
           'avg_view_drop_off': {
             format: value => ReportHelper.percents(value, true, true),
             title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
             tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),
-            sortOrder: 4,
+            sortOrder: 3,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate_tt`),
-            sortOrder: 5,
+            sortOrder: 4,
           },
         }
       }
