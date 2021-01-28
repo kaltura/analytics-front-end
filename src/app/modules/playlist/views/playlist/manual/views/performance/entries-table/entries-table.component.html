@@ -8,12 +8,14 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr>
+        <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
         <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'entry_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'entry_name'">
           {{'app.entry.' + col | translate}}
           <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'name'"></p-sortIcon>
         </th>
       </tr>
       <tr *ngIf="_tableData?.length && !userDrilldown" class="kSummaryRow">
+        <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
         <th>
           <span>{{'app.playlist.summary' | translate}}</span>
         </th>
@@ -39,6 +41,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-data>
       <tr>
+        <td [ngStyle]="{'width': '112px', 'padding-left': '12px'}">
+          <thumb-loader [thumbnailUrl]="data.thumbnailUrl" [disabled]="true"></thumb-loader>
+        </td>
         <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
           <span *ngIf="isCompareMode && data[col]?.value && col !== 'entry_name'"
                 class="kTrend">
@@ -50,7 +55,7 @@
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'entry_name'">
             <span *ngIf="col !== 'plays_distribution' && col !== 'entry_name' && col !== 'total_completion_rate' && (col !== 'avg_completion_rate' || (col == 'avg_completion_rate' && userDrilldown))">{{data[col]}}</span>
-            <app-bullet *ngIf="col === 'plays_distribution' && !isCompareMode" [value]="data[col]" [animate]="false" [colorScheme]="'default'"></app-bullet>
+            <app-bullet *ngIf="col === 'plays_distribution' && !isCompareMode && !userDrilldown" [value]="data[col]" [animate]="false" [colorScheme]="'default'"></app-bullet>
             <span class="kEntryLink kTableColumn"
                   *ngIf="col === 'entry_name' && (userDrilldown || !_viewConfig.entryDrilldown)"
                   [kTooltip]="data[col]"

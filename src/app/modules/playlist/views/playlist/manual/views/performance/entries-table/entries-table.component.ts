@@ -5,7 +5,16 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import {
+  AuthService,
+  BrowserService,
+  ErrorsManagerService,
+  NavigationDrillDownService,
+  Report,
+  ReportConfig,
+  ReportHelper,
+  ReportService
+} from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map, switchMap } from 'rxjs/operators';
@@ -34,6 +43,8 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
 
   @Output() drillDown: EventEmitter<{entry: string, name: string, pid: string, source: string}> = new EventEmitter();
 
+  private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http') ? analyticsConfig.kalturaServer.uri : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
+  private _partnerId = this._authService.pid;
   private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
@@ -51,6 +62,7 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
               private _compareService: CompareService,
               private _browserService: BrowserService,
               private _router: Router,
+              private _authService: AuthService,
               private _activatedRoute: ActivatedRoute,
               private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -141,20 +153,31 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
       this._columns = columns;
       this.totalCount = current.table.totalCount || 0;
       this._tableData = tableData;
+      this.addThumbnailData();
     }
+  }
+
+  private addThumbnailData(): void {
+    this._tableData.forEach(entryData => {
+      const thumbnailUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${entryData.object_id}/width/256/height/144?rnd=${Math.random()}`;
+      entryData['thumbnailUrl'] = thumbnailUrl;
+    });
   }
 
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this.totalCount = table.totalCount;
     this._columns = columns;
-    this._columns.splice(2, 0, "plays_distribution");
     this._tableData = tableData;
-    // calculate plays distribution
-    this._tableData.forEach(entryData => {
-      const distribution = parseInt(entryData.count_plays.replace(/,/g, '')) / parseInt(this.summary.total_plays) * 100;
-      entryData['plays_distribution'] = Math.round(distribution * 100) / 100;
-    });
+    this.addThumbnailData();
+    if (!this.userDrilldown) {
+      this._columns.splice(2, 0, "plays_distribution");
+      // calculate plays distribution
+      this._tableData.forEach(entryData => {
+        const distribution = parseInt(entryData.count_plays.replace(/,/g, '')) / parseInt(this.summary.total_plays) * 100;
+        entryData['plays_distribution'] = Math.round(distribution * 100) / 100;
+      });
+    }
   }
 
   public _onPaginationChanged(event: { page: number }): void {

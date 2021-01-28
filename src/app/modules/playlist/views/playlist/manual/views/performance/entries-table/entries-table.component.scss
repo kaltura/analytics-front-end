@@ -8,7 +8,7 @@ app-bullet {
 }
 .kSummaryRow {
   height: 32px;
-  border-top: 1px solid $kGrayscale6;
+  border-top: 1px solid #d9d9d9;
 
   th {
     color: $kGrayscale1;
@@ -18,4 +18,16 @@ app-bullet {
 }
 app-bullet ::ng-deep .kBulletContainer .kValue {
   color: $kGrayscale1 !important;
+}
+p-table ::ng-deep .ui-table .ui-table-tbody > tr > td {
+  height: 72px;
+  &:nth-child(2) {
+    padding-left: 0px;
+  }
+}
+
+p-table ::ng-deep .ui-table .ui-table-thead > tr > th {
+  &:nth-child(2) {
+    padding-left: 0px;
+  }
 }

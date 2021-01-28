@@ -76,7 +76,9 @@ export class ManualPlaylistUsersTableComponent implements OnInit, OnDestroy {
   }
 
   private _loadReport(): void {
-    this._isBusy = true;
+    setTimeout(() => {
+      this._isBusy = true;
+    }, 0);
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this.filter, order: this._order, pager: this._pager };
     if (this.entryDrilldown) {
       this._dataConfig.table.fields['total_completion_rate'] = {
