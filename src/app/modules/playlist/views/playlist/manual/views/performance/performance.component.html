@@ -119,6 +119,7 @@
 
               <manual-playlist-entries-table #entriesTableComponent
                                  (drillDown)="onDrillDown('entry', $event)"
+                                 [summary]="_summaryData"
                                  [filterChange]="_filterChange$"
                                  [filter]="_filter"
                                  [compareFilter]="_compareFilter"
@@ -135,6 +136,7 @@
               <manual-playlist-entries-table #entriesTableComponentDrilldown
                                  [filterChange]="_filterChange$"
                                  [filter]="_filter"
+                                 [summary]="_summaryData"
                                  [compareFilter]="_compareFilter"
                                  [isCompareMode]="_isCompareMode"
                                  [reportInterval]="_reportInterval"

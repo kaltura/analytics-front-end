@@ -91,6 +91,7 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
   public _selectedMetricsLabel: string;
   public _metricsLineChartData: { [key: string]: any } = null;
   public _metricsCompareTo: string = null;
+  public _summaryData: {[key: string]: any} = {};
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -280,6 +281,14 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    if (this._drillDown.label === '') {
+      this._tabsData.forEach(tab => {
+        this._summaryData[tab.key] = tab.value;
+        if (tab.key === 'count_plays') {
+          this._summaryData['total_plays'] = tab.rawValue;
+        }
+      });
+    }
   }
 
   private _handleGraphs(graphs: KalturaReportGraph[]): void {

@@ -1053,7 +1053,8 @@
       "videosPlayed": "Videos played on avg.",
       "avgTime": "Avg. minutes viewed",
       "videoOfTheDay": "Video of the day",
-      "performance": "Playlist Performance Over Time"
+      "performance": "Playlist Performance Over Time",
+      "summary": "Total"
     },
     "context": {
       "name": "Name",

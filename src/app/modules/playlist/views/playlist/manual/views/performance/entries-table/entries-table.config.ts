@@ -37,11 +37,11 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'unique_known_users': {
+          'sum_time_viewed': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },

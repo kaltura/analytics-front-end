@@ -5,13 +5,13 @@
               [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-        <app-export-csv *ngIf="_viewConfig.export" name="Manual Playlist" #export
+        <app-export-csv [class.kHidden]="!_viewConfig.export" name="Manual Playlist" #export
                         aria-label="Export"
                         role="button"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
-                        [rootEntryIdIn]="_playlistId"></app-export-csv>
+                        [playlistId]="_playlistId"></app-export-csv>
 
         <div class="kFilter kOverrideFAIcons">
           <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"

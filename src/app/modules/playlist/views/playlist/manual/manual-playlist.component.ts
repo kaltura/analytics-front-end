@@ -112,8 +112,8 @@ export class ManualPlaylistComponent implements OnInit {
         data: {
           id: "performance",
           label: "User Engagement",
-          order: "-count_loads",
-          reportType: "47",
+          order: "-count_plays",
+          reportType: "38",
           sections: [1]
         }
       }], { userIds: event.id });
@@ -124,7 +124,7 @@ export class ManualPlaylistComponent implements OnInit {
         data: {
           id: "performance",
           label: "Media Engagement",
-          order: "-count_loads",
+          order: "-count_plays",
           reportType: "13",
           sections: [1]
         }

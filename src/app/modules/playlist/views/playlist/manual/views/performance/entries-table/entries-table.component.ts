@@ -30,10 +30,11 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
   @Input() firstTimeLoading: boolean;
   @Input() filterChange: Observable<void>;
   @Input() userDrilldown = false;
+  @Input() summary: {[key: string]: any} = {};
 
   @Output() drillDown: EventEmitter<{entry: string, name: string, pid: string, source: string}> = new EventEmitter();
 
-  private _reportType = reportTypeMap(KalturaReportType.topUserContent);
+  private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_loads';
 
@@ -147,7 +148,13 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this.totalCount = table.totalCount;
     this._columns = columns;
+    this._columns.splice(2, 0, "plays_distribution");
     this._tableData = tableData;
+    // calculate plays distribution
+    this._tableData.forEach(entryData => {
+      const distribution = parseInt(entryData.count_plays.replace(/,/g, '')) / parseInt(this.summary.total_plays) * 100;
+      entryData['plays_distribution'] = Math.round(distribution * 100) / 100;
+    });
   }
 
   public _onPaginationChanged(event: { page: number }): void {
