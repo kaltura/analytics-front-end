@@ -8,8 +8,8 @@
          (sortFunction)="_onSortChanged($event)">
   <ng-template pTemplate="header">
     <tr [ngStyle]="{'width': '100%'}">
-      <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col" [class.nonSortable]="isCompareMode" [ngStyle]="{'width': '100%'}">
-        {{'app.engagement.highlightsReport.' + col | translate}}
+      <th [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true" *ngFor="let col of _columns" [pSortableColumn]="isCompareMode ? null : col" [class.nonSortable]="isCompareMode" [ngStyle]="{'width': '100%'}">
+        {{'app.entry.' + col | translate}}
         <p-sortIcon [field]="col" *ngIf="!isCompareMode"></p-sortIcon>
       </th>
 

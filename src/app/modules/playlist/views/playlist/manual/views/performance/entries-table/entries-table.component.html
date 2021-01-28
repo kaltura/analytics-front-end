@@ -9,10 +9,24 @@
     <ng-template pTemplate="header">
       <tr>
         <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
-        <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'entry_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'entry_name'">
-          {{'app.entry.' + col | translate}}
-          <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'name'"></p-sortIcon>
+        <th [ngStyle]="{'width': '28%'}">{{'app.entry.entry_name' | translate}}</th>
+        <th [ngStyle]="{'width': '8%'}" [kTooltip]="'app.entry.count_plays' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'count_plays'">{{'app.entry.count_plays' | translate}}
+          <p-sortIcon [field]="'count_plays'" *ngIf="!isCompareMode"></p-sortIcon>
         </th>
+        <th [ngStyle]="{'width': '17%'}" [kTooltip]="'app.entry.plays_distribution' | translate" [showOnEllipsis]="true">{{'app.entry.plays_distribution' | translate}}</th>
+        <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.unique_viewers' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'unique_viewers'">{{'app.entry.unique_viewers' | translate}}
+          <p-sortIcon [field]="'unique_viewers'" *ngIf="!isCompareMode"></p-sortIcon>
+        </th>
+        <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.sum_time_viewed' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'sum_time_viewed'">{{'app.entry.sum_time_viewed' | translate}}
+          <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!isCompareMode"></p-sortIcon>
+        </th>
+        <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.avg_view_drop_off' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">{{'app.entry.avg_view_drop_off' | translate}}
+          <p-sortIcon [field]="'avg_view_drop_off'" *ngIf="!isCompareMode"></p-sortIcon>
+        </th>
+        <th [ngStyle]="{'width': '17%'}" [kTooltip]="'app.entry.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'avg_completion_rate'">{{'app.entry.avg_completion_rate' | translate}}
+          <p-sortIcon [field]="'avg_completion_rate'" *ngIf="!isCompareMode"></p-sortIcon>
+        </th>
+
       </tr>
       <tr *ngIf="_tableData?.length && !userDrilldown" class="kSummaryRow">
         <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>

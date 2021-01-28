@@ -8,7 +8,7 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
+        <th [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true" *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
           {{'app.entry.' + col | translate}}
           <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
         </th>
