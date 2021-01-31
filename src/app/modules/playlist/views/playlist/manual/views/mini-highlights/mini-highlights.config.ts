@@ -38,12 +38,12 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.playlist.played`),
             sortOrder: 4,
           },
-          'unique_owners': {
-            format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.playlist.avgPlays`),
-            tooltip: this._translate.instant(`app.playlist.avgPlays`),
-            sortOrder: 5,
-          }
+          // 'unique_owners': {
+          //   format: value => ReportHelper.integerOrZero(value),
+          //   title: this._translate.instant(`app.playlist.avgPlays`),
+          //   tooltip: this._translate.instant(`app.playlist.avgPlays`),
+          //   sortOrder: 5,
+          // }
         }
       }
     };
