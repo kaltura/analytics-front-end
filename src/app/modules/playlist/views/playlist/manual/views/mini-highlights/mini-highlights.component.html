@@ -2,7 +2,7 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
-    <div class="kReportContent">
+    <div class="kReportContent kNoTitle">
       <div class="kHighlights">
         <div class="kVal">
           <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
@@ -86,8 +86,8 @@
 
       </div>
 
-      <div class="kFilters">
-        <a (click)="scrollTo('#performance')" class="kDetails">{{'app.common.details' | translate}}</a>
+      <div class="kShowDetails">
+        <a (click)="scrollTo('#performance')">{{'app.common.details' | translate}}</a>
       </div>
 
     </div>

@@ -85,7 +85,7 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
   public _filterChange$ = this._filterChange.asObservable();
 
   public _drillDown: {label: string, id: string, pid: string, source?: string} = {label: '', id: '', pid: ''};
-  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.playlist.performance;
   public _showExternalLink = true;
   public _showCustomLegend = false;
   public _selectedMetricsLabel: string;

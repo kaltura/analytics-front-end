@@ -80,13 +80,11 @@
       }
     }
   }
-  .kFilters {
+  .kShowDetails {
     justify-content: center;
     height: 50px;
-    .kTitle{
-      width: auto;
-      padding-right: 0px;
-    }
+    display: flex;
+    align-items: center;
   }
 }
 .kPlayedEntries {
