@@ -1,8 +1,26 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { CuePointListAction, KalturaAnnotationFilter, KalturaClient, KalturaCuePointType, KalturaCuePointListResponse, KalturaEndUserReportInputFilter,
-  KalturaFilterPager, KalturaNullableBoolean, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTotal, KalturaReportType, KalturaRequestOptions, KalturaResponseProfileHolder, KalturaAnnotation } from 'kaltura-ngx-client';
+import {
+  CuePointListAction,
+  KalturaAnnotationFilter,
+  KalturaClient,
+  KalturaCuePointType,
+  KalturaCuePointListResponse,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaNullableBoolean,
+  KalturaObjectBaseFactory,
+  KalturaReportInterval,
+  KalturaReportTotal,
+  KalturaReportType,
+  KalturaAnnotation,
+  KalturaDetachedResponseProfile,
+  KalturaResponseProfileType,
+  KalturaMetadataFilter,
+  KalturaMetadataObjectType,
+  KalturaResponseProfileMapping,
+} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
@@ -99,12 +117,38 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
 
     return new CuePointListAction({ filter, pager })
       .setRequestOptions(
-        new KalturaRequestOptions({
-          responseProfile: new KalturaResponseProfileHolder({
-            systemName: 'QandA'
-          })
-        })
-      );
+        {
+          responseProfile: this.getResponseProfile()
+        }
+      )
+  }
+
+  private getResponseProfile(): KalturaDetachedResponseProfile {
+    //metadata filter
+    const metadataFilter = new KalturaMetadataFilter({
+      metadataObjectTypeEqual: KalturaMetadataObjectType.annotation
+    });
+    //metadata filter mapping
+    const metadataFilterMapping = new KalturaResponseProfileMapping({
+      filterProperty: 'objectIdEqual',
+      parentProperty: 'id'
+    });
+    //detached metadata response profile
+    const metadataResponseProfile = new KalturaDetachedResponseProfile({
+      name: 'analytics_qna_drp',
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'id,xml',
+      filter: metadataFilter,
+      mappings: [metadataFilterMapping]
+    });
+    //cue point response profile
+    const cuepointResponseProfile = new KalturaDetachedResponseProfile({
+      name: 'analytics_webcast_cp',
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'id,createdAt,updatedAt,text,userId',
+      relatedProfiles: [metadataResponseProfile]
+    });
+    return cuepointResponseProfile;
   }
 
   private _parseCuePointsResponse(data: KalturaCuePointListResponse): void {
@@ -112,9 +156,9 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       this._questions = [];
       const parser = new DOMParser();
       data.objects.forEach((cuePoint: KalturaAnnotation) => {
-        if (cuePoint.relatedObjects && cuePoint.relatedObjects.QandA_ResponseProfile && cuePoint.relatedObjects.QandA_ResponseProfile_user) {
-          if (cuePoint.relatedObjects.QandA_ResponseProfile['objects'] && cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0] && cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0]['xml'] ){
-            const xml = cuePoint.relatedObjects.QandA_ResponseProfile['objects'][0]['xml'];
+        if (cuePoint.relatedObjects && cuePoint.relatedObjects.analytics_qna_drp) {
+          if (cuePoint.relatedObjects.analytics_qna_drp['objects'] && cuePoint.relatedObjects.analytics_qna_drp['objects'][0] && cuePoint.relatedObjects.analytics_qna_drp['objects'][0]['xml'] ){
+            const xml = cuePoint.relatedObjects.analytics_qna_drp['objects'][0]['xml'];
             const xmlDoc = parser.parseFromString(xml,"text/xml");
             const type = xmlDoc.getElementsByTagName("Type")[0].childNodes[0].nodeValue;
             if (type === "Question") {
