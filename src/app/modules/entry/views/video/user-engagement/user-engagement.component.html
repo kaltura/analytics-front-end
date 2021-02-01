@@ -57,11 +57,15 @@
                   <a class="kTableColumn"
                      tabindex="0"
                      role="link"
-                     *ngIf="col === 'full_name'"
+                     *ngIf="col === 'full_name' && _viewConfig.userFilter"
                      [kTooltip]="data[col].length ? data[col] : data['name']"
                      [showOnEllipsis]="true"
                      (keydown.enter)="_drillDown(data)"
                      (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
+                  <span class="kTableColumn"
+                     *ngIf="col === 'full_name' && !_viewConfig.userFilter"
+                     [kTooltip]="data[col].length ? data[col] : data['name']"
+                     [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</span>
                   <app-bullet *ngIf="col === 'avg_completion_rate'"
                               colorScheme="dropoff"
                               [value]="data['avg_completion_rate']"></app-bullet>
