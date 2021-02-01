@@ -34,9 +34,15 @@ export class EndUserStorageDataConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
+          'full_name': {
+            format: value => value,
+            nonComparable: true,
+            sortOrder: 1,
+          },
           'name': {
             format: value => value,
             nonComparable: true,
+            hidden: true,
           },
           'date_id': {
             format: value => DateFilterUtils.formatFullDateString(value),

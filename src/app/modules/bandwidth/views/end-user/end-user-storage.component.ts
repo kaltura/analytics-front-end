@@ -60,6 +60,7 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
+  public _drillDownName = '';
   public _paginationChanged$ = this._paginationChanged.asObservable();
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
@@ -131,19 +132,20 @@ export class EndUserStorageComponent implements OnInit, OnDestroy {
     this.updateChartType();
   }
 
-  public _onDrillDown(user: string, selection?: TableRow): void {
+  public _onDrillDown(selection: TableRow): void {
     if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid.toString()) {
       this._browserService.alert({
         header: this._translate.instant('app.common.attention'),
         message: this._translate.instant('app.bandwidth.userError'),
       });
     } else {
-      this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', {user});
-      this._drillDown = user.length ? user : '';
-      this.reportType = user.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
+      this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', {selection});
+      this._drillDown = selection.name && selection.name.length ? selection.name : '';
+      this._drillDownName = selection.full_name && selection.full_name.length ? selection.full_name : this._drillDown;
+      this.reportType = this._drillDown.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
       this.pager.pageIndex = 1;
 
-      this.order = user.length ? '+month_id' : '-total_storage_mb';
+      this.order = this._drillDown.length ? '+month_id' : '-total_storage_mb';
 
       if (this._drillDown) {
         this.filter.userIds = this._drillDown;
