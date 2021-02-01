@@ -1,25 +1,26 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {
   KalturaAPIException,
   KalturaClient,
   KalturaDetachedResponseProfile,
   KalturaMultiRequest,
-  KalturaMultiResponse, KalturaPlaylist,
+  KalturaMultiResponse,
+  KalturaPlaylist,
+  KalturaPlaylistType,
   KalturaRequestOptions,
   KalturaResponseProfileType,
   KalturaUser,
   PlaylistGetAction,
-  UserGetAction,
-  KalturaPlaylistType
+  UserGetAction
 } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { map } from 'rxjs/operators';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
-import { TranslateService } from '@ngx-translate/core';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {map} from 'rxjs/operators';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AuthService, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-playlist',
@@ -35,6 +36,8 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
   public _owner = '';
   public _isChildAccount = false;
   public _interactiveVideo = false;
+  public _isManualPlaylist = false;
+  public _isRuleBasedPlaylist = false;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -109,6 +112,8 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
           this._playlist = playlist;
           this._interactiveVideo = (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') > -1) || playlist.playlistType === KalturaPlaylistType.path ? true : false;
           this._owner = user && user.fullName ? user.fullName : playlist.userId; // fallback for deleted users
+          this._isManualPlaylist = playlist.playlistType === KalturaPlaylistType.staticList;
+          this._isRuleBasedPlaylist = playlist.playlistType === KalturaPlaylistType.dynamic;
           this._loadingPlaylist = false;
         },
         error => {
@@ -127,6 +132,12 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
 
   public _back(): void {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
+  }
+
+  public _navigateToPlaylist(): void {
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.NavigateTo, '/content/playlists/playlist/' + this._playlistId);
+    }
   }
 
 }

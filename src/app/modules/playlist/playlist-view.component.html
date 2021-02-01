@@ -6,6 +6,13 @@
               [playlist]="_playlist"
               [owner]="_owner"
               (back)="_back()"></app-path>
-    <app-playlist-view *ngIf="!_loadingPlaylist && !_interactiveVideo"></app-playlist-view>
+    <app-manual-playlist-view *ngIf="!_loadingPlaylist && _isManualPlaylist"
+              [isChildAccount]="_isChildAccount"
+              [viewConfig]="_playlistViewConfig"
+              [playlist]="_playlist"
+              [owner]="_owner"
+              (back)="_back()"
+              (navigateToPlaylist)="_navigateToPlaylist()"></app-manual-playlist-view>
+    <app-rulebased-playlist-view *ngIf="!_loadingPlaylist && _isRuleBasedPlaylist"></app-rulebased-playlist-view>
   </k-area-blocker>
 </div>

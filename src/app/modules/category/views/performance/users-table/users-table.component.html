@@ -35,8 +35,8 @@
                (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
             <span class="kTableColumn"
                *ngIf="col === 'full_name' && (entryDrilldown || !_viewConfig.userDrilldown)"
-               [kTooltip]="data[col]"
-               [showOnEllipsis]="true">{{data[col]}}</span>
+               [kTooltip]="data[col].length ? data[col] : data['name']"
+               [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</span>
             <app-bullet *ngIf="col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
           </ng-container>
         </td>

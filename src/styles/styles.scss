@@ -157,7 +157,7 @@ body {
           align-items: center;
           margin-bottom: 24px;
           padding-left: 24px;
-
+          justify-content: center;
           i {
             width: 20px;
             color: $kTertiary;
@@ -176,6 +176,7 @@ body {
 
           &.kOpen {
             height: auto;
+            overflow-y: visible;
           }
 
           &.kClose {

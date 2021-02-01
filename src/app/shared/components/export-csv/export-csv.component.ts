@@ -25,6 +25,7 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() pager: KalturaPager = null;
   @Input() entryId: string = null;
   @Input() categoryId: string = null;
+  @Input() playlistId: string = null;
   @Input() rootEntryIdIn: string = null;
   @Input() userId: string = null;
   @Input() width = 240;
@@ -95,6 +96,10 @@ export class ExportCsvComponent implements OnDestroy {
 
     if (this.categoryId && !filter.categoriesIdsIn && !filter.playbackContextIdsIn) {
       filter.categoriesIdsIn = this.categoryId;
+    }
+
+    if (this.playlistId) {
+      filter.playlistIdIn = this.playlistId;
     }
 
     if (this.rootEntryIdIn) {

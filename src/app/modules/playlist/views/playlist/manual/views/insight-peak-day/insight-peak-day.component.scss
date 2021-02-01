@@ -1,0 +1,98 @@
+@import '../../../../../../../../styles/variables';
+:host{
+  height: 100%;
+}
+
+.kFilters {
+  height: 93px !important;
+}
+
+.kReport{
+  height: 100%;
+  .peakDayHolder{
+    margin-bottom: 4px;
+    .peakDay{
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: bold;
+      margin-left: 24px;
+      margin-right: 8px;
+      margin-top: 24px;
+    }
+    .peakDayLable{
+      font-size: 18px;
+      font-weight: normal;
+    }
+  }
+  .kValueHolder{
+    display: flex;
+    margin-top: 12px;
+    margin-left: 24px;
+    .kVal{
+      font-size: 15px;
+      font-weight: bold;
+      margin-right: 8px;
+      margin-left: 8px;
+    }
+    .kLabel{
+      font-size: 15px;
+      font-weight: normal;
+    }
+    .kBlue{
+      color: #487ADF;
+    }
+    .kAqua {
+      color: #16a8d7;
+    }
+    .kGreen{
+      color: #31BEA6;
+    }
+    .kOrange{
+      color: #E1962E;
+    }
+  }
+  .kSpinnerAnim {
+    margin-top: 36px;
+  }
+  .topEntry {
+    margin-top: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    .topEntryDetails {
+      overflow: hidden;
+      white-space: nowrap;
+      padding-left: 8px;
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 15px;
+        font-weight: bold;
+        color: $kGrayscale1;
+      }
+      .entryName {
+        font-size: 15px;
+        font-weight: normal;
+        color: $kGrayscale3;
+        margin-top: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.kNoResults {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}

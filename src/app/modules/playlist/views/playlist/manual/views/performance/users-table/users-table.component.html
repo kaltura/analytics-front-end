@@ -1,0 +1,57 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <p-table dataKey="name"
+           [sortField]="'count_plays'"
+           [value]="_tableData"
+           [customSort]="true"
+           [defaultSortOrder]="-1"
+           [sortOrder]="-1"
+           (sortFunction)="_onSortChanged($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [kTooltip]="'app.entry.' + col | translate" [showOnEllipsis]="true" *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
+          {{'app.entry.' + col | translate}}
+          <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
+        </th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr>
+        <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+          <span *ngIf="isCompareMode && data[col]?.value && col !== 'full_name'"
+                class="kTrend">
+            <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+              <app-trend-value [value]="data[col].value"
+                               [units]="data[col].units"
+                               [trend]="data[col].trend"></app-trend-value>
+            </span>
+          </span>
+          <ng-container *ngIf="!isCompareMode || col === 'full_name'">
+            <span *ngIf="col !== 'full_name' && col !== 'total_completion_rate'">{{data[col]}}</span>
+            <a class="kTableColumn"
+               *ngIf="col === 'full_name' && !entryDrilldown && _viewConfig.userDrilldown"
+               [kTooltip]="data[col].length ? data[col] : data['name']"
+               [showOnEllipsis]="true"
+               (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
+            <span class="kTableColumn"
+               *ngIf="col === 'full_name' && (entryDrilldown || !_viewConfig.userDrilldown)"
+               [kTooltip]="data[col].length ? data[col] : data['name']"
+               [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</span>
+            <app-bullet *ngIf="col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <div class="emptymessage">
+        <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+        <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-paginator [rows]="_pager.pageSize"
+               [first]="(_pager.pageIndex -1) * _pager.pageSize"
+               [totalRecords]="totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</k-area-blocker>

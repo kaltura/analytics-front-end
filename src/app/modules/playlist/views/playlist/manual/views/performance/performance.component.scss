@@ -1,0 +1,175 @@
+@import '../../../../../../../../styles/variables';
+:host {
+  width: 100%;
+  height: 100%;
+}
+.kFilters .kTitle.drillDownRoot{
+  color: $kGrayscale3;
+  padding-left: 24px;
+  padding-right: 8px;
+  width: auto;
+  cursor: pointer;
+  &.kSlash{
+    padding-left: 0px;
+    padding-right: 8px;
+  }
+}
+.kDrilldown {
+  font-size: 20px;
+  color: $kGrayscale1;
+  font-weight: bold;
+}
+.kIconexternal_link {
+  color: #999999;
+  font-size: 24px;
+  margin-left: 4px;
+  margin-top: 3px;
+  cursor: pointer;
+}
+.kTableHeader {
+  padding-left: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  .kTotalCount {
+    margin-right: 14px;
+  }
+  .kLink {
+    font-size: 15px;
+    font-weight: 700;
+    color: $menuBkgColor;
+    cursor: pointer;
+  }
+}
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+.kReport .kReportContent .kChart{
+  margin-bottom: 0px;
+  position: relative;
+}
+.kReport{
+  margin-bottom: 0px !important;
+}
+.kTableModeSelector {
+  margin-left: 24px;
+  margin-bottom: 16px;
+
+  .kOptionsLabelWrapper {
+    display: flex;
+    align-items: center;
+    width: calc(100% - 15px);
+    height: 100%;
+    font-weight: normal;
+
+    .kIcon {
+      color: $kGrayscale3;
+      margin-right: 12px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+.kDisabled{
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.kLegend {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  margin-bottom: 20px;
+  .kDates{
+    font-size: 12px;
+    font-weight: normal;
+    color: $kGrayscale1;
+    margin-right: 12px;
+  }
+  .dashed {
+    width: 15px;
+    margin-left: 20px;
+    margin-right: 6px;
+    height: 0px;
+  }
+  .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 6px;
+  }
+  .line {
+    width: 12px;
+    height: 3px;
+    margin-right: 6px;
+    &.margin {
+      margin-left: 20px;
+    }
+  }
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+}
+.kCompareLegend{
+  position: absolute;
+  bottom: 0px;
+  height: 50px;
+  background-color: white;
+  .kLegend:first-child {
+    margin-bottom: 8px;
+  }
+}
+:host ::ng-deep .kGraphTooltip {
+  .row {
+    display: flex;
+    align-items: center;
+    .dashed {
+      width: 15px;
+      margin-right: 4px;
+      height: 0px;
+    }
+    .line {
+      width: 16px;
+      height: 3px;
+      margin-right: 4px;
+    }
+    .label {
+      margin-left: 4px;
+      margin-right: 4px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .value {
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
+:host ::ng-deep .kTableModeSelector {
+  .ui-dropdown {
+    width: 172px !important;
+  }
+  .ui-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
+}

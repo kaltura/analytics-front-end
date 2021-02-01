@@ -1,0 +1,147 @@
+@import '../../../../../../../../../styles/variables';
+
+:host {
+  width: 100%;
+}
+
+.kDates {
+  font-size: 15px;
+  margin-left: 24px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+.kTopVideoEntryColumn {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: -24px;
+
+  .kEntryName {
+    font-size: 18px;
+    color: $kGrayscale1;
+    margin-bottom: 12px;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 375px);
+    &.noCreator{
+      margin-top: -12px;
+    }
+  }
+
+  .kEntryDetails {
+    color: $kGrayscale3;
+    margin-top: 32px;
+  }
+}
+
+.kTopVideoRow {
+  height: 100px;
+
+  .kReportRowIndex {
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    color: $kGrayscale3;
+
+    span {
+      position: absolute;
+      top: -35px;
+      left: 4px;
+    }
+
+    &.kFirst {
+      margin-right: 28px;
+
+      img {
+        z-index: 1;
+        position: absolute;
+        top: -50px;
+        left: -7px;
+      }
+
+      span {
+        z-index: 2;
+        position: absolute;
+        top: -35px;
+        left: 4px;
+        color: $kGrayscale1
+      }
+
+    }
+  }
+}
+
+.kTableCell {
+  color: $kGrayscale1;
+  display: flex;
+  align-items: center;
+
+  i {
+    margin-right: 10px;
+  }
+
+  .icon-small-play {
+    color: #487ADF;
+  }
+
+  .icon-viewer-contributor {
+    color: #31BEA6
+  }
+
+  .icon-small-Completion-Rate {
+    color: #81cc6f;
+  }
+
+  .kCellValue {
+    font-weight: bold;
+  }
+}
+
+.kScore {
+  div{
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+    padding-top: 6px;
+    align-items: flex-end;
+  }
+
+  .kTop {
+    font-size: 15px;
+    color: $kGrayscale3;
+  }
+
+  span {
+    color: $kGrayscale1;
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 24px;
+    &.kEntryStatus{
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: bold;
+      font-style: italic;
+      color: $kGrayscale3;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.kDividerWrapper {
+  display: flex;
+  .kDivider {
+    border-left: 1px solid #d9d9d9;
+  }
+}
+
+.emptymessage {
+  height: 532px;
+
+  .kEmptyMessage {
+    top: 115px;
+    border-bottom: none;
+  }
+}

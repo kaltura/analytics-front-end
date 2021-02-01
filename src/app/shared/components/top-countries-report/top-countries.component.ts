@@ -40,23 +40,24 @@ import { QueryBase } from "shared/components/query-base/query-base";
 })
 export class TopCountriesComponent extends QueryBase implements OnInit, OnDestroy {
   @Input() categoryId: string = null;
+  @Input() playlistId: string = null;
   @Input() entryId: string = null;
-  
+
   @ViewChild('categoryGeo') _categoryGeo: GeoComponent;
   @ViewChild('categoryCompareGeo') _categoryCompareGeo: GeoComponent;
 
   @Output() onDrillDown = new EventEmitter<{ reportType: KalturaReportType, drillDown: string[] }>();
-  
+
   @Input() _distributionKey = 'loads_distribution';
   @Input() _distributionCalculationKey = 'count_loads';
-  
+
   private _dataConfig: ReportDataConfig;
   private _mapCenter = [0, 10];
   private _order = `-${this._distributionCalculationKey}`;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
 
   protected _componentId = 'top-geo';
-  
+
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _selectedMetrics: string;
@@ -76,12 +77,12 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
   public _mapData: any;
   public _currentPeriodTitle: string;
   public _comparePeriodTitle: string;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
   public topCountries$: BehaviorSubject<{ table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException }> = new BehaviorSubject({ table: null, compare: null, busy: false, error: null });
-  
+
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -93,11 +94,11 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   }
-  
+
   ngOnDestroy() {
     this.topCountries$.complete();
   }
-  
+
   ngOnInit() {
     this._isBusy = false;
     // load works map data
@@ -106,16 +107,16 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
         this._mapData = data;
       });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._drillDownTop(false);
-    
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._drillDownTop(false);
 
@@ -134,7 +135,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       this._compareFilter = null;
     }
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     if (this._drillDown.length === 0) {
       this.topCountries$.next({table: null, compare: null, busy: true, error: null});
@@ -144,18 +145,21 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     this._tableData = [];
     this._compareTableData = [];
     this._blockerMessage = null;
-    
+
     this._order = `-${this._distributionCalculationKey}`;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     this._updateReportConfig(reportConfig);
-  
+
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
     }
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
-    
+    if (this.playlistId && !this._filter.playlistIdIn) {
+      this._filter.playlistIdIn = this.playlistId;
+    }
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(
         cancelOnDestroy(this),
@@ -163,28 +167,31 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
           if (!this._isCompareMode) {
             return ObservableOf({ report, compare: null });
           }
-          
+
           const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
           this._updateReportConfig(compareReportConfig);
-          
+
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
           }
           if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
             this._compareFilter.categoriesIdsIn = this.categoryId;
           }
-          
+          if (this.playlistId && !this._compareFilter.playlistIdIn) {
+            this._compareFilter.playlistIdIn = this.playlistId;
+          }
+
           return this._reportService.getReport(compareReportConfig, this._dataConfig)
             .pipe(map(compare => ({ report, compare })));
         })
       )
       .subscribe(({ report, compare }) => {
           this._isBusy = false;
-    
+
           if (report.totals) {
             this._tabsData = this._handleTotals(report.totals); // handle totals
           }
-    
+
           if (report.table && report.table.header && report.table.data) {
             this._tableData = this._handleTable(report.table, this._tabsData); // handle table
             if (this._drillDown.length === 0) {
@@ -198,7 +205,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
           } else if (this._drillDown.length === 0) {
             this.topCountries$.next({ table: null, compare: null, busy: false, error: null });
           }
-          
+
           if (compare) {
             this._currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
             this._comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(this._compareFilter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._compareFilter.toDate, analyticsConfig.locale)}`;
@@ -208,13 +215,13 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
             }
             if (compare.table && compare.table.header && compare.table.data) {
               this._compareTableData = this._handleTable(compare.table, this._compareTabsData); // handle table
-              
+
               this._tableData.forEach(row => {
                 const relevantCompareRow = this._compareTableData.find(item => {
                   const sameCountry = item.country === row.country;
                   const sameRegion = item.region === row.region;
                   const sameCity = item.city === row.city;
-                  
+
                   return sameCountry && sameRegion && sameCity;
                 });
                 const compareValue = relevantCompareRow ? relevantCompareRow[this._distributionCalculationKey] : 0;
@@ -226,10 +233,10 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
               });
             }
           }
-          
+
           setTimeout(() => {
             this._categoryGeo.updateMap(this._mapCenter);
-            
+
             if (this._categoryCompareGeo) {
               this._categoryCompareGeo.updateMap(this._mapCenter);
             }
@@ -251,7 +258,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private _setPlaysTrend(row: TableRow, field: string, compareValue: any, currentPeriodTitle: string, comparePeriodTitle: string, units: string = ''): void {
     const currentValue = parseFormattedValue(row[field]);
     compareValue = parseFormattedValue(compareValue.toString());
@@ -264,7 +271,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       units: value !== null ? '%' : '',
     };
   }
-  
+
   private _handleTable(table: KalturaReportTable, tabsData: Tab[]): TableRow[] {
     let { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     // server might return unknown countries with empty object_id. Filter them out.
@@ -279,7 +286,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
     let tmp = this._columns.pop();
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
-    
+
     return tableData.map(row => {
       const calculateDistribution = (key: string): number => {
         const tab = tabsData.find(item => item.key === key);
@@ -289,19 +296,19 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       };
       const playsDistribution = calculateDistribution(this._distributionCalculationKey);
       row[this._distributionKey] = ReportHelper.numberWithCommas(playsDistribution);
-      
+
       return row;
     });
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal): Tab[] {
     return this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
-  
+
   private _updateReportConfig(reportConfig: ReportConfig): void {
     const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries') || this._refineFilter.find(({ type }) => type === 'location');
     const regionsFilterApplied = this._refineFilter.find(({ type, value }) => type === 'location' && value['region'] && value['region'].length);
-    
+
     if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
       delete reportConfig.filter['countryIn'];
     }
@@ -312,20 +319,20 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = '';
-  
+
     if (countriesFilterApplied || regionsFilterApplied) {
       refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
     }
-    
+
     if (this._drillDown.length > 0) {
       reportConfig.filter.countryIn = this._drillDown[0];
     }
-    
+
     if (this._drillDown.length > 1) {
       reportConfig.filter.regionIn = this._drillDown[1];
     }
   }
-  
+
   private _setMapCenter(): void {
     this._mapCenter = [0, 10];
     if (this._drillDown.length > 0) {
@@ -343,7 +350,7 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       }
     }
   }
-  
+
   public _onDrillDown(event: { drillDown: string[], reload: boolean }): void {
     const { drillDown, reload } = event;
     this._drillDown = Array.isArray(drillDown) ? drillDown : [drillDown];
@@ -355,12 +362,12 @@ export class TopCountriesComponent extends QueryBase implements OnInit, OnDestro
       this._loadReport();
     }
   }
-  
+
   public _drillDownTop(reload = true): void {
     if (this._categoryGeo) {
       this._categoryGeo.drillDown(null, reload);
     }
-    
+
     if (this._categoryCompareGeo) {
       this._categoryCompareGeo.drillDown(null, reload);
     }

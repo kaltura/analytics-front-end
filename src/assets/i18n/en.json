@@ -951,6 +951,7 @@
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
       "unique_viewers": "Unique Viewers",
+      "unique_videos": "Played Entries",
       "count_loads": "Player Impressions",
       "loads_distribution": "Player Impressions Distribution",
       "avg_time_viewed": "Avg. View Time",
@@ -1039,7 +1040,21 @@
           "3": "Clicked 3 times",
           "n": "Clicked more than 3 times"
         }
-      }
+      },
+      "manual": "Playlist type:  Manual",
+      "id": "ID:",
+      "creator": "Creator:",
+      "creation": "Creation Date:",
+      "impressions": "Playlist Impressions",
+      "plays": "{{0}} Playlists played",
+      "played": "Played Entries",
+      "avgPlays": "Avg. played entries per user",
+      "viewersEng": "Viewer’s Engagement",
+      "videosPlayed": "Videos played on avg.",
+      "avgTime": "Avg. minutes viewed",
+      "videoOfTheDay": "Video of the day",
+      "performance": "Playlist Performance Over Time",
+      "summary": "Total"
     },
     "context": {
       "name": "Name",

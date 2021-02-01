@@ -1,0 +1,168 @@
+<div data-aid="report-performance-highlights" class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle" [class.drillDownRoot]="_drillDown.label.length" (click)="drillUp()">{{'app.playlist.performance' | translate}}</span>
+    <span class="kTitle drillDownRoot kSlash" *ngIf="_drillDown.label.length">/</span>
+    <span class="kDrilldown" *ngIf="_drillDown.label.length">{{_drillDown.label}}</span>
+    <i *ngIf="_drillDown.label.length && _showExternalLink" (click)="navigateToDrilldown()" class="kIconexternal_link"
+       [kTooltip]="'app.category.' + _tableMode + 'DrillDown' | translate"></i>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <app-report-tabs [tabs]="_tabsData" [showValue]="_filter.userIds" [compareMode]="_isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-compare-metric [metric]="_selectedMetricsLabel"
+                            [colors]="_metricsColors"
+                            [options]="_metricsOptions"
+                            [class.kDisabled]="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+                            (compareTo)="_onCompareTo($event)"></app-compare-metric>
+        <app-time-units applyIn="performance"
+                        [dateFilter]="dateFilterComponent"
+                        [selectedTimeUnit]="_reportInterval"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart" (chartInit)="onCompareChartInit($event)"
+             *ngIf="!_metricsLineChartData && _lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+        <div echarts class="kChart" (chartInit)="onCompareChartInit($event)"
+             *ngIf="_metricsLineChartData"
+             [options]="_metricsLineChartData"></div>
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+        <div class="kCompareLegend" *ngIf="_showCustomLegend && _isCompareMode">
+          <div class="kLegend">
+            <span class="kDates">{{_lineChartData[_selectedMetrics]?.legend?.data[1]}}:</span>
+            <div class="circle" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[1]}"></div>
+            <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+            <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[1]}"></div>
+            <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+          </div>
+          <div class="kLegend">
+            <span class="kDates">{{_lineChartData[_selectedMetrics]?.legend?.data[0]}}:</span>
+            <div class="circle" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[0]}"></div>
+            <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+            <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[0]}"></div>
+            <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="kLegend" *ngIf="_showCustomLegend && !_isCompareMode">
+        <div class="line" [ngStyle]="{'background-color': _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.category_' + _selectedMetrics | translate}}</span>
+        <div class="dashed margin" [ngStyle]="{'border-top': '3px dotted ' + _lineChartData[_selectedMetrics]?.color[0]}"></div>
+        <span>{{'app.category.graphs.context_' + _selectedMetrics | translate}}</span>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle" [class.kHidden]="_tableMode === 'user' || _tableMode === 'entry'">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <div class="kTableModeSelector" [class.kHidden]="_tableMode === 'user' || _tableMode === 'entry'">
+            <p-dropdown [style]="{'width': '172px'}"
+                        [options]="_tableModesOptions"
+                        (ngModelChange)="_onChangeMode()"
+                        [(ngModel)]="_tableMode">
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
+          <ng-container [ngSwitch]="_tableMode">
+            <manual-playlist-dates-table *ngSwitchCase="_tableModes.dates"
+                             [data]="_datesTableData"
+                             [sortField]="_sortField"
+                             [currentPeriod]="_currentPeriod"
+                             [comparePeriod]="_comparePeriod"
+                             [isCompareMode]="_isCompareMode"
+                             [reportInterval]="_reportInterval"
+                             [firstTimeLoading]="_firstTimeLoading"></manual-playlist-dates-table>
+
+            <ng-container *ngSwitchCase="_tableModes.users">
+              <app-user-engagement-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="usersTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                          [showUserFilter]="_viewConfig.userFilter"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
+
+              <manual-playlist-users-table #usersTableComponent
+                               (drillDown)="onDrillDown('user', $event)"
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [firstTimeLoading]="_firstTimeLoading"></manual-playlist-users-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.entries">
+              <app-entry-engagement-filter *ngIf="!_isMultiAccount"
+                                          [totalCount]="entriesTableComponent.totalCount"
+                                          [dateFilter]="_dateFilter"
+                                           [viewConfig]="_viewConfig"
+                                          (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>
+
+              <manual-playlist-entries-table #entriesTableComponent
+                                 (drillDown)="onDrillDown('entry', $event)"
+                                 [summary]="_summaryData"
+                                 [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [firstTimeLoading]="_firstTimeLoading"></manual-playlist-entries-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.user">
+              <div class="kTableHeader">
+                <span class="kTotalCount">{{'app.entry.totalEntriesCount' | translate: { '0': entriesTableComponentDrilldown.totalCount } }}</span>
+                <span class="kLink" (click)="exportReport()">{{'app.common.exportReport' | translate}}</span>
+              </div>
+              <manual-playlist-entries-table #entriesTableComponentDrilldown
+                                 [filterChange]="_filterChange$"
+                                 [filter]="_filter"
+                                 [summary]="_summaryData"
+                                 [compareFilter]="_compareFilter"
+                                 [isCompareMode]="_isCompareMode"
+                                 [reportInterval]="_reportInterval"
+                                 [userDrilldown]="true"
+                                 [firstTimeLoading]="_firstTimeLoading"></manual-playlist-entries-table>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="_tableModes.entry">
+              <div class="kTableHeader">
+                <span class="kTotalCount">{{'app.entry.totalViewersCount' | translate: { '0': usersTableComponentDrilldown.totalCount } }}</span>
+                <span class="kLink" (click)="exportReport()">{{'app.common.exportReport' | translate}}</span>
+              </div>
+              <manual-playlist-users-table #usersTableComponentDrilldown
+                               [filterChange]="_filterChange$"
+                               [filter]="_filter"
+                               [compareFilter]="_compareFilter"
+                               [isCompareMode]="_isCompareMode"
+                               [reportInterval]="_reportInterval"
+                               [entryDrilldown]="true"
+                               [firstTimeLoading]="_firstTimeLoading"></manual-playlist-users-table>
+            </ng-container>
+
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

@@ -202,14 +202,37 @@ export const viewsConfig = {
     title: {},
     export: {},
     refineFilter: {
-      geo: {},
+      mediaType: {},
+      playbackType: {},
+      entrySource: {},
+      tags: {},
       owners: {},
       categories: {},
+      geo: {},
     },
     details: {},
+    miniHighlights: {},
+    miniTopVideos: {},
+    miniTopViewers: {},
+    miniInsights: {
+      peakDay: {},
+      domains: {},
+      geo: {},
+      devices: {}
+    },
     totals: {},
-    performance: {},
-    videos: {},
+    performance: {
+      userDrilldown: {},
+      userFilter: {},
+      userLink: {},
+      entryDrilldown: {},
+      entryFilter: {},
+      entryLink: {}
+    },
+    topVideos: {},
+    geo: {},
+    devices: {},
+    syndication: {}
   },
   user: {
     export: {},
