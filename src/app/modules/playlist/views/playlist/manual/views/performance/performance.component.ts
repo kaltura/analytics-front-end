@@ -489,4 +489,9 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
       this._metricsCompareTo = null;
     }
   }
+
+  public openViewers(): void {
+    this._tableMode = TableModes.users;
+    this._showTable = true;
+  }
 }

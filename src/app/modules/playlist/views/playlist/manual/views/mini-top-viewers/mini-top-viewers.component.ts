@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { PageScrollConfig, PageScrollInstance, PageScrollService } from 'ngx-page-scroll';
 import {
@@ -38,6 +38,7 @@ import { TableRow } from "shared/utils/table-local-sort-handler";
 export class ManualPlaylistMiniTopViewersComponent extends ManualPlaylistBase {
   @Input() dateFilterComponent: DateFilterComponent;
   @Input() playlistId: string = null;
+  @Output() openViewers = new EventEmitter();
 
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
@@ -187,6 +188,11 @@ export class ManualPlaylistMiniTopViewersComponent extends ManualPlaylistBase {
       const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
       this.pageScrollService.start(pageScrollInstance);
     }
+  }
+
+  public scrollToViewers(): void {
+    this.openViewers.emit();
+    this.scrollTo('#performance');
   }
 
 }

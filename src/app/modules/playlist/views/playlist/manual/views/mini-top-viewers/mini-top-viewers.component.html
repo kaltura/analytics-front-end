@@ -4,7 +4,7 @@
     <kInputHelper>
       <span>{{'app.category.topViewers_tt' | translate}}</span>
     </kInputHelper>
-    <a (click)="scrollTo('#performance')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <a (click)="scrollToViewers()" class="kDetails">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

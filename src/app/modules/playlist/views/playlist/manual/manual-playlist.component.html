@@ -88,6 +88,7 @@
 
       <div *ngIf="_viewConfig.miniTopViewers" class="kMiniReportContainer kMiniTopReportSmall">
         <app-manual-playlist-mini-top-viewers [dateFilter]="_dateFilter" [playlistId]="_playlistId"
+                                              (openViewers)="performance.openViewers()"
                                        [refineFilter]="_refineFilter"></app-manual-playlist-mini-top-viewers>
       </div>
 
@@ -126,8 +127,8 @@
 
       <div class="divider"></div>
 
-      <div *ngIf="_viewConfig.performance" class="kReportContainer" id="performance" >
-        <app-manual-playlist-performance
+      <div [class.kHidden]="!_viewConfig.performance" class="kReportContainer" id="performance">
+        <app-manual-playlist-performance #performance
           [playlistId]="_playlistId"
           [dateFilter]="_dateFilter"
           [dateFilterComponent]="dateFilter"
