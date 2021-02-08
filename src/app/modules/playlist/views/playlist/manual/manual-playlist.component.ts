@@ -28,6 +28,7 @@ export class ManualPlaylistComponent implements OnInit {
       this._playlistId = value.id;
       this._playlistName = value.name;
       this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
+      this._updateDate = DateFilterUtils.getMomentDate(value.updatedAt);
     }
   }
   @Input() owner: string;
@@ -60,6 +61,7 @@ export class ManualPlaylistComponent implements OnInit {
   public _playlistId = '';
   public _playlistName = '';
   public _creationDate: moment.Moment = null;
+  public _updateDate: moment.Moment = null;
   public _viewConfig: ViewConfig = { ...viewsConfig.playlist };
 
   public _dateFilter: DateChangeEvent = null;

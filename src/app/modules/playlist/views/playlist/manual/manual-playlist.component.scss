@@ -177,6 +177,9 @@
     top: 110px;
     left: 0px;
   }
+  .hideOnTablet {
+    display: none;
+  }
   .kReport .kEntryDetails{
     height: 86px;
   }
@@ -200,9 +203,6 @@
     .kMiniTopReportWide {
       width: 80%;
       height: 187px !important;
-    }
-    .hideOnTablet {
-      display: none;
     }
     .showOnTablet {
       display: block;

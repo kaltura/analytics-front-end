@@ -43,6 +43,9 @@
       <div class="kSeparator"></div>
       <span class="kLabel">{{'app.playlist.creation' | translate}}</span>
       <span class="kProp">{{_creationDate | date:'MM/dd/yyyy'}}</span>
+      <div class="kSeparator hideOnTablet"></div>
+      <span class="kLabel hideOnTablet">{{'app.playlist.updated' | translate}}</span>
+      <span class="kProp hideOnTablet">{{_updateDate | date:'MM/dd/yyyy'}}</span>
       <div *ngIf="!isChildAccount && _viewConfig.title" class="kSeparator"></div>
       <a tabindex="0" *ngIf="!isChildAccount && _viewConfig.title" class="link" role="link" aria-label="See All Details" #link
          (click)="navigateToPlaylist.emit()"
