@@ -10,13 +10,15 @@ import {ManualExportConfig} from "./manual-export.config";
 import {ManualPlaylistTopContentComponent} from "./views/top-content";
 import {TopCountriesComponent} from "shared/components/top-countries-report/top-countries.component";
 import {ExportCsvComponent} from "shared/components/export-csv/export-csv.component";
+import {CustomSyndicationConfig} from './custom-syndication.config';
+import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import * as moment from "moment";
 
 @Component({
   selector: 'app-manual-playlist-view',
   templateUrl: './manual-playlist.component.html',
   styleUrls: ['./manual-playlist.component.scss'],
-  providers: [ManualExportConfig]
+  providers: [ManualExportConfig, CustomSyndicationConfig]
 })
 export class ManualPlaylistComponent implements OnInit {
 
@@ -67,6 +69,7 @@ export class ManualPlaylistComponent implements OnInit {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
+  public _syndicationConfig: ReportDataConfig;
 
   public _miniViewsCount = [
     this._viewConfig.miniHighlights,
@@ -76,7 +79,9 @@ export class ManualPlaylistComponent implements OnInit {
     this._viewConfig.miniInsights
   ].filter(Boolean).length;
 
-  constructor(private _exportConfigService: ManualExportConfig) {
+  constructor(private _exportConfigService: ManualExportConfig,
+              private _customSyndicationConfig: CustomSyndicationConfig) {
+    this._syndicationConfig = this._customSyndicationConfig.getConfig();
   }
 
   ngOnInit() {

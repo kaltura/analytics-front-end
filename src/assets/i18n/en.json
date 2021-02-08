@@ -472,6 +472,7 @@
         "count_plays_tt": "Plays",
         "plays_distribution": "Plays Distribution",
         "loads_distribution": "Player Impr. Distribution",
+        "unique_played_videos": "Played Entries",
         "sum_time_viewed_tt": "Min. Viewed",
         "count_loads_tt": "Player Impressions",
         "load_play_ratio_tt": "Play Impression Ratio",

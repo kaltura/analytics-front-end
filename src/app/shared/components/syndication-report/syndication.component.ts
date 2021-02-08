@@ -69,6 +69,10 @@ export class SyndicationComponent implements OnDestroy {
   @Input() categoryId: string;
   @Input() playlistId: string;
   @Input() dateFilterComponent: DateFilterComponent;
+  @Input() set reportDataConfig(value: ReportDataConfig){
+    this._dataConfig = value;
+    this._selectedMetrics = this._dataConfig.totals.preSelected;
+  };
 
   @Output() onDrillDown = new EventEmitter<string>();
 
