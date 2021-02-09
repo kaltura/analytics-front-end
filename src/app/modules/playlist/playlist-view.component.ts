@@ -73,7 +73,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,playlistType,createdAt,userId,adminTags'
+            fields: 'id,name,playlistType,createdAt,updatedAt,userId,adminTags'
           })
         }),
       new UserGetAction({ userId: null })
