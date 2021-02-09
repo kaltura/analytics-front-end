@@ -177,7 +177,7 @@ export class ManualPlaylistPerformanceComponent extends ManualPlaylistBase imple
           }
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
 
-          if (report.totals && (!this._tabsData.length || this._filter.userIds)) {
+          if (report.totals) {
             this._handleTotals(report.totals); // handle totals
           }
 
