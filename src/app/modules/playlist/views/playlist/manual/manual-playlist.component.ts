@@ -13,6 +13,7 @@ import {ExportCsvComponent} from "shared/components/export-csv/export-csv.compon
 import {CustomSyndicationConfig} from './custom-syndication.config';
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import * as moment from "moment";
+import {analyticsConfig} from "configuration/analytics-config";
 
 @Component({
   selector: 'app-manual-playlist-view',
@@ -29,6 +30,9 @@ export class ManualPlaylistComponent implements OnInit {
       this._playlistName = value.name;
       this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
       this._updateDate = DateFilterUtils.getMomentDate(value.updatedAt);
+      const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+      this._creationDateLabel = this._creationDate.format(dateFormat);
+      this._updateDateLabel = this._updateDate.format(dateFormat);
     }
   }
   @Input() owner: string;
@@ -61,7 +65,9 @@ export class ManualPlaylistComponent implements OnInit {
   public _playlistId = '';
   public _playlistName = '';
   public _creationDate: moment.Moment = null;
+  public _creationDateLabel = '';
   public _updateDate: moment.Moment = null;
+  public _updateDateLabel = '';
   public _viewConfig: ViewConfig = { ...viewsConfig.playlist };
 
   public _dateFilter: DateChangeEvent = null;
