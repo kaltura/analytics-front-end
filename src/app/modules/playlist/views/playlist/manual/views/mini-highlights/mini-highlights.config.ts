@@ -32,7 +32,7 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             units: value => 'min',
             sortOrder: 3,
           },
-          'unique_videos': {
+          'unique_played_videos': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.playlist.played`),
             tooltip: this._translate.instant(`app.playlist.played`),
