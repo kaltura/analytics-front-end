@@ -13,7 +13,7 @@
         <th [ngStyle]="{'width': '8%'}" [kTooltip]="'app.entry.count_plays' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'count_plays'">{{'app.entry.count_plays' | translate}}
           <p-sortIcon [field]="'count_plays'" *ngIf="!isCompareMode"></p-sortIcon>
         </th>
-        <th *ngIf="!userDrilldown" [ngStyle]="{'width': '17%'}" [kTooltip]="'app.entry.plays_distribution' | translate" [showOnEllipsis]="true">{{'app.entry.plays_distribution' | translate}}</th>
+        <th *ngIf="!userDrilldown && !isCompareMode" [ngStyle]="{'width': '17%'}" [kTooltip]="'app.entry.plays_distribution' | translate" [showOnEllipsis]="true">{{'app.entry.plays_distribution' | translate}}</th>
         <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.unique_viewers' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'unique_viewers'">{{'app.entry.unique_viewers' | translate}}
           <p-sortIcon [field]="'unique_viewers'" *ngIf="!isCompareMode"></p-sortIcon>
         </th>
@@ -28,7 +28,7 @@
         </th>
 
       </tr>
-      <tr *ngIf="_tableData?.length && !userDrilldown" class="kSummaryRow">
+      <tr *ngIf="_tableData?.length && !userDrilldown && !isCompareMode" class="kSummaryRow">
         <th [ngStyle]="{'width': '112px', 'padding-left': '12px'}"></th>
         <th>
           <span>{{'app.playlist.summary' | translate}}</span>
