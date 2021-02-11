@@ -74,12 +74,13 @@ export function getCountryName(country: string, toServerName = false): string {
     'Venezuela',
     'Vietnam'
   ];
-  
-  if (toServerName) {
-    const index = mapCountryNames.indexOf(country);
-    return index === -1 ? country : serveCountryNames[index];
-  } else {
-    const index = serveCountryNames.indexOf(country);
-    return index === -1 ? country : mapCountryNames[index];
-  }
+
+  // if (toServerName) {
+  //   const index = mapCountryNames.indexOf(country);
+  //   return index === -1 ? country : serveCountryNames[index];
+  // } else {
+  //   const index = serveCountryNames.indexOf(country);
+  //   return index === -1 ? country : mapCountryNames[index];
+  // }
+  return country;
 }
