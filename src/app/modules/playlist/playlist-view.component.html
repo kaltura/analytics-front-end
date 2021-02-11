@@ -6,7 +6,7 @@
               [playlist]="_playlist"
               [owner]="_owner"
               (back)="_back()"></app-path>
-    <app-manual-playlist-view *ngIf="!_loadingPlaylist && _isManualPlaylist"
+    <app-manual-playlist-view *ngIf="!_loadingPlaylist && _isManualPlaylist && !_interactiveVideo"
               [isChildAccount]="_isChildAccount"
               [viewConfig]="_playlistViewConfig"
               [playlist]="_playlist"

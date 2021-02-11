@@ -201,6 +201,7 @@ export const viewsConfig = {
   playlist: {
     title: {},
     export: {},
+    videos: {},
     refineFilter: {
       mediaType: {},
       playbackType: {},
