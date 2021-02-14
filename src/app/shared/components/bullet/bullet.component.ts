@@ -10,11 +10,12 @@ import { getColorPercent } from 'shared/utils/colors';
 export class BulletComponent {
   public _value = 0;
   public _color = getColorPercent(65);
-  
+
   @Input() formatter: Function = significantDigits;
   @Input() animate = true;
   @Input() colorPercent = 65;
-  
+  @Input() hideBulletOnTablet = false;
+
   @Input() set value(value: any) {
     if (this.animate) {
       setTimeout(() => {
@@ -23,13 +24,13 @@ export class BulletComponent {
     } else {
       this._setValue(value);
     }
-    
+
   }
-  
+
   @Input() set colorScheme(type: string) {
     this._color = getColorPercent(this.colorPercent, type);
   }
-  
+
   private _setValue(value: any): void {
     this._value = typeof this.formatter === 'function' ? this.formatter(value) : value;
   }

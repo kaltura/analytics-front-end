@@ -37,7 +37,7 @@
           <span>{{summary['count_plays']}}</span>
         </th>
         <th *ngIf="!isCompareMode">
-          <app-bullet [value]="100" [animate]="false" [colorScheme]="'default'"></app-bullet>
+          <app-bullet [hideBulletOnTablet]="true" [value]="100" [animate]="false" [colorScheme]="'default'"></app-bullet>
         </th>
         <th>
           <span>{{summary['unique_known_users']}}</span>
@@ -49,7 +49,7 @@
           <span>{{summary['avg_view_drop_off']}}</span>
         </th>
         <th [ngStyle]="{'paddingRight':'8px'}">
-          <app-bullet [value]="summary['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+          <app-bullet [hideBulletOnTablet]="true" [value]="summary['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
         </th>
       </tr>
     </ng-template>
@@ -69,7 +69,7 @@
           </span>
           <ng-container *ngIf="!isCompareMode || col === 'entry_name'">
             <span *ngIf="col !== 'plays_distribution' && col !== 'entry_name' && col !== 'total_completion_rate' && col !== 'avg_completion_rate'">{{data[col]}}</span>
-            <app-bullet *ngIf="col === 'plays_distribution' && !isCompareMode && !userDrilldown" [value]="data[col]" [animate]="false" [colorScheme]="'default'"></app-bullet>
+            <app-bullet [hideBulletOnTablet]="true" *ngIf="col === 'plays_distribution' && !isCompareMode && !userDrilldown" [value]="data[col]" [animate]="false" [colorScheme]="'default'"></app-bullet>
             <span class="kEntryLink kTableColumn"
                   *ngIf="col === 'entry_name' && (userDrilldown || !_viewConfig.entryDrilldown)"
                   [kTooltip]="data[col]"
@@ -80,7 +80,7 @@
                [kTooltip]="data[col]"
                [showOnEllipsis]="true"
                (click)="_drillDown(data)">{{data[col]}}</a>
-            <app-bullet *ngIf="(col === 'avg_completion_rate') || col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+            <app-bullet [hideBulletOnTablet]="true" *ngIf="(col === 'avg_completion_rate') || col === 'total_completion_rate'" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
           </ng-container>
         </td>
       </tr>
