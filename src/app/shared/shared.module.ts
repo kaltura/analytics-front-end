@@ -13,7 +13,6 @@ import { ThumbLoaderComponent } from './components/thumb-loader/thumb-loader.com
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
-import { DomainFilterComponent } from './components/domain-filter/domain-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { BulletComponent } from './components/bullet/bullet.component';
 import { InsightsBulletComponent } from './components/insights-bullet/insights-bullet.component';
@@ -113,7 +112,6 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
-    DomainFilterComponent,
     DomainsFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
@@ -173,7 +171,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
-    DomainFilterComponent,
+    CountryFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
