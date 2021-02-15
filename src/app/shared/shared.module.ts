@@ -50,6 +50,7 @@ import { TagsFilterComponent } from './components/filter/tags-filter/tags-filter
 import { PlaybackFilterComponent } from './components/filter/playback-filter/playback-filter.component';
 import { OwnersFilterComponent } from './components/filter/owners-filter/owners-filter.component';
 import { LocationFilterComponent } from './components/filter/location-filter/location-filter.component';
+import { DomainsFilterComponent } from './components/filter/domains-filter/domains-filter.component';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
@@ -113,6 +114,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     UsersFilterComponent,
     CountryFilterComponent,
     DomainFilterComponent,
+    DomainsFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,

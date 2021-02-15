@@ -1,0 +1,21 @@
+<app-dropdown-filter templateType="domain"
+                     [class.expandWidth]="expandWidth"
+                     [label]="'app.filters.domains' | translate"
+                     [options]="_domainsFilterService.domainsOptions | async"
+                     [isLoading]="_domainsFilterService.isBusy('domains')"
+                     [defaultLabel]="'app.filters.domainPlaceholder' | translate"
+                     [selectedItemsLabel]="'app.filters.domainsSelected' | translate"
+                     [selectedFilters]="_selectedDomains"
+                     (itemSelected)="_onItemSelected($event, 'domains')">
+</app-dropdown-filter>
+
+<app-dropdown-filter [class.expandWidth]="expandWidth"
+                     [label]="'app.filters.pages' | translate"
+                     [options]="_domainsFilterService.pagesOptions | async"
+                     [disabled]="!_selectedDomains.length"
+                     [isLoading]="_domainsFilterService.isBusy('pages')"
+                     [defaultLabel]="'app.filters.pagesPlaceholder' | translate"
+                     [selectedItemsLabel]="'app.filters.pagesSelected' | translate"
+                     [selectedFilters]="_selectedPages"
+                     (itemSelected)="_onItemSelected($event, 'pages')"></app-dropdown-filter>
+

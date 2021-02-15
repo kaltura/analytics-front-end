@@ -13,6 +13,7 @@ export const viewsConfig = {
         tags: {},
         owners: {},
         categories: {},
+        domains: {},
         geo: {},
       },
       miniHighlights: {},
