@@ -162,15 +162,15 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
   }
 
   if (domains.length) {
-    console.log("--------> Add domains to filter!"); // TODO: set filter value
+    serverFilter.domainIn = domains.join(analyticsConfig.valueSeparator);
   } else {
-    console.log("--------> Remove domains from filter!"); // TODO: remove filter value
+    delete serverFilter.domainIn;
   }
 
   if (pages.length) {
-    console.log("--------> Add pages to filter!"); // TODO: set filter value
+    serverFilter.canonicalUrlIn = pages.join(analyticsConfig.valueSeparator);
   } else {
-    console.log("--------> Remove pages from filter!"); // TODO: remove filter value
+    delete serverFilter.canonicalUrlIn;
   }
 
   if (tags.length) {
