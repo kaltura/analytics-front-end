@@ -39,14 +39,14 @@
                    onError="this.onerror=null;this.style.display='none'"
                    (error)="holder.classList.add('kIconfile-small')">
             </div>
-            <span style="margin-top:2px; position: absolute; overflow: hidden; width: 140px; text-overflow: ellipsis"
+            <span style="margin-top:2px; position: absolute; overflow: hidden; text-overflow: ellipsis"
                   [kTooltip]="item.label" [showOnEllipsis]="true">
               {{item.label}}
             </span>
           </ng-container>
 
           <ng-container *ngSwitchDefault>
-            <span style="margin-top:2px; position: absolute; overflow: hidden; width: 160px; text-overflow: ellipsis"
+            <span style="margin-top:2px; position: absolute; overflow: hidden; text-overflow: ellipsis"
                   [kTooltip]="item.label" [showOnEllipsis]="true">
               {{item.label}}
             </span>

@@ -34,7 +34,8 @@
 
       .kListFilters {
         display: flex;
-
+        width: 50%;
+        flex: 0 0 auto;
         .kLastItem {
           margin-right: 18px !important;
         }
@@ -43,7 +44,8 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        width: 432px;
+        width: 50%;
+        flex: 0 0 auto;
       }
     }
 
@@ -72,7 +74,13 @@
 ktags {
   margin-left: 0 !important;
 }
+.kMultiselectFilter ::ng-deep .ui-multiselect {
+  width: 100% !important;
+}
 
+.kMultiselectFilter ::ng-deep .expandWidth .ui-multiselect {
+  width: 432px !important;
+}
 app-domains-filter, app-category-filter{
   margin-top: 12px;
 }
@@ -84,12 +92,21 @@ app-owners-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  app-autocomplete-filter, app-dropdown-filter {
+  app-autocomplete-filter {
     margin: 0;
+  }
+
+  app-dropdown-filter {
+    margin-right: 0;
   }
 
   .ui-autocomplete-multiple-container {
     min-height: 34px;
     padding: 3px 6px !important;
+  }
+}
+@media (max-width: 991px) {
+  ::ng-deep app-checkboxes-list-filter {
+    min-width: 118px !important;
   }
 }

@@ -195,6 +195,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     CheckboxesListFilterComponent,
     CategoryFilterComponent,
     CategoriesSelectorComponent,
+    DomainsFilterComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     ImpressionsComponent,

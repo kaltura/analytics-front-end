@@ -19,18 +19,27 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <app-country-filter *ngIf="_viewConfig.geo"
+          <app-country-filter *ngIf="_viewConfig.geo" style="width: 33%"
                               [dateFilter]="_dateFilter"
                               [selectedFilters]="_selectedValues['countries']"
                               (itemSelected)="_onItemSelected($event, 'countries')"
                               (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
 
-          <app-tags-filter *ngIf="_viewConfig.tags"
-                           [selectedFilters]="_selectedValues['tags']"
-                           (itemSelected)="_onItemSelected($event, 'tags')"
-                           (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
+          <div class="kMiscFilters">
+            <app-tags-filter *ngIf="_viewConfig.tags"
+                             [selectedFilters]="_selectedValues['tags']"
+                             (itemSelected)="_onItemSelected($event, 'tags')"
+                             (itemUnselected)="_onItemUnselected($event, 'tags')"></app-tags-filter>
 
-          <app-category-filter *ngIf="_viewConfig.categories"
+            <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
+          </div>
+
+          <app-category-filter *ngIf="_viewConfig.categories" style="width: 33%"
                                [label]="'app.filters.categories' | translate"
                                [selectedFilters]="_selectedValues['categories']"
                                [linkLabel]="'app.filters.selectCategories' | translate"

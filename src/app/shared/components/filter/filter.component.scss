@@ -5,7 +5,12 @@
   width: 100%;
   height: 100%;
 }
-
+.kMiscFilters ::ng-deep .ui-multiselect {
+  width: 100% !important;
+}
+app-location-filters ::ng-deep app-dropdown-filter{
+  margin-right: 0;
+}
 .kRefineFilters {
   width: 100%;
   height: auto;
@@ -28,6 +33,8 @@
 
       .kListFilters {
         display: flex;
+        width: 40%;
+        flex: 0 0 auto;
         .kLastItem {
           margin-right: 18px !important;
         }
@@ -40,7 +47,8 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 0 0 auto;
+        width: 30%;
       }
     }
 
@@ -80,5 +88,10 @@
       width: auto;
       padding: 7px;
     }
+  }
+}
+@media (max-width: 991px) {
+  ::ng-deep app-checkboxes-list-filter {
+    min-width: 118px !important;
   }
 }

@@ -36,10 +36,6 @@
                                  (itemSelected)="_onItemSelected($event, 'context')"
                                  (itemUnselected)="_onItemUnselected($event, 'context')"></app-category-filter>
 
-            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
-                                <!--[selectedFilters]="_selectedValues['domains']"-->
-                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
-                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
 
           </div>
           <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
@@ -47,6 +43,14 @@
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+          </div>
+          <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
+            <app-domains-filters *ngIf="_viewConfig?.domains"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
           </div>
         </div>
       </div>
