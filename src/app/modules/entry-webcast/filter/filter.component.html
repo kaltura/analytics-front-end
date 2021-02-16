@@ -33,6 +33,12 @@
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+
+            <app-country-filter *ngIf="_viewConfig.geo" style="margin-top: 16px"
+                                [dateFilter]="_dateFilter"
+                                [selectedFilters]="_selectedValues['countries']"
+                                (itemSelected)="_onItemSelected($event, 'countries')"
+                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
           </div>
 
           <div class="kFilterContainerCol">
@@ -55,13 +61,6 @@
               (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
           </div>
 
-          <div class="kFilterContainerCol">
-            <app-country-filter *ngIf="_viewConfig.geo"
-                                [dateFilter]="_dateFilter"
-                                [selectedFilters]="_selectedValues['countries']"
-                                (itemSelected)="_onItemSelected($event, 'countries')"
-                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
-          </div>
 
         </div>
       </div>
