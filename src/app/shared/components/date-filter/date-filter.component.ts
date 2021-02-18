@@ -345,6 +345,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   private triggerChangeEvent(applyIn?: string, changeOnly?: string): void {
+    // if the current selected time interval is hours and the selected time rage is larger than 30 days - switch to days
+    if (this.selectedTimeUnit === KalturaReportInterval.hours) {
+      const delta = (DateFilterUtils.toServerDate(this.endDate, false) - DateFilterUtils.toServerDate(this.startDate, true)) / (60 * 60 *24);
+      if (delta > 30) {
+        // the time unit component registers to the filterChange event and updates its internal selected time interval to days
+        this.selectedTimeUnit = KalturaReportInterval.days;
+      }
+    }
     this.filterChange.emit({
       applyIn: applyIn,
       changeOnly: changeOnly,
