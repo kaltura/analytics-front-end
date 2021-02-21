@@ -15,6 +15,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
                              classField="__class"
                              [label]="label"
                              [selectedFilters]="selectedFilters"
+                             [placeholder]="'app.filters.ownersPlaceholder' | translate"
                              [provider]="_usersProvider"
                              (search)="_searchUsers($event)"
                              (itemSelected)="itemSelected.emit($event)"
@@ -28,28 +29,28 @@ export class OwnersFilterComponent implements OnDestroy {
 
   @Output() itemSelected = new EventEmitter();
   @Output() itemUnselected = new EventEmitter();
-  
+
   private _searchUsersSubscription: Unsubscribable;
-  
+
   public _usersProvider = new Subject();
-  
+
   constructor(private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService) {
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   public _searchUsers(event, formControl?): void {
     this._usersProvider.next({ suggestions: [], isLoading: true });
-    
+
     if (this._searchUsersSubscription) {
       // abort previous request
       this._searchUsersSubscription.unsubscribe();
       this._searchUsersSubscription = null;
     }
-    
+
     this._searchUsersSubscription = this._searchUsersRequest(event.query).subscribe(data => {
         const suggestions = [];
         (data || []).forEach((suggestedUser: KalturaUser) => {
@@ -71,7 +72,7 @@ export class OwnersFilterComponent implements OnDestroy {
         this._usersProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
   }
-  
+
   private _searchUsersRequest(text: string): Observable<KalturaUser[]> {
     return this._kalturaServerClient
       .request(

@@ -27,6 +27,7 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { GeoExportConfig } from './geo-export.config';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {DomainsFilterService} from "shared/components/filter/domains-filter/domains-filter.service";
 
 export enum GeoTableModes {
   countries = 'countries',
@@ -41,6 +42,7 @@ export enum GeoTableModes {
   providers: [
     GeoExportConfig,
     GeoLocationDataConfig,
+    DomainsFilterService,
     KalturaLogger.createLogger('GeoLocationComponent')
   ]
 })

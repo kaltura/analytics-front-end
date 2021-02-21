@@ -69,8 +69,16 @@
                                  [linkLabel]="'app.filters.selectCategories' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+
+            <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
+
           </div>
-          <div class="kListFilters" *ngIf="_viewConfig?.geo">
+          <div class="kMiscFilters" *ngIf="_viewConfig?.geo">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"

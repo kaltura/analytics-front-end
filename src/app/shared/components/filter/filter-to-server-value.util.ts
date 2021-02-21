@@ -12,7 +12,7 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 
 export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilter: KalturaReportInputFilter): void {
   let categories = [], mediaType = [], sourceType = [], playbackType = [], devices = [], browsers = [], os = [],
-    tags = [], owners = [], country = [], region = [], city = [], domains = [], users = [], context = [];
+    tags = [], owners = [], country = [], region = [], city = [], domains = [], pages = [], users = [], context = [];
 
   refineFilter.forEach(item => {
     switch (item.type) {
@@ -62,7 +62,12 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
         country.push(item.value.name);
         break;
       case 'domains':
-        domains.push(item.value.name);
+        if (item.value.domains) {
+          domains.push(...item.value.domains.map(({ name }) => name));
+        }
+        if (item.value.pages) {
+          pages.push(...item.value.pages.map(({ name }) => name));
+        }
         break;
       case 'location':
         if (item.value.country) {
@@ -154,6 +159,18 @@ export function refineFilterToServerValue(refineFilter: RefineFilter, serverFilt
     serverFilter.citiesIn = city.join(analyticsConfig.valueSeparator);
   } else {
     delete serverFilter.citiesIn;
+  }
+
+  if (domains.length) {
+    serverFilter.domainIn = domains.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.domainIn;
+  }
+
+  if (pages.length) {
+    serverFilter.canonicalUrlIn = pages.join(analyticsConfig.valueSeparator);
+  } else {
+    delete serverFilter.canonicalUrlIn;
   }
 
   if (tags.length) {

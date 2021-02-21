@@ -27,9 +27,11 @@
       .kFilterContainerCol {
         display: flex;
         flex-direction: column;
-        width: 336px;
+        width: 33%;
+        flex: 0 0 auto;
         &:not(:first-child) {
-          margin-left: 24px;
+          padding-left: 24px;
+          box-sizing: border-box;
         }
       }
 

@@ -13,6 +13,8 @@ import { isEqual } from 'shared/utils/is-equals';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import {DomainsFilterService} from "shared/components/filter/domains-filter/domains-filter.service";
+import {DomainsFilterValue} from "shared/components/filter/domains-filter/domains-filter.component";
 
 export interface OptionItem {
   value: any;
@@ -38,7 +40,7 @@ export type RefineFilter = { value: any, type: string }[];
   selector: 'app-refine-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
-  providers: [LocationsFilterService, KalturaLogger.createLogger('FilterComponent')],
+  providers: [LocationsFilterService, DomainsFilterService, KalturaLogger.createLogger('FilterComponent')],
   animations: [
     trigger('state', [
       state('visible', style({ height: '*', opacity: 1 })),
@@ -80,6 +82,7 @@ export class FilterComponent {
         owners: {},
         context: {},
         categories: {},
+        doamins: {},
         geo: {},
       };
     }
@@ -141,6 +144,7 @@ export class FilterComponent {
     owners: {},
     context: {},
     categories: {},
+    domains: {},
     geo: {},
   };
 
@@ -205,6 +209,7 @@ export class FilterComponent {
       'users': [],
       'location': [],
       'countries': [],
+      'domains': [],
       'entries': [],
       'context': [],
     };
@@ -265,6 +270,18 @@ export class FilterComponent {
           } else {
             return null;
           }
+        case 'domains':
+          const domain = value as DomainsFilterValue;
+          if (domain.domains && domain.domains.length) {
+            label = this._translate.instant(`app.filters.domains`);
+            tooltip = this._translate.instant(`app.filters.domains`) + `: ${domain.domains.map(({name}) => name)}`;
+            if (domain.pages && domain.pages.length) {
+              tooltip += ` > ${domain.pages.map(({name}) => name)}`;
+            }
+            return {value: 'domain', type: 'domains', label, tooltip};
+          } else {
+            return null;
+          }
         case 'countries':
           return { value: value.id, type, label: value.name, tooltip: value.name };
         default:
@@ -285,7 +302,7 @@ export class FilterComponent {
 
     if (Array.isArray(values) && values.length) {
       values.forEach(item => {
-        if (!this._selectedValues[item.type] || item.type === 'location') {
+        if (!this._selectedValues[item.type] || item.type === 'location' || item.type === 'domains') {
           this._selectedValues[item.type] = [item.value];
         } else {
           if (this._selectedValues[item.type].indexOf(item.value) === -1) {
@@ -319,8 +336,8 @@ export class FilterComponent {
   public _onItemSelected(item: any, type: string): void {
     this._logger.trace('Item selected by user', { item, type });
     const value = { value: item, type };
-    if (type === 'location') {
-      const relevantFilterIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
+    if (type === 'location' || type === 'domains') {
+      const relevantFilterIndex = this._currentFilters.findIndex(filter => filter.type === type);
       if (relevantFilterIndex !== -1) {
         this._currentFilters.splice(relevantFilterIndex, 1, value);
       } else {
@@ -335,8 +352,8 @@ export class FilterComponent {
   public _onItemUnselected(item: any, type: string): void {
     this._logger.trace('Item removed by user', { item, type });
     let unselectedItemIndex = -1;
-    if (type === 'location') {
-      unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === 'location');
+    if (type === 'location' || type === 'domains') {
+      unselectedItemIndex = this._currentFilters.findIndex(filter => filter.type === type);
     } else if (type === 'countries') {
       const value = typeof item === 'string' ? item : item.id;
       unselectedItemIndex = this._currentFilters.findIndex(filterItem => filterItem.value.id === value && filterItem.type === type);

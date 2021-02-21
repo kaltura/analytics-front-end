@@ -34,7 +34,7 @@
 
       .kListFilters {
         display: flex;
-
+        width: 50%;
         .kLastItem {
           margin-right: 18px !important;
         }
@@ -43,7 +43,9 @@
       .kMiscFilters {
         display: flex;
         flex-direction: column;
-        width: 432px;
+        flex: 0 0 auto;
+        margin-right: 24px;
+        width: 50%;
       }
     }
 
@@ -80,10 +82,13 @@ app-owners-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  app-autocomplete-filter, app-dropdown-filter {
+  app-autocomplete-filter {
     margin: 0;
   }
 
+  app-dropdown-filter {
+    margin-right: 0;
+  }
   .ui-autocomplete-multiple-container {
     min-height: 34px;
     padding: 3px 6px !important;
