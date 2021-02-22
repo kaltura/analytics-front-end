@@ -72,7 +72,7 @@ export class DomainsFilterService implements OnDestroy {
       reportType: reportTypeMap(KalturaReportType.topSyndication),
       filter: this._filter,
       pager: this._pager,
-      order: null,
+      order: '+domain_name',
     };
     // TODO delete new filter field if exists
     // if (reportConfig.filter.countryIn) {
@@ -102,7 +102,7 @@ export class DomainsFilterService implements OnDestroy {
       reportType: reportTypeMap(KalturaReportType.topSyndication),
       filter: this._filter,
       pager: this._pager,
-      order: null
+      order: '+referrer',
     };
     reportConfig.objectIds = domains;
     this._reportService.getReport(reportConfig, this._reportConfig, false)
