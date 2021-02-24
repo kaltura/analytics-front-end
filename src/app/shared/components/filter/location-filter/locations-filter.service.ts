@@ -1,6 +1,12 @@
 import { Injectable, KeyValueDiffer, KeyValueDiffers, OnDestroy } from '@angular/core';
 import { ReportConfig, ReportService } from 'src/app/shared/services';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaObjectBaseFactory,
+  KalturaReportTable,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -20,7 +26,7 @@ export class LocationsFilterService implements OnDestroy {
   private _dateFilterDiffer: KeyValueDiffer<DateChangeEvent, any>;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _currentlyLoading: string[] = [];
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -34,22 +40,22 @@ export class LocationsFilterService implements OnDestroy {
       }
     }
   };
-  
+
   public readonly countriesOptions = this._countriesOptions.asObservable();
   public readonly regionOptions = this._regionsOptions.asObservable();
   public readonly citiesOptions = this._citiesOptions.asObservable();
-  
+
   constructor(private _reportService: ReportService,
               private _objectDiffers: KeyValueDiffers) {
     this._dateFilterDiffer = this._objectDiffers.find([]).create();
   }
-  
+
   ngOnDestroy() {
     this._countriesOptions.complete();
     this._regionsOptions.complete();
     this._citiesOptions.complete();
   }
-  
+
   private _handleCountryTable(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
     // server might return unknown countries with empty object_id. Filter them out before mapping data.
@@ -58,29 +64,29 @@ export class LocationsFilterService implements OnDestroy {
       label: data.country,
     })));
   }
-  
+
   private _handleRegionTable(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
-  
+
     this._regionsOptions.next(tableData.map(data => ({
       value: { name: data.region, id: data.region },
       label: data.region,
     })));
   }
-  
+
   private _handleCityTable(table: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._reportConfig.table);
-    
+
     this._citiesOptions.next(tableData.map(data => ({
       value: { name: data.city, id: data.city },
       label: data.city,
     })));
   }
-  
+
   private _loadCountryData(): void {
     this._isBusy = true;
     this._currentlyLoading.push('country');
-    
+
     const reportConfig: ReportConfig = {
       reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),
       filter: this._filter,
@@ -97,7 +103,7 @@ export class LocationsFilterService implements OnDestroy {
             this._handleCountryTable(report.table); // handle table
           }
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('country'), 1);
-          
+
           this._isBusy = false;
         },
         error => {
@@ -105,11 +111,11 @@ export class LocationsFilterService implements OnDestroy {
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('country'), 1);
         });
   }
-  
+
   private _loadRegionData(country: string): void {
     this._isBusy = true;
     this._currentlyLoading.push('region');
-    
+
     let reportConfig: ReportConfig = {
       reportType: reportTypeMap(KalturaReportType.mapOverlayRegion),
       filter: this._filter,
@@ -124,7 +130,7 @@ export class LocationsFilterService implements OnDestroy {
             this._handleRegionTable(report.table); // handle table
           }
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('region'), 1);
-          
+
           this._isBusy = false;
         },
         error => {
@@ -132,15 +138,15 @@ export class LocationsFilterService implements OnDestroy {
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('region'), 1);
         });
   }
-  
+
   private _loadCityData(country: string, region: string): void {
     this._isBusy = true;
     this._currentlyLoading.push('city');
-  
+
     const filter = Object.assign(KalturaObjectBaseFactory.createObject(this._filter), this._filter);
     filter.countryIn = country;
     filter.regionIn = region;
-    
+
     const reportConfig: ReportConfig = {
       reportType: reportTypeMap(KalturaReportType.mapOverlayCity),
       filter: filter,
@@ -154,7 +160,7 @@ export class LocationsFilterService implements OnDestroy {
             this._handleCityTable(report.table); // handle table
           }
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('city'), 1);
-          
+
           this._isBusy = false;
         },
         error => {
@@ -162,29 +168,29 @@ export class LocationsFilterService implements OnDestroy {
           this._currentlyLoading.splice(this._currentlyLoading.indexOf('city'), 1);
         });
   }
-  
+
   public resetAll(): void {
     this._countriesOptions.next([]);
     this.resetRegion();
   }
-  
+
   public resetRegion(countries?: string): void {
     this._regionsOptions.next([]);
     this.resetCity();
-    
+
     if (countries) {
       this._loadRegionData(countries);
     }
   }
-  
+
   public resetCity(country?: string, region?: string): void {
     this._citiesOptions.next([]);
-    
+
     if (country && region) {
       this._loadCityData(country, region);
     }
   }
-  
+
   public updateDateFilter(event: DateChangeEvent, callback: () => void): void {
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
@@ -192,16 +198,20 @@ export class LocationsFilterService implements OnDestroy {
       this._filter.toDate = event.endDate;
       this._filter.interval = event.timeUnits;
       this._pager.pageIndex = 1;
-  
+
       this.resetAll();
       this._loadCountryData();
-      
+
       if (typeof callback === 'function') {
         callback();
       }
     }
   }
-  
+
+  public updateFilter(filterProp: string, value: string): void {
+    this._filter[filterProp] = value;
+  }
+
   public isBusy(type: string): boolean {
     return this._isBusy && this._currentlyLoading.indexOf(type) !== -1;
   }

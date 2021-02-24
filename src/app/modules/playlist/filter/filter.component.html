@@ -23,6 +23,7 @@
             <app-country-filter *ngIf="_viewConfig.geo"
                                 [dateFilter]="_dateFilter"
                                 [selectedFilters]="_selectedValues['countries']"
+                                [rootEntryId]="playlistId"
                                 (itemSelected)="_onItemSelected($event, 'countries')"
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
 

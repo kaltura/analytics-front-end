@@ -23,6 +23,32 @@ export class LocationFilterComponent implements OnDestroy {
   @Input() expandWidth = false;
   @Input() filterWarning: string;
 
+  @Input() set entryId (val: string) {
+    if (val) {
+      this._locationFilterService.updateFilter('entryIdIn', val);
+    }
+  }
+  @Input() set userId (val: string) {
+    if (val) {
+      this._locationFilterService.updateFilter('userIds', val);
+    }
+  }
+  @Input() set playlistId (val: string) {
+    if (val) {
+      this._locationFilterService.updateFilter('playlistIdIn', val);
+    }
+  }
+  @Input() set rootEntryId (val: string) {
+    if (val) {
+      this._locationFilterService.updateFilter('rootEntryIdIn', val);
+    }
+  }
+  @Input() set categoryId (val: string) {
+    if (val) {
+      this._locationFilterService.updateFilter('categoriesIdsIn', val);
+    }
+  }
+
   @Input() set selectedFilters(value: LocationsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
       const result = value[0];
@@ -35,28 +61,31 @@ export class LocationFilterComponent implements OnDestroy {
       this._selectedCities = [];
     }
   }
-  
+
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._locationFilterService.updateDateFilter(event, () => {
-      this._selectedCountries = [];
-      this._selectedRegions = [];
-      this._selectedCities = [];
-    });
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._locationFilterService.updateDateFilter(event, () => {
+        this._selectedCountries = [];
+        this._selectedRegions = [];
+        this._selectedCities = [];
+      });
+    }, 0);
   }
-  
+
   @Output() itemSelected = new EventEmitter<LocationsFilterValue>();
-  
+
   public _selectedCountries: LocationsFilterValueItem[];
   public _selectedRegions: LocationsFilterValueItem[];
   public _selectedCities: LocationsFilterValueItem[];
-  
+
   constructor(public _locationFilterService: LocationsFilterService) {
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
     let countriesNames, regionsNames;
     switch (type) {
@@ -80,7 +109,7 @@ export class LocationFilterComponent implements OnDestroy {
       default:
         break;
     }
-    
+
     this.itemSelected.emit({
       country: this._selectedCountries || [],
       region: this._selectedRegions || [],

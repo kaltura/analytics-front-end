@@ -54,6 +54,7 @@ export class CatFilterComponent extends FilterComponent {
       };
     }
   }
+  @Input() categoryId: string;
   @Input() set category(value: KalturaCategory) {
     this._contextTypes[1].value = [{...value}];
   }

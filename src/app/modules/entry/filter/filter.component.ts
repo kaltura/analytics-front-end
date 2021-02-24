@@ -46,4 +46,5 @@ export class EntryFilterComponent extends FilterComponent {
       };
     }
   }
+  @Input() entryId: string;
 }

@@ -21,6 +21,32 @@ export interface DomainsFilterValue {
 export class DomainsFilterComponent implements OnDestroy {
   @Input() expandWidth = false;
 
+  @Input() set entryId (val: string) {
+    if (val) {
+      this._domainsFilterService.updateFilter('entryIdIn', val);
+    }
+  }
+  @Input() set userId (val: string) {
+    if (val) {
+      this._domainsFilterService.updateFilter('userIds', val);
+    }
+  }
+  @Input() set playlistId (val: string) {
+    if (val) {
+      this._domainsFilterService.updateFilter('playlistIdIn', val);
+    }
+  }
+  @Input() set rootEntryId (val: string) {
+    if (val) {
+      this._domainsFilterService.updateFilter('rootEntryIdIn', val);
+    }
+  }
+  @Input() set categoryId (val: string) {
+    if (val) {
+      this._domainsFilterService.updateFilter('categoriesIdsIn', val);
+    }
+  }
+
   @Input() set selectedFilters(value: DomainsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
       const result = value[0];
@@ -33,10 +59,13 @@ export class DomainsFilterComponent implements OnDestroy {
   }
 
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._domainsFilterService.updateDateFilter(event, () => {
-      this._selectedDomains = [];
-      this._selectedPages = [];
-    });
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._domainsFilterService.updateDateFilter(event, () => {
+        this._selectedDomains = [];
+        this._selectedPages = [];
+      });
+    }, 0);
   }
 
   @Output() itemSelected = new EventEmitter<DomainsFilterValue>();

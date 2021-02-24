@@ -103,6 +103,7 @@ export class FilterComponent {
       }
     }
   }
+  @Input() playlistId: string;
 
   @Input() set selectedFilters(value: RefineFilter) {
     this._updateSelectedValues(value);

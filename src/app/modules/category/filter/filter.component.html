@@ -68,6 +68,7 @@
             <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
+                                 [categoryId]="categoryId"
                                  [selectedFilters]="_selectedValues['domains']"
                                  (itemSelected)="_onItemSelected($event, 'domains')">
             </app-domains-filters>
@@ -91,6 +92,7 @@
               <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                     [filterWarning]="locationFiltersWarning"
                                     [dateFilter]="_dateFilter"
+                                    [categoryId]="categoryId"
                                     [selectedFilters]="_selectedValues['location']"
                                     (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
             </div>

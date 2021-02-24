@@ -46,4 +46,5 @@ export class PlaylistFilterComponent extends FilterComponent {
       };
     }
   }
+  @Input() playlistId: string;
 }

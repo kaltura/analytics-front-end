@@ -48,6 +48,7 @@
         <app-user-filter [viewConfig]="_userViewConfig.refineFilter"
                          [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
+                         [userId]="_user.id"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-user-filter>

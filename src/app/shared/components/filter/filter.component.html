@@ -74,6 +74,7 @@
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
                                  [selectedFilters]="_selectedValues['domains']"
+                                 [playlistId]="playlistId"
                                  (itemSelected)="_onItemSelected($event, 'domains')">
             </app-domains-filters>
 
@@ -82,6 +83,7 @@
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"
+                                  [playlistId]="playlistId"
                                   [selectedFilters]="_selectedValues['location']"
                                   (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
           </div>

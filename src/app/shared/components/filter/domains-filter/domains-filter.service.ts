@@ -1,6 +1,11 @@
 import { Injectable, KeyValueDiffer, KeyValueDiffers, OnDestroy } from '@angular/core';
 import { ReportConfig, ReportService } from 'src/app/shared/services';
-import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaReportTable,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -19,7 +24,7 @@ export class DomainsFilterService implements OnDestroy {
   private _dateFilterDiffer: KeyValueDiffer<DateChangeEvent, any>;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _currentlyLoading: string[] = [];
-  private _filter = new KalturaReportInputFilter({
+  private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -149,6 +154,10 @@ export class DomainsFilterService implements OnDestroy {
         callback();
       }
     }
+  }
+
+  public updateFilter(filterProp: string, value: string): void {
+    this._filter[filterProp] = value;
   }
 
   public isBusy(type: string): boolean {

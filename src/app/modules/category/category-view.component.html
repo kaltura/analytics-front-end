@@ -58,6 +58,7 @@
         <app-cat-filter class="kRefineFiltersHost"
                         name="category" #categoryFilter
                         [category]="_category"
+                        [categoryId]="_category?.id"
                         [viewConfig]="_viewConfig.refineFilter"
                         [opened]="_refineFilterOpened"
                         [dateFilter]="_dateFilter"
