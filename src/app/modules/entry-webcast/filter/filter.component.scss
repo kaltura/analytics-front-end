@@ -82,14 +82,15 @@ app-owners-filter, app-category-filter, app-country-filter, app-webcast-device-f
   padding-right: 24px;
 }
 
-app-webcast-device-filter, app-webcast-browser-filter {
-  margin-bottom: 24px;
-}
-
 :host ::ng-deep {
 
-  app-autocomplete-filter, app-dropdown-filter {
+  app-autocomplete-filter {
     margin: 0;
+  }
+
+   app-dropdown-filter {
+    margin: 0;
+     margin-bottom: 24px;
   }
 
   .ui-autocomplete-multiple-container {

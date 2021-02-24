@@ -200,6 +200,7 @@ export const viewsConfig = {
       owners: {},
       devices: {},
       browsers: {},
+      domains: {},
       os: {},
       geo: {}
     }
@@ -215,6 +216,7 @@ export const viewsConfig = {
       tags: {},
       owners: {},
       categories: {},
+      domains: {},
       geo: {},
     },
     details: {},
