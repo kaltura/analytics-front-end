@@ -27,9 +27,11 @@
       .kFilterContainerCol {
         display: flex;
         flex-direction: column;
-        width: 336px;
+        flex: 0 0 auto;
+        width: 33%;
         &:not(:first-child) {
-          margin-left: 24px;
+          padding-left: 24px;
+          box-sizing: border-box;
         }
       }
 
@@ -81,8 +83,12 @@ app-owners-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  app-autocomplete-filter, app-dropdown-filter {
+  app-autocomplete-filter {
     margin: 0;
+  }
+
+  app-dropdown-filter {
+    margin-right: 0;
   }
 
   .ui-autocomplete-multiple-container {

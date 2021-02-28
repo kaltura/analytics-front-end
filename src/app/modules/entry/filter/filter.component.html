@@ -45,7 +45,7 @@
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
           </div>
-          <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
+          <div class="kFilterContainerCol" *ngIf="_viewConfig.domains">
             <app-domains-filters *ngIf="_viewConfig?.domains"
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
