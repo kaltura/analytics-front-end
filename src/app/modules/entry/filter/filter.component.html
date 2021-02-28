@@ -22,6 +22,7 @@
           <div class="kFilterContainerCol">
             <app-country-filter *ngIf="_viewConfig.geo"
                                 [dateFilter]="_dateFilter"
+                                [filterConfig]="filterConfig"
                                 [selectedFilters]="_selectedValues['countries']"
                                 (itemSelected)="_onItemSelected($event, 'countries')"
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
@@ -48,6 +49,7 @@
             <app-domains-filters *ngIf="_viewConfig?.domains"
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
                                  [selectedFilters]="_selectedValues['domains']"
                                  (itemSelected)="_onItemSelected($event, 'domains')">
             </app-domains-filters>

@@ -14,6 +14,7 @@ import {CustomSyndicationConfig} from './custom-syndication.config';
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import * as moment from "moment";
 import {analyticsConfig} from "configuration/analytics-config";
+import {FilterConfig} from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-manual-playlist-view',
@@ -33,6 +34,7 @@ export class ManualPlaylistComponent implements OnInit {
       const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
       this._creationDateLabel = this._creationDate.format(dateFormat);
       this._updateDateLabel = this._updateDate.format(dateFormat);
+      this._filterConfig.items = [{property: "playlistIdIn", value: value.id}];
     }
   }
   @Input() owner: string;
@@ -54,6 +56,7 @@ export class ManualPlaylistComponent implements OnInit {
     }, 0);
   }
   public _playlistTopContentComponent: ManualPlaylistTopContentComponent;
+  public _filterConfig: FilterConfig = {};
 
   @ViewChild('topCountries') set topCountries(comp: TopCountriesComponent) {
     setTimeout(() => { // use timeout to prevent check after init error

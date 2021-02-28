@@ -47,6 +47,7 @@
             <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
                                  [selectedFilters]="_selectedValues['domains']"
                                  (itemSelected)="_onItemSelected($event, 'domains')">
             </app-domains-filters>

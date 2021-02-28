@@ -5,6 +5,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { FilterBaseService } from "shared/components/filter/filter-base.service";
 
 export interface DomainsFilterItem {
   value: { id: string, name: string };
@@ -12,17 +13,12 @@ export interface DomainsFilterItem {
 }
 
 @Injectable()
-export class DomainsFilterService implements OnDestroy {
+export class DomainsFilterService extends FilterBaseService implements OnDestroy {
   private _isBusy: boolean;
   private _domainsOptions = new BehaviorSubject<DomainsFilterItem[]>([]);
   private _pagesOptions = new BehaviorSubject<DomainsFilterItem[]>([]);
-  private _dateFilterDiffer: KeyValueDiffer<DateChangeEvent, any>;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _currentlyLoading: string[] = [];
-  private _filter = new KalturaReportInputFilter({
-    searchInTags: true,
-    searchInAdminTags: false
-  });
   private _reportConfig = {
     table: {
       fields: {
@@ -36,9 +32,10 @@ export class DomainsFilterService implements OnDestroy {
   public readonly domainsOptions = this._domainsOptions.asObservable();
   public readonly pagesOptions = this._pagesOptions.asObservable();
 
-  constructor(private _reportService: ReportService,
-              private _objectDiffers: KeyValueDiffers) {
-    this._dateFilterDiffer = this._objectDiffers.find([]).create();
+  constructor(protected _reportService: ReportService,
+              protected _objectDiffers: KeyValueDiffers) {
+    super(_reportService, _objectDiffers);
+    this._reportType = reportTypeMap(KalturaReportType.topSyndication);
   }
 
   ngOnDestroy() {
@@ -69,7 +66,7 @@ export class DomainsFilterService implements OnDestroy {
     this._currentlyLoading.push('domains');
 
     const reportConfig: ReportConfig = {
-      reportType: reportTypeMap(KalturaReportType.topSyndication),
+      reportType: this._reportType,
       filter: this._filter,
       pager: this._pager,
       order: '+domain_name',

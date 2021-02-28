@@ -10,6 +10,7 @@ import { ViewConfig } from 'configuration/view-config';
 import { KalturaCategory } from "kaltura-ngx-client";
 import { TranslateService } from "@ngx-translate/core";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-cat-filter',
@@ -54,8 +55,13 @@ export class CatFilterComponent extends FilterComponent {
       };
     }
   }
+  public filterConfig: FilterConfig = {};
+
   @Input() set category(value: KalturaCategory) {
-    this._contextTypes[1].value = [{...value}];
+    if (value) {
+      this._contextTypes[1].value = [{...value}];
+      this.filterConfig.items = [{property: 'categoriesIdsIn', value: value.id.toString()}];
+    }
   }
 
   public contextSelected = false;

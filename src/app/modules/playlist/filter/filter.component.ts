@@ -7,6 +7,7 @@ import { FilterComponent } from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-playlist-filter',
@@ -35,6 +36,7 @@ import { ViewConfig } from 'configuration/view-config';
   ]
 })
 export class PlaylistFilterComponent extends FilterComponent {
+  public filterConfig: FilterConfig = {};
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -45,5 +47,9 @@ export class PlaylistFilterComponent extends FilterComponent {
         categories: {},
       };
     }
+  }
+
+  @Input() set rootEntryId (id: string) {
+    this.filterConfig.items = [{property: "rootEntryIdIn", value: id}];
   }
 }
