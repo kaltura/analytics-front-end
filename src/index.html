@@ -3,13 +3,36 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="./">
+  <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+
+  <script type="text/javascript">
+    var analyticsConfig = {
+      kalturaServer: {
+        uri : "www.kaltura.com",
+        "previewUIConf": 12345678,
+        "previewUIConfV7":12345678
+      },
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      ks: "djJ8MTY0NTE2MXxA6W6W3OZrGfd0dODoDqIwu_mxoHJsjJs_4gj7RfMlbHbFngXEbwA12svJb0S2pcIqJhzUB_S8QfUrh8zrYDCCwsnBYbYz_GcOnW7-1nFgRVGsL4Sy_7dGneSZWLtH5y5BKgUOEwT4wAC2Lz0tNDfOuEiLts_w5s1hxLtZ4-1qHg==",
+      pid: "1645161",
+      locale: "en",
+      multiAccount: false,
+      live: {
+        "pollInterval": 30,
+        "healthNotificationsCount": 50,
+      },
+    }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>

@@ -37,7 +37,7 @@
 
             <app-country-filter *ngIf="_viewConfig.geo" style="margin-top: 16px"
                                 [dateFilter]="_dateFilter"
-                                [filterConfig]="countriesFilterConfig"
+                                [filterConfig]="filterConfig"
                                 [selectedFilters]="_selectedValues['countries']"
                                 (itemSelected)="_onItemSelected($event, 'countries')"
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
@@ -45,7 +45,7 @@
             <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
                                  [expandWidth]="!showAutocompleteGroup"
                                  [dateFilter]="_dateFilter"
-                                 [filterConfig]="domainsFilterConfig"
+                                 [filterConfig]="filterConfig"
                                  [selectedFilters]="_selectedValues['domains']"
                                  (itemSelected)="_onItemSelected($event, 'domains')"></app-domains-filters>
 

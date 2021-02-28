@@ -8,8 +8,6 @@ import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
 import { FilterConfig } from "shared/components/filter/filter-base.service";
-import { reportTypeMap } from "shared/utils/report-type-map";
-import { KalturaReportType } from "kaltura-ngx-client";
 
 @Component({
   selector: 'app-entry-webcast-filter',
@@ -38,8 +36,6 @@ import { KalturaReportType } from "kaltura-ngx-client";
   ]
 })
 export class EntryWebcastFilterComponent extends FilterComponent {
-  public domainsFilterConfig: FilterConfig = {reportType: reportTypeMap(KalturaReportType.topDomainsWebcast)};
-  public countriesFilterConfig: FilterConfig = {reportType: reportTypeMap(KalturaReportType.mapOverlayCountryWebcast)};
   public filterConfig: FilterConfig = {};
 
   @Input() set viewConfig(value: ViewConfig) {
@@ -55,8 +51,6 @@ export class EntryWebcastFilterComponent extends FilterComponent {
   }
 
   @Input() set entryId (id: string) {
-    this.domainsFilterConfig.items = [{property: "entryIdIn", value: id}];
-    this.countriesFilterConfig.items = [{property: "entryIdIn", value: id}];
     this.filterConfig.items = [{property: "entryIdIn", value: id}, {property: 'playbackTypeIn', value: 'dvr|live|vod'}];
   }
 
