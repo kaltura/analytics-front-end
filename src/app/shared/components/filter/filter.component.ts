@@ -13,8 +13,9 @@ import { isEqual } from 'shared/utils/is-equals';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
-import {DomainsFilterService} from "shared/components/filter/domains-filter/domains-filter.service";
-import {DomainsFilterValue} from "shared/components/filter/domains-filter/domains-filter.component";
+import { DomainsFilterService } from "shared/components/filter/domains-filter/domains-filter.service";
+import { DomainsFilterValue } from "shared/components/filter/domains-filter/domains-filter.component";
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 export interface OptionItem {
   value: any;
@@ -70,6 +71,8 @@ export class FilterComponent {
   @Input() locationFiltersWarning: string;
 
   @Input() showAutocompleteGroup = true;
+
+  @Input() filterConfig: FilterConfig = {};
 
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {

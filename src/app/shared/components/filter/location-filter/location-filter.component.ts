@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './locations-filter.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
+
 
 export interface LocationsFilterValueItem {
   name: string;
@@ -35,28 +37,37 @@ export class LocationFilterComponent implements OnDestroy {
       this._selectedCities = [];
     }
   }
-  
-  @Input() set dateFilter(event: DateChangeEvent) {
-    this._locationFilterService.updateDateFilter(event, () => {
-      this._selectedCountries = [];
-      this._selectedRegions = [];
-      this._selectedCities = [];
-    });
+
+  @Input() set filterConfig (config: FilterConfig) {
+    if (config) {
+      this._locationFilterService.filterConfig = config;
+    }
   }
-  
+
+  @Input() set dateFilter(event: DateChangeEvent) {
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._locationFilterService.updateDateFilter(event, () => {
+        this._selectedCountries = [];
+        this._selectedRegions = [];
+        this._selectedCities = [];
+      });
+    }, 0);
+  }
+
   @Output() itemSelected = new EventEmitter<LocationsFilterValue>();
-  
+
   public _selectedCountries: LocationsFilterValueItem[];
   public _selectedRegions: LocationsFilterValueItem[];
   public _selectedCities: LocationsFilterValueItem[];
-  
+
   constructor(public _locationFilterService: LocationsFilterService) {
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
     let countriesNames, regionsNames;
     switch (type) {
@@ -80,7 +91,7 @@ export class LocationFilterComponent implements OnDestroy {
       default:
         break;
     }
-    
+
     this.itemSelected.emit({
       country: this._selectedCountries || [],
       region: this._selectedRegions || [],

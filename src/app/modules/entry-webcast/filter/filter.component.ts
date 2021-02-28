@@ -7,6 +7,7 @@ import {FilterComponent, OptionItem} from 'shared/components/filter/filter.compo
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-entry-webcast-filter',
@@ -35,6 +36,8 @@ import { ViewConfig } from 'configuration/view-config';
   ]
 })
 export class EntryWebcastFilterComponent extends FilterComponent {
+  public filterConfig: FilterConfig = {};
+
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -45,6 +48,10 @@ export class EntryWebcastFilterComponent extends FilterComponent {
         geo: {}
       };
     }
+  }
+
+  @Input() set entryId (id: string) {
+    this.filterConfig.items = [{property: "entryIdIn", value: id}, {property: 'playbackTypeIn', value: 'dvr|live|vod'}];
   }
 
   public _playbackTypes: OptionItem[] = [

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { OsFilterService } from './os-filter.service';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 export interface OsFilterValueItem {
   name: string;
@@ -24,9 +25,18 @@ export class OsFilterComponent implements OnDestroy {
   }
 
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._osFilterService.updateDateFilter(event, () => {
-      this._selectedOs = [];
-    });
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._osFilterService.updateDateFilter(event, () => {
+        this._selectedOs = [];
+      });
+    }, 0);
+  }
+
+  @Input() set filterConfig (config: FilterConfig) {
+    if (config) {
+      this._osFilterService.filterConfig = config;
+    }
   }
 
   @Output() itemSelected = new EventEmitter<OsFilterValueItem>();

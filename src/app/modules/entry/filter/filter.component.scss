@@ -83,10 +83,6 @@ app-owners-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  .ui-state-focus {
-    margin-top: 4px;
-    outline: 5px auto rgba(0, 150, 255, 1) !important;
-  }
 
   app-autocomplete-filter {
     margin: 0;

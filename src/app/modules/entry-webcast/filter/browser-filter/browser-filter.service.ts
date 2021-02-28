@@ -5,6 +5,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { FilterBaseService } from "shared/components/filter/filter-base.service";
 
 export interface BrowserFilterItem {
   value: { id: string, name: string };
@@ -12,14 +13,11 @@ export interface BrowserFilterItem {
 }
 
 @Injectable()
-export class BrowserFilterService implements OnDestroy {
+export class BrowserFilterService extends FilterBaseService implements OnDestroy {
   private _isBusy: boolean;
   private _browserOptions = new BehaviorSubject<BrowserFilterItem[]>([]);
-  private _dateFilterDiffer: KeyValueDiffer<DateChangeEvent, any>;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _order = '-count_plays';
-  private _reportType = reportTypeMap(KalturaReportType.browsersFamilies);
 
   private _reportConfig = {
     table: {
@@ -32,9 +30,10 @@ export class BrowserFilterService implements OnDestroy {
 
   public readonly browserOptions = this._browserOptions.asObservable();
 
-  constructor(private _reportService: ReportService,
-              private _objectDiffers: KeyValueDiffers) {
-    this._dateFilterDiffer = this._objectDiffers.find([]).create();
+  constructor(protected _reportService: ReportService,
+              protected _objectDiffers: KeyValueDiffers) {
+    super(_reportService, _objectDiffers);
+    this._reportType = reportTypeMap(KalturaReportType.browsersFamilies);
   }
 
   ngOnDestroy() {

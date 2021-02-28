@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, I
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterValueItem } from 'shared/components/filter/location-filter/location-filter.component';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-country-filter',
@@ -17,48 +18,57 @@ export class CountryFilterComponent implements OnDestroy {
       this._selectedCountries = [];
     }
   }
-  
-  @Input() set dateFilter(event: DateChangeEvent) {
-    this._locationFilterService.updateDateFilter(event, () => {
-      this._selectedCountries = [];
-    });
+
+  @Input() set filterConfig (config: FilterConfig) {
+    if (config) {
+      this._locationFilterService.filterConfig = config;
+    }
   }
-  
+
+  @Input() set dateFilter(event: DateChangeEvent) {
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._locationFilterService.updateDateFilter(event, () => {
+        this._selectedCountries = [];
+      });
+    }, 0);
+  }
+
   @Output() itemSelected = new EventEmitter<LocationsFilterValueItem>();
   @Output() itemUnselected = new EventEmitter<LocationsFilterValueItem>();
-  
+
   private _listDiffer: IterableDiffer<any>;
-  
+
   public _selectedCountries: LocationsFilterValueItem[];
 
   constructor(private _listDiffers: IterableDiffers,
               public _locationFilterService: LocationsFilterService) {
     this._setDiffer();
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   private _setDiffer(): void {
     this._listDiffer = this._listDiffers.find([]).create();
     this._listDiffer.diff(this._selectedCountries);
   }
-  
+
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
     if (type !== 'country') {
       return;
     }
-  
+
     this._selectedCountries = items;
 
     const changes = this._listDiffer.diff(items);
-  
+
     if (changes) {
       changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
         this.itemSelected.emit(record.item);
       });
-    
+
       changes.forEachRemovedItem((record: IterableChangeRecord<any>) => {
         this.itemUnselected.emit(record.item);
       });

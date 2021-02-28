@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { DomainsFilterService } from './domains-filter.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 export interface LocationsFilterValueItem {
   name: string;
@@ -32,11 +33,20 @@ export class DomainsFilterComponent implements OnDestroy {
     }
   }
 
+  @Input() set filterConfig (config: FilterConfig) {
+    if (config) {
+      this._domainsFilterService.filterConfig = config;
+    }
+  }
+
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._domainsFilterService.updateDateFilter(event, () => {
-      this._selectedDomains = [];
-      this._selectedPages = [];
-    });
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._domainsFilterService.updateDateFilter(event, () => {
+        this._selectedDomains = [];
+        this._selectedPages = [];
+      });
+    }, 0);
   }
 
   @Output() itemSelected = new EventEmitter<DomainsFilterValue>();
