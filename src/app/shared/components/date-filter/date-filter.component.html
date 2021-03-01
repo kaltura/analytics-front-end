@@ -18,7 +18,7 @@
 
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-' + name"
-              [popupWidth]="_creationDate ? 560 : 460" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
+              [popupWidth]="_creationDate ? 560 : 494" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
               (onOpen)="_focusSelectButton()">
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
@@ -55,10 +55,19 @@
       </div>
       <div class="kFilters kSpecific" [class.kWide]="_creationDate" *ngIf="selectedView==='specific'">
         <div class="kStartEnd">
-          <span>{{'app.dateFilter.from' | translate}}</span>
-          <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
-          <span class="end">{{'app.dateFilter.to' | translate}}</span>
-          <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificEnd" aria-label="end date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+          <p-calendar [class.showHours]="showHours" [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+          <p-dropdown *ngIf="showHours"
+                      (onChange)="updateSpecific()"
+                      [options]="hoursSelectorOptions"
+                      [(ngModel)]="startHours">
+          </p-dropdown>
+          <div class="divider"></div>
+          <p-calendar [class.showHours]="showHours" [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificEnd" aria-label="end date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+          <p-dropdown *ngIf="showHours"
+                      (onChange)="updateSpecific()"
+                      [options]="hoursSelectorOptions"
+                      [(ngModel)]="endHours">
+          </p-dropdown>
         </div>
         <span class="kInvalid" *ngIf="!validDateRange">{{'app.dateFilter.error' | translate }}</span>
         <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true"
@@ -76,10 +85,16 @@
                        name="compare" value="specific" *ngIf="compare" [(ngModel)]="selectedComparePeriod"
                        (ngModelChange)="updateSpecificCompareStartDate()"
                        [label]="'app.dateFilter.comparespecific' | translate"></p-radioButton>
-        <p-calendar [dateFormat]="_dateFormat" [showIcon]="true" icon="kIconcalendar" [locale]="localeData"
-                    *ngIf="compare && selectedComparePeriod==='specific'"
-                    [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true"
-                    [yearNavigator]="true" [yearRange]="'2010:2050'"></p-calendar>
+        <div  class="compareDate" *ngIf="compare && selectedComparePeriod==='specific'">
+          <p-calendar [dateFormat]="_dateFormat" [showIcon]="true" icon="kIconcalendar" [locale]="localeData"
+                      [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true"
+                      [yearNavigator]="true" [yearRange]="'2010:2050'" [class.showHours]="showHours"></p-calendar>
+          <p-dropdown *ngIf="showHours"
+                      [options]="hoursSelectorOptions"
+                      [(ngModel)]="compareHours">
+          </p-dropdown>
+        </div>
+
       </div>
       <div class="kFooter">
         <button tabindex="0"
