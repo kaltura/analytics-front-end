@@ -368,6 +368,12 @@ export class BroadcastingEntriesService implements OnDestroy {
     if (primary !== null) {
       className = severityToHealth(JSON.parse(primary.privateData).maxSeverity);
       key = 'primary_' + className;
+      if (secondary !== null) {
+        if (secondary.updatedAt > primary.updatedAt) {
+          className = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
+          key = 'secondary_' + className;
+        }
+      }
     } else if (secondary !== null) {
       className = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
       key = 'secondary_' + className;
