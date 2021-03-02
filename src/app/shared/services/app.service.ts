@@ -177,6 +177,17 @@ export class AppService implements OnDestroy {
           this._initAppError(error.message);
         }
       );
+
+    // Load jQuery to support player loading long configuration string (more than 2083 characters)
+    if (analyticsConfig.previewPlayer.loadJquery && document.getElementById("jquery") === null) {
+      let jq = document.createElement('script');
+      jq.src = 'https://code.jquery.com/jquery-3.5.1.min.js';
+      jq.id = "jquery";
+      jq.integrity = "sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=";
+      jq.crossOrigin = "anonymous";
+      jq.async = false;
+      document.head.appendChild(jq);
+    }
   }
 
   private _initAppError(errorMsg: string): void {
