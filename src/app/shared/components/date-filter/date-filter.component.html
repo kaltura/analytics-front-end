@@ -89,7 +89,7 @@
           <p-calendar [dateFormat]="_dateFormat" [showIcon]="true" icon="kIconcalendar" [locale]="localeData"
                       [(ngModel)]="specificCompareStartDate" [maxDate]="compareMaxDate" [monthNavigator]="true"
                       [yearNavigator]="true" [yearRange]="'2010:2050'" [class.showHours]="showHours"></p-calendar>
-          <p-dropdown *ngIf="showHours"
+          <p-dropdown *ngIf="showHours && selectedView==='specific'"
                       [options]="hoursSelectorOptions"
                       [(ngModel)]="compareHours">
           </p-dropdown>
