@@ -41,6 +41,13 @@ export class LocationFilterComponent implements OnDestroy {
   @Input() set filterConfig (config: FilterConfig) {
     if (config) {
       this._locationFilterService.filterConfig = config;
+      if (this._locationFilterService.requireReload) {
+        this._locationFilterService.resetAll();
+        this._locationFilterService.loadCountryData();
+        this._selectedCountries = [];
+        this._selectedRegions = [];
+        this._selectedCities = [];
+      }
     }
   }
 

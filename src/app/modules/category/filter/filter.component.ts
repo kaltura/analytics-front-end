@@ -60,7 +60,10 @@ export class CatFilterComponent extends FilterComponent {
   @Input() set category(value: KalturaCategory) {
     if (value) {
       this._contextTypes[1].value = [{...value}];
-      this.filterConfig.items = [{property: 'categoriesIdsIn', value: value.id.toString()}];
+      // rewrite filterConfig to invoke change detection
+      this.filterConfig = {
+        items: [{property: 'categoriesIdsIn', value: value.id.toString()}]
+      };
     }
   }
 

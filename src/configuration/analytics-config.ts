@@ -46,6 +46,9 @@ export interface AnalyticsConfig {
   viewsConfig?: {
     [key: string]: ViewConfig;
   };
+  previewPlayer?: {
+    loadJquery: boolean;
+  };
   live?: {
     pollInterval?: PollInterval;
     healthNotificationsCount?: number;
@@ -118,6 +121,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
   analyticsConfig.customData = config.customData || { };
   analyticsConfig.multiAccount = config.multiAccount || false;
+  analyticsConfig.previewPlayer = config.previewPlayer || { loadJquery: true };
   setLiveEntryUsersReports(config.liveEntryUsersReports);
   if (config.customStyle) {
     setCustomStyle(config.customStyle);

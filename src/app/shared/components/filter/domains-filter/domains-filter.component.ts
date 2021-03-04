@@ -36,6 +36,12 @@ export class DomainsFilterComponent implements OnDestroy {
   @Input() set filterConfig (config: FilterConfig) {
     if (config) {
       this._domainsFilterService.filterConfig = config;
+      if (this._domainsFilterService.requireReload) {
+        this._domainsFilterService.resetAll();
+        this._domainsFilterService.loadDomainsData();
+        this._selectedDomains = [];
+        this._selectedPages = [];
+      }
     }
   }
 

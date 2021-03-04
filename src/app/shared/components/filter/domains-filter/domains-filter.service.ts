@@ -61,7 +61,7 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
     })));
   }
 
-  private _loadDomainsData(): void {
+  public loadDomainsData(): void {
     this._isBusy = true;
     this._currentlyLoading.push('domains');
 
@@ -140,7 +140,7 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
       this._pager.pageIndex = 1;
 
       this.resetAll();
-      this._loadDomainsData();
+      this.loadDomainsData();
 
       if (typeof callback === 'function') {
         callback();
