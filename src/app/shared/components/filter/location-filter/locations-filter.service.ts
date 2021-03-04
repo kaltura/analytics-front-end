@@ -75,7 +75,7 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     })));
   }
 
-  private _loadCountryData(): void {
+  public loadCountryData(): void {
     this._isBusy = true;
     this._currentlyLoading.push('country');
 
@@ -192,7 +192,7 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
       this._pager.pageIndex = 1;
 
       this.resetAll();
-      this._loadCountryData();
+      this.loadCountryData();
 
       if (typeof callback === 'function') {
         callback();
