@@ -33,8 +33,12 @@ export interface BroadcastingEntries {
   engagedUsers?: number;
   buffering?: number;
   downstream?: number;
-  streamHealth?: string;
-  streamHealthClassName?: string;
+  primaryStreamHealth?: string;
+  primaryStreamHealthClassName?: string;
+  primaryLastUpdate?: Date;
+  secondaryStreamHealth?: string;
+  secondaryStreamHealthClassName?: string;
+  secondaryLastUpdate?: Date;
   redundancy?: boolean;
   conversionProfileId?: number;
   partnerId?: string;
@@ -299,7 +303,12 @@ export class BroadcastingEntriesService implements OnDestroy {
   private loadStreamHealth(): void {
     let actions = [];
     this._broadcastingEntries.forEach(entry => {
-      actions.push(new BeaconListAction({filter: new KalturaBeaconFilter({
+      actions.push(new BeaconListAction({
+        pager: new KalturaFilterPager({
+          pageSize: 100,
+          pageIndex: 1
+        }),
+        filter: new KalturaBeaconFilter({
           orderBy: '-updatedAt',
           relatedObjectTypeIn: KalturaBeaconObjectTypes.entryBeacon,
           eventTypeIn: '0_healthData,1_healthData',
@@ -315,9 +324,13 @@ export class BroadcastingEntriesService implements OnDestroy {
           }
           responses.forEach((response, index) => {
             const beacons: KalturaBeacon[] = response.result.objects;
-            const streamHealth: {health: string, className: string} = this.getStreamHealth(beacons);
-            this._broadcastingEntries[index].streamHealth = streamHealth.health;
-            this._broadcastingEntries[index].streamHealthClassName = streamHealth.className;
+            const streamHealth: {health: string, className: string, updatedAt: Date}[] = this.getStreamHealth(beacons);
+            this._broadcastingEntries[index].primaryStreamHealth = streamHealth.length ? streamHealth[0].health : null;
+            this._broadcastingEntries[index].primaryStreamHealthClassName = streamHealth.length ? streamHealth[0].className : null;
+            this._broadcastingEntries[index].primaryLastUpdate = streamHealth.length ? streamHealth[0].updatedAt : null;
+            this._broadcastingEntries[index].secondaryStreamHealth = streamHealth.length === 2 ? streamHealth[1].health : null;
+            this._broadcastingEntries[index].secondaryStreamHealthClassName = streamHealth.length === 2 ? streamHealth[1].className : null;
+            this._broadcastingEntries[index].secondaryLastUpdate = streamHealth.length === 2 ? streamHealth[1].updatedAt : null;
           });
           this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: true, forceReload: this._forceRefresh});
         },
@@ -338,18 +351,23 @@ export class BroadcastingEntriesService implements OnDestroy {
     });
   }
 
-  private getStreamHealth(beacons: KalturaBeacon[]): {health: string, className: string} {
+  private getStreamHealth(beacons: KalturaBeacon[]): {health: string, className: string, updatedAt: Date}[] {
+    let streamHealth = [];
     // find the first primary and first secondary stream (these are the most updated since we ordered by descending updatedAt)
     let primary = null;
     let secondary = null;
-    beacons.forEach(beacon => {
+    for (let i = 0; i< beacons.length; i++) {
+      const beacon = beacons[i];
       if (primary === null && beacon.eventType[0] === '0' && beacon.privateData) {
         primary = beacon;
       }
       if (secondary === null && beacon.eventType[0] === '1' && beacon.privateData) {
         secondary = beacon;
       }
-    });
+      if (primary && secondary) {
+        break;
+      }
+    }
 
     const severityToHealth = (severity: number) => {
       let health = '';
@@ -363,23 +381,17 @@ export class BroadcastingEntriesService implements OnDestroy {
       return health;
     };
 
-    let key = '';
-    let className = '';
     if (primary !== null) {
-      className = severityToHealth(JSON.parse(primary.privateData).maxSeverity);
-      key = 'primary_' + className;
-      if (secondary !== null) {
-        if (secondary.updatedAt > primary.updatedAt) {
-          className = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
-          key = 'secondary_' + className;
-        }
-      }
-    } else if (secondary !== null) {
-      className = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
-      key = 'secondary_' + className;
+      const primaryClassName = severityToHealth(JSON.parse(primary.privateData).maxSeverity);
+      const primaryKey = 'primary_' + primaryClassName;
+      streamHealth.push({ health: this._translate.instant(`app.entriesLive.health.${primaryKey}`), className: primaryClassName, updatedAt: primary.updatedAt });
     }
-    const localizationKey = key.length ? 'app.entriesLive.health.' + key : 'app.common.na';
-    return { health: this._translate.instant(localizationKey), className };
+    if (secondary !== null) {
+      const secondaryClassName = severityToHealth(JSON.parse(secondary.privateData).maxSeverity);
+      const secondaryKey = 'secondary_' + secondaryClassName;
+      streamHealth.push({ health: this._translate.instant(`app.entriesLive.health.${secondaryKey}`), className: secondaryClassName, updatedAt: secondary.updatedAt });
+    }
+    return streamHealth;
   }
 
   public paginationChange(newPageIndex: number, firstTime = true): void {

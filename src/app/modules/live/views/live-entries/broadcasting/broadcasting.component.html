@@ -48,10 +48,15 @@
                 </div>
               </div>
               <div class="col">
-                <div class="row">
-                  <div class="healthIcon" [ngClass]="entry.streamHealthClassName"></div>
-                  <span class="value">{{entry.streamHealth}}</span>
-                  <span class="label">{{'app.entriesLive.stream_health' | translate}}</span>
+                <div class="row" *ngIf="entry.primaryStreamHealth">
+                  <div class="healthIcon" [ngClass]="entry.primaryStreamHealthClassName"></div>
+                  <span class="value">{{entry.primaryStreamHealth}}</span>
+                  <span class="label">{{entry.primaryLastUpdate | date:'MM/d/yy H:mm'}}</span>
+                </div>
+                <div class="row" *ngIf="entry.secondaryStreamHealth">
+                  <div class="healthIcon" [ngClass]="entry.secondaryStreamHealthClassName"></div>
+                  <span class="value">{{entry.secondaryStreamHealth}}</span>
+                  <span class="label">{{entry.secondaryLastUpdate | date:'MM/d/yy H:mm'}}</span>
                 </div>
                 <div class="row" *ngIf="entry.redundancy">
                   <i class="kIconcheck-medium"></i>
