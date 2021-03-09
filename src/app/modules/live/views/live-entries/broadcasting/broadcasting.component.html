@@ -25,6 +25,9 @@
               <div class="separator"></div>
               <span>{{'app.entriesLive.transcoding' | translate}}</span>
               <span *ngIf="entry.transcoding !== undefined" style="margin-left: 4px">{{entry.transcoding ? ('app.entryLive.on' | translate) : ('app.entryLive.off' | translate) }}</span>
+              <div *ngIf="entry.redundancy" class="separator"></div>
+              <i *ngIf="entry.redundancy" class="kIconcheck-medium"></i>
+              <span *ngIf="entry.redundancy" class="redundancy">{{'app.entriesLive.redundancy' | translate}}</span>
             </div>
             <div class="reportData">
               <div class="col">
@@ -48,14 +51,15 @@
                 </div>
               </div>
               <div class="col">
-                <div class="row">
-                  <div class="healthIcon" [ngClass]="entry.streamHealthClassName"></div>
-                  <span class="value">{{entry.streamHealth}}</span>
-                  <span class="label">{{'app.entriesLive.stream_health' | translate}}</span>
+                <div class="row" *ngIf="entry.primaryStreamHealth">
+                  <div class="healthIcon" [ngClass]="entry.primaryStreamHealthClassName"></div>
+                  <span class="value health">{{entry.primaryStreamHealth}}</span>
+                  <span class="timestamp">{{entry.primaryLastUpdate | date:'H:mm MM/d/yy'}}</span>
                 </div>
-                <div class="row" *ngIf="entry.redundancy">
-                  <i class="kIconcheck-medium"></i>
-                  <span class="label">{{'app.entriesLive.redundancy' | translate}}</span>
+                <div class="row" *ngIf="entry.secondaryStreamHealth" [ngStyle]="{'margin-top': '22px'}">
+                  <div class="healthIcon" [ngClass]="entry.secondaryStreamHealthClassName"></div>
+                  <span class="value health">{{entry.secondaryStreamHealth}}</span>
+                  <span class="timestamp">{{entry.secondaryLastUpdate | date:'H:mm MM/d/yy'}}</span>
                 </div>
               </div>
             </div>
