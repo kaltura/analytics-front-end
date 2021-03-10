@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from "rxjs";
+import { Observable, forkJoin } from "rxjs";
 import { FileAssetListAction, FileAssetServeAction, InteractivityGetAction, KalturaClient, KalturaFileAsset, KalturaFileAssetFilter, KalturaFileAssetListResponse, KalturaFileAssetObjectType, KalturaInteractivity } from "kaltura-ngx-client";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import { map, switchMap } from "rxjs/operators";
@@ -68,10 +68,10 @@ export class PathContentService implements  OnDestroy {
         });
         const fileAssetsServeAction = new FileAssetServeAction({id: jsonFileAssetId});
         const projectAssetsServeAction = new FileAssetServeAction({id: projectFileAssetId});
-        return Observable.forkJoin(this._kalturaClient.request(fileAssetsServeAction), this._kalturaClient.request(projectAssetsServeAction));
+        return forkJoin(this._kalturaClient.request(fileAssetsServeAction), this._kalturaClient.request(projectAssetsServeAction));
       }))
       .pipe(switchMap(responses => {
-        return Observable.forkJoin(this.http.get(`${responses[0].url}&rnd=${Math.random()}`), this.http.get(`${responses[1].url}&rnd=${Math.random()}`));
+        return forkJoin(this.http.get(`${responses[0].url}&rnd=${Math.random()}`), this.http.get(`${responses[1].url}&rnd=${Math.random()}`));
       }))
       .pipe(map(dataArray => {
         return this.parseIVData(dataArray[0], dataArray[1]).concat(this.parseIVDeletedNodes(dataArray[1]));

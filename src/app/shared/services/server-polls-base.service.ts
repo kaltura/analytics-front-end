@@ -2,7 +2,7 @@ import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest
 import {Directive, Injectable, OnDestroy} from '@angular/core';
 import { Observable, throwError as ObservableThrowError } from 'rxjs';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export interface OnPollTickSuccess {

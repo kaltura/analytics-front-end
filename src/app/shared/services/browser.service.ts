@@ -5,7 +5,7 @@ import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-even
 import { Params } from '@angular/router';
 import { analyticsConfig } from "configuration/analytics-config";
 import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 export enum HeaderTypes {
     error = 1,
@@ -172,7 +172,7 @@ export class BrowserService {
       }
       file = this._downloadContent(data);
     } else {
-      file = Observable.of(new Blob([data], {type: type}));
+      file = of(new Blob([data], {type: type}));
     }
 
     file.subscribe(content => {

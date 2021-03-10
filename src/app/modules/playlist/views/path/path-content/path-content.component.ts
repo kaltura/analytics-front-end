@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { of as ObservableOf, forkJoin } from 'rxjs';
 import * as moment from 'moment';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { Observable } from 'rxjs';
@@ -91,7 +91,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
     const loadIVData$ = this.isPath ? this._pathService.loadPathData(this.playlistId) : this._pathService.loadIVData(this.playlistId);
     const loadIVReport$ = this.loadIVReport();
 
-    Observable.forkJoin(loadIVData$, loadIVReport$)
+    forkJoin(loadIVData$, loadIVReport$)
       .subscribe(( value: [ Node[], {report: Report, compare: any} ] ) => {
         const nodes: Node[] = value[0];
         const { report, compare } = {...value[1]};
