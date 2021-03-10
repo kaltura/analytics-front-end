@@ -1,6 +1,6 @@
 import { EventEmitter, Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { Params } from '@angular/router';
 import { analyticsConfig } from "configuration/analytics-config";

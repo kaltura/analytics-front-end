@@ -23,10 +23,10 @@
 }
 
 :host ::ng-deep .kMetricsSelector {
-  .ui-dropdown-panel {
+  .p-dropdown-panel {
     width: 240px !important;
   }
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {
@@ -35,7 +35,7 @@
       top: 9px;
     }
   }
-  .ui-dropdown-items-wrapper {
+  .p-dropdown-items-wrapper {
     max-height: 300px !important;
   }
 }

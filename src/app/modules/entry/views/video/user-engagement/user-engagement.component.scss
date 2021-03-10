@@ -27,7 +27,7 @@
   text-align: center;
 }
 
-:host ::ng-deep .ui-autocomplete-input-token input:focus {
+:host ::ng-deep .p-autocomplete-input-token input:focus {
   outline: 5px auto rgba(0, 150, 255, 1) !important;
 }
 
@@ -35,7 +35,7 @@
   th, td {
     color: $kGrayscale1;
 
-    &.ui-state-highlight span {
+    &.p-state-highlight span {
       text-decoration: underline;
     }
 
@@ -44,7 +44,7 @@
     }
   }
   ::ng-deep {
-    .ui-autocomplete-input-token input::placeholder {
+    .p-autocomplete-input-token input::placeholder {
       color: $kGrayscale1;
     }
 

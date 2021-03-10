@@ -22,12 +22,12 @@
 }
 
 :host ::ng-deep .kTableModeSelector {
-  .ui-dropdown {
+  .p-dropdown {
     width: 144px !important;
     min-width: 144px !important;
   }
 
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {

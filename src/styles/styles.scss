@@ -372,7 +372,7 @@ kpopupwidget {
 }
 
 p-multiselect ::ng-deep {
-  .ui-multiselect-label {
+  .p-multiselect-label {
     overflow: hidden;
     display: inline-block;
     text-overflow: ellipsis;
@@ -380,7 +380,7 @@ p-multiselect ::ng-deep {
     padding: .5em calc(2em + 12px) .25em 12px !important;
   }
 
-  .ui-multiselect-item {
+  .p-multiselect-item {
     padding: .125em 13px !important;
   }
 }
@@ -406,11 +406,11 @@ p-multiselect ::ng-deep {
   white-space: nowrap;
 }
 
-.ui-overlaypanel-content {
+.p-overlaypanel-content {
   padding: 0;
 }
 
-.ui-carousel-item {
+.p-carousel-item {
   background-color: #FFFFFF !important;
 }
 
@@ -422,16 +422,16 @@ p-multiselect ::ng-deep {
   }
 }
 
-.ui-paginator {
+.p-paginator {
   margin-top: 4px;
   margin-bottom: 2px;
 }
 
-.ui-paginator .ui-paginator-pages {
+.p-paginator .p-paginator-pages {
   margin-top: 1px;
 }
 
-.ui-paginator .ui-paginator-page {
+.p-paginator .p-paginator-page {
   width: 32px;
 }
 
@@ -441,12 +441,12 @@ p-multiselect ::ng-deep {
   height: 24px;
 }
 
-.ui-multiselect-item {
+.p-multiselect-item {
   display: flex;
   align-items: center;
   height: 40px;
 }
-.ui-widget-header {
+.p-widget-header {
   border: 0;
 }
 
@@ -515,14 +515,14 @@ button, a, tr, td, th, li, [role=button], [role=link], [role=tab], div, p-radiob
   }
 }
 
-.ui-datepicker-trigger {
+.p-datepicker-trigger {
   position: absolute;
 }
 
-.ui-table p-sorticon {
+.p-table p-sorticon {
   vertical-align: unset;
 }
-.ui-table th.nonSortable {
+.p-table th.nonSortable {
   cursor: default;
   &:hover {
     color: $kGrayscale3 !important;
@@ -634,15 +634,15 @@ k-area-blocker {
   border-top: none !important;
 }
 
-.ui-autocomplete-panel {
+.p-autocomplete-panel {
   max-height: 284px !important;
   max-width: 250px;
 
-  .ui-autocomplete-list {
+  .p-autocomplete-list {
     padding: 0;
 
-    .ui-autocomplete-list-item,
-    .ui-autocomplete-notification-item {
+    .p-autocomplete-list-item,
+    .p-autocomplete-notification-item {
       border: 0 !important;
       border-radius: 0 !important;
       min-height: 32px !important;
@@ -680,7 +680,7 @@ ui-carousel {
   }
 }
 
-.ui-dialog.ui-confirmdialog {
+.p-dialog.p-confirmdialog {
   top: 180px !important;
 }
 

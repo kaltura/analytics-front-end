@@ -75,14 +75,14 @@
   }
 }
 :host ::ng-deep p-dropdown{
-  .ui-dropdown {
+  .p-dropdown {
     margin-left: 8px;
     margin-right: 8px;
     width: 84px !important;
     min-width: 84px !important;
   }
 
-  .ui-state-focus {
+  .p-state-focus {
     // margin-top: 4px;
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }

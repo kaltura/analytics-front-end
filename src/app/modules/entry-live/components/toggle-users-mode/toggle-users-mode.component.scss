@@ -19,11 +19,11 @@
 }
 
 :host ::ng-deep {
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
   }
 
-  .ui-dropdown-item.ui-corner-all.ui-state-highlight:after {
+  .p-dropdown-item.p-corner-all.p-state-highlight:after {
     position: absolute;
     right: 8px;
     top: 8px;
@@ -31,7 +31,7 @@
     font-weight: normal;
   }
 
-  .ui-dropdown .ui-dropdown-panel {
+  .p-dropdown .p-dropdown-panel {
     width: 283px;
   }
 }

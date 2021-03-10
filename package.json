@@ -67,7 +67,6 @@
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "local-web-server": "^3.0.7",
-    "node-sass": "^4.13.1",
     "protractor": "~7.0.0",
     "ts-node": "~5.0.1",
     "tslint": "~6.1.0",

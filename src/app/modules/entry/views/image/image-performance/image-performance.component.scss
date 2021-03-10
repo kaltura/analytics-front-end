@@ -77,16 +77,16 @@
 }
 
 :host ::ng-deep .kTableModeSelector {
-  .ui-dropdown {
+  .p-dropdown {
     width: 172px !important;
   }
 
-  .ui-state-focus {
+  .p-state-focus {
     // margin-top: 4px;
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {
@@ -101,7 +101,7 @@
   th, td {
     color: $kGrayscale1;
 
-    &.ui-state-highlight span {
+    &.p-state-highlight span {
       text-decoration: underline;
     }
 
@@ -115,7 +115,7 @@
       color: $kGrayscale1 !important;
     }
 
-    p-selectButton .ui-state-active {
+    p-selectButton .p-highlight {
       background-color: #00866a !important;
       border: 1px solid #00866a !important;
     }
