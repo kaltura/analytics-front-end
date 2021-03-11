@@ -24,11 +24,16 @@
 :host ::ng-deep kautocomplete {
   .p-autocomplete-multiple-container {
     height: auto !important;
+    width: 100%;
   }
 
   .p-autocomplete-list-item span {
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .p-autocomplete-input-token input {
+    width: auto;
   }
 }
 

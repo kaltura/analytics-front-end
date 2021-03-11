@@ -519,10 +519,10 @@ button, a, tr, td, th, li, [role=button], [role=link], [role=tab], div, p-radiob
   position: absolute;
 }
 
-.p-table p-sorticon {
+.p-datatable p-sorticon {
   vertical-align: unset;
 }
-.p-table th.nonSortable {
+.p-datatable th.nonSortable {
   cursor: default;
   &:hover {
     color: $kGrayscale3 !important;

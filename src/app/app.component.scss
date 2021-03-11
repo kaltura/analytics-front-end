@@ -6,7 +6,7 @@
   z-index: 1200;
 }
 
-:host ::ng-deep p-table .p-table .p-table-tbody > tr{
+:host ::ng-deep p-table .p-datatable .p-datatable-tbody > tr{
   > td {
     height: 48px;
     padding-left: 24px;
@@ -17,19 +17,19 @@
     }
   }
 }
-:host ::ng-deep p-table .p-table .p-table-thead > tr > th {
+:host ::ng-deep p-table .p-datatable .p-datatable-thead > tr > th {
   padding-left: 24px;
   &:last-child {
     padding-right: 24px;
   }
 }
-:host ::ng-deep p-table .p-table .p-widget-header.p-table-scrollable-header {
+:host ::ng-deep p-table .p-datatable .p-widget-header.p-datatable-scrollable-header {
   height: inherit;
 }
-:host ::ng-deep p-table .p-table .p-table-tbody > tr > td:first-child {
+:host ::ng-deep p-table .p-datatable .p-datatable-tbody > tr > td:first-child {
   border-top: 1px solid #d9d9d9;
 }
-:host ::ng-deep p-table .p-table .p-table-thead {
+:host ::ng-deep p-table .p-datatable .p-datatable-thead {
   border-top: 1px solid #d9d9d9;
 }
 :host ::ng-deep p-table {
