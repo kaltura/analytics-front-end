@@ -279,6 +279,7 @@
         "month_id": "Month",
         "date_id": "Date",
         "name": "User ID",
+        "full_name": "User Name",
         "added_entries": "Added Entries",
         "deleted_entries": "Deleted Entries",
         "total_entries": "Total Entries",
