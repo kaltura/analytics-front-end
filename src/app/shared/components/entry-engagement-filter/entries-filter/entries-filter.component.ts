@@ -9,7 +9,6 @@ import { map } from 'rxjs/operators';
   selector: 'app-engagement-entries-filter',
   template: `
       <kAutoComplete #searchEntries *ngIf="_showEntryFilter"
-                     appendTo="body"
                      suggestionItemField="item"
                      suggestionLabelField="name"
                      field="name"

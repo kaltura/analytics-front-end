@@ -424,11 +424,7 @@ p-multiselect ::ng-deep {
 
 .p-paginator {
   margin-top: 4px;
-  margin-bottom: 2px;
-}
-
-.p-paginator .p-paginator-pages {
-  margin-top: 1px;
+  margin-bottom: 8px;
 }
 
 .p-paginator .p-paginator-page {
@@ -445,6 +441,9 @@ p-multiselect ::ng-deep {
   display: flex;
   align-items: center;
   height: 40px;
+  .p-checkbox {
+    vertical-align: middle;
+  }
 }
 .p-widget-header {
   border: 0;
