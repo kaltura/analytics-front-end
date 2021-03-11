@@ -42,14 +42,16 @@ export class FilterBaseService implements OnDestroy {
 
   private checkRequireReload(newConfig: FilterConfig): boolean {
     let reload = false;
-    newConfig.items.forEach(item => {
-      // check for category changes
-      if (item.property === 'categoriesIdsIn' && this._filter.categoriesIdsIn && this._filter.categoriesIdsIn.toString() !== item.value.toString()) {
-        // category change (we had a category on the filter and now we have a new category)
-        reload = true;
-      }
-      // TODO: check for additional changes if needed
-    })
+    if (newConfig && newConfig.items) {
+      newConfig.items.forEach(item => {
+        // check for category changes
+        if (item.property === 'categoriesIdsIn' && this._filter.categoriesIdsIn && this._filter.categoriesIdsIn.toString() !== item.value.toString()) {
+          // category change (we had a category on the filter and now we have a new category)
+          reload = true;
+        }
+        // TODO: check for additional changes if needed
+      })
+    }
     return reload;
   }
 
