@@ -11,6 +11,7 @@ import { SharedModule } from 'shared/shared.module';
 import { EntriesLiveNoDataIconComponent } from './views/live-entries/entries-live-no-data-icon/entries-live-no-data-icon.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { BroadcastingComponent } from "./views/live-entries/broadcasting/broadcasting.component";
 import { EndedComponent } from "./views/live-entries/ended/ended.component";
 import { BroadcastingEntriesService } from "./views/live-entries/broadcasting/broadcasting-entries.service";
@@ -29,6 +30,7 @@ import {UpcomingComponent} from "./views/live-entries/upcoming/upcoming.componen
     KalturaUIModule,
     SharedModule,
     TableModule,
+    OverlayPanelModule,
     PaginatorModule,
     TranslateModule,
     AreaBlockerModule,

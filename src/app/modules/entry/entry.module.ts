@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { routing } from './entry.routes';
 import { EntryViewComponent } from './entry-view.component';
 import { SharedModule } from 'shared/shared.module';
@@ -28,6 +28,7 @@ import { declarations as videoEntryDeclarations } from './views/video/declaratio
     TranslateModule,
     DropdownModule,
     ButtonModule,
+    OverlayPanelModule,
     PaginatorModule,
     SharedModule,
     TableModule,

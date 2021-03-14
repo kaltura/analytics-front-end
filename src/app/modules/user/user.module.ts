@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { routing } from './user.routes';
 import { UserViewComponent } from './user-view.component';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
@@ -45,6 +45,7 @@ import { UserEntryDetailsOverlayComponent } from './components/entry-details-ove
     TranslateModule,
     DropdownModule,
     ButtonModule,
+    OverlayPanelModule,
     PaginatorModule,
     SharedModule,
     TableModule,

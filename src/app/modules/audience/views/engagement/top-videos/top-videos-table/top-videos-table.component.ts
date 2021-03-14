@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {KalturaEntryStatus, KalturaFilterPager} from 'kaltura-ngx-client';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import {BrowserService, NavigationDrillDownService} from 'shared/services';
 import { Subject } from 'rxjs';
 import { SortEvent } from 'primeng/api';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
+import { OverlayPanel } from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-engagement-top-videos-table',
@@ -48,7 +47,7 @@ export class TopVideosTableComponent implements OnDestroy {
 
   @Output() sortChanged = new EventEmitter<SortEvent>();
 
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayPanel;
 
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];

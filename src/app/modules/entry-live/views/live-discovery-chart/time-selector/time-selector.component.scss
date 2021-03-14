@@ -63,46 +63,41 @@
     height: 100%;
     overflow: hidden;
 
-    &.kPreset {
+    &.kPreset{
       display: flex;
-      align-items: flex-start;
-
-      .col {
+      .col{
         width: 50%;
         display: flex;
         flex-direction: column;
-
-        .kTitle {
-          font-size: 14px;
+        .kTitle{
+          font-size:14px;
           color: $kGrayscale3;
           padding-left: 24px;
           margin-bottom: 8px;
         }
-
-        p-radiobutton {
+        p-radiobutton{
+          position: relative;
           width: 100%;
           height: 32px;
           box-sizing: border-box;
           cursor: pointer;
-
-          &:hover {
+          overflow: hidden;
+          &:hover{
             background-color: $kGrayscale6;
           }
-
-          ::ng-deep .p-radiobutton {
-            float: right;
-            margin-right: 16px;
-
-            .p-radiobutton-box {
+          ::ng-deep .p-radiobutton{
+            position: absolute;
+            right: 16px;
+            top: 0px;
+            .p-radiobutton-box{
               display: none;
-
-              &.p-highlight {
+              &.p-highlight{
                 display: block;
                 border: none;
                 margin-top: 7px;
                 background: transparent;
-
-                .pi-circle-on:before {
+                .p-radiobutton-icon:before {
+                  font-family: "kmcng-icon-pack";
                   content: "\e91c";
                   color: $kGrayscale1;
                   font-size: 14px;
@@ -110,17 +105,15 @@
               }
             }
           }
-
-          ::ng-deep .p-radiobutton-label {
+          ::ng-deep .p-radiobutton-label{
             font-weight: normal;
             margin-left: 24px;
             display: block;
             width: 100%;
-            height: 36px;
+            height: 24px;
             padding-top: 7px;
             cursor: pointer;
-
-            &.p-label-active {
+            &.p-radiobutton-label-active{
               font-weight: 700;
             }
           }
@@ -187,7 +180,7 @@
             }
 
             ::ng-deep .p-timepicker {
-              padding-left: 50px;
+              padding-left: 90px;
               padding-top: 0px;
               padding-bottom: 0px;
               >div a:last-child {

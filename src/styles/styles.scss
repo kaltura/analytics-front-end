@@ -407,7 +407,7 @@ p-multiselect ::ng-deep {
 }
 
 .p-overlaypanel-content {
-  padding: 0;
+  padding: 0px !important;
 }
 
 .p-carousel-item {
@@ -678,8 +678,7 @@ ui-carousel {
     margin-right: 6px;
   }
 }
-
-.p-dialog.p-confirmdialog {
+.p-dialog.p-confirm-dialog {
   top: 180px !important;
 }
 
