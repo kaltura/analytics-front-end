@@ -1,12 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-  KalturaClient,
-  KalturaLiveStreamEntry,
-  KalturaRecordingStatus,
-  KalturaRecordStatus,
-  KalturaViewMode,
-  LiveStreamUpdateAction
-} from 'kaltura-ngx-client';
+import { KalturaClient, KalturaLiveStreamEntry, KalturaRecordingStatus, KalturaRecordStatus, KalturaViewMode, LiveStreamUpdateAction } from 'kaltura-ngx-client';
 import { Subject } from 'rxjs';
 import { BrowserService } from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,7 +33,7 @@ export class ToggleLiveService implements OnDestroy {
       .subscribe(
         ({ viewMode, recordingStatus }) => {
           entry.viewMode = viewMode;
-          if (entry.recordStatus !== KalturaRecordStatus.disabled) {
+          if (typeof entry.recordStatus !== "undefined" && entry.recordStatus !== KalturaRecordStatus.disabled) {
             entry.recordingStatus = recordingStatus;
           }
 
