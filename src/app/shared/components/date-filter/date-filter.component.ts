@@ -430,7 +430,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   private validate(): void {
-    if (DateFilterUtils.toServerDate(this.specificStart, false) === DateFilterUtils.toServerDate(this.specificEnd, false) && this.showHours) {
+    if (this.showHours && this.specificEnd && DateFilterUtils.toServerDate(this.specificStart, false) === DateFilterUtils.toServerDate(this.specificEnd, false)) {
       this.validDateRange = this.startHours <= this.endHours;
     } else {
       this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true); // validation
