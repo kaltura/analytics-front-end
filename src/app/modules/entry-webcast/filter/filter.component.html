@@ -26,6 +26,7 @@
                                         [selectedFilters]="_selectedValues['playbackType']"
                                         (itemSelected)="_onItemSelected($event, 'playbackType')"
                                         (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-checkboxes-list-filter>
+
           </div>
 
           <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
@@ -33,17 +34,34 @@
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+
+            <app-country-filter *ngIf="_viewConfig.geo" style="margin-top: 16px"
+                                [dateFilter]="_dateFilter"
+                                [filterConfig]="filterConfig"
+                                [selectedFilters]="_selectedValues['countries']"
+                                (itemSelected)="_onItemSelected($event, 'countries')"
+                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+
+            <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')"></app-domains-filters>
+
           </div>
 
           <div class="kFilterContainerCol">
             <app-webcast-device-filter *ngIf="_viewConfig.devices"
               [dateFilter]="_dateFilter"
               [selectedFilters]="_selectedValues['devices']"
+              [filterConfig]="filterConfig"
               (itemSelected)="_onItemSelected($event, 'devices')"
               (itemUnselected)="_onItemUnselected($event, 'devices')"></app-webcast-device-filter>
 
             <app-webcast-browser-filter *ngIf="_viewConfig.browsers"
               [dateFilter]="_dateFilter"
+              [filterConfig]="filterConfig"
               [selectedFilters]="_selectedValues['browser']"
               (itemSelected)="_onItemSelected($event, 'browser')"
               (itemUnselected)="_onItemUnselected($event, 'browser')"></app-webcast-browser-filter>
@@ -51,17 +69,11 @@
             <app-webcast-os-filter *ngIf="_viewConfig.os"
               [dateFilter]="_dateFilter"
               [selectedFilters]="_selectedValues['os']"
+              [filterConfig]="filterConfig"
               (itemSelected)="_onItemSelected($event, 'os')"
               (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
           </div>
 
-          <div class="kFilterContainerCol">
-            <app-country-filter *ngIf="_viewConfig.geo"
-                                [dateFilter]="_dateFilter"
-                                [selectedFilters]="_selectedValues['countries']"
-                                (itemSelected)="_onItemSelected($event, 'countries')"
-                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
-          </div>
 
         </div>
       </div>

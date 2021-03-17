@@ -41,6 +41,14 @@
             <app-owners-filter [selectedFilters]="_selectedValues['owners']"
                                (itemSelected)="_onItemSelected($event, 'owners')"
                                (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
+
+            <app-domains-filters style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
+
           </div>
         </div>
       </div>

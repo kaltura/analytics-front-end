@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { DeviceFilterService } from './device-filter.service';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 export interface DeviceFilterValueItem {
   name: string;
@@ -24,9 +25,18 @@ export class DeviceFilterComponent implements OnDestroy {
   }
 
   @Input() set dateFilter(event: DateChangeEvent) {
-    this._devicesFilterService.updateDateFilter(event, () => {
-      this._selectedDevices = [];
-    });
+    // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
+    setTimeout(() => {
+      this._devicesFilterService.updateDateFilter(event, () => {
+        this._selectedDevices = [];
+      });
+    }, 0);
+  }
+
+  @Input() set filterConfig (config: FilterConfig) {
+    if (config) {
+      this._devicesFilterService.filterConfig = config;
+    }
   }
 
   @Output() itemSelected = new EventEmitter<DeviceFilterValueItem>();

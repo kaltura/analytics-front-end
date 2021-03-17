@@ -64,6 +64,14 @@
                                  [popupTitle]="'app.category.subcatSelect' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+
+            <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
           </div>
 
           <div class="tabletMode">
@@ -78,11 +86,13 @@
                                  (itemSelected)="_onItemSelected($event, 'owners')"
                                  (itemUnselected)="_onItemUnselected($event, 'owners')"></app-owners-filter>
 
+
             </div>
-            <div class="kListFilters" *ngIf="_viewConfig?.geo">
+            <div class="kMiscFilters" *ngIf="_viewConfig?.geo">
               <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                     [filterWarning]="locationFiltersWarning"
                                     [dateFilter]="_dateFilter"
+                                    [filterConfig]="filterConfig"
                                     [selectedFilters]="_selectedValues['location']"
                                     (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
             </div>

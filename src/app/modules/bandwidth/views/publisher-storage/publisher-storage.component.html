@@ -15,6 +15,7 @@
     </div>
     <app-date-filter #dateFilter
                      name="storage"
+                     [showHours]="false"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>

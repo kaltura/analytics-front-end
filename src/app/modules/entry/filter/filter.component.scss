@@ -16,7 +16,7 @@
     height: 100%;
 
     .kFilterContainer {
-      padding: 32px 24px 0 24px;
+      padding: 32px 12px 0 24px;
       display: flex;
       flex-direction: column;
 
@@ -27,9 +27,11 @@
       .kFilterContainerCol {
         display: flex;
         flex-direction: column;
-        width: 336px;
+        flex: 0 0 auto;
+        width: 33%;
         &:not(:first-child) {
-          margin-left: 24px;
+          padding-left: 24px;
+          box-sizing: border-box;
         }
       }
 
@@ -81,13 +83,13 @@ app-owners-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  .ui-state-focus {
-    margin-top: 4px;
-    outline: 5px auto rgba(0, 150, 255, 1) !important;
+
+  app-autocomplete-filter {
+    margin: 0;
   }
 
-  app-autocomplete-filter, app-dropdown-filter {
-    margin: 0;
+  app-dropdown-filter {
+    margin-right: 0;
   }
 
   .ui-autocomplete-multiple-container {

@@ -22,6 +22,7 @@
           <div class="kFilterContainerCol">
             <app-country-filter *ngIf="_viewConfig.geo"
                                 [dateFilter]="_dateFilter"
+                                [filterConfig]="filterConfig"
                                 [selectedFilters]="_selectedValues['countries']"
                                 (itemSelected)="_onItemSelected($event, 'countries')"
                                 (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
@@ -34,17 +35,22 @@
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
 
-            <!--<app-domains-filter [dateFilter]="_dateFilter"-->
-                                <!--[selectedFilters]="_selectedValues['domains']"-->
-                                <!--(itemSelected)="_onItemSelected($event, 'domains')"-->
-                                <!--(itemUnselected)="_onItemUnselected($event, 'domains')"></app-domains-filter>-->
-
           </div>
           <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
             <app-owners-filter [selectedFilters]="_selectedValues['users']"
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
                                (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+          </div>
+
+          <div class="kFilterContainerCol" *ngIf="_viewConfig.domains">
+            <app-domains-filters *ngIf="_viewConfig?.domains"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
           </div>
         </div>
       </div>

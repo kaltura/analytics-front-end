@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
-import { DomainsFilterService } from 'shared/components/domain-filter/domains-filter.service';
+import { DomainsFilterService } from 'shared/components/filter/domains-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import {FilterComponent, OptionItem} from 'shared/components/filter/filter.component';
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-entry-webcast-filter',
@@ -35,6 +36,8 @@ import { ViewConfig } from 'configuration/view-config';
   ]
 })
 export class EntryWebcastFilterComponent extends FilterComponent {
+  public filterConfig: FilterConfig = {};
+
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -45,6 +48,10 @@ export class EntryWebcastFilterComponent extends FilterComponent {
         geo: {}
       };
     }
+  }
+
+  @Input() set entryId (id: string) {
+    this.filterConfig.items = [{property: "entryIdIn", value: id}, {property: 'playbackTypeIn', value: 'dvr|live|vod'}];
   }
 
   public _playbackTypes: OptionItem[] = [

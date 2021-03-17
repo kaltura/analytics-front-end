@@ -75,6 +75,11 @@
         margin-left: 12px;
         border-left: 1px solid $kGrayscale2;
       }
+      .redundancy {
+        font-size: 15px;
+        font-weight: 700;
+        margin-left: 6px;
+      }
     }
     .reportData{
       margin-top: 16px;
@@ -96,6 +101,16 @@
             font-size: 15px;
             font-weight: 300;
             margin-right: 40px;
+          }
+          .timestamp {
+            font-size: 12px;
+            font-weight: 700;
+            color: $kGrayscale3;
+            margin-right: 40px;
+            margin-bottom: 1px;
+          }
+          .health {
+            font-size: 15px;
           }
           i {
             color: $kGrayscale3;

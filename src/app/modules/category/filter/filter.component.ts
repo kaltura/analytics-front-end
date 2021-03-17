@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { LocationsFilterService } from 'shared/components/filter/location-filter/locations-filter.service';
-import { DomainsFilterService } from 'shared/components/domain-filter/domains-filter.service';
+import { DomainsFilterService } from 'shared/components/filter/domains-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import {FilterComponent, OptionItem} from 'shared/components/filter/filter.component';
@@ -10,6 +10,7 @@ import { ViewConfig } from 'configuration/view-config';
 import { KalturaCategory } from "kaltura-ngx-client";
 import { TranslateService } from "@ngx-translate/core";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
+import { FilterConfig } from "shared/components/filter/filter-base.service";
 
 @Component({
   selector: 'app-cat-filter',
@@ -54,8 +55,16 @@ export class CatFilterComponent extends FilterComponent {
       };
     }
   }
+  public filterConfig: FilterConfig = {};
+
   @Input() set category(value: KalturaCategory) {
-    this._contextTypes[1].value = [{...value}];
+    if (value) {
+      this._contextTypes[1].value = [{...value}];
+      // rewrite filterConfig to invoke change detection
+      this.filterConfig = {
+        items: [{property: 'categoriesIdsIn', value: value.id.toString()}]
+      };
+    }
   }
 
   public contextSelected = false;

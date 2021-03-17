@@ -20,13 +20,13 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
           <div class="kListFilters">
-            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
+            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate" style="min-width: 45%"
                                         [options]="_mediaTypes"
                                         [selectedFilters]="_selectedValues['mediaType']"
                                         (itemSelected)="_onItemSelected($event, 'mediaType')"
                                         (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-            <app-checkboxes-list-filter class="kLastItem"
+            <app-checkboxes-list-filter class="kLastItem" style="min-width: 45%"
                                         [label]="'app.filters.entrySources.title' | translate"
                                         [options]="_entrySources"
                                         [selectedFilters]="_selectedValues['entrySources']"
@@ -43,6 +43,15 @@
                                  [linkLabel]="'app.filters.selectCategories' | translate"
                                  (itemSelected)="_onItemSelected($event, 'categories')"
                                  (itemUnselected)="_onItemUnselected($event, 'categories')"></app-category-filter>
+
+            <app-domains-filters *ngIf="_viewConfig?.domains" style="margin-top: 24px"
+                                 [expandWidth]="!showAutocompleteGroup"
+                                 [dateFilter]="_dateFilter"
+                                 [filterConfig]="filterConfig"
+                                 [selectedFilters]="_selectedValues['domains']"
+                                 (itemSelected)="_onItemSelected($event, 'domains')">
+            </app-domains-filters>
+
           </div>
         </div>
       </div>

@@ -13,7 +13,6 @@ import { ThumbLoaderComponent } from './components/thumb-loader/thumb-loader.com
 import { DateFilterService } from './components/date-filter/date-filter.service';
 import { UsersFilterComponent } from './components/users-filter/users-filter.component';
 import { CountryFilterComponent } from './components/country-filter/country-filter.component';
-import { DomainFilterComponent } from './components/domain-filter/domain-filter.component';
 import { ExportCsvComponent } from './components/export-csv/export-csv.component';
 import { BulletComponent } from './components/bullet/bullet.component';
 import { InsightsBulletComponent } from './components/insights-bullet/insights-bullet.component';
@@ -50,6 +49,7 @@ import { TagsFilterComponent } from './components/filter/tags-filter/tags-filter
 import { PlaybackFilterComponent } from './components/filter/playback-filter/playback-filter.component';
 import { OwnersFilterComponent } from './components/filter/owners-filter/owners-filter.component';
 import { LocationFilterComponent } from './components/filter/location-filter/location-filter.component';
+import { DomainsFilterComponent } from './components/filter/domains-filter/domains-filter.component';
 import { BrowserImagePipe } from 'shared/pipes/browser-image.pipe';
 import { ImpressionsComponent } from 'shared/components/impressions-report/impressions.component';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
@@ -112,7 +112,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
-    DomainFilterComponent,
+    DomainsFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
@@ -171,7 +171,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     ThumbLoaderComponent,
     UsersFilterComponent,
     CountryFilterComponent,
-    DomainFilterComponent,
+    CountryFilterComponent,
     ReportTabsComponent,
     ExportCsvComponent,
     BulletComponent,
@@ -195,6 +195,7 @@ import { KalturaPlayerV7Component } from "shared/player-v7";
     CheckboxesListFilterComponent,
     CategoryFilterComponent,
     CategoriesSelectorComponent,
+    DomainsFilterComponent,
     AutocompleteFilterComponent,
     DropdownFilterComponent,
     ImpressionsComponent,

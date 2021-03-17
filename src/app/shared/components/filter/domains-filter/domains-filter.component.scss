@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  ::ng-deep .ui-multiselect {
+    width: 100% !important;
+  }
+
+  ::ng-deep .expandWidth .ui-multiselect {
+    width: 432px !important;
+  }
+
+  .label-addition {
+    display: inline-flex;
+
+    ::ng-deep .kIconhelpLink {
+      z-index: 0 !important;
+    }
+  }
+}
+/* responsive design */
+@media (max-width: 1280px) {
+  :host {
+    ::ng-deep .ui-multiselect {
+      width: 240px;
+    }
+  }
+}
+@media (max-width: 991px) {
+  :host {
+    ::ng-deep .ui-multiselect {
+      width: 180px;
+    }
+  }
+}

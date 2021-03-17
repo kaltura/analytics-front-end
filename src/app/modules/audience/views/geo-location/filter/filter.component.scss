@@ -26,19 +26,19 @@
           margin-top: 24px;
         }
       }
-
+      .kMiscFilters {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 auto;
+        margin-right: 24px;
+        width: 33%;
+      }
       .kListFilters {
         display: flex;
 
         .kLastItem {
           margin-right: 18px !important;
         }
-      }
-
-      .kMiscFilters {
-        display: flex;
-        flex-direction: column;
-        width: 432px;
       }
     }
 
@@ -84,8 +84,12 @@ app-tags-filter, app-category-filter, app-country-filter {
 }
 
 :host ::ng-deep {
-  app-autocomplete-filter, app-dropdown-filter {
+  app-autocomplete-filter {
     margin: 0;
+  }
+
+  app-dropdown-filter {
+    margin-right: 0;
   }
 
   .ui-autocomplete-multiple-container {
