@@ -18,14 +18,14 @@
   <ng-template pTemplate="body" let-data>
     <tr [ngStyle]="{'width': '100%'}">
       <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'width': '100%'}">
-                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id'" class="kTrend">
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'hours_id' && col !== 'date_id'" class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
                                        [units]="data[col].units"
                                        [trend]="data[col].trend"></app-trend-value>
                     </span>
                   </span>
-        <ng-container *ngIf="!isCompareMode || col === 'month_id' || col === 'date_id'">
+        <ng-container *ngIf="!isCompareMode || col === 'month_id' || col === 'date_id' || col === 'hours_id'">
           <span>{{data[col]}}</span>
         </ng-container>
       </td>

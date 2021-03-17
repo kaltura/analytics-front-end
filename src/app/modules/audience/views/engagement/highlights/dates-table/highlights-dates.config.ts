@@ -10,7 +10,7 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -21,6 +21,10 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
           },
           'date_id': {
             format: value => DateFilterUtils.formatFullDateString(value),
+            nonComparable: true,
+          },
+          'hours_id': {
+            format: value => DateFilterUtils.formatHoursString(value),
             nonComparable: true,
           },
           'count_loads': {

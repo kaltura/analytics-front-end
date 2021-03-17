@@ -64,7 +64,7 @@ export class ReportService implements OnDestroy {
   private _labelColor: string;
   private _querySubscription: ISubscription;
   private _exportSubscription: ISubscription;
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
@@ -76,16 +76,16 @@ export class ReportService implements OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(isContrast => this._setLabelColor(isContrast));
   }
-  
+
   private _setLabelColor(isContrast: boolean): void {
     this._labelColor = isContrast ? '#333333' : '#999999';
   }
-  
+
   private _responseIsType(response: KalturaResponse<any>, type: any): boolean {
     return response.result instanceof type
       || Array.isArray(response.result) && response.result.length && response.result[0] instanceof type;
   }
-  
+
   public getReport(config: ReportConfig, sections: ReportDataConfig = null, preventMultipleRequests = true): Observable<Report> {
     sections = sections === null ? { table: { fields: {}} } : sections; // table is default section
     const logger = this._logger.subLogger(`Report #${config.reportType}`);
@@ -104,14 +104,14 @@ export class ReportService implements OnDestroy {
           objectIds: config.objectIds ? config.objectIds : null,
           responseOptions
         });
-        
+
         const getGraphs = new ReportGetGraphsAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
           objectIds: config.objectIds ? config.objectIds : null,
           responseOptions
         });
-        
+
         const getTable = new ReportGetTableAction({
           reportType: config.reportType,
           reportInputFilter: config.filter,
@@ -120,27 +120,27 @@ export class ReportService implements OnDestroy {
           objectIds: config.objectIds ? config.objectIds : null,
           responseOptions
         });
-        
+
         if (this._querySubscription && preventMultipleRequests) {
           logger.info('Another report request is in progress, cancel previous one');
           this._querySubscription.unsubscribe();
           this._querySubscription = null;
         }
-        
+
         let request: KalturaRequest<any>[] = [];
-        
+
         if (sections.table) {
           request.push(getTable);
         }
-        
+
         if (sections.graph) {
           request.push(getGraphs);
         }
-        
+
         if (sections.totals) {
           request.push(getTotal);
         }
-        
+
         this._querySubscription = this._kalturaClient.multiRequest(request)
           .pipe(cancelOnDestroy(this))
           .subscribe((responses: KalturaMultiResponse) => {
@@ -170,9 +170,9 @@ export class ReportService implements OnDestroy {
                 });
                 observer.next(report);
                 observer.complete();
-  
+
                 logger.info('Report has loaded');
-  
+
                 if (analyticsConfig.isHosted) {
                   setTimeout(() => {
                     this._frameEventManager.publish(FrameEvents.UpdateLayout, { 'height': document.getElementById('analyticsApp').getBoundingClientRect().height });
@@ -188,19 +188,19 @@ export class ReportService implements OnDestroy {
             });
       });
   }
-  
+
   public exportToCsv(args: ReportGetUrlForReportAsCsvActionArgs): Observable<string> {
     const logger = this._logger.subLogger(`Report #${args.reportType}`);
     logger.info('Request for export csv link', { title: args.reportTitle });
     return Observable.create(
       observer => {
         const exportAction = new ReportGetUrlForReportAsCsvAction(args);
-        
+
         if (this._exportSubscription) {
           this._exportSubscription.unsubscribe();
           this._exportSubscription = null;
         }
-        
+
         this._exportSubscription = this._kalturaClient.request(exportAction)
           .pipe(cancelOnDestroy(this))
           .subscribe((response: string) => {
@@ -216,18 +216,18 @@ export class ReportService implements OnDestroy {
             });
       });
   }
-  
-  
+
+
   ngOnDestroy() {
   }
-  
+
   public parseTableData(table: KalturaReportTable | KalturaReportTotal, config: ReportDataItemConfig): { columns: string[], tableData: { [key: string]: string }[] } {
     // parse table columns
     let columns = table.header ? table.header.toLowerCase().split(analyticsConfig.valueSeparator) : [];
     const tableData = [];
-  
+
     this._logger.trace('Parse table data', { headers: table.header });
-    
+
     // parse table data
     if (table.data) {
       table.data.split(';').forEach(valuesString => {
@@ -242,21 +242,21 @@ export class ReportService implements OnDestroy {
         }
       });
     }
-    
+
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
     columns.sort((a, b) => {
       const valA = config.fields[a].sortOrder || 0;
       const valB = config.fields[b].sortOrder || 0;
       return valA - valB;
     });
-    
+
     return { columns, tableData };
   }
-  
+
   public parseTotals(totals: KalturaReportTotal | KalturaReportTable, config: ReportDataItemConfig, selected?: string): Tab[] {
     const tabsData = [];
     const data = totals.data.split(analyticsConfig.valueSeparator);
-  
+
     this._logger.trace('Parse totals data', { headers: totals.header });
 
     totals.header.toLowerCase().split(analyticsConfig.valueSeparator).forEach((header, index) => {
@@ -277,12 +277,12 @@ export class ReportService implements OnDestroy {
         });
       }
     });
-    
+
     return tabsData.sort((a, b) => {
       return a.sortOrder - b.sortOrder;
     });
   }
-  
+
   public parseGraphs(graphs: KalturaReportGraph[],
                      config: ReportDataItemConfig,
                      period: { from: number, to: number },
@@ -293,7 +293,7 @@ export class ReportService implements OnDestroy {
       'Parse graph data',
       () => ({ period, reportInterval, graphIds: graphs.map(({ id }) => id).join(', ') })
     );
-    
+
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -303,24 +303,24 @@ export class ReportService implements OnDestroy {
       let xAxisData = [];
       let yAxisData = [];
       const data = graph.data.split(';');
-      
+
       data.forEach((value, index) => {
         if (value.length) {
           const label = value.split(analyticsConfig.valueSeparator)[0];
           let name = label;
-          
+
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
               : reportInterval === KalturaReportInterval.hours
-                ? label
+                ? DateFilterUtils.formatHoursString(label, analyticsConfig.locale)
                 : DateFilterUtils.formatFullDateString(label);
           } else {
             this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
 
           let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
-  
+
           if (config.fields[graph.id] && config.fields[graph.id].parse) {
             val = config.fields[graph.id].parse(val);
           } else {
@@ -330,11 +330,11 @@ export class ReportService implements OnDestroy {
           if (isNaN(val)) {
             val = 0;
           }
-          
+
           if (config.fields[graph.id]) {
             val = config.fields[graph.id].format(val);
           }
-          
+
           xAxisData.push(name);
           yAxisData.push(val);
         }
@@ -508,7 +508,7 @@ export class ReportService implements OnDestroy {
           type: 'bar'
         }]
       };
-      
+
       if (typeof dataLoadedCb === 'function') {
         setTimeout(() => {
           dataLoadedCb();
@@ -517,7 +517,7 @@ export class ReportService implements OnDestroy {
     });
     return { barChartData, lineChartData };
   }
-  
+
   public getGraphDataFromTable(table: KalturaReportTable,
                                dataConfig: ReportDataConfig,
                                period: { from: number, to: number },
@@ -529,32 +529,31 @@ export class ReportService implements OnDestroy {
     const graphData = this.convertTableDataToGraphData(tableData, dataConfig);
     return this.parseGraphs(graphData, dataConfig.graph, period, reportInterval, null, graphOptions);
   }
-  
-  
+
+
   public convertTableDataToGraphData(data: { [key: string]: string }[], dataConfig: ReportDataConfig): KalturaReportGraph[] {
     this._logger.trace('Convert table data to graph data', { graphIds: Object.keys(dataConfig.graph.fields) });
     return Object.keys(dataConfig.graph.fields).map(
       field => new KalturaReportGraph({ id: field, data: data.reduce((acc, val) => (acc += `${val.source}${analyticsConfig.valueSeparator}${val[field]};`, acc), '') })
     );
   }
-  
+
   public tableFromGraph(graphs: KalturaReportGraph[],
                         config: ReportDataItemConfig,
                         reportInterval: KalturaReportInterval): { columns: string[], tableData: TableRow[], totalCount: number } {
-    const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
+    const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : reportInterval === KalturaReportInterval.hours ? 'hours_id' : 'month_id';
     let columns = [];
     let tableData = [];
     const data = [];
-    
+
     if (!graphs.length) {
       return { tableData, columns, totalCount: 0 };
     }
-    
+
     graphs.forEach(item => {
       columns.push(item.id);
       data.push(item.data.split(';'));
     });
-    
     tableData = data[0].filter(Boolean).map((item, i) => {
       const initialValue = {
         [firstColumn]: config.fields[firstColumn]
@@ -571,7 +570,7 @@ export class ReportService implements OnDestroy {
         initialValue
       );
     });
-  
+
     columns = columns.filter(header => config.fields.hasOwnProperty(header) && !config.fields[header].hidden);
     columns.sort((a, b) => {
       const valA = config.fields[a].sortOrder || 0;
@@ -579,7 +578,7 @@ export class ReportService implements OnDestroy {
       return valA - valB;
     });
     columns = [firstColumn, ...columns];
-  
+
     return { tableData, columns, totalCount: tableData.length };
   }
 }

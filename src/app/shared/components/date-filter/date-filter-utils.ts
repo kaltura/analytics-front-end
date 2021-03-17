@@ -124,6 +124,27 @@ export class DateFilterUtils {
     return result;
   }
 
+  // 3/18, 23:00
+  static formatHoursString(value: string | number | Date, locale = analyticsConfig.locale): string {
+    let result = '';
+    locale = locale.length > 2 ? (locale === 'zn_hant' ? 'zf' : locale.substr(0, 2)) : locale;
+    if (typeof value === 'string') {
+      const month: string = value.substring(4, 6);
+      const day: string = value.substring(6, 8);
+      const hours: string = value.substring(8, 10);
+      result =  analyticsConfig.dateFormat === 'month-day-year' ? `${month}/${day} ${hours}:00` : `${day}/${month} ${hours}:00`;
+    } else if (typeof value === 'number') {
+      const date = this.fromServerDate(value);
+      result = `${date.toLocaleString(locale, { year: 'numeric', month: 'short', day: 'numeric' })} ${this._getHour(date)}:00`;
+    } else if (value instanceof Date) {
+      result = `${value.toLocaleString(locale, { year: 'numeric', month: 'short', day: 'numeric' })} ${this._getHour(value)}:00`;
+    } else {
+      throw new Error(`Unsupported value: ${value}`);
+    }
+
+    return result;
+  }
+
   // March
   static formatMonthOnlyString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';
@@ -198,7 +219,11 @@ export class DateFilterUtils {
     }
 
     if (typeof value === 'string') {
-      result = new Date(value);
+      if (value.length === 10) {
+        result = moment(value, 'YYYYMMDDHH').toDate();
+      } else {
+        result = new Date(value);
+      }
     }
     return moment(result);
   }
@@ -206,11 +231,14 @@ export class DateFilterUtils {
   static parseDateString(value: string): moment.Moment {
     const day = value && value.length ? Number(value.substring(6, 8)) : null;
 
-    if (!day) {
-      value += '01'; // add the first day of a month to correct parsing
+    if (value && value.length === 10) {
+      return moment(value, 'YYYYMMDDHH');
+    } else {
+      if (!day) {
+        value += '01'; // add the first day of a month to correct parsing
+      }
+      return moment(value, 'YYYYMMDD');
     }
-
-    return moment(value, 'YYYYMMDD');
   }
 
   static getTimeStringFromEpoch(epoch: string, format = 'HH:mm:ss'): string {
@@ -232,6 +260,10 @@ export class DateFilterUtils {
 
   private static _getDate(date: Date): string {
     return ('0' + date.getDate()).slice(-2);
+  }
+
+  private static _getHour(date: Date): string {
+    return ('0' + (date.getHours() + 1)).slice(-2);
   }
 
   static getDatesLabelPrefix(preset: DateRanges, custom: {startDate: Date, endDate: Date}): string {

@@ -43,7 +43,7 @@
 
       <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
-        <app-time-units [dateFilter]="dateFilter"></app-time-units>
+        <app-time-units [dateFilter]="dateFilter" [displayHours]="false"></app-time-units>
       </div>
       <div class="kChart">
         <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]" *ngIf="_chartType==='bar'"></div>

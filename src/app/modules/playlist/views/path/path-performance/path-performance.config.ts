@@ -11,7 +11,7 @@ export class PathPerformanceConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -23,6 +23,11 @@ export class PathPerformanceConfig extends ReportDataBaseConfig {
           },
           'date_id': {
             format: value => DateFilterUtils.formatFullDateString(value),
+            nonComparable: true,
+            sortOrder: 1,
+          },
+          'hours_id': {
+            format: value => DateFilterUtils.formatHoursString(value),
             nonComparable: true,
             sortOrder: 1,
           },

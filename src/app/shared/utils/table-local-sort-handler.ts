@@ -15,13 +15,14 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         let value1: any = data1[event.field];
         let value2: any = data2[event.field];
         let result = 0;
-    
+
         if (dateKeys.indexOf(event.field) !== -1) {
           value1 = getDate(value1);
           value2 = getDate(value2);
         }
-    
-        if (typeof value1 === 'string' && typeof value2 === 'string') {
+        if (event.field === 'hours_id'){
+          result = value1.localeCompare(value2, undefined, { numeric: false });
+        } else if (typeof value1 === 'string' && typeof value2 === 'string') {
           value1 = String(parseFormattedValue(value1));
           value2 = String(parseFormattedValue(value2));
           result = value1.localeCompare(value2, undefined, { numeric: true });
@@ -31,10 +32,10 @@ export function tableLocalSortHandler(event: SortEvent, initialOrder: string = n
         return (event.order * result);
       });
     }
-  
+
     return order;
   }
-  
+
   return initialOrder;
 }
 
@@ -45,14 +46,14 @@ function getDate(date: string): Date {
   if (typeof date !== 'string') {
     return null;
   }
-  
+
   let [month, year] = date.split(/\s+/);
   month = month.replace(/[^ -~]/g, ''); // because IE adds extra LTR and RTL characters ‎(ノ≥∇≤)ノ︵ ┻━┻
   const monthIndex = months.indexOf(month) + 1;
   if (monthIndex) {
     return new Date(`${('0' + monthIndex).slice(-2)}/01/${year}`);
   }
-  
+
   return parseDate(date);
 }
 
@@ -66,6 +67,6 @@ function parseDate(input: string): Date {
 
   // extract date-part indexes from the format
   format.replace(/(yyyy|dd|mm)/g, part => (fmt[part] = i++, null));
-  
+
   return new Date(parts[fmt['yyyy']], parts[fmt['mm']] - 1, parts[fmt['dd']]);
 }

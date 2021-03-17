@@ -26,6 +26,11 @@ export class ImagePerformanceConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
+          'hours_id': {
+            format: value => DateFilterUtils.formatHoursString(value),
+            nonComparable: true,
+            sortOrder: 1,
+          },
           'full_name': {
             format: value => value,
             nonComparable: true,
