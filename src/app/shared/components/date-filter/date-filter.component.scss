@@ -121,18 +121,18 @@
       flex-direction: column;
       padding-left: 22px;
       &.kWide {
-        padding-left: 68px;
+        padding-left: 54px;
       }
       .kStartEnd{
         display: flex;
         align-items: center;
         margin-bottom: 8px;
-        span{
-          padding-bottom: 4px;
+        .divider {
+          width: 8px;
+          border: none;
+          border-top: 1px solid $kGrayscale3;
           margin-right: 8px;
-          &.end{
-            margin-left: 16px;
-          }
+          margin-left: 8px;
         }
         p-calendar {
           ::ng-deep button {
@@ -142,7 +142,7 @@
       }
       p-calendar{
         ::ng-deep .p-calendar .p-datepicker{
-          width: 420px;
+          width: 454px;
           .p-datepicker-calendar td:not(.p-state-disabled) a:hover{
             background-color: $kPrimary;
           }
@@ -185,9 +185,11 @@
         font-weight: normal;
       }
     }
-    p-calendar {
+    .compareDate {
       margin-top: 12px;
       margin-left: 48px;
+      display: flex;
+      align-items: center;
     }
   }
   hr {
@@ -216,10 +218,41 @@
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 }
-::ng-deep .p-button{
+.kDateFilterPopup ::ng-deep .p-button{
   height: auto;
   min-height: 34px;
   .p-button-text {
     line-height: 16px;
+  }
+}
+.kDateFilterPopup ::ng-deep .ui-calendar.ui-calendar-w-btn{
+  height: 32px;
+  input {
+    height: 32px;
+  }
+  button {
+    height: 32px !important;
+    min-height: 32px;
+  }
+}
+.showHours{
+  ::ng-deep .ui-calendar.ui-calendar-w-btn{
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+}
+.kDateFilterPopup ::ng-deep .ui-dropdown{
+  width: 72px;
+  min-width: 72px;
+  height: 34px;
+  border-left: none;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  margin-bottom: 3px;
+  .ui-dropdown-trigger {
+    font-size: 14px;
+  }
+  .ui-dropdown-panel .ui-dropdown-items-wrapper {
+    width: 100px;
   }
 }
