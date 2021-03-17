@@ -12,7 +12,6 @@ import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { BrowserService } from 'shared/services';
-import {DateRange} from "../../../modules/entry-live/views/live-discovery-chart/filters/filters.service";
 
 @Component({
   selector: 'app-date-filter',
@@ -22,6 +21,7 @@ import {DateRange} from "../../../modules/entry-live/views/live-discovery-chart/
 export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
   @Input() name = 'default';
+  @Input() showHours = true;
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {
@@ -94,6 +94,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   ];
   public selectedView = 'preset';
   public selectedComparePeriod = 'lastYear';
+
+  public hoursSelectorOptions = DateFilterUtils.getHoursSelectorOption();
+
+  public startHours = 0;
+  public endHours = 23 * 60 + 59;
+  public compareHours = 0;
 
   public _dateRangePrefix = '';
   public _dateRangeLabel = '';
@@ -276,7 +282,12 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];
-      this._dateRangeLabel = DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY');
+      if (this.showHours) {
+        const format = this._dateFormat === 'mm/dd/yy' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+        this._dateRangeLabel = `${DateFilterUtils.getMomentDate(this.startDate).format(format)}, ${DateFilterUtils.getHoursSelectorLabel(this.startHours)} - ${DateFilterUtils.getMomentDate(this.endDate).format(format)}, ${DateFilterUtils.getHoursSelectorLabel(this.endHours)}`;
+      } else {
+        this._dateRangeLabel = `${DateFilterUtils.getMomentDate(this.startDate).format('MMM D, YYYY')} - ${DateFilterUtils.getMomentDate(this.endDate).format('MMM D, YYYY')}`;
+      }
       const diff = moment(this.endDate).diff(moment(this.startDate), 'days') + 1;
       this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(null, {startDate: this.startDate, endDate: this.endDate}), {0: diff});
     }
@@ -345,18 +356,30 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   private triggerChangeEvent(applyIn?: string, changeOnly?: string): void {
+    let startDate = DateFilterUtils.toServerDate(this.startDate, true);
+    if (this.selectedView === 'specific' && this.showHours) {
+      startDate += this.startHours * 60;
+    }
+    let endDate = DateFilterUtils.toServerDate(this.endDate, this.selectedView === 'specific' && this.showHours);
+    if (this.selectedView === 'specific' && this.showHours) {
+      endDate += this.endHours * 60;
+    }
+    let compareStartDate = DateFilterUtils.toServerDate(this.compareStartDate, true);
+    if (this.selectedView === 'specific' && this.showHours) {
+      compareStartDate += this.compareHours * 60;
+    }
     this.filterChange.emit({
       applyIn: applyIn,
       changeOnly: changeOnly,
-      startDate: DateFilterUtils.toServerDate(this.startDate, true),
-      endDate: DateFilterUtils.toServerDate(this.endDate, false),
+      startDate: startDate,
+      endDate: endDate,
       startDay: DateFilterUtils.getDay(this.startDate),
       endDay: DateFilterUtils.getDay(this.endDate),
       timeUnits: this.selectedTimeUnit,
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       compare: {
         active: this.compare,
-        startDate: DateFilterUtils.toServerDate(this.compareStartDate, true),
+        startDate: compareStartDate,
         startDay: DateFilterUtils.getDay(this.compareStartDate),
         endDate: DateFilterUtils.toServerDate(this.compareEndDate, false),
         endDay: DateFilterUtils.getDay(this.compareEndDate)
@@ -407,6 +430,10 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   private validate(): void {
-    this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true); // validation
+    if (DateFilterUtils.toServerDate(this.specificStart, false) === DateFilterUtils.toServerDate(this.specificEnd, false) && this.showHours) {
+      this.validDateRange = this.startHours <= this.endHours;
+    } else {
+      this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true); // validation
+    }
   }
 }

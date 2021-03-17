@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { SelectItem } from "primeng/api";
 
 export enum DateRanges {
   Last7D = 'last7days',
@@ -365,5 +366,46 @@ export class DateFilterUtils {
         break;
     }
     return localData;
+  }
+
+  static getHoursSelectorOption(): SelectItem[] {
+    return [
+      {label: '00:00', value: 0},
+      {label: '01:00', value: 1 * 60},
+      {label: '02:00', value: 2 * 60},
+      {label: '03:00', value: 3 * 60},
+      {label: '04:00', value: 4 * 60},
+      {label: '05:00', value: 5 * 60},
+      {label: '06:00', value: 6 * 60},
+      {label: '07:00', value: 7 * 60},
+      {label: '08:00', value: 8 * 60},
+      {label: '09:00', value: 9 * 60},
+      {label: '10:00', value: 10 * 60},
+      {label: '11:00', value: 11 * 60},
+      {label: '12:00', value: 12 * 60},
+      {label: '13:00', value: 13 * 60},
+      {label: '14:00', value: 14 * 60},
+      {label: '15:00', value: 15 * 60},
+      {label: '16:00', value: 16 * 60},
+      {label: '17:00', value: 17 * 60},
+      {label: '18:00', value: 18 * 60},
+      {label: '19:00', value: 19 * 60},
+      {label: '20:00', value: 20 * 60},
+      {label: '21:00', value: 21 * 60},
+      {label: '22:00', value: 22 * 60},
+      {label: '23:00', value: 23 * 60},
+      {label: '23:59', value: 23 * 60 + 59}
+    ];
+  }
+
+  static getHoursSelectorLabel(value: number): string {
+    let result = '';
+    const options = this.getHoursSelectorOption();
+    options.forEach(option => {
+      if (option.value === value) {
+        result = option.label;
+      }
+    })
+    return result;
   }
 }
