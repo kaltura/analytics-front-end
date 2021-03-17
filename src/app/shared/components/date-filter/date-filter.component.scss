@@ -225,8 +225,9 @@
     line-height: 16px;
   }
 }
-.kDateFilterPopup ::ng-deep .ui-calendar.ui-calendar-w-btn{
+.kDateFilterPopup ::ng-deep .p-calendar.p-calendar-w-btn{
   height: 32px;
+  margin-bottom: 4px;
   input {
     height: 32px;
   }
@@ -236,23 +237,23 @@
   }
 }
 .showHours{
-  ::ng-deep .ui-calendar.ui-calendar-w-btn{
+  ::ng-deep .p-calendar.p-calendar-w-btn{
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
   }
 }
-.kDateFilterPopup ::ng-deep .ui-dropdown{
+.kDateFilterPopup ::ng-deep .p-dropdown{
   width: 72px;
   min-width: 72px;
   height: 34px;
   border-left: none;
   border-bottom-left-radius: 0px;
   border-top-left-radius: 0px;
-  margin-bottom: 3px;
-  .ui-dropdown-trigger {
+  margin-bottom: 4px;
+  .p-dropdown-trigger {
     font-size: 14px;
   }
-  .ui-dropdown-panel .ui-dropdown-items-wrapper {
+  .p-dropdown-panel .p-dropdown-items-wrapper {
     width: 100px;
   }
 }
