@@ -24,6 +24,7 @@ kScrollToTopContainer {
   width: auto !important;
   margin-bottom: 0 !important;
   padding: 24px 16px 0 24px;
+  box-sizing: border-box;
   height: $cleanHeight;
 
   .kNoResults {
@@ -122,24 +123,37 @@ kScrollToTopContainer {
   width: 100%;
   right: 20px;
 }
-/* player height according to screen resolution */
+/* stream health height according to screen resolution */
 @media (max-width: 991px) {
-  :host {
+  .kStreamHealth {
     height: 349px;
+    &.hiddenStatus{
+      height: 405px;
+    }
+
   }
 }
 @media screen and (min-width: 992px) {
-  :host {
+  .kStreamHealth {
     height: 309px;
+    &.hiddenStatus{
+      height: 365px;
+    }
   }
 }
 @media screen and (min-width: 1280px) {
-  :host {
+  .kStreamHealth {
     height: 269px;
+    &.hiddenStatus{
+      height: 325px;
+    }
   }
 }
 @media screen and (min-width: 1610px) {
-  :host {
+  .kStreamHealth {
     height: 229px;
+    &.hiddenStatus{
+      height: 285px;
+    }
   }
 }

@@ -5,6 +5,7 @@ import { ErrorsManagerService } from 'shared/services';
 import {DiagnosticsErrorCodes, LiveEntryDiagnosticsInfo, StreamHealth} from './live-stream-health.types';
 import { LiveStreamHealthWidget } from './live-stream-health.widget';
 import { filter } from 'rxjs/operators';
+import { analyticsConfig } from "configuration/analytics-config";
 
 @Component({
   selector: 'app-live-stream-health',
@@ -34,6 +35,7 @@ export class LiveStreamHealthComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage;
   public _data: StreamHealth[] = [];
+  public _hideStatus = !analyticsConfig.viewsConfig.entryLive.status;
 
   constructor(private _liveStreamHealth: LiveStreamHealthWidget,
               private _errorsManager: ErrorsManagerService) {
