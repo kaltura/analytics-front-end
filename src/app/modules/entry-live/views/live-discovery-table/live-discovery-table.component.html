@@ -12,7 +12,7 @@
 
         <!-- USERS TABLE-->
         <ng-container *ngSwitchCase="_tableModes.users">
-          <app-discovery-filter [totalCount]="_totalCount"
+          <app-discovery-filter [totalCount]="_usersTotalCount"
                                 [rangeLabel]="rangeLabel"
                                 (openTimeSelector)="_openTimeSelector()"
                                 (filterChange)="_widget.usersFilterChange($event)">
