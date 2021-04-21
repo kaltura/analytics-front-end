@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
   CuePointListAction,
   KalturaAnnotationFilter,
@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from "configuration/analytics-config";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {OverlayComponent} from "shared/components/overlay/overlay.component";
 
 @Component({
   selector: 'app-webcast-mini-engagement-tools',
@@ -38,6 +39,7 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 export class WebcastMiniEngagementToolsComponent implements OnDestroy, OnInit {
 
   @Input() entryId = '';
+  @ViewChild('overlay') _overlay: OverlayComponent;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -46,6 +48,8 @@ export class WebcastMiniEngagementToolsComponent implements OnDestroy, OnInit {
   public _polls = 0;
   public _announcements = 0;
   public _answer_on_air = 0;
+  public _reactions = 10;
+  public _added_to_calendar = 0;
 
   constructor(private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
@@ -190,6 +194,21 @@ export class WebcastMiniEngagementToolsComponent implements OnDestroy, OnInit {
       })
     }
     this._polls = pollsCount;
+  }
+
+  public _showReactionsBreakdown(event: any): void {
+    setTimeout(() => {
+      if (this._overlay && event) {
+        this._overlay.show(event);
+      }
+    }, 200);
+
+  }
+
+  public _hideReactionsBreakdown(): void {
+    if (this._overlay) {
+      this._overlay.hide();
+    }
   }
 
   public export(): void {
