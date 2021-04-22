@@ -106,7 +106,7 @@
         </div>
 
         <div class="kReportContainer">
-          <div *ngIf="_viewConfig.liveEngagement" class="kMiniReportContainer kHigh" [class.wide]="_viewConfig.tools && _viewConfig.insights">
+          <div *ngIf="_viewConfig.liveEngagement" class="kMiniReportContainer kHigh" [class.kMedium]="_viewConfig.tools && _viewConfig.insights">
             <app-webcast-mini-live-engagement
               [entryIdIn]="_entry.id"
               [dateFilter]="_dateFilter"
@@ -115,8 +115,12 @@
             </app-webcast-mini-live-engagement>
           </div>
 
-          <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.insights && _viewConfig.liveEngagement">
-            <app-webcast-mini-engagement-tools [entryId]="_entry.id"></app-webcast-mini-engagement-tools>
+          <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh" [class.kMedium]="_viewConfig.insights && _viewConfig.liveEngagement">
+            <app-webcast-mini-engagement-tools
+              [entryIdIn]="_entry.id"
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter">
+            </app-webcast-mini-engagement-tools>
           </div>
 
           <div *ngIf="_viewConfig.insights" class="kMiniReportContainer kHigh" [class.narrow]="_viewConfig.tools && _viewConfig.liveEngagement">

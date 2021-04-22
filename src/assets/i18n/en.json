@@ -557,7 +557,15 @@
         "slides": "Slides",
         "polls": "Polls",
         "announcements": "Announcements",
-        "answer": "Answer On Air"
+        "answer": "Answer On Air",
+        "reactions": "Reactions",
+        "added": "Times Added to the Calendar",
+        "breakdown": "View Breakdown",
+        "applause": "Applause",
+        "laugh": "Laugh",
+        "love": "Love",
+        "wow": "Wow",
+        "curious": "Curious"
       },
       "insights": {
         "title": "Insights",
