@@ -18,7 +18,7 @@
   .label {
     font-size: 15px;
     font-weight: bold;
-    width: 100px;
+    width: 140px;
     flex: 0 0 auto;
   }
 
@@ -54,12 +54,18 @@ app-horizontal-bar-row {
   ::ng-deep {
     .kValue {
       margin-right: 8px !important;
-      width: auto !important;
+      width: 48px !important;
       text-align: right !important;
     }
     .kUnits {
       color: $kGrayscale1 !important;
       margin-left: 0px !important;
+    }
+    .kLabel {
+      display: none !important;
+    }
+    .kBarWrapper {
+      width: 100% !important;
     }
   }
 }

@@ -1,59 +1,33 @@
 <div data-aid="overlay-reactions-breakdown" class="kReactionsBreakdownOverlay">
-  <!--k-area-blocker [showLoader]="_loading">
-    <ng-container *ngIf="_data && !_errorMessage">
-      <div class="kContributorName">{{_data.fullName ? _data.fullName : _data.id}}</div>
-      <div class="kContributorDetails">
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.contributors.topContributorsReport.role' | translate}}</div>
-          <div class="kValue">{{_data.roleNames}}</div>
-        </div>
 
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.contributors.topContributorsReport.email' | translate}}</div>
-          <div class="kValue">{{_data.email}}</div>
-        </div>
-
-        <div class="kDetailsRow">
-          <div class="kLabel">{{'app.contributors.topContributorsReport.creationDate' | translate}}</div>
-          <div class="kValue">{{_data.createdAt | date:'MM/d/yy'}}</div>
-        </div>
-
-
-      </div>
-    </ng-container>
-    <div *ngIf="_errorMessage" class="kErrorMessage">
-      {{_errorMessage}}
-    </div>
-  </k-area-blocker-->
   <div class="row">
     <div class="icon applause"></div>
     <span class="label">{{'app.entryWebcast.tools.applause' | translate}}</span>
-    <app-horizontal-bar-row [value]="32"></app-horizontal-bar-row>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Clap"></app-horizontal-bar-row>
   </div>
 
   <div class="row">
     <div class="icon laugh"></div>
     <span class="label">{{'app.entryWebcast.tools.laugh' | translate}}</span>
-    <app-horizontal-bar-row [value]="32"></app-horizontal-bar-row>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Smile"></app-horizontal-bar-row>
   </div>
 
   <div class="row">
     <div class="icon love"></div>
     <span class="label">{{'app.entryWebcast.tools.love' | translate}}</span>
-    <app-horizontal-bar-row [value]="32"></app-horizontal-bar-row>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Heart"></app-horizontal-bar-row>
   </div>
 
   <div class="row">
     <div class="icon wow"></div>
     <span class="label">{{'app.entryWebcast.tools.wow' | translate}}</span>
-    <app-horizontal-bar-row [value]="32"></app-horizontal-bar-row>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Wow"></app-horizontal-bar-row>
   </div>
 
   <div class="row">
     <div class="icon curious"></div>
     <span class="label">{{'app.entryWebcast.tools.curious' | translate}}</span>
-    <app-horizontal-bar-row [value]="32"></app-horizontal-bar-row>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Think"></app-horizontal-bar-row>
   </div>
-
 
 </div>

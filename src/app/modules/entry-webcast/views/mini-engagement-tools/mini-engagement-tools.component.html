@@ -4,7 +4,7 @@
     <!--a class="link" [class.disabled]="_isBusy" (click)="export()">{{'app.common.exportCsv' | translate}}</a-->
   </div>
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy || _loadingReport">
 
     <div class="kReportContent">
 
@@ -45,17 +45,17 @@
       <div class="kVal">
         <div class="kMiniIcon blue"><i class="icon-small-like"></i></div>
         <div class="kLabels">
-          <span class="value">{{_reactions}}</span>
-          <span class="title">{{'app.entryWebcast.tools.reactions' | translate}}</span>
-          <a class="link" [class.disabled]="!_reactions" (mouseenter)="_showReactionsBreakdown($event)" (mouseleave)="_hideReactionsBreakdown()">{{'app.entryWebcast.tools.breakdown' | translate}}</a>
+          <span class="value">{{_tabsData[0]?.value || 0}}</span>
+          <span class="title">{{_tabsData[0]?.title}}</span>
+          <a class="link" [class.disabled]="!_tabsData.length || _tabsData[0].value === '0'" (mouseenter)="_showReactionsBreakdown($event)" (mouseleave)="_hideReactionsBreakdown()">{{'app.entryWebcast.tools.breakdown' | translate}}</a>
         </div>
       </div>
 
       <div class="kVal">
         <div class="kMiniIcon blue"><i class="icon-calendar"></i></div>
         <div class="kLabels">
-          <span class="value">{{_added_to_calendar}}</span>
-          <span class="title">{{'app.entryWebcast.tools.added' | translate}}</span>
+          <span class="value">{{_tabsData[1]?.value || 0}}</span>
+          <span class="title">{{_tabsData[1]?.title}}</span>
         </div>
       </div>
 
@@ -66,6 +66,6 @@
 </div>
 
 <k-overlayPanel #overlay appendTo="body">
-  <app-reactions-breakdown-overlay></app-reactions-breakdown-overlay>
+  <app-reactions-breakdown-overlay #breakdown [ReactionsBreakdown]="_reactionsBreakdown"></app-reactions-breakdown-overlay>
 </k-overlayPanel>
 
