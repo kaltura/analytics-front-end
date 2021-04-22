@@ -29,6 +29,7 @@ import { WebcastDevicesComponent } from "./views/devices/devices.component";
 import { WebcastEntryPreviewComponent } from "./views/entry-preview/entry-preview.component";
 import { WebcastEntryUserEngagementComponent } from "./views/user-engagement/user-engagement.component";
 import { WebcastMiniLiveEngagementComponent } from "./views/mini-live-engagement/mini-live-engagement.component";
+import { ReactionsBreakdownOverlayComponent } from "./views/mini-engagement-tools/reactions-breakdown-overlay/reactions-breakdown-overlay.component";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { WebcastMiniLiveEngagementComponent } from "./views/mini-live-engagement
     EntryWebcastFilterComponent,
     DeviceFilterComponent,
     BrowserFilterComponent,
+    ReactionsBreakdownOverlayComponent,
     OsFilterComponent,
     WebcastMiniHighlightsComponent,
     WebcastMiniEngagementComponent,

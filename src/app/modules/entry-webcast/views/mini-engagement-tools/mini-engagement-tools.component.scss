@@ -16,15 +16,14 @@
       width: auto;
       padding-right: 0px;
     }
-    .link {
-      margin-left: auto;
-      margin-right: 24px;
-      &.disabled {
-        pointer-events: none;
-      }
+  }
+  .link {
+    margin-left: auto;
+    margin-right: 24px;
+    &.disabled {
+      pointer-events: none;
     }
   }
-
   .kDetails {
     margin-left: auto;
     white-space: nowrap;
