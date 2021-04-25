@@ -333,7 +333,7 @@ export class WebcastMiniEngagementToolsComponent extends WebcastBaseReportCompon
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
     if (this._tabsData.length && this._tabsData[0].value && parseInt(this._tabsData[0].value) > 0) {
-      this.loadReactionsBreakdown(parseInt(this._tabsData[0].value));
+      this.loadReactionsBreakdown(parseInt(this._tabsData[0].rawValue.toString()));
     }
   }
 
