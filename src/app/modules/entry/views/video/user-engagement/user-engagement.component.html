@@ -54,14 +54,10 @@
                 </span>
                 <ng-container *ngIf="!_isCompareMode || col === 'full_name'">
                   <span *ngIf="col !== 'avg_completion_rate' && col !== 'full_name' && col !== 'total_completion_rate'">{{data[col]}}</span>
-                  <a class="kTableColumn"
-                     tabindex="0"
-                     role="link"
+                  <span class="kTableColumn"
                      *ngIf="col === 'full_name'"
                      [kTooltip]="data[col]"
-                     [showOnEllipsis]="true"
-                     (keydown.enter)="_drillDown(data)"
-                     (click)="_drillDown(data)">{{data[col]}}</a>
+                     [showOnEllipsis]="true">{{data[col]}}</span>
                   <app-bullet *ngIf="col === 'avg_completion_rate'"
                               colorScheme="dropoff"
                               [value]="data['avg_completion_rate']"></app-bullet>
