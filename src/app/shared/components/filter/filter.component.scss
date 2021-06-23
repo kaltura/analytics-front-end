@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
 }
-.kMiscFilters ::ng-deep .ui-multiselect {
+.kMiscFilters ::ng-deep .p-multiselect {
   width: 100% !important;
 }
 app-location-filters ::ng-deep app-dropdown-filter{
@@ -74,7 +74,7 @@ app-location-filters ::ng-deep app-dropdown-filter{
   }
 }
 
-:host ::ng-deep .ui-autocomplete-multiple-container {
+:host ::ng-deep .p-autocomplete-multiple-container {
   min-height: 34px;
   padding: 3px 6px !important;
 }

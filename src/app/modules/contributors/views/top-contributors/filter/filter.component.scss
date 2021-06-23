@@ -74,11 +74,11 @@
 ktags {
   margin-left: 0 !important;
 }
-.kMultiselectFilter ::ng-deep .ui-multiselect {
+.kMultiselectFilter ::ng-deep .p-multiselect {
   width: 100% !important;
 }
 
-.kMultiselectFilter ::ng-deep .expandWidth .ui-multiselect {
+.kMultiselectFilter ::ng-deep .expandWidth .p-multiselect {
   width: 432px !important;
 }
 app-domains-filter, app-category-filter{
@@ -100,7 +100,7 @@ app-owners-filter, app-category-filter, app-country-filter {
     margin-right: 0;
   }
 
-  .ui-autocomplete-multiple-container {
+  .p-autocomplete-multiple-container {
     min-height: 34px;
     padding: 3px 6px !important;
   }

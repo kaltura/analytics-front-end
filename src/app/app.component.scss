@@ -6,7 +6,7 @@
   z-index: 1200;
 }
 
-:host ::ng-deep p-table .ui-table .ui-table-tbody > tr{
+:host ::ng-deep p-table .p-datatable .p-datatable-tbody > tr{
   > td {
     height: 48px;
     padding-left: 24px;
@@ -17,19 +17,19 @@
     }
   }
 }
-:host ::ng-deep p-table .ui-table .ui-table-thead > tr > th {
+:host ::ng-deep p-table .p-datatable .p-datatable-thead > tr > th {
   padding-left: 24px;
   &:last-child {
     padding-right: 24px;
   }
 }
-:host ::ng-deep p-table .ui-table .ui-widget-header.ui-table-scrollable-header {
+:host ::ng-deep p-table .p-datatable .p-widget-header.p-datatable-scrollable-header {
   height: inherit;
 }
-:host ::ng-deep p-table .ui-table .ui-table-tbody > tr > td:first-child {
+:host ::ng-deep p-table .p-datatable .p-datatable-tbody > tr > td:first-child {
   border-top: 1px solid #d9d9d9;
 }
-:host ::ng-deep p-table .ui-table .ui-table-thead {
+:host ::ng-deep p-table .p-datatable .p-datatable-thead {
   border-top: 1px solid #d9d9d9;
 }
 :host ::ng-deep p-table {
@@ -52,6 +52,6 @@
     }
   }
 }
-:host ::ng-deep p-paginator .ui-paginator.ui-widget-header.ui-unselectable-text {
+:host ::ng-deep p-paginator .p-paginator.p-widget-header.p-unselectable-text {
   height: 34px;
 }

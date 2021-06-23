@@ -5,17 +5,17 @@
 
   ::ng-deep {
 
-    .ui-widget-header {
+    .p-multiselect-header {
       height: 0;
       min-height: 0;
     }
-    .ui-multiselect-items-wrapper {
+    .p-multiselect-items-wrapper {
       overflow-x: hidden;
     }
-    .ui-multiselect-label{
+    .p-multiselect-label{
       white-space: nowrap;
     }
-    .ui-multiselect {
+    .p-multiselect {
       width: auto;
     }
   }

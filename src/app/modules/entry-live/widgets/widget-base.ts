@@ -6,7 +6,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { AnalyticsServerPollsBase, OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { TranslateService } from '@ngx-translate/core';
-import { OnDestroy } from '@angular/core';
+import {Directive, OnDestroy} from '@angular/core';
 
 export interface WidgetState {
   isBusy?: boolean;
@@ -15,6 +15,7 @@ export interface WidgetState {
   error?: KalturaAPIException;
 }
 
+@Directive()
 export abstract class WidgetBase<T = any> implements OnDestroy {
   protected _pollingSubscription: Unsubscribable;
   protected _data = new BehaviorSubject<T>(null);

@@ -9,7 +9,7 @@ import {
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable, of as ObservableOf, forkJoin } from 'rxjs';
+import { of as ObservableOf, forkJoin } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -122,7 +122,7 @@ export class CategoryMiniPageViewsComponent extends CategoryBase {
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         const contextCompareReportConfig = { reportType: this._reportType, filter: this._contextCompareFilter, pager: this._pager, order: this._order };
 
-        return Observable.forkJoin({
+        return forkJoin({
           compare: this._reportService.getReport(compareReportConfig, sections, false),
           contextCompare: this._reportService.getReport(contextCompareReportConfig, sections, false)
         })

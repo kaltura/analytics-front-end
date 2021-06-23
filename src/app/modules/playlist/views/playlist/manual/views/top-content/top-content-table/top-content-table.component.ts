@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { KalturaEntryStatus, KalturaFilterPager } from 'kaltura-ngx-client';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { NavigationDrillDownService } from 'shared/services';
 import { Subject } from 'rxjs';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
+import { OverlayPanel } from "primeng/overlaypanel";
 
 @Component({
   selector: 'manual-playlist-top-content',
@@ -28,7 +28,7 @@ export class ManualPlaylistTopContentTableComponent implements OnDestroy {
   @Input() firstTimeLoading = true;
   @Input() name = 'default';
 
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayPanel;
 
   private _paginationChanged = new Subject<void>();
   private _originalTable: TableRow<string>[] = [];

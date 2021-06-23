@@ -7,7 +7,7 @@
   background-color: $appBkgColor;
 }
 
-.kMiscFilters ::ng-deep .ui-multiselect {
+.kMiscFilters ::ng-deep .p-multiselect {
   width: 100% !important;
 }
 app-location-filters ::ng-deep app-dropdown-filter{
@@ -88,7 +88,7 @@ app-location-filters ::ng-deep app-dropdown-filter{
   }
   p-radioButton{
     margin-bottom: 8px;
-    ::ng-deep .ui-radiobutton-label {
+    ::ng-deep .p-radiobutton-label {
       font-size: 15px;
       font-weight: normal;
       color: $kGrayscale1;
@@ -99,7 +99,7 @@ app-checkboxes-list-filter {
   min-width: 206px;
 }
 
-:host ::ng-deep .ui-autocomplete-multiple-container {
+:host ::ng-deep .p-autocomplete-multiple-container {
   min-height: 34px;
   padding: 3px 6px !important;
 }

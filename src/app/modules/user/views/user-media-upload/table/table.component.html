@@ -56,6 +56,6 @@
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>
 </div>
 
-<k-overlayPanel #overlay appendTo="body">
+<p-overlayPanel [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" #overlay appendTo="body">
   <app-user-entry-details-overlay *ngIf="_entryData" [entryData]="_entryData"></app-user-entry-details-overlay>
-</k-overlayPanel>
+</p-overlayPanel>

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, TagsComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'src/app/shared/services';
@@ -23,38 +23,38 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
   @Input() set filterPlaceholder(value: string) {
     this._filterPlaceholder = value && typeof value === 'string' ? value : this._defaultPlaceholder;
   }
-  
+
   @Input() set value(value: CategoryData[]) {
     this._selectedCategories = value ? [...value] : [];
     this._treeSelection = value ? [...value.map(item => {
       return item.id;
     })] : [];
   }
-  
+
   @Output() valueChange = new EventEmitter<CategoryData[]>();
-  
+
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('tags') _tags: TagsComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete;
-  
+
   private _confirmClose = true;
   private _searchCategoriesSubscription: ISubscription;
   private _defaultTitle = this._translate.instant('app.categories.selectCategories');
   private _defaultPlaceholder = this._translate.instant('app.categories.searchCategories');
-  
+
   public _title: string = this._defaultTitle;
   public _filterPlaceholder: string = this._defaultPlaceholder;
   public _categoriesLoaded = false;
   public _treeSelection: number[] = [];
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
   public _selectedCategories: CategoryData[] = [];
-  
+
   constructor(private _categoriesSearchService: CategoriesSearchService,
               private _cdRef: ChangeDetectorRef,
               private _translate: TranslateService,
               private _browserService: BrowserService) {
   }
-  
+
   ngAfterViewInit() {
     setTimeout(() => {
       if (typeof this._tags !== 'undefined' && this._tags !== null) {
@@ -62,23 +62,23 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
       }
     }, 0);
   }
-  
+
   ngOnDestroy() {
     if (this._searchCategoriesSubscription) {
       this._searchCategoriesSubscription.unsubscribe();
       this._searchCategoriesSubscription = null;
     }
   }
-  
+
   public _apply(): void {
     this.valueChange.emit(this._selectedCategories);
-    
+
     if (this.parentPopupWidget) {
       this._confirmClose = false;
       this.parentPopupWidget.close({ isDirty: true });
     }
   }
-  
+
   public _cancel(): void {
     if (this.parentPopupWidget) {
       this._confirmClose = false;
@@ -88,7 +88,7 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
 
   public _onTreeCategoriesLoad({ totalCategories }): void {
     this._categoriesLoaded = totalCategories > 0;
-    
+
     if (this._categoriesLoaded) {
       this._autoComplete.focusInput();
     }
@@ -96,27 +96,27 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
       this._categoriesTree.expandNode(category.id);
     });
   }
-  
+
   public _onAutoCompleteSearch(event): void {
     this._categoriesProvider.next({ suggestions: [], isLoading: true });
-    
+
     if (this._searchCategoriesSubscription) {
       // abort previous request
       this._searchCategoriesSubscription.unsubscribe();
       this._searchCategoriesSubscription = null;
     }
-    
+
     this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query, this.rootCategoryId).subscribe(data => {
         const suggestions = [];
         const entryCategories = this._selectedCategories || [];
-        
+
         (data || []).forEach(suggestedCategory => {
           const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
-          
+
           const isSelectable = !entryCategories.find(category => {
             return category.id === suggestedCategory.id;
           });
-          
+
           suggestions.push({ name: label, isSelectable: isSelectable, item: suggestedCategory });
         });
         this._categoriesProvider.next({ suggestions: suggestions, isLoading: false });
@@ -129,49 +129,49 @@ export class CategoriesSelectorComponent implements OnDestroy, AfterViewInit {
         });
       });
   }
-  
+
   public _onAutoCompleteSelected(): void {
     this._confirmClose = true;
     const selectedItem: CategoryData = this._autoComplete.getValue();
-    
+
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
       const selectedCategoryIndex = this._selectedCategories.findIndex(item => String(item.id) === String(selectedItem.id));
-      
+
       if (selectedCategoryIndex === -1) {
         this._selectedCategories.push(selectedItem);
       }
-      
+
       const treeSelectionIndex = this._treeSelection.findIndex(item => String(item) === String(selectedItem.id));
-      
+
       if (treeSelectionIndex === -1) {
         this._treeSelection = [...this._treeSelection, selectedItem.id];
-        
+
         this._categoriesTree.expandNode(selectedItem.id);
       }
     }
-    
+
     // clear user text from component
     this._autoComplete.clearValue();
   }
-  
+
   public _onCategoryUnselected(node: number): void {
     this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
     const requestedCategoryTreeIndex = this._treeSelection.findIndex(item => item === node);
-    
+
     if (requestedCategoryIndex > -1 && requestedCategoryTreeIndex > -1) {
       this._selectedCategories.splice(requestedCategoryIndex, 1);
       this._treeSelection.splice(requestedCategoryTreeIndex, 1);
     }
   }
-  
+
   public _onCategorySelected(node: number): void {
     this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
-    
+
     if (requestedCategoryIndex === -1) {
       const categoryData = this._categoriesSearchService.getCachedCategory(node);
-      
+
       if (categoryData) {
         this._selectedCategories.push(categoryData);
       } else {

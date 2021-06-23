@@ -93,11 +93,11 @@
   }
 }
 
-:host ::ng-deep .ui-multiselect-item {
+:host ::ng-deep .p-multiselect-item {
   display: flex;
   align-items: center;
 }
-:host ::ng-deep .ui-multiselect-panel .ui-multiselect-items-wrapper {
+:host ::ng-deep .p-multiselect-panel .p-multiselect-items-wrapper {
   overflow-x: hidden;
 }
 
@@ -126,16 +126,16 @@
 }
 
 :host ::ng-deep .kTableModeSelector {
-  .ui-dropdown {
+  .p-dropdown {
     width: 164px !important;
   }
 
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {
       position: absolute;
-      right: 3px;
+      right: 8px;
       top: 9px;
     }
   }

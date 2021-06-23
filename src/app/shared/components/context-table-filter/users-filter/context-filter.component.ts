@@ -9,7 +9,6 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
   selector: 'app-context-filter',
   template: `
       <kAutoComplete #searchContext
-                     appendTo="body"
                      suggestionItemField="item"
                      suggestionLabelField="name"
                      field="screenName"
@@ -26,32 +25,32 @@ export class ContextFilterComponent implements OnDestroy {
       this._selectedContext = value;
     }
   }
-  
+
   @Output() itemSelected = new EventEmitter();
-  
+
   @ViewChild('searchContext') _autoComplete: AutoComplete = null;
-  
+
   private _selectedContext: KalturaCategory[] = [];
   private _searchCategorySubscription: Unsubscribable;
-  
+
   public _contextProvider = new Subject<SuggestionsProviderData>();
-  
+
   constructor(private _kalturaServerClient: KalturaClient) {
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   public _searchContexts(event, formControl?): void {
     this._contextProvider.next({ suggestions: [], isLoading: true });
-    
+
     if (this._searchCategorySubscription) {
       // abort previous request
       this._searchCategorySubscription.unsubscribe();
       this._searchCategorySubscription = null;
     }
-    
+
     this._searchCategorySubscription = this._searchCategoriesRequest(event.query).subscribe(data => {
         const suggestions = [];
         (data || []).forEach((suggestedCategory: KalturaCategory) => {
@@ -72,19 +71,19 @@ export class ContextFilterComponent implements OnDestroy {
         this._contextProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
   }
-  
+
   public _onSuggestionSelected(): void {
-    
+
     const selectedItem = this._autoComplete.getValue() as KalturaCategory;
     // clear category text from component
     this._autoComplete.clearValue();
-    
+
     if (selectedItem && !(this._selectedContext || []).find(category => category.id === selectedItem.id)) {
       this._selectedContext.push(selectedItem);
       this.itemSelected.emit(selectedItem);
     }
   }
-  
+
   private _searchCategoriesRequest(text: string): Observable<KalturaCategory[]> {
     return this._kalturaServerClient
       .request(

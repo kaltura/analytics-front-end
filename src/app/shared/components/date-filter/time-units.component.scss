@@ -1,9 +1,9 @@
 ::ng-deep p-selectbutton {
-  .ui-button {
+  .p-button {
     width: auto;
   }
 
-  .ui-state-focus {
+  .p-state-focus {
     z-index: 10;
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }

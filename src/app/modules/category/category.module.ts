@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { routing } from './category.routes';
 import { CategoryViewComponent } from './category-view.component';
 import { SharedModule } from 'shared/shared.module';
@@ -43,6 +43,7 @@ import { SubcategoryDetailsOverlayComponent } from "./views/subcategories/subcat
     DropdownModule,
     ButtonModule,
     PaginatorModule,
+    OverlayPanelModule,
     SharedModule,
     TableModule,
     RadioButtonModule,

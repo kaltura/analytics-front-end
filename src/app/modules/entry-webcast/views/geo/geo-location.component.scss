@@ -82,16 +82,16 @@
 }
 
 :host ::ng-deep .kTableModeSelector {
-  .ui-dropdown {
+  .p-dropdown {
     width: 164px !important;
   }
 
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {
       position: absolute;
-      right: 3px;
+      right: 8px;
       top: 9px;
     }
   }

@@ -8,8 +8,8 @@ import { ErrorsManagerService, NavigationDrillDownService} from 'shared/services
 import { SortEvent } from 'primeng/api';
 import { analyticsConfig } from 'configuration/analytics-config';
 import * as moment from 'moment';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { skip } from 'rxjs/operators';
+import { OverlayPanel } from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-live-entries-ended',
@@ -20,7 +20,7 @@ import { skip } from 'rxjs/operators';
   ]
 })
 export class EndedComponent implements OnInit, OnDestroy {
-  @ViewChild('overlay') _overlay: OverlayComponent;
+  @ViewChild('overlay') _overlay: OverlayPanel;
 
   public _tableData: TableRow[] = [];
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 10 });

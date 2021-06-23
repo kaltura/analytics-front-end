@@ -4,8 +4,8 @@ import { SortEvent } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { KalturaEntryStatus, KalturaPager } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { OverlayComponent } from 'shared/components/overlay/overlay.component';
 import { EntryDetailsOverlayData } from 'shared/components/entry-details-overlay/entry-details-overlay.component';
+import { OverlayPanel } from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-user-media-upload-table',
@@ -25,24 +25,24 @@ export class UserMediaUploadTableComponent {
   @Input() pager: KalturaPager;
   @Input() areaBlockerMessage: AreaBlockerMessage;
   @Input() isBusy: boolean;
-  
+
   @Output() drillDown = new EventEmitter<TableRow<string>>();
   @Output() sortChanged = new EventEmitter<SortEvent>();
   @Output() paginationChanged = new EventEmitter<{ page: number, pageCount: number, rows: TableRow<string>, first: number }>();
-  
-  @ViewChild('overlay') _overlay: OverlayComponent;
-  
+
+  @ViewChild('overlay') _overlay: OverlayPanel;
+
   private _paginationChanged = new Subject<void>();
   private _timeoutId = null;
-  
+
   public _entryData: EntryDetailsOverlayData;
   public _paginationChanged$ = this._paginationChanged.asObservable();
-  
+
   public _onPaginationChanged(event: { page: number, pageCount: number, rows: TableRow<string>, first: number }): void {
     this._paginationChanged.next();
     this.paginationChanged.emit(event);
   }
-  
+
   public _showOverlay(event: MouseEvent, entryId: string): void {
     if (this._overlay) {
       this._entryData = this.entryDetails.find(({ object_id }) => entryId === object_id);
@@ -56,7 +56,7 @@ export class UserMediaUploadTableComponent {
       }
     }
   }
-  
+
   public _hideOverlay(): void {
     if (this._overlay) {
       this._entryData = null;

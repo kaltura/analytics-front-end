@@ -3,11 +3,11 @@
   width: 100%;
   flex-direction: column;
 
-  ::ng-deep .ui-multiselect {
+  ::ng-deep .p-multiselect {
     width: 100% !important;
   }
 
-  ::ng-deep .expandWidth .ui-multiselect {
+  ::ng-deep .expandWidth .p-multiselect {
     width: 432px !important;
   }
 
@@ -22,14 +22,14 @@
 /* responsive design */
 @media (max-width: 1280px) {
   :host {
-    ::ng-deep .ui-multiselect {
+    ::ng-deep .p-multiselect {
       width: 240px;
     }
   }
 }
 @media (max-width: 991px) {
   :host {
-    ::ng-deep .ui-multiselect {
+    ::ng-deep .p-multiselect {
       width: 180px;
     }
   }

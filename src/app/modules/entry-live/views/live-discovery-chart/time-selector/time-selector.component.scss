@@ -63,46 +63,41 @@
     height: 100%;
     overflow: hidden;
 
-    &.kPreset {
+    &.kPreset{
       display: flex;
-      align-items: flex-start;
-
-      .col {
+      .col{
         width: 50%;
         display: flex;
         flex-direction: column;
-
-        .kTitle {
-          font-size: 14px;
+        .kTitle{
+          font-size:14px;
           color: $kGrayscale3;
           padding-left: 24px;
           margin-bottom: 8px;
         }
-
-        p-radiobutton {
+        p-radiobutton{
+          position: relative;
           width: 100%;
           height: 32px;
           box-sizing: border-box;
           cursor: pointer;
-
-          &:hover {
+          overflow: hidden;
+          &:hover{
             background-color: $kGrayscale6;
           }
-
-          ::ng-deep .ui-radiobutton {
-            float: right;
-            margin-right: 16px;
-
-            .ui-radiobutton-box {
+          ::ng-deep .p-radiobutton{
+            position: absolute;
+            right: 16px;
+            top: 0px;
+            .p-radiobutton-box{
               display: none;
-
-              &.ui-state-active {
+              &.p-highlight{
                 display: block;
                 border: none;
                 margin-top: 7px;
                 background: transparent;
-
-                .pi-circle-on:before {
+                .p-radiobutton-icon:before {
+                  font-family: "kmcng-icon-pack";
                   content: "\e91c";
                   color: $kGrayscale1;
                   font-size: 14px;
@@ -110,17 +105,15 @@
               }
             }
           }
-
-          ::ng-deep .ui-radiobutton-label {
+          ::ng-deep .p-radiobutton-label{
             font-weight: normal;
             margin-left: 24px;
             display: block;
             width: 100%;
-            height: 36px;
+            height: 24px;
             padding-top: 7px;
             cursor: pointer;
-
-            &.ui-label-active {
+            &.p-radiobutton-label-active{
               font-weight: 700;
             }
           }
@@ -135,14 +128,14 @@
       flex-direction: column;
       overflow: visible;
       .kMainCalendar {
-        ::ng-deep .ui-calendar .ui-datepicker {
+        ::ng-deep .p-calendar .p-datepicker {
           width: 405px;
           border-bottom: none;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
           border-left: none;
 
-          .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover {
+          .p-datepicker-calendar td:not(.p-state-disabled) a:hover {
             background-color: $kPrimary;
           }
         }
@@ -151,12 +144,12 @@
       .kTimeSelectorsGroup {
         display: flex;
 
-        p-calendar ::ng-deep .ui-calendar .ui-datepicker {
+        p-calendar ::ng-deep .p-calendar .p-datepicker {
           width: 202.5px;
           border-top: none;
           border-bottom: 1px solid #d9d9d9;
           border-radius: 0 0 3px 3px;
-          .ui-hour-picker a span, .ui-minute-picker a span , .ui-separator a span {
+          .p-hour-picker a span, .p-minute-picker a span , .p-separator a span {
             line-height: 2.4em;
           }
         }
@@ -174,20 +167,20 @@
             }
 
             &.kLeft {
-              ::ng-deep .ui-calendar .ui-datepicker {
+              ::ng-deep .p-calendar .p-datepicker {
                 border-bottom-right-radius: 0;
                 border-right: none;
               }
             }
 
             &.kRight {
-              ::ng-deep .ui-calendar .ui-datepicker {
+              ::ng-deep .p-calendar .p-datepicker {
                 border-bottom-left-radius: 0;
               }
             }
 
-            ::ng-deep .ui-timepicker {
-              padding-left: 50px;
+            ::ng-deep .p-timepicker {
+              padding-left: 90px;
               padding-top: 0px;
               padding-bottom: 0px;
               >div a:last-child {
@@ -228,7 +221,7 @@
       width: 100%;
       margin-left: 24px;
       margin-right: 24px;
-      .ui-button {
+      .p-button {
         min-width: 147px;
         width: 100%;
       }
@@ -258,14 +251,14 @@
 }
 
 :host ::ng-deep {
-  .ui-state-focus {
+  .p-state-focus {
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 }
-::ng-deep .ui-button{
+::ng-deep .p-button{
   height: auto;
   min-height: 34px;
-  .ui-button-text {
+  .p-button-text {
     line-height: 16px;
   }
 }
