@@ -106,6 +106,7 @@
        class="kReportContainer">
     <app-syndication [dateFilterComponent]="dateFilter"
                      [dateFilter]="_dateFilter"
+                     (onDrillDown)="_onDrillDown($event)"
                      [refineFilter]="_refineFilter"></app-syndication>
   </div>
 </div>
