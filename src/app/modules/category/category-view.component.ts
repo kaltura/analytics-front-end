@@ -216,4 +216,13 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
+  public _onDrillDown(event: string): void {
+    let update: Partial<ExportItem> = {};
+    if (event) {
+      update.objectIds = event;
+    }
+
+    this._exportConfig = CategoryExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'syndication', update);
+  }
+
 }
