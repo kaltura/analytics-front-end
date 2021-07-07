@@ -565,7 +565,8 @@
         "laugh": "Laugh",
         "love": "Love",
         "wow": "Wow",
-        "curious": "Curious"
+        "curious": "Curious",
+        "custom": "Custom"
       },
       "insights": {
         "title": "Insights",

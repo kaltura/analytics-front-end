@@ -30,8 +30,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from "configuration/analytics-config";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {OverlayComponent} from "shared/components/overlay/overlay.component";
-import { MiniEngagementToolsConfig } from './mini-engagement-tools.config';
-import { ReactionsBreakdownConfig } from './reactions-breakdown-overlay/reactions-breakdown.config';
+import {MiniEngagementToolsConfig} from './mini-engagement-tools.config';
+import {ReactionsBreakdown, ReactionsBreakdownConfig} from './reactions-breakdown-overlay/reactions-breakdown.config';
 import {WebcastBaseReportComponent} from "../webcast-base-report/webcast-base-report.component";
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import {reportTypeMap} from "shared/utils/report-type-map";
@@ -85,7 +85,7 @@ export class WebcastMiniEngagementToolsComponent extends WebcastBaseReportCompon
   public _announcements = 0;
   public _answer_on_air = 0;
 
-  public _reactionsBreakdown = {
+  public _reactionsBreakdown: ReactionsBreakdown = {
     Clap: 0,
     Smile: 0,
     Wow: 0,

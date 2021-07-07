@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {ReactionsBreakdown} from "./reactions-breakdown.config";
 
 @Component({
   selector: 'app-reactions-breakdown-overlay',
@@ -14,7 +15,7 @@ export class ReactionsBreakdownOverlayComponent {
     this._reactionsBreakdown = breakdown;
   }
 
-  public _reactionsBreakdown = {
+  public _reactionsBreakdown: ReactionsBreakdown = {
     Clap: 0,
     Smile: 0,
     Wow: 0,
