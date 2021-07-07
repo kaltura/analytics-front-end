@@ -171,6 +171,7 @@
           <app-syndication [dateFilterComponent]="dateFilter"
                            [dateFilter]="_dateFilter"
                            [categoryId]="_category?.id.toString()"
+                           (onDrillDown)="_onDrillDown($event)"
                            [refineFilter]="_refineFilter"></app-syndication>
         </div>
 
