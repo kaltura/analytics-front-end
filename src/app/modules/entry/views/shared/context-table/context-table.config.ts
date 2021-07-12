@@ -40,7 +40,7 @@ export class ContextTableConfig extends ReportDataBaseConfig {
             sortOrder: 5,
           },
           'avg_completion_rate': {
-            format: value => ReportHelper.percents(value, true, true),
+            format: value => ReportHelper.percents(value / 100, true, true),
             sortOrder: 6,
           },
           'avg_view_drop_off': {
