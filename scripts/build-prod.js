@@ -20,6 +20,18 @@ catch (error) {
   process.exit(1);
 }
 
+// STEP: check existence of tag with the version
+try {
+  const tagExistence = execSync(`git tag -l "v${versionNumber}"`).toString();
+  if (tagExistence) {
+    console.error('tag has been already created');
+    process.exit(1);
+  }
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+}
+
 const packageRoot = findRoot(process.cwd());
 if (!packageRoot) throw new Error("couldn't find package root");
 
@@ -48,7 +60,7 @@ try {
   execSync(`git commit -m "bump analytics version to v${versionNumber}"`);
 }
 catch (error) {
-  console.error('it seems that you cannot make a commit');
+  console.error('Git commit operation failed. Verify you are logged into Github and have permissions to commit to this repository');
   process.exit(1);
 }
 
@@ -57,7 +69,7 @@ try {
   execSync(`git push origin"`);
 }
 catch (error) {
-  console.error('it seems that you cannot make a push');
+  console.error('Git push operation failed. Verify you are logged into Github and have permissions to push to this repository');
   process.exit(1);
 }
 
@@ -97,7 +109,7 @@ try {
   execSync(`zip -r ${zipName} v${versionNumber}/ -x "*.DS_Store" -x "__MACOSX"`, opts);
 }
 catch (error) {
-  console.error('making zip error');
+  console.error('Zip creation error: ', error);
   process.exit(1);
 }
 
@@ -124,11 +136,11 @@ catch (error) {
 // STEP: release new version to GitHub and upload zip
 const zipPath = path.resolve(packageRoot, `dist/${zipName}`);
 try {
-  execSync(`/usr/local/bin/gh release create v${versionNumber} ${zipPath} --draft --title "KMC Analytics v${versionNumber}"`);
+  execSync(`/usr/local/bin/gh release create v${versionNumber} ${zipPath} --title "KMC Analytics v${versionNumber}"`);
 }
 catch (error) {
   console.error('cannot upload release');
   process.exit(1);
 }
 
-console.log(`https://github.com/kaltura/analytics-front-end/releases/tag/v${versionNumber}`);
+console.log('\x1b[32m%s\x1b[0m', `Version created successfully! You can find the new release here: https://github.com/kaltura/analytics-front-end/releases/tag/v${versionNumber}`);
