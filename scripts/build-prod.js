@@ -119,7 +119,7 @@ try {
   execSync(`git tag v${versionNumber}`);
 }
 catch (error) {
-  console.error('cannot create tag');
+  console.error('cannot create tag: ', error);
   process.exit(1);
 }
 
@@ -129,17 +129,17 @@ try {
   execSync(`git push origin v${versionNumber}`);
 }
 catch (error) {
-  console.error('cannot push tag');
+  console.error('Git push operation failed. Verify you are logged into Github and have permissions to push to this repository');
   process.exit(1);
 }
 
 // STEP: release new version to GitHub and upload zip
 const zipPath = path.resolve(packageRoot, `dist/${zipName}`);
 try {
-  execSync(`/usr/local/bin/gh release create v${versionNumber} ${zipPath} --title "KMC Analytics v${versionNumber}"`);
+  execSync(`gh release create v${versionNumber} ${zipPath} --title "KMC Analytics v${versionNumber}"`);
 }
 catch (error) {
-  console.error('cannot upload release');
+  console.error('cannot upload release: ', error);
   process.exit(1);
 }
 
