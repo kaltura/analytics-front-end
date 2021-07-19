@@ -638,7 +638,7 @@
       "engagedUsers": "Engaged Users",
       "engagedUsersHelpTip": "Users with tab and sound on or in full screen divided by the total users viewing",
       "usersBuffering": "Avg. Buffer Rate",
-      "usersBufferingHelpTip": "Users that are experiencing buffering issue of over 1 second divided by total users",
+      "usersBufferingHelpTip": "The time viewers player buffered / total viewed time",
       "downstreamBandwidth": "Downstream Bandwidth",
       "downstreamBW": "Downstream BW",
       "downstreamBandwidthHelpTip": "The size of the downloaded media divided by seconds",
