@@ -1,0 +1,104 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: $appBkgColor;
+}
+
+.kRefineFilters {
+  width: 100%;
+  height: auto;
+  margin-bottom: 0 !important;
+
+  .kRefineFiltersMain {
+    height: 100%;
+
+    .kFilterContainer {
+      padding: 32px 24px 0 24px;
+      display: flex;
+      flex-direction: column;
+
+      .kFilterContainerRow {
+        display: flex;
+      }
+
+      .kFilterContainerCol {
+        display: flex;
+        flex-direction: column;
+        width: 33%;
+        flex: 0 0 auto;
+        &:not(:first-child) {
+          padding-left: 24px;
+          box-sizing: border-box;
+        }
+      }
+
+      .kListFilters {
+        display: flex;
+
+        .kLastItem {
+          margin-right: 18px !important;
+        }
+      }
+
+      .kMiscFilters {
+        display: flex;
+        flex-direction: column;
+        width: 432px;
+      }
+    }
+
+    .kGroupTitle {
+      display: inline-block;
+      color: $kGrayscale3;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .kRefineFiltersFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 66px;
+      padding: 0 24px;
+      margin-top: 8px;
+      button {
+        width: 100px;
+      }
+    }
+  }
+}
+
+app-category-filter{
+  margin-top: 20px;
+}
+
+app-owners-filter, app-category-filter, app-country-filter, app-webcast-device-filter, app-webcast-browser-filter {
+  display: block;
+  width: 100%;
+  padding-right: 24px;
+}
+
+:host ::ng-deep {
+
+  app-autocomplete-filter {
+    margin: 0;
+  }
+
+  app-dropdown-filter {
+    margin: 0;
+    margin-bottom: 24px;
+  }
+
+  .ui-autocomplete-multiple-container {
+    min-height: 34px;
+    padding: 3px 6px !important;
+  }
+
+  ktags {
+    margin: 0 !important;
+  }
+}
