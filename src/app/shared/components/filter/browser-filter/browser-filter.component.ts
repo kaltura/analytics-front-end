@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { DeviceFilterService } from './device-filter.service';
+import { BrowserFilterService } from './browser-filter.service';
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import {OptionItem} from "shared/components/filter/filter.component";
 
 export interface DeviceFilterValueItem {
   name: string;
@@ -9,33 +10,40 @@ export interface DeviceFilterValueItem {
 }
 
 @Component({
-  selector: 'app-webcast-device-filter',
-  templateUrl: './device-filter.component.html',
-  styleUrls: ['./device-filter.component.scss'],
-  providers: [DeviceFilterService]
+  selector: 'app-webcast-browser-filter',
+  templateUrl: './browser-filter.component.html',
+  styleUrls: ['./browser-filter.component.scss'],
+  providers: [BrowserFilterService]
 })
-export class DeviceFilterComponent implements OnDestroy {
+export class BrowserFilterComponent implements OnDestroy {
   @Input() set selectedFilters(value: DeviceFilterValueItem[]) {
     if (Array.isArray(value) && value.length) {
-      this._selectedDevices = value;
+      this._selectedBrowsers = value;
       this._setDiffer();
     } else {
-      this._selectedDevices = [];
+      this._selectedBrowsers = [];
     }
+  }
+
+  @Input() set predefinedBrowsers(value: string[]) {
+    this._predefinedBrowsers = value.map((data, index) => ({
+      value: { name: data, id: index.toString() },
+      label: data,
+    }));
   }
 
   @Input() set dateFilter(event: DateChangeEvent) {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
-      this._devicesFilterService.updateDateFilter(event, () => {
-        this._selectedDevices = [];
+      this._browsersFilterService.updateDateFilter(event, () => {
+        this._selectedBrowsers = [];
       });
     }, 0);
   }
 
   @Input() set filterConfig (config: FilterConfig) {
     if (config) {
-      this._devicesFilterService.filterConfig = config;
+      this._browsersFilterService.filterConfig = config;
     }
   }
 
@@ -44,10 +52,12 @@ export class DeviceFilterComponent implements OnDestroy {
 
   private _listDiffer: IterableDiffer<any>;
 
-  public _selectedDevices: DeviceFilterValueItem[];
+  public _selectedBrowsers: DeviceFilterValueItem[];
+  public _predefinedBrowsers: OptionItem[];
+
 
   constructor(private _listDiffers: IterableDiffers,
-              public _devicesFilterService: DeviceFilterService) {
+              public _browsersFilterService: BrowserFilterService) {
     this._setDiffer();
   }
 
@@ -57,15 +67,15 @@ export class DeviceFilterComponent implements OnDestroy {
 
   private _setDiffer(): void {
     this._listDiffer = this._listDiffers.find([]).create();
-    this._listDiffer.diff(this._selectedDevices);
+    this._listDiffer.diff(this._selectedBrowsers);
   }
 
   public _onItemSelected(items: { id: string, name: string }[], type: string): void {
-    if (type !== 'device') {
+    if (type !== 'browser') {
       return;
     }
 
-    this._selectedDevices = items;
+    this._selectedBrowsers = items;
 
     const changes = this._listDiffer.diff(items);
 

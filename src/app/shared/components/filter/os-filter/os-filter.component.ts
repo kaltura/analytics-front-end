@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, I
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { OsFilterService } from './os-filter.service';
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import {OptionItem} from "shared/components/filter/filter.component";
 
 export interface OsFilterValueItem {
   name: string;
@@ -22,6 +23,13 @@ export class OsFilterComponent implements OnDestroy {
     } else {
       this._selectedOs = [];
     }
+  }
+
+  @Input() set predefinedOSs(value: string[]) {
+    this._predefinedOSs = value.map((data, index) => ({
+      value: { name: data, id: index.toString() },
+      label: data,
+    }));
   }
 
   @Input() set dateFilter(event: DateChangeEvent) {
@@ -45,6 +53,7 @@ export class OsFilterComponent implements OnDestroy {
   private _listDiffer: IterableDiffer<any>;
 
   public _selectedOs: OsFilterValueItem[];
+  public _predefinedOSs: OptionItem[];
 
   constructor(private _listDiffers: IterableDiffers,
               public _osFilterService: OsFilterService) {

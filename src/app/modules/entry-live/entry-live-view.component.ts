@@ -1,29 +1,30 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient, KalturaNullableBoolean, KalturaReportType, KalturaSourceType } from 'kaltura-ngx-client';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { filter, map } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
-import { EntryLiveService, KalturaExtendedLiveEntry } from './entry-live.service';
-import { EntryLiveWidget } from './entry-live.widget';
-import { WidgetsManager } from './widgets/widgets-manager';
-import { LiveUsersWidget } from './views/live-users/live-users.widget';
-import { LiveBandwidthWidget } from './views/live-bandwidth/live-bandwidth.widget';
-import { LiveStreamHealthWidget } from './views/live-stream-health/live-stream-health.widget';
-import { LiveGeoWidget } from './views/live-geo/live-geo.widget';
-import { LiveDevicesWidget } from './views/live-devices/live-devices.widget';
-import { LiveDiscoveryWidget } from './views/live-discovery-chart/live-discovery.widget';
-import { EntryLiveExportConfig } from './entry-live-export.config';
-import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import { LiveDiscoveryTableWidget } from './views/live-discovery-table/live-discovery-table.widget';
-import { defaultDateRange, FiltersService } from './views/live-discovery-chart/filters/filters.service';
-import { DateChangeEvent, TimeSelectorService } from './views/live-discovery-chart/time-selector/time-selector.service';
-import { DateFiltersChangedEvent } from './views/live-discovery-chart/filters/filters.component';
-import { TimeSelectorComponent } from './views/live-discovery-chart/time-selector/time-selector.component';
-import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analytics-permissions.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {KalturaClient, KalturaNullableBoolean, KalturaReportType, KalturaSourceType} from 'kaltura-ngx-client';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {filter, map} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import {EntryLiveService, KalturaExtendedLiveEntry} from './entry-live.service';
+import {EntryLiveWidget} from './entry-live.widget';
+import {WidgetsManager} from './widgets/widgets-manager';
+import {LiveUsersWidget} from './views/live-users/live-users.widget';
+import {LiveBandwidthWidget} from './views/live-bandwidth/live-bandwidth.widget';
+import {LiveStreamHealthWidget} from './views/live-stream-health/live-stream-health.widget';
+import {LiveGeoWidget} from './views/live-geo/live-geo.widget';
+import {LiveDevicesWidget} from './views/live-devices/live-devices.widget';
+import {LiveDiscoveryWidget} from './views/live-discovery-chart/live-discovery.widget';
+import {EntryLiveExportConfig} from './entry-live-export.config';
+import {ExportItem} from 'shared/components/export-csv/export-config-base.service';
+import {LiveDiscoveryTableWidget} from './views/live-discovery-table/live-discovery-table.widget';
+import {defaultDateRange, FiltersService} from './views/live-discovery-chart/filters/filters.service';
+import {DateChangeEvent, TimeSelectorService} from './views/live-discovery-chart/time-selector/time-selector.service';
+import {DateFiltersChangedEvent} from './views/live-discovery-chart/filters/filters.component';
+import {TimeSelectorComponent} from './views/live-discovery-chart/time-selector/time-selector.component';
+import {AnalyticsPermissionsService} from 'shared/analytics-permissions/analytics-permissions.service';
+import {RefineFilter} from 'shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-entry-live',
@@ -58,6 +59,9 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _entryLiveViewConfig = analyticsConfig.viewsConfig.entryLive;
   public _isManual = false;
   public _manualLiveOnline = false;
+  public _refineFilterOpened = false;
+  public _refineFilter: RefineFilter = null;
+  public _selectedRefineFilters: RefineFilter = null;
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -86,11 +90,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     this._route.params
       .pipe(
         cancelOnDestroy(this),
-        map(({ id }) => id || null)
+        map(({id}) => id || null)
       )
       .subscribe(entryId => {
         this._entryId = entryId;
-        this._entryLiveWidget.activate({ entryId });
+        this._entryLiveWidget.activate({entryId});
       });
 
     this._entryLiveWidget.state$
@@ -133,11 +137,25 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
   // DO NOT register to entry data widget here!
   // register to all other widgets only once after entry data is received
-  private _registerWidgets(): void {
-    if (!this._widgetsRegistered) {
+  private _registerWidgets(force = false): void {
+    if (!this._widgetsRegistered || force) {
       this._widgetsRegistered = true;
 
-      const widgetArgs = { entryId: this._entryId };
+      let countryIn, regionIn, citiesIn = '';
+      const locationArgs = this._refineFilter?.find(f => f.type === 'location');
+      if (locationArgs) {
+        countryIn = locationArgs.value.country.map(c => c.name).join(analyticsConfig.valueSeparator);
+        regionIn = locationArgs.value.region.map(c => c.name).join(analyticsConfig.valueSeparator);
+        citiesIn = locationArgs.value.city.map(c => c.name).join(analyticsConfig.valueSeparator);
+      }
+      const deviceIn = this._refineFilter?.filter(f => f.type === 'devices').map(f => f.value.name).join(analyticsConfig.valueSeparator);
+      const operatingSystemIn = this._refineFilter?.filter(f => f.type === 'os').map(f => f.value.name).join(analyticsConfig.valueSeparator);
+      const browserIn = this._refineFilter?.filter(f => f.type === 'browser').map(f => f.value.name).join(analyticsConfig.valueSeparator);
+      const userIds = this._refineFilter?.filter(filter => filter.type === 'users')
+        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
+        .join(analyticsConfig.valueSeparator);
+
+      const widgetArgs = {entryId: this._entryId, countryIn, regionIn, citiesIn, deviceIn, operatingSystemIn, browserIn, userIds};
       const widgets = [];
       const silentWidgets = [];
 
@@ -181,7 +199,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
 
   public _onGeoDrilldown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
-    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
+    let update: Partial<ExportItem> = {reportType: event.reportType, additionalFilters: {}};
 
     if (event.drillDown && event.drillDown.length > 0) {
       update.additionalFilters.countryIn = event.drillDown[0];
@@ -195,20 +213,20 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   }
 
   public _onTableModeChange(reportType: KalturaReportType): void {
-    const currentValue = this._exportConfig.find(({ id }) => id === 'discovery');
-    const table = currentValue.items.find(({ id }) => id === 'table');
+    const currentValue = this._exportConfig.find(({id}) => id === 'discovery');
+    const table = currentValue.items.find(({id}) => id === 'table');
     const tableIndex = currentValue.items.indexOf(table);
 
     table.reportType = reportType;
 
-    const update = { items: [...currentValue.items.slice(0, tableIndex), table, ...currentValue.items.slice(tableIndex + 1)] };
+    const update = {items: [...currentValue.items.slice(0, tableIndex), table, ...currentValue.items.slice(tableIndex + 1)]};
 
     this._exportConfig = EntryLiveExportConfig.updateConfig(this._exportConfig, 'discovery', update);
   }
 
   public _onDiscoveryDateFilterChange(event: DateFiltersChangedEvent): void {
     this._exportConfig
-      .filter(({ id }) => ['discovery', 'geo', 'devices'].indexOf(id) !== -1)
+      .filter(({id}) => ['discovery', 'geo', 'devices'].indexOf(id) !== -1)
       .forEach(currentValue => {
         let update;
         if (currentValue.items) {
@@ -222,7 +240,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
             }
             return item;
           });
-          update = { items };
+          update = {items};
         } else {
           if (event.isPresetMode) {
             update = {
@@ -257,5 +275,12 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
     if (this._isManual) {
       this._manualLiveOnline = isLive;
     }
+  }
+
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
+
+    this._widgetsManager.deactivateAll();
+    this._registerWidgets(true);
   }
 }

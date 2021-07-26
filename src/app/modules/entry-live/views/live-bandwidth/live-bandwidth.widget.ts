@@ -38,11 +38,13 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveBandwidthRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveBandwidthRequestFactory(this._activationArgs.entryId, this._activationArgs.countryIn, this._activationArgs.regionIn, this._activationArgs.citiesIn,
+      this._activationArgs.deviceIn, this._activationArgs.operatingSystemIn, this._activationArgs.browserIn, this._activationArgs.userIds);
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveBandwidthRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveBandwidthRequestFactory(widgetsArgs.entryId, widgetsArgs.countryIn, widgetsArgs.regionIn, widgetsArgs.citiesIn,
+      widgetsArgs.deviceIn, widgetsArgs.operatingSystemIn, widgetsArgs.browserIn, widgetsArgs.userIds);
 
     return ObservableOf(null);
   }

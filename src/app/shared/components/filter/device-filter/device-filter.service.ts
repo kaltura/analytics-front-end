@@ -15,6 +15,7 @@ export interface DeviceFilterItem {
 @Injectable()
 export class DeviceFilterService extends FilterBaseService implements OnDestroy {
   private _isBusy: boolean;
+  private _isRealTime: boolean;
   private _deviceOptions = new BehaviorSubject<DeviceFilterItem[]>([]);
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _order = '-count_plays';
@@ -33,7 +34,6 @@ export class DeviceFilterService extends FilterBaseService implements OnDestroy 
   constructor(protected _reportService: ReportService,
               protected _objectDiffers: KeyValueDiffers) {
     super(_reportService, _objectDiffers);
-    this._reportType = reportTypeMap(KalturaReportType.platforms);
   }
 
   ngOnDestroy() {
@@ -51,7 +51,8 @@ export class DeviceFilterService extends FilterBaseService implements OnDestroy 
 
   private _loadDevicesData(): void {
     this._isBusy = true;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
+    const reportType = reportTypeMap(this._isRealTime ? KalturaReportType.platformsRealtime : KalturaReportType.platforms);
+    const reportConfig: ReportConfig = { reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._reportConfig, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
@@ -72,7 +73,8 @@ export class DeviceFilterService extends FilterBaseService implements OnDestroy 
   }
 
 
-  public updateDateFilter(event: DateChangeEvent, callback: () => void): void {
+  public updateDateFilter(event: DateChangeEvent, callback: () => void, isRealTime = false): void {
+    this._isRealTime = isRealTime;
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
       this._filter.fromDate = event.startDate;

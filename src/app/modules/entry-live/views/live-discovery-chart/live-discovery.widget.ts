@@ -48,7 +48,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
               protected _filterService: FiltersService,
               protected _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
-  
+
     _usersModeService.usersMode$
       .pipe(cancelOnDestroy(this))
       .subscribe(mode => {
@@ -81,7 +81,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
         this._dateFilter.startDate = this._originalDateRange.startDate;
         this._dateFilter.endDate = this._originalDateRange.endDate;
       }
-      
+
       this._originalDateRange = null;
       this._applyFilters();
     }
@@ -118,12 +118,14 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId, this._activationArgs.countryIn, this._activationArgs.regionIn, this._activationArgs.citiesIn,
+      this._activationArgs.deviceIn, this._activationArgs.operatingSystemIn, this._activationArgs.browserIn, this._activationArgs.userIds);
     this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs.entryId, widgetsArgs.countryIn, widgetsArgs.regionIn, widgetsArgs.citiesIn,
+      widgetsArgs.deviceIn, widgetsArgs.operatingSystemIn, widgetsArgs.browserIn, widgetsArgs.userIds);
 
     return ObservableOf(null);
   }
@@ -185,7 +187,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
 
           return result;
         }, {});
-      
+
       if (this._usersModeService.usersMode === EntryLiveUsersMode.All) {
         ['viewers', 'viewers_engagement', 'viewers_dvr', 'viewers_buffering'].forEach(column => {
           if (reportTotalFields.hasOwnProperty(column)) {

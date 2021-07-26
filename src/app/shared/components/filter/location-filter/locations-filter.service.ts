@@ -15,6 +15,7 @@ export interface LocationFilterItem {
 @Injectable()
 export class LocationsFilterService extends  FilterBaseService implements OnDestroy {
   private _isBusy: boolean;
+  private _isRealTime: boolean;
   private _countriesOptions = new BehaviorSubject<LocationFilterItem[]>([]);
   private _regionsOptions = new BehaviorSubject<LocationFilterItem[]>([]);
   private _citiesOptions = new BehaviorSubject<LocationFilterItem[]>([]);
@@ -39,7 +40,6 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
   constructor(protected _reportService: ReportService,
               protected _objectDiffers: KeyValueDiffers) {
     super(_reportService, _objectDiffers);
-    this._reportType = reportTypeMap(KalturaReportType.mapOverlayCountry)
   }
 
   ngOnDestroy() {
@@ -79,8 +79,9 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     this._isBusy = true;
     this._currentlyLoading.push('country');
 
+    const reportType = reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCountryRealtime : KalturaReportType.mapOverlayCountry);
     const reportConfig: ReportConfig = {
-      reportType: this._reportType,
+      reportType,
       filter: this._filter,
       pager: this._pager,
       order: null,
@@ -108,8 +109,9 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     this._isBusy = true;
     this._currentlyLoading.push('region');
 
+    const reportType = reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayRegionRealtime : KalturaReportType.mapOverlayRegion);
     let reportConfig: ReportConfig = {
-      reportType: reportTypeMap(KalturaReportType.mapOverlayRegion),
+      reportType,
       filter: this._filter,
       pager: this._pager,
       order: null
@@ -139,8 +141,9 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     filter.countryIn = country;
     filter.regionIn = region;
 
+    const reportType = reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCityRealtime : KalturaReportType.mapOverlayCity);
     const reportConfig: ReportConfig = {
-      reportType: reportTypeMap(KalturaReportType.mapOverlayCity),
+      reportType,
       filter: filter,
       pager: this._pager,
       order: null,
@@ -183,7 +186,8 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     }
   }
 
-  public updateDateFilter(event: DateChangeEvent, callback: () => void): void {
+  public updateDateFilter(event: DateChangeEvent, callback: () => void, isRealTime = false): void {
+    this._isRealTime = isRealTime;
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
       this._filter.fromDate = event.startDate;

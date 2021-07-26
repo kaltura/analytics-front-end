@@ -1,6 +1,6 @@
 <app-dropdown-filter templateType="os"
                      [label]="'app.filters.os' | translate"
-                     [options]="_osFilterService.osOptions | async"
+                     [options]="_predefinedOSs || (_osFilterService.osOptions | async)"
                      [isLoading]="_osFilterService.isBusy('os')"
                      [defaultLabel]="'app.filters.osPlaceholder' | translate"
                      [selectedItemsLabel]="'app.filters.osSelected' | translate"
