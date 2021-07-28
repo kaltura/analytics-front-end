@@ -108,7 +108,7 @@ export class FilterComponent {
   }
 
   @Input() set selectedFilters(value: RefineFilter) {
-    this._updateSelectedValues(value);
+    this._initialFilters = value;
   }
 
   @Input() set dateFilter(value: DateChangeEvent) {
@@ -133,6 +133,7 @@ export class FilterComponent {
 
   protected _currentFilters: FilterItem[] = []; // local state
   protected _appliedFilters: FilterItem[] = [];
+  protected _initialFilters: FilterItem[] = [];
   protected _showFilters: boolean;
 
   public _showDisclaimer = false;
@@ -374,6 +375,12 @@ export class FilterComponent {
     this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
+    if (this._currentFilters.length === 0) {
+      this._initialFilters.forEach(f => {
+        this._onItemSelected(f.value, f.type);
+      });
+      this._updateSelectedValues(this._initialFilters);
+    }
     this._updateLayout();
   }
 

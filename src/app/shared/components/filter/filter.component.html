@@ -29,14 +29,14 @@
                                           (itemSelected)="_onItemSelected($event, 'mediaType')"
                                           (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
 
-              <app-playback-filter *ngIf="_viewConfig?.playbackType && name !== 'entry-webcast'"
+              <app-playback-filter *ngIf="_viewConfig?.playbackType && name !== 'entry-webcast' && name !== 'engagement'"
                                    [label]="'app.filters.playbackType.title' | translate"
                                    [options]="_playbackTypesAll"
                                    [selectedFilters]="_selectedValues['playbackType']"
                                    (itemSelected)="_onItemSelected($event, 'playbackType')"
                                    (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-playback-filter>
 
-              <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType && name === 'entry-webcast'"
+              <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType && (name === 'entry-webcast' || name === 'engagement')"
                                           [label]="'app.filters.playbackType.title' | translate"
                                           [options]="_playbackTypes"
                                           [selectedFilters]="_selectedValues['playbackType']"
