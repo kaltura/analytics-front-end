@@ -41,12 +41,7 @@
                                    [predefinedOSs]="predefinedOSs"
                                    (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
           </div>
-          <div class="kFilterContainerCol">
-            <app-owners-filter [selectedFilters]="_selectedValues['users']"
-                               [label]="'app.filters.users' | translate"
-                               (itemSelected)="_onItemSelected($event, 'users')"
-                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
-
+          <div class="kFilterContainerCol location-filters">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"
@@ -54,7 +49,12 @@
                                   [selectedFilters]="_selectedValues['location']"
                                   [isRealTime]="true"
                                   (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
-
+          </div>
+          <div class="kFilterContainerCol">
+            <app-owners-filter [selectedFilters]="_selectedValues['users']"
+                               [label]="'app.filters.users' | translate"
+                               (itemSelected)="_onItemSelected($event, 'users')"
+                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
           </div>
 
 
