@@ -35,9 +35,11 @@ export class BrowserFilterComponent implements OnDestroy {
   @Input() set dateFilter(event: DateChangeEvent) {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
-      this._browsersFilterService.updateDateFilter(event, () => {
-        this._selectedBrowsers = [];
-      });
+      if (!this._predefinedBrowsers) {
+        this._browsersFilterService.updateDateFilter(event, () => {
+          this._selectedBrowsers = [];
+        });
+      }
     }, 0);
   }
 

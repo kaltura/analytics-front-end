@@ -35,9 +35,11 @@ export class OsFilterComponent implements OnDestroy {
   @Input() set dateFilter(event: DateChangeEvent) {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
-      this._osFilterService.updateDateFilter(event, () => {
-        this._selectedOs = [];
-      });
+      if (!this._predefinedOSs) {
+        this._osFilterService.updateDateFilter(event, () => {
+          this._selectedOs = [];
+        });
+      }
     }, 0);
   }
 

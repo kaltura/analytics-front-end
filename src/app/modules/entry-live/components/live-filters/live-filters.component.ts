@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FilterConfig} from "shared/components/filter/filter-base.service";
 import {FilterComponent} from "shared/components/filter/filter.component";
 import {ReportService} from "shared/services";
@@ -35,7 +35,7 @@ import * as moment from 'moment';
     ])
   ]
 })
-export class LiveFiltersComponent extends FilterComponent implements OnInit {
+export class LiveFiltersComponent extends FilterComponent implements OnChanges {
   public filterConfig: FilterConfig = {};
 
   @Input() set entryId(id: string) {
@@ -62,10 +62,12 @@ export class LiveFiltersComponent extends FilterComponent implements OnInit {
     'Chrome OS',
   ];
 
-  ngOnInit(): void {
-    this.dateFilter = {
-      startDate: moment().unix(),
-      endDate: moment().subtract(200, 'seconds').unix()
-    } as DateChangeEvent;
+  ngOnChanges(changes: SimpleChanges) {
+    if (!this._currentFilters.find(filter => filter.type === 'location') && changes['opened']?.currentValue) {
+      this.dateFilter = {
+        startDate: moment().unix(),
+        endDate: moment().subtract(200, 'seconds').unix()
+      } as DateChangeEvent;
+    }
   }
 }
