@@ -118,14 +118,12 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs.entryId, this._activationArgs.countryIn, this._activationArgs.regionIn, this._activationArgs.citiesIn,
-      this._activationArgs.deviceIn, this._activationArgs.operatingSystemIn, this._activationArgs.browserIn, this._activationArgs.userIds);
+    this._pollsFactory = new LiveDiscoveryRequestFactory(this._activationArgs);
     this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs.entryId, widgetsArgs.countryIn, widgetsArgs.regionIn, widgetsArgs.citiesIn,
-      widgetsArgs.deviceIn, widgetsArgs.operatingSystemIn, widgetsArgs.browserIn, widgetsArgs.userIds);
+    this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs);
 
     return ObservableOf(null);
   }

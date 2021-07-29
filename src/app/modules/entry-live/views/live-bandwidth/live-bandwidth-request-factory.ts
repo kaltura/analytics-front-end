@@ -6,6 +6,7 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
+import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 
 export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -24,29 +25,28 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
     responseOptions: this._responseOptions
   };
 
-  constructor(private _entryId: string, private _countryIn: string, private _regionIn: string, private _citiesIn: string,
-              private _deviceIn: string, private _operatingSystemIn: string, private _browserIn: string, private _userIds: string) {
-    this._getGraphActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    if (this._countryIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._countryIn;
+  constructor(private activationArgs: WidgetsActivationArgs) {
+    this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
+    if (this.activationArgs.countryIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
     }
-    if (this._regionIn) {
-      this._getGraphActionArgs.reportInputFilter.regionIn = this._regionIn;
+    if (this.activationArgs.regionIn) {
+      this._getGraphActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
     }
-    if (this._citiesIn) {
-      this._getGraphActionArgs.reportInputFilter.citiesIn = this._citiesIn;
+    if (this.activationArgs.citiesIn) {
+      this._getGraphActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
     }
-    if (this._deviceIn) {
-      this._getGraphActionArgs.reportInputFilter.deviceIn = this._deviceIn;
+    if (this.activationArgs.deviceIn) {
+      this._getGraphActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
     }
-    if (this._operatingSystemIn) {
-      this._getGraphActionArgs.reportInputFilter.operatingSystemIn = this._operatingSystemIn;
+    if (this.activationArgs.operatingSystemIn) {
+      this._getGraphActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
     }
-    if (this._browserIn) {
-      this._getGraphActionArgs.reportInputFilter.browserIn = this._browserIn;
+    if (this.activationArgs.browserIn) {
+      this._getGraphActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
     }
-    if (this._userIds) {
-      this._getGraphActionArgs.reportInputFilter.userIds = this._userIds;
+    if (this.activationArgs.userIds) {
+      this._getGraphActionArgs.reportInputFilter.userIds = this.activationArgs.userIds;
     }
   }
 

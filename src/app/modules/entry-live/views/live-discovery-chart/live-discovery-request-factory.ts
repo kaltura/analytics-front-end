@@ -7,6 +7,7 @@ import { DateRangeServerValue, defaultDateRange, FiltersService } from './filter
 import { OnPollTickSuccess } from 'shared/services/server-polls-base.service';
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
+import {WidgetsActivationArgs} from "../../widgets/widgets-manager";
 
 export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
   private readonly _responseOptions = new KalturaReportResponseOptions({
@@ -50,38 +51,37 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
     }
   }
 
-  constructor(private _entryId: string, private _countryIn: string, private _regionIn: string, private _citiesIn: string,
-              private _deviceIn: string, private _operatingSystemIn: string, private _browserIn: string, private _userIds: string) {
-    this._getGraphActionArgs.reportInputFilter.entryIdIn = this._entryId;
-    this._getTotalActionArgs.reportInputFilter.entryIdIn = this._entryId;
+  constructor(private activationArgs: WidgetsActivationArgs) {
+    this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
+    this._getTotalActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
 
-    if (this._countryIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._countryIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._countryIn;
+    if (this.activationArgs.countryIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
     }
-    if (this._regionIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._regionIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._regionIn;
+    if (this.activationArgs.regionIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.regionIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.regionIn;
     }
-    if (this._citiesIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._citiesIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._citiesIn;
+    if (this.activationArgs.citiesIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.citiesIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.citiesIn;
     }
-    if (this._deviceIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._deviceIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._deviceIn;
+    if (this.activationArgs.deviceIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.deviceIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.deviceIn;
     }
-    if (this._operatingSystemIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._operatingSystemIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._operatingSystemIn;
+    if (this.activationArgs.operatingSystemIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.operatingSystemIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.operatingSystemIn;
     }
-    if (this._browserIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._browserIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._browserIn;
+    if (this.activationArgs.browserIn) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.browserIn;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.browserIn;
     }
-    if (this._userIds) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this._userIds;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this._userIds;
+    if (this.activationArgs.userIds) {
+      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.userIds;
+      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.userIds;
     }
   }
 
