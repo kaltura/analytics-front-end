@@ -376,8 +376,8 @@ export class FilterComponent {
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
     if (this._currentFilters.length === 0) {
-      this._initialFilters.forEach(f => {
-        this._onItemSelected(f.value, f.type);
+      this._initialFilters.forEach(filter => {
+        this._onItemSelected(filter.value, filter.type);
       });
       this._updateSelectedValues(this._initialFilters);
     }
