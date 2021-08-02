@@ -49,6 +49,10 @@ export enum GeoTableModes {
 export class GeoLocationComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: Table;
 
+  public _selectedRefineFilters: RefineFilter = [{
+    type: "playbackType",
+    value: 'vod'
+  }];
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _selectedTab: Tab;

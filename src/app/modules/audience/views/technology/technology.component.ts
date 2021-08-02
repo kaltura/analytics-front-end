@@ -10,6 +10,7 @@ import { EngagementExportConfig } from '../engagement/engagement-export.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateRanges } from "shared/components/date-filter/date-filter-utils";
+import {RefineFilter} from "shared/components/filter/filter.component";
 
 @Component({
   selector: 'app-technology',
@@ -34,6 +35,12 @@ export class TechnologyComponent implements OnInit {
   public _reportType = reportTypeMap(KalturaReportType.platforms);
   public _exportConfig: ExportItem[] = [];
   public _technologyViewConfig = analyticsConfig.viewsConfig.audience.technology;
+  public _refineFilterOpened = false;
+  public _selectedRefineFilters: RefineFilter = [{
+    type: "playbackType",
+    value: 'vod'
+  }];
+  public _refineFilter: RefineFilter = [];
 
   constructor(private _exportConfigService: TechnologyExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
@@ -58,6 +65,10 @@ export class TechnologyComponent implements OnInit {
     if (this._overview) {
       this._overview.resetDeviceFilters();
     }
+  }
+
+  public _onRefineFilterChange(event: RefineFilter): void {
+    this._refineFilter = event;
   }
 
   public _onDrillDown(event: { drillDown: string, reportType: KalturaReportType, name: string }): void {

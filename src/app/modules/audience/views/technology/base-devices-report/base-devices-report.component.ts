@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {RefineFilter} from "shared/components/filter/filter.component";
 
 export const BaseDevicesReportConfig = new InjectionToken('BaseDevicesReportConfigService');
 
@@ -76,6 +77,20 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
       this._reportInterval = value.timeUnits;
       this._pager.pageIndex = 1;
       this._loadReport();
+    }
+  }
+
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._chartDataLoaded = false;
+      this._filter.playbackTypeIn = value.filter(refineFilter => refineFilter.type === 'playbackType').map(refineFilter => refineFilter.value).join(analyticsConfig.valueSeparator);
+      if (this._filter.playbackTypeIn === '') {
+        delete this._filter.playbackTypeIn;
+      }
+      this._pager.pageIndex = 1;
+      if (this._reportType) {
+        this._loadReport();
+      }
     }
   }
 

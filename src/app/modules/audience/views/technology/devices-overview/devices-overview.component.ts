@@ -16,6 +16,7 @@ import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { BarRowTooltip } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import {RefineFilter} from "shared/components/filter/filter.component";
 
 export interface SummaryItem {
   key: string;
@@ -58,6 +59,20 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       this._pager.pageIndex = 1;
       this.loadReport();
       this.resetDeviceFilters(true, false);
+    }
+  }
+
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._chartDataLoaded = false;
+      this._filter.playbackTypeIn = value.filter(refineFilter => refineFilter.type === 'playbackType').map(refineFilter => refineFilter.value).join(analyticsConfig.valueSeparator);
+      if (this._filter.playbackTypeIn === '') {
+        delete this._filter.playbackTypeIn;
+      }
+      this._pager.pageIndex = 1;
+      if (this._filter.fromDate) {
+        this.loadReport();
+      }
     }
   }
 

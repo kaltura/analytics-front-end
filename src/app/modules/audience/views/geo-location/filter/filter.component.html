@@ -19,12 +19,20 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <app-country-filter *ngIf="_viewConfig.geo" style="width: 33%"
-                              [dateFilter]="_dateFilter"
-                              [selectedFilters]="_selectedValues['countries']"
-                              (itemSelected)="_onItemSelected($event, 'countries')"
-                              (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+          <div class="kMiscFilters">
+            <app-country-filter *ngIf="_viewConfig.geo" style="width: 33%"
+                                [dateFilter]="_dateFilter"
+                                [selectedFilters]="_selectedValues['countries']"
+                                (itemSelected)="_onItemSelected($event, 'countries')"
+                                (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
 
+            <app-checkboxes-list-filter *ngIf="_viewConfig?.playbackType"
+                                        [label]="'app.filters.playbackType.title' | translate"
+                                        [options]="_playbackTypes"
+                                        [selectedFilters]="_selectedValues['playbackType']"
+                                        (itemSelected)="_onItemSelected($event, 'playbackType')"
+                                        (itemUnselected)="_onItemUnselected($event, 'playbackType')"></app-checkboxes-list-filter>
+          </div>
           <div class="kMiscFilters">
             <app-tags-filter *ngIf="_viewConfig.tags"
                              [selectedFilters]="_selectedValues['tags']"
