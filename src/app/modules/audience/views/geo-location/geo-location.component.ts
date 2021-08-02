@@ -181,6 +181,10 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     this._currentTableLevel = this._tableMode = GeoTableModes.countries;
 
+    if (!this.isVodFilterSelected() && this._selectedTab.key === 'avg_view_drop_off') {
+      this._onTabChange(this._tabsData[0]);
+    }
+
     this._onDrillDown('');
   }
 
@@ -543,5 +547,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
         this._mapCenter = [this._tableData[0]['coordinates'].split('/')[1], this._tableData[0]['coordinates'].split('/')[0]];
       }
     }
+  }
+
+  private isVodFilterSelected() {
+    const playbackTypeFilters = this._refineFilter.filter(filter => filter.type === 'playbackType');
+    return playbackTypeFilters.length === 0 || playbackTypeFilters.find(filter => filter.value === 'vod');
+  }
+
+  getTabsData() {
+    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'avg_view_drop_off');
   }
 }
