@@ -54,7 +54,7 @@
                   <span *ngIf="_tableData?.length">{{'app.audience.technology.index' | translate}}</span>
                 </th>
                 <th [ngStyle]="{'width': '50px', 'padding-left': '16px'}" *ngIf="_showIcon"></th>
-                <th *ngFor="let col of _columns"
+                <th *ngFor="let col of getColumnData()"
                     [pSortableColumn]="col !== 'plays_trend' && col !== 'plays_distribution' && col !== 'os_family' && col !== 'os' && col !== 'browser' && col !== 'browser_family' ? col : null"
                     [class.nonSortable]="col === 'plays_trend' || col === 'plays_distribution' || col === 'os_family' || col === 'os' || col === 'browser' || col === 'browser_family'"
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
@@ -87,7 +87,7 @@
                     </ng-template>
                   </ng-container>
                 </td>
-                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0" [kTooltip]="data[col]" [showOnEllipsis]="true">
+                <td *ngFor="let col of getColumnData(); let i = index" [class.kHighlight]="i === 0" [kTooltip]="data[col]" [showOnEllipsis]="true">
                   <span *ngIf="col !== 'plays_distribution' && col !== 'plays_trend' && col !== 'browser_family' && col !== 'os_family'">
                     {{data[col]}}
                   </span>

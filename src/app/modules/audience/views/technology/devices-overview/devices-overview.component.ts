@@ -69,6 +69,9 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       if (this._filter.playbackTypeIn === '') {
         delete this._filter.playbackTypeIn;
       }
+      if (!this.isVodFilterSelected() && (this._selectedMetrics === 'sum_time_viewed' || this._selectedMetrics === 'avg_time_viewed')) {
+        this._onTabChange(this._tabsData[0]);
+      }
       this._pager.pageIndex = 1;
       if (this._filter.fromDate) {
         this.loadReport();
@@ -372,5 +375,14 @@ export class TechDevicesOverviewComponent implements OnDestroy {
 
   public _tooltipFormatter(value: string, label: string): string {
     return `<div class="kDevicesGraphTooltip"><div class="kTitle">${label}</div><div class="kValue">${value}</div></div>`;
+  }
+
+  private isVodFilterSelected() {
+    const playbackTypeFilters = this._filter.playbackTypeIn;
+    return !playbackTypeFilters || playbackTypeFilters.length === 0 || playbackTypeFilters.includes('vod');
+  }
+
+  getTabsData() {
+    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
   }
 }

@@ -379,4 +379,13 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
 
     this._loadReport();
   }
+
+  private isVodFilterSelected() {
+    const playbackTypeFilters = this._filter.playbackTypeIn;
+    return !playbackTypeFilters || playbackTypeFilters.length === 0 || playbackTypeFilters.includes('vod');
+  }
+
+  getColumnData() {
+    return this.isVodFilterSelected() ? this._columns : this._columns.filter(column => column !== 'sum_time_viewed');
+  }
 }
