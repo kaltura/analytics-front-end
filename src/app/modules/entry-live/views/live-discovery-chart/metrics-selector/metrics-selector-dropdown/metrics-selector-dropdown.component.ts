@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SelectItem } from 'primeng/api';
-import { getPrimaryColor } from 'shared/utils/colors';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {SelectItem} from 'primeng/api';
+import {getPrimaryColor} from 'shared/utils/colors';
+import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui";
 
 @Component({
   selector: 'app-metrics-selector-dropdown',
@@ -11,14 +12,23 @@ export class MetricsSelectorDropdownComponent {
   @Input() options: SelectItem[] = [];
   @Input() selection: string;
   @Input() colorsMap: { [metric: string]: string } = {};
-  
+
   @Output() selectionChange = new EventEmitter<string>();
   @Output() change = new EventEmitter<string>();
-  
+  public _popupOpened = false;
+
   public _defaultColor = getPrimaryColor();
-  
+
   public _onChange(): void {
     this.selectionChange.emit(this.selection);
     this.change.emit(this.selection);
+  }
+
+  _onPopupOpen() {
+    this._popupOpened = true;
+  }
+
+  _onPopupClose() {
+    this._popupOpened = false;
   }
 }

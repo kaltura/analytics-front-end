@@ -1,3 +1,50 @@
+@import '../../../../../../../styles/variables';
+
+:host {
+  position: relative;
+  overflow: visible;
+}
+
+.kMetricsPopup {
+  height: 100%;
+  border: 1px solid #dadada;
+  border-radius: 4px;
+}
+
+.metricsDropDown {
+  background-color: white;
+  width: 180px;
+  height: 34px;
+  border: 1px solid $kGrayscale4;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $kPrimary;
+  }
+
+  &:active {
+    box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+  }
+
+  span {
+    font-size: 15px;
+    white-space: nowrap;
+    margin-right: 12px;
+  }
+
+  i {
+    margin-left: auto;
+    font-size: 12px;
+    color: $kGrayscale3;
+  }
+}
+
 .kMetricsSelector {
   .kOptionsLabelWrapper {
     display: flex;

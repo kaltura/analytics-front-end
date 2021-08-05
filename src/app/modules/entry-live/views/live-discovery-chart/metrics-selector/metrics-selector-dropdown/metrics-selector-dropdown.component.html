@@ -1,20 +1,47 @@
-<p-dropdown class="kMetricsSelector"
-            [style]="{'width': '180px'}"
-            [options]="options"
-            (onChange)="_onChange()"
-            [(ngModel)]="selection">
-  <ng-template let-option pTemplate="selectedItem">
-    <div class="kOptionsLabelWrapper">
-      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
-         [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
-      <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+<div #metricsSelector id="discovery-metrics-selector">
+  <div class="metricsDropDown" #toggleMetrics (click)="metricsPopup.open()">
+    <span [innerHTML]="selection"></span>
+    <i *ngIf="!_popupOpened" class="kIcondropdown_arrow_bottom"></i>
+    <i *ngIf="_popupOpened" class="kIcondropdown_arrow_top"></i>
+  </div>
+</div>
+
+<kPopupWidget #metricsPopup
+              [appendTo]="metricsSelector"
+              [popupWidth]="460"
+              [targetRef]="toggleMetrics"
+              [closeBtn]="false"
+              [targetOffset]="{x: 0, y: 40}"
+              (onOpen)="_onPopupOpen()"
+              (onClose)="_onPopupClose()">
+  <ng-template>
+    <div class="kMetricsPopup kOverrideFAIcons">
+      <p-dropdown class="kMetricsSelector"
+                  [style]="{'width': '180px'}"
+                  [options]="options"
+                  (onChange)="_onChange()"
+                  [(ngModel)]="selection"
+                  [group]="true">
+        <ng-template let-group pTemplate="group">
+          <div class="p-d-flex p-ai-center">
+            <span>{{group.label}}</span>
+          </div>
+        </ng-template>
+        <ng-template let-option pTemplate="selectedItem">
+          <div class="kOptionsLabelWrapper">
+            <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
+               [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+            <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+          </div>
+        </ng-template>
+        <ng-template let-option pTemplate="item">
+          <div class="kOptionsLabelWrapper kItemLabel">
+            <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
+               [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+            <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
     </div>
   </ng-template>
-  <ng-template let-option pTemplate="item">
-    <div class="kOptionsLabelWrapper kItemLabel">
-      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
-         [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
-      <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
-    </div>
-  </ng-template>
-</p-dropdown>
+</kPopupWidget>
