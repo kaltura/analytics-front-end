@@ -9,6 +9,7 @@ import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui";
   styleUrls: ['./metrics-selector-dropdown.component.scss']
 })
 export class MetricsSelectorDropdownComponent {
+  @ViewChild('popupWidgetComponent') _popup: PopupWidgetComponent;
   @Input() options: SelectItem[] = [];
   @Input() selection: string;
   @Input() colorsMap: { [metric: string]: string } = {};
@@ -22,6 +23,12 @@ export class MetricsSelectorDropdownComponent {
   public _onChange(): void {
     this.selectionChange.emit(this.selection);
     this.change.emit(this.selection);
+  }
+
+  public toggleDropdown() {
+    if (this._popup) {
+      this._popup.toggle();
+    }
   }
 
   _onPopupOpen() {
