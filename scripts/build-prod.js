@@ -57,7 +57,7 @@ console.log('Package.json has been updated!');
 
 // STEP: commit changed files to git
 try {
-  execSync(`git commit -m "bump analytics version to v${versionNumber}"`);
+  execSync(`git commit -am "bump analytics version to v${versionNumber}"`);
 }
 catch (error) {
   console.error('Git commit operation failed. Verify you are logged into Github and have permissions to commit to this repository');
