@@ -1,5 +1,5 @@
 <div #metricsSelector id="discovery-metrics-selector">
-  <div class="metricsDropDown" #toggleMetrics (click)="toggleDropdown()">
+  <div class="metricsDropDown" #toggleMetrics>
     <div class="metric-group-option">
       <i class="kCompareMetricBullet" [style.color]="colorsMap ? (colorsMap[selection] || _defaultColor) : _defaultColor">&bull;</i>
       <span class="kOptionLabel" [kTooltip]="getSelectedLabel()" [showOnEllipsis]="true">{{getSelectedLabel()}}</span>

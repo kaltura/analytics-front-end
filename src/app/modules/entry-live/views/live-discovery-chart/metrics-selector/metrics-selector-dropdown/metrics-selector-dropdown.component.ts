@@ -10,7 +10,7 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrls: ['./metrics-selector-dropdown.component.scss']
 })
 export class MetricsSelectorDropdownComponent {
-  @ViewChild('popupWidgetComponent') _popup: PopupWidgetComponent;
+  @ViewChild(PopupWidgetComponent) _popup: PopupWidgetComponent;
   @Input() options: SelectItemGroup[] = [];
   @Input() selection: string;
   @Input() colorsMap: { [metric: string]: string } = {};
@@ -43,12 +43,6 @@ export class MetricsSelectorDropdownComponent {
   public _onChange(): void {
     this.selectionChange.emit(this.selection);
     this.change.emit(this.selection);
-  }
-
-  public toggleDropdown() {
-    if (this._popup) {
-      this._popup.toggle();
-    }
   }
 
   _onPopupOpen() {
