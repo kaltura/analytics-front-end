@@ -66,7 +66,7 @@ catch (error) {
 
 // STEP: push commit to origin
 try {
-  execSync(`git push origin"`);
+  execSync(`git push origin`);
 }
 catch (error) {
   console.error('Git push operation failed. Verify you are logged into Github and have permissions to push to this repository');
