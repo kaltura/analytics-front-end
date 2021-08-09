@@ -8,7 +8,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public static mapTotalsMetric(metric: string): string {
     switch (metric) {
       case 'view_unique_audience_dvr':
@@ -21,7 +21,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
         return metric;
     }
   }
-  
+
   public getConfig(authUsers = false): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
@@ -34,6 +34,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
               ? `${this._translate.instant('app.entryLive.discovery.viewers')}: ${ReportHelper.numberOrZero(value)}`
               : `${this._translate.instant('app.entryLive.discovery.view_unique_audience')}: ${ReportHelper.numberOrZero(value)}`,
             sortOrder: 1,
+            group: 'engagement',
           },
           [authUsers ? 'view_unique_audience_dvr' : 'viewers_dvr']: {
             format: value => Math.round(value),
@@ -42,7 +43,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             graphTooltip: value => authUsers
               ? `${this._translate.instant('app.entryLive.discovery.viewers_dvr')}: ${ReportHelper.numberOrZero(value)}`
               : `${this._translate.instant('app.entryLive.discovery.view_unique_audience_dvr')}: ${ReportHelper.numberOrZero(value)}`,
-            sortOrder: 3,
+            sortOrder: 2,
+            group: 'engagement',
           },
           [authUsers ? 'view_unique_engaged_users' : 'viewers_engagement']: {
             format: value => Math.round(value),
@@ -51,23 +53,44 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             graphTooltip: value => authUsers
               ? `${this._translate.instant('app.entryLive.discovery.viewers_engagement')}: ${ReportHelper.numberOrZero(value)}`
               : `${this._translate.instant('app.entryLive.discovery.view_unique_engaged_users')}: ${ReportHelper.numberOrZero(value)}`,
-            sortOrder: 4,
+            sortOrder: 3,
+            group: 'engagement',
           },
-          'avg_view_dropped_frames_ratio': {
-            format: value => (value * 100).toFixed(1),
-            colors: ['#9b64e6'],
+          'sum_view_time': {
+            format: value => Math.round(value),
+            colors: ['#e1962e'], // replace with relevant color
             graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_dropped_frames_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
-            units: () => '%',
-            sortOrder: 5,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.sum_view_time')}: ${ReportHelper.numberOrZero(value)} Seconds`,
+            units: () => 'Seconds',
+            sortOrder: 4,
+            group: 'engagement',
           },
           'avg_view_bitrate': {
             format: value => Number(value).toFixed(1),
-            colors: ['#f7c25c'],
+            colors: ['#FDD27E'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_bitrate')}: ${ReportHelper.numberOrZero(value, false)} Kbps`,
             units: () => 'Kbps',
+            sortOrder: 5,
+            group: 'qualityOfService',
+          },
+          'view_buffer_time_ratio': {
+            format: value => (value * 100).toFixed(1),
+            colors: ['#EEAC41'],
+            graphType: GraphType.line,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_buffer_time_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
             sortOrder: 6,
+            group: 'qualityOfService',
+          },
+          'avg_view_dropped_frames_ratio': {
+            format: value => (value * 100).toFixed(1),
+            colors: ['#D68021'],
+            graphType: GraphType.line,
+            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_dropped_frames_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
+            units: () => '%',
+            sortOrder: 7,
+            group: 'qualityOfService',
           },
           'avg_view_live_latency': {
             format: value => Math.round(value),
@@ -75,7 +98,8 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_live_latency')}: ${ReportHelper.numberOrZero(value)} Seconds`,
             units: () => 'Seconds',
-            sortOrder: 7,
+            sortOrder: 10,
+            group: 'qualityOfService',
           },
           'avg_view_downstream_bandwidth': {
             format: value => Math.round(value),
@@ -83,24 +107,9 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_downstream_bandwidth')}: ${ReportHelper.numberOrZero(value)} Kbps`,
             units: () => 'Kbps',
-            sortOrder: 8,
+            sortOrder: 11,
+            group: 'qualityOfService',
           },
-          'sum_view_time': {
-            format: value => Math.round(value),
-            colors: ['#487adf'], // replace with relevant color
-            graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.sum_view_time')}: ${ReportHelper.numberOrZero(value)} Seconds`,
-            units: () => 'Seconds',
-            sortOrder: 9,
-          },
-          'view_buffer_time_ratio': {
-            format: value => (value * 100).toFixed(1),
-            colors: ['#e1962e'],
-            graphType: GraphType.line,
-            graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.view_buffer_time_ratio')}: ${ReportHelper.percents(value / 100, false)}`,
-            units: () => '%',
-            sortOrder: 10,
-          }
         }
       },
       [ReportDataSection.totals]: {

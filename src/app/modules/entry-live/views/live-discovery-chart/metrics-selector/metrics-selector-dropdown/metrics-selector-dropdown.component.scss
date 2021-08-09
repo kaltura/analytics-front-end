@@ -9,6 +9,7 @@
   height: 100%;
   border: 1px solid #dadada;
   border-radius: 4px;
+  padding: 40px;
 }
 
 .metricsDropDown {
@@ -35,54 +36,83 @@
   span {
     font-size: 15px;
     white-space: nowrap;
-    margin-right: 12px;
   }
 
   i {
     margin-left: auto;
-    font-size: 12px;
     color: $kGrayscale3;
   }
-}
 
-.kMetricsSelector {
-  .kOptionsLabelWrapper {
-    display: flex;
-    align-items: center;
-
-    &.kItemLabel {
-      width: calc(100% - 15px);
-    }
+  .metric-group-option {
+    overflow: hidden;
 
     .kOptionLabel {
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .kCompareMetricBullet {
-      font-size: 18px;
-      font-style: normal;
-      margin-right: 8px
     }
   }
 }
 
-:host ::ng-deep .kMetricsSelector {
-  .ui-dropdown-panel {
-    width: 240px !important;
-  }
-  .ui-dropdown-item {
-    position: relative;
+.kCompareMetricBullet {
+  font-size: 18px;
+  font-style: normal;
+  margin-right: 8px;
 
-    &:after {
-      position: absolute;
-      right: 3px;
-      top: 9px;
+  &.none-value {
+    text-shadow: 1px 0 0 #CCCCCC, 0 -1px 0 #CCCCCC, 0 1px 0 #CCCCCC, -1px 0 0 #CCCCCC;
+  }
+}
+
+.metric-selector-container {
+  padding: 24px;
+
+  .metric-group-option {
+    &:not(.selected-option):hover {
+      background-color: #ebebeb;
+    }
+
+    &.selected-option {
+      .kOptionLabel {
+        font-weight: bold;
+      }
     }
   }
-  .ui-dropdown-items-wrapper {
-    max-height: 300px !important;
+}
+
+.metric-groups {
+  display: flex;
+}
+
+.metric-group {
+  display: flex;
+  flex-direction: column;
+
+  &:first-child {
+    margin-right: 16px;
   }
+}
+
+.metric-group-label {
+  text-transform: uppercase;
+  color: #999999;
+  padding-bottom: 8px;
+  padding-top: 16px;
+  padding-left: 6px;
+}
+
+.metric-group-option {
+  width: 256px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.kOptionLabel {
+  flex: 1;
+}
+
+.kIconcheck_small {
+  font-size: 11px;
 }

@@ -39,25 +39,24 @@ export class MetricsSelectorComponent implements OnChanges {
   private _updateOptions(initial: boolean): void {
     this._selectedMain = initial ? this._metrics[0] : this._selectedMain;
 
-    this._secondaryMetricsOptions = [{
-      label: 'Engagement',
-      items: this._getOptions(this._metrics.filter(metric => metric !== this._selectedMain))
-    }];
-    this._selectedSecondary = initial ? this._secondaryMetricsOptions[0].value : this._selectedSecondary;
+    this._secondaryMetricsOptions = this._getOptionGroups(this._selectedMain);
+    this._selectedSecondary = initial ? this._secondaryMetricsOptions[0].items[0].value : this._selectedSecondary;
 
-    this._mainMetricsOptions = [{
-      label: 'Engagement',
-      items: this._getOptions(this._metrics.filter(metric => metric !== this._selectedSecondary))
-    }, {
-      label: 'QOS',
-      items: this._getOptions(this._metrics.filter(metric => metric !== this._selectedSecondary))
-    }];
-    this._mainMetricsOptions.unshift(...this._getOptions(['none']));
-    this._secondaryMetricsOptions.unshift(...this._getOptions(['none']));
+    this._mainMetricsOptions = this._getOptionGroups(this._selectedSecondary);
   }
 
-  private _getOptions(metrics: string[]) {
-    return metrics.map(metric => ({
+  private _getOptionGroups(selectedOption: string) {
+    return [{
+      label: this._translate.instant('app.entryWebcast.engagement.title'),
+      items: this._getOptions(this._metrics.filter(metric => metric !== selectedOption), 'engagement')
+    }, {
+      label: this._translate.instant('app.entryWebcast.quality.title'),
+      items: this._getOptions(this._metrics.filter(metric => metric !== selectedOption), 'qualityOfService')
+    }];
+  }
+
+  private _getOptions(metrics: string[], group: string) {
+    return metrics.filter(metric => this.fields[metric].group === group).map(metric => ({
       label: this._translate.instant(`app.entryLive.discovery.${metric}`),
       value: metric,
       items: []
