@@ -1,5 +1,16 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportType, ReportGetGraphsAction, ReportGetGraphsActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaReportInterval,
+  KalturaReportResponseOptions,
+  KalturaReportType,
+  ReportGetGraphsAction,
+  ReportGetGraphsActionArgs,
+  ReportGetTotalAction,
+  ReportGetTotalActionArgs
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
@@ -24,7 +35,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
 
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.discoveryRealtime),
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
@@ -35,7 +46,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
 
   private _getGraphActionArgs: ReportGetGraphsActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.discoveryRealtime),
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
@@ -60,28 +71,28 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
       this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
     }
     if (this.activationArgs.regionIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.regionIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.regionIn;
+      this._getGraphActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
+      this._getTotalActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
     }
     if (this.activationArgs.citiesIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.citiesIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.citiesIn;
+      this._getGraphActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
+      this._getTotalActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
     }
     if (this.activationArgs.deviceIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.deviceIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.deviceIn;
+      this._getGraphActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
+      this._getTotalActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
     }
     if (this.activationArgs.operatingSystemIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.operatingSystemIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.operatingSystemIn;
+      this._getGraphActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
+      this._getTotalActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
     }
     if (this.activationArgs.browserIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.browserIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.browserIn;
+      this._getGraphActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
+      this._getTotalActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
     }
     if (this.activationArgs.userIds) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.userIds;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.userIds;
+      (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter).userIds = this.activationArgs.userIds;
+      (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter).userIds = this.activationArgs.userIds;
     }
   }
 
