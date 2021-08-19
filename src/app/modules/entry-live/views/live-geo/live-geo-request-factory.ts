@@ -12,27 +12,11 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
 
   constructor(private activationArgs: WidgetsActivationArgs, _isAuthUsers: boolean = false) {
     this._getTableActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
-    if (this.activationArgs.countryIn) {
-      this._getTableActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
-    }
-    if (this.activationArgs.regionIn) {
-      this._getTableActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
-    }
-    if (this.activationArgs.citiesIn) {
-      this._getTableActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
-    }
-    if (this.activationArgs.deviceIn) {
-      this._getTableActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
-    }
-    if (this.activationArgs.operatingSystemIn) {
-      this._getTableActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
-    }
-    if (this.activationArgs.browserIn) {
-      this._getTableActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
-    }
-    if (this.activationArgs.userIds) {
-      this._getTableActionArgs.reportInputFilter.userIds = this.activationArgs.userIds;
-    }
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+      if (this.activationArgs[filter]) {
+        this._getTableActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
+      }
+    });
     this._getTableActionArgs.order = _isAuthUsers ? '-view_unique_audience' : '-views';
   }
 

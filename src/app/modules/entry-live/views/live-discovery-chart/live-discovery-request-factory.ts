@@ -66,34 +66,12 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
     this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
     this._getTotalActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
 
-    if (this.activationArgs.countryIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
-      this._getTotalActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
-    }
-    if (this.activationArgs.regionIn) {
-      this._getGraphActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
-      this._getTotalActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
-    }
-    if (this.activationArgs.citiesIn) {
-      this._getGraphActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
-      this._getTotalActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
-    }
-    if (this.activationArgs.deviceIn) {
-      this._getGraphActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
-      this._getTotalActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
-    }
-    if (this.activationArgs.operatingSystemIn) {
-      this._getGraphActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
-      this._getTotalActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
-    }
-    if (this.activationArgs.browserIn) {
-      this._getGraphActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
-      this._getTotalActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
-    }
-    if (this.activationArgs.userIds) {
-      (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter).userIds = this.activationArgs.userIds;
-      (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter).userIds = this.activationArgs.userIds;
-    }
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+      if (this.activationArgs[filter]) {
+        (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = this.activationArgs[filter];
+        (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = this.activationArgs[filter];
+      }
+    });
   }
 
   public set interval(interval: KalturaReportInterval) {

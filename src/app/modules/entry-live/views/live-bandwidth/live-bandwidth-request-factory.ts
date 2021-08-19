@@ -27,27 +27,11 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
 
   constructor(private activationArgs: WidgetsActivationArgs) {
     this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
-    if (this.activationArgs.countryIn) {
-      this._getGraphActionArgs.reportInputFilter.countryIn = this.activationArgs.countryIn;
-    }
-    if (this.activationArgs.regionIn) {
-      this._getGraphActionArgs.reportInputFilter.regionIn = this.activationArgs.regionIn;
-    }
-    if (this.activationArgs.citiesIn) {
-      this._getGraphActionArgs.reportInputFilter.citiesIn = this.activationArgs.citiesIn;
-    }
-    if (this.activationArgs.deviceIn) {
-      this._getGraphActionArgs.reportInputFilter.deviceIn = this.activationArgs.deviceIn;
-    }
-    if (this.activationArgs.operatingSystemIn) {
-      this._getGraphActionArgs.reportInputFilter.operatingSystemIn = this.activationArgs.operatingSystemIn;
-    }
-    if (this.activationArgs.browserIn) {
-      this._getGraphActionArgs.reportInputFilter.browserIn = this.activationArgs.browserIn;
-    }
-    if (this.activationArgs.userIds) {
-      this._getGraphActionArgs.reportInputFilter.userIds = this.activationArgs.userIds;
-    }
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+      if (this.activationArgs[filter]) {
+        this._getGraphActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
+      }
+    });
   }
 
   private _getTime(seconds: number): moment.Moment {
