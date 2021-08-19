@@ -62,6 +62,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
   public _refineFilterOpened = false;
   public _refineFilter: RefineFilter = null;
   public _selectedRefineFilters: RefineFilter = null;
+  public _selectedDateLabelRange: DateChangeEvent;
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _errorsManager: ErrorsManagerService,
@@ -81,7 +82,8 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
               private _liveDevices: LiveDevicesWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
               private _exportConfigService: EntryLiveExportConfig,
-              private _permissions: AnalyticsPermissionsService) {
+              private _permissions: AnalyticsPermissionsService,
+              private _timeSelectorService: TimeSelectorService) {
     this._exportConfig = _exportConfigService.getConfig();
   }
 
@@ -127,6 +129,11 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         if (this._timeSelector) {
           this._timeSelector.updateDataRanges(false);
         }
+      });
+    this._timeSelectorService.filterLabelDateChange$
+      .pipe(cancelOnDestroy(this))
+      .subscribe(labelDate => {
+        this._selectedDateLabelRange = labelDate;
       });
   }
 
@@ -265,6 +272,7 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._selectedDateRange = event.dateRange;
+    this._selectedDateLabelRange = event;
   }
 
   public _onUsersModeChange(): void {

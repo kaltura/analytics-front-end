@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FilterConfig} from "shared/components/filter/filter-base.service";
 import {FilterComponent} from "shared/components/filter/filter.component";
 import {ReportService} from "shared/services";
@@ -6,8 +6,6 @@ import {LocationsFilterService} from "shared/components/filter/location-filter/l
 import {DomainsFilterService} from "shared/components/filter/domains-filter/domains-filter.service";
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import {animate, group, state, style, transition, trigger} from "@angular/animations";
-import {DateChangeEvent} from 'shared/components/date-filter/date-filter.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-live-filters',
@@ -35,7 +33,7 @@ import * as moment from 'moment';
     ])
   ]
 })
-export class LiveFiltersComponent extends FilterComponent implements OnChanges {
+export class LiveFiltersComponent extends FilterComponent {
   public filterConfig: FilterConfig = {};
 
   @Input() set entryId(id: string) {
@@ -61,13 +59,4 @@ export class LiveFiltersComponent extends FilterComponent implements OnChanges {
     'iOS',
     'Chrome OS',
   ];
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!this._currentFilters.find(filter => filter.type === 'location') && changes['opened']?.currentValue) {
-      this.dateFilter = {
-        startDate: moment().unix(),
-        endDate: moment().subtract(200, 'seconds').unix()
-      } as DateChangeEvent;
-    }
-  }
 }
