@@ -48,10 +48,14 @@ export class LiveDevicesRequestFactory implements RequestFactory<KalturaMultiReq
   }
 
   constructor(private activationArgs: WidgetsActivationArgs) {
-    this._getTableActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
+    this.updateArgs(activationArgs);
+  }
+
+  public updateArgs(activationArgs: WidgetsActivationArgs) {
+    this._getTableActionArgs.reportInputFilter.entryIdIn = activationArgs.entryId;
     ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
-      if (this.activationArgs[filter]) {
-        this._getTableActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
+      if (activationArgs[filter]) {
+        this._getTableActionArgs.reportInputFilter[filter] = activationArgs[filter];
       }
     });
   }

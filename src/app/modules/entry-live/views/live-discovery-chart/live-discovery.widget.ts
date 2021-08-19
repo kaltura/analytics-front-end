@@ -123,7 +123,11 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs);
+    if (this._pollsFactory) {
+      this._pollsFactory.updateArgs(widgetsArgs);
+    } else {
+      this._pollsFactory = new LiveDiscoveryRequestFactory(widgetsArgs);
+    }
 
     return ObservableOf(null);
   }

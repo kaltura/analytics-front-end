@@ -70,7 +70,11 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs, this._isAuthUsers);
+    if (this._pollsFactory) {
+      this._pollsFactory.updateArgs(widgetsArgs, this._isAuthUsers);
+    } else {
+      this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs, this._isAuthUsers);
+    }
 
     return ObservableOf(null);
   }

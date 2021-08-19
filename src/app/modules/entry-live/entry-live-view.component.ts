@@ -130,11 +130,6 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
           this._timeSelector.updateDataRanges(false);
         }
       });
-    this._timeSelectorService.filterLabelDateChange$
-      .pipe(cancelOnDestroy(this))
-      .subscribe(labelDate => {
-        this._selectedDateLabelRange = labelDate;
-      });
   }
 
   ngOnDestroy() {

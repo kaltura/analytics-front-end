@@ -18,14 +18,12 @@ export interface DateChangeEvent {
 @Injectable()
 export class TimeSelectorService implements OnDestroy {
   private _filterLabelChange = new Subject<string>();
-  private _filterLabelDateChange = new Subject<DateChangeEvent>();
   private _filterChange = new Subject<DateChangeEvent>();
   private _popupOpened = new Subject<void>();
 
   public readonly popupOpened$ = this._popupOpened.asObservable();
   public readonly filterChange$ = this._filterChange.asObservable();
   public readonly filterLabelChange$ = this._filterLabelChange.asObservable();
-  public readonly filterLabelDateChange$ = this._filterLabelDateChange.asObservable();
 
   constructor(private _translate: TranslateService,
               private _filterService: FiltersService) {
@@ -100,10 +98,6 @@ export class TimeSelectorService implements OnDestroy {
 
   public onFilterChange(event: DateChangeEvent): void {
     this._filterChange.next(event);
-  }
-
-  public onFilterLabelDateChange(event: DateChangeEvent): void {
-    this._filterLabelDateChange.next(event);
   }
 
   public onFilterLabelChange(label: string): void {

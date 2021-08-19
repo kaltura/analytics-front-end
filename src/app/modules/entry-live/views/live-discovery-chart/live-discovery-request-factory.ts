@@ -63,13 +63,17 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
   }
 
   constructor(private activationArgs: WidgetsActivationArgs) {
-    this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
-    this._getTotalActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
+    this.updateArgs(activationArgs);
+  }
+
+  public updateArgs(activationArgs: WidgetsActivationArgs) {
+    this._getGraphActionArgs.reportInputFilter.entryIdIn = activationArgs.entryId;
+    this._getTotalActionArgs.reportInputFilter.entryIdIn = activationArgs.entryId;
 
     ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
-      if (this.activationArgs[filter]) {
-        (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = this.activationArgs[filter];
-        (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = this.activationArgs[filter];
+      if (activationArgs[filter]) {
+        (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];
+        (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];
       }
     });
   }

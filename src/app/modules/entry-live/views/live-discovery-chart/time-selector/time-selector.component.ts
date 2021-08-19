@@ -116,7 +116,7 @@ export class TimeSelectorComponent implements OnDestroy {
     }
   }
 
-  private _triggerChangeEvent(isDateLabelUpdate: boolean = false): void {
+  private _triggerChangeEvent(): void {
     const isPresetMode = this._selectedView === 'preset';
     const startDate = moment(this._startDate);
     const endDate = moment(this._endDate);
@@ -131,11 +131,8 @@ export class TimeSelectorComponent implements OnDestroy {
       shortRangeLabel: this._shortDateRangeLabel,
     };
     this.filterChange.emit(payload);
-    if (isDateLabelUpdate) {
-      this._dateFilterService.onFilterLabelDateChange(payload);
-    } else {
-      this._dateFilterService.onFilterChange(payload);
-    }
+
+    this._dateFilterService.onFilterChange(payload);
   }
 
   private _updateLayout(): void {
@@ -194,7 +191,6 @@ export class TimeSelectorComponent implements OnDestroy {
     }
 
     this._dateFilterService.onFilterLabelChange(this._dateRangeLabel);
-    this._triggerChangeEvent(true);
 
     if (fireUpdateEvent) {
       this._triggerChangeEvent();

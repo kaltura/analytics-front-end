@@ -61,7 +61,11 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs);
+    if (this._pollsFactory) {
+      this._pollsFactory.updateArgs(widgetsArgs);
+    } else {
+      this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs);
+    }
 
     return ObservableOf(null);
   }
