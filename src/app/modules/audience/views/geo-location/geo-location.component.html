@@ -27,6 +27,7 @@
     <app-geo-filter [viewConfig]="_geoViewConfig.refineFilter"
                     [opened]="_refineFilterOpened"
                     [dateFilter]="_dateFilter"
+                    [selectedFilters]="_selectedRefineFilters"
                     (closeFilters)="_refineFilterOpened = false"
                     (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>
   </div>
@@ -50,7 +51,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <app-report-tabs [tabs]="_tabsData" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <app-report-tabs [tabs]="getTabsData()" (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kMap">
         <div *ngIf="_mapDataReady" echarts class="kChart"
              [options]="_mapChartData[_selectedMetrics]"

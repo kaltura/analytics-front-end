@@ -2,6 +2,7 @@
   <app-tech-devices-overview *ngIf="_technologyViewConfig.devices"
                         #overview
                         [filter]="_filterEvent"
+                        [refineFilter]="_refineFilter"
                         [allowedDevices]="_allowedDevices"
                         (metricChanged)="_selectedMetric = $event"
                         (devicesListChange)="_onDevicesListChange($event)"
@@ -13,16 +14,33 @@
                       [width]="260"
                       [reports]="_exportConfig"
                       [dateFilter]="_filterEvent"></app-export-csv>
+      <div *ngIf="_technologyViewConfig.refineFilter"
+           class="kFilter kOverrideFAIcons">
+        <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+          <span>{{'app.filters.filter' | translate}}</span>
+          <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+          <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+        </div>
+      </div>
       <app-date-filter #dateFilter
                        name="technology"
                        [dateRange]="_dateRange"
                        [showCompare]="false"
                        (filterChange)="_onDateFilterChange($event)"></app-date-filter>
     </div>
+    <div class="kReportContainer kNoPadding">
+      <app-geo-filter [viewConfig]="_technologyViewConfig.refineFilter"
+                      [opened]="_refineFilterOpened"
+                      [dateFilter]="_filterEvent"
+                      [selectedFilters]="_selectedRefineFilters"
+                      (closeFilters)="_refineFilterOpened = false"
+                      (filterChange)="_onRefineFilterChange($event)"></app-geo-filter>
+    </div>
   </app-tech-devices-overview>
 
   <app-top-browsers *ngIf="_technologyViewConfig.topBrowsers"
                     [filter]="_filterEvent"
+                    [refineFilter]="_refineFilter"
                     [selectedMetric]="_selectedMetric"
                     [devicesList]="_devicesList"
                     [deviceFilter]="_devicesFilter"
@@ -31,6 +49,7 @@
 
   <app-top-os *ngIf="_technologyViewConfig.topOs"
               [filter]="_filterEvent"
+              [refineFilter]="_refineFilter"
               [selectedMetric]="_selectedMetric"
               [devicesList]="_devicesList"
               [deviceFilter]="_devicesFilter"

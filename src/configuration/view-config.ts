@@ -48,6 +48,7 @@ export const viewsConfig = {
       export: {},
       refineFilter: {
         geo: {},
+        playbackType: {},
         tags: {},
         categories: {},
         domains: {},
@@ -58,6 +59,9 @@ export const viewsConfig = {
       devices: {},
       topBrowsers: {},
       topOs: {},
+      refineFilter: {
+        playbackType: {},
+      },
     },
   },
   bandwidth: {
