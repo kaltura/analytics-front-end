@@ -732,7 +732,10 @@
         "sum_view_time": "Minutes Viewed",
         "avg_view_live_latency": "Avg. Latency Rate",
         "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
+        "avg_view_segment_download_time_sec": "Avg. Segment Download Time",
+        "avg_view_manifest_download_time_sec": "Avg. Manifest Download Time",
         "view_buffer_time_ratio": "Avg. Buffer Rate",
+        "error": "Errors",
         "totals": {
           "viewers": "Peak Users",
           "viewers_engagement": "Peak Engaged Users",
