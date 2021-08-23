@@ -30,6 +30,8 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
     ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
       if (this.activationArgs[filter]) {
         this._getGraphActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
+      } else {
+        delete this._getGraphActionArgs.reportInputFilter[filter];
       }
     });
   }

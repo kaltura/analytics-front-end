@@ -19,6 +19,8 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
       if (activationArgs[filter]) {
         this._getTableActionArgs.reportInputFilter[filter] = activationArgs[filter];
+      } else {
+        delete this._getTableActionArgs.reportInputFilter[filter];
       }
     });
     this._getTableActionArgs.order = _isAuthUsers ? '-view_unique_audience' : '-views';

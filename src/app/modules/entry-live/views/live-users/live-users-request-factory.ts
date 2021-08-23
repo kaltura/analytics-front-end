@@ -30,6 +30,8 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
     ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
       if (this.activationArgs[filter]) {
         this._getTableActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
+      } else {
+        delete this._getTableActionArgs.reportInputFilter[filter];
       }
     });
   }

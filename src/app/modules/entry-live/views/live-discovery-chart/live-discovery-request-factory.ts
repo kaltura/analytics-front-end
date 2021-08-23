@@ -74,6 +74,9 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
       if (activationArgs[filter]) {
         (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];
         (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];
+      } else {
+        delete this._getGraphActionArgs.reportInputFilter[filter];
+        delete this._getTotalActionArgs.reportInputFilter[filter];
       }
     });
   }
