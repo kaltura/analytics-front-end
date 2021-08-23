@@ -58,15 +58,20 @@ export class LocationFilterComponent implements OnDestroy {
         this._selectedCountries = [];
         this._selectedRegions = [];
         this._selectedCities = [];
-      });
+      }, this._isRealTime);
     }, 0);
   }
 
   @Output() itemSelected = new EventEmitter<LocationsFilterValue>();
 
+  @Input() set isRealTime (value: boolean) {
+    this._isRealTime = value;
+  }
+
   public _selectedCountries: LocationsFilterValueItem[];
   public _selectedRegions: LocationsFilterValueItem[];
   public _selectedCities: LocationsFilterValueItem[];
+  private _isRealTime: boolean;
 
   constructor(public _locationFilterService: LocationsFilterService) {
   }

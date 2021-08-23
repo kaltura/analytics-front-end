@@ -20,7 +20,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 })
 export class TimeSelectorComponent implements OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
-  
+
   @Input() set dateRange(value: DateRange) {
     if (value) {
       this._selectedDateRange = value;
@@ -28,18 +28,18 @@ export class TimeSelectorComponent implements OnDestroy {
       this._selectedDateRange = defaultDateRange;
     }
   }
-  
+
   @Input() showCompare = true;
-  
+
   @Output() filterChange: EventEmitter<DateChangeEvent> = new EventEmitter();
-  
+
   @ViewChild(PopupWidgetComponent) _popupWidget: PopupWidgetComponent;
-  
+
   private _lastSelectedDateRange: DateRange; // used for revert selection
   private _startDate: Date;
   private _endDate: Date;
   private _invalidTimes = false;
-  
+
   public _invalidFrom = false;
   public _invalidTo = false;
   public _maxDate = new Date();
@@ -58,11 +58,11 @@ export class TimeSelectorComponent implements OnDestroy {
   public _dateRangeLabel = '';
   public _shortDateRangeLabel = '';
   public _specificDateRange: Date[] = [new Date(), new Date()];
-  
+
   public get _applyDisabled(): boolean {
     return this._selectedView === 'specific' && (this._specificDateRange.filter(Boolean).length !== 2 || this._invalidTimes);
   }
-  
+
   constructor(private _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
@@ -71,18 +71,18 @@ export class TimeSelectorComponent implements OnDestroy {
               private _dateFilterService: TimeSelectorService) {
     this._init();
   }
-  
+
   ngOnDestroy() {
-  
+
   }
-  
+
   private _init(): void {
     this._leftDateRangeItems = this._dateFilterService.getDateRange('left');
     this._rightDateRangeItems = this._dateFilterService.getDateRange('right');
     setTimeout(() => {
       this.updateDataRanges(); // use a timeout to allow data binding to complete
     }, 0);
-  
+
     this._dateFilterService.popupOpened$
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {
@@ -92,7 +92,7 @@ export class TimeSelectorComponent implements OnDestroy {
         }
       });
   }
-  
+
   private _scrollToPopup(): void {
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById('discovery-time-selector') as HTMLElement;
@@ -106,16 +106,16 @@ export class TimeSelectorComponent implements OnDestroy {
       this._pageScrollService.start(pageScrollInstance);
     }
   }
-  
+
   private _resetTime(): void {
     if (this._invalidTimes) {
       this._fromTime = moment().subtract(1, 'minute').toDate();
       this._toTime = new Date();
-  
+
       this._validateTimeInputs();
     }
   }
-  
+
   private _triggerChangeEvent(): void {
     const isPresetMode = this._selectedView === 'preset';
     const startDate = moment(this._startDate);
@@ -131,9 +131,10 @@ export class TimeSelectorComponent implements OnDestroy {
       shortRangeLabel: this._shortDateRangeLabel,
     };
     this.filterChange.emit(payload);
+
     this._dateFilterService.onFilterChange(payload);
   }
-  
+
   private _updateLayout(): void {
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
@@ -141,32 +142,32 @@ export class TimeSelectorComponent implements OnDestroy {
       }, 0);
     }
   }
-  
+
   private _getDate(date: Date, time: Date): Date {
     const momentDate = moment(date);
     const momentTime = moment(time);
-    
+
     momentDate.set({ hour: momentTime.hour(), minute: momentTime.minute(), second: 0 });
-    
+
     return momentDate.toDate();
   }
-  
+
   private _formPresetDateRangeLabel(label: string, from: Date, to: Date, short = false): string {
     if (short) {
       return `<b>${label}</b>`;
     }
     return `<b>${label}</b>&nbsp;&nbsp;&nbsp;${this._formatDateRangeLabel(from, to)}`;
   }
-  
+
   private _formatDateRangeLabel(from: Date, to: Date): string {
     const startDate = DateFilterUtils.getMomentDate(from);
     const endDate = DateFilterUtils.getMomentDate(to);
     const getDate = date => date.format(analyticsConfig.dateFormat === 'month-day-year' ? 'MM/D/YYYY' : 'D/MM/YYYY');
     const getTime = date => date.format('HH:mm');
-  
+
     return `${getDate(startDate)} ${getTime(startDate)} – ${getDate(endDate)} ${getTime(endDate)}`;
   }
-  
+
   public _validateTimeInputs(): void {
     // postpone checks to make sure all properties are updated
     setTimeout(() => {
@@ -174,7 +175,7 @@ export class TimeSelectorComponent implements OnDestroy {
       this._timeChange('to');
     }, 0);
   }
-  
+
   public updateDataRanges(fireUpdateEvent = true): void {
     this._lastSelectedDateRange = this._selectedDateRange;
     if (this._selectedView === 'preset') {
@@ -188,31 +189,31 @@ export class TimeSelectorComponent implements OnDestroy {
       this._endDate = this._getDate(this._specificDateRange[1], this._toTime);
       this._dateRangeLabel = this._formatDateRangeLabel(this._startDate, this._endDate);
     }
-  
+
     this._dateFilterService.onFilterLabelChange(this._dateRangeLabel);
-    
+
     if (fireUpdateEvent) {
       this._triggerChangeEvent();
     }
   }
-  
+
   public _onPopupOpen(): void {
     this._updateLayout();
     this._selectedDateRange = this._lastSelectedDateRange;
   }
-  
+
   public _onPopupClose(): void {
     this._updateLayout();
     this._resetTime();
   }
-  
+
   public _closePopup(): void {
     this.updateDataRanges();
     if (this._popupWidget) {
       this._popupWidget.close();
     }
   }
-  
+
   public _timeChange(type: 'from' | 'to'): void {
     const isFromTime = type === 'from';
     const time = moment(isFromTime ? this._fromTime : this._toTime).set({ second: 0 });
@@ -220,7 +221,7 @@ export class TimeSelectorComponent implements OnDestroy {
 
     this._invalidFrom = isFromTime && isSameDay && time.isSameOrAfter(moment(this._toTime).set({ second: 0 }));
     this._invalidTo = !isFromTime && isSameDay && time.isSameOrBefore(moment(this._fromTime).set({ second: 0 }));
-  
+
     this._invalidTimes = this._invalidFrom || this._invalidTo;
   }
 }

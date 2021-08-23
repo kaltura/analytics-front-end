@@ -56,12 +56,16 @@ export class LiveDevicesWidget extends WidgetBase<LiveDevicesData> {
 
   protected _onRestart(): void {
     this._selectedMetric = analyticsConfig.liveEntryUsersReports === EntryLiveUsersMode.All ? 'sum_view_time' : 'view_unique_audience';
-    this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveDevicesRequestFactory(this._activationArgs);
     this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs.entryId);
+    if (this._pollsFactory) {
+      this._pollsFactory.updateArgs(widgetsArgs);
+    } else {
+      this._pollsFactory = new LiveDevicesRequestFactory(widgetsArgs);
+    }
 
     return ObservableOf(null);
   }

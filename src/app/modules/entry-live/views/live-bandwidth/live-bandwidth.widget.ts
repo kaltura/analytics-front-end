@@ -38,11 +38,11 @@ export class LiveBandwidthWidget extends WidgetBase<LiveQoSData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveBandwidthRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveBandwidthRequestFactory(this._activationArgs);
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveBandwidthRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveBandwidthRequestFactory(widgetsArgs);
 
     return ObservableOf(null);
   }

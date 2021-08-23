@@ -41,11 +41,11 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveUsersRequestFactory(this._activationArgs.entryId);
+    this._pollsFactory = new LiveUsersRequestFactory(this._activationArgs);
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveUsersRequestFactory(widgetsArgs.entryId);
+    this._pollsFactory = new LiveUsersRequestFactory(widgetsArgs);
 
     return ObservableOf(null);
   }
@@ -93,11 +93,11 @@ export class LiveUsersWidget extends WidgetBase<LiveUsersData> {
         .forEach((valueString, index, array) => {
           const [date, rawValue] = valueString.split(analyticsConfig.valueSeparator);
           const relevantActiveUser = result.activeUsers[index] ? result.activeUsers[index].value || 0 : 0;
-          
+
           const value = this._usersModeService.usersMode === EntryLiveUsersMode.All
             ? Number(rawValue) * 100
             : relevantActiveUser ? Number(rawValue) / relevantActiveUser * 100 : 0;
-          
+
           const graphPoint = { value };
           if (index === array.length - 1) {
             graphPoint['symbol'] = 'circle';

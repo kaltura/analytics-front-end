@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, I
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { OsFilterService } from './os-filter.service';
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import {OptionItem} from "shared/components/filter/filter.component";
 
 export interface OsFilterValueItem {
   name: string;
@@ -24,12 +25,21 @@ export class OsFilterComponent implements OnDestroy {
     }
   }
 
+  @Input() set predefinedOSs(value: string[]) {
+    this._predefinedOSs = value.map((data, index) => ({
+      value: { name: data, id: index.toString() },
+      label: data,
+    }));
+  }
+
   @Input() set dateFilter(event: DateChangeEvent) {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
-      this._osFilterService.updateDateFilter(event, () => {
-        this._selectedOs = [];
-      });
+      if (!this._predefinedOSs) {
+        this._osFilterService.updateDateFilter(event, () => {
+          this._selectedOs = [];
+        });
+      }
     }, 0);
   }
 
@@ -45,6 +55,7 @@ export class OsFilterComponent implements OnDestroy {
   private _listDiffer: IterableDiffer<any>;
 
   public _selectedOs: OsFilterValueItem[];
+  public _predefinedOSs: OptionItem[];
 
   constructor(private _listDiffers: IterableDiffers,
               public _osFilterService: OsFilterService) {

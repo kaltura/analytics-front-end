@@ -8,6 +8,15 @@
           <span class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_entry?.name}}</span>
           <div class="kControls">
             <app-toggle-users-mode (modeChanges)="_onUsersModeChange()"></app-toggle-users-mode>
+            <div class="kFilter kOverrideFAIcons">
+              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+                   (click)="_refineFilterOpened = !_refineFilterOpened"
+                   (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
+                <span>{{'app.filters.filter' | translate}}</span>
+                <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+                <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+              </div>
+            </div>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
                             name="Live Entry"
                             [width]="380"
@@ -21,6 +30,14 @@
 
         <app-entry-details *ngIf="_entryLiveViewConfig.details"
                            [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+        <app-live-filters class="kRefineFiltersHost" name="entry-webcast"
+                                  [viewConfig]="_refineFilter"
+                                  [opened]="_refineFilterOpened"
+                                  [entryId]="_entryId"
+                                  [dateFilter]="_selectedDateLabelRange"
+                                  [selectedFilters]="_selectedRefineFilters"
+                                  (closeFilters)="_refineFilterOpened = false"
+                                  (filterChange)="_onRefineFilterChange($event)"></app-live-filters>
         <div class="kEntryWidgets">
           <div class="kWideColumn">
             <app-live-users [entry]="_entry"></app-live-users>

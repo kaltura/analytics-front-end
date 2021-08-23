@@ -1,0 +1,70 @@
+<div data-aid="filter-entry" class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconhelp_full"></i>
+      {{'app.filters.disclaimer' | translate}}
+    </span>
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
+  </div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <div class="kFilterContainerRow">
+          <div class="kFilterContainerCol">
+            <app-webcast-device-filter [dateFilter]="_dateFilter"
+                                       [selectedFilters]="_selectedValues['devices']"
+                                       [filterConfig]="filterConfig"
+                                       (itemSelected)="_onItemSelected($event, 'devices')"
+                                       [isRealTime]="true"
+                                       (itemUnselected)="_onItemUnselected($event, 'devices')"></app-webcast-device-filter>
+
+            <app-webcast-browser-filter [dateFilter]="_dateFilter"
+                                        [filterConfig]="filterConfig"
+                                        [selectedFilters]="_selectedValues['browser']"
+                                        (itemSelected)="_onItemSelected($event, 'browser')"
+                                        [predefinedBrowsers]="predefinedBrowsers"
+                                        (itemUnselected)="_onItemUnselected($event, 'browser')"></app-webcast-browser-filter>
+
+            <app-webcast-os-filter [dateFilter]="_dateFilter"
+                                   [selectedFilters]="_selectedValues['os']"
+                                   [filterConfig]="filterConfig"
+                                   (itemSelected)="_onItemSelected($event, 'os')"
+                                   [predefinedOSs]="predefinedOSs"
+                                   (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
+          </div>
+          <div class="kFilterContainerCol location-filters">
+            <app-location-filters [expandWidth]="!showAutocompleteGroup"
+                                  [filterWarning]="locationFiltersWarning"
+                                  [dateFilter]="_dateFilter"
+                                  [filterConfig]="filterConfig"
+                                  [selectedFilters]="_selectedValues['location']"
+                                  [isRealTime]="true"
+                                  (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
+          </div>
+          <div class="kFilterContainerCol">
+            <app-owners-filter [selectedFilters]="_selectedValues['users']"
+                               [label]="'app.filters.users' | translate"
+                               (itemSelected)="_onItemSelected($event, 'users')"
+                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="kRefineFiltersFooter">
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
+    </div>
+  </div>
+</div>

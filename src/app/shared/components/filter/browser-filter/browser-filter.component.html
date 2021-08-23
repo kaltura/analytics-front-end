@@ -1,6 +1,6 @@
 <app-dropdown-filter templateType="browser"
                      [label]="'app.filters.filterBrowsers' | translate"
-                     [options]="_browsersFilterService.browserOptions | async"
+                     [options]="_predefinedBrowsers || (_browsersFilterService.browserOptions | async)"
                      [isLoading]="_browsersFilterService.isBusy('browser')"
                      [defaultLabel]="'app.filters.browserPlaceholder' | translate"
                      [selectedItemsLabel]="'app.filters.browsersSelected' | translate"
