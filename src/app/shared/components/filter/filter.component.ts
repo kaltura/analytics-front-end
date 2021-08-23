@@ -375,7 +375,7 @@ export class FilterComponent {
     this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
-    if (this._currentFilters.length === 0) {
+    if (this._currentFilters.length === 0 && this._initialFilters) {
       this._initialFilters.forEach(filter => {
         this._onItemSelected(filter.value, filter.type);
       });
