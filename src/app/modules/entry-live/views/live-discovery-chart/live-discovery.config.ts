@@ -93,7 +93,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             group: 'qualityOfService',
           },
           'avg_view_segment_download_time_sec': {
-            format: value => Math.round(value),
+            format: value => parseFloat(value).toFixed(2),
             colors: ['#BD93F8'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_segment_download_time_sec')}: ${ReportHelper.numberOrZero(value)} Seconds`,
@@ -102,7 +102,7 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
             group: 'qualityOfService',
           },
           'avg_view_manifest_download_time_sec': {
-            format: value => Math.round(value),
+            format: value => parseFloat(value).toFixed(2),
             colors: ['#8A54D7'],
             graphType: GraphType.line,
             graphTooltip: value => `${this._translate.instant('app.entryLive.discovery.avg_view_manifest_download_time_sec')}: ${ReportHelper.numberOrZero(value)} Seconds`,
