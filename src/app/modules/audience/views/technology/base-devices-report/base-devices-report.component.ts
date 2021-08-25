@@ -380,12 +380,19 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
     this._loadReport();
   }
 
+  private getPlaybackTypeFilters() {
+    return (this._filter.playbackTypeIn || '').split(analyticsConfig.valueSeparator);
+  }
+
   private isVodFilterSelected() {
-    const playbackTypeFilters = this._filter.playbackTypeIn;
-    return !playbackTypeFilters || playbackTypeFilters.length === 0 || playbackTypeFilters.includes('vod');
+    return !this._filter.playbackTypeIn || this.getPlaybackTypeFilters().includes('vod');
   }
 
   getColumnData() {
     return this.isVodFilterSelected() ? this._columns : this._columns.filter(column => column !== 'sum_time_viewed');
+  }
+
+  displayVodLabel(column: string) {
+    return this.isVodFilterSelected() && this.getPlaybackTypeFilters().length > 1 && column === 'sum_time_viewed';
   }
 }

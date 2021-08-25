@@ -1,21 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { TranslateService } from '@ngx-translate/core';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { DevicesOverviewConfig } from './devices-overview.config';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { TrendService } from 'shared/services/trend.service';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { reportTypeMap } from 'shared/utils/report-type-map';
-import { BarRowTooltip } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AuthService, ErrorDetails, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType} from 'kaltura-ngx-client';
+import {TranslateService} from '@ngx-translate/core';
+import {ReportDataConfig} from 'shared/services/storage-data-base.config';
+import {DevicesOverviewConfig} from './devices-overview.config';
+import {Tab} from 'shared/components/report-tabs/report-tabs.component';
+import {DateChangeEvent} from 'shared/components/date-filter/date-filter.service';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {TrendService} from 'shared/services/trend.service';
+import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {BehaviorSubject} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {reportTypeMap} from 'shared/utils/report-type-map';
+import {BarRowTooltip} from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
 import {RefineFilter} from "shared/components/filter/filter.component";
 
 export interface SummaryItem {
@@ -95,7 +95,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
   public _tabsData: Tab[] = [];
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public _dataConfig: ReportDataConfig;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
@@ -167,7 +167,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
 
   private _setCompareData(device: SummaryItem, compareValue: number, currentPeriodTitle: string, comparePeriodTitle: string): void {
     const currentValue = device.rawValue;
-    const { value, direction } = this._trendService.calculateTrend(currentValue, compareValue);
+    const {value, direction} = this._trendService.calculateTrend(currentValue, compareValue);
     const tooltip = `${this._trendService.getTooltipRowString(currentPeriodTitle, ReportHelper.numberWithCommas(currentValue.toFixed(this._fractions)))}${this._trendService.getTooltipRowString(comparePeriodTitle, ReportHelper.numberWithCommas(compareValue.toFixed(this._fractions)))}`;
     device['trend'] = value !== null ? value : '–';
     device['trendDirection'] = direction;
@@ -176,7 +176,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   private _loadTrendData(): void {
-    const { startDate, endDate } = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
+    const {startDate, endDate} = this._trendService.getCompareDates(this._filter.fromDate, this._filter.toDate);
     const currentPeriodTitle = `${DateFilterUtils.formatMonthDayString(this._filter.fromDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(this._filter.toDate, analyticsConfig.locale)}`;
     const comparePeriodTitle = `${DateFilterUtils.formatMonthDayString(startDate, analyticsConfig.locale)} – ${DateFilterUtils.formatMonthDayString(endDate, analyticsConfig.locale)}`;
 
@@ -205,7 +205,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
 
               if (report.table && report.table.header && report.table.data) {
                 const relevantFields = Object.keys(this._dataConfig.totals.fields);
-                const { data } = this._getOverviewData(report.table, relevantFields);
+                const {data} = this._getOverviewData(report.table, relevantFields);
                 const compareData = this._getSummaryData(data, relevantFields);
                 Object.keys(this._summaryData).forEach(key => {
                   const compare = compareData[key] as SummaryItem[];
@@ -251,12 +251,12 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   private _getOverviewData(table: KalturaReportTable, relevantFields: string[]): { data: { [key: string]: string }[], columns: string[] } {
-    const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig.table);
+    const {tableData, columns} = this._reportService.parseTableData(table, this._dataConfig.table);
     const data = tableData.reduce((data, item) => {
       if (this.allowedDevices.indexOf(item.device) > -1) {
         data.push(item);
       } else {
-        const otherIndex = data.findIndex(({ device }) => device === 'OTHER');
+        const otherIndex = data.findIndex(({device}) => device === 'OTHER');
         if (otherIndex !== -1) {
           relevantFields.forEach(key => {
             data[otherIndex][key] = (parseFloat(data[otherIndex][key]) || 0) + (parseFloat(item[key]) || 0);
@@ -270,12 +270,12 @@ export class TechDevicesOverviewComponent implements OnDestroy {
     }, []);
 
     // move other devices in the end
-    const otherDevicesIndex = data.findIndex(({ device }) => device === 'OTHER');
+    const otherDevicesIndex = data.findIndex(({device}) => device === 'OTHER');
     if (otherDevicesIndex !== -1) {
       data.push(data.splice(otherDevicesIndex, 1)[0]);
     }
 
-    return { data, columns };
+    return {data, columns};
   }
 
   private _handleDevicesListChange(data: { [key: string]: string }[]): void {
@@ -289,7 +289,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   private _getSummaryData(data: { [key: string]: string }[], relevantFields: string[]): Summary {
     return relevantFields.reduce((summaryData, key) => {
       const relevantTotal = key === 'unique_viewers'
-        ? { value: String(data.reduce((acc, val) => acc + parseFloat(val['unique_viewers']), 0)) }
+        ? {value: String(data.reduce((acc, val) => acc + parseFloat(val['unique_viewers']), 0))}
         : this._tabsData.find(total => total.key === key);
       if (relevantTotal) {
         const totalValue = parseFloat(relevantTotal.value);
@@ -329,7 +329,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
 
   private handleOverview(table: KalturaReportTable): void {
     const relevantFields = Object.keys(this._dataConfig.totals.fields);
-    const { data, columns } = this._getOverviewData(table, relevantFields);
+    const {data, columns} = this._getOverviewData(table, relevantFields);
 
     this._summaryData = this._getSummaryData(data, relevantFields);
 
@@ -345,7 +345,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   public _onSelectionChange(updateGraph = true): void {
-    this._logger.trace('Handle device filter apply action by user', { selectedFilters: this._selectedValues, updateGraph });
+    this._logger.trace('Handle device filter apply action by user', {selectedFilters: this._selectedValues, updateGraph});
     if (updateGraph) {
       this._updateGraphStyle();
     }
@@ -354,14 +354,14 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   public _onTabChange(tab: Tab): void {
-    this._logger.trace('Handle tab change action by user', { tab });
+    this._logger.trace('Handle tab change action by user', {tab});
     this._selectedMetrics = tab.key;
     this.metricChanged.emit(this._selectedMetrics);
     this._updateGraphStyle();
   }
 
   public resetDeviceFilters(emit = false, updateGraph = true): void {
-    this._logger.trace('Handle reset device filters action by user', { emit, updateGraph });
+    this._logger.trace('Handle reset device filters action by user', {emit, updateGraph});
     this._selectedValues = [];
 
     if (updateGraph) {
@@ -378,11 +378,21 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   private isVodFilterSelected() {
-    const playbackTypeFilters = this._filter.playbackTypeIn;
-    return !playbackTypeFilters || playbackTypeFilters.length === 0 || playbackTypeFilters.includes('vod');
+    return !this._filter.playbackTypeIn || this.getPlaybackTypeFilters().includes('vod');
+  }
+
+  private getPlaybackTypeFilters() {
+    return (this._filter.playbackTypeIn || '').split(analyticsConfig.valueSeparator);
   }
 
   getTabsData() {
-    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
+    return this.isVodFilterSelected() ? this._tabsData.map(tab => {
+      if (this.getPlaybackTypeFilters().length > 1 && (tab.key === 'sum_time_viewed' || tab.key === 'avg_time_viewed')) {
+        tab.postfixLabel = ' (VOD)';
+      } else {
+        tab.postfixLabel = null;
+      }
+      return tab;
+    }) : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
   }
 }

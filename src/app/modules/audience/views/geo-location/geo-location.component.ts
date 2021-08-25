@@ -550,11 +550,21 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private isVodFilterSelected() {
-    const playbackTypeFilters = this._refineFilter.filter(filter => filter.type === 'playbackType');
-    return playbackTypeFilters.length === 0 || playbackTypeFilters.find(filter => filter.value === 'vod');
+    return !this._filter.playbackTypeIn || this.getPlaybackTypeFilters().includes('vod');
+  }
+
+  private getPlaybackTypeFilters() {
+    return (this._filter.playbackTypeIn || '').split(analyticsConfig.valueSeparator);
   }
 
   getTabsData() {
-    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'avg_view_drop_off');
+    return this.isVodFilterSelected() ? this._tabsData.map(tab => {
+      if (this.getPlaybackTypeFilters().length > 1 && (tab.key === 'avg_view_drop_off')) {
+        tab.postfixLabel = ' (VOD)';
+      } else {
+        tab.postfixLabel = null;
+      }
+      return tab;
+    }) : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
   }
 }

@@ -13,6 +13,7 @@ export type Tab = {
   hidden?: boolean;
   icon?: string;
   iconColor?: string;
+  postfixLabel?: string;
 };
 
 @Component({
@@ -27,7 +28,7 @@ export class ReportTabsComponent implements OnInit {
   @Input() narrowTabs = false;
 
   @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
-  
+
   constructor() {
   }
 

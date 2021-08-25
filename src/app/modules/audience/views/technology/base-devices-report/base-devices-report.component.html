@@ -60,7 +60,7 @@
                     [ngStyle]="{'width': col === 'plays_distribution' ? '300px' : 'auto'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.technology.' + col | translate" [showOnEllipsis]="true">
-                      {{'app.audience.technology.' + col | translate}}
+                      {{'app.audience.technology.' + col | translate}} <span *ngIf="displayVodLabel(col)">(VOD)</span>
                     </span>
                     <p-sortIcon [field]="col" *ngIf="col !== 'plays_trend' && col !== 'plays_distribution' && col !== 'os_family' && col !== 'os' && col !== 'browser' && col !== 'browser_family'"></p-sortIcon>
                   </div>

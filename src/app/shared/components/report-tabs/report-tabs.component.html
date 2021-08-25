@@ -12,6 +12,7 @@
        (click)="tabClick(tab)">
     <span class="kTabTitle">
       {{tab.title}}
+      <span *ngIf="tab.postfixLabel">{{tab.postfixLabel}}</span>
       <kInputHelper *ngIf="tab.tooltip && !compareMode">
         <span>{{tab.tooltip}}</span>
     </kInputHelper>
