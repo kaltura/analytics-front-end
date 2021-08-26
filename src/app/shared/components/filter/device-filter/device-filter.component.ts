@@ -28,7 +28,7 @@ export class DeviceFilterComponent implements OnDestroy {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
       this._devicesFilterService.updateDateFilter(event, () => {
-        this._selectedDevices = [];
+        // this._selectedDevices = [];
       }, this._isRealTime);
     }, 0);
   }
