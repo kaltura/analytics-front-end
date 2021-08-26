@@ -15,7 +15,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
                              classField="__class"
                              [label]="label"
                              [selectedFilters]="selectedFilters"
-                             [placeholder]="'app.filters.ownersPlaceholder' | translate"
+                             [placeholder]="placeholder"
                              [provider]="_usersProvider"
                              (search)="_searchUsers($event)"
                              (itemSelected)="itemSelected.emit($event)"
@@ -24,6 +24,7 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 })
 export class OwnersFilterComponent implements OnDestroy {
   @Input() label = this._translate.instant('app.filters.owners');
+  @Input() placeholder = this._translate.instant('app.filters.ownersPlaceholder');
   @Input() selectedFilters: KalturaUser[] = [];
   @Input() dateFilter: DateChangeEvent;
 
