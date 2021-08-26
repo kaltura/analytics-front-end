@@ -70,7 +70,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
     this._getGraphActionArgs.reportInputFilter.entryIdIn = activationArgs.entryId;
     this._getTotalActionArgs.reportInputFilter.entryIdIn = activationArgs.entryId;
 
-    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemFamilyIn', 'browserFamilyIn', 'userIds'].forEach(filter => {
       if (activationArgs[filter]) {
         (this._getGraphActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];
         (this._getTotalActionArgs.reportInputFilter as KalturaEndUserReportInputFilter)[filter] = activationArgs[filter];

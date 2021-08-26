@@ -27,7 +27,7 @@ export class LiveBandwidthRequestFactory implements RequestFactory<KalturaMultiR
 
   constructor(private activationArgs: WidgetsActivationArgs) {
     this._getGraphActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
-    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemFamilyIn', 'browserFamilyIn', 'userIds'].forEach(filter => {
       if (this.activationArgs[filter]) {
         this._getGraphActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
       } else {

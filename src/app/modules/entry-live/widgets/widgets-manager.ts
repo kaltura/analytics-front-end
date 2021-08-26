@@ -8,8 +8,8 @@ export interface WidgetsActivationArgs {
   regionIn?: string;
   citiesIn?: string;
   deviceIn?: string;
-  operatingSystemIn?: string;
-  browserIn?: string;
+  operatingSystemFamilyIn?: string;
+  browserFamilyIn?: string;
   userIds?: string;
 }
 

@@ -151,13 +151,13 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
         citiesIn = locationArgs.value.city.map(c => c.name).join(analyticsConfig.valueSeparator);
       }
       const deviceIn = this._refineFilter?.filter(f => f.type === 'devices').map(f => f.value.name).join(analyticsConfig.valueSeparator);
-      const operatingSystemIn = this._refineFilter?.filter(f => f.type === 'os').map(f => f.value.name).join(analyticsConfig.valueSeparator);
-      const browserIn = this._refineFilter?.filter(f => f.type === 'browser').map(f => f.value.name).join(analyticsConfig.valueSeparator);
+      const operatingSystemFamilyIn = this._refineFilter?.filter(f => f.type === 'os').map(f => f.value.name).join(analyticsConfig.valueSeparator);
+      const browserFamilyIn = this._refineFilter?.filter(f => f.type === 'browser').map(f => f.value.name).join(analyticsConfig.valueSeparator);
       const userIds = this._refineFilter?.filter(filter => filter.type === 'users')
         .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
         .join(analyticsConfig.valueSeparator);
 
-      const widgetArgs = {entryId: this._entryId, countryIn, regionIn, citiesIn, deviceIn, operatingSystemIn, browserIn, userIds};
+      const widgetArgs = {entryId: this._entryId, countryIn, regionIn, citiesIn, deviceIn, operatingSystemFamilyIn, browserFamilyIn, userIds};
       const widgets = [];
       const silentWidgets = [];
 
