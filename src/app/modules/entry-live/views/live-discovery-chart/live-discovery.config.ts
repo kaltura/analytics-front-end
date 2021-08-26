@@ -175,6 +175,15 @@ export class LiveDiscoveryConfig extends ReportDataBaseConfig {
           },
           'view_buffer_time_ratio': {
             format: value => ReportHelper.percents(value, false),
+          },
+          'avg_view_segment_download_time_sec': {
+            format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
+          },
+          'avg_view_manifest_download_time_sec': {
+            format: value => `${ReportHelper.numberOrZero(value)} Seconds`,
+          },
+          'error': {
+            format: value => ReportHelper.numberOrZero(value, false),
           }
         }
       },
