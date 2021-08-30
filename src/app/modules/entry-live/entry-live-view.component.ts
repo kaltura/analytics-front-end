@@ -128,6 +128,10 @@ export class EntryLiveViewComponent implements OnInit, OnDestroy {
 
         if (this._timeSelector) {
           this._timeSelector.updateDataRanges(false);
+          this._selectedDateLabelRange = {
+            startDate: Math.floor(this._timeSelector._endDate.getTime() / 1000),
+            endDate: Math.floor(this._timeSelector._endDate.getTime() / 1000),
+          } as DateChangeEvent;
         }
       });
   }
