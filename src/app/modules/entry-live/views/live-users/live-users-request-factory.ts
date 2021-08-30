@@ -27,7 +27,7 @@ export class LiveUsersRequestFactory implements RequestFactory<KalturaMultiReque
 
   constructor(private activationArgs: WidgetsActivationArgs) {
     this._getTableActionArgs.reportInputFilter.entryIdIn = this.activationArgs.entryId;
-    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemIn', 'browserIn', 'userIds'].forEach(filter => {
+    ['countryIn', 'regionIn', 'citiesIn', 'deviceIn', 'operatingSystemFamilyIn', 'browserFamilyIn', 'userIds'].forEach(filter => {
       if (this.activationArgs[filter]) {
         this._getTableActionArgs.reportInputFilter[filter] = this.activationArgs[filter];
       } else {
