@@ -109,12 +109,12 @@
       "exportCsv": "Export",
       "exportReports": "Export Reports",
       "exportReport": "Export Report",
+      "reportReady": "Your report is ready!",
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
       "noResultsRegion": "No Data for this Region",
       "exporting": "Preparing Report",
-      "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
       "downloadCsv": "Download Report",
       "tryAgain": "Try Again",
@@ -137,6 +137,8 @@
     },
     "exportReports": {
       "exportReports": "Export Reports",
+      "reportReady": "Your report is ready!",
+      "reportNotFound": "Report expired. Please export it again.",
       "successMessage": "We are preparing your report. We will send it to your email address shortly.",
       "errorMessage": "There was an error processing your export request, please try again or contact Kaltura support."
     },
