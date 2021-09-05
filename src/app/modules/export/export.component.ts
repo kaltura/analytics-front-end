@@ -19,6 +19,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   public _reportId = '';
   public _reportName = '';
   public _exportDate = '';
+  public _invalidLink = false;
 
   constructor(private _route: ActivatedRoute,
               private _http: HttpClient,
@@ -33,11 +34,18 @@ export class ExportComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
         const queryParams = params && params.id ? params.id.split('|') : [];
-        this._reportId = queryParams && queryParams.length > 0 ? queryParams[0] : '';
-        this._reportName = queryParams && queryParams.length > 1 ? queryParams[1] : '';
-        const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MMMM DD, YYYY' : 'DD MMMM, YYYY';
-        const date = queryParams && queryParams.length > 2 ? queryParams[2] : '';
-        this._exportDate = DateFilterUtils.getMomentDate(parseInt(date)).format(dateFormat);
+        if (queryParams.length > 0) {
+          this._reportId = queryParams[0];
+          this._reportName = queryParams.length > 1 ? queryParams[1] : '';
+          const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MMMM DD, YYYY' : 'DD MMMM, YYYY';
+          const date = queryParams.length > 2 ? queryParams[2] : '';
+          this._exportDate = DateFilterUtils.getMomentDate(parseInt(date)).format(dateFormat);
+          if (window.parent && window.parent.history) {
+            window.parent.history.replaceState(null, null, window.parent.location.pathname);
+          }
+        } else {
+          this._invalidLink = true;
+        }
       });
   }
 
