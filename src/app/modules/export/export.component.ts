@@ -5,7 +5,8 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import {TranslateService} from '@ngx-translate/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {buildCDNUrl} from "configuration/analytics-config";
+import {analyticsConfig, buildCDNUrl} from "configuration/analytics-config";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-export',
@@ -16,6 +17,8 @@ export class ExportComponent implements OnInit, OnDestroy {
   public _downloadingReport = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportId = '';
+  public _reportName = '';
+  public _exportDate = '';
 
   constructor(private _route: ActivatedRoute,
               private _http: HttpClient,
@@ -29,7 +32,12 @@ export class ExportComponent implements OnInit, OnDestroy {
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
-        this._reportId = params['id'];
+        const queryParams = params && params.id ? params.id.split('|') : [];
+        this._reportId = queryParams && queryParams.length > 0 ? queryParams[0] : '';
+        this._reportName = queryParams && queryParams.length > 1 ? queryParams[1] : '';
+        const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MMMM DD, YYYY' : 'DD MMMM, YYYY';
+        const date = queryParams && queryParams.length > 2 ? queryParams[2] : '';
+        this._exportDate = DateFilterUtils.getMomentDate(parseInt(date)).format(dateFormat);
       });
   }
 

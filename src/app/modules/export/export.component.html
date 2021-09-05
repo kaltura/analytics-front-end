@@ -1,9 +1,10 @@
 <div data-aid="report-group-entry" class="kMain">
   <k-area-blocker [showLoader]="_downloadingReport" [message]="_blockerMessage">
     <div class="kReportView kContent">
-      <div class="kReportHeader">
-        <span class="kTitle">{{'app.exportReports.reportReady' | translate}}</span>
-        <button type="button" class="kButtonBranded" pButton [label]="'app.entryWebcast.engagement.download' | translate" [disabled]="_downloadingReport" (click)="_downloadReport()"></button>
+      <div class="kExportContent">
+        <span class="kTitle" [innerHTML]="'app.exportReports.reportReady' | translate: { reportName: _reportName } "></span>
+        <span class="kTitle">{{'app.exportReports.exportDate' | translate: {exportDate: _exportDate} }}</span>
+        <button type="button" class="kButtonBranded" pButton [label]="'app.exportReports.download' | translate" [disabled]="_downloadingReport" (click)="_downloadReport()"></button>
       </div>
     </div>
   </k-area-blocker>

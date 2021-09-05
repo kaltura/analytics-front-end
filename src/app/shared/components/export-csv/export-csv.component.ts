@@ -209,7 +209,7 @@ export class ExportCsvComponent implements OnDestroy {
         mapReportItem(item);
       }
     });
-
+    console.log("referrer URL: "+window.parent.location);
     const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems }) });
 
     this._exportingCsv = true;
