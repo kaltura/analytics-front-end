@@ -26,9 +26,20 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: calc(100% - 375px);
+
+    @media screen and (max-width: 991px) {
+      width: calc(100% - 440px);
+    }
+    @media screen and (min-width: 992px) {
+      width: calc(100% - 292px);
+    }
+    @media screen and (min-width: 1280px) {
+      width: calc(100% - 375px);
+    }
     @media screen and (min-width: 1610px) {
       width: calc(100% - 480px);
     }
+
     &.noCreator{
       margin-top: -12px;
     }
