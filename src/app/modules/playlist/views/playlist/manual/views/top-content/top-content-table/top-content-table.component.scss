@@ -25,7 +25,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: calc(100% - 480px);
+    width: calc(100% - 375px);
+    @media screen and (min-width: 1610px) {
+      width: calc(100% - 480px);
+    }
     &.noCreator{
       margin-top: -12px;
     }
