@@ -33,7 +33,7 @@ export class ExportComponent implements OnInit, OnDestroy {
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
-        const queryParams = params && params.id ? params.id.split(analyticsConfig.valueSeparator) : [];
+        const queryParams = params && params.id ? params.id.split('|') : [];
         if (queryParams.length > 0) {
           this._reportId = queryParams[0];
           this._reportName = queryParams.length > 1 ? queryParams[1] : '';
