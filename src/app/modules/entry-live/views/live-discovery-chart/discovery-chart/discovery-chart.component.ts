@@ -141,8 +141,22 @@ export class DiscoveryChartComponent implements OnDestroy{
     mainMin = mainMin === mainMax ? 0 : mainMin;
     secondaryMin = secondaryMin === secondaryMax ? 0 : secondaryMin;
 
-    const mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
-    const secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
+    let mainInterval = parseFloat(((mainMax - mainMin) / 5).toFixed(2));
+    let secondaryInterval = parseFloat(((secondaryMax - secondaryMin) / 5).toFixed(2));
+
+    // make the same scale if both have the same units
+    if (this.fields[mainMetric].units && this.fields[secondaryMetric].units &&
+      this.fields[mainMetric].units() === this.fields[secondaryMetric].units()) {
+      const min = Math.min(mainMin, secondaryMin);
+      const max = Math.max(mainMax, secondaryMax);
+      const interval = parseFloat(((max - min) / 5).toFixed(2));
+      mainMin = min;
+      secondaryMin = min;
+      mainMax = max;
+      secondaryMax = max;
+      mainInterval = interval;
+      secondaryInterval = interval;
+    }
 
     return {
       color: this._selectedMetrics.map(metric => getColor(metric)),
