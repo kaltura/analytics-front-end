@@ -6,7 +6,7 @@ import { AlertSeverity, DiagnosticsErrorCodes } from '../live-stream-health.type
 })
 export class CodeToSeverityPipe implements PipeTransform {
   transform(code: number): number {
-    
+
     switch (code) {
       case DiagnosticsErrorCodes.BitrateUnmatched:
       case DiagnosticsErrorCodes.EntryStopped:
@@ -17,13 +17,13 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.BandwidthBackToNormal:
       case DiagnosticsErrorCodes.CPUBackToNormal:
         return AlertSeverity.info;
-      
+
       case DiagnosticsErrorCodes.EntryRestarted:
       case DiagnosticsErrorCodes.BackupOnlyStreamRecording:
       case DiagnosticsErrorCodes.ResolutionLimitedByBandwidth:
       case DiagnosticsErrorCodes.ResolutionLimitedByCPU:
         return AlertSeverity.warning;
-      
+
       case DiagnosticsErrorCodes.NoAudioSignal:
       case DiagnosticsErrorCodes.NoVideoSignal:
       case DiagnosticsErrorCodes.PtsDrift:
@@ -34,8 +34,9 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.AuthenticationNoLivePermission:
       case DiagnosticsErrorCodes.AuthenticationTooManyStreams:
       case DiagnosticsErrorCodes.AuthenticationTooManyTranscodedStreams:
+      case DiagnosticsErrorCodes.M3U8ChunkWithInvalidDurationAlert:
         return AlertSeverity.critical;
-      
+
       default:
         return AlertSeverity.info;
     }
