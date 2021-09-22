@@ -870,6 +870,11 @@
         },
         "122": {
           "message-log": "CPU back to normal"
+        },
+        "123": {
+          "message-log": "Abnormal M3U8 segment size",
+          "self-serve-message-log": "Abnormal M3U8 segment size",
+          "message-text-box": "Segment reported in m3u8 is with irregular duration"
         }
       },
       "exportLabels": {

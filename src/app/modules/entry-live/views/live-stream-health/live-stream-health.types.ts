@@ -28,6 +28,7 @@ export enum DiagnosticsErrorCodes {
   ResolutionLimitedByCPU = 120,
   BandwidthBackToNormal = 121,
   CPUBackToNormal = 122,
+  M3U8ChunkWithInvalidDurationAlert = 123,
 }
 
 export enum AlertSeverity {
