@@ -116,7 +116,7 @@ export class FilterComponent {
       this._logger.debug('Update date filter', () => value);
       this._dateFilter = value;
 
-      if (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits') {
+      if (this.name !== 'entry-live' && (!this._dateFilter || !this._dateFilter.changeOnly || this._dateFilter.changeOnly !== 'timeUnits')) {
         setTimeout(() => { // remove location filter in the next tick to avoid tags array update collisions
           if (this._currentFilters.find(({ type }) => type === 'location')) {
             this._removeFilter({ value: 'location', label: 'Location', type: 'location' });
