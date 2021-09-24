@@ -139,7 +139,7 @@
       "exportReports": "Export Reports",
       "download": "Download Report",
       "exportDate": "Exported {{exportDate}}",
-      "reportReady": "Your <b>{{reportName}}</b> is ready for download",
+      "reportReady": "Your <b>{{reportName}}</b> report is ready for download",
       "reportNotFound": "Report expired. Please export it again.",
       "successMessage": "We are preparing your report. We will send it to your email address shortly.",
       "errorMessage": "There was an error processing your export request, please try again or contact Kaltura support."
