@@ -209,8 +209,10 @@ export class ExportCsvComponent implements OnDestroy {
         mapReportItem(item);
       }
     });
-    console.log("referrer URL: "+window.parent.location);
-    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems }) });
+    const origin = window.parent && window.parent.location && window.parent.location.origin ? window.parent.location.origin : window.location.origin;
+    const path = origin.indexOf('kmc') > 0 ? origin + '/analytics/analytics/export?id=' : origin + '/userreports/downloadreport?report_id=';
+    const baseUrl = encodeURIComponent(path);
+    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
 
     this._exportingCsv = true;
 
