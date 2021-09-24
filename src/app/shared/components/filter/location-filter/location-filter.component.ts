@@ -28,9 +28,9 @@ export class LocationFilterComponent implements OnDestroy {
   @Input() set selectedFilters(value: LocationsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
       const result = value[0];
-      this._selectedCountries = result.country;
-      this._selectedRegions = result.region;
-      this._selectedCities = result.city;
+      this._onItemSelected(result.country, 'country');
+      this._onItemSelected(result.region, 'region');
+      this._onItemSelected(result.city, 'city');
     } else {
       this._selectedCountries = [];
       this._selectedRegions = [];
@@ -55,9 +55,18 @@ export class LocationFilterComponent implements OnDestroy {
     // use timeout to allow updating the filter before loading the data when in context (entry / category / user / playlist)
     setTimeout(() => {
       this._locationFilterService.updateDateFilter(event, () => {
-        this._selectedCountries = [];
-        this._selectedRegions = [];
-        this._selectedCities = [];
+        if (this._isRealTime) {
+          const selectedCountries = this._selectedCountries;
+          const selectedRegions = this._selectedRegions;
+          const selectedCities = this._selectedCities;
+          this._onItemSelected(selectedCountries, 'country');
+          this._onItemSelected(selectedRegions, 'region');
+          this._onItemSelected(selectedCities, 'city');
+        } else {
+          this._selectedCountries = [];
+          this._selectedRegions = [];
+          this._selectedCities = [];
+        }
       }, this._isRealTime);
     }, 0);
   }
