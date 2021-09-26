@@ -9,7 +9,11 @@ import { getFixedEpoch } from 'shared/utils/get-fixed-epoch';
 import { WidgetsActivationArgs } from '../../widgets/widgets-manager';
 
 export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest, KalturaMultiResponse>, OnPollTickSuccess {
-
+  private appliedFilter = {
+    countryIn: null,
+    regionIn: null,
+    citiesIn: null,
+  };
   constructor(private activationArgs: WidgetsActivationArgs, _isAuthUsers: boolean = false) {
     this.updateArgs(activationArgs, _isAuthUsers);
   }
@@ -23,6 +27,11 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
         delete this._getTableActionArgs.reportInputFilter[filter];
       }
     });
+    this.appliedFilter = {
+      countryIn: activationArgs.countryIn || null,
+      regionIn: activationArgs.regionIn || null,
+      citiesIn: activationArgs.citiesIn || null,
+    };
     this._getTableActionArgs.order = _isAuthUsers ? '-view_unique_audience' : '-views';
   }
 
@@ -79,6 +88,15 @@ export class LiveGeoRequestFactory implements RequestFactory<KalturaMultiRequest
     } else {
       delete this._getTableActionArgs.reportInputFilter.countryIn;
       delete this._getTableActionArgs.reportInputFilter.regionIn;
+    }
+    if (this.appliedFilter.countryIn) {
+      this._getTableActionArgs.reportInputFilter.countryIn = this.appliedFilter.countryIn;
+    }
+    if (this.appliedFilter.regionIn) {
+      this._getTableActionArgs.reportInputFilter.regionIn = this.appliedFilter.regionIn;
+    }
+    if (this.appliedFilter.citiesIn) {
+      this._getTableActionArgs.reportInputFilter.citiesIn = this.appliedFilter.citiesIn;
     }
   }
 
