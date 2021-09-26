@@ -27,6 +27,7 @@ export interface AnalyticsConfig {
     uri?: string,
     previewUIConf?: number,
     previewUIConfV7?: number,
+    exportRoute?: string
   };
   cdnServers?: {
     serverUri?: string,
