@@ -12,11 +12,13 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { finalize } from 'rxjs/operators';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
+import { KalturaLogger } from "@kaltura-ng/kaltura-logger";
 
 @Component({
   selector: 'app-export-csv',
   templateUrl: './export-csv.component.html',
   styleUrls: ['./export-csv.component.scss'],
+  providers: [KalturaLogger.createLogger('ExportCSV'),]
 })
 export class ExportCsvComponent implements OnDestroy {
   @Input() name = 'default';
@@ -61,6 +63,7 @@ export class ExportCsvComponent implements OnDestroy {
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
+              private _logger: KalturaLogger,
               private _kalturaClient: KalturaClient) {
   }
 
@@ -210,7 +213,18 @@ export class ExportCsvComponent implements OnDestroy {
       }
     });
 
-    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems }) });
+    let baseUrl = '';
+    try {
+      const origin = window.parent && window.parent.location && window.parent.location.origin ? window.parent.location.origin : window.location.origin;
+      const isKMC = window.parent && typeof window.parent['kmcng'] === 'object';
+      const exportRoute = analyticsConfig.kalturaServer.exportRoute ? analyticsConfig.kalturaServer.exportRoute : isKMC ? '/index.php/kmcng/analytics/export?id=' : '/userreports/downloadreport?report_id=';
+      baseUrl = encodeURIComponent(`${origin}${exportRoute}`);
+    } catch (e) {
+      this._logger.error('Error accessing parent window location', e);
+    }
+
+    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
+
 
     this._exportingCsv = true;
 

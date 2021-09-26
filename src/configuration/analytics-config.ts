@@ -27,6 +27,7 @@ export interface AnalyticsConfig {
     uri?: string,
     previewUIConf?: number,
     previewUIConfV7?: number,
+    exportRoute?: string
   };
   cdnServers?: {
     serverUri?: string,
@@ -95,7 +96,7 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '2.6.3',
+  appVersion: '2.6.4',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
