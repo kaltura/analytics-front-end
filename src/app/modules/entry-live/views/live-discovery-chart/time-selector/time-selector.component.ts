@@ -36,8 +36,8 @@ export class TimeSelectorComponent implements OnDestroy {
   @ViewChild(PopupWidgetComponent) _popupWidget: PopupWidgetComponent;
 
   private _lastSelectedDateRange: DateRange; // used for revert selection
-  public _startDate: Date;
-  public _endDate: Date;
+  private _startDate: Date;
+  private _endDate: Date;
   private _invalidTimes = false;
 
   public _invalidFrom = false;

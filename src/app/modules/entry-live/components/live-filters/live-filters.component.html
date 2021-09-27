@@ -20,12 +20,12 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
           <div class="kFilterContainerCol">
-            <app-webcast-device-filter [dateFilter]="_dateFilter"
+            <!--app-webcast-device-filter [dateFilter]="_dateFilter"
                                        [selectedFilters]="_selectedValues['devices']"
                                        [filterConfig]="filterConfig"
                                        (itemSelected)="_onItemSelected($event, 'devices')"
                                        [isRealTime]="true"
-                                       (itemUnselected)="_onItemUnselected($event, 'devices')"></app-webcast-device-filter>
+                                       (itemUnselected)="_onItemUnselected($event, 'devices')"></app-webcast-device-filter-->
 
             <app-webcast-browser-filter [dateFilter]="_dateFilter"
                                         [filterConfig]="filterConfig"
@@ -34,21 +34,22 @@
                                         [predefinedBrowsers]="predefinedBrowsers"
                                         (itemUnselected)="_onItemUnselected($event, 'browser')"></app-webcast-browser-filter>
 
+          </div>
+          <div class="kFilterContainerCol location-filters">
             <app-webcast-os-filter [dateFilter]="_dateFilter"
                                    [selectedFilters]="_selectedValues['os']"
                                    [filterConfig]="filterConfig"
                                    (itemSelected)="_onItemSelected($event, 'os')"
                                    [predefinedOSs]="predefinedOSs"
                                    (itemUnselected)="_onItemUnselected($event, 'os')"></app-webcast-os-filter>
-          </div>
-          <div class="kFilterContainerCol location-filters">
-            <app-location-filters [expandWidth]="!showAutocompleteGroup"
+
+            <!--app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"
                                   [filterConfig]="filterConfig"
                                   [selectedFilters]="_selectedValues['location']"
                                   [isRealTime]="true"
-                                  (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters>
+                                  (itemSelected)="_onItemSelected($event, 'location')"></app-location-filters-->
           </div>
           <div class="kFilterContainerCol">
             <app-owners-filter [selectedFilters]="_selectedValues['users']"
