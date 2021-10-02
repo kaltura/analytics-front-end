@@ -98,7 +98,7 @@
                 <tr>
                   <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i === 0">
                   <span
-                    *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'full_name'"
+                    *ngIf="_isCompareMode && data[col]?.value && col !== 'month_id' && col !== 'date_id' && col !== 'hours_id' && col !== 'full_name'"
                     class="kTrend">
                     <span [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
                       <app-trend-value [value]="data[col].value"
@@ -106,7 +106,7 @@
                                        [trend]="data[col].trend"></app-trend-value>
                     </span>
                   </span>
-                    <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id' || col === 'full_name'">
+                    <ng-container *ngIf="!_isCompareMode || col === 'month_id' || col === 'date_id' || col === 'hours_id' || col === 'full_name'">
                       <span>{{col === 'full_name' && !data[col].length ? data['name'] : data[col]}}</span>
                     </ng-container>
                   </td>

@@ -181,6 +181,7 @@
         "specific": "{{0}} Days"
       },
       "daily": "Daily",
+      "hourly": "Hourly",
       "sinceCreation": "Creation",
       "lastBroadcast": "Last Broadcast",
       "firstBroadcast": "First Broadcast",
@@ -431,6 +432,7 @@
       "highlightsReport": {
         "month_id": "Month",
         "date_id": "Day",
+        "hours_id": "Time",
         "count_plays": "Plays",
         "count_loads": "Player Impressions",
         "sum_time_viewed": "Minutes Viewed (vod)",
@@ -980,6 +982,7 @@
       "videoPerformance": "Video performance over time",
       "month_id": "Month",
       "date_id": "Date",
+      "hours_id": "Time",
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
@@ -1048,6 +1051,7 @@
       "avg_view_period_time": "Avg. Viewing Time",
       "month_id": "Month",
       "date_id": "Date",
+      "hours_id": "Time",
       "name": "Name",
       "destination": "Destination",
       "clicks": "Clicks",

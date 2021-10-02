@@ -11,6 +11,7 @@
                        (tabChange)="_onTabChange($event)"></app-report-tabs>
       <div class="kDimensions">
         <app-time-units applyIn="user-media-upload"
+                        [displayHours]="false"
                         [dateFilter]="dateFilterComponent"
                         [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>

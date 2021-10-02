@@ -368,6 +368,14 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     if (this.selectedView === 'specific' && this.showHours) {
       compareStartDate += this.compareHours * 60;
     }
+    // if the current selected time interval is hours and the selected time rage is larger than 30 days - switch to days
+    if (this.selectedTimeUnit === KalturaReportInterval.hours) {
+      const delta = (endDate - startDate) / (60 * 60 *24);
+      if (delta > 30) {
+        // the time unit component registers to the filterChange event and updates its internal selected time interval to days
+        this.selectedTimeUnit = KalturaReportInterval.days;
+      }
+    }
     this.filterChange.emit({
       applyIn: applyIn,
       changeOnly: changeOnly,
@@ -433,7 +441,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     if (this.showHours && this.specificEnd && DateFilterUtils.toServerDate(this.specificStart, false) === DateFilterUtils.toServerDate(this.specificEnd, false)) {
       this.validDateRange = this.startHours <= this.endHours;
     } else {
-      this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true); // validation
+      this.validDateRange = !this.specificEnd || DateFilterUtils.toServerDate(this.specificEnd, false) >= DateFilterUtils.toServerDate(this.specificStart, true);
     }
   }
 }
