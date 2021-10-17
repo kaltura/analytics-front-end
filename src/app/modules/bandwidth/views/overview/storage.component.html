@@ -1,0 +1,118 @@
+<div data-aid="report-end-user" class="kReport kContent kOverrideFAIcons">
+  <div class="kReportHeader">
+    <span class="kTitle">{{'app.modules.bandwidth' | translate}}</span>
+    <app-export-csv *ngIf="_storageViewConfig.export"
+                    name="Storage"
+                    [reports]="_exportConfig"
+                    [dateFilter]="_dateFilter"></app-export-csv>
+    <div *ngIf="_storageViewConfig.refineFilter"
+         class="kFilter kOverrideFAIcons">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+        <span>{{'app.filters.filter' | translate}}</span>
+        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+      </div>
+    </div>
+    <app-date-filter #dateFilter
+                     name="storage"
+                     [showHours]="false"
+                     [dateRange]="_dateRange"
+                     [dateRangeType]="_dateRangeType"
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+  </div>
+
+  <div class="kReportContainer kNoPadding">
+    <app-storage-filter [opened]="_refineFilterOpened"
+                         [dateFilter]="_dateFilter"
+                         [selectedFilters]="_selectedRefineFilters"
+                         (closeFilters)="_refineFilterOpened = false"
+                         (filterChange)="_onRefineFilterChange($event)"></app-storage-filter>
+  </div>
+
+  <!--k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+
+      <div class="kFilters">
+        <span class="kTitle" *ngIf="!_drillDownName.length">{{'app.bandwidth.allUsers' | translate}}</span>
+        <div class="kBreadcrumbs" *ngIf="_drillDownName.length">
+          <a (click)="_onDrillDown({})">{{'app.bandwidth.allUsers' | translate}}</a>
+          <span class="separator">/</span>
+          <span>{{_drillDownName}}</span>
+        </div>
+      </div>
+
+      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="kDimensions">
+        <app-time-units [dateFilter]="dateFilter"></app-time-units>
+      </div>
+      <div class="kChart">
+        <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]" *ngIf="_chartType==='bar'"></div>
+        <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table appScrollTopOnPaging
+                   [customPaginationEvent]="_paginationChanged$"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortField]="_drillDown.length ? 'month_id' : 'total_storage_mb'"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.bandwidth.enduser_table.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.bandwidth.enduser_table.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
+                  </div>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index">
+                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'full_name' && col !== 'month_id' && col !== 'date_id'"
+                        class="kTrend"
+                        [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data[col].value"
+                                     [units]="data[col].units"
+                                     [trend]="data[col].trend"></app-trend-value>
+                  </span>
+                  <ng-container *ngIf="!isCompareMode || col === 'full_name' || col === 'month_id' || col === 'date_id'">
+                    <span *ngIf="col !== 'full_name' || data[col]==='anonymous'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
+                    <a *ngIf="col === 'full_name' && data[col]!=='anonymous'" (click)="_onDrillDown(data)" class="nameLink" [kTooltip]="data[col].length ? data[col] : data['name']" [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</a>
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+          <p-paginator [rows]="pager.pageSize"
+                       [first]="(pager.pageIndex -1) * pager.pageSize"
+                       [totalRecords]="_totalCount"
+                       (onPageChange)="_onPaginationChanged($event)" ></p-paginator>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </k-area-blocker-->
+
+</div>
+

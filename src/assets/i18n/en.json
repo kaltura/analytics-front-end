@@ -234,6 +234,7 @@
       }
     },
     "bandwidth": {
+      "overview": "Overview",
       "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
       "allUsers": "All Users",

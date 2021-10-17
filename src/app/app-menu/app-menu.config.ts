@@ -37,6 +37,11 @@ export const menu = [
     label: 'app.modules.bandwidth',
     items: [
       {
+        id: 'overview',
+        link: 'bandwidth/overview',
+        label: 'app.bandwidth.overview',
+      },
+      {
         id: 'publisher',
         link: 'bandwidth/publisher',
         label: 'app.bandwidth.publisherStorage',

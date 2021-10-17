@@ -12,11 +12,13 @@ import { routing } from './bandwidth.routes';
 import { BandwidthComponent } from './bandwidth.component';
 import { PublisherStorageComponent } from './views/publisher-storage/publisher-storage.component';
 import { EndUserStorageComponent } from './views/end-user/end-user-storage.component';
+import { StorageComponent } from './views/overview/storage.component';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { EndUserFilterComponent } from './views/end-user/filter/filter.component';
+import { StorageFilterComponent } from './views/overview/filter/filter.component';
 
 @NgModule({
   imports: [
@@ -40,6 +42,8 @@ import { EndUserFilterComponent } from './views/end-user/filter/filter.component
     PublisherStorageComponent,
     EndUserStorageComponent,
     EndUserFilterComponent,
+    StorageComponent,
+    StorageFilterComponent
   ],
   exports: [],
   providers: []
