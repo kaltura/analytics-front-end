@@ -3,11 +3,7 @@
 app-users-filter{
   margin-right: 24px;
 }
-.nameLink{
-  white-space: nowrap;
-  overflow: hidden;
-  display: block;
-}
+
 :host{
   margin-bottom: 24px;
 }
@@ -26,7 +22,6 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
 .kFilter {
   display: flex;
   align-items: center;
-
   .kDropDown {
     background-color: white;
     width: auto;
@@ -60,5 +55,45 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
       font-size: 12px;
       color: $kGrayscale3;
     }
+  }
+}
+.kTotals {
+  display: flex;
+  width: 100%;
+  padding: 0px 24px 12px;
+  box-sizing: border-box;
+  .kCol {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .kTotal {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    .kTotalValue {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .kTotalLabel {
+      font-size: 15px;
+      font-weight: 400;
+      margin-left: 8px;
+    }
+    .kTotalUnits {
+      font-size: 13px;
+      font-weight: 700;
+      color: $kGrayscale3;
+      margin-left: 2px;
+    }
+  }
+}
+.kLink{
+  font-size: 15px;
+  font-weight: 700;
+  color: #006EFA;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
   }
 }

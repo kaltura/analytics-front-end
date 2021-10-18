@@ -13,11 +13,10 @@ export class StorageExportConfig extends ExportConfigService {
   public getConfig(): ExportItem[] {
     return [
       {
-        id: 'end-user',
-        label: this._translate.instant('app.bandwidth.exportLabels.endUser'),
-        reportType: reportTypeMap(KalturaReportType.userUsage),
-        sections: [KalturaReportExportItemType.graph, KalturaReportExportItemType.table],
-        order: '-total_storage_mb',
+        id: 'overview',
+        label: this._translate.instant('app.modules.bandwidth'),
+        reportType: reportTypeMap(KalturaReportType.selfServeUsage),
+        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph]
       },
     ];
   }

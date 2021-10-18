@@ -29,28 +29,70 @@
                          (filterChange)="_onRefineFilterChange($event)"></app-storage-filter>
   </div>
 
-  <!--k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
 
       <div class="kFilters">
-        <span class="kTitle" *ngIf="!_drillDownName.length">{{'app.bandwidth.allUsers' | translate}}</span>
-        <div class="kBreadcrumbs" *ngIf="_drillDownName.length">
-          <a (click)="_onDrillDown({})">{{'app.bandwidth.allUsers' | translate}}</a>
-          <span class="separator">/</span>
-          <span>{{_drillDownName}}</span>
+        <span class="kTitle">selected date period</span>
+      </div>
+
+      <div class="kTotals" *ngIf="_tabsData && _tabsData.length">
+        <div class="kCol">
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[0].value}}</span>
+            <span class="kTotalUnits">{{_tabsData[0].units}}</span>
+            <span class="kTotalLabel">{{_tabsData[0].title}}</span>
+          </div>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[1].value}}</span>
+            <span class="kTotalUnits">{{_tabsData[1].units}}</span>
+            <span class="kTotalLabel">{{_tabsData[1].title}}</span>
+          </div>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[2].value}}</span>
+            <span class="kTotalUnits">{{_tabsData[2].units}}</span>
+            <span class="kTotalLabel">{{_tabsData[2].title}}</span>
+          </div>
+        </div>
+        <div class="kCol">
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[3].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[3].title}}</span>
+          </div>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[4].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[4].title}}</span>
+          </div>
+        </div>
+        <div class="kCol">
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[5].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[5].title}}</span>
+          </div>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[6].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[6].title}}</span>
+          </div>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[7].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[7].title}}</span>
+          </div>
+        </div>
+        <div class="kCol">
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[8].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[8].title}}</span>
+          </div>
+          <span class="kLink">{{'app.bandwidth.enrichment_data' | translate}}</span>
         </div>
       </div>
 
-      <app-report-tabs [tabs]="_tabsData" [compareMode]="isCompareMode" (tabChange)="_onTabChange($event)"></app-report-tabs>
-      <div class="kDimensions">
-        <app-time-units [dateFilter]="dateFilter"></app-time-units>
-      </div>
-      <div class="kChart">
+      <!--div class="kChart">
         <div echarts class="kChart" [options]="_barChartData[_selectedMetrics]" *ngIf="_chartType==='bar'"></div>
         <div echarts class="kChart" [options]="_lineChartData[_selectedMetrics]" *ngIf="_chartType==='line'"></div>
-      </div>
+      </div-->
 
-      <div class="kTable">
+      <!--div class="kTable">
         <div class="kToggle">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
@@ -106,13 +148,13 @@
                        [totalRecords]="_totalCount"
                        (onPageChange)="_onPaginationChanged($event)" ></p-paginator>
         </div>
-      </div>
+      </div-->
     </div>
 
 
 
 
-  </k-area-blocker-->
+  </k-area-blocker>
 
 </div>
 
