@@ -20,7 +20,8 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export.config';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import { DateRanges } from "shared/components/date-filter/date-filter-utils";
+import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
+import {OverviewDateRange} from "./overview-date-filter/overview-date-range.type";
 
 @Component({
   selector: 'app-storage',
@@ -39,7 +40,6 @@ export class StorageComponent implements OnInit {
   public _refineFilterOpened = false;
   public _refineFilter: RefineFilter = null;
   public _selectedRefineFilters: RefineFilter = null;
-  public _dateRangeType: DateRangeType = DateRangeType.LongTerm;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   public _chartDataLoaded = false;
@@ -90,15 +90,16 @@ export class StorageComponent implements OnInit {
     this._isBusy = false;
   }
 
-  public _onDateFilterChange(event: DateChangeEvent): void {
+  public _onDateFilterChange(range: OverviewDateRange): void {
+    const event = {} as DateChangeEvent;
     this._dateFilter = event;
-    this._logger.trace('Handle date filter change action by user', () => ({ event }));
     this._chartDataLoaded = false;
-    this.filter.timeZoneOffset = event.timeZoneOffset;
-    this.filter.fromDate = event.startDate;
-    this.filter.toDate = event.endDate;
-    this.filter.interval = event.timeUnits;
-    this._reportInterval = event.timeUnits;
+    this.filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+    this.filter.toDate = range.endDate;
+    this.filter.fromDate = range.startDate;
+    this.filter.interval = range.interval;
+    this._reportInterval = range.interval;
+    this.order = this._reportInterval === KalturaReportInterval.months ? '-year_id' : '-month_id';
     this.pager.pageIndex = 1;
     this.loadReport();
   }
