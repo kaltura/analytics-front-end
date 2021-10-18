@@ -14,11 +14,13 @@ import { PublisherStorageComponent } from './views/publisher-storage/publisher-s
 import { EndUserStorageComponent } from './views/end-user/end-user-storage.component';
 import { StorageComponent } from './views/overview/storage.component';
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { EndUserFilterComponent } from './views/end-user/filter/filter.component';
 import { StorageFilterComponent } from './views/overview/filter/filter.component';
+import { OverviewDateFilterComponent } from "./views/overview/overview-date-filter/overview-date-filter.component";
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
   imports: [
@@ -35,6 +37,8 @@ import { StorageFilterComponent } from './views/overview/filter/filter.component
     TableModule,
     TooltipModule,
     NgxEchartsModule,
+    PopupWidgetModule,
+    RadioButtonModule,
     RouterModule.forChild(routing),
   ],
   declarations: [
@@ -43,7 +47,8 @@ import { StorageFilterComponent } from './views/overview/filter/filter.component
     EndUserStorageComponent,
     EndUserFilterComponent,
     StorageComponent,
-    StorageFilterComponent
+    StorageFilterComponent,
+    OverviewDateFilterComponent
   ],
   exports: [],
   providers: []

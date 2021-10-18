@@ -188,7 +188,11 @@
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
       "comparespecific": "Same period starting at:",
-      "exit": "Exit Compare Mode"
+      "exit": "Exit Compare Mode",
+      "byMonth": "By Month",
+      "byYear": "By Year",
+      "currentYear": "Current Year",
+      "currentMonth": "Current Month"
     },
     "usersFilter": {
       "prompt": "Search Users",

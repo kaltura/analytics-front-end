@@ -13,12 +13,13 @@
         <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
       </div>
     </div>
-    <app-date-filter #dateFilter
+    <!--app-date-filter #dateFilter
                      name="storage"
                      [showHours]="false"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
-                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+                     (filterChange)="_onDateFilterChange($event)"></app-date-filter-->
+    <app-overview-date-filter name="overview"></app-overview-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
