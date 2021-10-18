@@ -28,7 +28,7 @@
     <div class="kReportContent">
 
       <div class="kFilters">
-        <span class="kTitle">selected date period</span>
+        <span class="kTitle">{{_selectedPeriod}}</span>
       </div>
 
       <div class="kTotals" *ngIf="_tabsData && _tabsData.length">
@@ -78,7 +78,7 @@
             <span class="kTotalValue">{{_tabsData[8].value}}</span>
             <span class="kTotalLabel">{{_tabsData[8].title}}</span>
           </div>
-          <span class="kLink">{{'app.bandwidth.enrichment_data' | translate}}</span>
+          <span class="kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.enrichment_data' | translate}}</span>
         </div>
       </div>
 

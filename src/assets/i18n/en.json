@@ -192,7 +192,8 @@
       "byMonth": "By Month",
       "byYear": "By Year",
       "currentYear": "Current Year",
-      "currentMonth": "Current Month"
+      "currentMonth": "Current Month",
+      "past_period": "Past Period"
     },
     "usersFilter": {
       "prompt": "Search Users",

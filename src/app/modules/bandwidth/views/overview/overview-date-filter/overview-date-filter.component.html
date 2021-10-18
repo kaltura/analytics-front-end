@@ -1,8 +1,10 @@
 <div class="kDateFilter kOverrideFAIcons">
 
   <div #datesBtn class="datesRangeDropDown" tabindex="0" role="button" aria-label="Date filter" (keydown.enter)="datesPopup.toggle()">
-    <span class="kDateRangePrefix">{{selectedDateRange?.label}}</span>
-    <span *ngIf="labelPostfix.length">{{labelPostfix}}</span>
+    <span *ngIf="selectedDateRange?.key.indexOf('0') > -1" class="kDateRangePrefix">{{selectedDateRange?.label}}</span>
+    <span *ngIf="selectedDateRange?.key.indexOf('0') > -1">{{labelPostfix}}</span>
+    <span *ngIf="selectedDateRange?.key.indexOf('0') === -1" class="kDateRangePrefix">{{'app.dateFilter.past_period' | translate}}</span>
+    <span *ngIf="selectedDateRange?.key.indexOf('0') === -1">{{selectedDateRange?.label}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
 </div>

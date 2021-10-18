@@ -50,8 +50,8 @@ export class StorageComponent implements OnInit {
   public _chartType = 'line';
   public _showTable = false;
   public _totalCount: number;
-  public _dateRange = DateRanges.CurrentQuarter;
   public _storageViewConfig = analyticsConfig.viewsConfig.bandwidth.overview;
+  public _selectedPeriod = '';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -99,6 +99,7 @@ export class StorageComponent implements OnInit {
     this.filter.fromDate = range.startDate;
     this.filter.interval = range.interval;
     this._reportInterval = range.interval;
+    this._selectedPeriod = range.label;
     this.order = this._reportInterval === KalturaReportInterval.months ? '-year_id' : '-month_id';
     this.pager.pageIndex = 1;
     this.loadReport();
@@ -207,5 +208,11 @@ export class StorageComponent implements OnInit {
     this._refineFilter = event;
     refineFilterToServerValue(this._refineFilter, this.filter);
     this.loadReport();
+  }
+
+  public _navigateToEnrichment(): void {
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.NavigateTo, '/settings/reach/list');
+    }
   }
 }
