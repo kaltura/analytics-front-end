@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent, DateRangeType } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -8,9 +8,8 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { StorageDataConfig } from './storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf, Subject } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
@@ -33,11 +32,9 @@ import { DateRanges } from "shared/components/date-filter/date-filter-utils";
     StorageDataConfig,
   ]
 })
-export class StorageComponent implements OnInit, OnDestroy {
+export class StorageComponent implements OnInit {
 
   @ViewChild('userFilter') private userFilter: UsersFilterComponent;
-
-  private _paginationChanged = new Subject<void>();
 
   public _refineFilterOpened = false;
   public _refineFilter: RefineFilter = null;
@@ -60,12 +57,9 @@ export class StorageComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _drillDown = '';
-  public _drillDownName = '';
-  public _paginationChanged$ = this._paginationChanged.asObservable();
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = reportTypeMap(KalturaReportType.selfServeUsage);
-  public compareFilter: KalturaEndUserReportInputFilter = null;
   public _exportConfig: ExportItem[] = [];
   public _dateFilter: DateChangeEvent;
   public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
@@ -78,17 +72,12 @@ export class StorageComponent implements OnInit, OnDestroy {
   private order = '-total_storage_mb';
   private _dataConfig: ReportDataConfig = null;
 
-  public get isCompareMode(): boolean {
-    return this.compareFilter !== null;
-  }
-
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _authService: AuthService,
               private _browserService: BrowserService,
-              private _compareService: CompareService,
               private _dataConfigService: StorageDataConfig,
               private _logger: KalturaLogger,
               private _exportConfigService: StorageExportConfig) {
@@ -101,10 +90,6 @@ export class StorageComponent implements OnInit, OnDestroy {
     this._isBusy = false;
   }
 
-  ngOnDestroy(): void {
-    this._paginationChanged.complete();
-  }
-
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
     this._logger.trace('Handle date filter change action by user', () => ({ event }));
@@ -115,59 +100,7 @@ export class StorageComponent implements OnInit, OnDestroy {
     this.filter.interval = event.timeUnits;
     this._reportInterval = event.timeUnits;
     this.pager.pageIndex = 1;
-    if (event.compare.active) {
-      const compare = event.compare;
-      this.compareFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
-      this.compareFilter.fromDate = compare.startDate;
-      this.compareFilter.toDate = compare.endDate;
-    } else {
-      this.compareFilter = null;
-    }
     this.loadReport();
-  }
-
-  public _onTabChange(tab: Tab): void {
-    this._logger.trace('Handle tab change action by user', { tab });
-    this._selectedMetrics = tab.key;
-    this.updateChartType();
-  }
-
-  public _onDrillDown(selection: TableRow): void {
-    if (selection && selection.partner_id && selection.partner_id.toString() !== this._authService.pid.toString()) {
-      this._browserService.alert({
-        header: this._translate.instant('app.common.attention'),
-        message: this._translate.instant('app.bandwidth.userError'),
-      });
-    } else {
-      this._logger.trace('Handle drill down to a user details action by user, reset page index to 1', {selection});
-      this._drillDown = selection.name && selection.name.length ? selection.name : '';
-      this._drillDownName = selection.full_name && selection.full_name.length ? selection.full_name : this._drillDown;
-      this.reportType = this._drillDown.length ? reportTypeMap(KalturaReportType.specificUserUsage) : reportTypeMap(KalturaReportType.userUsage);
-      this.pager.pageIndex = 1;
-
-      this.order = this._drillDown.length ? '+month_id' : '-total_storage_mb';
-
-      if (this._drillDown) {
-        this.filter.userIds = this._drillDown;
-        if (this.compareFilter) {
-          this.compareFilter.userIds = this._drillDown;
-        }
-      } else {
-        if (this._refineFilter) {
-          this._onRefineFilterChange(this._refineFilter);
-        } else {
-          delete this.filter.userIds;
-          if (this.compareFilter) {
-            delete this.compareFilter.userIds;
-          }
-        }
-
-      }
-
-      this._updateExportConfig();
-
-      this.loadReport();
-    }
   }
 
   private _updateExportConfig(): void {
@@ -192,15 +125,6 @@ export class StorageComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onPaginationChanged(event): void {
-    if (event.page !== (this.pager.pageIndex - 1)) {
-      this._paginationChanged.next();
-      this._logger.trace('Handle pagination changed action by user', { newPage: event.page + 1 });
-      this.pager.pageIndex = event.page + 1;
-      this.loadReport({ table: this._dataConfig.table });
-    }
-  }
-
   private loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._tableData = [];
@@ -209,28 +133,18 @@ export class StorageComponent implements OnInit, OnDestroy {
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
-        if (!this.isCompareMode) {
-          return ObservableOf({ report, compare: null });
-        }
-
-        const compareReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
-        return this._reportService.getReport(compareReportConfig, sections)
-          .pipe(map(compare => ({ report, compare })));
+          return ObservableOf({ report });
       }))
-      .subscribe( ({ report, compare }) => {
-          if (compare) {
-            this.handleCompare(report, compare);
-          } else {
-            if (report.table && report.table.header && report.table.data) {
-              this.handleTable(report.table); // handle table
-            }
-            if (report.graphs.length) {
-              this._chartDataLoaded = false;
-              this.handleGraphs(report.graphs); // handle graphs
-            }
-            if (report.totals) {
-              this.handleTotals(report.totals); // handle totals
-            }
+      .subscribe( ({ report }) => {
+          if (report.table && report.table.header && report.table.data) {
+            this.handleTable(report.table); // handle table
+          }
+          if (report.graphs.length) {
+            this._chartDataLoaded = false;
+            this.handleGraphs(report.graphs); // handle graphs
+          }
+          if (report.totals) {
+            this.handleTotals(report.totals); // handle totals
           }
           this._isBusy = false;
         },
@@ -250,7 +164,7 @@ export class StorageComponent implements OnInit, OnDestroy {
 
   _onSortChanged(event) {
     setTimeout(() => {
-      if (event.data.length && event.field && event.order && event.order !== 1 && !this.isCompareMode) {
+      if (event.data.length && event.field && event.order && event.order !== 1) {
         const order = (event.order === 1 || event.field === 'month_id') ? '+' + event.field : '-' + event.field;
         if (order !== this.order) {
           this._logger.trace('Handle sort changed action by user', { order });
@@ -262,56 +176,6 @@ export class StorageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private handleCompare(current: Report, compare: Report): void {
-    const currentPeriod = { from: this.filter.fromDate, to: this.filter.toDate };
-    const comparePeriod = { from: this.compareFilter.fromDate, to: this.compareFilter.toDate };
-
-    const dataKey = this._drillDown.length ? '' : 'kuser_id';
-    if (current.table && compare.table) {
-      const { columns, tableData } = this._compareService.compareTableData(
-        currentPeriod,
-        comparePeriod,
-        current.table,
-        compare.table,
-        this._dataConfig.table,
-        this._reportInterval,
-        dataKey
-      );
-      if (columns.indexOf('partner_id') > -1) {
-        columns.splice(columns.indexOf('partner_id'), 1);
-      }
-      this._columns = columns;
-      this._totalCount = compare.table.totalCount;
-      this._tableData = tableData;
-      this.setAnonymousUsers(this._tableData); // fix for anonymous users
-    }
-
-    if (current.totals && compare.totals) {
-      this._tabsData = this._compareService.compareTotalsData(
-        currentPeriod,
-        comparePeriod,
-        current.totals,
-        compare.totals,
-        this._dataConfig.totals,
-        this._selectedMetrics
-      );
-    }
-
-    if (current.graphs.length && compare.graphs.length) {
-      const { lineChartData, barChartData } = this._compareService.compareGraphData(
-        currentPeriod,
-        comparePeriod,
-        current.graphs,
-        compare.graphs,
-        this._dataConfig.graph,
-        this._reportInterval,
-        () => this._chartDataLoaded = true
-      );
-      this._lineChartData = lineChartData;
-      this._barChartData = barChartData;
-    }
-  }
-
   private handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
@@ -320,7 +184,6 @@ export class StorageComponent implements OnInit, OnDestroy {
     }
     this._columns = columns;
     this._tableData = tableData;
-    this.setAnonymousUsers(this._tableData); // fix for anonymous users
   }
 
   private handleTotals(totals: KalturaReportTotal): void {
@@ -339,28 +202,9 @@ export class StorageComponent implements OnInit, OnDestroy {
     this._barChartData = barChartData;
   }
 
-  private updateChartType(): void {
-    this._chartType = ((this._selectedMetrics === 'added_storage_mb' || this._selectedMetrics === 'deleted_storage_mb') && this._reportInterval === KalturaReportInterval.months) ? 'bar' : 'line';
-  }
-
-  private setAnonymousUsers(users: TableRow<string>[]): void {
-    if ( !this._drillDown.length ) {
-      users.forEach(user => {
-        if (!user['name'].length) {
-          user['name'] = 'anonymous';
-        }
-      });
-    }
-  }
-
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
-
     refineFilterToServerValue(this._refineFilter, this.filter);
-    if (this.compareFilter) {
-      refineFilterToServerValue(this._refineFilter, this.compareFilter);
-    }
-
     this.loadReport();
   }
 }

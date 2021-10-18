@@ -103,17 +103,17 @@
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
-                   [sortField]="_drillDown.length ? 'month_id' : 'total_storage_mb'"
+                   [sortField]="'total_storage_mb'"
                    [sortOrder]="-1"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
-                <th *ngFor="let col of _columns" [pSortableColumn]="isCompareMode || col === 'full_name' ? null : col" [class.nonSortable]="isCompareMode || col === 'full_name'">
+                <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' ? null : col" [class.nonSortable]="col === 'full_name'">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.bandwidth.enduser_table.' + col | translate" [showOnEllipsis]="true">
                       {{'app.bandwidth.enduser_table.' + col | translate}}
                     </span>
-                    <p-sortIcon [field]="col" *ngIf="!isCompareMode && col !== 'full_name'"></p-sortIcon>
+                    <p-sortIcon [field]="col" *ngIf="col !== 'full_name'"></p-sortIcon>
                   </div>
                 </th>
 
@@ -122,16 +122,14 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td *ngFor="let col of _columns; let i = index">
-                  <span *ngIf="isCompareMode && data[col]?.value && col !== 'full_name' && col !== 'month_id' && col !== 'date_id'"
-                        class="kTrend"
-                        [kTooltip]="data[col].tooltip" [escape]="false" [maxWidth]="500">
+
                     <app-trend-value [value]="data[col].value"
                                      [units]="data[col].units"
                                      [trend]="data[col].trend"></app-trend-value>
                   </span>
-                  <ng-container *ngIf="!isCompareMode || col === 'full_name' || col === 'month_id' || col === 'date_id'">
+                  <ng-container *ngIf="col === 'full_name' || col === 'month_id' || col === 'date_id'">
                     <span *ngIf="col !== 'full_name' || data[col]==='anonymous'" [class.kHighlight]="col === 'month_id'">{{data[col]}}</span>
-                    <a *ngIf="col === 'full_name' && data[col]!=='anonymous'" (click)="_onDrillDown(data)" class="nameLink" [kTooltip]="data[col].length ? data[col] : data['name']" [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</a>
+                    <a *ngIf="col === 'full_name' && data[col]!=='anonymous'" class="nameLink" [kTooltip]="data[col].length ? data[col] : data['name']" [showOnEllipsis]="true">{{data[col].length ? data[col] : data['name']}}</a>
                   </ng-container>
                 </td>
               </tr>
@@ -143,10 +141,6 @@
               </div>
             </ng-template>
           </p-table>
-          <p-paginator [rows]="pager.pageSize"
-                       [first]="(pager.pageIndex -1) * pager.pageSize"
-                       [totalRecords]="_totalCount"
-                       (onPageChange)="_onPaginationChanged($event)" ></p-paginator>
         </div>
       </div-->
     </div>

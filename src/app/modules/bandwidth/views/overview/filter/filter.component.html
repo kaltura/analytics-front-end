@@ -19,26 +19,10 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kListFilters">
-            <app-checkboxes-list-filter [label]="'app.filters.mediaType.title' | translate"
-                                        [options]="_mediaTypes"
-                                        [selectedFilters]="_selectedValues['mediaType']"
-                                        (itemSelected)="_onItemSelected($event, 'mediaType')"
-                                        (itemUnselected)="_onItemUnselected($event, 'mediaType')"></app-checkboxes-list-filter>
-
-            <app-checkboxes-list-filter class="kLastItem"
-                                        [label]="'app.filters.entrySources.title' | translate"
-                                        [options]="_entrySources"
-                                        [selectedFilters]="_selectedValues['entrySources']"
-                                        (itemSelected)="_onItemSelected($event, 'entrySources')"
-                                        (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
-          </div>
-          <div class="kMiscFilters">
-            <app-owners-filter [selectedFilters]="_selectedValues['users']"
-                               [label]="'app.filters.users' | translate"
-                               (itemSelected)="_onItemSelected($event, 'users')"
-                               (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
-          </div>
+          <app-owners-filter [selectedFilters]="_selectedValues['users']"
+                             [label]="'app.filters.users' | translate"
+                             (itemSelected)="_onItemSelected($event, 'users')"
+                             (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
         </div>
       </div>
       <div class="kRefineFiltersFooter">

@@ -5,7 +5,12 @@
   width: 100%;
   height: 100%;
 }
-
+.kTagsContainer {
+  ktags {
+    width: 100%;
+    margin-left: 0;
+  }
+}
 .kRefineFilters {
   width: 100%;
   height: auto;
