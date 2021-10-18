@@ -1,11 +1,8 @@
 <div class="kDateFilter kOverrideFAIcons">
 
-  <div #datesBtn class="datesRangeDropDown" tabindex="0" role="button" aria-label="Date filter"
-       (keydown.enter)="datesPopup.toggle()">
-    <!--span class="kDateRangePrefix">{{appliedDateRange?.prefix}}</span>
-    <span>{{appliedDateRange?.label}}</span-->
-    <span>selection label</span>
-    <span>selection value</span>
+  <div #datesBtn class="datesRangeDropDown" tabindex="0" role="button" aria-label="Date filter" (keydown.enter)="datesPopup.toggle()">
+    <span class="kDateRangePrefix">{{selectedDateRange?.label}}</span>
+    <span *ngIf="labelPostfix.length">{{labelPostfix}}</span>
     <i class="kIcondropdown_arrow_bottom"></i>
   </div>
 </div>
@@ -20,22 +17,21 @@
           <span class="kTitle">{{'app.dateFilter.byMonth' | translate | uppercase}}</span>
           <p-radioButton *ngFor="let dateRange of monthlyDateRangeItems" name="dates"
                          [label]="dateRange.label"
-                         [value]="{startDate: dateRange.startDate, endDate: dateRange.endDate}"
-                         [(ngModel)]="selectedDateRange"></p-radioButton>
+                         [value]="dateRange.key"
+                         [(ngModel)]="selectedDateRangeKey"></p-radioButton>
         </div>
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.byYear' | translate | uppercase}}</span>
           <p-radioButton *ngFor="let dateRange of yearlyDateRangeItems" name="dates"
                          [label]="dateRange.label"
-                         [value]="{startDate: dateRange.startDate, endDate: dateRange.endDate}"
-                         [(ngModel)]="selectedDateRange"></p-radioButton>
+                         [value]="dateRange.key"
+                         [(ngModel)]="selectedDateRangeKey"></p-radioButton>
         </div>
       </div>
       <hr>
       <div class="kFooter">
         <button tabindex="0"
                 pButton class="kButtonBranded"
-                [disabled]="applyDisabled"
                 [label]="'app.common.apply' | translate"
                 (click)="updateDataRanges();datesPopup.close()"></button>
       </div>
