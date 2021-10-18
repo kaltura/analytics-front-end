@@ -23,12 +23,20 @@ export class AuthService implements OnDestroy {
       return this._pid;
     }
 
+    public set partnerCreatedAt(value: string) {
+      this._partnerCreatedAt = value;
+    }
+    public get partnerCreatedAt(): string {
+      return this._partnerCreatedAt;
+    }
+
     public isChildAccount = false;
 
     private _ks: string = null; // current ks
     private _parentKs = null;   // parent ks for multi account
     private _pid = null;        // current partner id
     private _parentPid = null;  // parent partner id for multi account
+    private _partnerCreatedAt = null;  // partner creation date
 
     constructor(private _frameEventManager: FrameEventManagerService,
                 private _kalturaServerClient: KalturaClient,
