@@ -48,6 +48,8 @@
       "usersPlaceholder": "Select Users",
       "owners": "Owners",
       "ownersPlaceholder": "Select Owners",
+      "accounts": "Accounts",
+      "accountsPlaceholder": "Select Accounts",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
       "region": "Region",

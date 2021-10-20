@@ -19,10 +19,9 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <app-owners-filter [selectedFilters]="_selectedValues['users']"
-                             [label]="'app.filters.users' | translate"
+          <app-account-filter [selectedFilters]="_selectedValues['users']"
                              (itemSelected)="_onItemSelected($event, 'users')"
-                             (itemUnselected)="_onItemUnselected($event, 'users')"></app-owners-filter>
+                             (itemUnselected)="_onItemUnselected($event, 'users')"></app-account-filter>
         </div>
       </div>
       <div class="kRefineFiltersFooter">

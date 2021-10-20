@@ -7,7 +7,7 @@
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_storageViewConfig.refineFilter"
          class="kFilter kOverrideFAIcons">
-      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened" *ngIf="_multiAccount">
         <span>{{'app.filters.filter' | translate}}</span>
         <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
         <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>

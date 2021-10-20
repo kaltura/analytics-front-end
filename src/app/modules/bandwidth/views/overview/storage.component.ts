@@ -8,7 +8,7 @@ import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { UsersFilterComponent } from 'shared/components/users-filter/users-filter.component';
 import { StorageDataConfig } from './storage-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { switchMap } from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import { of as ObservableOf, Subject } from 'rxjs';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -22,6 +22,8 @@ import { GeoExportConfig } from '../../../audience/views/geo-location/geo-export
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 import {OverviewDateRange} from "./overview-date-filter/overview-date-range.type";
+import {AnalyticsPermissions} from "shared/analytics-permissions/analytics-permissions";
+import {AnalyticsPermissionsService} from "shared/analytics-permissions/analytics-permissions.service";
 
 @Component({
   selector: 'app-storage',
@@ -52,11 +54,11 @@ export class StorageComponent implements OnInit {
   public _totalCount: number;
   public _storageViewConfig = analyticsConfig.viewsConfig.bandwidth.overview;
   public _selectedPeriod = '';
+  public _multiAccount = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
-  public _drillDown = '';
 
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = reportTypeMap(KalturaReportType.selfServeUsage);
@@ -68,6 +70,7 @@ export class StorageComponent implements OnInit {
       searchInAdminTags: false
     }
   );
+  public graphFilter: KalturaEndUserReportInputFilter = null;
 
   private order = '-total_storage_mb';
   private _dataConfig: ReportDataConfig = null;
@@ -80,10 +83,12 @@ export class StorageComponent implements OnInit {
               private _browserService: BrowserService,
               private _dataConfigService: StorageDataConfig,
               private _logger: KalturaLogger,
+              private _permissionsService: AnalyticsPermissionsService,
               private _exportConfigService: StorageExportConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetrics = this._dataConfig.totals.preSelected;
     this._exportConfig = _exportConfigService.getConfig();
+    this._multiAccount = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS);
   }
 
   ngOnInit() {
@@ -102,16 +107,24 @@ export class StorageComponent implements OnInit {
     this._selectedPeriod = range.label;
     this.order = this._reportInterval === KalturaReportInterval.months ? '-year_id' : '-month_id';
     this.pager.pageIndex = 1;
+
+    this.graphFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
+    /*
+    if (range.interval === KalturaReportInterval.months) {
+      // get up to last 5 years
+      this.graphFilter.fromDate = 1;
+      this.graphFilter.toDate = 1;
+    } else {
+      // get up to last 12 months
+      this.graphFilter.fromDate = 1;
+      this.graphFilter.toDate = 1;
+    }*/
+
     this.loadReport();
   }
 
   private _updateExportConfig(): void {
     let update: Partial<ExportItem> = { reportType: this.reportType, order: this.order, additionalFilters: {} };
-
-    if (this._drillDown) {
-      update.additionalFilters.userIds = this._drillDown;
-    }
-
     this._exportConfig = GeoExportConfig.updateConfig(this._exportConfigService.getConfig(), 'end-user', update);
   }
 
@@ -133,17 +146,17 @@ export class StorageComponent implements OnInit {
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-    this._reportService.getReport(reportConfig, sections)
+    this._reportService.getReport(reportConfig, { totals: this._dataConfig.totals })
       .pipe(switchMap(report => {
-          return ObservableOf({ report });
+        const graphReportConfig = { reportType: this.reportType, filter: this.graphFilter, pager: this.pager, order: this.order };
+        return this._reportService.getReport(graphReportConfig, { graph: this._dataConfig.graph })
+          .pipe(map(graph => ({ report, graph })));
       }))
-      .subscribe( ({ report }) => {
-          if (report.table && report.table.header && report.table.data) {
-            this.handleTable(report.table); // handle table
-          }
-          if (report.graphs.length) {
+      .subscribe( ({ report, graph }) => {
+          if (graph.graphs.length) {
             this._chartDataLoaded = false;
-            this.handleGraphs(report.graphs); // handle graphs
+            this.handleGraphs(graph.graphs); // handle graphs
+            this.handleTable(graph);  // table from graph
           }
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
@@ -178,12 +191,13 @@ export class StorageComponent implements OnInit {
     });
   }
 
-  private handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._totalCount = table.totalCount;
-    if (columns.indexOf('partner_id') > -1) {
-      columns.splice(columns.indexOf('partner_id'), 1);
-    }
+  private handleTable(graph: Report): void {
+    const graphs = graph.graphs;
+    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
+      graphs,
+      this._dataConfig.table,
+      this._reportInterval,
+    );
     this._columns = columns;
     this._tableData = tableData;
   }
