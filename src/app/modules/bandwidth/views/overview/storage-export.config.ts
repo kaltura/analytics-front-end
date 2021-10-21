@@ -16,7 +16,7 @@ export class StorageExportConfig extends ExportConfigService {
         id: 'overview',
         label: this._translate.instant('app.modules.bandwidth'),
         reportType: reportTypeMap(KalturaReportType.selfServeUsage),
-        sections: [KalturaReportExportItemType.total, KalturaReportExportItemType.graph]
+        sections: [KalturaReportExportItemType.total]
       },
     ];
   }

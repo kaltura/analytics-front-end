@@ -40,7 +40,7 @@ export class StorageComponent implements OnInit {
   @ViewChild('userFilter') private userFilter: UsersFilterComponent;
 
   public _refineFilterOpened = false;
-  public _refineFilter: RefineFilter = null;
+  public _selectedAccounts: number[] = [];
   public _selectedRefineFilters: RefineFilter = null;
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
@@ -108,17 +108,37 @@ export class StorageComponent implements OnInit {
     this.order = this._reportInterval === KalturaReportInterval.months ? '-year_id' : '-month_id';
     this.pager.pageIndex = 1;
 
+    // update graph filter to show previous up to 12 months or 5 years according to selected period
     this.graphFilter = Object.assign(KalturaObjectBaseFactory.createObject(this.filter), this.filter);
-    /*
+    const partnerCreationDate = new Date(this._authService.partnerCreatedAt);
+
     if (range.interval === KalturaReportInterval.months) {
       // get up to last 5 years
-      this.graphFilter.fromDate = 1;
-      this.graphFilter.toDate = 1;
+      const partnerCreationYear = partnerCreationDate.getFullYear();
+      const selectedYear = new Date(range.startDate * 1000).getFullYear();
+      const yearsDiff = selectedYear - partnerCreationYear;
+      if (yearsDiff < 5) {
+        // partner created less than 5 years since selected year - show data since partner creation till selected year
+        this.graphFilter.fromDate = DateFilterUtils.toServerDate(partnerCreationDate, true);
+      } else {
+        // partner created over 5 years since selected year - show data from 5 years before selected year till selected year
+        const startYear = selectedYear - 4;
+        this.graphFilter.fromDate = DateFilterUtils.toServerDate(new Date(`${startYear}-01-01`), true);
+      }
     } else {
       // get up to last 12 months
-      this.graphFilter.fromDate = 1;
-      this.graphFilter.toDate = 1;
-    }*/
+      const selectedDate = new Date(range.startDate * 1000);
+      const monthsDiff = selectedDate.getMonth() - partnerCreationDate.getMonth() + (12 * (selectedDate.getFullYear() - partnerCreationDate.getFullYear()));
+      if (monthsDiff < 12) {
+        // partner created less than 12 months since selected month - show data since partner creation till selected month
+        this.graphFilter.fromDate = DateFilterUtils.toServerDate(partnerCreationDate, true);
+      } else {
+        // partner created over 12 months since selected month - show data from 12 months before selected month till selected month
+        const selectedDate = new Date(range.startDate * 1000);
+        selectedDate.setMonth((selectedDate.getMonth() - 11));
+        this.graphFilter.fromDate = DateFilterUtils.toServerDate(selectedDate, true);
+      }
+    }
 
     this.loadReport();
   }
@@ -146,9 +166,19 @@ export class StorageComponent implements OnInit {
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
+    if (this._selectedAccounts.length) {
+      reportConfig.objectIds = this._selectedAccounts.join(',');
+    } else {
+      delete reportConfig['objectIds'];
+    }
     this._reportService.getReport(reportConfig, { totals: this._dataConfig.totals })
       .pipe(switchMap(report => {
-        const graphReportConfig = { reportType: this.reportType, filter: this.graphFilter, pager: this.pager, order: this.order };
+        const graphReportConfig: ReportConfig = { reportType: this.reportType, filter: this.graphFilter, pager: this.pager, order: this.order };
+        if (this._selectedAccounts.length) {
+          graphReportConfig.objectIds = this._selectedAccounts.join(',');
+        } else {
+          delete graphReportConfig['objectIds'];
+        }
         return this._reportService.getReport(graphReportConfig, { graph: this._dataConfig.graph })
           .pipe(map(graph => ({ report, graph })));
       }))
@@ -219,8 +249,10 @@ export class StorageComponent implements OnInit {
   }
 
   public _onRefineFilterChange(event: RefineFilter): void {
-    this._refineFilter = event;
-    refineFilterToServerValue(this._refineFilter, this.filter);
+    this._selectedAccounts = [];
+    event.forEach(account => {
+      this._selectedAccounts.push(account.value.id);
+    })
     this.loadReport();
   }
 
