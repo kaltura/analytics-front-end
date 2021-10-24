@@ -241,7 +241,19 @@
       }
     },
     "bandwidth": {
-      "overview": "Overview",
+      "overview": {
+        "title": "Overview",
+        "month_id": "Month",
+        "peak_storage": "Stored Media",
+        "bandwidth_consumption": "Outbound Bandwidth",
+        "transcoding_consumption": "Transcoded Media",
+        "total_entries": "Managed Entries",
+        "total_interactive_video_entries": "Interactive Videos",
+        "unique_known_users": "Active Unique Users",
+        "live_view_time": "Live Viewing Hours",
+        "video_streams": "Delivered Video Streams",
+        "total_credits": "Enrichment Credits Spent"
+      },
       "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
       "allUsers": "All Users",
@@ -257,15 +269,6 @@
       "deleted_storage": "Deleted Storage",
       "combined_bandwidth_storage": "BW and Storage Consumption",
       "transcoding_consumption": "Transcoding Consumption",
-      "stored_media": "Stored Media",
-      "outbound_bandwidth": "Outbound Bandwidth",
-      "transcoded_media": "Transcoded Media",
-      "managed_entries": "Managed Entries",
-      "interactive_videos": "Interactive Videos",
-      "active_unique_users": "Active Unique Users",
-      "live_viewing_hours": "Live Viewing Hours",
-      "delivered_video_streams": "Delivered Video Streams",
-      "credits_spent": "Enrichment Credits Spent",
       "enrichment_data": "See enrichment data",
       "publisher_table": {
         "month_id": "Month",

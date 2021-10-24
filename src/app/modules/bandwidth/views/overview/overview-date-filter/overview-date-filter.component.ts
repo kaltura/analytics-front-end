@@ -43,7 +43,7 @@ export class OverviewDateFilterComponent implements OnInit {
       label: this._translate.instant('app.dateFilter.currentYear'),
       startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-01-01`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
-      interval: KalturaReportInterval.months
+      interval: KalturaReportInterval.hours
     }];
     // add up to 5 years to available years
     for (let i = 1; i < 5; i++) {
@@ -54,7 +54,7 @@ export class OverviewDateFilterComponent implements OnInit {
           label: year.toString(),
           startDate: DateFilterUtils.toServerDate(new Date(`${year}-01-01`), true),
           endDate: DateFilterUtils.toServerDate(new Date(`${year}-12-31`), false),
-          interval: KalturaReportInterval.months
+          interval: KalturaReportInterval.hours
         });
       }
     }
@@ -64,8 +64,8 @@ export class OverviewDateFilterComponent implements OnInit {
       key: 'month-0',
       label: this._translate.instant('app.dateFilter.currentMonth'),
       startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonth}-01`), true),
-      endDate: DateFilterUtils.toServerDate(new Date(currentYear,currentMonth,0), false),
-      interval: KalturaReportInterval.days
+      endDate: DateFilterUtils.toServerDate(today, false),
+      interval: KalturaReportInterval.months
     }];
     // add up to 12 months to available months
     let year = currentYear;
@@ -82,7 +82,7 @@ export class OverviewDateFilterComponent implements OnInit {
           label: `${monthName} ${year}`,
           startDate: DateFilterUtils.toServerDate(new Date(`${year}-${month}-01`), true),
           endDate: DateFilterUtils.toServerDate(new Date(year,month,0), false),
-          interval: KalturaReportInterval.days
+          interval: KalturaReportInterval.months
         });
       }
     }

@@ -39,7 +39,7 @@ export const menu = [
       {
         id: 'overview',
         link: 'bandwidth/overview',
-        label: 'app.bandwidth.overview',
+        label: 'app.bandwidth.overview.title',
       },
       {
         id: 'publisher',

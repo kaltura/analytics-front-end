@@ -11,7 +11,13 @@ app-users-filter{
 p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
   content: "\e91e";
 }
-
+.kReportContent {
+  background-color: $appBkgColor !important;
+  .kChartContainer {
+    margin-top: 24px;
+    background-color: white;
+  }
+}
 .kReportContainer {
   padding-bottom: 24px;
   background-color: $appBkgColor;
@@ -58,6 +64,7 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
   }
 }
 .kTotals {
+  background-color: white;
   display: flex;
   width: 100%;
   padding: 0px 24px 12px;
@@ -96,4 +103,22 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
   &:hover {
     text-decoration: underline;
   }
+}
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+.kFilters {
+  background-color: white;
+}
+.kTable {
+  background-color: white;
 }

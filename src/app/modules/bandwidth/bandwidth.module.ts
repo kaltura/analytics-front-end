@@ -21,6 +21,7 @@ import { EndUserFilterComponent } from './views/end-user/filter/filter.component
 import { StorageFilterComponent } from './views/overview/filter/filter.component';
 import { OverviewDateFilterComponent } from "./views/overview/overview-date-filter/overview-date-filter.component";
 import { RadioButtonModule } from "primeng/radiobutton";
+import { OverviewMetricsSelectorDropdownComponent } from "./views/overview/overview-metrics-selector-dropdown/overview-metrics-selector-dropdown.component";
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { RadioButtonModule } from "primeng/radiobutton";
     EndUserFilterComponent,
     StorageComponent,
     StorageFilterComponent,
-    OverviewDateFilterComponent
+    OverviewDateFilterComponent,
+    OverviewMetricsSelectorDropdownComponent
   ],
   exports: [],
   providers: []
