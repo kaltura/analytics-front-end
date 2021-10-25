@@ -19,12 +19,12 @@ export class StorageDataConfig extends ReportDataBaseConfig {
         fields: {
           'peak_storage': {
             format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => `<span class="kValue">${fileSize(value).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('default'), getColorPercent(100,'default')],
           },
           'bandwidth_consumption': {
             format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${ReportHelper.numberOrZero(String(value), false)}</span>&nbsp;MB`,
+            graphTooltip: (value) => `<span class="kValue">${fileSize(value).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
           },
           'total_entries': {
@@ -43,6 +43,10 @@ export class StorageDataConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
+          'year_id': {
+            format: value => value,
+            nonComparable: true,
+          },
           'month_id': {
             format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
             nonComparable: true,

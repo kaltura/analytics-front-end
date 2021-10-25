@@ -73,21 +73,21 @@
             <span class="kTotalLabel">{{_tabsData[7].title}}</span>
           </div>
         </div>
-        <div class="kCol">
+        <div class="kCol" *ngIf="_reach">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[8].value}}</span>
             <span class="kTotalLabel">{{_tabsData[8].title}}</span>
           </div>
-          <span *ngIf="_reach" class="kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.enrichment_data' | translate}}</span>
+          <span class="kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.enrichment_data' | translate}}</span>
         </div>
       </div>
 
       <div class="kChartContainer">
         <div class="kFilters">
-          <span class="kTitle">{{_selectedPeriod}}</span>
+          <span class="kTitle">{{_graphTitle}}</span>
         </div>
         <app-overview-metrics-selector-dropdown *ngIf="_barChartData && _barChartData[_selectedMetrics] && _barChartData[_selectedMetrics].series && _barChartData[_selectedMetrics].series[0]?.data?.length"
-                                                [options]="_mainMetricsOptions"
+                                                [options]="_metricsOptions"
                                                 [colorsMap]="_colorsMap"
                                                 (selectionChange)="_onMetricChange($event)"
                                                 [(selection)]="_selectedMetrics"></app-overview-metrics-selector-dropdown>
@@ -111,7 +111,7 @@
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
-                   [sortField]="'month_id'"
+                   [sortField]="_sortField"
                    [sortOrder]="-1"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
@@ -146,9 +146,6 @@
         </div>
       </div>
     </div>
-
-
-
 
   </k-area-blocker>
 

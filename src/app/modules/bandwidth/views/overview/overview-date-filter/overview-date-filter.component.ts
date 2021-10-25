@@ -43,7 +43,7 @@ export class OverviewDateFilterComponent implements OnInit {
       label: this._translate.instant('app.dateFilter.currentYear'),
       startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-01-01`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
-      interval: KalturaReportInterval.hours
+      interval: KalturaReportInterval.years
     }];
     // add up to 5 years to available years
     for (let i = 1; i < 5; i++) {
@@ -54,7 +54,7 @@ export class OverviewDateFilterComponent implements OnInit {
           label: year.toString(),
           startDate: DateFilterUtils.toServerDate(new Date(`${year}-01-01`), true),
           endDate: DateFilterUtils.toServerDate(new Date(`${year}-12-31`), false),
-          interval: KalturaReportInterval.hours
+          interval: KalturaReportInterval.years
         });
       }
     }
