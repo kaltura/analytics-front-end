@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { StorageDataConfig } from './storage-data.config';
@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
-import {tableLocalSortHandler, TableRow} from 'shared/utils/table-local-sort-handler';
+import { tableLocalSortHandler, TableRow } from 'shared/utils/table-local-sort-handler';
 import { StorageExportConfig } from './storage-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
@@ -51,24 +51,23 @@ export class StorageComponent implements OnInit {
   public _metricsOptions: SelectItem[] = [];
   public _fields: ReportDataFields;
   public _colorsMap: { [metric: string]: string } = {};
-
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
   public _graphTitle = '';
-
   public pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 25, pageIndex: 1});
   public reportType: KalturaReportType = reportTypeMap(KalturaReportType.selfServeUsage);
   public _exportConfig: ExportItem[] = [];
   public _dateFilter: DateChangeEvent;
-  public filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
+  public filter: KalturaReportInputFilter = new KalturaReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
     }
   );
-  public graphFilter: KalturaEndUserReportInputFilter = null;
+  public graphFilter: KalturaReportInputFilter = null;
   public _sortField = 'month_id';
+
   private order = '-month_id';
   private _dataConfig: ReportDataConfig = null;
 
@@ -97,8 +96,12 @@ export class StorageComponent implements OnInit {
   }
 
   public _onDateFilterChange(range: OverviewDateRange): void {
-    const event = {} as DateChangeEvent;
-    this._dateFilter = event;
+    this._dateFilter = {
+      startDate: range.startDate,
+      endDate: range.endDate,
+      timeUnits: range.interval,
+      timeZoneOffset: DateFilterUtils.getTimeZoneOffset()
+    } as DateChangeEvent;
     this._chartDataLoaded = false;
     this.filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this.filter.toDate = range.endDate;
@@ -141,7 +144,6 @@ export class StorageComponent implements OnInit {
         this.graphFilter.fromDate = DateFilterUtils.toServerDate(selectedDate, true);
       }
     }
-
     this.loadReport();
   }
 
@@ -184,11 +186,16 @@ export class StorageComponent implements OnInit {
             this._chartDataLoaded = false;
             this.handleGraphs(graph.graphs); // handle graphs
             this.handleTable(graph);  // table from graph
+          } else {
+            this._barChartData = [];
+            this._graphTitle = this._selectedPeriod;
           }
           if (report.totals) {
             this.handleTotals(report.totals); // handle totals
           }
-          this._isBusy = false;
+          setTimeout(() => {
+            this._isBusy = false;
+          });
         },
         error => {
           this._isBusy = false;
@@ -206,24 +213,28 @@ export class StorageComponent implements OnInit {
 
   public _onSortChanged(event: SortEvent) {
     this.order = tableLocalSortHandler(event, this.order);
-    if (event.field === "month_id") {
-      this._tableData.reverse();
+    if (this._isBusy) {
+      if (event.field === "month_id" || event.field === "year_id") {
+        this._tableData.reverse();
+      }
+    } else {
+      if (event.field === "month_id") {
+        this._tableData.reverse();
+      }
     }
   }
 
   private handleTable(graph: Report): void {
     const graphs = graph.graphs;
-    const { columns, tableData, totalCount } = this._reportService.tableFromGraph(
-      graphs,
-      this._dataConfig.table,
-      this._reportInterval,
-    );
+    const { columns, tableData } = this._reportService.tableFromGraph(graphs, this._dataConfig.table, this._reportInterval);
     this._columns = columns;
     this._tableData = tableData;
-    if (this._tableData.length) {
+    if (this._tableData.length > 1) {
       this._graphTitle = this._sortField === 'month_id'
         ? this._translate.instant('app.bandwidth.overview.lastMonths', {months: this._tableData.length, selectedPeriod: this._selectedPeriod})
         : this._translate.instant('app.bandwidth.overview.lastYears', {years: this._tableData.length, selectedPeriod: this._selectedPeriod});
+    } else if (this._tableData.length === 1) {
+      this._graphTitle = this._selectedPeriod;
     } else {
       this._graphTitle = '';
     }

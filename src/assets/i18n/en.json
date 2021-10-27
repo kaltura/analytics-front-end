@@ -244,9 +244,9 @@
       "overview": {
         "title": "Overview",
         "month_id": "Month",
-        "lastMonths": "{{months}} Months until {{selectedPeriod}}",
+        "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
         "year_id": "Year",
-        "lastYears": "{{years}} Years until {{selectedPeriod}}",
+        "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
         "peak_storage": "Stored Media",
         "bandwidth_consumption": "Outbound Bandwidth",
         "transcoding_consumption": "Transcoded Media",
