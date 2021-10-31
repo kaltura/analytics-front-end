@@ -22,6 +22,7 @@ import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-per
 import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
 import { SelectItem, SortEvent } from "primeng/api";
 import { fileSize } from "shared/utils/file-size";
+import { of as ObservableOf } from "rxjs";
 
 @Component({
   selector: 'app-storage',
@@ -67,6 +68,7 @@ export class StorageComponent implements OnInit {
   );
   public graphFilter: KalturaReportInputFilter = null;
   public _sortField = 'month_id';
+  public _isSpecificTimeRange = false;
 
   private order = '-month_id';
   private _dataConfig: ReportDataConfig = null;
@@ -96,6 +98,7 @@ export class StorageComponent implements OnInit {
   }
 
   public _onDateFilterChange(range: OverviewDateRange): void {
+    this._isSpecificTimeRange = range.isSpecific;
     this._dateFilter = {
       startDate: range.startDate,
       endDate: range.endDate,
@@ -144,7 +147,7 @@ export class StorageComponent implements OnInit {
         this.graphFilter.fromDate = DateFilterUtils.toServerDate(selectedDate, true);
       }
     }
-    this.loadReport();
+    this.loadReport(this._dataConfig);
   }
 
   public toggleTable(): void {
@@ -172,6 +175,9 @@ export class StorageComponent implements OnInit {
     }
     this._reportService.getReport(reportConfig, { totals: this._dataConfig.totals })
       .pipe(switchMap(report => {
+        if (this._isSpecificTimeRange) {
+          return ObservableOf({ report, graph: null });
+        }
         const graphReportConfig: ReportConfig = { reportType: this.reportType, filter: this.graphFilter, pager: this.pager, order: this.order };
         if (this._selectedAccounts.length) {
           graphReportConfig.objectIds = this._selectedAccounts.join(',');
@@ -182,7 +188,7 @@ export class StorageComponent implements OnInit {
           .pipe(map(graph => ({ report, graph })));
       }))
       .subscribe( ({ report, graph }) => {
-          if (graph.graphs.length) {
+          if (graph && graph.graphs.length) {
             this._chartDataLoaded = false;
             this.handleGraphs(graph.graphs); // handle graphs
             this.handleTable(graph);  // table from graph

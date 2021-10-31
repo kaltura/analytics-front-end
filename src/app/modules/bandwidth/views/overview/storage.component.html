@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <div class="kChartContainer">
+      <div class="kChartContainer" *ngIf="!_isSpecificTimeRange">
         <div class="kFilters">
           <span class="kTitle">{{_graphTitle}}</span>
         </div>
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div class="kTable" *ngIf="_tableData.length">
+      <div class="kTable" *ngIf="!_isSpecificTimeRange && _tableData.length">
         <div class="kToggle">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>

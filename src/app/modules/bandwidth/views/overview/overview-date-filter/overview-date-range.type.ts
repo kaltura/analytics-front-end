@@ -5,5 +5,6 @@ export interface OverviewDateRange {
   startDate: number;
   endDate: number;
   key: string;
+  isSpecific: boolean;
   interval: KalturaReportInterval;
 }

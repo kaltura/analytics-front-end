@@ -136,3 +136,54 @@
     line-height: 16px;
   }
 }
+.kViews{
+  width: 100%;
+  display: flex;
+  padding-top: 20px;
+  justify-content: center;
+  ::ng-deep p-selectbutton .ui-button{
+    width: 210px;
+  }
+}
+.kSpecific{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-left: 22px;
+  &.kWide {
+    padding-left: 54px;
+  }
+  .kStartEnd{
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    .divider {
+      width: 8px;
+      border: none;
+      border-top: 1px solid $kGrayscale3;
+      margin-right: 8px;
+      margin-left: 8px;
+    }
+    p-calendar {
+      ::ng-deep button {
+        pointer-events: none;
+      }
+    }
+  }
+  p-calendar{
+    ::ng-deep .ui-calendar .ui-datepicker{
+      width: 454px;
+      .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
+        background-color: $kPrimary;
+      }
+    }
+    ::ng-deep .ui-inputtext {
+      margin-left: 40px;
+    }
+  }
+  .kInvalid{
+    color: $kDandger;
+    font-size: 14px;
+    padding-bottom: 12px;
+  }
+}
