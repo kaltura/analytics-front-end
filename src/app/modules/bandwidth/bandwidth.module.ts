@@ -24,6 +24,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { OverviewMetricsSelectorDropdownComponent } from "./views/overview/overview-metrics-selector-dropdown/overview-metrics-selector-dropdown.component";
+import { OverviewCanActivate } from "./gaurds/overview-can-activate";
 
 @NgModule({
   imports: [
@@ -57,7 +58,7 @@ import { OverviewMetricsSelectorDropdownComponent } from "./views/overview/overv
     OverviewMetricsSelectorDropdownComponent
   ],
   exports: [],
-  providers: []
+  providers: [OverviewCanActivate]
 })
 export class BandwidthModule {
 }

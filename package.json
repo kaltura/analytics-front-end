@@ -41,7 +41,7 @@
     "echarts": "^4.2.1",
     "jquery": "^3.5.1",
     "jsnlog": "^2.29.0",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20211025-143815.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20211110-083327.tgz",
     "moment": "^2.24.0",
     "ng-carousel-iuno": "^0.3.0",
     "ngx-echarts": "^4.2.1",
