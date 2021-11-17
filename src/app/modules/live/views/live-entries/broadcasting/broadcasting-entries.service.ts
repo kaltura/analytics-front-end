@@ -9,7 +9,7 @@ import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, Kaltu
   KalturaReportType, LiveStreamGetDetailsAction, ReportGetTableAction, ReportGetTableActionArgs, KalturaLiveStreamBroadcastStatus,
   EntryServerNodeListAction, KalturaLiveEntryServerNodeFilter, KalturaLiveEntryServerNode, KalturaEntryServerNodeStatus,
   ConversionProfileAssetParamsListAction, KalturaConversionProfileAssetParamsFilter, KalturaConversionProfileAssetParams,
-  KalturaAssetParamsOrigin, BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaBeacon, KalturaBeaconObjectTypes
+  KalturaAssetParamsOrigin, BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaBeacon, KalturaBeaconObjectTypes, KalturaRecordStatus
 } from 'kaltura-ngx-client';
 import { BroadcastingEntriesDataConfig } from './broadcasting-entries-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -27,7 +27,7 @@ export interface BroadcastingEntries {
   name?: string;
   owner?: string;
   dvr?: KalturaDVRStatus;
-  recording?: KalturaRecordingStatus;
+  recording?: boolean;
   transcoding?: boolean;
   activeUsers?: number;
   engagedUsers?: number;
@@ -208,7 +208,7 @@ export class BroadcastingEntriesService implements OnDestroy {
                 broadcastingEntry.name = entry.name;
                 broadcastingEntry.dvr = entry.dvrStatus;
                 broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
-                broadcastingEntry.recording = entry.recordingStatus;
+                broadcastingEntry.recording = entry.recordingStatus === KalturaRecordingStatus.active && entry.recordStatus !== KalturaRecordStatus.disabled;
                 broadcastingEntry.conversionProfileId = entry.conversionProfileId;
                 broadcastingEntry.partnerId = entry.partnerId.toString();
               }
