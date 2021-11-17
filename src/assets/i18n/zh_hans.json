@@ -608,7 +608,7 @@
           "message-text-box": "编码器曾发生重新联机。请检查您的编码器记录文件"
         },
         "101": {
-          "message-log": "声明与实际比特率不符",
+          "message-log": "所检测传入的实际比特率 ({{incomingBitrate}} Mbit/s) 与所声明的 ({{configuredBitrate}} Mbit/s) 不同。请确定您的编码器设置为使用 CBR（恒定比特率）",
           "message-text-box": "所检测传入的实际比特率 ({{incomingBitrate}}) 与所声明的 ({{configuredBitrate}}) 不同。请确定您的编码器设置为使用 CBR（恒定比特率）"
         },
         "102": {

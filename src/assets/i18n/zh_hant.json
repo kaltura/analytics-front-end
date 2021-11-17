@@ -608,7 +608,7 @@
           "message-text-box": "編碼器曾發生重新連線。請檢查您的編碼器記錄檔"
         },
         "101": {
-          "message-log": "宣告與實際位元速率不符",
+          "message-log": "所偵測傳入的實際位元速率 ({{incomingBitrate}} Mbit/s) 與所宣告的 ({{configuredBitrate}} Mbit/s) 不同。請確定您的編碼器設定為使用 CBR（恆定位元速率）",
           "message-text-box": "所偵測傳入的實際位元速率 ({{incomingBitrate}}) 與所宣告的 ({{configuredBitrate}}) 不同。請確定您的編碼器設定為使用 CBR（恆定位元速率）"
         },
         "102": {
