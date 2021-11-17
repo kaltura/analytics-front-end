@@ -65,6 +65,15 @@ export const viewsConfig = {
     },
   },
   bandwidth: {
+    overview: {
+      export: {},
+      refineFilter: {
+        mediaType: {},
+        entrySource: {},
+        owners: {},
+        geo: {},
+      },
+    },
     endUser: {
       export: {},
       refineFilter: {

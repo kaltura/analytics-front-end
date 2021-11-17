@@ -38,6 +38,13 @@ export class ReportHelper {
     return x / 60000;
   }
 
+  static hours(x: number): number {
+    x = typeof x === 'number' ? x : parseFloat(x);
+    x = !isNaN(x) ? x : 0;
+
+    return x / 60;
+  }
+
   static integerOrZero(x: any, round = true): string {
     x = parseInt(x);
     return this.numberOrZero(x, round);

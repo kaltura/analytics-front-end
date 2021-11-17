@@ -12,11 +12,19 @@ import { routing } from './bandwidth.routes';
 import { BandwidthComponent } from './bandwidth.component';
 import { PublisherStorageComponent } from './views/publisher-storage/publisher-storage.component';
 import { EndUserStorageComponent } from './views/end-user/end-user-storage.component';
+import { StorageComponent } from './views/overview/storage.component';
 import { SharedModule } from 'shared/shared.module';
-import { AreaBlockerModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, PopupWidgetModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TableModule } from 'primeng/table';
 import { EndUserFilterComponent } from './views/end-user/filter/filter.component';
+import { StorageFilterComponent } from './views/overview/filter/filter.component';
+import { OverviewDateFilterComponent } from "./views/overview/overview-date-filter/overview-date-filter.component";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { CalendarModule } from 'primeng/calendar';
+import { OverviewMetricsSelectorDropdownComponent } from "./views/overview/overview-metrics-selector-dropdown/overview-metrics-selector-dropdown.component";
+import { OverviewCanActivate } from "./gaurds/overview-can-activate";
 
 @NgModule({
   imports: [
@@ -27,12 +35,16 @@ import { EndUserFilterComponent } from './views/end-user/filter/filter.component
     FormsModule,
     TranslateModule,
     DropdownModule,
+    SelectButtonModule,
+    CalendarModule,
     ButtonModule,
     PaginatorModule,
     SharedModule,
     TableModule,
     TooltipModule,
     NgxEchartsModule,
+    PopupWidgetModule,
+    RadioButtonModule,
     RouterModule.forChild(routing),
   ],
   declarations: [
@@ -40,9 +52,13 @@ import { EndUserFilterComponent } from './views/end-user/filter/filter.component
     PublisherStorageComponent,
     EndUserStorageComponent,
     EndUserFilterComponent,
+    StorageComponent,
+    StorageFilterComponent,
+    OverviewDateFilterComponent,
+    OverviewMetricsSelectorDropdownComponent
   ],
   exports: [],
-  providers: []
+  providers: [OverviewCanActivate]
 })
 export class BandwidthModule {
 }

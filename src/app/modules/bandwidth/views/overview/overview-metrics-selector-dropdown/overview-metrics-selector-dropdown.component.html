@@ -1,0 +1,20 @@
+<p-dropdown class="kMetricsSelector"
+            [style]="{'width': '180px'}"
+            [options]="options"
+            (onChange)="_onChange()"
+            [(ngModel)]="selection">
+  <ng-template let-option pTemplate="selectedItem">
+    <div class="kOptionsLabelWrapper">
+      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
+         [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+      <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+    </div>
+  </ng-template>
+  <ng-template let-option pTemplate="item">
+    <div class="kOptionsLabelWrapper kItemLabel">
+      <i *ngIf="option.value && option.value !== 'none'" class="kCompareMetricBullet"
+         [style.color]="colorsMap ? (colorsMap[option.value] || _defaultColor) : _defaultColor">&bull;</i>
+      <span class="kOptionLabel" [kTooltip]="option.label" [showOnEllipsis]="true">{{option.label}}</span>
+    </div>
+  </ng-template>
+</p-dropdown>

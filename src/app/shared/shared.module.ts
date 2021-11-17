@@ -80,9 +80,10 @@ import { DevicesOverviewComponent } from "shared/components/devices-report/devic
 import { GeoComponent } from "shared/components/top-countries-report/geo/geo.component";
 import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
 import { KalturaPlayerV7Component } from "shared/player-v7";
-import {DeviceFilterComponent} from "shared/components/filter/device-filter/device-filter.component";
-import {OsFilterComponent} from "shared/components/filter/os-filter/os-filter.component";
-import {BrowserFilterComponent} from "shared/components/filter/browser-filter/browser-filter.component";
+import { DeviceFilterComponent } from "shared/components/filter/device-filter/device-filter.component";
+import { OsFilterComponent } from "shared/components/filter/os-filter/os-filter.component";
+import { BrowserFilterComponent } from "shared/components/filter/browser-filter/browser-filter.component";
+import { AccountFilterComponent } from "shared/components/filter/account-filter/account-filter.component";
 
 @NgModule({
   imports: [
@@ -154,6 +155,7 @@ import {BrowserFilterComponent} from "shared/components/filter/browser-filter/br
     TagsFilterComponent,
     PlaybackFilterComponent,
     OwnersFilterComponent,
+    AccountFilterComponent,
     LocationFilterComponent,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,
@@ -217,6 +219,7 @@ import {BrowserFilterComponent} from "shared/components/filter/browser-filter/br
     TagsFilterComponent,
     PlaybackFilterComponent,
     OwnersFilterComponent,
+    AccountFilterComponent,
     LocationFilterComponent,
     UserEngagementUsersFilterComponent,
     UserEngagementFilterComponent,

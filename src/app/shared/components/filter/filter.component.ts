@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaMediaEntry, KalturaUser } from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -146,6 +146,7 @@ export class FilterComponent {
     entrySource: {},
     tags: {},
     owners: {},
+    accounts: {},
     context: {},
     categories: {},
     domains: {},
@@ -210,6 +211,7 @@ export class FilterComponent {
       'browser': [],
       'os': [],
       'owners': [],
+      'accounts': [],
       'users': [],
       'location': [],
       'countries': [],
@@ -253,6 +255,11 @@ export class FilterComponent {
           const user = value as KalturaUser;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
+          return { value, type, label, tooltip };
+        case 'accounts':
+          const account = value as KalturaPartner;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${account.id}`;
+          label = account.name;
           return { value, type, label, tooltip };
         case 'entries':
           const entry = value as KalturaMediaEntry;
