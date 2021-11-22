@@ -49,6 +49,7 @@
     height: 100%;
     display: flex;
     padding-top: 20px;
+    box-sizing: border-box;
       .col{
         width: 50%;
         display: flex;
@@ -149,7 +150,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding-left: 22px;
+  padding-left: 50px;
   &.kWide {
     padding-left: 54px;
   }
