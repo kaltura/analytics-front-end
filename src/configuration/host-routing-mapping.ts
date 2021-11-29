@@ -22,6 +22,10 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
     case '/analytics/engagement':
       analyticsRoute = '/audience/engagement';
       break;
+    case 'overview':
+    case '/analytics/overview':
+      analyticsRoute = '/bandwidth/overview';
+      break;
     case 'publisher':
     case '/analytics/publisher':
       analyticsRoute = '/bandwidth/publisher';
@@ -37,6 +41,10 @@ export function mapRoutes(kmcRoute: string, queryParams: { [key: string]: string
     case 'entry':
     case '/analytics/entry':
       analyticsRoute = `/entry${idPostfix}`;
+      break;
+    case 'export':
+    case '/analytics/export':
+      analyticsRoute = `/export${idPostfix}`;
       break;
     case 'category':
     case '/analytics/category':

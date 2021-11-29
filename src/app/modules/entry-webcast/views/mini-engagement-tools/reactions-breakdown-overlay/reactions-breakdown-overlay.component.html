@@ -30,4 +30,10 @@
     <app-horizontal-bar-row [value]="_reactionsBreakdown.Think"></app-horizontal-bar-row>
   </div>
 
+  <div class="row" *ngIf="_reactionsBreakdown.Custom">
+    <div class="icon custom"></div>
+    <span class="label">{{'app.entryWebcast.tools.custom' | translate}}</span>
+    <app-horizontal-bar-row [value]="_reactionsBreakdown.Custom"></app-horizontal-bar-row>
+  </div>
+
 </div>

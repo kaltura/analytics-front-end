@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaMediaEntry, KalturaUser } from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -108,7 +108,7 @@ export class FilterComponent {
   }
 
   @Input() set selectedFilters(value: RefineFilter) {
-    this._updateSelectedValues(value);
+    this._initialFilters = value;
   }
 
   @Input() set dateFilter(value: DateChangeEvent) {
@@ -133,6 +133,7 @@ export class FilterComponent {
 
   protected _currentFilters: FilterItem[] = []; // local state
   protected _appliedFilters: FilterItem[] = [];
+  protected _initialFilters: FilterItem[] = [];
   protected _showFilters: boolean;
 
   public _showDisclaimer = false;
@@ -145,6 +146,7 @@ export class FilterComponent {
     entrySource: {},
     tags: {},
     owners: {},
+    accounts: {},
     context: {},
     categories: {},
     domains: {},
@@ -209,6 +211,7 @@ export class FilterComponent {
       'browser': [],
       'os': [],
       'owners': [],
+      'accounts': [],
       'users': [],
       'location': [],
       'countries': [],
@@ -252,6 +255,11 @@ export class FilterComponent {
           const user = value as KalturaUser;
           tooltip = this._translate.instant(`app.filters.${type}`) + `: ${user.id}`;
           label = user.screenName;
+          return { value, type, label, tooltip };
+        case 'accounts':
+          const account = value as KalturaPartner;
+          tooltip = this._translate.instant(`app.filters.${type}`) + `: ${account.id}`;
+          label = account.name;
           return { value, type, label, tooltip };
         case 'entries':
           const entry = value as KalturaMediaEntry;
@@ -374,6 +382,12 @@ export class FilterComponent {
     this._logger.trace('Filters is opened by user, update selected values');
     this._currentFilters = [...this._appliedFilters];
     this._updateSelectedValues(this._currentFilters);
+    if (this._currentFilters.length === 0 && this._initialFilters) {
+      this._initialFilters.forEach(filter => {
+        this._onItemSelected(filter.value, filter.type);
+      });
+      this._updateSelectedValues(this._initialFilters);
+    }
     this._updateLayout();
   }
 

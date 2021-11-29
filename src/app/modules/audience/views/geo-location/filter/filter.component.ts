@@ -42,6 +42,7 @@ export class GeoFilterComponent extends FilterComponent {
         geo: {},
         tags: {},
         categories: {},
+        playbackType: {},
       };
     }
   }

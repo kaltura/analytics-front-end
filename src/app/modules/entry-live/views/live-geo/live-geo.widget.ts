@@ -51,7 +51,7 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
               private _dataConfigService: LiveGeoConfig,
               private _usersModeService: ToggleUsersModeService) {
     super(_serverPolls, _frameEventManager);
-  
+
     this._dataConfig = _dataConfigService.getConfig(this._isAuthUsers);
     this._selectedMetrics = this._dataConfig.totals.preSelected;
 
@@ -65,12 +65,16 @@ export class LiveGeoWidget extends WidgetBase<LiveGeoWidgetData> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs.entryId, this._isAuthUsers);
+    this._pollsFactory = new LiveGeoRequestFactory(this._activationArgs, this._isAuthUsers);
     this._applyFilters();
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs.entryId, this._isAuthUsers);
+    if (this._pollsFactory) {
+      this._pollsFactory.updateArgs(widgetsArgs, this._isAuthUsers);
+    } else {
+      this._pollsFactory = new LiveGeoRequestFactory(widgetsArgs, this._isAuthUsers);
+    }
 
     return ObservableOf(null);
   }

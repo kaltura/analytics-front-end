@@ -312,9 +312,9 @@ export class ReportService implements OnDestroy {
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-              : reportInterval === KalturaReportInterval.hours
-                ? label
-                : DateFilterUtils.formatFullDateString(label);
+              : (reportInterval === KalturaReportInterval.hours || reportInterval === KalturaReportInterval.years)
+              ? label
+              : DateFilterUtils.formatFullDateString(label);
           } else {
             this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
@@ -541,7 +541,7 @@ export class ReportService implements OnDestroy {
   public tableFromGraph(graphs: KalturaReportGraph[],
                         config: ReportDataItemConfig,
                         reportInterval: KalturaReportInterval): { columns: string[], tableData: TableRow[], totalCount: number } {
-    const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : 'month_id';
+    const firstColumn = reportInterval === KalturaReportInterval.days ? 'date_id' : reportInterval === KalturaReportInterval.years ? 'year_id' : 'month_id';
     let columns = [];
     let tableData = [];
     const data = [];

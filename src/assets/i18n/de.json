@@ -608,7 +608,7 @@
           "message-text-box": "Neuanschluss des Encoders erfolgt. Bitte überprüfen Sie Ihre Encoder-Protokolle"
         },
         "101": {
-          "message-log": "Angegebene und tatsächliche Bitrate stimmen nicht überein",
+          "message-log": "Die erkannte eingehende tatsächliche Bitrate ({{incomingBitrate}} Mbit/s) unterscheidet sich von der angegebenen Bitrate ({{configuredBitrate}} Mbit/s). Vergewissern Sie sich, dass der Encoder für die Verwendung von CBR (konstante Bitrate) konfiguriert ist",
           "message-text-box": "Die erkannte eingehende tatsächliche Bitrate ({{incomingBitrate}}) unterscheidet sich von der angegebenen Bitrate ({{configuredBitrate}}). Vergewissern Sie sich, dass der Encoder für die Verwendung von CBR (konstante Bitrate) konfiguriert ist"
         },
         "102": {

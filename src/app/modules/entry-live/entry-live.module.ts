@@ -60,6 +60,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
 import { ToggleUsersModeComponent } from './components/toggle-users-mode/toggle-users-mode.component';
 import { ToggleUsersModeService } from './components/toggle-users-mode/toggle-users-mode.service';
+import { LiveFiltersComponent } from './components/live-filters/live-filters.component';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import { ToggleUsersModeService } from './components/toggle-users-mode/toggle-us
     TimeSelectorComponent,
     ToggleLiveComponent,
     ToggleUsersModeComponent,
+    LiveFiltersComponent,
   ],
   providers: [
     CodeToSeverityPipe,
@@ -130,7 +132,7 @@ import { ToggleUsersModeService } from './components/toggle-users-mode/toggle-us
     LiveDiscoveryUsersTableProvider,
     LiveDiscoveryUsersStatusConfig,
     ToggleUsersModeService,
-    
+
     // polls services
     EntryLiveGeneralPollsService,
     EntryLiveGeoDevicesPollsService,

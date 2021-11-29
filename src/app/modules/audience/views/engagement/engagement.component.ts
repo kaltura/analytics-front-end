@@ -19,7 +19,10 @@ import { DateRanges } from "shared/components/date-filter/date-filter-utils";
   ]
 })
 export class EngagementComponent {
-  public _selectedRefineFilters: RefineFilter = null;
+  public _selectedRefineFilters: RefineFilter = [{
+    type: "playbackType",
+    value: 'vod'
+  }];
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;

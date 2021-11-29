@@ -15,9 +15,6 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule, PopupW
 import { TableModule } from 'primeng/table';
 import { EntryWebcastFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { DeviceFilterComponent } from "./filter/device-filter/device-filter.component";
-import { BrowserFilterComponent } from "./filter/browser-filter/browser-filter.component";
-import { OsFilterComponent } from "./filter/os-filter/os-filter.component";
 import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
 import { WebcastGeoComponent } from "./views/geo/geo-location.component";
 import { WebcastMiniQualityComponent } from "./views/mini-quality/mini-quality.component";
@@ -53,10 +50,7 @@ import { ReactionsBreakdownOverlayComponent } from "./views/mini-engagement-tool
   declarations: [
     EntryWebcastViewComponent,
     EntryWebcastFilterComponent,
-    DeviceFilterComponent,
-    BrowserFilterComponent,
     ReactionsBreakdownOverlayComponent,
-    OsFilterComponent,
     WebcastMiniHighlightsComponent,
     WebcastMiniEngagementComponent,
     WebcastMiniQualityComponent,

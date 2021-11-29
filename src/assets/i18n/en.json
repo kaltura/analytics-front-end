@@ -48,6 +48,8 @@
       "usersPlaceholder": "Select Users",
       "owners": "Owners",
       "ownersPlaceholder": "Select Owners",
+      "accounts": "Accounts",
+      "accountsPlaceholder": "Select Accounts",
       "userNotFoundTooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
       "country": "Country",
       "region": "Region",
@@ -109,12 +111,12 @@
       "exportCsv": "Export",
       "exportReports": "Export Reports",
       "exportReport": "Export Report",
+      "reportReady": "Your report is ready!",
       "na": "N/A",
       "noMsg": "No Message",
       "noResults": "No Data Found",
       "noResultsRegion": "No Data for this Region",
       "exporting": "Preparing Report",
-      "reportReady": "Your report is ready!",
       "reportFail": "Report preparation failed.",
       "downloadCsv": "Download Report",
       "tryAgain": "Try Again",
@@ -137,6 +139,10 @@
     },
     "exportReports": {
       "exportReports": "Export Reports",
+      "download": "Download Report",
+      "exportDate": "Exported {{exportDate}}",
+      "reportReady": "Your <b>{{reportName}}</b> report is ready for download",
+      "reportNotFound": "Report expired. Please export it again.",
       "successMessage": "We are preparing your report. We will send it to your email address shortly.",
       "errorMessage": "There was an error processing your export request, please try again or contact Kaltura support."
     },
@@ -184,7 +190,12 @@
       "compare": "Compare with another period",
       "comparelastyear": "Same period last year",
       "comparespecific": "Same period starting at:",
-      "exit": "Exit Compare Mode"
+      "exit": "Exit Compare Mode",
+      "byMonth": "By Month",
+      "byYear": "By Year",
+      "currentYear": "Current Year",
+      "currentMonth": "Current Month",
+      "past_period": "Past Period"
     },
     "usersFilter": {
       "prompt": "Search Users",
@@ -230,6 +241,22 @@
       }
     },
     "bandwidth": {
+      "overview": {
+        "title": "Overview",
+        "month_id": "Month",
+        "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
+        "year_id": "Year",
+        "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
+        "peak_storage": "Stored Media",
+        "bandwidth_consumption": "Outbound Bandwidth",
+        "transcoding_consumption": "Transcoded Media",
+        "total_entries": "Managed Entries",
+        "total_interactive_video_entries": "Interactive Videos",
+        "unique_known_users": "Active Unique Users",
+        "live_view_time": "Live Viewing Hours",
+        "video_streams": "Delivered Video Streams",
+        "total_credits": "Enrichment Credits Spent"
+      },
       "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
       "allUsers": "All Users",
@@ -245,6 +272,7 @@
       "deleted_storage": "Deleted Storage",
       "combined_bandwidth_storage": "BW and Storage Consumption",
       "transcoding_consumption": "Transcoding Consumption",
+      "enrichment_data": "See enrichment data",
       "publisher_table": {
         "month_id": "Month",
         "date_id": "Date",
@@ -322,7 +350,7 @@
         "unique_known_users": "Unique Viewers",
         "unique_viewers": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
-        "avg_view_drop_off": "Avg. Drop Off Rate",
+        "avg_view_drop_off": "Avg. Drop Off Rate (VOD)",
         "avg_view_drop_off_tt": "Average drop off rate measured by viewer reaching playback quartiles",
         "object_id": "Name",
         "country": "",
@@ -352,8 +380,8 @@
         "topBrowsers": "Top Browsers",
         "topOS": "Top Operating Systems",
         "count_plays": "Plays",
-        "sum_time_viewed": "Minutes Viewed",
-        "avg_time_viewed": "Avg. Min Viewed",
+        "sum_time_viewed": "Minutes Viewed (VOD)",
+        "avg_time_viewed": "Avg. Min Viewed (VOD)",
         "unique_known_users": "Unique Viewers",
         "unique_viewers": "Unique Viewers",
         "unique_known_users_tt": "Unique authenticated viewers. All anonymous viewers will be counted as 1 unique viewer",
@@ -565,7 +593,8 @@
         "laugh": "Laugh",
         "love": "Love",
         "wow": "Wow",
-        "curious": "Curious"
+        "curious": "Curious",
+        "custom": "Custom"
       },
       "insights": {
         "title": "Insights",
@@ -624,9 +653,9 @@
       "owner": "Owner: {{0}}",
       "seeAll": "See All Details",
       "back": "Back",
-      "dvrStatus": "DVR {{0}}",
-      "recordingStatus": "Recording {{0}}",
-      "transcodingStatus": "Transcoding {{0}}",
+      "dvrStatus": "DVR: {{0}}",
+      "recordingStatus": "Recording: {{0}}",
+      "transcodingStatus": "Transcoding: {{0}}",
       "on": "ON",
       "off": "OFF",
       "redundancy": "Redundancy",
@@ -637,7 +666,7 @@
       "engagedUsers": "Engaged Users",
       "engagedUsersHelpTip": "Users with tab and sound on or in full screen divided by the total users viewing",
       "usersBuffering": "Avg. Buffer Rate",
-      "usersBufferingHelpTip": "Users that are experiencing buffering issue of over 1 second divided by total users",
+      "usersBufferingHelpTip": "The time viewers player buffered / total viewed time",
       "downstreamBandwidth": "Downstream Bandwidth",
       "downstreamBW": "Downstream BW",
       "downstreamBandwidthHelpTip": "The size of the downloaded media divided by seconds",
@@ -731,7 +760,10 @@
         "sum_view_time": "Minutes Viewed",
         "avg_view_live_latency": "Avg. Latency Rate",
         "avg_view_dropped_frames_ratio": "Dropped Frame Rate",
+        "avg_view_segment_download_time_sec": "Avg. Segment Download Time",
+        "avg_view_manifest_download_time_sec": "Avg. Manifest Download Time",
         "view_buffer_time_ratio": "Avg. Buffer Rate",
+        "error": "Errors",
         "totals": {
           "viewers": "Peak Users",
           "viewers_engagement": "Peak Engaged Users",
@@ -745,7 +777,10 @@
           "sum_view_time": "Total Viewed Minutes",
           "avg_view_live_latency": "Avg. Latency",
           "avg_view_dropped_frames_ratio": "Avg. Dropped Frames",
-          "view_buffer_time_ratio": "Avg. Buffer Rate"
+          "avg_view_segment_download_time_sec": "Avg. Segment Download Time",
+          "avg_view_manifest_download_time_sec": "Avg. Manifest Download Time",
+          "view_buffer_time_ratio": "Avg. Buffer Rate",
+          "error": "Errors"
         },
         "drag": "Drag to select a time frame",
         "userStatus": {
@@ -785,7 +820,7 @@
           "message-text-box": "Encoder re-connection occurred. Please check your encoder logs"
         },
         "101": {
-          "message-log": "Declared and actual bitrate unmatched",
+          "message-log": "Detected incoming actual bitrate ({{incomingBitrate}} Mbit/s) is different from declared one ({{configuredBitrate}} Mbit/s). Make sure your encoder is configured to use CBR (constant bitrate)",
           "message-text-box": "Detected incoming actual bitrate ({{incomingBitrate}}) is different from declared one ({{configuredBitrate}}). Make sure your encoder is configured to use CBR (constant bitrate)"
         },
         "102": {
@@ -869,6 +904,11 @@
         },
         "122": {
           "message-log": "CPU back to normal"
+        },
+        "123": {
+          "message-log": "Abnormal M3U8 segment size",
+          "self-serve-message-log": "Abnormal M3U8 segment size",
+          "message-text-box": "Segment reported in m3u8 is with irregular duration"
         }
       },
       "exportLabels": {

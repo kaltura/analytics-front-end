@@ -1,41 +1,118 @@
-.kMetricsSelector {
-  .kOptionsLabelWrapper {
-    display: flex;
-    align-items: center;
+@import '../../../../../../../styles/variables';
 
-    &.kItemLabel {
-      width: calc(100% - 15px);
-    }
+:host {
+  position: relative;
+  overflow: visible;
+}
+
+.kMetricsPopup {
+  height: 100%;
+  border: 1px solid #dadada;
+  border-radius: 4px;
+  padding: 40px;
+}
+
+.metricsDropDown {
+  background-color: white;
+  width: 180px;
+  height: 34px;
+  border: 1px solid $kGrayscale4;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $kPrimary;
+  }
+
+  &:active {
+    box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+  }
+
+  span {
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  i {
+    margin-left: auto;
+    color: $kGrayscale3;
+  }
+
+  .metric-group-option {
+    overflow: hidden;
 
     .kOptionLabel {
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .kCompareMetricBullet {
-      font-size: 18px;
-      font-style: normal;
-      margin-right: 8px
     }
   }
 }
 
-:host ::ng-deep .kMetricsSelector {
-  .p-dropdown-panel {
-    width: 240px !important;
-  }
-  .p-dropdown-item {
-    position: relative;
+.kCompareMetricBullet {
+  font-size: 18px;
+  font-style: normal;
+  margin-right: 8px;
 
-    &:after {
-      position: absolute;
-      right: 8px;
-      top: 9px;
+  &.none-value {
+    text-shadow: 1px 0 0 #CCCCCC, 0 -1px 0 #CCCCCC, 0 1px 0 #CCCCCC, -1px 0 0 #CCCCCC;
+  }
+}
+
+.metric-selector-container {
+  padding: 24px;
+
+  .metric-group-option {
+    &:not(.selected-option):hover {
+      background-color: #ebebeb;
+    }
+
+    &.selected-option {
+      .kOptionLabel {
+        font-weight: bold;
+      }
     }
   }
-  .p-dropdown-items-wrapper {
-    max-height: 300px !important;
+}
+
+.metric-groups {
+  display: flex;
+}
+
+.metric-group {
+  display: flex;
+  flex-direction: column;
+
+  &:first-child {
+    margin-right: 16px;
   }
+}
+
+.metric-group-label {
+  text-transform: uppercase;
+  color: #999999;
+  padding-bottom: 8px;
+  padding-top: 16px;
+  padding-left: 6px;
+}
+
+.metric-group-option {
+  width: 256px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.kOptionLabel {
+  flex: 1;
+}
+
+.kIconcheck_small {
+  font-size: 11px;
 }

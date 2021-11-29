@@ -11,11 +11,12 @@ import {
   KalturaPermissionFilter,
   KalturaPermissionStatus,
   KalturaRequestOptions,
-  KalturaResponseProfileType,
+  KalturaResponseProfileType, PartnerGetAction,
   PermissionGetCurrentPermissionsAction,
   PermissionListAction,
   UserGetAction,
-  UserRoleGetAction } from 'kaltura-ngx-client';
+  UserRoleGetAction
+} from 'kaltura-ngx-client';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { filter, map, switchMap, skip } from 'rxjs/operators';
@@ -161,7 +162,7 @@ export class AppService implements OnDestroy {
     this._logger.info('Loading permissions and localization...');
     this._translate.setDefaultLang('en');
     this._translate.use(analyticsConfig.locale);
-    this._loadPermissions()
+    this._loadPermissionsAndPartner()
       .pipe(switchMap(() => this._translate.use(analyticsConfig.locale)))
       .subscribe(
         () => {
@@ -194,7 +195,7 @@ export class AppService implements OnDestroy {
     this._logger.error(errorMsg);
   }
 
-  private _loadPermissions(): Observable<void> {
+  private _loadPermissionsAndPartner(): Observable<void> {
     const getUserAction = new UserGetAction().setRequestOptions(
       new KalturaRequestOptions({
         responseProfile: new KalturaDetachedResponseProfile({
@@ -218,9 +219,18 @@ export class AppService implements OnDestroy {
       );
     const getCurrentPermissions = new PermissionGetCurrentPermissionsAction(); // this one is used in cases user ks cannot list permissions and get role
 
-    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions))
+    const getPartnerAction = new PartnerGetAction({id: parseInt(this._authService.pid)}).setRequestOptions(
+      new KalturaRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'createdAt'
+        })
+      })
+    );
+
+    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions, getPartnerAction))
       .pipe(map(responses => {
-        const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse] = responses;
+        const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse, partnerResponse] = responses;
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
           if (err.code === "SERVICE_FORBIDDEN") {
@@ -240,6 +250,7 @@ export class AppService implements OnDestroy {
           const userRolePermissionList = userRole.permissionNames.split(',');
           this._permissionsService.load(userRolePermissionList, partnerPermissionList);
           this._permissionsLoaded.next(true);
+          this._authService.partnerCreatedAt = partnerResponse.result.createdAt;
         }
       }));
   }

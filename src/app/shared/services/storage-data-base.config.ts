@@ -28,6 +28,7 @@ export interface ReportDataItemField {
   graphType?: GraphType;
   icon?: string;
   iconColor?: string;
+  group?: string;
 }
 
 export interface ReportDataFields {

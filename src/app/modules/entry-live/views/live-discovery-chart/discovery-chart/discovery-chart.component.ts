@@ -115,7 +115,7 @@ export class DiscoveryChartComponent implements OnDestroy{
       },
     };
 
-    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(1));
+    const createFunc = func => series => parseFloat(func(...[].concat.apply([], series)).toFixed(2));
     const getMaxValue = createFunc(Math.max);
     const getMinValue = createFunc(Math.min);
     const getDefaultMax = metric => ['avg_view_dropped_frames_ratio'].indexOf(metric) !== -1 ? 100 : 1;
@@ -247,7 +247,7 @@ export class DiscoveryChartComponent implements OnDestroy{
   }
 
   private shouldNormalize(metric: string): boolean {
-    const normalizedMetrics = ['view_unique_audience', 'viewers', 'view_unique_audience_dvr', 'viewers_dvr', 'view_unique_engaged_users', 'viewers_engagement'];
+    const normalizedMetrics = ['view_unique_audience', 'viewers', 'view_unique_audience_dvr', 'viewers_dvr', 'view_unique_engaged_users', 'viewers_engagement', 'avg_view_segment_download_time_sec', 'avg_view_manifest_download_time_sec'];
     return normalizedMetrics.indexOf(metric) > -1;
   }
 

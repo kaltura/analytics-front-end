@@ -33,6 +33,7 @@ function mapMultiAccount(reportType: KalturaReportType): KalturaReportType {
     [KalturaReportType.playbackRate]:               KalturaReportType.playbackRateVpaas,
     [KalturaReportType.partnerUsage]:               KalturaReportType.partnerUsageVpaas,
     [KalturaReportType.topPlaybackContext]:         KalturaReportType.topPlaybackContextVpaas,
+    [KalturaReportType.selfServeUsage]:             KalturaReportType.selfServeUsageVpaas,
   };
   return reportsMap[reportType] || reportType;
 }

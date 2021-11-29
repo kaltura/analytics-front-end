@@ -27,3 +27,12 @@ export class ReactionsBreakdownConfig extends ReportDataBaseConfig {
     };
   }
 }
+
+export interface ReactionsBreakdown {
+  Clap: number;
+  Smile: number;
+  Wow: number;
+  Heart: number;
+  Think: number;
+  Custom?: number;
+}

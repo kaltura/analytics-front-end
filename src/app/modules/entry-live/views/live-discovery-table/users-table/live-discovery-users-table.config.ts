@@ -21,7 +21,7 @@ export class LiveDiscoveryUsersTableConfig extends ReportDataBaseConfig {
         };
       })
       .sort((a, b) => b.count - a.count);
-    return topFlavors.length ? topFlavors[0].name : 'N/A';
+    return topFlavors.length && topFlavors[0].count ? topFlavors[0].name : 'N/A';
   }
 
   public getConfig(): ReportDataConfig {

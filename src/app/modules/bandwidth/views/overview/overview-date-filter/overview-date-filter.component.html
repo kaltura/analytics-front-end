@@ -1,0 +1,58 @@
+<div class="kDateFilter kOverrideFAIcons">
+
+  <div #datesBtn class="datesRangeDropDown" tabindex="0" role="button" aria-label="Date filter" (keydown.enter)="datesPopup.toggle()">
+    <span *ngIf="selectedView !== 'specific' && selectedDateRange?.key.indexOf('0') > -1" class="kDateRangePrefix">{{selectedDateRange?.label}}</span>
+    <span *ngIf="selectedView !== 'specific' && selectedDateRange?.key.indexOf('0') > -1">{{labelPostfix}}</span>
+    <span *ngIf="selectedView !== 'specific' && selectedDateRange?.key.indexOf('0') === -1" class="kDateRangePrefix">{{'app.dateFilter.past_period' | translate}}</span>
+    <span *ngIf="selectedView !== 'specific' && selectedDateRange?.key.indexOf('0') === -1">{{selectedDateRange?.label}}</span>
+    <span *ngIf="selectedView === 'specific'">{{labelPostfix}}</span>
+    <i class="kIcondropdown_arrow_bottom"></i>
+  </div>
+</div>
+
+<kPopupWidget #datesPopup [attr.data-aid]="'date-filter-overview'"
+              [popupWidth]="560" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
+>
+  <ng-template>
+    <div class="kDateFilterPopup kOverrideFAIcons">
+      <div class="kViews">
+        <p-selectButton [options]="viewItems" [(ngModel)]="selectedView" (ngModelChange)="_createTimeRanges($event)"></p-selectButton>
+      </div>
+      <div class="kFilters" *ngIf="selectedView==='preset'">
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.byMonth' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let dateRange of monthlyDateRangeItems" name="dates"
+                         [label]="dateRange.label"
+                         [value]="dateRange.key"
+                         [(ngModel)]="selectedDateRangeKey"></p-radioButton>
+        </div>
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.byYear' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let dateRange of yearlyDateRangeItems" name="dates"
+                         [label]="dateRange.label"
+                         [value]="dateRange.key"
+                         [(ngModel)]="selectedDateRangeKey"></p-radioButton>
+        </div>
+      </div>
+      <div class="kFilters kSpecific" *ngIf="selectedView==='specific'">
+        <div class="kStartEnd">
+          <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificStart" aria-label="start date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+          <div class="divider"></div>
+          <p-calendar [showOnFocus]="false" [dateFormat]="_dateFormat" [locale]="localeData" [(ngModel)]="specificEnd" aria-label="end date" (onBlur)="updateSpecific()" [tabindex]="0" [showIcon]="true" icon="kIconcalendar"></p-calendar>
+        </div>
+        <span class="kInvalid" *ngIf="!validDateRange">{{'app.dateFilter.error' | translate }}</span>
+        <p-calendar [(ngModel)]="specificDateRange" [inline]="true" selectionMode="range" [monthNavigator]="true"
+                    [yearNavigator]="true" [yearRange]="'2010:2050'" [dateFormat]="_dateFormat" [locale]="localeData"
+                    (ngModelChange)="updateSpecificCalendars()"></p-calendar>
+      </div>
+      <hr>
+      <div class="kFooter">
+        <button tabindex="0"
+                pButton class="kButtonBranded"
+                [disabled]="_applyDisabled"
+                [label]="'app.common.apply' | translate"
+                (click)="updateDataRanges();datesPopup.close()"></button>
+      </div>
+    </div>
+  </ng-template>
+</kPopupWidget>

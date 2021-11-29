@@ -106,3 +106,42 @@
 :host ::ng-deep .kExport .kDropDown {
   margin-right: 0 !important;
 }
+
+.kFilter {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  .kDropDown {
+    background-color: white;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
+}

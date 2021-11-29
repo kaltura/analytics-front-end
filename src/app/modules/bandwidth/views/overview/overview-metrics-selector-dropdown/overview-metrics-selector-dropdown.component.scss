@@ -1,0 +1,48 @@
+.kMetricsSelector {
+  .kOptionsLabelWrapper {
+    display: flex;
+    align-items: center;
+
+    &.kItemLabel {
+      width: calc(100% - 15px);
+    }
+
+    .kOptionLabel {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .kCompareMetricBullet {
+      font-size: 18px;
+      font-style: normal;
+      margin-right: 8px
+    }
+  }
+}
+
+:host {
+  margin-left: 24px;
+}
+
+:host ::ng-deep .kMetricsSelector {
+  .p-dropdown {
+    width: 240px !important;
+  }
+  .p-dropdown-panel {
+    width: 280px !important;
+  }
+  .p-dropdown-item {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+    }
+  }
+  .p-dropdown-items-wrapper {
+    max-height: 300px !important;
+  }
+}

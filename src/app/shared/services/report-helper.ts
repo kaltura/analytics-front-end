@@ -6,43 +6,50 @@ export class ReportHelper {
     // use en-US format always to have consistent formatting
     return parseFloat(x).toLocaleString('en-US', { maximumSignificantDigits: 20 });
   }
-  
+
   static percents(x: any, round = true, maxHundred = false, addUnits = true, precision = 1): string {
     x = parseFloat(x) * 100;
     x = maxHundred && x > 100 ? 100 : x;
     x = round ? Math.round(x) : x;
     return !isNaN(x) ? `${this.numberWithCommas(x.toFixed(precision))}${addUnits ? '%' : ''}` : 'N/A';
   }
-  
+
   static numberOrNA(x: any): string {
     return x.length ? ReportHelper.numberWithCommas(Math.round(parseFloat(x))) : 'N/A';
   }
-  
-  static numberOrZero(x: any, round = true): string {
+
+  static numberOrZero(x: any, round = true, precision = 1): string {
     x = parseFloat(x);
     if (isNaN(x)) {
       return '0';
     } else {
       x = x % 1 === 0
         ? round ? Math.round(x) : x
-        : x.toFixed(1);
-      
+        : x.toFixed(precision);
+
       return ReportHelper.numberWithCommas(x);
     }
   }
-  
+
   static minutes(x: number): number {
     x = typeof x === 'number' ? x : parseFloat(x);
     x = !isNaN(x) ? x : 0;
-  
+
     return x / 60000;
+  }
+
+  static hours(x: number): number {
+    x = typeof x === 'number' ? x : parseFloat(x);
+    x = !isNaN(x) ? x : 0;
+
+    return x / 60;
   }
 
   static integerOrZero(x: any, round = true): string {
     x = parseInt(x);
     return this.numberOrZero(x, round);
   }
-  
+
   static time(x: any): string {
     if (!x.length) {
       return '00:00';
@@ -52,20 +59,20 @@ export class ReportHelper {
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
     let formattedTime = wholeMinutes.toString() + ':' + secondsText;
-    
+
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;
     }
     return formattedTime;
   }
-  
+
   static underscoreToSpace(x: string): string {
     return x.replace('_', ' ');
   }
-  
+
   static format(param: string, value: string): string {
     let result: string = value;
-    
+
     switch (param) {
       case 'count_plays':
       case 'count_plays_25':
@@ -123,7 +130,7 @@ export class ReportHelper {
         const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
         const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
         let formattedTime = wholeMinutes.toString() + ':' + secondsText;
-        
+
         if (parseFloat(value) < 0) {
           formattedTime = '-' + formattedTime;
         }
@@ -135,7 +142,7 @@ export class ReportHelper {
         // replace '_' with space
         result = value.replace('_', ' ');
         break;
-      
+
     }
     return result;
   }

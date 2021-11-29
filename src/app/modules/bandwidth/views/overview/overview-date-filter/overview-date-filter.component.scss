@@ -1,0 +1,191 @@
+@import '../../../../../../styles/variables';
+
+.kDateFilter{
+  display: flex;
+  align-items: center;
+  .kDateRangePrefix {
+    font-weight: 700;
+  }
+  .datesRangeDropDown{
+    background-color: white;
+    min-width: 210px;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    &:hover{
+      border-color: $kPrimary;
+    }
+    &:active{
+      box-shadow: 0 0 0 3px rgba(0,167,132,0.4);
+    }
+    span{
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+    i{
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+    .compareIcon{
+      font-size: 24px;
+      color: $kOrange;
+    }
+  }
+}
+.kDateFilterPopup{
+  height: 100%;
+  border: 1px solid $kGrayscale5;
+  border-radius: 4px;
+  .kFilters{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding-top: 20px;
+    box-sizing: border-box;
+      .col{
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        .kTitle{
+          font-size:14px;
+          color: $kGrayscale3;
+          padding-left: 24px;
+          margin-bottom: 8px;
+        }
+        p-radiobutton{
+          position: relative;
+          width: 100%;
+          height: 32px;
+          box-sizing: border-box;
+          cursor: pointer;
+          overflow: hidden;
+          &:hover{
+            background-color: $kGrayscale6;
+          }
+          ::ng-deep .p-radiobutton{
+            position: absolute;
+            right: 16px;
+            top: 0px;
+            .p-radiobutton-box{
+              display: none;
+              &.p-highlight{
+                display: block;
+                border: none;
+                margin-top: 7px;
+                background: transparent;
+                .p-radiobutton-icon:before {
+                  font-family: "kmcng-icon-pack";
+                  content: "\e91c";
+                  color: $kGrayscale1;
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+          ::ng-deep .p-radiobutton-label{
+            font-weight: normal;
+            margin-left: 24px;
+            display: block;
+            width: 100%;
+            height: 24px;
+            padding-top: 7px;
+            cursor: pointer;
+            &.p-radiobutton-label-active{
+              font-weight: 700;
+            }
+          }
+        }
+      }
+  }
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid $kGrayscale4;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    padding: 0;
+  }
+  .kFooter {
+    width: 100%;
+    display: flex;
+    margin-bottom: 24px;
+    margin-top: 24px;
+    button {
+      margin-right: 24px;
+      margin-left: auto;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-state-focus {
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
+}
+.kDateFilterPopup ::ng-deep .p-button{
+  height: auto;
+  min-height: 34px;
+  .p-button-text {
+    line-height: 16px;
+  }
+}
+.kViews{
+  width: 100%;
+  display: flex;
+  padding-top: 20px;
+  justify-content: center;
+  ::ng-deep p-selectbutton .p-button{
+    width: 210px;
+  }
+}
+.kSpecific{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-left: 50px;
+  &.kWide {
+    padding-left: 54px;
+  }
+  .kStartEnd{
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    .divider {
+      width: 8px;
+      border: none;
+      border-top: 1px solid $kGrayscale3;
+      margin-right: 8px;
+      margin-left: 8px;
+    }
+    p-calendar {
+      ::ng-deep button {
+        pointer-events: none;
+      }
+    }
+  }
+  p-calendar{
+    ::ng-deep .p-calendar .p-datepicker{
+      width: 454px;
+      .p-datepicker-calendar td:not(.p-state-disabled) a:hover{
+        background-color: $kPrimary;
+      }
+    }
+    ::ng-deep .p-inputtext {
+      margin-left: 40px;
+    }
+  }
+  .kInvalid{
+    color: $kDandger;
+    font-size: 14px;
+    padding-bottom: 12px;
+  }
+}

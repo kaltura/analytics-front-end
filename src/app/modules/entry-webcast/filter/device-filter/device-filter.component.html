@@ -1,8 +1,0 @@
-<app-dropdown-filter templateType="device"
-                     [label]="'app.filters.filterDevices' | translate"
-                     [options]="_devicesFilterService.deviceOptions | async"
-                     [isLoading]="_devicesFilterService.isBusy('device')"
-                     [defaultLabel]="'app.filters.devicePlaceholder' | translate"
-                     [selectedItemsLabel]="'app.filters.devicesSelected' | translate"
-                     [selectedFilters]="_selectedDevices"
-                     (itemSelected)="_onItemSelected($event, 'device')"></app-dropdown-filter>

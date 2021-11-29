@@ -608,7 +608,7 @@
           "message-text-box": "Se ha producido una reconexión con el codificador. Compruebe los registros de su codificador"
         },
         "101": {
-          "message-log": "Las tasas de bits declarada y real no coinciden",
+          "message-log": "Se ha detectado que la tasa de bits real ({{incomingBitrate}} Mbit/s) es diferente a la declarada ({{configuredBitrate}} Mbit/s). Asegúrese de que su codificador está configurado para utilizar tasa de bits constante",
           "message-text-box": "Se ha detectado que la tasa de bits real ({{incomingBitrate}}) es diferente a la declarada ({{configuredBitrate}}). Asegúrese de que su codificador está configurado para utilizar tasa de bits constante"
         },
         "102": {

@@ -16,6 +16,7 @@ import { filter } from 'rxjs/operators';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { BarRowTooltip } from 'shared/components/horizontal-bar-row/horizontal-bar-row.component';
+import {RefineFilter} from "shared/components/filter/filter.component";
 
 export interface SummaryItem {
   key: string;
@@ -58,6 +59,23 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       this._pager.pageIndex = 1;
       this.loadReport();
       this.resetDeviceFilters(true, false);
+    }
+  }
+
+  @Input() set refineFilter(value: RefineFilter) {
+    if (value) {
+      this._chartDataLoaded = false;
+      this._filter.playbackTypeIn = value.filter(refineFilter => refineFilter.type === 'playbackType').map(refineFilter => refineFilter.value).join(analyticsConfig.valueSeparator);
+      if (this._filter.playbackTypeIn === '') {
+        delete this._filter.playbackTypeIn;
+      }
+      if (!this.isVodFilterSelected() && (this._selectedMetrics === 'sum_time_viewed' || this._selectedMetrics === 'avg_time_viewed')) {
+        this._onTabChange(this._tabsData[0]);
+      }
+      this._pager.pageIndex = 1;
+      if (this._filter.fromDate) {
+        this.loadReport();
+      }
     }
   }
 
@@ -357,5 +375,14 @@ export class TechDevicesOverviewComponent implements OnDestroy {
 
   public _tooltipFormatter(value: string, label: string): string {
     return `<div class="kDevicesGraphTooltip"><div class="kTitle">${label}</div><div class="kValue">${value}</div></div>`;
+  }
+
+  private isVodFilterSelected() {
+    const playbackTypeFilters = this._filter.playbackTypeIn;
+    return !playbackTypeFilters || playbackTypeFilters.length === 0 || playbackTypeFilters.includes('vod');
+  }
+
+  getTabsData() {
+    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
   }
 }

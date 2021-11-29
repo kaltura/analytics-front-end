@@ -148,4 +148,13 @@ export class ManualPlaylistComponent implements OnInit {
     }
   }
 
+  public _onDrillDown(event: string): void {
+    let update: Partial<ExportItem> = {};
+    if (event) {
+      update.objectIds = event;
+    }
+
+    this._exportConfig = ManualExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'syndication', update);
+  }
+
 }
