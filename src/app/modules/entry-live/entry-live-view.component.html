@@ -44,7 +44,7 @@
             <app-live-bandwidth [entry]="_entry"></app-live-bandwidth>
           </div>
           <div class="kNarrowColumn">
-            <app-live-status [entry]="_entry" [manualLiveOnline]="_manualLiveOnline"></app-live-status>
+            <app-live-status *ngIf="_entryLiveViewConfig.status" [entry]="_entry" [manualLiveOnline]="_manualLiveOnline"></app-live-status>
             <app-live-player [entryId]="_entry?.id" (liveStatusChange)="onLiveStatusChange($event)"></app-live-player>
             <app-live-stream-health *ngIf="!_isManual"></app-live-stream-health>
             <div *ngIf="_isManual" class="manual">

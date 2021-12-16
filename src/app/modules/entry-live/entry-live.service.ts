@@ -12,9 +12,11 @@ import {
   KalturaRequestOptions,
   KalturaResponseProfileType,
   LiveStreamGetAction,
+  LiveStreamIsLiveAction,
   UserGetAction
 } from 'kaltura-ngx-client';
 import { getStreamStatus, KalturaStreamStatus } from './utils/get-stream-status';
+import { analyticsConfig } from "configuration/analytics-config";
 
 export interface KalturaExtendedLiveEntry extends KalturaLiveEntry {
   dvr: boolean;
@@ -40,6 +42,10 @@ export class EntryLiveService {
           })
         })
       );
+  }
+
+  private _getLiveStreamIsLiveAction(id): LiveStreamIsLiveAction {
+    return new LiveStreamIsLiveAction({ id });
   }
 
   private _getConversionProfileAssetParamsListAction(): ConversionProfileAssetParamsListAction {
@@ -117,11 +123,19 @@ export class EntryLiveService {
   }
 
   public getEntryDateRequest(entryId): KalturaMultiRequest {
-    return new KalturaMultiRequest(
+    const showStatus = analyticsConfig.viewsConfig.entryLive.status;
+    const multiRequest = showStatus ?
+    new KalturaMultiRequest(
       this._getLiveStreamAction(entryId),
+      this._getUserAction().setDependency(['userId', 0, 'userId']),
       this._getConversionProfileAssetParamsListAction(),
-      this._getEntryServerNodeListAction(entryId),
-      this._getUserAction().setDependency(['userId', 0, 'userId'])
-    );
+      this._getEntryServerNodeListAction(entryId)
+    ) :
+    new KalturaMultiRequest(
+      this._getLiveStreamAction(entryId),
+      this._getUserAction().setDependency(['userId', 0, 'userId']),
+      this._getLiveStreamIsLiveAction(entryId)
+    )
+    return multiRequest;
   }
 }
