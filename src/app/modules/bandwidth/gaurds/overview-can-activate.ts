@@ -20,7 +20,7 @@ export class OverviewCanActivate implements CanActivate {
           .request(new PartnerGetInfoAction())
           .subscribe(
             (partner) => {
-              if (partner.isSelfServe && this._permissions.hasPermission(AnalyticsPermissions.FEATURE_ENABLE_USAGE_DASHBOARD)) {
+              if (partner.isSelfServe || (this._permissions.hasPermission(AnalyticsPermissions.FEATURE_ENABLE_USAGE_DASHBOARD) && this._permissions.hasPermission(AnalyticsPermissions.ANALYTICS_BASE))) {
                 observer.next(true);
                 observer.complete();
               } else {
