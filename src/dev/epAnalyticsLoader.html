@@ -40,9 +40,8 @@
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
-    let selectedRoute = 'entry-webcast';
+    let analyticsApp;
     function handleClick(event, route) {
-      selectedRoute = route;
       links = document.getElementsByTagName('sapn') || [];
       [...links].forEach(elm => {
         elm.style.background = '#ffffff';
@@ -51,6 +50,7 @@
       switch (route) {
         case 'engagement':
           sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last30days'}}});
           break;
          case 'entry-webcast':
           sendMessage({ messageType: 'navigate', payload: { url: '/entry-webcast/1_05kwa8a7' } });
@@ -70,7 +70,7 @@
     const config = {
         kalturaServer: {
             uri: 'www.kaltura.com',
-            previewUIConf: 38524931,
+            previewUIConf: 49101843,
         },
         cdnServers: {
             serverUri: 'http://cdnapi.kaltura.com',
@@ -94,7 +94,7 @@
                 background-color: white;
             }
             .ep .kMain .kReportView .kReport, .ep .kMain .kReportView .kReport .kDivider {
-                background: transparent;
+                background: transparent !important;
             }
             .ep .kMain .kReportView .kReport .kTotalsRow,  .ep .kMain .kReportView .kReport .kTotalsContainer {
                 background: transparent;
@@ -127,7 +127,7 @@
                 box-sizing: border-box;
             }
             /* Borders */
-            .ep .kTotalContainer, .ep .kSocialHighlights {
+            .ep .kTotalContainer, .ep .kSocialHighlights, .ep .kLiveUsers, .ep .kUsersBandwidth, .ep app-live-stream-health, .ep .kEntryWidgets .kTopCountries, .ep .kEntryWidgets .kDevices, .ep .kDiscovery {
                 border: 1px solid #cccccc !important;
             }
             .ep .kTotalContainer:first-child {
@@ -177,8 +177,6 @@
         }
     };
 
-    let analyticsApp;
-
     const sendMessage = message => {
       if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
         analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
@@ -197,31 +195,32 @@
 
             switch (postMessageData.messageType) {
                 case 'analyticsInit':
-                  const viewsConfig = postMessageData.payload.viewsConfig;
-                  switch (selectedRoute) {
-                    case 'engagement':
-                      viewsConfig.audience.engagement.title = null;
-                      viewsConfig.audience.engagement.syndication = null;
-                      viewsConfig.audience.engagement.refineFilter.mediaType = null;
-                      viewsConfig.audience.engagement.refineFilter.entrySource = null;
-                      viewsConfig.audience.engagement.refineFilter.domains = null;
-                      break;
-                    case 'entry-webcast':
-                      viewsConfig.entryWebcast.title = null;
-                      viewsConfig.entryWebcast.domains = null;
-                      viewsConfig.entryWebcast.details = null;
-                      viewsConfig.entryWebcast.linkToLive = null;
-                      viewsConfig.entryWebcast.tools.slides = null;
-                      viewsConfig.entryWebcast.tools.polls = null;
-                      viewsConfig.entryWebcast.tools.announcements = null;
-                      viewsConfig.entryWebcast.tools.answers = null;
-                      viewsConfig.entryWebcast.miniEngagement.questions = null;
-                      viewsConfig.entryWebcast.miniEngagement.viewers = null;
-                      viewsConfig.entryWebcast.refineFilter.domains = null;
-                      break;
-                    default:
-                      break;
-                  }
+                  let viewsConfig = postMessageData.payload.viewsConfig;
+
+                  // Engagement config
+                  viewsConfig.audience.engagement.title = null;
+                  viewsConfig.audience.engagement.syndication = null;
+                  viewsConfig.audience.engagement.refineFilter.mediaType = null;
+                  viewsConfig.audience.engagement.refineFilter.entrySource = null;
+                  viewsConfig.audience.engagement.refineFilter.domains = null;
+
+                  // Webcast config
+                  viewsConfig.entryWebcast.title = null;
+                  viewsConfig.entryWebcast.domains = null;
+                  viewsConfig.entryWebcast.details = null;
+                  viewsConfig.entryWebcast.linkToLive = null;
+                  viewsConfig.entryWebcast.tools.slides = null;
+                  viewsConfig.entryWebcast.tools.polls = null;
+                  viewsConfig.entryWebcast.tools.announcements = null;
+                  viewsConfig.entryWebcast.tools.answers = null;
+                  viewsConfig.entryWebcast.miniEngagement.questions = null;
+                  viewsConfig.entryWebcast.miniEngagement.viewers = null;
+                  viewsConfig.entryWebcast.refineFilter.domains = null;
+
+                  // Live config
+                  viewsConfig.entryLive.title = null;
+                  viewsConfig.entryLive.details = null;
+
                   sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
                   break;
                 case 'analyticsInitComplete':

@@ -19,7 +19,7 @@ import { DateRanges } from "shared/components/date-filter/date-filter-utils";
   ]
 })
 export class EngagementComponent {
-  public _selectedRefineFilters: RefineFilter = [];
+  public _selectedRefineFilters: RefineFilter = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;

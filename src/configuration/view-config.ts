@@ -176,6 +176,7 @@ export const viewsConfig = {
     syndication: {},
   },
   entryLive: {
+    title: {},
     export: {},
     toggleLive: {},
     details: {},
