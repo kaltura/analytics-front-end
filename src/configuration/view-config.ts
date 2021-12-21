@@ -5,6 +5,7 @@ export interface ViewConfig {
 export const viewsConfig = {
   audience: {
     engagement: {
+      title: {},
       export: {},
       refineFilter: {
         mediaType: {},
@@ -194,12 +195,19 @@ export const viewsConfig = {
     details: {},
     miniHighlights: {},
     miniEngagement: {
+      questions: {},
+      viewers: {},
       // download: {} // used by KMS only
     },
     miniQuality: {},
     highlights: {},
     liveEngagement: {},
-    tools: {},
+    tools: {
+      slides: {},
+      polls: {},
+      announcements: {},
+      answers: {}
+    },
     insights: {},
     entryPreview: {},
     userEngagement: {

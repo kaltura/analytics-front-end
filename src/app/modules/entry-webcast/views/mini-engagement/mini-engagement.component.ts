@@ -34,6 +34,7 @@ import { reportTypeMap } from "shared/utils/report-type-map";
 import { analyticsConfig } from "configuration/analytics-config";
 import * as moment from "moment";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {ViewConfig} from "configuration/view-config";
 
 export interface Question {
   text: string;
@@ -60,6 +61,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   @Input() entryIdIn = '';
   @Input() entryId = '';
   @Input() showDownload = false;
+  @Input() engagementViewConfig: ViewConfig;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

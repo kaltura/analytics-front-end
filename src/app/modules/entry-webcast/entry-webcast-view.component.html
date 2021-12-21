@@ -87,6 +87,7 @@
 
           <div *ngIf="_viewConfig.miniEngagement" class="kMiniReportContainer">
             <app-webcast-mini-engagement [showDownload]="_viewConfig.miniEngagement.download"
+                                         [engagementViewConfig]="_viewConfig.miniEngagement"
                                          [entryIdIn]="_entryIdIn"
                                          [entryId]="_entryId"
                                          [dateFilter]="_dateFilter"
@@ -118,6 +119,7 @@
           <div *ngIf="_viewConfig.tools" class="kMiniReportContainer kHigh" [class.kMedium]="_viewConfig.insights && _viewConfig.liveEngagement">
             <app-webcast-mini-engagement-tools
               [entryIdIn]="_entry.id"
+              [toolsViewConfig]="_viewConfig.tools"
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter">
             </app-webcast-mini-engagement-tools>

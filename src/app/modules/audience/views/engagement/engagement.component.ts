@@ -19,10 +19,7 @@ import { DateRanges } from "shared/components/date-filter/date-filter-utils";
   ]
 })
 export class EngagementComponent {
-  public _selectedRefineFilters: RefineFilter = [{
-    type: "playbackType",
-    value: 'vod'
-  }];
+  public _selectedRefineFilters: RefineFilter = [];
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;
@@ -46,7 +43,7 @@ export class EngagementComponent {
   );
 
   constructor(private _exportConfigService: EngagementExportConfig) {
-    this._exportConfig = _exportConfigService.getConfig();
+    this._exportConfig = _exportConfigService.getConfig(this._engagementViewConfig);
   }
 
 
@@ -64,6 +61,6 @@ export class EngagementComponent {
       update.objectIds = event;
     }
 
-    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(), 'syndication', update);
+    this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(this._engagementViewConfig), 'syndication', update);
   }
 }

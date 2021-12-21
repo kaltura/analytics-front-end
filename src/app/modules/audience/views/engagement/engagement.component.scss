@@ -28,7 +28,9 @@
     }
   }
 }
-
+.kReport.kContent .kReportHeader .left {
+  margin-left: 0px;
+}
 .kFilter {
   display: flex;
   align-items: center;

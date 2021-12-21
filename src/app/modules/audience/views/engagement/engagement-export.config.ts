@@ -3,15 +3,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {ViewConfig} from "configuration/view-config";
 
 @Injectable()
 export class EngagementExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
     super();
   }
-  
-  public getConfig(): ExportItem[] {
-    return [
+
+  public getConfig(viewConfig?: ViewConfig): ExportItem[] {
+    const exportConfig = [
       {
         label: this._translate.instant('app.engagement.exportLabels.highlights'),
         reportType: reportTypeMap(KalturaReportType.userEngagementTimeline),
@@ -50,5 +51,9 @@ export class EngagementExportConfig extends ExportConfigService {
         order: '-count_plays',
       },
     ];
+    if (!viewConfig.syndication) {
+      exportConfig.pop();
+    }
+    return exportConfig;
   }
 }

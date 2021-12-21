@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="engagementViewConfig.questions">
         <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
         <div class="kLabels">
           <span class="value">{{_usersCount}}</span>
@@ -41,7 +41,7 @@
 
       </div>
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="engagementViewConfig.viewers">
         <div class="kMiniIcon blue"><i class="icon-ic_registration"></i></div>
         <div class="kLabels">
           <span class="value">{{_tabsData[2]?.value}}</span>

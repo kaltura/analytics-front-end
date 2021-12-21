@@ -11,6 +11,7 @@
     "ws": "ws --spa index.html -d dist/analytics-front-end",
     "example": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoader.html\" \"npm start\"",
     "example:style": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderCustomStyle.html\" \"npm start\"",
+    "example:ep": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/epAnalyticsLoader.html\" \"npm start\"",
     "example:locale": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderLocale.html\" \"npm start\"",
     "example:menu": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderMenu.html\" \"npm start\"",
     "example:view": "concurrently --kill-others \"node scripts/run-example.js --path=src/dev/analyticsLoaderView.html\" \"npm start\"",
