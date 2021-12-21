@@ -60,7 +60,8 @@
           sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
           break;
          case 'entry':
-          sendMessage({ messageType: 'navigate', payload: { url: '/entry/1_571bavnf' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_nqrxyrig' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 'user':
           sendMessage({ messageType: 'navigate', payload: { url: '/user/amir.chervinsky@kaltura.com' } });
@@ -220,6 +221,14 @@
                   // Live config
                   viewsConfig.entryLive.title = null;
                   viewsConfig.entryLive.details = null;
+
+                  // Entry config
+                  viewsConfig.entry.title = null;
+                  viewsConfig.entry.details = null;
+                  viewsConfig.entry.totals.social = null;
+                  viewsConfig.entry.userEngagement.userFilter = null;
+                  viewsConfig.entry.syndication = null;
+                  viewsConfig.entry.refineFilter.domains = null;
 
                   sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
                   break;

@@ -19,7 +19,7 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kFilterContainerCol">
+          <div class="kFilterContainerCol" [class.wide]="!_viewConfig.domains">
             <app-country-filter *ngIf="_viewConfig.geo"
                                 [dateFilter]="_dateFilter"
                                 [filterConfig]="filterConfig"
@@ -39,7 +39,7 @@
 
 
           </div>
-          <div class="kFilterContainerCol" *ngIf="_viewConfig.owners">
+          <div class="kFilterContainerCol" [class.wide]="!_viewConfig.domains" *ngIf="_viewConfig.owners">
             <app-owners-filter [selectedFilters]="_selectedValues['users']"
                                [label]="'app.filters.users' | translate"
                                (itemSelected)="_onItemSelected($event, 'users')"
