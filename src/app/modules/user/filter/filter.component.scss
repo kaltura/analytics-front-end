@@ -46,6 +46,9 @@
         flex: 0 0 auto;
         margin-right: 24px;
         width: 34%;
+        &.fillWidth {
+          width: 100%;
+        }
       }
     }
 

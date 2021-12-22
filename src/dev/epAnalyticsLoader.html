@@ -60,7 +60,7 @@
           sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
           break;
          case 'entry':
-          sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_nqrxyrig' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_tsttld1e' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 'user':
@@ -128,7 +128,7 @@
                 box-sizing: border-box;
             }
             /* Borders */
-            .ep .kTotalContainer, .ep .kSocialHighlights, .ep .kLiveUsers, .ep .kUsersBandwidth, .ep app-live-stream-health, .ep .kEntryWidgets .kTopCountries, .ep .kEntryWidgets .kDevices, .ep .kDiscovery {
+            .ep .kTotalContainer, .ep .kSocialHighlights, .ep .kLiveUsers, .ep .kUsersBandwidth, .ep app-live-stream-health, .ep .kEntryWidgets .kTopCountries, .ep .kEntryWidgets .kDevices, .ep .kDiscovery, .ep .kUserMiniHighlights, .ep .kUserMiniTopContent {
                 border: 1px solid #cccccc !important;
             }
             .ep .kTotalContainer:first-child {
@@ -229,6 +229,19 @@
                   viewsConfig.entry.userEngagement.userFilter = null;
                   viewsConfig.entry.syndication = null;
                   viewsConfig.entry.refineFilter.domains = null;
+
+                  // User config
+                  viewsConfig.user.title = null;
+                  viewsConfig.user.avatar = null;
+                  viewsConfig.user.details = null;
+                  viewsConfig.user.totals.social = null;
+                  viewsConfig.user.totals.entries = null;
+                  viewsConfig.user.insights = null;
+                  viewsConfig.user.contributor = null;
+                  viewsConfig.user.refineFilter.categories = null;
+                  viewsConfig.user.refineFilter.domains = null;
+                  viewsConfig.user.refineFilter.entrySource = null;
+                  viewsConfig.user.refineFilter.mediaType = null;
 
                   sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
                   break;

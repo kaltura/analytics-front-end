@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import {ViewConfig} from "configuration/view-config";
+import { ViewConfig } from "configuration/view-config";
 
 @Injectable()
 export class EngagementExportConfig extends ExportConfigService {

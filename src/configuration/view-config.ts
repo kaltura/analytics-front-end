@@ -266,6 +266,9 @@ export const viewsConfig = {
     syndication: {}
   },
   user: {
+    title: {},
+    avatar: {},
+    details: {},
     export: {},
     refineFilter: {
       mediaType: {},
@@ -274,7 +277,10 @@ export const viewsConfig = {
       categories: {},
       domains: {},
     },
-    totals: {},
+    totals: {
+      entries: {},
+      social: {}
+    },
     geoDevices: {},
     lastViewedEntries: {},
     insights: {

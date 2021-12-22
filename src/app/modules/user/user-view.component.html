@@ -1,11 +1,11 @@
-<div data-aid="report-group-user" class="kMain">
+<div data-aid="report-group-user" class="kMain kUser">
   <k-area-blocker [showLoader]="_loadingUser" [message]="_blockerMessage">
     <div class="kReportView">
       <div *ngIf="_user" class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader">
           <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
-          <div class="kAvatar">
+          <div class="kAvatar" *ngIf="_userViewConfig.avatar">
             <div *ngIf="_user?.thumbnailUrl" class="kUserThumbnailHolder">
               <img [src]="_user?.thumbnailUrl">
             </div>
@@ -13,7 +13,7 @@
               <i class="icon-viewer-contributor"></i>
             </div>
           </div>
-          <span class="kTitle kTruncateTitle" [kTooltip]="_userName" [showOnEllipsis]="true" [placement]="'bottom'">{{_userName}}</span>
+          <span *ngIf="_userViewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_userName" [showOnEllipsis]="true" [placement]="'bottom'">{{_userName}}</span>
           <app-export-csv *ngIf="_userViewConfig.export"
                           name="User"
                           [userId]="_userId"
@@ -34,7 +34,7 @@
                            (filterChange)="_onDateFilterChange($event)"></app-date-filter>
         </div>
 
-        <div class="kUserDetails">
+        <div class="kUserDetails" *ngIf="_userViewConfig.details">
           <span>{{'app.user.user_role' | translate}}</span>
           <span class="kLabel">{{_user?.roleNames}}</span>
           <div class="kSeparator"></div>
@@ -56,19 +56,22 @@
         <div class="kReportContainer">
           <app-user-totals *ngIf="_userViewConfig.totals"
                            [dateFilter]="_dateFilter"
+                           [userTotalsViewConfig]="_userViewConfig.totals"
                            [userId]="_user.id"
                            [refineFilter]="_refineFilter"></app-user-totals>
         </div>
 
         <div class="kReportContainer">
-          <div class="kLeftCol" *ngIf="_userViewConfig.geoDevices || _userViewConfig.lastViewedEntries"
+          <div class="kLeftCol" [class.noMargin]="!_userViewConfig.insights" *ngIf="_userViewConfig.geoDevices || _userViewConfig.lastViewedEntries"
                [class.kCompare]="_isCompare">
             <app-user-mini-highlights *ngIf="_userViewConfig.geoDevices"
                                       [dateFilter]="_dateFilter"
+                                      [userViewConfig]="_userViewConfig"
                                       [userId]="_user.id"
                                       [refineFilter]="_refineFilter"></app-user-mini-highlights>
             <app-user-mini-top-content *ngIf="_userViewConfig.lastViewedEntries"
                                        [dateFilter]="_dateFilter"
+                                       [userViewConfig]="_userViewConfig"
                                        [userId]="_user.id"
                                        [refineFilter]="_refineFilter"></app-user-mini-top-content>
           </div>

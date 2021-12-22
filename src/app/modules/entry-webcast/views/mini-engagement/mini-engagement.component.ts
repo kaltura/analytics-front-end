@@ -33,8 +33,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
 import { analyticsConfig } from "configuration/analytics-config";
 import * as moment from "moment";
-import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
-import {ViewConfig} from "configuration/view-config";
+import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { ViewConfig } from "configuration/view-config";
 
 export interface Question {
   text: string;

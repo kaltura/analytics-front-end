@@ -29,6 +29,7 @@ import { UserMiniHighlightsDevicesData } from './devices/devices.component';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { ViewConfig } from "configuration/view-config";
 
 export interface UserMiniHighlightsReportData {
   geo: { table: KalturaReportTable };
@@ -43,11 +44,12 @@ export interface UserMiniHighlightsReportData {
 })
 export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+  @Input() userViewConfig: ViewConfig;
+
   private _dataConfig: ReportDataConfig;
-  
+
   protected _componentId = 'mini-highlights';
-  
+
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = false;
@@ -61,11 +63,11 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
   public _compareGeoData: UserMiniHighlightsGeoData = null;
   public _devicesData: UserMiniHighlightsDevicesData[] = [];
   public _compareDevicesData: UserMiniHighlightsDevicesData[] = [];
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -73,32 +75,32 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
               private _dataConfigService: UserMiniHighlightsConfig,
               private _kalturaClient: KalturaClient) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     this._filter.userIds = this.userId;
-    
+
     this._getReport(this._filter)
       .pipe(switchMap(current => {
         if (!this._isCompareMode) {
           return ObservableOf({ current, compare: null });
         }
-        
+
         this._compareFilter.userIds = this.userId;
-        
+
         return this._getReport(this._compareFilter).pipe(map(compare => ({ current, compare })));
       }))
       .subscribe(({ current, compare }) => {
           this._handleReportData(current, compare);
-          
+
           this._firstTimeLoading = false;
           this._isBusy = false;
         },
@@ -115,7 +117,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -131,14 +133,14 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _handleReportData(current: UserMiniHighlightsReportData, compare?: UserMiniHighlightsReportData): void {
     if (compare) {
       this._handleCompareReportData(current, compare);
@@ -153,7 +155,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       this._devicesData = devices;
     }
   }
-  
+
   private _handleCurrentReportData(data: UserMiniHighlightsReportData): { geo: UserMiniHighlightsGeoData, devices: UserMiniHighlightsDevicesData[] } {
     let result = {
       geo: null,
@@ -164,7 +166,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       const geoTable = this._reportService.parseTableData(data.geo.table, this._dataConfig.geoTable);
       result.geo = geoTable.tableData.length ? <any>geoTable.tableData[0] : null;
     }
-    
+
     if (data.devices.table.data && data.devices.totals.data) {
       const devicesTable = this._reportService.parseTableData(data.devices.table, this._dataConfig.devicesTable);
       const devicesTotal = this._reportService.parseTotals(data.devices.totals, this._dataConfig.devicesTotal);
@@ -189,7 +191,7 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
           device,
         };
       };
-      
+
       if (devicesTotalData !== null) {
         const topTableData = devicesTable.tableData
           .filter(item => parseInt(item['count_plays'], 10) > 0)
@@ -207,29 +209,29 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
         }
       }
     }
-  
+
     return result;
   }
-  
+
   private _handleCompareReportData(current: UserMiniHighlightsReportData, compare: UserMiniHighlightsReportData): void {
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-  
+
     const { geo, devices } = this._handleCurrentReportData(current);
     this._geoData = geo;
     this._devicesData = devices;
-  
+
     const { geo: compareGeo, devices: compareDevices } = this._handleCurrentReportData(compare);
     this._compareGeoData = compareGeo;
     this._compareDevicesData = compareDevices;
   }
-  
+
   private _getReport(filter: KalturaEndUserReportInputFilter): Observable<UserMiniHighlightsReportData> {
     const responseOptions: KalturaReportResponseOptions = new KalturaReportResponseOptions({
       delimiter: analyticsConfig.valueSeparator,
       skipEmptyDates: analyticsConfig.skipEmptyBuckets
     });
-    
+
     const geoTableReport = new ReportGetTableAction({
       reportType: reportTypeMap(KalturaReportType.mapOverlayCity),
       reportInputFilter: filter,
@@ -237,28 +239,28 @@ export class UserMiniHighlightsComponent extends UserBase implements OnDestroy {
       order: '-count_plays',
       responseOptions,
     });
-    
+
     const devicesTableReport = new ReportGetTableAction({
       reportType: reportTypeMap(KalturaReportType.platforms),
       reportInputFilter: filter,
       pager: new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize }),
       responseOptions,
     });
-    
+
     const devicesTotalReport = new ReportGetTotalAction({
       reportType: reportTypeMap(KalturaReportType.platforms),
       reportInputFilter: filter,
       responseOptions,
     });
-    
+
     const request = new KalturaMultiRequest(geoTableReport, devicesTableReport, devicesTotalReport);
-    
+
     return this._kalturaClient.multiRequest(request)
       .pipe(map(responses => {
         if (responses.hasErrors()) {
           throw responses.getFirstError();
         }
-        
+
         return {
           geo: { table: responses[0].result },
           devices: { table: responses[1].result, totals: responses[2].result },

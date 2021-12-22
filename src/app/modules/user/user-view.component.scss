@@ -141,6 +141,9 @@
     justify-content: space-between;
     flex: 1;
     margin-right: 24px;
+    &.noMargin {
+      margin-right: 0px;
+    }
   }
 
   .kRightCol {
@@ -171,6 +174,9 @@
   .kLeftCol:not(.kCompare) {
     flex: 1;
     height: 543px;
+    &.noMargin {
+      height: auto;
+    }
   }
 
   .kRightCol:not(.kCompare) {
@@ -186,6 +192,9 @@
 
   .kLeftCol.kCompare {
     height: 622px;
+    &.noMargin {
+      height: auto;
+    }
   }
 
   .kRightCol.kCompare {
