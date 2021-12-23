@@ -54,7 +54,7 @@
           break;
          case 'entry-webcast':
           sendMessage({ messageType: 'navigate', payload: { url: '/entry-webcast/1_05kwa8a7' } });
-          sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceLastBroadcast'}}});
+          sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceFirstBroadcast'}}});
           break;
          case 'entry-live':
           sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
@@ -221,10 +221,12 @@
                   viewsConfig.entryWebcast.miniEngagement.questions = null;
                   viewsConfig.entryWebcast.miniEngagement.viewers = null;
                   viewsConfig.entryWebcast.refineFilter.domains = null;
+                  viewsConfig.entryWebcast.userEngagement.userFilter = null;
 
                   // Live config
                   viewsConfig.entryLive.title = null;
                   viewsConfig.entryLive.details = null;
+                  viewsConfig.entryLive.discovery.userFilter = null;
 
                   // Entry config
                   viewsConfig.entry.title = null;
@@ -255,6 +257,10 @@
                   break;
                 case 'updateLayout':
                     analyticsApp.style.height = `${postMessageData.payload.height}px`;
+                    break;
+
+                case 'scrollTo':
+                    window.scrollTo(0, postMessageData.payload);
                     break;
 
                 case 'navigateTo':

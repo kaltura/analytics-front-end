@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { LiveDiscoveryData, LiveDiscoveryWidget } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -16,6 +16,7 @@ import { LiveGeoWidget } from '../live-geo/live-geo.widget';
 import { LiveDevicesWidget } from '../live-devices/live-devices.widget';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 import { EntryLiveUsersMode } from 'configuration/analytics-config';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-live-discovery',
@@ -23,6 +24,7 @@ import { EntryLiveUsersMode } from 'configuration/analytics-config';
   styleUrls: ['./live-discovery.component.scss']
 })
 export class LiveDiscoveryComponent implements OnInit, OnDestroy {
+  @Input() discoveryViewConfig: ViewConfig;
   @Output() tableChange = new EventEmitter<KalturaReportType>();
   @Output() dateFilterChange = new EventEmitter<DateFiltersChangedEvent>();
   @ViewChild(DiscoveryChartComponent) _discoveryChart: DiscoveryChartComponent;
@@ -92,10 +94,10 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._liveExploreWidget.setCurrentInterval(event.timeInterval);
     this._pollingBtnDisabled = !event.isPresetMode;
     this._rangeLabel = event.shortRangeLabel;
-  
+
     this._liveExploreWidget.updateFilters(event, !event.initialRun);
     this._liveDiscoveryTable.updateFilters(event);
-    
+
     if (!event.initialRun) {
       this._liveDevicesWidget.updateFilters(event);
       this._liveGeoWidget.updateFilters(event);

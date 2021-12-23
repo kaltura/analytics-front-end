@@ -13,6 +13,7 @@ import { TimeSelectorService } from '../live-discovery-chart/time-selector/time-
 import { liveReportTypeMap } from 'shared/utils/live-report-type-map';
 import { ToggleUsersModeService } from '../../components/toggle-users-mode/toggle-users-mode.service';
 import { EntryLiveUsersMode } from 'configuration/analytics-config';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-live-discovery-table',
@@ -22,6 +23,7 @@ import { EntryLiveUsersMode } from 'configuration/analytics-config';
 export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   @Input() isPolling: boolean;
   @Input() rangeLabel: string;
+  @Input() discoveryViewConfig: ViewConfig;
 
   @Output() tableChange = new EventEmitter<KalturaReportType>();
 

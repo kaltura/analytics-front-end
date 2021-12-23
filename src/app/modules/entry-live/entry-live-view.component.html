@@ -73,7 +73,7 @@
           </div>
         </div>
         <div *ngIf="_entryLiveViewConfig.discovery" class="kReport">
-          <app-live-discovery (tableChange)="_onTableModeChange($event)"
+          <app-live-discovery (tableChange)="_onTableModeChange($event)" [discoveryViewConfig]="_entryLiveViewConfig.discovery"
                               (dateFilterChange)="_onDiscoveryDateFilterChange($event)"></app-live-discovery>
         </div>
       </div>

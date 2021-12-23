@@ -187,7 +187,9 @@ export const viewsConfig = {
     player: {},
     streamHealth: {},
     devices: {},
-    discovery: {},
+    discovery: {
+      userFilter: {}
+    },
   },
   entryWebcast: {
     export: {},
