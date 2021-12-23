@@ -65,6 +65,7 @@
           break;
          case 'user':
           sendMessage({ messageType: 'navigate', payload: { url: '/user/amir.chervinsky@kaltura.com' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last12months'}}});
           break;
         }
     }
@@ -175,6 +176,9 @@
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
             }`
+        },
+        customData: {
+          eventId: '91811461'
         }
     };
 
