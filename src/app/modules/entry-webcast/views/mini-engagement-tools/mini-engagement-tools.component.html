@@ -8,7 +8,7 @@
 
     <div class="kReportContent">
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="toolsViewConfig.slides">
         <div class="kMiniIcon blue"><i class="icon-ic_slide"></i></div>
           <div class="kLabels">
             <span class="value">{{_slides}}</span>
@@ -17,7 +17,7 @@
 
       </div>
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="toolsViewConfig.polls">
         <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
         <div class="kLabels">
           <span class="value">{{_polls}}</span>
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="toolsViewConfig.announcements">
         <div class="kMiniIcon blue"><i class="icon-ic_annoucements"></i></div>
         <div class="kLabels">
           <span class="value">{{_announcements}}</span>
@@ -34,7 +34,7 @@
 
       </div>
 
-      <div class="kVal">
+      <div class="kVal" *ngIf="toolsViewConfig.answers">
         <div class="kMiniIcon blue"><i class="icon-viewer-contributor"></i></div>
         <div class="kLabels">
           <span class="value">{{_answer_on_air}}</span>

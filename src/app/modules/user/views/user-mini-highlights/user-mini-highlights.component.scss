@@ -9,7 +9,7 @@
   margin-bottom: 24px;
 }
 
-.kMiniHighlights {
+.kUserMiniHighlights {
   width: 100%;
   height: 100%;
   display: flex;
@@ -29,15 +29,24 @@
     height: auto;
     margin-bottom: 24px;
     min-height: 286px;
+    &.small {
+      min-height: 140px;
+    }
   }
 
   .kMiniHighlightsWrapper.kCompare {
     height: auto;
     margin-bottom: 24px;
     min-height: 365px;
+    &.small {
+      min-height: 140px;
+    }
   }
 
-  .kMiniHighlights {
+  .kUserMiniHighlights {
     flex-direction: column;
+    &.row {
+      flex-direction: row;
+    }
   }
 }

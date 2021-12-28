@@ -33,6 +33,9 @@
           padding-left: 24px;
           box-sizing: border-box;
         }
+        &.wide {
+          width: 50%;
+        }
       }
 
       .kListFilters {

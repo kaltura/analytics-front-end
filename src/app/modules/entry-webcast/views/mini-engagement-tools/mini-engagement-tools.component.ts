@@ -39,6 +39,7 @@ import {map, switchMap} from "rxjs/operators";
 import {of as ObservableOf} from "rxjs";
 import {Tab} from "shared/components/report-tabs/report-tabs.component";
 import {CompareService} from "shared/services/compare.service";
+import {ViewConfig} from "configuration/view-config";
 
 @Component({
   selector: 'app-webcast-mini-engagement-tools',
@@ -59,6 +60,7 @@ export class WebcastMiniEngagementToolsComponent extends WebcastBaseReportCompon
   protected _componentId = 'webcast-mini-engagement-tools';
 
   @Input() entryIdIn = '';
+  @Input() toolsViewConfig: ViewConfig;
   @ViewChild('overlay') _overlay: OverlayComponent;
 
   public _isBusy: boolean;

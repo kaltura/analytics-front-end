@@ -19,7 +19,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import {ViewConfig} from "configuration/view-config";
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-engagement-highlights',

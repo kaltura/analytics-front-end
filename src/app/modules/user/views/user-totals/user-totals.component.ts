@@ -16,6 +16,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { TrendService } from 'shared/services/trend.service';
 import { analyticsConfig } from 'configuration/analytics-config';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-user-totals',
@@ -25,13 +26,14 @@ import { analyticsConfig } from 'configuration/analytics-config';
 })
 export class UserTotalsComponent extends UserBase {
   @Input() userId: string;
-  
+  @Input() userTotalsViewConfig: ViewConfig;
+
   private _dataConfig: ReportDataConfig;
   private _reportType = reportTypeMap(KalturaReportType.userHighlights);
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -40,11 +42,11 @@ export class UserTotalsComponent extends UserBase {
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   public _socialHighlights = null;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -55,16 +57,16 @@ export class UserTotalsComponent extends UserBase {
               private _trendService: TrendService,
               private _dataConfigService: UserTotalsConfig) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     this._filter.userIds = this.userId;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: null };
     this._reportService.getReport(reportConfig, sections)
       .pipe(
@@ -72,7 +74,7 @@ export class UserTotalsComponent extends UserBase {
           if (!this._isCompareMode) {
             return ObservableOf({ report, compare: null });
           }
-          
+
           this._compareFilter.userIds = this.userId;
           const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
           return this._reportService.getReport(compareReportConfig, sections)
@@ -103,14 +105,14 @@ export class UserTotalsComponent extends UserBase {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -127,19 +129,19 @@ export class UserTotalsComponent extends UserBase {
       this._compareFilter = null;
     }
   }
-  
+
   private _handleCompare(current: Report, compare: Report, likes: number[]): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-  
+
     if (likes !== null) {
       current.totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
       current.totals.header += `${analyticsConfig.valueSeparator}votes`;
-    
+
       compare.totals.data += `${analyticsConfig.valueSeparator}${likes[1]}`;
       compare.totals.header += `${analyticsConfig.valueSeparator}votes`;
     }
-    
+
     if (current.totals && compare.totals && current.totals.data && compare.totals.data) {
       const tabsData = this._compareService.compareTotalsData(
         currentPeriod,
@@ -148,25 +150,28 @@ export class UserTotalsComponent extends UserBase {
         compare.totals,
         this._dataConfig.totals
       );
-  
+
       const shares = tabsData.find(({ key }) => key === 'count_viral');
       const like = tabsData.find(({ key }) => key === 'votes');
-      
+
       this._socialHighlights = {
         likes: like,
         shares: shares,
       };
-  
+
       this._tabsData = tabsData.filter(({ hidden }) => !hidden);
     }
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal, likes: number[]): void {
     if (likes !== null) {
       totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
       totals.header += `${analyticsConfig.valueSeparator}votes`;
     }
-    
+
+    if (!this.userTotalsViewConfig.entries && this._dataConfig.totals.fields["added_entries"]) {
+      delete this._dataConfig.totals.fields["added_entries"];
+    }
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
 
     const shares = tabsData.find(({ key }) => key === 'count_viral');
@@ -177,7 +182,7 @@ export class UserTotalsComponent extends UserBase {
     };
     this._tabsData = tabsData.filter(({ hidden }) => !hidden);
   }
-  
+
   private _getLikes(): Observable<number[]> {
     const getAction = filter => new LikeListAction({
       filter: new KalturaLikeFilter({
@@ -187,13 +192,13 @@ export class UserTotalsComponent extends UserBase {
       }),
       pager: new KalturaFilterPager({ pageSize: 1 }),
     });
-    
+
     const actions = [getAction(this._filter)];
-    
+
     if (this._isCompareMode) {
       actions.push(getAction(this._compareFilter));
     }
-    
+
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(map(responses => {
         if (responses.hasErrors()) {
@@ -206,5 +211,5 @@ export class UserTotalsComponent extends UserBase {
         return responses.map(response => response.result.totalCount);
       }));
   }
-  
+
 }

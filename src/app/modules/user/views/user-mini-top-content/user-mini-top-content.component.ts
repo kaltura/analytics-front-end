@@ -13,6 +13,7 @@ import { of as ObservableOf } from 'rxjs';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { ViewConfig } from "configuration/view-config";
 
 @Component({
   selector: 'app-user-mini-top-content',
@@ -22,7 +23,8 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+  @Input() userViewConfig: ViewConfig;
+
   private _order = '-count_plays';
   private _pager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
   private _reportType = reportTypeMap(KalturaReportType.latestPlayedEntries);
@@ -31,9 +33,9 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http')
     ? analyticsConfig.kalturaServer.uri
     : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
-  
+
   protected _componentId = 'mini-highlights';
-  
+
   public _columns: string[] = [];
   public _firstTimeLoading = true;
   public _isBusy = false;
@@ -45,11 +47,11 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   public _currentDates: string;
   public _compareDates: string;
   public _reportInterval = KalturaReportInterval.days;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
@@ -57,17 +59,17 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
               private _authService: AuthService,
               private _navigationDrillDownService: NavigationDrillDownService) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnDestroy() {
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
@@ -75,27 +77,27 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
-        
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
-          
+
           if (compare) {
             this._handleCompare(report, compare);
           } else {
             this._currentDates = null;
             this._compareDates = null;
-            
+
             if (report.table && report.table.data && report.table.header) {
               this._handleTable(report.table); // handle table
             }
           }
-          
+
           this._firstTimeLoading = false;
           this._isBusy = false;
         },
@@ -112,7 +114,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -128,28 +130,28 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-    
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _extendTableRow(item: TableRow<string>): TableRow<string> {
     item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
     return item;
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._columns = columns;
     this._tableData = tableData.map(this._extendTableRow.bind(this));
     this._tableData = this.filterUnique(this._tableData, 'object_id').slice(0, 5); // get first 5 unique entries (report returns duplicates)
   }
-  
+
   // following function filters a given objects array and returns only objects that have unique value in the passed key field
   private filterUnique(arr: TableRow[], key: string): TableRow[] {
     return arr.filter((entry, index, self) =>
@@ -158,17 +160,17 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
       ))
     );
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-    
+
     if (current.table && current.table.data) {
       const { columns, tableData } = this._reportService.parseTableData(current.table, this._dataConfig.table);
       this._columns = columns;
       this._tableData = tableData.map(this._extendTableRow.bind(this));
       this._tableData = this.filterUnique(this._tableData, 'object_id').slice(0, 3); // get first 3 unique entries (report returns duplicates)
-      
+
       if (compare.table && compare.table.data) {
         const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
         this._compareTableData = compareTableData.map(this._extendTableRow.bind(this));
@@ -178,14 +180,14 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
       }
     }
   }
-  
+
   public _drillDown(row: TableRow<string>): void {
     const { object_id: entryId, status, partner_id: partnerId, entry_source } = row;
-    
+
     if (status === KalturaEntryStatus.ready) {
       const path = entry_source === 'Interactive Video' ? 'playlist' : 'entry';
       this._navigationDrillDownService.drilldown(path, entryId, true, partnerId);
     }
   }
-  
+
 }

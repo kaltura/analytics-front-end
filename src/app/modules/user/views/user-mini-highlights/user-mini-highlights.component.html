@@ -1,6 +1,6 @@
-<div class="kMiniHighlightsWrapper" [class.kCompare]="_isCompareMode">
+<div class="kMiniHighlightsWrapper" [class.small]="!userViewConfig.insights" [class.kCompare]="_isCompareMode">
   <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-    <div class="kMiniHighlights" *ngIf="!_firstTimeLoading && !_isBusy">
+    <div class="kUserMiniHighlights" [class.row]="!userViewConfig.insights" *ngIf="!_firstTimeLoading && !_isBusy">
       <app-user-mini-highlights-geo [isCompare]="_isCompareMode"
                                     [data]="_geoData"
                                     [compare]="_compareGeoData"

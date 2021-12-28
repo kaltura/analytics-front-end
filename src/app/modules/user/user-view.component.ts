@@ -29,6 +29,8 @@ export enum UserReportTabs {
   ]
 })
 export class UserViewComponent implements OnInit, OnDestroy {
+  private eventId = '';
+
   public _user: KalturaUser;
   public _loadingUser = false;
   public _creationDate: moment.Moment = null;
@@ -60,6 +62,10 @@ export class UserViewComponent implements OnInit, OnDestroy {
               private _navigationDrillDownService: NavigationDrillDownService,
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: UserExportConfig) {
+      this.eventId = analyticsConfig.customData && analyticsConfig.customData.eventId ? analyticsConfig.customData.eventId : '';
+      if (this.eventId.length) {
+        this._refineFilter = [{type: 'categories', value: {id: this.eventId}}];
+      }
   }
 
   ngOnInit() {
@@ -72,7 +78,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
           const showContributions = !!this._route.snapshot.queryParams.showContributions;
           this._currentTab = showContributions ? UserReportTabs.contributor : UserReportTabs.viewer;
           this.loadUserDetails();
-          this._exportConfig = this._exportConfigService.getConfig(this._userId);
+          this._exportConfig = this._exportConfigService.getConfig(this._userId, this._userViewConfig);
         }
       });
   }
@@ -87,6 +93,9 @@ export class UserViewComponent implements OnInit, OnDestroy {
 
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
+    if (this.eventId.length) {
+      this._refineFilter.push({type: 'categories', value: {id: this.eventId}});
+    }
   }
 
   private loadUserDetails(): void {

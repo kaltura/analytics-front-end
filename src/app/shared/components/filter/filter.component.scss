@@ -42,6 +42,9 @@ app-location-filters ::ng-deep app-dropdown-filter{
           display: flex;
           flex-direction: column;
         }
+        &.narrow {
+          width: 20%;
+        }
       }
 
       .kMiscFilters {
@@ -49,6 +52,9 @@ app-location-filters ::ng-deep app-dropdown-filter{
         flex-direction: column;
         flex: 0 0 auto;
         width: 30%;
+        &.wide {
+          width: 40%;
+        }
       }
     }
 

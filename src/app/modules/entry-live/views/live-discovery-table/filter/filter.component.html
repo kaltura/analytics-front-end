@@ -9,7 +9,7 @@
       <span [innerHTML]="rangeLabel"></span>
       <a (click)="openTimeSelector.emit()">{{'app.entryLive.changeDate' | translate}}</a>
     </div>
-    <div class="kSearch">
+    <div class="kSearch" *ngIf="showUserFilter">
       <app-discovery-users-filter [selectedUsers]="_selectedValues['users']"
                                 (itemSelected)="_onItemSelected($event, 'users')"></app-discovery-users-filter>
     </div>
