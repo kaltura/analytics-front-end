@@ -14,6 +14,7 @@
         <ng-container *ngSwitchCase="_tableModes.users">
           <app-discovery-filter [totalCount]="_totalCount"
                                 [rangeLabel]="rangeLabel"
+                                [showUserFilter]="discoveryViewConfig.userFilter"
                                 (openTimeSelector)="_openTimeSelector()"
                                 (filterChange)="_widget.usersFilterChange($event)">
             <app-table-selector *ngIf="(_usersModeService.usersMode$ | async) === _entryLiveUsersMode.Authenticated"

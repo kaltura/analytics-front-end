@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title>Event Platform Analytics Loader</title>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    sapn {
+      color: #006EFA;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 12px;
+      margin: 12px;
+      margin: 12px;
+      padding: 8px;
+    }
+    iframe {
+      position: absolute;
+      top: 0px;
+      left: 150px;
+      width: calc(100% - 150px);
+      height: 100vh;
+      border: 0;
+      transition: height 0.3s;
+    }
+  </style>
+</head>
+<body>
+<div style="display: flex; flex-direction: column; width: 150px">
+  <sapn style="background: #cacaca" onclick="handleClick(event, 'engagement')">Engagement</sapn>
+  <sapn onclick="handleClick(event, 'entry-webcast')">Webcast</sapn>
+  <sapn onclick="handleClick(event, 'entry-live')">Realtime</sapn>
+  <sapn onclick="handleClick(event, 'entry')">Video</sapn>
+  <sapn onclick="handleClick(event, 'user')">User</sapn>
+</div>
+<iframe id="analytics" src="http://localhost:4200"></iframe>
+<script>
+    let analyticsApp;
+    function handleClick(event, route) {
+      links = document.getElementsByTagName('sapn') || [];
+      [...links].forEach(elm => {
+        elm.style.background = '#ffffff';
+      });
+      event.target.style.background = '#cacaca';
+      switch (route) {
+        case 'engagement':
+          sendMessage({ messageType: 'navigate', payload: { url: '/analytics/engagement' } });
+          sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last30days'}}});
+          break;
+         case 'entry-webcast':
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry-webcast/1_05kwa8a7' } });
+          sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceFirstBroadcast'}}});
+          break;
+         case 'entry-live':
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry-live/1_05kwa8a7' } });
+          break;
+         case 'entry':
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_tsttld1e' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
+          break;
+         case 'user':
+          sendMessage({ messageType: 'navigate', payload: { url: '/user/amir.chervinsky@kaltura.com' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last12months'}}});
+          break;
+        }
+    }
+    const config = {
+        kalturaServer: {
+            uri: 'www.kaltura.com',
+            previewUIConf: 49101843,
+        },
+        cdnServers: {
+            serverUri: 'http://cdnapi.kaltura.com',
+            securedServerUri: 'https://cdnapisec.kaltura.com'
+        },
+        ks: "",
+        pid: "",
+        locale: 'en',
+        live: {
+            pollInterval: 30,
+            healthNotificationsCount: 50,
+        },
+        menuConfig: {
+            showMenu: false,
+        },
+        customStyle: {
+            baseClassName: 'ep',
+            css: `
+            body.ep {
+                background: transparent;
+                background-color: white;
+            }
+            .ep .kMain .kReportView .kReport, .ep .kMain .kReportView .kReport .kDivider {
+                background: transparent !important;
+            }
+            .ep .kMain .kReportView .kReport .kTotalsRow,  .ep .kMain .kReportView .kReport .kTotalsContainer {
+                background: transparent;
+            }
+            .ep .kMain .kReportView .kReport .kFilters {
+                background-color: white;
+            }
+            .ep .kMain .kReportView .kReport .kReportHeader {
+                background: transparent;
+            }
+            .ep .kMain .kReportView .kReport .kReportContainer {
+                background: transparent;
+            }
+            .ep .kMain .kReportView .kReport .kEntryDetails {
+                background: transparent;
+            }
+            .ep .kMain .kReportView .kReport.kImageReport {
+                background: transparent;
+            }
+            .ep .kMain .kReportView .kReport .kRefineFiltersHost {
+                background: transparent;
+            }
+            /* Margins */
+            .ep .kContent {
+                width: 100% !important;
+            }
+            .ep .kReportView .kContent:first-child {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+                box-sizing: border-box;
+            }
+            /* Borders */
+            .ep .kTotalContainer, .ep .kSocialHighlights, .ep .kLiveUsers, .ep .kUsersBandwidth, .ep app-live-stream-health, .ep .kEntryWidgets .kTopCountries, .ep .kEntryWidgets .kDevices, .ep .kDiscovery, .ep .kUserMiniHighlights, .ep .kUserMiniTopContent {
+                border: 1px solid #cccccc !important;
+            }
+            .ep .kTotalContainer:first-child {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+            .ep .kTotalContainer:last-child {
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                border-left: none !important;
+            }
+            .ep .kTotalContainer:not(:first-child):not(:last-child) {
+                border-left: none !important;
+            }
+            .ep .kEntryPreview app-video-entry-preview .kReport {
+                border: 1px solid #cccccc !important;
+                border-bottom: none !important;
+                border-radius: 0px;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+            .ep .kEntryPreview app-video-entry-user-engagement .kReport {
+                border: 1px solid #cccccc !important;
+                border-top: none !important;
+                border-radius: 0px;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+            .ep .kReportContainer .kFilters {
+                border: 1px solid #cccccc !important;
+                border-bottom: none !important;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+            .ep .kReportContainer .kReportContent {
+                border: 1px solid #cccccc !important;
+                border-top: none !important;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+            .ep .kReportContainer .kReportContent.kNoTitle {
+                border-top: 1px solid #cccccc !important;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }`
+        },
+        customData: {
+          eventId: '91811461'
+        }
+    };
+
+    const sendMessage = message => {
+      if (analyticsApp && analyticsApp.contentWindow && analyticsApp.contentWindow.postMessage) {
+        analyticsApp.contentWindow.postMessage(message, '*'); // use window.location.origin in your app instead
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        analyticsApp = document.getElementById('analytics');
+
+        window.addEventListener('message', e => {
+            if (!e.data) {
+                return;
+            }
+
+            const postMessageData = e.data;
+
+            switch (postMessageData.messageType) {
+                case 'analyticsInit':
+                  let viewsConfig = postMessageData.payload.viewsConfig;
+
+                  // Engagement config
+                  viewsConfig.audience.engagement.title = null;
+                  viewsConfig.audience.engagement.syndication = null;
+                  viewsConfig.audience.engagement.refineFilter.mediaType = null;
+                  viewsConfig.audience.engagement.refineFilter.entrySource = null;
+                  viewsConfig.audience.engagement.refineFilter.domains = null;
+
+                  // Webcast config
+                  viewsConfig.entryWebcast.title = null;
+                  viewsConfig.entryWebcast.domains = null;
+                  viewsConfig.entryWebcast.details = null;
+                  viewsConfig.entryWebcast.linkToLive = null;
+                  viewsConfig.entryWebcast.tools.slides = null;
+                  viewsConfig.entryWebcast.tools.polls = null;
+                  viewsConfig.entryWebcast.tools.announcements = null;
+                  viewsConfig.entryWebcast.tools.answers = null;
+                  viewsConfig.entryWebcast.miniEngagement.questions = null;
+                  viewsConfig.entryWebcast.miniEngagement.viewers = null;
+                  viewsConfig.entryWebcast.refineFilter.domains = null;
+                  viewsConfig.entryWebcast.userEngagement.userFilter = null;
+
+                  // Live config
+                  viewsConfig.entryLive.title = null;
+                  viewsConfig.entryLive.details = null;
+                  viewsConfig.entryLive.discovery.userFilter = null;
+
+                  // Entry config
+                  viewsConfig.entry.title = null;
+                  viewsConfig.entry.details = null;
+                  viewsConfig.entry.totals.social = null;
+                  viewsConfig.entry.userEngagement.userFilter = null;
+                  viewsConfig.entry.syndication = null;
+                  viewsConfig.entry.refineFilter.domains = null;
+
+                  // User config
+                  viewsConfig.user.title = null;
+                  viewsConfig.user.avatar = null;
+                  viewsConfig.user.details = null;
+                  viewsConfig.user.totals.social = null;
+                  viewsConfig.user.totals.entries = null;
+                  viewsConfig.user.insights = null;
+                  viewsConfig.user.contributor = null;
+                  viewsConfig.user.refineFilter.categories = null;
+                  viewsConfig.user.refineFilter.domains = null;
+                  viewsConfig.user.refineFilter.entrySource = null;
+                  viewsConfig.user.refineFilter.mediaType = null;
+
+                  sendMessage({ messageType: 'init', payload: { ...config, viewsConfig } });
+                  break;
+                case 'analyticsInitComplete':
+                  sendMessage({messageType: 'navigate', payload: {url: '/analytics/engagement'}});
+                  sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last30days'}}});
+                  break;
+                case 'updateLayout':
+                    analyticsApp.style.height = `${postMessageData.payload.height}px`;
+                    break;
+
+                case 'scrollTo':
+                    window.scrollTo(0, postMessageData.payload);
+                    break;
+
+                case 'navigateTo':
+                    const [url, params] = postMessageData.payload.split('?');
+                    const queryParams = params.split('&').reduce((acc, val) => {
+                        const [key, value] = val.split('=');
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+
+                    sendMessage({'messageType': 'navigate', payload: { url, queryParams }});
+                    sendMessage({'messageType': 'updateFilters', payload: { queryParams }});
+                    break;
+
+                default:
+                    console.log(`${postMessageData.messageType} event is not implemented`);
+                    break;
+            }
+        })
+    });
+</script>
+</body>
+</html>

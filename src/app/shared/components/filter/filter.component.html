@@ -19,7 +19,7 @@
     <div class="kRefineFiltersMain">
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
-          <div class="kListFilters" *ngIf="_viewConfig?.mediaType || _viewConfig?.entrySource || _viewConfig?.playbackType">
+          <div class="kListFilters" [class.narrow]="!_viewConfig?.entrySource" *ngIf="_viewConfig?.mediaType || _viewConfig?.entrySource || _viewConfig?.playbackType">
 
             <div class="kFiltersGroup"  *ngIf="_viewConfig?.mediaType || _viewConfig?.playbackType">
               <app-checkboxes-list-filter *ngIf="_viewConfig?.mediaType"
@@ -52,7 +52,7 @@
                                         (itemSelected)="_onItemSelected($event, 'entrySources')"
                                         (itemUnselected)="_onItemUnselected($event, 'entrySources')"></app-checkboxes-list-filter>
           </div>
-          <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners || _viewConfig?.categories)" class="kMiscFilters">
+          <div *ngIf="showAutocompleteGroup && (_viewConfig?.tags || _viewConfig?.owners || _viewConfig?.categories)" class="kMiscFilters" [class.wide]="!_viewConfig?.entrySource">
             <app-tags-filter *ngIf="_viewConfig?.tags"
                              [selectedFilters]="_selectedValues['tags']"
                              (itemSelected)="_onItemSelected($event, 'tags')"
@@ -79,7 +79,7 @@
             </app-domains-filters>
 
           </div>
-          <div class="kMiscFilters" *ngIf="_viewConfig?.geo">
+          <div class="kMiscFilters" [class.wide]="!_viewConfig?.entrySource" *ngIf="_viewConfig?.geo">
             <app-location-filters [expandWidth]="!showAutocompleteGroup"
                                   [filterWarning]="locationFiltersWarning"
                                   [dateFilter]="_dateFilter"

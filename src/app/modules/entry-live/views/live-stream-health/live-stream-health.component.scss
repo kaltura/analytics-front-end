@@ -119,8 +119,8 @@ kScrollToTopContainer {
   position: absolute;
   bottom: 0px;
   height: 20px;
-  width: 100%;
   right: 20px;
+  left: 2px;
 }
 /* player height according to screen resolution */
 @media (max-width: 991px) {

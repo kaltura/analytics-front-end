@@ -19,12 +19,12 @@ export class StorageDataConfig extends ReportDataBaseConfig {
         fields: {
           'peak_storage': {
             format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${fileSize(value).value} ${fileSize(value).units}</span>`,
+            graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('default'), getColorPercent(100,'default')],
           },
           'bandwidth_consumption': {
             format: value => value,
-            graphTooltip: (value) => `<span class="kValue">${fileSize(value).value} ${fileSize(value).units}</span>`,
+            graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
           },
           'total_entries': {

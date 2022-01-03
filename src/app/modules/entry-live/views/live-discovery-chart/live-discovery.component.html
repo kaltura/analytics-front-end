@@ -18,6 +18,7 @@
                          (togglePolling)="_onTogglePolling()"
                          (zoom)="onZoom($event)"></app-discovery-chart>
     <app-live-discovery-table [isPolling]="_isPolling"
+                              [discoveryViewConfig]="discoveryViewConfig"
                               [rangeLabel]="_rangeLabel"
                               (tableChange)="tableChange.emit($event)"></app-live-discovery-table>
   </div>

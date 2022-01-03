@@ -5,6 +5,7 @@ export interface ViewConfig {
 export const viewsConfig = {
   audience: {
     engagement: {
+      title: {},
       export: {},
       refineFilter: {
         mediaType: {},
@@ -175,6 +176,7 @@ export const viewsConfig = {
     syndication: {},
   },
   entryLive: {
+    title: {},
     export: {},
     toggleLive: {},
     details: {},
@@ -185,7 +187,9 @@ export const viewsConfig = {
     player: {},
     streamHealth: {},
     devices: {},
-    discovery: {},
+    discovery: {
+      userFilter: {}
+    },
   },
   entryWebcast: {
     export: {},
@@ -194,12 +198,19 @@ export const viewsConfig = {
     details: {},
     miniHighlights: {},
     miniEngagement: {
+      questions: {},
+      viewers: {},
       // download: {} // used by KMS only
     },
     miniQuality: {},
     highlights: {},
     liveEngagement: {},
-    tools: {},
+    tools: {
+      slides: {},
+      polls: {},
+      announcements: {},
+      answers: {}
+    },
     insights: {},
     entryPreview: {},
     userEngagement: {
@@ -257,6 +268,9 @@ export const viewsConfig = {
     syndication: {}
   },
   user: {
+    title: {},
+    avatar: {},
+    details: {},
     export: {},
     refineFilter: {
       mediaType: {},
@@ -265,7 +279,10 @@ export const viewsConfig = {
       categories: {},
       domains: {},
     },
-    totals: {},
+    totals: {
+      entries: {},
+      social: {}
+    },
     geoDevices: {},
     lastViewedEntries: {},
     insights: {

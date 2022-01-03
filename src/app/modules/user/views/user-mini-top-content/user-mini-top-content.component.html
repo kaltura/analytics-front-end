@@ -1,12 +1,12 @@
-<div data-aid="report-mini-highlights" class="kReport kOverrideFAIcons">
+<div data-aid="report-mini-highlights" class="kReport kOverrideFAIcons kUserMiniTopContent">
   <div class="kHeader">
     <span class="kTitle">{{'app.user.lastViewedEntries' | translate}}</span>
   </div>
   <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
     <div *ngIf="_isCompareMode" class="kReportWrapper" [class.kCompare]="_isCompareMode">
       <span *ngIf="_compareDates" class="kPeriod">{{_compareDates}}</span>
-      <div class="kReportContainer">
-        <div class="kCard" *ngFor="let card of _compareTableData">
+      <div class="kReportContainer" [class.kLessContent]="_tableData.length < 4">
+        <div class="kCard" [class.show]="!userViewConfig.insights" *ngFor="let card of _compareTableData">
           <thumb-loader [thumbnailUrl]="card.thumbnailUrl" (onClick)="_drillDown(card)" [width]="171" [height]="101"></thumb-loader>
           <span class="kLabel kTableColumn"
                 [kTooltip]="card.entry_name"
@@ -21,7 +21,7 @@
     <div class="kReportWrapper" [class.kCompare]="_isCompareMode">
       <span *ngIf="_currentDates" class="kPeriod">{{_currentDates}}</span>
       <div class="kReportContainer" [class.kLessContent]="_tableData.length < 4">
-        <div class="kCard" *ngFor="let card of _tableData">
+        <div class="kCard" [class.show]="!userViewConfig.insights" *ngFor="let card of _tableData">
           <thumb-loader [thumbnailUrl]="card.thumbnailUrl" (onClick)="_drillDown(card)" [width]="171" [height]="101"></thumb-loader>
           <span class="kLabel kTableColumn"
                 [kTooltip]="card.entry_name"

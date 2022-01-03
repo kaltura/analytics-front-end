@@ -3,15 +3,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExportConfigService, ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { KalturaReportExportItemType, KalturaReportType } from 'kaltura-ngx-client';
+import { ViewConfig } from "configuration/view-config";
 
 @Injectable()
 export class UserExportConfig extends ExportConfigService {
   constructor(private _translate: TranslateService) {
     super();
   }
-  
-  public getConfig(userId?: string): ExportItem[] {
-    return [
+
+  public getConfig(userId?: string, viewConfig?: ViewConfig): ExportItem[] {
+    let config = [
       {
         label: this._translate.instant('app.user.exportLabels.highlights'),
         reportType: reportTypeMap(KalturaReportType.userHighlights),
@@ -65,5 +66,9 @@ export class UserExportConfig extends ExportConfigService {
         ownerId: userId,
       },
     ];
+    if (viewConfig && !viewConfig.contributor) {
+      config = config.slice(0,6);
+    }
+    return config;
   }
 }

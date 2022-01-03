@@ -46,7 +46,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
       this._dateFilter = value;
-      
+
       if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
         this._updateFilter();
         // load report in the next run cycle to be sure all properties are updated
@@ -56,7 +56,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   @Input() set refineFilter(value: RefineFilter) {
     if (value) {
       this._refineFilter = value;
@@ -67,14 +67,14 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
+
   @Input() entryId: string;
   @Input() userId: string;
   @Input() title: string = null;
-  
+
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _playthroughs: SelectItem[] = [{ label: '25%', value: 25 }, { label: '50%', value: 50 }, { label: '75%', value: 75 }, { label: '100%', value: 100 }];
@@ -84,9 +84,9 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
   public _chartLoaded = false;
   public _currentDates: string;
   public _compareDates: string;
-  
+
   private _componentId = 'impressions';
-  
+
   private echartsIntance: any;
   private compareEchartsIntance: any;
   private reportType: KalturaReportType = reportTypeMap(KalturaReportType.contentDropoff);
@@ -101,14 +101,14 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
   private compareFilter: KalturaEndUserReportInputFilter = null;
   private _reportInterval: KalturaReportInterval = KalturaReportInterval.months;
   private _dataConfig: ReportDataConfig;
-  
+
   public get isCompareMode(): boolean {
     return this.compareFilter !== null;
   }
-  
+
   public _funnelData: funnelData;
   private compareFunnelData: funnelData;
-  
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
@@ -117,28 +117,28 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
               private _dataConfigService: ImpressionsDataConfig,
               private _browserService: BrowserService) {
     this._dataConfig = _dataConfigService.getConfig();
-    
+
     this._chartData = _dataConfigService.getChartConfig((params) => {
       return this.getChartTooltip(params);
     });
-    
+
     this._compareChartData = _dataConfigService.getChartConfig((params) => {
       return this.getCompareChartTooltip(params);
     });
-  
+
     this._browserService.contrastThemeChange$
       .pipe(cancelOnDestroy(this))
       .subscribe(isContrast => this._toggleChartTheme(isContrast));
   }
-  
+
   ngOnInit() {
     this._isBusy = false;
   }
-  
+
   ngOnDestroy(): void {
-  
+
   }
-  
+
   private _toggleChartTheme(isContrast: boolean): void {
     const toggle = (chart, color, background) => {
       const data = {
@@ -156,15 +156,15 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       toggle(this.compareEchartsIntance, color, labelBackground);
     }
   }
-  
+
   public onChartInit(ec) {
     this.echartsIntance = ec;
   }
-  
+
   public onCompareChartInit(ec) {
     this.compareEchartsIntance = ec;
   }
-  
+
   public updateFunnel(): void {
     const plays = this._funnelData.impressions === 0 ? '0' : (this._funnelData.plays / this._funnelData.impressions * 100).toFixed(1);
     const playThrough = this._funnelData.impressions === 0 ? '0' : (this._funnelData.playThrough['perc' + this._selectedPlaythrough] / this._funnelData.impressions * 100).toFixed(1);
@@ -188,14 +188,14 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     }, false);
     this._setEchartsOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
   }
-  
+
   public onPlaythroughChange(): void {
     this.updateFunnel();
     if (this.isCompareMode) {
       this.updateCompareFunnel();
     }
   }
-  
+
   private _loadReport(): void {
     this._isBusy = true;
     this._chartLoaded = false;
@@ -206,7 +206,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       this.filter.userIds = this.userId;
     }
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-    
+
     if (this.entryId) {
       reportConfig.filter.entryIdIn = this.entryId;
     }
@@ -215,7 +215,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
         if (!this.isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-  
+
         if (this.userId) {
           this.compareFilter.userIds = this.userId;
         }
@@ -251,7 +251,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   private handleCompare(current: Report, compare: Report): void {
     this.handleTotals(current.totals); // set original funnel data
     // resize funnels to fit window
@@ -259,7 +259,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     this.compareEchartsIntance.setOption({ series: [{ width: '100%' }] }, false);
     this._setEchartsOption({ series: [{ left: '0%' }] }, false);
     this.compareEchartsIntance.setOption({ series: [{ left: '0%' }] }, false);
-    
+
     const data = compare.totals.data.split(analyticsConfig.valueSeparator);
     this.compareFunnelData = {
       impressions: data[6].length ? parseInt(data[6]) : 0,
@@ -273,7 +273,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     };
     this.updateCompareFunnel();
   }
-  
+
   private updateCompareFunnel(): void {
     const plays = this.compareFunnelData.impressions === 0 ? '0' : (this.compareFunnelData.plays / this.compareFunnelData.impressions * 100).toFixed(1);
     const playThrough = this.compareFunnelData.impressions === 0 ? '0' : (this.compareFunnelData.playThrough['perc' + this._selectedPlaythrough] / this.compareFunnelData.impressions * 100).toFixed(2);
@@ -297,7 +297,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     }, false);
     this.compareEchartsIntance.setOption({ color: [getColorPercent(100), getColorPercent(parseFloat(plays)), getColorPercent(parseFloat(playThrough))] });
   }
-  
+
   private handleTotals(totals: KalturaReportTotal): void {
     this._setEchartsOption({ series: [{ width: '30%' }] }, false);
     this._setEchartsOption({ series: [{ left: '65%' }] }, false);
@@ -314,15 +314,15 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     };
     this.updateFunnel();
   }
-  
+
   private _setEchartsOption(option: EChartOption, opts?: any): void {
     setTimeout(() => {
       if (this.echartsIntance) {
         this.echartsIntance.setOption(option, opts);
       }
-    }, 0);
+    }, 200);
   }
-  
+
   private getChartTooltip(params): string {
     if (this.isCompareMode) {
       let value = this._funnelData.impressions;
@@ -331,7 +331,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       } else if (params.dataIndex === 2) {
         value = this._funnelData.playThrough['perc' + this._selectedPlaythrough];
       }
-      
+
       let compareValue = this.compareFunnelData.impressions;
       if (params.dataIndex === 1) {
         compareValue = this.compareFunnelData.plays;
@@ -344,7 +344,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
     }
   }
-  
+
   private getCompareChartTooltip(params): string {
     let value = this.compareFunnelData.impressions;
     if (params.dataIndex === 1) {
@@ -354,7 +354,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
     }
     return this._compareDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${ReportHelper.numberWithCommas(value)}</b></span>`;
   }
-  
+
   private _updateFilter(): void {
     this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this.filter.fromDate = this._dateFilter.startDate;
@@ -371,7 +371,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       this.compareFilter = null;
     }
   }
-  
+
   private _updateRefineFilter(): void {
     this.pager.pageIndex = 1;
     refineFilterToServerValue(this._refineFilter, this.filter);

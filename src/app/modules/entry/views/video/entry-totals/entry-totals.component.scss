@@ -18,6 +18,9 @@
   .kTotals {
     display: flex;
     width: 80%;
+    &.fillWidth {
+      width: 100%;
+    }
   }
   .kTotalContainer {
     width: 100%;

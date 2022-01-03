@@ -1,6 +1,6 @@
 <div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
   <div class="kReportHeader">
-    <span class="kTitle">{{'app.engagement.title' | translate}}</span>
+    <span *ngIf="_engagementViewConfig.title" class="kTitle">{{'app.engagement.title' | translate}}</span>
     <app-export-csv *ngIf="_engagementViewConfig.export"
                     name="Engagement"
                     [width]="290"
