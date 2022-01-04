@@ -27,6 +27,7 @@ export class ExportCsvComponent implements OnDestroy {
   @Input() pager: KalturaPager = null;
   @Input() entryId: string = null;
   @Input() categoryId: string = null;
+  @Input() virtualEventId: string = null;
   @Input() playlistId: string = null;
   @Input() rootEntryIdIn: string = null;
   @Input() userId: string = null;

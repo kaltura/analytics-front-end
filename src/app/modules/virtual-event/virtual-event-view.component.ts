@@ -38,7 +38,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.virtualEvent;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
-  public _creationDateLabel = '';
+  public _virtualEventDateLabel = '';
   public _creationDate: moment.Moment = null;
   public _updateDate = '';
   public _dateFilter: DateChangeEvent = null;
@@ -105,7 +105,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
           this._virtualEventLoaded = true;
           this._virtualEvent = virtualEvent;
           const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
-          this._creationDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
+          this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
           this._creationDate = DateFilterUtils.getMomentDate(virtualEvent.createdAt);
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
           this._loadingVirtualEvent = false;
