@@ -1,0 +1,38 @@
+<div [attr.data-aid]="'filter-' + name" class="kRefineFilters kReport">
+  <div class="kTagsContainer" *ngIf="_tags.length">
+    <span class="kDisclaimer" *ngIf="_showDisclaimer">
+      <i class="kIconInfo_Full"></i>
+      {{'app.filters.disclaimer' | translate}}
+    </span>
+    <kTags title=""
+           labelField="label"
+           tooltipField="tooltip"
+           [data]="_tags"
+           [clearAllLabel]="'app.common.clearAll' | translate"
+           (onTagRemove)="_removeFilter($event)"
+           (onRemoveAll)="_removeAll()">
+    </kTags>
+  </div>
+  <div *ngIf="showFilters"
+       [@state]="_state"
+       (@state.done)="_filtersAnimationDone($event)">
+    <div class="kRefineFiltersMain">
+      <div class="kFilterContainer kOverrideFAIcons">
+        <div class="kFilterContainerRow">
+
+          <app-country-filter *ngIf="_viewConfig.geo"
+                              [dateFilter]="_dateFilter"
+                              [filterConfig]="filterConfig"
+                              [selectedFilters]="_selectedValues['countries']"
+                              (itemSelected)="_onItemSelected($event, 'countries')"
+                              (itemUnselected)="_onItemUnselected($event, 'countries')"></app-country-filter>
+        </div>
+      </div>
+      <div class="kRefineFiltersFooter">
+        <button type="button" class="kButtonBranded" pButton
+                [label]="'app.common.apply' | translate"
+                (click)="_apply()"></button>
+      </div>
+    </div>
+  </div>
+</div>

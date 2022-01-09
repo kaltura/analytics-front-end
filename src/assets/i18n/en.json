@@ -184,6 +184,7 @@
       },
       "daily": "Daily",
       "sinceCreation": "Creation",
+      "sincePublish": "Publish",
       "lastBroadcast": "Last Broadcast",
       "firstBroadcast": "First Broadcast",
       "error": "'From' date must be before 'To' date",

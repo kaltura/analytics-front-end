@@ -195,6 +195,9 @@ export const viewsConfig = {
     title: {},
     export: {},
     details: {},
+    refineFilter: {
+      geo: {}
+    }
   },
   entryWebcast: {
     export: {},

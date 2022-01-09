@@ -149,12 +149,18 @@
     }
   }
 }
-
+app-date-filter.noTitle {
+  margin-right: 16px;
+}
 /* responsive design */
 .kHeaderRight{
   display: flex;
   margin-left: auto;
   z-index: 1;
+  &.noTitle {
+    margin-left: 0px;
+    flex-direction: row-reverse;
+  }
 }
 @media (max-width: 1280px) {
   ::ng-deep app-checkboxes-list-filter {

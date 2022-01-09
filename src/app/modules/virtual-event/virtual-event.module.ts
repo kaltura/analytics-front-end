@@ -13,6 +13,7 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {VirtualEventViewComponent} from "./virtual-event-view.component";
+import {VirtualEventFilterComponent} from "./filter/filter.component";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {VirtualEventViewComponent} from "./virtual-event-view.component";
     InputHelperModule
   ],
   declarations: [
-    VirtualEventViewComponent
+    VirtualEventViewComponent,
+    VirtualEventFilterComponent
   ],
   exports: [],
   providers: []

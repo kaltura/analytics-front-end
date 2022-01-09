@@ -1,8 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  CategoryGetAction,
-  KalturaCategory,
   KalturaClient,
   KalturaDetachedResponseProfile,
   KalturaReportInterval,
@@ -19,8 +17,7 @@ import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-fi
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 import { RefineFilter } from "shared/components/filter/filter.component";
 import { VirtualEventExportConfig } from "./virtual-event-export.config";
-import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
-import { TopCountriesComponent } from "shared/components/top-countries-report/top-countries.component";
+import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
 
@@ -36,7 +33,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
 
   public _selectedRefineFilters: RefineFilter = null;
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.virtualEvent;
-  public _dateRange = DateRanges.Last30D;
+  public _dateRange = DateRanges.SinceCreation;
   public _timeUnit = KalturaReportInterval.days;
   public _virtualEventDateLabel = '';
   public _creationDate: moment.Moment = null;

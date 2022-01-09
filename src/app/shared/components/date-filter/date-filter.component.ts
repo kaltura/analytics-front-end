@@ -22,6 +22,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
   @Input() name = 'default';
   @Input() showHours = true;
+  @Input() showMonthsAndYears = true;
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {
@@ -44,21 +45,21 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() set creationDate( value: moment.Moment) {
     if (value) {
       this._creationDate = value;
-      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this.showMonthsAndYears, this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
     }
   }
 
   @Input() set firstBroadcastDate( value: moment.Moment) {
     if (value) {
       this._firstBroadcastDate = value;
-      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this.showMonthsAndYears, this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
     }
   }
 
   @Input() set lastBroadcastDate( value: moment.Moment) {
     if (value) {
       this._lastBroadcastDate = value;
-      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+      this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this.showMonthsAndYears, this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
     }
   }
 
@@ -162,9 +163,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     const params = this._dateFilterService.currentFilters || queryParams;
     this._browserService.updateCurrentQueryParams(params);
     this._initCurrentFilterFromEventParams(params);
-    this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
-    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last');
-    this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current');
+    this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this.showMonthsAndYears, this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+    this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.showMonthsAndYears);
+    this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current', this.showMonthsAndYears);
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
     setTimeout( () => {
       this.updateDataRanges(false); // use a timeout to allow data binding to complete
