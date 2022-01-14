@@ -4,7 +4,7 @@ import { KalturaEndUserReportInputFilter, KalturaReportType } from 'kaltura-ngx-
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 
 export interface FilterConfigProp {
-  property: 'entryIdIn' | 'userIds' | 'playlistIdIn' | 'rootEntryIdIn' | 'categoriesIdsIn' | 'playbackTypeIn' | 'eventIdsIn';
+  property: 'entryIdIn' | 'userIds' | 'playlistIdIn' | 'rootEntryIdIn' | 'categoriesIdsIn' | 'playbackTypeIn' | 'virtualEventIdIn';
   value: string;
 }
 

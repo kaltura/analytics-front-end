@@ -184,7 +184,8 @@
       },
       "daily": "Daily",
       "sinceCreation": "Creation",
-      "sincePublish": "Publish",
+      "publish": "Publish",
+      "sincePublish": "Since Publish",
       "lastBroadcast": "Last Broadcast",
       "firstBroadcast": "First Broadcast",
       "error": "'From' date must be before 'To' date",
@@ -1064,6 +1065,14 @@
         "syndication": "Top Domains"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "ve": {
+      "registered": "Registered",
+      "registered_tt": "Completed the registration form.",
+      "confirmed": "Confirmed",
+      "confirmed_tt": "Confirmed the registration email.",
+      "participated": "Participated",
+      "participated_tt": "Showed up for the event."
     },
     "playlist": {
       "count_loads": "Player Impressions",

@@ -22,10 +22,6 @@
     &.kMiniTopReportContainer{
       height: 248px;
     }
-    &.short{
-      height: 185px;
-      width: 100%;
-    }
   }
   .kMiniTopReportSmall{
     width: 30%;
@@ -205,9 +201,6 @@ app-date-filter.noTitle {
     }
     .kMiniReportContainer.kMiniTopReportContainer {
       height: 308px;
-      &.short{
-        height: 248px !important;
-      }
     }
   }
 
@@ -217,7 +210,4 @@ app-date-filter.noTitle {
   .kEntryDetails, .kBackBtn {
     color: $kGrayscale1;
   }
-}
-ui-carousel ::ng-deep dots.middle {
-  bottom: 12px;
 }

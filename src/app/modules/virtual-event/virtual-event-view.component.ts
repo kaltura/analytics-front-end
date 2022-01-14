@@ -20,6 +20,7 @@ import { VirtualEventExportConfig } from "./virtual-event-export.config";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-virtual-event',
@@ -47,8 +48,10 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _virtualEvent: KalturaVirtualEvent;
   public _virtualEventId = null;
+  public _creationDateLabels = {label: null, prefix: null};
 
   constructor(private _router: Router,
+              private _translate: TranslateService,
               private _route: ActivatedRoute,
               private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
@@ -56,6 +59,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
               private _exportConfigService: VirtualEventExportConfig,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService) {
+    this._creationDateLabels = {label: this._translate.instant('app.dateFilter.publish'), prefix: this._translate.instant('app.dateFilter.sincePublish')};
   }
 
   ngOnInit() {
@@ -122,18 +126,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         });
   }
 
-  public _onGeoDrillDown(event: { reportType: KalturaReportType, drillDown: string[] }): void {
-    let update: Partial<ExportItem> = { reportType: event.reportType, additionalFilters: {} };
-
-    if (event.drillDown && event.drillDown.length > 0) {
-      update.additionalFilters.countryIn = event.drillDown[0];
-    }
-
-    if (event.drillDown && event.drillDown.length > 1) {
-      update.additionalFilters.regionIn = event.drillDown[1];
-    }
-
-    this._exportConfig = VirtualEventExportConfig.updateConfig(this._exportConfigService.getConfig(this._viewConfig), 'geo', update);
+  public onRegistrationDataLoaded(event: { unregistered: number, participated: number }): void {
+    debugger;
   }
 
   public exportReport(event: { type: string, id: string }): void {

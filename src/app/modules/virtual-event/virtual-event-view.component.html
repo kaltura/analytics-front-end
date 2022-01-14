@@ -26,6 +26,7 @@
             </div>
             <app-date-filter #dateFilter *ngIf="_creationDate" [class.noTitle]="!_viewConfig.title"
                              name="virtual-event"
+                             [creationDateLabels]="_creationDateLabels"
                              [dateRange]="_dateRange"
                              [selectedTimeUnit]="_timeUnit"
                              [showCompare]="false"
@@ -58,8 +59,15 @@
                         (filterChange)="_onRefineFilterChange($event)"></app-ve-filter>
 
 
-<!--        <div *ngIf="_miniViewsCount && _categoryLoaded" class="kReportContainer kTabletPadding">-->
-<!--          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide" [class.short]="categoryFilter.contextSelected">-->
+        <div *ngIf="_virtualEventLoaded" class="kReportContainer kTabletPadding">
+          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide">
+            <app-registration-funnel [dateFilter]="_dateFilter"
+                                     [refineFilter]="_refineFilter"
+                                     [virtualEventId]="_virtualEventId"
+                                     (registrationDataLoaded)="onRegistrationDataLoaded($event)">
+            </app-registration-funnel>
+          </div>
+        </div>
 <!--            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"-->
 <!--                                          [categoryId]="_category?.id.toString()"-->
 <!--                                          [refineFilter]="_refineFilter"></app-category-mini-highlights>-->

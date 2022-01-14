@@ -23,6 +23,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() name = 'default';
   @Input() showHours = true;
   @Input() showMonthsAndYears = true;
+  @Input() creationDateLabels = {label: null, prefix: null};
 
   @Input() set dateRangeType(value: DateRangeType) {
     if (!isNaN(value)) {
@@ -164,6 +165,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     this._browserService.updateCurrentQueryParams(params);
     this._initCurrentFilterFromEventParams(params);
     this.sinceDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'since', this.showMonthsAndYears, this._creationDate, this._firstBroadcastDate, this._lastBroadcastDate);
+    if (this.creationDateLabels.label !== null) {
+      this.sinceDateRangeItems[0].label = this.creationDateLabels.label;
+    }
     this.lastDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'last', this.showMonthsAndYears);
     this.currDateRangeItems = this._dateFilterService.getDateRange(this._dateRangeType, 'current', this.showMonthsAndYears);
     this.selectedDateRange = this.lastSelectedDateRange = this._dateRange;
@@ -279,7 +283,11 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       this.startDate = dates.startDate;
       this.endDate = dates.endDate;
       this._dateRangeLabel = dates.label;
-      this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(this.lastSelectedDateRange, null));
+      if (this.lastSelectedDateRange === DateRanges.SinceCreation && this.creationDateLabels.prefix !== null) {
+        this._dateRangePrefix = this.creationDateLabels.prefix;
+      } else {
+        this._dateRangePrefix = this._translate.instant(DateFilterUtils.getDatesLabelPrefix(this.lastSelectedDateRange, null));
+      }
     } else {
       this.startDate = this.specificDateRange[0];
       this.endDate = this.specificDateRange[1];

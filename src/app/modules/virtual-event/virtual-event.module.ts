@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {VirtualEventViewComponent} from "./virtual-event-view.component";
 import {VirtualEventFilterComponent} from "./filter/filter.component";
+import {RegistrationFunnelComponent} from "./views/registration-funnel/registration-funnel.component";
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import {VirtualEventFilterComponent} from "./filter/filter.component";
   ],
   declarations: [
     VirtualEventViewComponent,
-    VirtualEventFilterComponent
+    VirtualEventFilterComponent,
+    RegistrationFunnelComponent
   ],
   exports: [],
   providers: []

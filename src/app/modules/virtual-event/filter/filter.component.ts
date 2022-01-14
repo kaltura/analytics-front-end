@@ -53,7 +53,7 @@ export class VirtualEventFilterComponent extends FilterComponent {
   @Input() set virtualEvent(value: KalturaVirtualEvent) {
     if (value) {
       this.filterConfig = {
-        items: [{property: 'eventIdsIn', value: value.id.toString()}]
+        items: [{property: 'virtualEventIdIn', value: value.id.toString()}]
       };
     }
   }

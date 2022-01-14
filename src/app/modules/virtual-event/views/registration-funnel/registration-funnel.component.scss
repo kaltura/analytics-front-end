@@ -1,0 +1,62 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  width: 50%;
+  height: 100%;
+}
+.kCharts{
+  display: flex;
+  .kChart{
+    height: 360px !important;
+    width: 100%;
+  }
+}
+
+.kData{
+  width: 78%;
+  position: absolute;
+  margin-top: 10px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 24px;
+  .kDataContainer{
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid $kGrayscale6;
+    display: flex;
+    flex-direction: column;
+    &:first-child {
+      border-top: none;
+    }
+  }
+  .kValue{
+    font-size: 24px;
+    color: $kGrayscale1;
+    font-weight: 700;
+    line-height: 52px;
+  }
+  .kLabel{
+    font-size: 16px;
+    color: $kGrayscale1;
+  }
+}
+.kPlaythrough{
+  margin-left: 24px;
+  position: absolute;
+  top: 288px;
+}
+:host ::ng-deep p-dropdown{
+  .ui-dropdown {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 84px !important;
+    min-width: 84px !important;
+  }
+
+  .ui-state-focus {
+    // margin-top: 4px;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
+}
