@@ -1,7 +1,7 @@
 import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angular/core';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
@@ -17,7 +17,6 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import {TableRow} from "shared/utils/table-local-sort-handler";
 
 export type funnelData = {
   registered: number;
@@ -93,7 +92,6 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
               private _translate: TranslateService,
-              private _authService: AuthService,
               private _dataConfigService: RegistrationFunnelDataConfig,
               private _browserService: BrowserService) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -198,7 +196,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   private handleTotals(totals: KalturaReportTotal): void {
     this._setEchartsOption({ series: [{ width: '45%' }] }, false);
     this._setEchartsOption({ series: [{ left: '50%' }] }, false);
-    const data = ["1000","700","380","220","0","13"];//totals.data.split(analyticsConfig.valueSeparator);
+    const data = totals.data.split(analyticsConfig.valueSeparator); // ["1000","700","380","220","0","13"];
     this._funnelData = {
       registered: data[0].length ? parseInt(data[0]) : 0,
       confirmed: data[1].length ? parseInt(data[1]) : 0,
