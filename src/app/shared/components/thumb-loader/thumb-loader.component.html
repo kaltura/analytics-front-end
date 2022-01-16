@@ -1,4 +1,4 @@
 <div class="kThumbnailHolder" #holder [class.kDisabled]="disabled" [style.width.px]="width" [style.height.px]="height" (click)="_onClick()" (mouseenter)="_onMouseEnter($event)" (mouseleave)="_onMouseLeave($event)">
-  <img [style.width.px]="width" *ngIf="thumbnailUrl" [src]="thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=thumbnailUrl+'/ks/'+ _ks" alt="Image entry">
-  <img [style.width.px]="width" #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error');_onError()">
+  <img *ngIf="!_loadThumbnailWithKs && thumbnailUrl" [style.width.px]="width" [src]="thumbnailUrl" alt="Image entry">
+  <img *ngIf="_loadThumbnailWithKs && thumbnailUrl && _ks" [style.width.px]="width" #thumbks [src]="thumbnailUrl+'/ks/'+ _ks" (error)="holder.classList.add('error');_onError()"  alt="Image entry">
 </div>

@@ -18,6 +18,8 @@ import {of as ObservableOf} from "rxjs";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import {AnalyticsPermissionsService} from "shared/analytics-permissions/analytics-permissions.service";
+import {AnalyticsPermissions} from "shared/analytics-permissions/analytics-permissions";
 
 @Component({
   selector: 'app-video-entry-preview',
@@ -54,6 +56,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
   public _playProgress = 0;
   public _duration = 0;
   public _currentTime = 0;
+  public _loadThumbnailWithKs = false;
 
   public _chartOptions = {};
 
@@ -70,9 +73,11 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
+              private _permissionsService: AnalyticsPermissionsService,
               private _dataConfigService: EntryPreviewConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
+    this._loadThumbnailWithKs = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS);
   }
 
   ngOnInit() {

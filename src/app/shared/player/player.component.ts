@@ -43,6 +43,9 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	@Input()
 	fillHeight = false;
 
+	@Input()
+	loadThumbnailWithKs = false;
+
 	@Output()
 	kalturaPlayerReady = new EventEmitter<any>();
 
@@ -88,6 +91,9 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
       this.flashvars['kAnalony'] = {"plugin": false};
       this.flashvars['liveAnalytics'] = {"plugin": false};
       this.flashvars['statistics'] = {"plugin": false};
+    }
+    if (this.loadThumbnailWithKs) {
+      this.flashvars['loadThumbnailWithKs'] = true;
     }
 		window['kWidget'].embed({
 			"targetId": "kaltura_player_" + this.id,

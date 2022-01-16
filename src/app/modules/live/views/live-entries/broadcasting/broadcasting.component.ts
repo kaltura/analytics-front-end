@@ -9,6 +9,8 @@ import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils
 import { analyticsConfig, buildCDNUrl } from "configuration/analytics-config";
 import { FrameEventManagerService, FrameEvents } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import * as moment from "moment";
+import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 @Component({
   selector: 'app-live-entries-broadcasting',
@@ -29,6 +31,8 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   public uiconfid: number;
   public ks: string;
   public cdnUrl: string;
+  public poster = '';
+  public _loadThumbnailWithKs = false;
 
   private reportIntervalId = null;
   private timeUpdateIntervalId = null;
@@ -39,9 +43,11 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
               private _navigationDrillDownService: NavigationDrillDownService,
               private _frameEventManager: FrameEventManagerService,
               private _authService: AuthService,
+              private _permissionsService: AnalyticsPermissionsService,
               private _errorsManager: ErrorsManagerService) {
     this.ks = this._authService.ks;
     this.uiconfid = analyticsConfig.kalturaServer.previewUIConfV7;
+    this._loadThumbnailWithKs = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS);
     this.cdnUrl = buildCDNUrl('');
   }
 
