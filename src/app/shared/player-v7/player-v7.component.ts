@@ -37,6 +37,12 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	@Input()
 	id = "";
 
+  @Input()
+  poster = '';
+
+  @Input()
+  loadThumbnailWithKs = false;
+
 	constructor() {
 	  if (!this.id.length) {
 	    this.id = Math.random().toString().split('.')[1];
@@ -76,7 +82,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 
 	private doEmbed(): void {
     try {
-      const kalturaPlayer = window["KalturaPlayer"].setup({
+      let playerConfig = {
         targetId: "kaltura_player_" + this.id,
         plugins: {
           kava: {
@@ -92,7 +98,11 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
           autoplay: this.autoPlay,
           muted: this.muted
         }
-      });
+      };
+      if (this.loadThumbnailWithKs && this.poster.length) {
+        playerConfig = Object.assign(playerConfig, {sources: {poster: `${this.poster}/ks/${this.ks}`}});
+      }
+      const kalturaPlayer = window["KalturaPlayer"].setup(playerConfig);
       kalturaPlayer.loadMedia({entryId: this.entryid});
     } catch (e) {
       console.error(e.message);

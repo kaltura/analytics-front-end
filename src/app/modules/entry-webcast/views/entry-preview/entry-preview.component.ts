@@ -1,6 +1,6 @@
 import { Component, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { CompareService } from 'shared/services/compare.service';
@@ -13,11 +13,12 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { KalturaPlayerComponent } from 'shared/player';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
-import {map, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {Observable, of as ObservableOf} from "rxjs";
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
+import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 @Component({
   selector: 'app-webcast-entry-preview',
@@ -39,6 +40,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
   private _reportType = reportTypeMap(KalturaReportType.percentiles);
   private _liveReportType = reportTypeMap(KalturaReportType.engagmentTimelineWebcast);
 
+  public _loadThumbnailWithKs = false;
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'preview';
 
@@ -77,11 +79,13 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
               private zone: NgZone,
               private _reportService: ReportService,
               private _compareService: CompareService,
+              private _permissionsService: AnalyticsPermissionsService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _dataConfigService: EntryPreviewConfig) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
+    this._loadThumbnailWithKs = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS);
   }
 
   ngOnInit() {

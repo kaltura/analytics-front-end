@@ -17,7 +17,7 @@
         </div>
         <app-k-player *ngIf="!isLive && entryId.length" #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
                       [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid"
-                      [flashvars]="_playerConfig.flashvars" [lazy]="true"
+                      [flashvars]="_playerConfig.flashvars" [lazy]="true" [loadThumbnailWithKs]="_loadThumbnailWithKs"
                       (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player>
 
       </div>
