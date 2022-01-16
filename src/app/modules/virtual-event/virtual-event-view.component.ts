@@ -50,6 +50,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _virtualEventId = null;
   public _creationDateLabels = {label: null, prefix: null};
 
+  public _insights: { turnout: string, countries: string[], countriesCount: number, unregistered: number } =  { turnout: '0', countries: [], countriesCount: 0, unregistered: 0 };
+
   constructor(private _router: Router,
               private _translate: TranslateService,
               private _route: ActivatedRoute,
@@ -127,7 +129,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   }
 
   public onRegistrationDataLoaded(event: { unregistered: number, participated: number }): void {
-    debugger;
+    this._insights.turnout = event.participated.toFixed(2);
+    this._insights.unregistered = event.unregistered;
   }
 
   public exportReport(event: { type: string, id: string }): void {

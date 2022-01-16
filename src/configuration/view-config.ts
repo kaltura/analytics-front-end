@@ -198,7 +198,8 @@ export const viewsConfig = {
     refineFilter: {
       geo: {}
     },
-    miniHighlights: {}
+    miniFunnel: {},
+    miniInsights: {}
   },
   entryWebcast: {
     export: {},

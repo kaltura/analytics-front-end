@@ -59,14 +59,19 @@
                         (filterChange)="_onRefineFilterChange($event)"></app-ve-filter>
 
 
-        <div *ngIf="_virtualEventLoaded" class="kReportContainer kTabletPadding">
-          <div *ngIf="_viewConfig.miniHighlights" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportWide">
+        <div *ngIf="_virtualEventLoaded" class="kReportContainer">
+          <div *ngIf="_viewConfig.miniFunnel" class="kMiniReportContainer">
             <app-registration-funnel [dateFilter]="_dateFilter"
                                      [refineFilter]="_refineFilter"
                                      [virtualEventId]="_virtualEventId"
                                      (registrationDataLoaded)="onRegistrationDataLoaded($event)">
             </app-registration-funnel>
           </div>
+          <div *ngIf="_viewConfig.miniInsights" class="kMiniReportContainer kMiniTopReportContainer">
+            <app-ve-mini-insights [data]="_insights">
+            </app-ve-mini-insights>
+          </div>
+
         </div>
 <!--            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"-->
 <!--                                          [categoryId]="_category?.id.toString()"-->

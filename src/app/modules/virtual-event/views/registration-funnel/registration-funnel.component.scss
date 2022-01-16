@@ -2,13 +2,17 @@
 
 :host {
   display: block;
-  width: 50%;
   height: 100%;
+}
+.kFunnel {
+  height: 100%;
+  padding-top: 12px;
 }
 .kCharts{
   display: flex;
+  padding-right: 16px;
   .kChart{
-    height: 360px !important;
+    height: 436px !important;
     width: 100%;
   }
 }
@@ -17,7 +21,7 @@
   width: 78%;
   position: absolute;
   margin-top: 10px;
-  height: 340px;
+  height: 416px;
   display: flex;
   flex-direction: column;
   padding-left: 24px;

@@ -1072,7 +1072,10 @@
       "confirmed": "Confirmed",
       "confirmed_tt": "Confirmed the registration email.",
       "participated": "Participated",
-      "participated_tt": "Showed up for the event."
+      "participated_tt": "Showed up for the event.",
+      "turnout": "Turnout",
+      "turnout_tt": "Participation rate.",
+      "unregistered": "Unregistered"
     },
     "playlist": {
       "count_loads": "Player Impressions",
