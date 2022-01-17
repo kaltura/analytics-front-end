@@ -199,7 +199,8 @@ export const viewsConfig = {
       geo: {}
     },
     miniFunnel: {},
-    miniInsights: {}
+    miniInsights: {},
+    miniDevices: {}
   },
   entryWebcast: {
     export: {},

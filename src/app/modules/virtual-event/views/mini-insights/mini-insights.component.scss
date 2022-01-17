@@ -7,9 +7,11 @@
   font-size: 13px;
   font-weight: 700;
 }
-
 .kMini{
   height: 100%;
+  .kReportContent {
+    padding-bottom: 8px;
+  }
   .kVal{
     display: flex;
     align-items: center;
@@ -23,13 +25,11 @@
       margin-left: 12px;
     }
     .kCountriesLables{
-      margin-left: 12px;
-      &.oneCountry {
-        margin-left: 24px;
-      }
-      &.noCountries {
-        margin-left: 56px;
-      }
+      margin-left: 24px;
+    }
+    .icon-globe {
+      font-size: 30px;
+      color: #888888;
     }
     .kMiniIcon{
       flex: 0 0 auto;

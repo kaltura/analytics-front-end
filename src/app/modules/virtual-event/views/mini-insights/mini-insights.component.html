@@ -14,9 +14,10 @@
       </div>
 
       <div class="kVal">
+        <i *ngIf="data.countries.length === 0" class="icon-globe"></i>
         <i *ngIf="data.countries.length" class="kFlag flag1" [ngClass]="'kFlag-' + data.countries[0]"></i>
         <i *ngIf="data.countries.length > 1" class="kFlag flag2" [ngClass]="'kFlag-' + data.countries[1]"></i>
-        <div class="kLabels kCountriesLables" [class.noCountries]="data.countriesCount === 0" [class.oneCountry]="data.countriesCount === 1" [ngStyle]="data.countries.length > 1 ? {'paddingLeft': '12px'} : {}">
+        <div class="kLabels kCountriesLables">
           <span class="value">{{data.countriesCount | numberFormat}}</span>
           <span class="title">{{'app.entryWebcast.highlights.countries' | translate }}</span>
         </div>

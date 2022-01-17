@@ -18,13 +18,20 @@
   flex-wrap: wrap;
   .kMiniReportContainer{
     height: 460px;
-    width: calc(50% - 8px);
+    width: calc(50% - 12px);
     flex: 1 1 auto;
     &:first-child {
-      margin-right: 16px;
+      margin-right: 24px;
     }
     &.kMiniTopReportContainer{
       height: 184px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      ::ng-deep app-devices-overview .kNoResults {
+        height: 190px;
+      }
     }
   }
   .kMiniTopReportSmall{

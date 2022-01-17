@@ -51,6 +51,8 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
   @Input() categoryId: string = null;
   @Input() playlistId: string = null;
   @Input() entryId: string = null;
+  @Input() virtualEventId: string = null;
+  @Input() reportType: KalturaReportType = null;
   @Input() colorScheme = 'default';
 
   public _dateFilter: DateChangeEvent;
@@ -58,7 +60,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
 
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
-  private _reportType = reportTypeMap(KalturaReportType.platforms);
+  private _reportType: KalturaReportType = null;
   private _tabsData: Tab[] = [];
   private _compareTabsData: Tab[] = [];
 
@@ -93,7 +95,6 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
               private _dataConfigService: DevicesOverviewConfig,
               private _trendService: TrendService) {
     super();
-
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
   }
@@ -130,10 +131,14 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
     this._blockerMessage = null;
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
-
+    this._reportType = this.reportType ? reportTypeMap(this.reportType) : reportTypeMap(KalturaReportType.platforms);
 
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
+    }
+
+    if (this.virtualEventId) {
+      this._filter.virtualEventIdIn = this.virtualEventId;
     }
 
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
@@ -161,6 +166,10 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
 
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
+          }
+
+          if (this.virtualEventId) {
+            this._compareFilter.virtualEventIdIn = this.virtualEventId;
           }
 
           if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {

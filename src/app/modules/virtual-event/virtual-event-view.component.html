@@ -67,9 +67,16 @@
                                      (registrationDataLoaded)="onRegistrationDataLoaded($event)">
             </app-registration-funnel>
           </div>
-          <div *ngIf="_viewConfig.miniInsights" class="kMiniReportContainer kMiniTopReportContainer">
-            <app-ve-mini-insights [data]="_insights">
-            </app-ve-mini-insights>
+          <div *ngIf="_viewConfig.miniInsights" class="kMiniReportContainer kMiniReportContainer">
+            <div class="col">
+              <app-ve-mini-insights [data]="_insights">
+              </app-ve-mini-insights>
+              <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices"
+                                    [refineFilter]="_refineFilter"
+                                    [virtualEventId]="_virtualEventId"
+                                    [reportType]="_devicesReportType">
+              </app-devices-overview>
+            </div>
           </div>
 
         </div>

@@ -196,7 +196,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   private handleTotals(totals: KalturaReportTotal): void {
     this._setEchartsOption({ series: [{ width: '50%' }] }, false);
     this._setEchartsOption({ series: [{ left: '50%' }] }, false);
-    const data =  ["1000","700","380","220","0","13"];
+    const data =  totals.data.split(analyticsConfig.valueSeparator); // ["1000","700","380","220","0","13"];
     this._funnelData = {
       registered: data[0].length ? parseInt(data[0]) : 0,
       confirmed: data[1].length ? parseInt(data[1]) : 0,

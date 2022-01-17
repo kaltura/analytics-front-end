@@ -21,6 +21,7 @@ import { FrameEventManagerService } from "shared/modules/frame-event-manager/fra
 import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
 import {TranslateService} from "@ngx-translate/core";
+import {reportTypeMap} from "shared/utils/report-type-map";
 
 @Component({
   selector: 'app-virtual-event',
@@ -48,6 +49,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _virtualEvent: KalturaVirtualEvent;
   public _virtualEventId = null;
+  public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
 
   public _insights: { turnout: string, countries: string[], countriesCount: number, unregistered: number } =  { turnout: '0', countries: [], countriesCount: 0, unregistered: 0 };
