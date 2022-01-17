@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
 import { analyticsConfig, getKalturaServerUri } from "configuration/analytics-config";
 import { AuthService } from "shared/services";
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
+import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
 
 @Component({
   selector: 'app-live-player',
@@ -12,7 +14,7 @@ export class LivePlayerComponent {
   @Output() liveStatusChange = new EventEmitter<boolean>();
 
   public serverUri = getKalturaServerUri();
-  public partnerID = this._authService.pid;
+  public partnerID = parseInt(this._authService.pid);
   public UIConfID = analyticsConfig.kalturaServer.previewUIConf;
   public flashvars = {
     "autoPlay": true,
@@ -24,8 +26,13 @@ export class LivePlayerComponent {
       "plugin": false
     }
   };
+  public _loadThumbnailWithKs = false;
 
-  constructor(private _authService: AuthService, private zone: NgZone) {}
+  constructor(private _authService: AuthService,
+              private zone: NgZone,
+              private _permissionsService: AnalyticsPermissionsService) {
+    this._loadThumbnailWithKs = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS);
+  }
 
   public _onPlayerReady(player): void {
     const playerInstance = player;
