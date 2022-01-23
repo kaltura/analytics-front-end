@@ -13,7 +13,9 @@
 app-location-filters ::ng-deep app-dropdown-filter{
   margin-right: 0;
 }
-
+app-checkboxes-list-filter {
+  width: 35%;
+}
 .kRefineFilters {
   width: 100%;
   height: auto;

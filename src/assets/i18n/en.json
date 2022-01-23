@@ -12,6 +12,13 @@
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",
       "categories": "Categories",
+      "origin": {
+        "title": " Registration Origin",
+        "Registration": "Registration",
+        "Invitation": "Invitation",
+        "Webhook": "Webhook",
+        "SSO": "SSO"
+      },
       "mediaType": {
         "title": "Media Type",
         "Video": "Video",

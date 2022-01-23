@@ -196,6 +196,7 @@ export const viewsConfig = {
     export: {},
     details: {},
     refineFilter: {
+      origin: {},
       geo: {}
     },
     miniFunnel: {},

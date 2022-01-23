@@ -20,6 +20,13 @@
       <div class="kFilterContainer kOverrideFAIcons">
         <div class="kFilterContainerRow">
 
+          <app-checkboxes-list-filter *ngIf="_viewConfig?.origin"
+                                      [label]="'app.filters.origin.title' | translate"
+                                      [options]="_origins"
+                                      [selectedFilters]="_selectedValues['origin']"
+                                      (itemSelected)="_onItemSelected($event, 'origin')"
+                                      (itemUnselected)="_onItemUnselected($event, 'origin')"></app-checkboxes-list-filter>
+
           <app-country-filter *ngIf="_viewConfig.geo"
                               [dateFilter]="_dateFilter"
                               [filterConfig]="filterConfig"

@@ -181,6 +181,13 @@ export class FilterComponent {
     { value: 'Image', label: 'app.filters.mediaType.Image' },
   ];
 
+  public _origins: OptionItem[] = [
+    { value: 'Registration', label: 'app.filters.origin.Registration' },
+    { value: 'Invitation', label: 'app.filters.origin.Invitation' },
+    { value: 'SSO', label: 'app.filters.origin.SSO' },
+    { value: 'Webhook', label: 'app.filters.origin.Webhook' }
+  ];
+
   public _playbackTypes: OptionItem[] = [
     { value: 'dvr', label: 'app.filters.playbackType.dvr' },
     { value: 'live', label: 'app.filters.playbackType.live' },
@@ -206,6 +213,7 @@ export class FilterComponent {
       'playbackType': [],
       'entrySources': [],
       'categories': [],
+      'origin': [],
       'tags': [],
       'devices': [],
       'browser': [],
@@ -226,6 +234,7 @@ export class FilterComponent {
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
+        case 'origin':
         case 'playbackType':
         case 'entrySources':
           label = this._translate.instant(`app.filters.${type}.${value}`);

@@ -68,11 +68,4 @@ export class VirtualEventFilterComponent extends FilterComponent {
     super._apply(forceApply);
   }
 
-  public _onItemSelected(item: any, type: string): void {
-    if (type === 'context') {
-      item.name = this._translate.instant('app.category.contextCategory');
-    }
-    super._onItemSelected(item, type);
-  }
-
 }
