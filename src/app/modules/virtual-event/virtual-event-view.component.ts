@@ -52,7 +52,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
 
-  public _insights: { turnout: string, countries: string[], countriesCount: number, unregistered: number } =  { turnout: '0', countries: [], countriesCount: 0, unregistered: 0 };
+  public _insights: { countries: string[], countriesCount: number, unregistered: number } =  { countries: [], countriesCount: 0, unregistered: 0 };
 
   constructor(private _router: Router,
               private _translate: TranslateService,
@@ -130,8 +130,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         });
   }
 
-  public onRegistrationDataLoaded(event: { unregistered: number, participated: number }): void {
-    this._insights.turnout = event.participated.toFixed(2);
+  public onRegistrationDataLoaded(event: { unregistered: number }): void {
     this._insights.unregistered = event.unregistered;
   }
 

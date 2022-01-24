@@ -20,7 +20,6 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export type funnelData = {
   registered: number;
-  confirmed: number;
   participated: number;
 };
 
@@ -62,7 +61,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
   @Input() virtualEventId: string;
 
-  @Output() registrationDataLoaded = new EventEmitter<{ unregistered: number, participated: number }>();
+  @Output() registrationDataLoaded = new EventEmitter<{ unregistered: number }>();
 
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -73,6 +72,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   public _chartLoaded = false;
   public _currentDates: string;
   public _funnelData: funnelData;
+  public turnout = '0';
 
   private _componentId = 'registration-funnel';
 
@@ -133,19 +133,14 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   public updateFunnel(): void {
-    const confirmed = this._funnelData.registered === 0 ? '0' : (this._funnelData.confirmed / this._funnelData.registered * 100).toFixed(1);
-    const participated = this._funnelData.registered === 0 ? '0' : (this._funnelData.participated / this._funnelData.registered * 100).toFixed(1);
+    const participated = this._funnelData.registered === 0 ? '0' : Math.round(this._funnelData.participated / this._funnelData.registered * 100).toFixed(0);
 
     this._setEchartsOption({
       series: [{
         data: [
           {
             value: this._funnelData.registered === 0 ? 0 : 100,
-            name: this._translate.instant('app.ve.registered')
-          },
-          {
-            value: Math.round(parseFloat(confirmed)),
-            name: this._translate.instant('app.ve.confirmed')
+            name: this._translate.instant('app.ve.all')
           },
           {
             value: Math.round(parseFloat(participated)),
@@ -154,7 +149,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
         ]
       }]
     }, false);
-    this._setEchartsOption({ color: [getColorPalette()[2], getColorPalette()[4], getColorPalette()[7]] });
+    this._setEchartsOption({ color: [getColorPalette()[2], getColorPalette()[4]] });
   }
 
   private _loadReport(): void {
@@ -196,16 +191,17 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   private handleTotals(totals: KalturaReportTotal): void {
     this._setEchartsOption({ series: [{ width: '50%' }] }, false);
     this._setEchartsOption({ series: [{ left: '50%' }] }, false);
-    const data =  totals.data.split(analyticsConfig.valueSeparator); // ["1000","700","380","220","0","13"];
+    const data =  ["1010","700","380","440","3","13", "30", "100"]; // totals.data.split(analyticsConfig.valueSeparator);
+    const all = parseInt(data[0]) + parseInt(data[6]); // registered + invited
     this._funnelData = {
-      registered: data[0].length ? parseInt(data[0]) : 0,
-      confirmed: data[1].length ? parseInt(data[1]) : 0,
-      participated: data[3].length ? parseInt(data[3]) : 0
+      registered: all,
+      participated: parseInt(data[3])
     };
     // dispatch event for other widgets
     const unregistered = data[5].length ? parseInt(data[5]) : 0;
-    const participated = this._funnelData.registered === 0 ? 0 : this._funnelData.participated / this._funnelData.registered * 100;
-    this.registrationDataLoaded.emit({unregistered, participated});
+    const participated = all === 0 ? 0 : Math.round(this._funnelData.participated / all * 100);
+    this.turnout = participated.toFixed(0);
+    this.registrationDataLoaded.emit({unregistered});
     // update funnel graph
     this.updateFunnel();
   }
@@ -219,7 +215,12 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   private getChartTooltip(params): string {
-    return this._currentDates + `<span style="color: #333333"><br/><b>${params.data.name}: ${params.data.value}%</b></span>`;
+    if (params.data.value === 100) {
+      const dropoff = this.turnout.includes('.') ? (100 - parseFloat(this.turnout)).toFixed(2) + "%" : 100 - parseInt(this.turnout) + "%";
+      return `<span style="color: #333333"><b>${dropoff} ${this._translate.instant('app.ve.dropoff')}</b><br/><b>${this._funnelData.registered.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+    } else {
+      return `<span style="color: #333333"><b>${this.turnout}% ${this._translate.instant('app.ve.turnout2')}</b><br/><b>${this._funnelData.participated.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+    }
   }
 
   private _updateFilter(): void {

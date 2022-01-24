@@ -17,11 +17,12 @@
   display: flex;
   flex-wrap: wrap;
   .kMiniReportContainer{
-    height: 460px;
+    height: 410px;
     width: calc(50% - 12px);
     flex: 1 1 auto;
     &:first-child {
       margin-right: 24px;
+      height: 400px;
     }
     &.kMiniTopReportContainer{
       height: 184px;

@@ -12,16 +12,37 @@
   display: flex;
   padding-right: 16px;
   .kChart{
-    height: 436px !important;
+    height: 324px !important;
     width: 100%;
+    margin-bottom: 0px;
   }
 }
-
-.kData{
-  width: 78%;
+.kTurnout {
+  height: 62px;
+  display: flex;
+  align-items: flex-end;
+  width: calc(100% - 48px);
+  margin-left: 24px;
+  margin-right: 24px;
+  padding-bottom: 22px;
+  box-sizing: border-box;
+  border-bottom: 1px solid $kGrayscale6;
+  .kValue{
+    font-size: 24px;
+    color: $kGrayscale1;
+    font-weight: 700;
+  }
+  .kLabel{
+    font-size: 16px;
+    color: $kGrayscale1;
+    margin-left: 8px;
+  }
+}
+.kData {
+  width: 70%;
   position: absolute;
-  margin-top: 10px;
-  height: 416px;
+  margin-top: 61px;
+  height: 318px;
   display: flex;
   flex-direction: column;
   padding-left: 24px;
@@ -31,6 +52,9 @@
     border-top: 1px solid $kGrayscale6;
     display: flex;
     flex-direction: column;
+    .kFilters {
+      height: auto;
+    }
     &:first-child {
       border-top: none;
     }

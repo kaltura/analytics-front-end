@@ -49,6 +49,12 @@ export class RegistrationFunnelDataConfig extends ReportDataBaseConfig implement
           },
           'unregistered': {
             format: value => ReportHelper.numberOrNA(value)
+          },
+          'invited': {
+            format: value => ReportHelper.numberOrNA(value)
+          },
+          'created': {
+            format: value => ReportHelper.numberOrNA(value)
           }
         }
       }
@@ -76,10 +82,10 @@ export class RegistrationFunnelDataConfig extends ReportDataBaseConfig implement
           name: 'Registration',
           type: 'funnel',
           left: '65%',
-          top: 10,
-          bottom: 10,
+          top: 0,
+          bottom: 0,
           width: '30%',
-          height: 416,
+          height: 314,
           min: 0,
           max: 100,
           minSize: '0%',

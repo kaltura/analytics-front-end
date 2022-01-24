@@ -13,7 +13,7 @@ export class VEMiniInsightsComponent {
 
   protected _componentId = 've-mini-insights';
 
-  @Input() data: { turnout: string, countries: string[], countriesCount: number, unregistered: number } =  { turnout: '0', countries: [], countriesCount: 0, unregistered: 0 };
+  @Input() data: { countries: string[], countriesCount: number, unregistered: number } =  { countries: [], countriesCount: 0, unregistered: 0 };
 
   constructor() {
   }

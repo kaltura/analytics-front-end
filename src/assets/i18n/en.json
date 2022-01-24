@@ -1074,15 +1074,19 @@
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
     "ve": {
+      "all": "All attendees",
       "registered": "Registered",
-      "registered_tt": "Completed the registration form.",
+      "registered_tt": "Registered and invited attendees.",
       "confirmed": "Confirmed",
       "confirmed_tt": "Confirmed the registration email.",
       "participated": "Participated",
-      "participated_tt": "Showed up for the event.",
-      "turnout": "Turnout",
+      "participated_tt": "Attendees who showed up for the event.",
+      "turnout": "Overall Turnout",
       "turnout_tt": "Participation rate.",
-      "unregistered": "Unregistered"
+      "unregistered": "Unregistered",
+      "turnout2": "Turnout",
+      "dropoff": "Drop-off",
+      "attendees": "Attendees"
     },
     "playlist": {
       "count_loads": "Player Impressions",
