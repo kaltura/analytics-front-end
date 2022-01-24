@@ -70,7 +70,6 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _chartData: EChartOption = {};
   public _chartLoaded = false;
-  public _currentDates: string;
   public _funnelData: funnelData;
   public turnout = '0';
 
@@ -156,7 +155,6 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
-    this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + DateFilterUtils.getMomentDate(this._dateFilter.endDate).format('MMM D, YYYY');
 
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
 
@@ -191,7 +189,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   private handleTotals(totals: KalturaReportTotal): void {
     this._setEchartsOption({ series: [{ width: '50%' }] }, false);
     this._setEchartsOption({ series: [{ left: '50%' }] }, false);
-    const data =  ["1010","700","380","440","3","13", "30", "100"]; // totals.data.split(analyticsConfig.valueSeparator);
+    const data = totals.data.split(analyticsConfig.valueSeparator); // ["1010","700","380","440","3","13", "30", "100"];
     const all = parseInt(data[0]) + parseInt(data[6]); // registered + invited
     this._funnelData = {
       registered: all,

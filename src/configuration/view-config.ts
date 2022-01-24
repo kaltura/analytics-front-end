@@ -201,7 +201,8 @@ export const viewsConfig = {
     },
     miniFunnel: {},
     miniInsights: {},
-    miniDevices: {}
+    miniDevices: {},
+    status : {}
   },
   entryWebcast: {
     export: {},

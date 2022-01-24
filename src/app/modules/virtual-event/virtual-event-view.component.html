@@ -78,7 +78,13 @@
               </app-devices-overview>
             </div>
           </div>
+        </div>
 
+        <div *ngIf="_viewConfig.status" class="kReportContainer">
+          <app-status [dateFilter]="_dateFilter"
+                      [refineFilter]="_refineFilter"
+                      [virtualEventId]="_virtualEventId">
+          </app-status>
         </div>
 <!--            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"-->
 <!--                                          [categoryId]="_category?.id.toString()"-->

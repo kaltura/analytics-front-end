@@ -16,6 +16,7 @@ import {VirtualEventViewComponent} from "./virtual-event-view.component";
 import {VirtualEventFilterComponent} from "./filter/filter.component";
 import {RegistrationFunnelComponent} from "./views/registration-funnel/registration-funnel.component";
 import {VEMiniInsightsComponent} from "./views/mini-insights/mini-insights.component";
+import {StatusComponent} from "./views/status/status.component";
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import {VEMiniInsightsComponent} from "./views/mini-insights/mini-insights.compo
     VirtualEventViewComponent,
     VirtualEventFilterComponent,
     RegistrationFunnelComponent,
-    VEMiniInsightsComponent
+    VEMiniInsightsComponent,
+    StatusComponent
   ],
   exports: [],
   providers: []

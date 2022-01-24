@@ -1,0 +1,31 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.kHeader {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  padding-bottom: 0px;
+  .kTitle {
+    font-size: 20px;
+    color: $kGrayscale1;
+    font-weight: 700;
+  }
+  .kLabel {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+}
+.kCharts{
+  display: flex;
+  .kChart{
+    height: 328px !important;
+    width: 100%;
+    margin-bottom: 0px;
+  }
+}

@@ -1076,6 +1076,7 @@
     "ve": {
       "all": "All attendees",
       "registered": "Registered",
+      "invited": "Invited",
       "registered_tt": "Registered and invited attendees.",
       "confirmed": "Confirmed",
       "confirmed_tt": "Confirmed the registration email.",
@@ -1086,7 +1087,9 @@
       "unregistered": "Unregistered",
       "turnout2": "Turnout",
       "dropoff": "Drop-off",
-      "attendees": "Attendees"
+      "attendees": "Attendees",
+      "status": "Attendees status",
+      "evolution": "Evolution of cumulated attendee’s statuses over time"
     },
     "playlist": {
       "count_loads": "Player Impressions",
