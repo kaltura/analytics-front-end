@@ -16,6 +16,51 @@
         </div>
       </div>
 
+      <div class="kTable" *ngIf="_tableData.length">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <p-table appScrollTopOnPaging
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortField]="_sortField"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of _columns" [pSortableColumn]="col">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.ve.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.ve.' + col | translate}}
+                    </span>
+                    <p-sortIcon [field]="col"></p-sortIcon>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+              <tr>
+                <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                  <ng-container>
+                    <span *ngIf="i===0">{{data[col]}}</span>
+                    <span *ngIf="i>0">{{data[col]}}</span>
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
     </div>
 
   </k-area-blocker>

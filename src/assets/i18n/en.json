@@ -1090,7 +1090,8 @@
       "attendees": "Attendees",
       "status": "Attendees status",
       "evolution": "Evolution of cumulated attendee’s statuses over time",
-      "peak": "Peak Day"
+      "peak": "Peak Day",
+      "date_id": "Days"
     },
     "playlist": {
       "count_loads": "Player Impressions",
