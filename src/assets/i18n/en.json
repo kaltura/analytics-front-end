@@ -1089,7 +1089,8 @@
       "dropoff": "Drop-off",
       "attendees": "Attendees",
       "status": "Attendees status",
-      "evolution": "Evolution of cumulated attendee’s statuses over time"
+      "evolution": "Evolution of cumulated attendee’s statuses over time",
+      "peak": "Peak Day"
     },
     "playlist": {
       "count_loads": "Player Impressions",

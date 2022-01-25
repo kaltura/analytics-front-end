@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {ErrorsManagerService, ReportConfig, ReportService} from 'shared/services';
+import {ErrorsManagerService, Report, ReportConfig, ReportService} from 'shared/services';
 import {
+  KalturaAPIException,
   KalturaEndUserReportInputFilter,
   KalturaFilterPager,
   KalturaReportGraph,
@@ -9,7 +10,7 @@ import {
   KalturaReportType
 } from 'kaltura-ngx-client';
 import {switchMap} from 'rxjs/operators';
-import {of as ObservableOf} from 'rxjs';
+import {BehaviorSubject, of as ObservableOf} from 'rxjs';
 import {ReportDataConfig, ReportDataSection} from 'shared/services/storage-data-base.config';
 import {StatusDataConfig} from './status-data.config';
 import {TranslateService} from '@ngx-translate/core';
@@ -22,11 +23,11 @@ import {getColorPalette} from "shared/utils/colors";
 import {EChartOption} from "echarts";
 
 @Component({
-  selector: 'app-status',
+  selector: 'app-ve-status',
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
   providers: [
-    KalturaLogger.createLogger('StatusComponent'),
+    KalturaLogger.createLogger('VEStatusComponent'),
     StatusDataConfig,
     ReportService,
   ],
@@ -59,8 +60,6 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   @Input() virtualEventId: string;
 
-  @Output() registrationDataLoaded = new EventEmitter<{ unregistered: number }>();
-
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
 
@@ -69,6 +68,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   public _chartLoaded = false;
   public _chartData: EChartOption = {};
 
+  public status$ = new BehaviorSubject<{ current: Report, busy: boolean, error: KalturaAPIException }>({ current: null, busy: false, error: null });
 
   private _componentId = 'status';
   private echartsIntance: any;
@@ -98,10 +98,11 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.status$.complete();
   }
 
   private _loadReport(): void {
+    this.status$.next({ current: null, busy: true, error: null });
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
@@ -116,6 +117,7 @@ export class StatusComponent implements OnInit, OnDestroy {
           return ObservableOf({ report, compare: null });
       }))
       .subscribe(({ report, compare }) => {
+          this.status$.next({ current: report, busy: false, error: null });
           if (report.graphs) {
             this.handleGraphs(report.graphs); // handle graphs
           }
@@ -132,6 +134,7 @@ export class StatusComponent implements OnInit, OnDestroy {
             },
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          this.status$.next({ current: null, busy: false, error: error });
         });
   }
 

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ReportDataConfig, ReportDataSection, ReportDataBaseConfig } from 'shared/services/storage-data-base.config';
-import { EChartOption } from 'echarts';
-import { TranslateService } from "@ngx-translate/core";
+import {TranslateService} from "@ngx-translate/core";
 import {ReportHelper} from "shared/services";
+import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
 
 @Injectable()
-export class StatusDataConfig extends ReportDataBaseConfig {
+export class HighlightsDataConfig extends ReportDataBaseConfig {
 
   constructor(_translate: TranslateService) {
     super(_translate);
@@ -15,17 +15,21 @@ export class StatusDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'invited': {
-            format: value => value,
-          },
           'registered': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'confirmed': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           },
           'participated': {
             format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
+          },
+          'unregistered': {
+            format: value => value,
+            colors: [getPrimaryColor(), getSecondaryColor()],
           }
         }
       },
@@ -51,39 +55,5 @@ export class StatusDataConfig extends ReportDataBaseConfig {
         }
       }
     };
-  }
-
-  public getChartConfig(): EChartOption {
-    return {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      yAxis: {
-        type: 'value'
-      },
-      xAxis: {
-        type: 'category',
-        data: []
-      },
-      series: [],
-      legend: {
-        bottom: 20,
-        left: 24,
-        data: []
-      },
-      grid: {
-        left: 24,
-        right: 24,
-        top: 40,
-        bottom: 70,
-        containLabel: true
-      },
-      textStyle: {
-        fontFamily: 'Lato',
-      },
-    }
   }
 }

@@ -80,11 +80,18 @@
           </div>
         </div>
 
-        <div *ngIf="_viewConfig.status" class="kReportContainer">
-          <app-status [dateFilter]="_dateFilter"
-                      [refineFilter]="_refineFilter"
-                      [virtualEventId]="_virtualEventId">
-          </app-status>
+        <div [class.kHidden]="!_viewConfig.status" class="kReportContainer">
+          <app-ve-status [dateFilter]="_dateFilter" #status
+                         [refineFilter]="_refineFilter"
+                         [virtualEventId]="_virtualEventId">
+          </app-ve-status>
+        </div>
+
+        <div *ngIf="_viewConfig.highlights" class="kReportContainer">
+          <app-ve-highlights [dateFilter]="_dateFilter"
+                         [refineFilter]="_refineFilter"
+                         [highlights$]="status.status$">
+          </app-ve-highlights>
         </div>
 <!--            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"-->
 <!--                                          [categoryId]="_category?.id.toString()"-->
