@@ -22,6 +22,8 @@ import { ExportCsvComponent } from "shared/components/export-csv/export-csv.comp
 import * as moment from "moment";
 import {TranslateService} from "@ngx-translate/core";
 import {reportTypeMap} from "shared/utils/report-type-map";
+import {ReportDataSection} from "shared/services/storage-data-base.config";
+import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
 
 @Component({
   selector: 'app-virtual-event',
@@ -52,6 +54,29 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
   public _unregistered = 0;
+  public _devicesReportConfig = {
+    [ReportDataSection.table]: {
+      fields: {
+        'device': {
+          format: value => value,
+        },
+        'registered': {
+          format: value => value,
+        }
+      }
+    },
+    [ReportDataSection.totals]: {
+      preSelected: 'registered',
+      fields: {
+        'registered': {
+          format: value => value,
+          title: this._translate.instant(`app.ve.registered`),
+          sortOrder: 1,
+          colors: [getPrimaryColor(), getSecondaryColor()],
+        }
+      }
+    }
+  };
 
   constructor(private _router: Router,
               private _translate: TranslateService,

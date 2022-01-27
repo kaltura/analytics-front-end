@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -47,13 +47,14 @@ export interface Summary {
     ReportService,
   ]
 })
-export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
+export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDestroy {
   @Input() categoryId: string = null;
   @Input() playlistId: string = null;
   @Input() entryId: string = null;
   @Input() virtualEventId: string = null;
   @Input() reportType: KalturaReportType = null;
   @Input() colorScheme = 'default';
+  @Input() reportConfig: ReportDataConfig = null;
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'devices-overview';
@@ -97,6 +98,13 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
     super();
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
+  }
+
+  ngOnInit(): void {
+      if (this.reportConfig) {
+        this._dataConfig = this.reportConfig;
+        this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
+      }
   }
 
   ngOnDestroy() {

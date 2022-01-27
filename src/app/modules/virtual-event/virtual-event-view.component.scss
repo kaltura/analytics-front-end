@@ -31,7 +31,7 @@
       display: flex;
       flex-direction: column;
       ::ng-deep app-devices-overview .kNoResults {
-        height: 190px;
+        height: 178px;
       }
     }
   }
@@ -217,7 +217,11 @@ app-date-filter.noTitle {
   }
 
 }
-
+::ng-deep app-devices-overview {
+  .kReport {
+    padding-bottom: 12px;
+  }
+}
 .kHighContrast :host {
   .kEntryDetails, .kBackBtn {
     color: $kGrayscale1;
