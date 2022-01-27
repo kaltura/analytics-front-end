@@ -203,7 +203,8 @@ export const viewsConfig = {
     miniInsights: {},
     miniDevices: {},
     status : {},
-    highlights: {}
+    highlights: {},
+    geo: {}
   },
   entryWebcast: {
     export: {},

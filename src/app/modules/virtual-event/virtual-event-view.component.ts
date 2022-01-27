@@ -51,8 +51,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _virtualEventId = null;
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
-
-  public _insights: { countries: string[], countriesCount: number, unregistered: number } =  { countries: [], countriesCount: 0, unregistered: 0 };
+  public _unregistered = 0;
 
   constructor(private _router: Router,
               private _translate: TranslateService,
@@ -131,7 +130,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   }
 
   public onRegistrationDataLoaded(event: { unregistered: number }): void {
-    this._insights.unregistered = event.unregistered;
+    this._unregistered = event.unregistered;
   }
 
   public exportReport(event: { type: string, id: string }): void {

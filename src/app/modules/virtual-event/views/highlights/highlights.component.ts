@@ -178,7 +178,9 @@ export class HighlightsComponent implements OnInit, OnDestroy {
 
   public _onSortChanged(event: SortEvent) {
     this.order = tableLocalSortHandler(event, this.order);
-    this._tableData.reverse();
+    if (event.field === "date_id") {
+      this._tableData.reverse();
+    }
   }
 
   private _updateFilter(): void {

@@ -7,10 +7,11 @@ import { FilterComponent, OptionItem } from 'shared/components/filter/filter.com
 import { ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
-import { KalturaVirtualEvent } from "kaltura-ngx-client";
+import {KalturaReportType, KalturaVirtualEvent} from "kaltura-ngx-client";
 import { TranslateService } from "@ngx-translate/core";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import {reportTypeMap} from "shared/utils/report-type-map";
 
 @Component({
   selector: 'app-ve-filter',
@@ -48,13 +49,11 @@ export class VirtualEventFilterComponent extends FilterComponent {
       };
     }
   }
-  public filterConfig: FilterConfig = {};
+  public filterConfig: FilterConfig = {reportType: reportTypeMap(KalturaReportType.veRegisteredCountries)};
 
   @Input() set virtualEvent(value: KalturaVirtualEvent) {
     if (value) {
-      this.filterConfig = {
-        items: [{property: 'virtualEventIdIn', value: value.id.toString()}]
-      };
+      this.filterConfig.items = [{property: 'virtualEventIdIn', value: value.id.toString()}];
     }
   }
 

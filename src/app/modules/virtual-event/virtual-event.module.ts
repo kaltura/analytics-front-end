@@ -18,6 +18,7 @@ import {RegistrationFunnelComponent} from "./views/registration-funnel/registrat
 import {VEMiniInsightsComponent} from "./views/mini-insights/mini-insights.component";
 import {StatusComponent} from "./views/status/status.component";
 import {HighlightsComponent} from "./views/highlights/highlights.component";
+import {VEGeoComponent} from "./views/geo/geo-location.component";
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {HighlightsComponent} from "./views/highlights/highlights.component";
     RegistrationFunnelComponent,
     VEMiniInsightsComponent,
     StatusComponent,
-    HighlightsComponent
+    HighlightsComponent,
+    VEGeoComponent
   ],
   exports: [],
   providers: []

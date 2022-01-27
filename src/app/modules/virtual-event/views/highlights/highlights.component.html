@@ -1,4 +1,4 @@
-<div class="kReport kFunnel kOverrideFAIcons">
+<div class="kReport kHighlights kOverrideFAIcons">
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
 
@@ -24,6 +24,8 @@
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
           <p-table appScrollTopOnPaging
                    [value]="_tableData"
+                   [paginator]="true"
+                   [rows]="10"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortField]="_sortField"

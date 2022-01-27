@@ -69,7 +69,7 @@
           </div>
           <div *ngIf="_viewConfig.miniInsights" class="kMiniReportContainer kMiniReportContainer">
             <div class="col">
-              <app-ve-mini-insights [data]="_insights">
+              <app-ve-mini-insights [unregistered]="_unregistered" [topCountries$]="geo.topCountries$">
               </app-ve-mini-insights>
               <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices"
                                     [refineFilter]="_refineFilter"
@@ -89,116 +89,17 @@
 
         <div *ngIf="_viewConfig.highlights" class="kReportContainer">
           <app-ve-highlights [dateFilter]="_dateFilter"
-                         [refineFilter]="_refineFilter"
                          [highlights$]="status.status$">
           </app-ve-highlights>
         </div>
-<!--            <app-category-mini-highlights [dateFilter]="_dateFilter" [class.short]="categoryFilter.contextSelected"-->
-<!--                                          [categoryId]="_category?.id.toString()"-->
-<!--                                          [refineFilter]="_refineFilter"></app-category-mini-highlights>-->
-<!--          </div>-->
 
-<!--          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniPageViews && !categoryFilter.contextSelected"></div>-->
-<!--          <div class="divider showOnTablet"></div>-->
-
-<!--          <div *ngIf="_viewConfig.miniPageViews" [class.kHidden]="categoryFilter.contextSelected" class="kMiniReportContainer kMiniTopReportContainer kMiniTopReportSmall">-->
-<!--            <app-category-mini-page-views [dateFilter]="_dateFilter"-->
-<!--                                          [subCategoriesSelected]="categoryFilter.subCategoriesSelected"-->
-<!--                                          [categoryId]="_category?.id.toString()"-->
-<!--                                          [refineFilter]="_refineFilter"-->
-<!--                                          (openFilterClick)="openContextFilter()"></app-category-mini-page-views>-->
-<!--          </div>-->
-
-<!--          <div class="divider hideOnTablet"></div>-->
-<!--          <div class="separator showOnTablet" *ngIf="!categoryFilter.contextSelected"></div>-->
-
-<!--          <div *ngIf="_viewConfig.miniTopVideos" class="kMiniReportContainer kMiniTopReportSmall">-->
-<!--            <app-category-mini-top-videos [dateFilter]="_dateFilter" [topVideos]="_categoryTopContentComponent?.topVideos$"-->
-<!--                                          [refineFilter]="_refineFilter"></app-category-mini-top-videos>-->
-<!--          </div>-->
-
-<!--          <div class="separator hideOnTablet" *ngIf="_viewConfig.miniTopViewers || _viewConfig.insights"></div>-->
-<!--          <div class="divider showOnTablet"></div>-->
-
-<!--          <div *ngIf="_viewConfig.miniTopViewers" class="kMiniReportContainer kMiniTopReportSmall">-->
-<!--            <app-category-mini-top-viewers [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"-->
-<!--                                           [refineFilter]="_refineFilter"></app-category-mini-top-viewers>-->
-<!--          </div>-->
-
-<!--          <div class="separator" *ngIf="_viewConfig.insights && (_viewConfig.miniTopVideos || _viewConfig.miniTopViewers)"></div>-->
-<!--          <div class="kMiniReportContainer kMiniTopReportSmall" *ngIf="_viewConfig.insights && _categoryLoaded">-->
-<!--            <ui-carousel height="100%"-->
-<!--                         [infinite]="true"-->
-<!--                         [autoPlay]="true"-->
-<!--                         [autoPlaySpeed]="5000"-->
-<!--                         [arrows]="false"-->
-<!--                         [fade]="false"-->
-<!--                         [speed]="200">-->
-<!--              <ui-carousel-item *ngIf="_viewConfig.insights.domains">-->
-<!--                <app-category-insight-domains [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"-->
-<!--                                              [refineFilter]="_refineFilter"></app-category-insight-domains>-->
-<!--              </ui-carousel-item>-->
-<!--              <ui-carousel-item *ngIf="_viewConfig.insights.geo">-->
-<!--                <app-category-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"-->
-<!--                                          [dateFilter]="_dateFilter"-->
-<!--                                          [refineFilter]="_refineFilter"></app-category-insight-geo>-->
-<!--              </ui-carousel-item>-->
-
-<!--              <ui-carousel-item *ngIf="_viewConfig.insights.devices">-->
-<!--                <app-category-devices-domains [categoryId]="_category?.id.toString()"-->
-<!--                                         [dateFilter]="_dateFilter"-->
-<!--                                         [refineFilter]="_refineFilter"></app-category-devices-domains>-->
-<!--              </ui-carousel-item>-->
-
-<!--            </ui-carousel>-->
-<!--          </div>-->
-
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.performance && _categoryLoaded" class="kReportContainer" id="performance" >-->
-<!--          <app-category-performance-->
-<!--                [categoryId]="_category?.id.toString()"-->
-<!--                [dateFilter]="_dateFilter"-->
-<!--                [dateFilterComponent]="dateFilter"-->
-<!--                (export)="exportReport($event)"-->
-<!--                [refineFilter]="_refineFilter"></app-category-performance>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.topVideos && _categoryLoaded" class="kReportContainer" id="top-videos">-->
-<!--          <app-category-top-content [categoryId]="_category?.id.toString()" #topVideos-->
-<!--                                [dateFilter]="_dateFilter"-->
-<!--                                [refineFilter]="_refineFilter"></app-category-top-content>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.subcategories && _categoryLoaded && _category?.directSubCategoriesCount" [class.kHidden]="categoryFilter.contextSelected" class="kReportContainer" id="subcategories">-->
-<!--          <app-subcategories [categoryId]="_category?.id.toString()" #topVideos-->
-<!--                             [dateFilter]="_dateFilter"-->
-<!--                             [refineFilter]="_refineFilter"></app-subcategories>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.geo && _categoryLoaded" class="kReportContainer" id="top-geo">-->
-<!--          <app-top-countries [dateFilter]="_dateFilter" #topCountries-->
-<!--                                   [_distributionKey]="'plays_distribution'"-->
-<!--                                   [_distributionCalculationKey]="'count_plays'"-->
-<!--                                   [refineFilter]="_refineFilter"-->
-<!--                                   [categoryId]="_category?.id.toString()"-->
-<!--                                   (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.devices && _categoryLoaded" class="kReportContainer" id="top-devices">-->
-<!--          <app-devices-overview [dateFilter]="_dateFilter"-->
-<!--                                      [refineFilter]="_refineFilter"-->
-<!--                                      [colorScheme]="'plays'"-->
-<!--                                      [categoryId]="_category?.id.toString()"></app-devices-overview>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="_viewConfig.syndication && _categoryLoaded" class="kReportContainer" id="top-domains">-->
-<!--          <app-syndication [dateFilterComponent]="dateFilter"-->
-<!--                           [dateFilter]="_dateFilter"-->
-<!--                           [categoryId]="_category?.id.toString()"-->
-<!--                           (onDrillDown)="_onDrillDown($event)"-->
-<!--                           [refineFilter]="_refineFilter"></app-syndication>-->
-<!--        </div>-->
+        <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">
+          <app-ve-geo #geo
+                           [dateFilter]="_dateFilter"
+                           [refineFilter]="_refineFilter"
+                           [virtualEventId]="_virtualEventId">
+          </app-ve-geo>
+        </div>
 
       </div>
     </div>

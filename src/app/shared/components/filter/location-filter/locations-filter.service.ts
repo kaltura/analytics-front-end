@@ -79,7 +79,7 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     this._isBusy = true;
     this._currentlyLoading.push('country');
 
-    const reportType = reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCountryRealtime : KalturaReportType.mapOverlayCountry);
+    const reportType = this._reportType ? this._reportType : reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCountryRealtime : KalturaReportType.mapOverlayCountry);
     const reportConfig: ReportConfig = {
       reportType,
       filter: this._filter,
