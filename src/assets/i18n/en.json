@@ -1092,9 +1092,9 @@
       "evolution": "Evolution of cumulated attendee’s statuses over time",
       "peak": "Peak Day",
       "date_id": "Days",
-      "geo": {
-        "title": "Top Geographic Areas"
-      }
+      "geo": "Top Geographic Areas",
+      "roles": "Roles",
+      "industries": "Industries"
     },
     "playlist": {
       "count_loads": "Player Impressions",

@@ -102,6 +102,24 @@
           </app-ve-geo>
         </div>
 
+        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer">
+          <div class="kSmallReportContainer" *ngIf="_viewConfig.roles">
+            <app-ve-roles
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter"
+              [virtualEventId]="_virtualEventId">
+            </app-ve-roles>
+          </div>
+
+          <div class="kSmallReportContainer" *ngIf="_viewConfig.industries">
+            <app-ve-industries
+              [dateFilter]="_dateFilter"
+              [refineFilter]="_refineFilter"
+              [virtualEventId]="_virtualEventId">
+            </app-ve-industries>
+          </div>
+        </div>
+
       </div>
     </div>
   </k-area-blocker>

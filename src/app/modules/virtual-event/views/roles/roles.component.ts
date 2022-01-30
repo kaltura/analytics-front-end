@@ -1,17 +1,13 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { GeoLocationDataConfig } from './geo-location-data.config';
+import { RolesDataConfig } from './roles-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TrendService } from 'shared/services/trend.service';
 import { SortEvent } from 'primeng/api';
-import * as echarts from 'echarts';
-import { EChartOption } from 'echarts';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateRanges } from 'shared/components/date-filter/date-filter-utils';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -19,43 +15,38 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { getCountryName } from 'shared/utils/get-country-name';
-import { Table } from 'primeng/table';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.component";
-import { BehaviorSubject } from "rxjs";
 
 @Component({
-  selector: 'app-ve-geo',
-  templateUrl: './geo-location.component.html',
-  styleUrls: ['./geo-location.component.scss'],
+  selector: 'app-ve-roles',
+  templateUrl: './roles.component.html',
+  styleUrls: ['./roles.component.scss'],
   providers: [
-    GeoLocationDataConfig,
-    KalturaLogger.createLogger('VEGeoComponent')
+    RolesDataConfig,
+    KalturaLogger.createLogger('VERolesComponent')
   ]
 })
-export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnDestroy {
-  @ViewChild('table') _table: Table;
+export class VERolesComponent extends VEBaseReportComponent implements OnInit, OnDestroy {
   @Input() virtualEventId = '';
-  protected _componentId = 've-geo';
+
+  protected _componentId = 've-roles';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  private _echartsIntance: any; // echart instance
+
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
-  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredCountries);
+  private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredRoles);
   private _mapCenter = [0, 10];
   private order = '-registered';
   private _mapZoom = 1.2;
 
-  public topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }> = new BehaviorSubject({ topCountries: [], totalCount: 0 });
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   public _dateRange = DateRanges.Last30D;
   public _tableData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
-  public _mapChartData: any = { 'count_plays': {} };
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
@@ -67,8 +58,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
-              private http: HttpClient,
-              private _dataConfigService: GeoLocationDataConfig,
+              private _dataConfigService: RolesDataConfig,
               private _logger: KalturaLogger) {
     super();
     this._dataConfig = _dataConfigService.getConfig();
@@ -77,21 +67,9 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
 
   ngOnInit() {
     this._isBusy = false;
-    // load works map data
-    this.http.get('assets/world.json')
-      .subscribe(data => {
-        this._mapDataReady = true;
-        echarts.registerMap('world', data);
-      });
   }
 
   ngOnDestroy() {
-    this.topCountries$.complete();
-  }
-
-
-  public _onChartInit(ec: any): void {
-    this._echartsIntance = ec;
   }
 
   protected _updateFilter(): void {
@@ -105,7 +83,6 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
 
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-
     refineFilterToServerValue(this._refineFilter, this._filter);
   }
 
@@ -124,24 +101,14 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     }
   }
 
-  public _zoom(direction: string): void {
-    this._logger.trace('Handle zoom action by user', { direction });
-    this._mapZoom = direction === 'in' ? this._mapZoom * 2 : this._mapZoom / 2;
-    const roam = 'move';
-    this._echartsIntance.setOption({ series: [{ zoom: this._mapZoom, roam }] }, false);
-  }
-
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
-    this._setMapCenter();
     this._tableData = [];
     this._blockerMessage = null;
-    this.topCountries$.next({topCountries: [], totalCount: 0});
     if (this.virtualEventId) {
       this._filter.virtualEventIdIn = this.virtualEventId;
     }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
-    this._updateReportConfig(reportConfig);
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(cancelOnDestroy(this))
       .subscribe((report) => {
@@ -150,11 +117,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
           }
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
-            this.topCountries$.next({topCountries: this._tableData, totalCount: report.table.totalCount});
-          } else {
-            this.topCountries$.next({ topCountries: [], totalCount: 0 });
           }
-          this._updateMap();
           this._isBusy = false;
         },
         error => {
@@ -203,54 +166,5 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
   }
 
-  private _updateMap(): void {
-    let mapConfig: EChartOption = this._dataConfigService.getMapConfig();
-    (mapConfig.series[0] as any).name = this._translate.instant('app.ve.' + this._selectedMetrics);
-    (mapConfig.series[0] as any).data = [];
-    let maxValue = 0;
 
-    this._tableData.forEach(data => {
-      const coords = data['coordinates'].split('/');
-      if (coords.length === 2) {
-        let value = [coords[1], coords[0]];
-        value.push(parseFormattedValue(data[this._selectedMetrics]));
-        (mapConfig.series[0] as any).data.push({name: this._getName(data), value});
-        if (parseInt(data[this._selectedMetrics]) > maxValue) {
-          maxValue = parseFormattedValue(data[this._selectedMetrics]);
-        }
-      }
-    });
-
-    const map = mapConfig.visualMap as any;
-    map.inRange.color = this._tableData.length ? ['#B4E9FF', '#2541B8'] : ['#EBEBEB', '#EBEBEB'];
-    map.max = maxValue;
-    map.center = this._mapCenter;
-    map.zoom = this._mapZoom;
-    map.roam = 'move';
-    this._mapChartData[this._selectedMetrics] = mapConfig;
-  }
-
-  private _getName(data: TableRow): string {
-    return getCountryName(data.country, false);
-  }
-
-  private _updateReportConfig(reportConfig: ReportConfig): void {
-    const countriesFilterApplied = this._refineFilter.find(({ type }) => type === 'countries');
-
-    if (!countriesFilterApplied && reportConfig.filter['countryIn']) {
-      delete reportConfig.filter['countryIn'];
-    }
-    if (reportConfig['objectIds__null']) {
-      delete reportConfig['objectIds__null'];
-    }
-    reportConfig.objectIds = '';
-
-    if (countriesFilterApplied) {
-      refineFilterToServerValue(this._refineFilter, reportConfig.filter as KalturaEndUserReportInputFilter);
-    }
-  }
-
-  private _setMapCenter(): void {
-    this._mapCenter = [0, 10];
-  }
 }

@@ -204,7 +204,9 @@ export const viewsConfig = {
     miniDevices: {},
     status : {},
     highlights: {},
-    geo: {}
+    geo: {},
+    roles: {},
+    industries: {}
   },
   entryWebcast: {
     export: {},

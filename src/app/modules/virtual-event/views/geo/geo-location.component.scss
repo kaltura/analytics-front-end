@@ -3,7 +3,9 @@
 :host {
   width: 100%;
 }
-
+.kReport.kGeo {
+  margin-bottom: 0px;
+}
 .kReportContainer {
   padding-bottom: 24px;
   background-color: $appBkgColor;

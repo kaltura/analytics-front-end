@@ -1,25 +1,15 @@
-<div data-aid="report-geo" class="kReport kGeo kOverrideFAIcons">
+<div data-aid="report-roles" class="kReport kOverrideFAIcons">
 
   <div class="kFilters">
-    <span class="kTitle">{{'app.ve.geo' | translate}}</span>
+    <span class="kTitle">{{'app.ve.roles' | translate}}</span>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <div class="kMap">
-        <div *ngIf="_mapDataReady" echarts class="kChart"
-             [options]="_mapChartData[_selectedMetrics]"
-             (chartInit)="_onChartInit($event)"></div>
-        <div class="kZoomWidget">
-          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
-          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
-        </div>
-      </div>
       <div class="kTable">
         <div class="kTableContainer">
-          <p-table #table
-                   appScrollTopOnPaging
+          <p-table appScrollTopOnPaging
                    sortField="registered"
                    [value]="_tableData"
                    [customSort]="true"
@@ -33,7 +23,6 @@
                 <th [ngStyle]="{'width': '50px'}">
                   <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
                 </th>
-                <th [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '30%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
@@ -60,11 +49,8 @@
                 <td>
                   <span>{{rowIndex + 1}}</span>
                 </td>
-                <td class="kFlagColumn">
-                  <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
-                </td>
                 <td class="kHighlight">
-                  <span>{{data['country']}}</span>
+                  <span>{{data['role']}}</span>
                 </td>
                 <td>
                   <span>{{data['registered']}}</span>

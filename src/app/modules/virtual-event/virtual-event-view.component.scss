@@ -16,6 +16,12 @@
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
+  .kSmallReportContainer {
+    width: calc(50% - 12px);
+    &:first-child {
+      margin-right: 24px;
+    }
+  }
   .kMiniReportContainer{
     height: 410px;
     width: calc(50% - 12px);
@@ -200,6 +206,12 @@ app-date-filter.noTitle {
   .kReportContainer {
     .kMiniTopReportSmall {
       width: 40%;
+    }
+    .kSmallReportContainer {
+      width: 100%;
+      &:first-child {
+        margin-right: 0px;
+      }
     }
     .kMiniTopReportWide {
       width: 80%;

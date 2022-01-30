@@ -12,13 +12,15 @@ import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
-import {VirtualEventViewComponent} from "./virtual-event-view.component";
-import {VirtualEventFilterComponent} from "./filter/filter.component";
-import {RegistrationFunnelComponent} from "./views/registration-funnel/registration-funnel.component";
-import {VEMiniInsightsComponent} from "./views/mini-insights/mini-insights.component";
-import {StatusComponent} from "./views/status/status.component";
-import {HighlightsComponent} from "./views/highlights/highlights.component";
-import {VEGeoComponent} from "./views/geo/geo-location.component";
+import { VirtualEventViewComponent } from "./virtual-event-view.component";
+import { VirtualEventFilterComponent } from "./filter/filter.component";
+import { RegistrationFunnelComponent } from "./views/registration-funnel/registration-funnel.component";
+import { VEMiniInsightsComponent } from "./views/mini-insights/mini-insights.component";
+import { StatusComponent } from "./views/status/status.component";
+import { HighlightsComponent } from "./views/highlights/highlights.component";
+import { VEGeoComponent } from "./views/geo/geo-location.component";
+import { VERolesComponent } from "./views/roles/roles.component";
+import { VEIndustriesComponent } from "./views/industries/industries.component";
 
 
 @NgModule({
@@ -46,7 +48,9 @@ import {VEGeoComponent} from "./views/geo/geo-location.component";
     VEMiniInsightsComponent,
     StatusComponent,
     HighlightsComponent,
-    VEGeoComponent
+    VEGeoComponent,
+    VERolesComponent,
+    VEIndustriesComponent
   ],
   exports: [],
   providers: []
