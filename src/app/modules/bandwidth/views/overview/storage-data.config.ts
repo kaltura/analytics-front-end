@@ -79,6 +79,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
           'peak_storage': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.overview.peak_storage`),
+            tooltip: this._translate.instant(`app.bandwidth.storedMedia_tt`),
             units: value => fileSize(value).units,
             sortOrder: 1
           },
@@ -112,6 +113,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
           'live_view_time': {
             format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.hours(value))),
             title: this._translate.instant(`app.bandwidth.overview.live_view_time`),
+            tooltip: this._translate.instant(`app.bandwidth.live_view_tt`),
             units: value => 'Hours',
             sortOrder: 7
           },
