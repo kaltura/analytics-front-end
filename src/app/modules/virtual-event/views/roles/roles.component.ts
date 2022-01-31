@@ -38,9 +38,7 @@ export class VERolesComponent extends VEBaseReportComponent implements OnInit, O
 
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredRoles);
-  private _mapCenter = [0, 10];
   private order = '-registered';
-  private _mapZoom = 1.2;
 
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
