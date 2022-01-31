@@ -11,7 +11,7 @@ export const routing: Route[] = [
     path: '', component: BandwidthComponent,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: StorageComponent, canActivate: [OverviewCanActivate] },
+      { path: 'overview', component: StorageComponent },
       { path: 'publisher', component: PublisherStorageComponent },
       { path: 'end-user', component: EndUserStorageComponent },
     ]
