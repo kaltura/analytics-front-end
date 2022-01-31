@@ -256,7 +256,7 @@
         "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
         "year_id": "Year",
         "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
-        "peak_storage": "Stored Media",
+        "average_storge": "Stored Media",
         "bandwidth_consumption": "Outbound Bandwidth",
         "transcoding_consumption": "Transcoded Media",
         "total_entries": "Managed Entries",
@@ -343,7 +343,9 @@
       "exportLabels": {
         "endUser": "End user",
         "publisher": "Publisher Bandwidth"
-      }
+      },
+      "storedMedia_tt": "The average storage in the selected time frame.",
+      "live_view_tt": "Webcast and Live"
     },
     "audience": {
       "menu": {
