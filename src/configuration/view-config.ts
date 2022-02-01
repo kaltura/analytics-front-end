@@ -193,7 +193,7 @@ export const viewsConfig = {
   },
   virtualEvent: {
     title: {},
-    export: {},
+    download: {},
     details: {},
     refineFilter: {
       origin: {},

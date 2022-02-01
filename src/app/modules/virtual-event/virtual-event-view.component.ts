@@ -175,4 +175,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
+  public downloadReport(): void {
+
+  }
+
 }

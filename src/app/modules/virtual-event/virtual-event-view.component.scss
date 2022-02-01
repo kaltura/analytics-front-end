@@ -11,6 +11,17 @@
     margin-left: 0 !important;
   }
 }
+.kDownloadReport {
+  font-weight: normal;
+  margin-right: 16px;
+  margin-left: auto;
+  ::ng-deep  .ui-button-text {
+    padding-left: 3.1em;
+  }
+}
+.kFloatLeft {
+  margin-left: auto;
+}
 .kReportContainer{
   padding-bottom: 24px;
   background-color: $appBkgColor;
@@ -170,10 +181,14 @@ app-date-filter.noTitle {
 .kHeaderRight{
   display: flex;
   margin-left: auto;
+  width: 100%;
   z-index: 1;
   &.noTitle {
     margin-left: 0px;
     flex-direction: row-reverse;
+    .kDownloadReport {
+      margin-right: 0px;
+    }
   }
 }
 @media (max-width: 1280px) {
