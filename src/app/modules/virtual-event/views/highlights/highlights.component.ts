@@ -41,6 +41,8 @@ export class HighlightsComponent implements OnInit, OnDestroy {
   public _sortField = 'date_id';
   public _columns: string[] = [];
 
+  @Input() exporting = false;
+
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
       this._dateFilter = value;

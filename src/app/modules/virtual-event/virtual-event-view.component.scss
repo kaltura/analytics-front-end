@@ -27,6 +27,9 @@
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
+  &.kPageBreak {
+    border-top: 120px solid #f2f2f2;
+  }
   .kSmallReportContainer {
     width: calc(50% - 12px);
     &:first-child {
@@ -34,7 +37,6 @@
     }
   }
   .kMiniReportContainer{
-    height: 410px;
     width: calc(50% - 12px);
     flex: 1 1 auto;
     &:first-child {
@@ -104,6 +106,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 100%;
   }
 
   .kFloatingDetails{
@@ -244,13 +247,13 @@ app-date-filter.noTitle {
   }
 
 }
-::ng-deep app-devices-overview {
-  .kReport {
-    padding-bottom: 12px;
-  }
-}
+
 .kHighContrast :host {
   .kEntryDetails, .kBackBtn {
     color: $kGrayscale1;
   }
+}
+.fixHeight {
+  max-height: 272px;
+  overflow: hidden;
 }

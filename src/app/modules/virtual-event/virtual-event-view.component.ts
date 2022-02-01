@@ -54,6 +54,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
   public _unregistered = 0;
+  public _exporting = false;
   public _devicesReportConfig = {
     [ReportDataSection.table]: {
       fields: {
@@ -175,7 +176,53 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
-  public downloadReport(): void {
+  public downloadReport(el: any): void {
+    this._exporting = true;
+    let updateTitle = this._viewConfig.title === null; // need to temporarily display the title for the export
+    let updateDetails = this._viewConfig.details === null; // need to temporarily display the details for the export
+    if (updateTitle) {
+      this._viewConfig.title = {};
+    }
+    if (updateDetails) {
+      this._viewConfig.details = {};
+    }
+    this._viewConfig.refineFilter = null; // hide refine filter
+    this._viewConfig.download = null; // hide download report button
+
+    // use a timeout to refresh the page binding
+    setTimeout(() => {
+      var element = document.getElementById('reportToExport');
+      element.style.paddingLeft = 10 + 'px';
+      element.style.backgroundColor = '#f2f2f2';
+      let scrollHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      );
+      var opt = {
+        margin:       0,
+        filename:     `${this._virtualEvent.name}_report.pdf`,
+        image:        { type: 'jpeg', quality: 0.95 },
+        html2canvas:  { width: document.getElementsByClassName('kContent')[0].clientWidth + 40, height: scrollHeight + window.innerHeight -50, useCORS: true, backgroundColor: '#f2f2f2' },
+        jsPDF:        { units: 'px', orientation: 'portrait' }
+      };
+      window['html2pdf'](element, opt);
+      setTimeout(() => {
+        element.style.paddingLeft = null;
+        element.style.backgroundColor = null;
+        if (updateTitle) {
+          this._viewConfig.title = null;
+        }
+        if (updateDetails) {
+          this._viewConfig.details = null;
+        }
+        this._viewConfig.refineFilter = {};
+        this._viewConfig.download = {};
+        this._exporting = false;
+      },0);
+    }, 0);
+
+
 
   }
 

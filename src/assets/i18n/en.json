@@ -1079,11 +1079,11 @@
       "all": "All attendees",
       "registered": "Registered",
       "invited": "Invited",
-      "registered_tt": "Registered and invited attendees.",
+      "registered_tt": "Registered and invited attendees",
       "confirmed": "Confirmed",
-      "confirmed_tt": "Confirmed the registration email.",
+      "confirmed_tt": "Confirmed the registration email",
       "participated": "Participated",
-      "participated_tt": "Attendees who showed up for the event.",
+      "participated_tt": "Attendees who showed up for the event",
       "turnout": "Overall Turnout",
       "turnout_tt": "Participation rate.",
       "unregistered": "Unregistered",
@@ -1096,7 +1096,8 @@
       "date_id": "Days",
       "geo": "Top Geographic Areas",
       "roles": "Roles",
-      "industries": "Industries"
+      "industries": "Industries",
+      "details": "Registration details"
     },
     "playlist": {
       "count_loads": "Player Impressions",

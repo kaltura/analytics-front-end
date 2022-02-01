@@ -1,4 +1,4 @@
-<div data-aid="report-group-category" class="kMain">
+<div data-aid="report-group-category" class="kMain" id="reportToExport">
   <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
     <div class="kReportView">
       <div class="kReport kContent kOverrideFAIcons">
@@ -8,16 +8,16 @@
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-            <button *ngIf="_viewConfig.download" tabindex="0" aria-label="Download Report" role="button" pButton class="kButtonDefault kDownloadReport" icon="icon-pdf" (click)="downloadReport()" [label]="'app.common.downloadCsv' | translate"></button>
+            <button #btn *ngIf="_viewConfig.download" tabindex="0" aria-label="Download Report" role="button" pButton class="kButtonDefault kDownloadReport" icon="icon-pdf" (click)="downloadReport(btn)" [label]="'app.common.downloadCsv' | translate"></button>
             <!--app-export-csv aria-label="Export" #export
                             role="button"
                             [class.kHidden]="!_viewConfig.export" name="Category"
                             [reports]="_exportConfig"
                             [refineFilter]="_refineFilter"
                             [dateFilter]="_dateFilter"
-                            [virtualEventId]="_virtualEventId"></app-export-csv-->
+                            [virtualEventId]="null"></app-export-csv-->
             <div class="kFilter kOverrideFAIcons" [class.kFloatLeft]="!_viewConfig.download">
-              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown"
+              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown" *ngIf="_viewConfig.refineFilter"
                    (click)="_refineFilterOpened = !_refineFilterOpened"
                    (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
                 <span>{{'app.filters.filter' | translate}}</span>
@@ -64,7 +64,7 @@
           <div *ngIf="_viewConfig.miniFunnel" class="kMiniReportContainer">
             <app-registration-funnel [dateFilter]="_dateFilter"
                                      [refineFilter]="_refineFilter"
-                                     [virtualEventId]="_virtualEventId"
+                                     [virtualEventId]="null"
                                      (registrationDataLoaded)="onRegistrationDataLoaded($event)">
             </app-registration-funnel>
           </div>
@@ -72,10 +72,10 @@
             <div class="col">
               <app-ve-mini-insights [unregistered]="_unregistered" [topCountries$]="geo.topCountries$">
               </app-ve-mini-insights>
-              <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices"
+              <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices" [class.fixHeight]="_exporting"
                                     [refineFilter]="_refineFilter"
                                     [reportConfig]="_devicesReportConfig"
-                                    [virtualEventId]="_virtualEventId"
+                                    [virtualEventId]="null"
                                     [reportType]="_devicesReportType">
               </app-devices-overview>
             </div>
@@ -85,12 +85,13 @@
         <div [class.kHidden]="!_viewConfig.status" class="kReportContainer">
           <app-ve-status [dateFilter]="_dateFilter" #status
                          [refineFilter]="_refineFilter"
-                         [virtualEventId]="_virtualEventId">
+                         [virtualEventId]="null">
           </app-ve-status>
         </div>
 
         <div *ngIf="_viewConfig.highlights" class="kReportContainer">
           <app-ve-highlights [dateFilter]="_dateFilter"
+                             [exporting]="_exporting"
                          [highlights$]="status.status$">
           </app-ve-highlights>
         </div>
@@ -99,16 +100,16 @@
           <app-ve-geo #geo
                            [dateFilter]="_dateFilter"
                            [refineFilter]="_refineFilter"
-                           [virtualEventId]="_virtualEventId">
+                           [virtualEventId]="null">
           </app-ve-geo>
         </div>
 
-        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer">
+        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer kPageBreak">
           <div class="kSmallReportContainer" *ngIf="_viewConfig.roles">
             <app-ve-roles
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter"
-              [virtualEventId]="_virtualEventId">
+              [virtualEventId]="null">
             </app-ve-roles>
           </div>
 
@@ -116,7 +117,7 @@
             <app-ve-industries
               [dateFilter]="_dateFilter"
               [refineFilter]="_refineFilter"
-              [virtualEventId]="_virtualEventId">
+              [virtualEventId]="null">
             </app-ve-industries>
           </div>
         </div>
