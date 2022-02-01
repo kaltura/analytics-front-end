@@ -216,7 +216,10 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         if (updateDetails) {
           this._viewConfig.details = null;
         }
-        this._viewConfig.refineFilter = {};
+        this._viewConfig.refineFilter = {
+          origin: {},
+          geo: {}
+        };
         this._viewConfig.download = {};
         this._exporting = false;
       },0);

@@ -247,7 +247,12 @@ app-date-filter.noTitle {
   }
 
 }
-
+::ng-deep app-devices-overview {
+  .kReport {
+    padding-bottom: 12px;
+    box-sizing: border-box;
+  }
+}
 .kHighContrast :host {
   .kEntryDetails, .kBackBtn {
     color: $kGrayscale1;
