@@ -247,7 +247,7 @@
         "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
         "year_id": "Year",
         "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
-        "average_storge": "Stored Media",
+        "average_storage": "Stored Media",
         "bandwidth_consumption": "Outbound Bandwidth",
         "transcoding_consumption": "Transcoded Media",
         "total_entries": "Managed Entries",

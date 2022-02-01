@@ -17,7 +17,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'average_storge': {
+          'average_storage': {
             format: value => value,
             graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('default'), getColorPercent(100,'default')],
@@ -51,7 +51,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
             nonComparable: true,
           },
-          'average_storge': {
+          'average_storage': {
             format: value => ReportHelper.numberOrZero(value, true),
             sortOrder: 1
           },
@@ -74,11 +74,11 @@ export class StorageDataConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'average_storge',
+        preSelected: 'average_storage',
         fields: {
-          'average_storge': {
+          'average_storage': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
-            title: this._translate.instant(`app.bandwidth.overview.average_storge`),
+            title: this._translate.instant(`app.bandwidth.overview.average_storage`),
             tooltip: this._translate.instant(`app.bandwidth.storedMedia_tt`),
             units: value => fileSize(value).units,
             sortOrder: 1
