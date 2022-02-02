@@ -344,7 +344,7 @@
         "endUser": "End user",
         "publisher": "Publisher Bandwidth"
       },
-      "storedMedia_tt": "The average storage in the selected time frame.",
+      "storedMedia_tt": "The average storage in the selected time frame",
       "live_view_tt": "Webcast and Live"
     },
     "audience": {
@@ -1085,7 +1085,7 @@
       "participated": "Participated",
       "participated_tt": "Attendees who showed up for the event",
       "turnout": "Overall Turnout",
-      "turnout_tt": "Participation rate.",
+      "turnout_tt": "Participation rate",
       "unregistered": "Unregistered",
       "turnout2": "Turnout",
       "dropoff": "Drop-off",
