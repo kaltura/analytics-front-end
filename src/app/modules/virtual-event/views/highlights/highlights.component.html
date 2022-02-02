@@ -21,7 +21,7 @@
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
-        <span *ngIf="exporting" class="kDetails">{{'app.ve.details' | translate}}</span>
+        <!--span *ngIf="exporting" class="kDetails">{{'app.ve.details' | translate}}</span-->
         <div class="kTableContainer" [class.kOpen]="_showTable || exporting" [class.kClose]="!_showTable && !exporting">
           <p-table appScrollTopOnPaging
                    [value]="_tableData"

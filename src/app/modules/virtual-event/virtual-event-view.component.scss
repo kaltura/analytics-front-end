@@ -5,7 +5,9 @@
   width: 100%;
   height: 100%;
 }
-
+#reportToExport {
+  width: 100vw;
+}
 @media screen and (max-width: 1060px) {
   .kBackBtn {
     margin-left: 0 !important;
@@ -27,9 +29,6 @@
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
-  &.kPageBreak {
-    border-top: 120px solid #f2f2f2;
-  }
   .kSmallReportContainer {
     width: calc(50% - 12px);
     &:first-child {
@@ -50,7 +49,7 @@
       display: flex;
       flex-direction: column;
       ::ng-deep app-devices-overview .kNoResults {
-        height: 178px;
+        height: 166px;
       }
     }
   }

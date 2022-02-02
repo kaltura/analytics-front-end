@@ -13,7 +13,7 @@
       <div class="kData" *ngIf="_chartLoaded">
         <div class="kDataContainer" aria-label="Registered">
           <span class="kValue">{{_funnelData.registered | numberFormat}}</span>
-          <div class="kFilters">
+          <div>
             <span class="kLabel">{{'app.ve.all' | translate}}</span>
             <kInputHelper>
               <span>{{'app.ve.registered_tt' | translate}}</span>
@@ -23,7 +23,7 @@
 
         <div class="kDataContainer" aria-label="Participated">
           <span class="kValue">{{_funnelData.participated | numberFormat}}</span>
-          <div class="kFilters">
+          <div>
             <span class="kLabel">{{'app.ve.participated' | translate}}</span>
             <kInputHelper>
               <span>{{'app.ve.participated_tt' | translate}}</span>

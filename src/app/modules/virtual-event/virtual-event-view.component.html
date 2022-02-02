@@ -3,7 +3,7 @@
     <div class="kReportView">
       <div class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
-          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title"
+          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title && !_exporting"
                   class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
@@ -72,7 +72,7 @@
             <div class="col">
               <app-ve-mini-insights [unregistered]="_unregistered" [topCountries$]="geo.topCountries$">
               </app-ve-mini-insights>
-              <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices" [class.fixHeight]="_exporting"
+              <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices"
                                     [refineFilter]="_refineFilter"
                                     [reportConfig]="_devicesReportConfig"
                                     [virtualEventId]="_virtualEventId"
@@ -104,7 +104,7 @@
           </app-ve-geo>
         </div>
 
-        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer" [class.kPageBreak]="_exporting">
+        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer">
           <div class="kSmallReportContainer" *ngIf="_viewConfig.roles">
             <app-ve-roles
               [dateFilter]="_dateFilter"

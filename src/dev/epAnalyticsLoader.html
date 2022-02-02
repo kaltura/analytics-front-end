@@ -37,6 +37,7 @@
   <sapn onclick="handleClick(event, 'entry-live')">Realtime</sapn>
   <sapn onclick="handleClick(event, 'entry')">Video</sapn>
   <sapn onclick="handleClick(event, 'user')">User</sapn>
+  <sapn onclick="handleClick(event, 've')">Virtual Event</sapn>
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
@@ -63,6 +64,10 @@
           sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_tsttld1e' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
+         case 've':
+          sendMessage({ messageType: 'navigate', payload: { url: '/virtual-event/273' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
+          break;
          case 'user':
           sendMessage({ messageType: 'navigate', payload: { url: '/user/amir.chervinsky@kaltura.com' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last12months'}}});
@@ -71,15 +76,15 @@
     }
     const config = {
         kalturaServer: {
-            uri: 'www.kaltura.com',
+            uri: 'ny-front-stg.kaltura.com',
             previewUIConf: 49101843,
         },
         cdnServers: {
             serverUri: 'http://cdnapi.kaltura.com',
             securedServerUri: 'https://cdnapisec.kaltura.com'
         },
-        ks: "",
-        pid: "",
+      ks: "djJ8NDMxMjMzM3xlaiqIblMbjxDKufHL0nP9VYYTiz_6zIDhfwX1BrIMlGht-HekPmqTtawJDDbNbbkVV50gbVCn0ibYhIH4H4jcRlvFr1jxHAK17FDB4rGqsoc7yDkwAHSy5D9is4lSfVpTZ8MwkXmCDtB5ejjJEQQM",
+      pid: "4312333",
         locale: 'en',
         live: {
             pollInterval: 30,
@@ -171,7 +176,7 @@
                 border-bottom-left-radius: 3px;
                 border-bottom-right-radius: 3px;
             }
-            .ep .kReportContainer .kReportContent.kNoTitle {
+            .ep .kReportContainer .kReportContent.kNoTitle, .ep app-ve-highlights, .ep app-ve-status, .ep app-registration-funnel, .ep app-ve-mini-insights {
                 border-top: 1px solid #cccccc !important;
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
@@ -235,6 +240,10 @@
                   viewsConfig.entry.userEngagement.userFilter = null;
                   viewsConfig.entry.syndication = null;
                   viewsConfig.entry.refineFilter.domains = null;
+
+                  // Virtual Event
+                  viewsConfig.virtualEvent.title = null;
+                  viewsConfig.virtualEvent.details = null;
 
                   // User config
                   viewsConfig.user.title = null;

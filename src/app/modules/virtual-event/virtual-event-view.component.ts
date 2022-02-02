@@ -20,6 +20,7 @@ import { VirtualEventExportConfig } from "./virtual-event-export.config";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
+import * as html2pdf from "html2pdf.js";
 import {TranslateService} from "@ngx-translate/core";
 import {reportTypeMap} from "shared/utils/report-type-map";
 import {ReportDataSection} from "shared/services/storage-data-base.config";
@@ -193,23 +194,19 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       var element = document.getElementById('reportToExport');
       element.style.paddingLeft = 10 + 'px';
-      element.style.backgroundColor = '#f2f2f2';
-      let scrollHeight = Math.max(
-        document.body.scrollHeight, document.documentElement.scrollHeight,
-        document.body.offsetHeight, document.documentElement.offsetHeight,
-        document.body.clientHeight, document.documentElement.clientHeight
-      );
+      // element.style.backgroundColor = '#f2f2f2';
       var opt = {
         margin:       0,
+        pagebreak:    { before: '.beforeClass'},
         filename:     `${this._virtualEvent.name}_report.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { width: document.getElementsByClassName('kContent')[0].clientWidth + 40, height: scrollHeight + window.innerHeight -50, useCORS: true, backgroundColor: '#f2f2f2' },
+        html2canvas:  { width: document.getElementsByClassName('kContent')[0].clientWidth + 40, height: element.clientHeight + 300, useCORS: true },
         jsPDF:        { units: 'px', orientation: 'portrait' }
       };
-      window['html2pdf'](element, opt);
+      html2pdf(element, opt);
       setTimeout(() => {
         element.style.paddingLeft = null;
-        element.style.backgroundColor = null;
+        // element.style.backgroundColor = null;
         if (updateTitle) {
           this._viewConfig.title = null;
         }
