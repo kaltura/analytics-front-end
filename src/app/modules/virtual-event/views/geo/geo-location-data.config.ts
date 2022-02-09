@@ -33,6 +33,10 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
+          'world_region': {
+            format: value => value,
+            nonComparable: true,
+          },
           'registered': {
             format: value => value
           },

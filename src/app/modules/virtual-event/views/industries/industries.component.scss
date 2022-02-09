@@ -3,11 +3,17 @@
 :host {
   width: 100%;
 }
-.kReport {
+.kReport.kIndustries {
   .kReportContainer {
     padding-bottom: 24px;
     background-color: $appBkgColor;
     display: flex;
     flex-wrap: wrap;
+  }
+  .kReportContent {
+    padding-right: 12px;
+  }
+  ::ng-deep .ui-table .ui-table-tbody > tr > td, ::ng-deep  .ui-table .ui-table-thead {
+    border: none !important;
   }
 }

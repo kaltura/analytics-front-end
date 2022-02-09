@@ -25,7 +25,8 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.component";
-import { BehaviorSubject } from "rxjs";
+import {BehaviorSubject, forkJoin, Observable, of as ObservableOf} from "rxjs";
+import {map, switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-ve-geo',
@@ -45,6 +46,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   private _echartsIntance: any; // echart instance
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredCountries);
+  private _reportTypeWorldRegions: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredWorldRegions);
   private _mapCenter = [0, 10];
   private order = '-registered';
   private _mapZoom = 1.2;
@@ -54,11 +56,14 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   public _dateRange = DateRanges.Last30D;
   public _tableData: TableRow<any>[] = [];
+  public _worldRegionsTableData: TableRow<any>[] = [];
   public _tabsData: Tab[] = [];
+  public _worldRegionsTabsData: Tab[] = [];
   public _mapChartData: any = { 'count_plays': {} };
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _columns: string[] = [];
+  public _worldRegionsColumns: string[] = [];
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
   public _exportConfig: ExportItem[] = [];
@@ -141,18 +146,30 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
       this._filter.virtualEventIdIn = this.virtualEventId;
     }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
+    const worldRegionsReportConfig: ReportConfig = { reportType: this._reportTypeWorldRegions, filter: this._filter, pager: this._pager, order: this.order };
     this._updateReportConfig(reportConfig);
-    this._reportService.getReport(reportConfig, sections, false)
+    this._updateReportConfig(worldRegionsReportConfig);
+
+    forkJoin({
+      report: this._reportService.getReport(reportConfig, sections, false),
+      worldRegionsReport: this._reportService.getReport(worldRegionsReportConfig, sections, false)
+    })
       .pipe(cancelOnDestroy(this))
-      .subscribe((report) => {
-          if (report.totals) {
-            this._handleTotals(report.totals); // handle totals
+      .pipe(switchMap(({report, worldRegionsReport}) => {
+          return ObservableOf({ report, worldRegionsReport});
+      }))
+      .subscribe(({report, worldRegionsReport}) => {
+          if (report.totals && worldRegionsReport.totals) {
+            this._handleTotals(report.totals, worldRegionsReport.totals); // handle totals
           }
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table); // handle table
             this.topCountries$.next({topCountries: this._tableData, totalCount: report.table.totalCount});
           } else {
             this.topCountries$.next({ topCountries: [], totalCount: 0 });
+          }
+          if (worldRegionsReport.table && worldRegionsReport.table.header && worldRegionsReport.table.data) {
+            this._handleWorldRegionsTable(worldRegionsReport.table); // handle table
           }
           this._updateMap();
           this._isBusy = false;
@@ -199,8 +216,37 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     });
   }
 
-  private _handleTotals(totals: KalturaReportTotal): void {
+  private _handleWorldRegionsTable(table: KalturaReportTable): void {
+    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    this._worldRegionsColumns = columns;
+    this._worldRegionsColumns[0] = this._worldRegionsColumns.splice(1, 1, this._worldRegionsColumns[0])[0]; // switch places between the first 2 columns
+    this._worldRegionsColumns.unshift('index'); // add line indexing column at the beginning
+    let tmp = this._worldRegionsColumns.pop();
+    this._worldRegionsColumns.push('distribution'); // add distribution column at the end
+    this._worldRegionsColumns.push(tmp);
+
+    this._worldRegionsTableData = tableData.map((row, index) => {
+      const calculateDistribution = (key: string): number => {
+        const tab = this._worldRegionsTabsData.find(item => item.key === key);
+        const total = tab ? parseFormattedValue(tab.value) : 0;
+        const rowValue = parseFormattedValue(row[key]);
+        return significantDigits((rowValue / total) * 100);
+      };
+      const registrationDistribution = calculateDistribution('registered');
+
+      row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
+
+      return row;
+    });
+
+    setTimeout(() => {
+      this._onSortChanged({ data: this._worldRegionsTableData, field: this._selectedMetrics, order: -1 });
+    });
+  }
+
+  private _handleTotals(totals: KalturaReportTotal, worldRegionsReport: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    this._worldRegionsTabsData = this._reportService.parseTotals(worldRegionsReport, this._dataConfig.totals, this._selectedMetrics);
   }
 
   private _updateMap(): void {
