@@ -31,6 +31,7 @@ import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.componen
 })
 export class VERolesComponent extends VEBaseReportComponent implements OnInit, OnDestroy {
   @Input() virtualEventId = '';
+  @Input() exporting = false;
 
   protected _componentId = 've-roles';
   private _dataConfig: ReportDataConfig;

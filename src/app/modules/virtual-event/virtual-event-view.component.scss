@@ -100,7 +100,28 @@
     height: 80px;
     position: relative;
   }
-
+  .kTitle {
+    color: $kGrayscale1;
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    &.kTitleMargin {
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+  }
+  .kSummary {
+    color: $kGrayscale1;
+    font-size: 20px;
+    margin-top: 12px;
+    margin-bottom: 24px;
+    white-space: pre-wrap;
+    line-height: 32px;
+  }
+  .fixedHeight {
+    height: 400px;
+  }
   .kTruncateTitle {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -260,4 +281,22 @@ app-date-filter.noTitle {
 .fixHeight {
   max-height: 272px;
   overflow: hidden;
+}
+.exportMessage {
+  position: fixed;
+  z-index: 100000;
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  background-color: white;
+  text-align: center;
+  padding-top: 200px;
+  /*opacity: 0;
+  transition: opacity 0.35s ease-in-out;*/
+  span {
+    color: $kGrayscale1;
+    font-size: 28px;
+    font-weight: 700;
+  }
 }

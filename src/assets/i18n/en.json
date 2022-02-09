@@ -1015,6 +1015,7 @@
       "videoPerformance": "Video performance over time",
       "month_id": "Month",
       "date_id": "Date",
+      "registered": "Registered",
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
@@ -1077,6 +1078,7 @@
     },
     "ve": {
       "all": "All attendees",
+      "registration": "Registration",
       "registered": "Registered",
       "invited": "Invited",
       "registered_tt": "Registered and invited attendees",
@@ -1097,7 +1099,11 @@
       "geo": "Top Geographic Areas",
       "roles": "Roles",
       "industries": "Industries",
-      "details": "Registration details"
+      "details": "Registration details",
+      "people": "It’s all about the people",
+      "reportTitle": "Summary registration report: {{0}}",
+      "exporting": "Preparing report for export...",
+      "summary": "line1\nlin2"
     },
     "playlist": {
       "count_loads": "Player Impressions",

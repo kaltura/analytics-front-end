@@ -22,6 +22,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
   @Input() name = 'default';
   @Input() showHours = true;
+  @Input() exporting = false;
   @Input() showMonthsAndYears = true;
   @Input() creationDateLabels = {label: null, prefix: null};
 

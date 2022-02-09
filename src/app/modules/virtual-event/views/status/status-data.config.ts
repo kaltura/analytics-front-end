@@ -72,7 +72,10 @@ export class StatusDataConfig extends ReportDataBaseConfig {
       legend: {
         bottom: 20,
         left: 24,
-        data: []
+        data: [],
+        itemWidth: 10,
+        itemHeight: 10,
+        icon: 'circle'
       },
       grid: {
         left: 24,

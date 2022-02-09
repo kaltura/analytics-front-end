@@ -5,7 +5,7 @@
       <div class="kTurnout">
         <span class="kValue">{{turnout}}%</span>
         <span class="kLabel">{{'app.ve.turnout' | translate}}</span>
-        <kInputHelper>
+        <kInputHelper *ngIf="!exporting">
           <span>{{'app.ve.turnout_tt' | translate}}</span>
         </kInputHelper>
       </div>
@@ -15,7 +15,7 @@
           <span class="kValue">{{_funnelData.registered | numberFormat}}</span>
           <div>
             <span class="kLabel">{{'app.ve.all' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.ve.registered_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -25,7 +25,7 @@
           <span class="kValue">{{_funnelData.participated | numberFormat}}</span>
           <div>
             <span class="kLabel">{{'app.ve.participated' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.ve.participated_tt' | translate}}</span>
             </kInputHelper>
           </div>

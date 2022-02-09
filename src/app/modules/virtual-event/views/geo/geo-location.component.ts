@@ -40,6 +40,7 @@ import {map, switchMap} from "rxjs/operators";
 export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: Table;
   @Input() virtualEventId = '';
+  @Input() exporting = false;
   protected _componentId = 've-geo';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });

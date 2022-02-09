@@ -60,6 +60,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   @Input() virtualEventId: string;
+  @Input() exporting = false;
 
   @Output() registrationDataLoaded = new EventEmitter<{ unregistered: number }>();
 

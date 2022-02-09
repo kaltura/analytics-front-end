@@ -300,8 +300,8 @@ export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDes
           return {
             trend,
             tooltip: [
-              { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
-              { value: ReportHelper.numberOrZero(compareRawValue), label: this._translate.instant(`app.entry.count_plays`) },
+              { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.${key}`) },
+              { value: ReportHelper.numberOrZero(compareRawValue), label: this._translate.instant(`app.entry.${key}`) },
             ],
             value: [currentValue, compareValue],
             label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
@@ -311,7 +311,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDes
 
         return {
           value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
+          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.${key}`) },
           label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           icon: this._deviceIconPipe.transform(item.device),
         };

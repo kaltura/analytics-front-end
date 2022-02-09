@@ -189,23 +189,24 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     }
     this._viewConfig.refineFilter = null; // hide refine filter
     this._viewConfig.download = null; // hide download report button
-
+    var element = document.getElementById('reportToExport');
+    element.style.paddingLeft = 10 + 'px';
+    element.style.width = 1600 + 'px';
     // use a timeout to refresh the page binding
     setTimeout(() => {
-      var element = document.getElementById('reportToExport');
-      element.style.paddingLeft = 10 + 'px';
       // element.style.backgroundColor = '#f2f2f2';
       var opt = {
         margin:       0,
-        pagebreak:    { before: '.beforeClass'},
-        filename:     `${this._virtualEvent.name}_report.pdf`,
+        pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
+        filename:     `Summary_registration_report_${this._virtualEventId}.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { width: document.getElementsByClassName('kContent')[0].clientWidth + 40, height: element.clientHeight + 300, useCORS: true },
+        html2canvas:  { width: element.clientWidth + 40, useCORS: true, dpi: 150, scale: 2 },
         jsPDF:        { units: 'px', orientation: 'portrait' }
       };
       html2pdf(element, opt);
       setTimeout(() => {
         element.style.paddingLeft = null;
+        element.style.width = '100%';
         // element.style.backgroundColor = null;
         if (updateTitle) {
           this._viewConfig.title = null;
@@ -218,9 +219,11 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
           geo: {}
         };
         this._viewConfig.download = {};
-        this._exporting = false;
+        setTimeout(() => {
+          this._exporting = false;
+        }, 500);
       },0);
-    }, 0);
+    }, 1000);
 
 
 

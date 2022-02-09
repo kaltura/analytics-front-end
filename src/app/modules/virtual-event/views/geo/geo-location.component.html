@@ -11,7 +11,7 @@
         <div *ngIf="_mapDataReady" echarts class="kChart"
              [options]="_mapChartData[_selectedMetrics]"
              (chartInit)="_onChartInit($event)"></div>
-        <div class="kZoomWidget">
+        <div class="kZoomWidget" *ngIf="!exporting">
           <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
           <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
         </div>
@@ -92,7 +92,7 @@
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
-                   [paginator]="true"
+                   [paginator]="!exporting"
                    [rows]="5"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
