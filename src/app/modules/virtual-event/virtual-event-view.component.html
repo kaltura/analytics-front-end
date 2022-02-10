@@ -8,7 +8,7 @@
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title && !_exporting" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
           <h1 *ngIf="_exporting" class="kTitle kTruncateTitle">{{'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
-          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
             <button #btn *ngIf="_viewConfig.download" tabindex="0" aria-label="Download Report" role="button" pButton class="kButtonDefault kDownloadReport" icon="icon-pdf" (click)="downloadReport(btn)" [label]="'app.common.downloadCsv' | translate"></button>
             <!--app-export-csv aria-label="Export" #export
                             role="button"
@@ -133,11 +133,20 @@
         </div>
 
       </div>
+
+      <span *ngIf="_exporting" class="disclaimer">{{'app.ve.disclaimer' | translate}}</span>
+      <div *ngIf="_exporting" class="footer">
+        <i></i>
+        <span>{{'app.ve.footer' | translate}}</span>
+      </div>
     </div>
 
   </k-area-blocker>
 </div>
 
 <div *ngIf="_exporting" class="exportMessage">
-  <span>{{'app.ve.exporting' | translate}}</span>
+  <div class="msg">
+    <div class="loader"></div>
+    <span>{{'app.ve.exporting' | translate}}</span>
+  </div>
 </div>

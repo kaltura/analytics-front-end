@@ -1101,8 +1101,10 @@
       "industries": "Industries",
       "details": "Registration details",
       "people": "It’s all about the people",
-      "reportTitle": "Summary registration report: {{0}}",
-      "exporting": "Preparing report for export...",
+      "reportTitle": "Summary Registration Report: {{0}}",
+      "exporting": "Generating your report...",
+      "footer": "Remarkable events, insightful data",
+      "disclaimer": "* Please note that the data above is filtered based on the filter applied in the report",
       "summary": "line1\nlin2"
     },
     "playlist": {

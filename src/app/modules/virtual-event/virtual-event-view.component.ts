@@ -192,6 +192,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     var element = document.getElementById('reportToExport');
     element.style.paddingLeft = 10 + 'px';
     element.style.width = 1600 + 'px';
+    const originalHeight = element.style.width;
+    element.style.height = '2314px';
     // use a timeout to refresh the page binding
     setTimeout(() => {
       // element.style.backgroundColor = '#f2f2f2';
@@ -200,13 +202,14 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
         filename:     `Summary_registration_report_${this._virtualEventId}.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { width: element.clientWidth + 40, useCORS: true, dpi: 150, scale: 2 },
+        html2canvas:  { width: element.clientWidth + 40, useCORS: false, dpi: 150, scale: 2 },
         jsPDF:        { units: 'px', orientation: 'portrait' }
       };
       html2pdf(element, opt);
       setTimeout(() => {
         element.style.paddingLeft = null;
         element.style.width = '100%';
+        element.style.height = originalHeight + 'px';
         // element.style.backgroundColor = null;
         if (updateTitle) {
           this._viewConfig.title = null;
