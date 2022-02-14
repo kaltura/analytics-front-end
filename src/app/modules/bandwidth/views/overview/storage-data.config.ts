@@ -28,15 +28,18 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
           },
           'total_entries': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('entries'), getColorPercent(100,'entries')],
           },
          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('viewers'), getColorPercent(100,'viewers')],
           },
          'live_view_time': {
-            format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.hours(value))),
+            format: value => Math.round(ReportHelper.hours(value)),
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
           },
         }
