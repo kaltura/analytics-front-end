@@ -190,19 +190,20 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     this._viewConfig.refineFilter = null; // hide refine filter
     this._viewConfig.download = null; // hide download report button
     var element = document.getElementById('reportToExport');
-    element.style.paddingLeft = 10 + 'px';
+    // element.style.paddingLeft = 10 + 'px';
     element.style.width = 1600 + 'px';
     const originalHeight = element.style.width;
-    element.style.height = '2314px';
+    element.style.height = '2262px';
     // use a timeout to refresh the page binding
     setTimeout(() => {
       // element.style.backgroundColor = '#f2f2f2';
       var opt = {
         margin:       0,
+        enableLinks:  true,
         pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
         filename:     `Summary_registration_report_${this._virtualEventId}.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { width: element.clientWidth + 40, useCORS: false, dpi: 150, scale: 2 },
+        html2canvas:  { width: element.clientWidth, useCORS: false, dpi: 150, scale: 2 },
         jsPDF:        { units: 'px', orientation: 'portrait' }
       };
       html2pdf(element, opt);
