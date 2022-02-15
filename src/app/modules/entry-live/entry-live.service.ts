@@ -36,7 +36,7 @@ export class EntryLiveService {
         new KalturaRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,sourceType,dvrStatus,recordStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode,liveStatus,userId'
+            fields: 'id,name,sourceType,dvrStatus,recordStatus,recordingStatus,currentBroadcastStartTime,mediaType,createdAt,creatorId,conversionProfileId,explicitLive,viewMode,liveStatus,userId'
           })
         })
       );
