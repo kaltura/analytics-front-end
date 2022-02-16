@@ -1,4 +1,4 @@
-<div data-aid="report-group-category" class="kMain" id="reportToExport">
+<div #reportToExport data-aid="report-group-category" class="kMain">
   <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
     <div class="kReportView">
       <div class="kReport kContent kOverrideFAIcons">
@@ -9,7 +9,7 @@
           <h1 *ngIf="_viewConfig.title && !_exporting" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
           <h1 *ngIf="_exporting" class="kTitle kTruncateTitle">{{'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
-            <button #btn *ngIf="_viewConfig.download" tabindex="0" aria-label="Download Report" role="button" pButton class="kButtonDefault kDownloadReport" icon="icon-pdf" (click)="downloadReport(btn)" [label]="'app.common.downloadCsv' | translate"></button>
+            <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport" [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
             <!--app-export-csv aria-label="Export" #export
                             role="button"
                             [class.kHidden]="!_viewConfig.export" name="Category"
@@ -142,11 +142,4 @@
     </div>
 
   </k-area-blocker>
-</div>
-
-<div [ngClass]="{'kHidden': !_showExportingLoader && !_exporting, 'showMsg' : _showExportingLoader }" class="exportMessage">
-  <div class="msg">
-    <div class="loader"></div>
-    <span>{{'app.ve.exporting' | translate}}</span>
-  </div>
 </div>

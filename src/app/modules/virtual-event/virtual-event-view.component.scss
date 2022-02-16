@@ -16,14 +16,8 @@
 .kMain {
   position: relative;
 }
-.kDownloadReport {
-  font-weight: normal;
+app-pdf-export {
   margin-right: 16px;
-  margin-left: auto;
-  ::ng-deep  .ui-button-text {
-    padding-left: 3.1em;
-    white-space: nowrap;
-  }
 }
 .disclaimer{
   color: $kGrayscale3;
@@ -227,21 +221,13 @@
     }
   }
 }
-app-date-filter.noTitle {
-  margin-right: 16px;
-}
 /* responsive design */
 .kHeaderRight{
   display: flex;
   margin-left: auto;
   width: 100%;
-  z-index: 1;
   &.noTitle {
-    margin-left: 0px;
-    flex-direction: row-reverse;
-    .kDownloadReport {
-      margin-right: 0px;
-    }
+    justify-content: flex-end;
   }
   &.exporting {
     padding-top: 80px;
@@ -314,70 +300,4 @@ app-date-filter.noTitle {
 .fixHeight {
   max-height: 272px;
   overflow: hidden;
-}
-.exportMessage {
-  position: fixed;
-  z-index: 100000;
-  width: 100vw;
-  height: 100vh;
-  top: 0px;
-  left: 0px;
-  background-color: white;
-  text-align: center;
-  padding-top: 150px;
-  opacity: 0;
-  transition: opacity 0.45s ease-in-out;
-  &.showMsg {
-    opacity: 1;
-  }
-  .msg {
-    display: flex;
-    flex-direction: column;
-    span {
-      color: $kGrayscale1;
-      font-size: 24px;
-      font-weight: 700;
-    }
-  }
-}
-.loader,
-.loader:after {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-.loader {
-  margin: 30px auto;
-  font-size: 10px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 12px solid rgba(0, 110, 250, 0.2);
-  border-right: 12px solid rgba(0, 110, 250, 0.2);
-  border-bottom: 12px solid rgba(0, 110, 250, 0.2);
-  border-left: 12px solid #006EFA;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1.1s infinite linear;
-  animation: load8 1.1s infinite linear;
-}
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
 }

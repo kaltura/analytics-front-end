@@ -1,0 +1,9 @@
+<button *ngIf="!_exporting" #btn tabindex="0" aria-label="Download Report" role="button" pButton class="kButtonDefault kDownloadReport" icon="icon-pdf" (click)="downloadReport(btn)" [label]="'app.common.downloadCsv' | translate"></button>
+<div data-html2canvas-ignore="true" [ngClass]="{'kHidden': !_showExportingLoader && !_exporting, 'showMsg' : _showExportingLoader }" class="exportMessage">
+  <div class="msg">
+    <div class="loader"></div>
+    <span>{{'app.ve.exporting' | translate}}</span>
+  </div>
+</div>
+
+
