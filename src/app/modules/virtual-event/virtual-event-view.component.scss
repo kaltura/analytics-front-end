@@ -22,6 +22,7 @@
   margin-left: auto;
   ::ng-deep  .ui-button-text {
     padding-left: 3.1em;
+    white-space: nowrap;
   }
 }
 .disclaimer{
@@ -324,8 +325,11 @@ app-date-filter.noTitle {
   background-color: white;
   text-align: center;
   padding-top: 150px;
-  /*opacity: 0;
-  transition: opacity 0.35s ease-in-out;*/
+  opacity: 0;
+  transition: opacity 0.45s ease-in-out;
+  &.showMsg {
+    opacity: 1;
+  }
   .msg {
     display: flex;
     flex-direction: column;

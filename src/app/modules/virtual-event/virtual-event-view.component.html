@@ -144,7 +144,7 @@
   </k-area-blocker>
 </div>
 
-<div *ngIf="_exporting" class="exportMessage">
+<div [ngClass]="{'kHidden': !_showExportingLoader && !_exporting, 'showMsg' : _showExportingLoader }" class="exportMessage">
   <div class="msg">
     <div class="loader"></div>
     <span>{{'app.ve.exporting' | translate}}</span>
