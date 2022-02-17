@@ -19,7 +19,7 @@
       <div class="kTable">
         <div class="kTableContainer">
 
-          <p-table #table
+          <p-table #table *ngIf="_worldRegionsTableData.length"
                    appScrollTopOnPaging
                    sortField="registered"
                    [value]="_worldRegionsTableData"
@@ -63,7 +63,7 @@
                   <i class="kFlag icon-globe"></i>
                 </td>
                 <td class="kHighlight">
-                  <span>{{data['world_region']}}</span>
+                  <span>{{data['world_region'] !== '0' ? data['world_region'] : ('app.entry.entryType.unknown' | translate)}}</span>
                 </td>
                 <td>
                   <span>{{data['registered']}}</span>

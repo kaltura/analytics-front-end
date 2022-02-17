@@ -141,6 +141,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     this._isBusy = true;
     this._setMapCenter();
     this._tableData = [];
+    this._worldRegionsTableData = [];
     this._blockerMessage = null;
     this.topCountries$.next({topCountries: [], totalCount: 0});
     if (this.virtualEventId) {

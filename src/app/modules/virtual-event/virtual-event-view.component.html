@@ -16,7 +16,7 @@
                             [reports]="_exportConfig"
                             [refineFilter]="_refineFilter"
                             [dateFilter]="_dateFilter"
-                            [virtualEventId]="_virtualEventId"></app-export-csv-->
+                            [virtualEventId]="null"></app-export-csv-->
             <div class="kFilter kOverrideFAIcons" [class.kFloatLeft]="!_viewConfig.download">
               <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown" *ngIf="_viewConfig.refineFilter"
                    (click)="_refineFilterOpened = !_refineFilterOpened"
@@ -69,7 +69,7 @@
           <div *ngIf="_viewConfig.miniFunnel" class="kMiniReportContainer">
             <app-registration-funnel [dateFilter]="_dateFilter"
                                      [refineFilter]="_refineFilter"
-                                     [virtualEventId]="_virtualEventId"
+                                     [virtualEventId]="null"
                                      [exporting]="_exporting"
                                      (registrationDataLoaded)="onRegistrationDataLoaded($event)">
             </app-registration-funnel>
@@ -81,7 +81,7 @@
               <app-devices-overview [dateFilter]="_dateFilter" *ngIf="_viewConfig.miniDevices"
                                     [refineFilter]="_refineFilter"
                                     [reportConfig]="_devicesReportConfig"
-                                    [virtualEventId]="_virtualEventId"
+                                    [virtualEventId]="null"
                                     [reportType]="_devicesReportType">
               </app-devices-overview>
             </div>
@@ -91,7 +91,7 @@
         <div [class.kHidden]="!_viewConfig.status" class="kReportContainer">
           <app-ve-status [dateFilter]="_dateFilter" #status
                          [refineFilter]="_refineFilter"
-                         [virtualEventId]="_virtualEventId">
+                         [virtualEventId]="null">
           </app-ve-status>
         </div>
 
@@ -108,7 +108,7 @@
           <app-ve-geo #geo [exporting]="_exporting"
                            [dateFilter]="_dateFilter"
                            [refineFilter]="_refineFilter"
-                           [virtualEventId]="_virtualEventId">
+                           [virtualEventId]="null">
           </app-ve-geo>
         </div>
 
@@ -118,7 +118,7 @@
               [dateFilter]="_dateFilter"
               [exporting]="_exporting"
               [refineFilter]="_refineFilter"
-              [virtualEventId]="_virtualEventId">
+              [virtualEventId]="null">
             </app-ve-roles>
           </div>
 
@@ -127,7 +127,7 @@
               [dateFilter]="_dateFilter"
               [exporting]="_exporting"
               [refineFilter]="_refineFilter"
-              [virtualEventId]="_virtualEventId">
+              [virtualEventId]="null">
             </app-ve-industries>
           </div>
         </div>
