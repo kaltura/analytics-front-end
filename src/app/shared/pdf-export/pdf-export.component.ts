@@ -14,9 +14,6 @@ export class PdfExportComponent {
 	@Input()
   filename: string;
 
-	@Input()
-  reportBackgroundColor: string;
-
 	@Output()
 	exporting = new EventEmitter<boolean>();
 
@@ -43,9 +40,6 @@ export class PdfExportComponent {
       this.elementToExport.style.width = 1600 + 'px';
       const originalHeight = this.elementToExport.style.width;
       this.elementToExport.style.height = '2262px';
-      if (this.reportBackgroundColor) {
-        this.elementToExport.style.backgroundColor = this.reportBackgroundColor;
-      }
       // use a timeout to refresh the page binding
       setTimeout(() => {
         var opt = {
@@ -63,9 +57,6 @@ export class PdfExportComponent {
           this.elementToExport.removeAttribute('id');
           this.elementToExport.style.width = '100%';
           this.elementToExport.style.height = originalHeight + 'px';
-          if (this.reportBackgroundColor) {
-            this.elementToExport.style.backgroundColor = null;
-          }
           this.postExport.emit();
           setTimeout(() => {
             this.exporting.emit(false);
