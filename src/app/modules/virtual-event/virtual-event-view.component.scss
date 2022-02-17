@@ -5,8 +5,8 @@
   width: 100%;
   height: 100%;
 }
-#reportToExport {
-  width: 100vw;
+.kReportView .kContent:first-child {
+  background-color: #f2f2f2;
 }
 @media screen and (max-width: 1060px) {
   .kBackBtn {
@@ -231,6 +231,7 @@ app-pdf-export {
   }
   &.exporting {
     padding-top: 80px;
+    justify-content: flex-end;
   }
 }
 @media (max-width: 1280px) {

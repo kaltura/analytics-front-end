@@ -28,23 +28,26 @@ export class PdfExportComponent {
 
   public _showExportingLoader = false;
   public _exporting = false;
+  public _fadeAnimation = false;
 
 	constructor() {}
 
   public downloadReport(el: any): void {
     this._showExportingLoader = true;
+    this._fadeAnimation = true;
     setTimeout(() => {
       this.exporting.emit(true);
-      this._exporting = true;
       this.preExport.emit();
+      this._exporting = true;
+      this.elementToExport.setAttribute('id', 'reportToExport');
       this.elementToExport.style.width = 1600 + 'px';
       const originalHeight = this.elementToExport.style.width;
       this.elementToExport.style.height = '2262px';
+      if (this.reportBackgroundColor) {
+        this.elementToExport.style.backgroundColor = this.reportBackgroundColor;
+      }
       // use a timeout to refresh the page binding
       setTimeout(() => {
-        if (this.reportBackgroundColor) {
-          this.elementToExport.style.backgroundColor = this.reportBackgroundColor;
-        }
         var opt = {
           margin:       0,
           enableLinks:  true,
@@ -57,17 +60,22 @@ export class PdfExportComponent {
         html2pdf(this.elementToExport, opt);
         setTimeout(() => {
           this.elementToExport.style.paddingLeft = null;
+          this.elementToExport.removeAttribute('id');
           this.elementToExport.style.width = '100%';
           this.elementToExport.style.height = originalHeight + 'px';
           if (this.reportBackgroundColor) {
             this.elementToExport.style.backgroundColor = null;
           }
           this.postExport.emit();
-            this._showExportingLoader = false;
+          setTimeout(() => {
+            this.exporting.emit(false);
+            this._exporting = false;
+            this._fadeAnimation = false;
             setTimeout(() => {
-              this.exporting.emit(false);
-              this._exporting = false;
+              this._showExportingLoader = false;
             }, 500);
+          }, 500);
+
         },0);
       }, 1000);
     }, 500)

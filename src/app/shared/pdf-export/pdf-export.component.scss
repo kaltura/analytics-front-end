@@ -19,7 +19,7 @@
   padding-top: 150px;
   opacity: 0;
   transition: opacity 0.45s ease-in-out;
-  &.showMsg {
+  &.fadeIn {
     opacity: 1;
   }
   .msg {
