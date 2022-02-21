@@ -6,7 +6,7 @@
     <i *ngIf="comparing" class="compareIcon icon-bolt"></i>
     <span class="kDateRangePrefix">{{_dateRangePrefix}}</span>
     <span>{{_dateRangeLabel}}</span>
-    <i class="kIcondropdown_arrow_bottom"></i>
+    <i *ngIf="!exporting" class="kIcondropdown_arrow_bottom"></i>
   </div>
   <a tabindex="0" role="button" *ngIf="comparing" class="kExitCompare"
      (click)="exitCompare()"

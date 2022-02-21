@@ -1,0 +1,45 @@
+<div class="kReport kFunnel kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" aria-labelledby="kImpressions">
+
+      <div class="kTurnout">
+        <span class="kValue">{{turnout}}%</span>
+        <span class="kLabel">{{'app.ve.turnout' | translate}}</span>
+        <kInputHelper *ngIf="!exporting">
+          <span>{{'app.ve.turnout_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="kData" *ngIf="_chartLoaded">
+        <div class="kDataContainer" aria-label="Registered">
+          <span class="kValue">{{_funnelData.registered | numberFormat}}</span>
+          <div>
+            <span class="kLabel">{{'app.ve.all' | translate}}</span>
+            <kInputHelper *ngIf="!exporting">
+              <span>{{'app.ve.registered_tt' | translate}}</span>
+            </kInputHelper>
+          </div>
+        </div>
+
+        <div class="kDataContainer" aria-label="Participated">
+          <span class="kValue">{{_funnelData.participated | numberFormat}}</span>
+          <div>
+            <span class="kLabel">{{'app.ve.participated' | translate}}</span>
+            <kInputHelper *ngIf="!exporting">
+              <span>{{'app.ve.participated_tt' | translate}}</span>
+            </kInputHelper>
+          </div>
+        </div>
+      </div>
+
+      <div class="kCharts"  [style.opacity]="_chartLoaded ? 1 : 0">
+        <div class="kChart">
+          <div aria-label="Impressions Funnel" echarts class="kChart"  [options]="_chartData" (chartInit)="onChartInit($event)"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

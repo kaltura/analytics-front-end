@@ -12,6 +12,13 @@
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",
       "categories": "Categories",
+      "origin": {
+        "title": " Registration Origin",
+        "Registration": "Registration",
+        "Invitation": "Invitation",
+        "Webhook": "Webhook",
+        "SSO": "SSO"
+      },
       "mediaType": {
         "title": "Media Type",
         "Video": "Video",
@@ -184,6 +191,8 @@
       },
       "daily": "Daily",
       "sinceCreation": "Creation",
+      "publish": "Publish",
+      "sincePublish": "Since Publish",
       "lastBroadcast": "Last Broadcast",
       "firstBroadcast": "First Broadcast",
       "error": "'From' date must be before 'To' date",
@@ -335,7 +344,7 @@
         "endUser": "End user",
         "publisher": "Publisher Bandwidth"
       },
-      "storedMedia_tt": "The average storage in the selected time frame.",
+      "storedMedia_tt": "The average storage in the selected time frame",
       "live_view_tt": "Webcast and Live"
     },
     "audience": {
@@ -1006,6 +1015,7 @@
       "videoPerformance": "Video performance over time",
       "month_id": "Month",
       "date_id": "Date",
+      "registered": "Registered",
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
@@ -1065,6 +1075,37 @@
         "syndication": "Top Domains"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "ve": {
+      "all": "All attendees",
+      "registration": "Registration",
+      "registered": "Registered",
+      "invited": "Invited",
+      "registered_tt": "Registered and invited attendees",
+      "confirmed": "Confirmed",
+      "confirmed_tt": "Confirmed the registration email",
+      "participated": "Participated",
+      "participated_tt": "Attendees who showed up for the event",
+      "turnout": "Overall Turnout",
+      "turnout_tt": "Participation rate",
+      "unregistered": "Unregistered",
+      "turnout2": "Turnout",
+      "dropoff": "Drop-off",
+      "attendees": "Attendees",
+      "status": "Attendees status",
+      "evolution": "Evolution of cumulated attendee’s statuses over time",
+      "peak": "Peak Day",
+      "date_id": "Days",
+      "geo": "Top Geographic Areas",
+      "roles": "Roles",
+      "industries": "Industries",
+      "details": "Registration details",
+      "people": "It’s all about the people",
+      "reportTitle": "Summary Registration Report: {{0}}",
+      "exporting": "Generating your report...",
+      "footer": "Remarkable events, insightful data",
+      "disclaimer": "* Please note that the data above is filtered based on the filter applied in the report",
+      "summary": "line1\nlin2"
     },
     "playlist": {
       "count_loads": "Player Impressions",

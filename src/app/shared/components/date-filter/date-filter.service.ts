@@ -82,7 +82,7 @@ export class DateFilterService {
   }
 
 
-  public getDateRange(dateRangeType: DateRangeType, period: string, creationDate?: moment.Moment, firstBroadcastDate?: moment.Moment, lastBroadcastDate?: moment.Moment): SelectItem[] {
+  public getDateRange(dateRangeType: DateRangeType, period: string, showMonthsAndYears: boolean, creationDate?: moment.Moment, firstBroadcastDate?: moment.Moment, lastBroadcastDate?: moment.Moment): SelectItem[] {
     let selectItemArr: SelectItem[] = [];
 
     switch (dateRangeType) {
@@ -125,14 +125,16 @@ export class DateFilterService {
             label: this._translate.instant('app.dateFilter.last30d'),
             value: {val: DateRanges.Last30D, tooltip: this.getDateRangeDetails(DateRanges.Last30D).label}
           });
-          selectItemArr.push({
-            label: this._translate.instant('app.dateFilter.last3m'),
-            value: {val: DateRanges.Last3M, tooltip: this.getDateRangeDetails(DateRanges.Last3M).label}
+          if (showMonthsAndYears) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.last3m'),
+              value: {val: DateRanges.Last3M, tooltip: this.getDateRangeDetails(DateRanges.Last3M).label}
             });
-          selectItemArr.push({
-            label: this._translate.instant('app.dateFilter.last12m'),
-            value: {val: DateRanges.Last12M, tooltip: this.getDateRangeDetails(DateRanges.Last12M).label}
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.last12m'),
+              value: {val: DateRanges.Last12M, tooltip: this.getDateRangeDetails(DateRanges.Last12M).label}
             });
+          }
 
           if (creationDate) {
             selectItemArr.push({
@@ -150,14 +152,19 @@ export class DateFilterService {
             label: this._translate.instant('app.dateFilter.month'),
             value: {val: DateRanges.CurrentMonth, tooltip: this.getDateRangeDetails(DateRanges.CurrentMonth).label}
             });
-          selectItemArr.push({
-            label: this._translate.instant('app.dateFilter.quarter'),
-            value: {val: DateRanges.CurrentQuarter, tooltip: this.getDateRangeDetails(DateRanges.CurrentQuarter).label}
+          if (showMonthsAndYears) {
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.quarter'),
+              value: {
+                val: DateRanges.CurrentQuarter,
+                tooltip: this.getDateRangeDetails(DateRanges.CurrentQuarter).label
+              }
             });
-          selectItemArr.push({
-            label: this._translate.instant('app.dateFilter.year'),
-            value: {val: DateRanges.CurrentYear, tooltip: this.getDateRangeDetails(DateRanges.CurrentYear).label}
+            selectItemArr.push({
+              label: this._translate.instant('app.dateFilter.year'),
+              value: {val: DateRanges.CurrentYear, tooltip: this.getDateRangeDetails(DateRanges.CurrentYear).label}
             });
+          }
         }
         break;
       case DateRangeType.ShortTerm:

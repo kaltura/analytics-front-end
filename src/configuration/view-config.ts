@@ -191,6 +191,23 @@ export const viewsConfig = {
       userFilter: {}
     },
   },
+  virtualEvent: {
+    title: {},
+    download: {},
+    details: {},
+    refineFilter: {
+      origin: {},
+      geo: {}
+    },
+    miniFunnel: {},
+    miniInsights: {},
+    miniDevices: {},
+    status : {},
+    highlights: {},
+    geo: {},
+    roles: {},
+    industries: {}
+  },
   entryWebcast: {
     export: {},
     title: {},

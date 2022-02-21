@@ -1,0 +1,27 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+
+    <div class="kReportContent">
+
+      <div class="kVal">
+        <i *ngIf="countries.length === 0" class="icon-globe"></i>
+        <i *ngIf="countries.length" class="kFlag flag1" [ngClass]="'kFlag-' + countries[0]"></i>
+        <i *ngIf="countries.length > 1" class="kFlag flag2" [ngClass]="'kFlag-' + countries[1]"></i>
+        <div class="kLabels kCountriesLables">
+          <span class="value">{{countriesCount | numberFormat}}</span>
+          <span class="title">{{'app.entryWebcast.highlights.countries' | translate }}</span>
+        </div>
+      </div>
+
+
+      <div class="kVal">
+        <div class="kMiniIcon grey"><i class="icon-small-viewer-contributor"></i></div>
+        <div class="kLabels">
+          <span class="value">{{unregistered | numberFormat}}</span>
+          <span class="title">{{'app.ve.unregistered' | translate}}</span>
+        </div>
+      </div>
+
+    </div>
+
+</div>
+
