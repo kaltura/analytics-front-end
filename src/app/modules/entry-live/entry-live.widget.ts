@@ -16,11 +16,13 @@ import {
 import { EntryLiveGeneralPollsService } from './providers/entry-live-general-polls.service';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import {analyticsConfig} from "configuration/analytics-config";
 
 @Injectable()
 export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   protected _widgetId = 'main';
   protected _pollsFactory = null;
+  private loadOwner = analyticsConfig.viewsConfig.entryLive.owner !== null;
 
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
@@ -29,11 +31,11 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
   }
 
   protected _onRestart(): void {
-    this._pollsFactory = new EntryLiveRequestFactory(this._activationArgs.entryId, this._entryLiveService);
+    this._pollsFactory = new EntryLiveRequestFactory(this._activationArgs.entryId, this._entryLiveService, this.loadOwner);
   }
 
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
-    this._pollsFactory = new EntryLiveRequestFactory(widgetsArgs.entryId, this._entryLiveService);
+    this._pollsFactory = new EntryLiveRequestFactory(widgetsArgs.entryId, this._entryLiveService, this.loadOwner);
 
     return ObservableOf(null);
   }
@@ -49,7 +51,7 @@ export class EntryLiveWidget extends WidgetBase<KalturaExtendedLiveEntry> {
       redundancy: this._entryLiveService.getRedundancyStatus(nodes),
       streamStatus: KalturaStreamStatus.offline,
       serverType: null,
-      owner: responses[3].result.fullName,
+      owner: this.loadOwner ? responses[3].result.fullName : '',
       isManual: entry.sourceType === KalturaSourceType.manualLiveStream,
       displayCreatedAt: DateFilterUtils.formatFullDateString(entry.createdAt),
     });

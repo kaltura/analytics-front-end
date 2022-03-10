@@ -29,7 +29,7 @@
         </div>
 
         <app-entry-details *ngIf="_entryLiveViewConfig.details"
-                           [entry]="_entry" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
+                           [entry]="_entry" [showOwner]="_entryLiveViewConfig.owner" (navigateToEntry)="_navigateToEntry()"></app-entry-details>
         <app-live-filters class="kRefineFiltersHost" name="entry-webcast"
                                   [viewConfig]="_refineFilter"
                                   [opened]="_refineFilterOpened"
