@@ -54,7 +54,7 @@
             </div>
           </td>
           <td [ngStyle]="{'width': '155px', 'padding-left': '10px'}">
-            <thumb-loader [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" [width]="128" [height]="72"></thumb-loader>
+            <thumb-loader [useBase64]="true" [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" [width]="128" [height]="72"></thumb-loader>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
             <div class="kTopVideoEntryColumn"

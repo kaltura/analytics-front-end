@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import { AuthService } from "shared/services";
 import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
 import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
@@ -9,10 +9,11 @@ import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-per
   styleUrls: ['./thumb-loader.component.scss']
 })
 export class ThumbLoaderComponent {
-
+  @ViewChild('canvas') _canvas: any;
   @Input() thumbnailUrl: string = null;
   @Input() width = 86;
   @Input() height = 48;
+  @Input() useBase64 = false;
   @Input() disabled = false;
   @Output() onErrror = new EventEmitter<string>();
   @Output() onClick = new EventEmitter();
@@ -21,6 +22,7 @@ export class ThumbLoaderComponent {
 
   public _ks = '';
   public _loadThumbnailWithKs = false;
+  public base64Data = '';
 
   constructor(_authService: AuthService,
               private _permissionsService: AnalyticsPermissionsService) {
@@ -47,6 +49,20 @@ export class ThumbLoaderComponent {
   public _onMouseLeave(event): void {
     if (!this.disabled) {
       this.onMouseLeave.emit(event);
+    }
+  }
+
+  public onLoad(event): void {
+    if (this.useBase64) {
+      const ctx = this._canvas.nativeElement.getContext('2d');
+      // get the scale
+      var scale = Math.max(this._canvas.nativeElement.width / event.target.width, this._canvas.nativeElement.height / event.target.height);
+      // get the top left position of the image
+      var x = (this._canvas.nativeElement.width / 2) - (event.target.width / 2) * scale;
+      var y = (this._canvas.nativeElement.height / 2) - (event.target.height / 2) * scale;
+      ctx.drawImage(event.target, x, y, event.target.width * scale, event.target.height * scale);
+      event.target.style.display = 'none';
+      this.base64Data = this._canvas.nativeElement.toDataURL();
     }
   }
 }
