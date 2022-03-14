@@ -2,6 +2,15 @@
 
 .kReport {
   height: 100%;
+  background-color: $appBkgColor;
+  .kReportHeader {
+    app-export-csv {
+      margin-left: 16px;
+    }
+    app-pdf-export {
+      margin-left: auto;
+    }
+  }
 }
 
 .kReportContainer{

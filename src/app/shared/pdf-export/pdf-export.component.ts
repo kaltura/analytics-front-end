@@ -48,7 +48,7 @@ export class PdfExportComponent {
           pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
           filename:     this.filename ? this.filename : 'Summary.pdf',
           image:        { type: 'jpeg', quality: 0.95 },
-          html2canvas:  { width: this.elementToExport.clientWidth, useCORS: false, dpi: 150, scale: 2 },
+          html2canvas:  { width: this.elementToExport.clientWidth, useCORS: true, dpi: 150, scale: 2 },
           jsPDF:        { units: 'px', orientation: 'portrait' }
         };
         html2pdf(this.elementToExport, opt);

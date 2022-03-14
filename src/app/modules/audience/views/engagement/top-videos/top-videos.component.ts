@@ -40,12 +40,12 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   protected _componentId = 'top-videos';
 
   public topVideos$: BehaviorSubject<{table: KalturaReportTable, compare: KalturaReportTable, busy: boolean, error: KalturaAPIException}> = new BehaviorSubject({table: null, compare: null, busy: false, error: null});
   public totalCount$: BehaviorSubject<number> = new BehaviorSubject(0);
-  
+
   public _order = '-engagement_ranking';
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy: boolean;
@@ -69,14 +69,14 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
               private _dataConfigService: TopVideosDataConfig,
               private _logger: KalturaLogger) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
-  
+
+
   ngOnInit() {
   }
-  
+
   protected _loadReport(): void {
     this.topVideos$.next({table: null, compare: null, busy: true, error: null});
     this.totalCount$.next(0);
@@ -88,7 +88,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
@@ -97,7 +97,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           this._tableData = [];
           this._entryDetails = [];
           this._compareTableData = [];
-          
+
           if (report.table && report.table.header && report.table.data) {
             this._handleTable(report.table, compare); // handle table
             this.topVideos$.next({table: report.table, compare: compare && compare.table ? compare.table : null, busy: false, error: null});
@@ -125,7 +125,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -146,7 +146,7 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._compareFirstTimeLoading = true;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -154,29 +154,29 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (item, index) => {
       (<any>item)['index'] = index + 1;
-      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144}`;
+      item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
       return item;
     };
     this._columns = columns;
     this._tableData = tableData.map(extendTableRow);
     this._currentDates = null;
     this._compareDates = null;
-  
+
     const { tableData: entryDetails } = this._reportService.parseTableData(table, this._dataConfig.entryDetails);
     this._entryDetails = entryDetails.map(extendTableRow);
-    
+
     if (compare && compare.table && compare.table.header && compare.table.data) {
       const { tableData: compareTableData } = this._reportService.parseTableData(compare.table, this._dataConfig.table);
       this._compareTableData = compareTableData.map(extendTableRow);
       this._columns = ['entry_name', 'count_plays'];
       this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM D, YYYY');
       this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM D, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM D, YYYY');
-  
+
       const { tableData: compareEntryDetails } = this._reportService.parseTableData(compare.table, this._dataConfig.entryDetails);
       this._entryDetails = [...this._entryDetails, ...compareEntryDetails.map(extendTableRow)];
     }

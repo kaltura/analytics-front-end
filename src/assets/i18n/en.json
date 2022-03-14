@@ -435,6 +435,7 @@
         "context": "Playback Context"
       },
       "title": "Engagement",
+      "exportTitle": "Summary Engagement Report",
       "playedEntries": "Out of {{0}} Played Entries",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
