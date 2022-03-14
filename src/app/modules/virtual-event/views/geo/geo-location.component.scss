@@ -16,6 +16,9 @@
   ::ng-deep .ui-table .ui-table-tbody > tr > td, ::ng-deep  .ui-table .ui-table-thead {
     border: none !important;
   }
+  .hidePaginator ::ng-deep .ui-paginator {
+    display: none;
+  }
   .divider {
     width: 100%;
     height: 1px;

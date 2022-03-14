@@ -85,14 +85,14 @@
 
           <div class="divider"></div>
 
-          <p-table #table
+          <p-table #table [class.hidePaginator]="exporting"
                    appScrollTopOnPaging
                    sortField="registered"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
-                   [paginator]="!exporting"
+                   [paginator]="true"
                    [rows]="5"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
