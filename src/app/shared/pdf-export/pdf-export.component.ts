@@ -38,7 +38,7 @@ export class PdfExportComponent {
       this._exporting = true;
       this.elementToExport.setAttribute('id', 'reportToExport');
       this.elementToExport.style.width = 1600 + 'px';
-      const originalHeight = this.elementToExport.style.width;
+      const originalHeight = this.elementToExport.style.height;
       this.elementToExport.style.height = '2262px';
       // use a timeout to refresh the page binding
       setTimeout(() => {
