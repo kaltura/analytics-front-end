@@ -434,6 +434,7 @@
         "entries": "Entries",
         "context": "Playback Context"
       },
+      "footer": "insightful data",
       "title": "Engagement",
       "exportTitle": "Summary Engagement Report",
       "playedEntries": "Out of {{0}} Played Entries",

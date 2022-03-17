@@ -1,7 +1,7 @@
 <div data-aid="report-mini-top-videos" class="kReport kOverrideFAIcons">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
-    <kInputHelper>
+    <kInputHelper *ngIf="!exporting">
       <span>{{'app.engagement.topVideos_tt' | translate}}</span>
     </kInputHelper>
   </div>
@@ -10,6 +10,7 @@
       <app-engagement-top-videos-table *ngIf="_isCompareMode"
                                        name="compare"
                                        [order]="_order"
+                                       [exporting]="exporting"
                                        [entryDetails]="_entryDetails"
                                        [isCompareMode]="_isCompareMode"
                                        [tableData]="_compareTableData"
@@ -19,6 +20,7 @@
                                        (sortChanged)="_onSortChanged($event)"></app-engagement-top-videos-table>
       <app-engagement-top-videos-table name="current"
                                        [order]="_order"
+                                       [exporting]="exporting"
                                        [tableData]="_tableData"
                                        [entryDetails]="_entryDetails"
                                        [showDivider]="_isCompareMode"

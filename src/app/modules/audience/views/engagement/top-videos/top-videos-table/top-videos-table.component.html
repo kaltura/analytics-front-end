@@ -106,7 +106,7 @@
       </ng-template>
     </p-table>
   </div>
-  <p-paginator [rows]="_pager.pageSize"
+  <p-paginator [rows]="_pager.pageSize" [class.hidePaginator]="exporting"
                [first]="(_pager.pageIndex - 1) * _pager.pageSize"
                [totalRecords]="_totalCount"
                (onPageChange)="_onPaginationChanged($event)"></p-paginator>

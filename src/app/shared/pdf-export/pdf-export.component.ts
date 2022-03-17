@@ -53,7 +53,6 @@ export class PdfExportComponent {
         };
         html2pdf(this.elementToExport, opt);
         setTimeout(() => {
-          this.elementToExport.style.paddingLeft = null;
           this.elementToExport.removeAttribute('id');
           this.elementToExport.style.width = '100%';
           this.elementToExport.style.height = originalHeight + 'px';

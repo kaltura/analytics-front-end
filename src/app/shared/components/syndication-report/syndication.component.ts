@@ -73,6 +73,7 @@ export class SyndicationComponent implements OnDestroy {
     this._dataConfig = value;
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   };
+  @Input() exporting = false;
 
   @Output() onDrillDown = new EventEmitter<string>();
 

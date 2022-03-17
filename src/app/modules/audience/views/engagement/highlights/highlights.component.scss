@@ -1,5 +1,7 @@
 @import '../../../../../../styles/variables';
-
+:host .kReport {
+  margin-bottom: 0px;
+}
 .kNoResults {
   display: flex;
   width: 100%;
