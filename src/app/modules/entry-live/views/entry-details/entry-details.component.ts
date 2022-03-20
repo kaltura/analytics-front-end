@@ -8,6 +8,7 @@ import { KalturaExtendedLiveEntry } from '../../entry-live.service';
 })
 export class EntryDetailsComponent {
   @Input() entry: KalturaExtendedLiveEntry;
-  
+  @Input() showOwner: boolean;
+
   @Output() navigateToEntry = new EventEmitter<void>();
 }

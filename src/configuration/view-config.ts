@@ -177,6 +177,7 @@ export const viewsConfig = {
   },
   entryLive: {
     title: {},
+    owner: {},
     export: {},
     toggleLive: {},
     details: {},

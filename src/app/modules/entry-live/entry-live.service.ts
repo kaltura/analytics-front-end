@@ -116,12 +116,20 @@ export class EntryLiveService {
       );
   }
 
-  public getEntryDateRequest(entryId): KalturaMultiRequest {
-    return new KalturaMultiRequest(
-      this._getLiveStreamAction(entryId),
-      this._getConversionProfileAssetParamsListAction(),
-      this._getEntryServerNodeListAction(entryId),
-      this._getUserAction().setDependency(['userId', 0, 'userId'])
-    );
+  public getEntryDateRequest(entryId, loadOwner = true): KalturaMultiRequest {
+    if (loadOwner) {
+      return new KalturaMultiRequest(
+        this._getLiveStreamAction(entryId),
+        this._getConversionProfileAssetParamsListAction(),
+        this._getEntryServerNodeListAction(entryId),
+        this._getUserAction().setDependency(['userId', 0, 'userId'])
+      );
+    } else {
+      return new KalturaMultiRequest(
+        this._getLiveStreamAction(entryId),
+        this._getConversionProfileAssetParamsListAction(),
+        this._getEntryServerNodeListAction(entryId)
+      );
+    }
   }
 }
