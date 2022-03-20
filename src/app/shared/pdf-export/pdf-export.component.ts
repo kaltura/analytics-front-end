@@ -38,7 +38,7 @@ export class PdfExportComponent {
       this._exporting = true;
       this.elementToExport.setAttribute('id', 'reportToExport');
       this.elementToExport.style.width = 1600 + 'px';
-      const originalHeight = this.elementToExport.style.width;
+      const originalHeight = this.elementToExport.style.height;
       this.elementToExport.style.height = '2262px';
       // use a timeout to refresh the page binding
       setTimeout(() => {
@@ -47,13 +47,12 @@ export class PdfExportComponent {
           enableLinks:  true,
           pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
           filename:     this.filename ? this.filename : 'Summary.pdf',
-          image:        { type: 'jpeg', quality: 0.95 },
+          image:        { type: 'jpg', quality: 0.95 },
           html2canvas:  { width: this.elementToExport.clientWidth, useCORS: false, dpi: 150, scale: 2 },
           jsPDF:        { units: 'px', orientation: 'portrait' }
         };
         html2pdf(this.elementToExport, opt);
         setTimeout(() => {
-          this.elementToExport.style.paddingLeft = null;
           this.elementToExport.removeAttribute('id');
           this.elementToExport.style.width = '100%';
           this.elementToExport.style.height = originalHeight + 'px';

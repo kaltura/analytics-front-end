@@ -28,12 +28,13 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 })
 export class EngagementMiniHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy, OnInit {
   @Input() dateFilterComponent: DateFilterComponent;
-  
+  @Input() exporting = false;
+
   @Input() highlights$: BehaviorSubject<{ current: Report, compare: Report, busy: boolean, error: KalturaAPIException }>;
   @Input() videosCount$: BehaviorSubject<number>;
-  
+
   private _dataConfig: ReportDataConfig;
-  
+
   protected _componentId = 'mini-highlights';
 
   public _isBusy: boolean;
@@ -46,11 +47,11 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
     searchInTags: true,
     searchInAdminTags: false
   });
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -61,10 +62,10 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
               private _dataConfigService: MiniHighlightsConfig,
               private _logger: KalturaLogger) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnInit(): void {
     if (this.highlights$) {
       this.highlights$
@@ -82,14 +83,14 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
         });
     }
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     // empty by design
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -97,7 +98,7 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -114,11 +115,11 @@ export class EngagementMiniHighlightsComponent extends EngagementBaseReportCompo
       this._compareFilter = null;
     }
   }
-  
+
   private _handleCompare(current: Report, compare: Report): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-    
+
     if (current.totals && compare.totals) {
       this._tabsData = this._compareService.compareTotalsData(
         currentPeriod,

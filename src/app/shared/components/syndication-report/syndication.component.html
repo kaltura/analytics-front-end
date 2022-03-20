@@ -1,7 +1,7 @@
 <div class="kReport kOverrideFAIcons">
   <div class="kFilters">
     <h2 class="kTitle" id="kSyndication" *ngIf="!_drillDown">{{'app.engagement.topDomainsReport.topDomains' | translate}}</h2>
-    <kInputHelper *ngIf="!_drillDown">
+    <kInputHelper *ngIf="!_drillDown && !exporting">
       <span>{{'app.engagement.topDomainsReport.topDomains_tt' | translate}}</span>
     </kInputHelper>
     <div class="kBreadcrumbs" *ngIf="_drillDown">
@@ -24,7 +24,7 @@
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent" aria-labelledby="kSyndication">
-      <ng-container *ngIf="_drillDown && !_isBusy">
+      <ng-container *ngIf="_drillDown && !_isBusy && !exporting">
         <app-report-tabs [tabs]="_tabsData" [compareMode]="_isCompareMode"
                          (tabChange)="_onTabChange($event)"></app-report-tabs>
         <div class="kDimensions">
@@ -38,7 +38,7 @@
         </div>
       </ng-container>
 
-      <span *ngIf="_totalCount !== undefined" class="kTotalCount">
+      <span *ngIf="_totalCount !== undefined && !exporting" class="kTotalCount">
         <ng-container *ngIf="!_drillDown">
           {{'app.engagement.topDomainsReport.domains' | translate: { '0': _totalCount } }}
         </ng-container>
@@ -57,13 +57,13 @@
                 <th [ngStyle]="{'width': '60px'}">
                   <span *ngIf="_tableData?.length">{{'app.engagement.topDomainsReport.index' | translate}}</span>
                 </th>
-                <th [ngStyle]="{'width': '30px'}"></th>
+                <th *ngIf="!exporting" [ngStyle]="{'width': '30px'}"></th>
                 <th *ngFor="let col of _columns"
                     [pSortableColumn]="_isCompareMode || col === 'plays_distribution'  || col === 'domain_name' ? null : col"
                     [class.nonSortable]="_isCompareMode || col === 'plays_distribution'  || col === 'domain_name'"
                     [ngStyle]="{
                       'width': col === 'plays_distribution' || col === 'domain_name' || col === 'referrer'
-                        ? '20%'
+                        ? '19%'
                         : 'auto'
                 }">
                   <div class="kColumnHeader">
@@ -78,7 +78,7 @@
             <ng-template pTemplate="body" let-data>
               <tr>
                 <td><span>{{data['index']}}</span></td>
-                <td [ngStyle]="{'padding': '0'}">
+                <td *ngIf="!exporting" [ngStyle]="{'padding': '0', 'width': exporting ? '0px' : '30px'}">
                   <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
                     <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
                          onError="this.onerror=null;this.style.display='none'"
@@ -132,7 +132,7 @@
               </div>
             </ng-template>
           </p-table>
-          <p-paginator aria-label="Pagination"
+          <p-paginator aria-label="Pagination" [class.hidePaginator]="exporting"
                        [rows]="_pager.pageSize"
                        [first]="(_pager.pageIndex -1) * _pager.pageSize"
                        [totalRecords]="_totalCount"

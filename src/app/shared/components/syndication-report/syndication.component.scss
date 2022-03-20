@@ -103,3 +103,9 @@ td span {
     }
   }
 }
+.hidePaginator {
+  display: none;
+}
+p-table ::ng-deep .ui-table .ui-table-tbody > tr > td, p-table ::ng-deep .ui-table .ui-table-thead > tr > th {
+  padding-left: 24px;
+}

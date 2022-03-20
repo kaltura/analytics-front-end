@@ -6,6 +6,7 @@ export const viewsConfig = {
   audience: {
     engagement: {
       title: {},
+      download: {},
       export: {},
       refineFilter: {
         mediaType: {},

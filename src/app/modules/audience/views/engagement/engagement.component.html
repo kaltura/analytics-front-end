@@ -1,114 +1,115 @@
-<div data-aid="report-group-engagement" class="kReport kContent kOverrideFAIcons">
-  <div class="kReportHeader">
-    <span *ngIf="_engagementViewConfig.title" class="kTitle">{{'app.engagement.title' | translate}}</span>
-    <app-export-csv *ngIf="_engagementViewConfig.export"
-                    name="Engagement"
-                    [width]="290"
-                    [reports]="_exportConfig"
-                    [refineFilter]="_refineFilter"
-                    [dateFilter]="_dateFilter"></app-export-csv>
-    <div *ngIf="_engagementViewConfig.refineFilter" class="kFilter kOverrideFAIcons">
-      <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
-        <span>{{'app.filters.filter' | translate}}</span>
-        <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
-        <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+<div #reportToExport data-aid="report-group-engagement" class="kMain" [class.exporting]="_exporting">
+  <div class="kReportView">
+    <div class="kReport kContent kOverrideFAIcons" [ngStyle]="{backgroundColor: '#f2f2f2'}" [class.exporting]="_exporting">
+      <div class="kReportHeader" [class.exporting]="_exporting">
+        <span *ngIf="_engagementViewConfig.title" class="kTitle">{{ (_exporting ? 'app.engagement.exportTitle' : 'app.engagement.title') | translate}}</span>
+        <app-pdf-export *ngIf="_engagementViewConfig.download" [elementToExport]="reportToExport" class="pdfExport"
+                        [filename]="'Summary_engagement_report.pdf'" (preExport)="preExportHandler()"
+                        (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+        <app-export-csv *ngIf="_engagementViewConfig.export"
+                        name="Engagement"
+                        [width]="290"
+                        [reports]="_exportConfig"
+                        [refineFilter]="_refineFilter"
+                        [dateFilter]="_dateFilter"></app-export-csv>
+        <div *ngIf="_engagementViewConfig.refineFilter" class="kFilter kOverrideFAIcons">
+          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+            <span>{{'app.filters.filter' | translate}}</span>
+            <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+            <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+          </div>
+        </div>
+        <app-date-filter #dateFilter [exporting]="_exporting"
+                         name="engagement"
+                         [dateRange]="_dateRange"
+                         [selectedTimeUnit]="_timeUnit"
+                         (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+      </div>
+
+      <div class="kReportContainer kNoPadding">
+        <app-refine-filter name="engagement"
+                           [viewConfig]="_engagementViewConfig.refineFilter"
+                           [opened]="_refineFilterOpened"
+                           [dateFilter]="_dateFilter"
+                           [selectedFilters]="_selectedRefineFilters"
+                           (closeFilters)="_refineFilterOpened = false"
+                           (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
+      </div>
+
+      <div *ngIf="_miniViewsCount" class="kReportContainer kMiniReportsContainer">
+        <div *ngIf="_engagementViewConfig.miniHighlights"
+             class="kMiniReportContainer" [class.exporting]="_exporting">
+          <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
+                                          [videosCount$]="topVideos.totalCount$"
+                                          [dateFilter]="_dateFilter"
+                                          [exporting]="_exporting"
+                                          [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
+        </div>
+
+        <div *ngIf="_engagementViewConfig.miniTopVideos"
+             class="kMiniReportContainer" [class.exporting]="_exporting">
+          <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
+                                          [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
+        </div>
+
+        <div *ngIf="_engagementViewConfig.miniPeakDay"
+             class="kMiniReportContainer" [class.exporting]="_exporting">
+          <app-engagement-mini-peak-day [dateFilter]="_dateFilter"
+                                        [refineFilter]="_refineFilter"></app-engagement-mini-peak-day>
+        </div>
+      </div>
+
+      <div [class.kHidden]="!_engagementViewConfig.highlights"
+           id="highlights-report" class="kReportContainer" [class.exporting]="_exporting">
+        <app-engagement-highlights #highlights
+                                   [viewConfig]="_engagementViewConfig.highlights"
+                                   [dateFilterComponent]="dateFilter"
+                                   [dateFilter]="_dateFilter"
+                                   [refineFilter]="_refineFilter"></app-engagement-highlights>
+      </div>
+
+      <div [class.kHidden]="!_engagementViewConfig.topVideos"
+           id="top-videos" class="kReportContainer">
+        <app-engagement-top-videos #topVideos
+                                   [exporting]="_exporting"
+                                   [dateFilter]="_dateFilter"
+                                   [refineFilter]="_refineFilter"></app-engagement-top-videos>
+      </div>
+
+      <!--div class="kReportContainer">
+        <app-engagement-duration [dateFilter]="_dateFilter"
+                                 [refineFilter]="_refineFilter"></app-engagement-duration>
+      </div-->
+
+      <div *ngIf="_engagementViewConfig.impressions"
+           class="kReportContainer">
+        <!--div class="kSmallReportContainer"-->
+        <app-impressions [dateFilter]="_dateFilter"
+                         [exporting]="_exporting"
+                         [refineFilter]="_refineFilter"></app-impressions>
+        <!--/div-->
+        <!--div class="kSmallReportContainer">
+          <app-engagement-users [dateFilter]="_dateFilter"
+                                [refineFilter]="_refineFilter"></app-engagement-users>
+        </div-->
+      </div>
+
+      <div *ngIf="_engagementViewConfig.syndication"
+           class="kReportContainer">
+        <app-syndication [dateFilterComponent]="dateFilter"
+                         [dateFilter]="_dateFilter"
+                         [exporting]="_exporting"
+                         (onDrillDown)="_onDrillDown($event)"
+                         [refineFilter]="_refineFilter"></app-syndication>
       </div>
     </div>
-    <app-date-filter #dateFilter
-                     name="engagement"
-                     [dateRange]="_dateRange"
-                     [selectedTimeUnit]="_timeUnit"
-                     (filterChange)="_onDateFilterChange($event)"></app-date-filter>
-  </div>
 
-  <div class="kReportContainer kNoPadding">
-    <app-refine-filter name="engagement"
-                       [viewConfig]="_engagementViewConfig.refineFilter"
-                       [opened]="_refineFilterOpened"
-                       [dateFilter]="_dateFilter"
-                       [selectedFilters]="_selectedRefineFilters"
-                       (closeFilters)="_refineFilterOpened = false"
-                       (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>
-  </div>
-
-  <div *ngIf="_miniViewsCount" class="kReportContainer">
-    <div *ngIf="_engagementViewConfig.miniHighlights"
-         class="kMiniReportContainer">
-      <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
-                                      [videosCount$]="topVideos.totalCount$"
-                                      [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
+    <span *ngIf="_exporting" class="disclaimer">{{'app.ve.disclaimer' | translate}}</span>
+    <div *ngIf="_exporting" class="footer">
+      <i></i>
+      <span>{{'app.engagement.footer' | translate}}</span>
     </div>
 
-    <div *ngIf="_engagementViewConfig.miniTopVideos"
-         class="kMiniReportContainer">
-      <app-engagement-mini-top-videos [dateFilter]="_dateFilter" [topVideos$]="topVideos.topVideos$"
-                                      [refineFilter]="_refineFilter"></app-engagement-mini-top-videos>
-    </div>
-
-    <div *ngIf="_engagementViewConfig.miniPeakDay"
-         class="kMiniReportContainer">
-      <app-engagement-mini-peak-day [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-engagement-mini-peak-day>
-    </div>
-
-    <!-- Example -->
-    <!-- IMPORTANT: set infinite and autoPlay to false in case there's only ONE item -->
-    <!--<div class="kMiniReportContainer">-->
-    <!--<ui-carousel [infinite]="false"-->
-    <!--[autoPlay]="false"-->
-    <!--[autoPlaySpeed]="5000"-->
-    <!--[arrows]="false"-->
-    <!--[fade]="false"-->
-    <!--[speed]="200"-->
-    <!--height="280px">-->
-    <!--<ui-carousel-item>-->
-    <!--<div class="kInsights">Some stuff</div>-->
-    <!--</ui-carousel-item>-->
-    <!--</ui-carousel>-->
-    <!--</div>-->
   </div>
 
-  <div [class.kHidden]="!_engagementViewConfig.highlights"
-       id="highlights-report" class="kReportContainer">
-    <app-engagement-highlights #highlights
-                               [viewConfig]="_engagementViewConfig.highlights"
-                               [dateFilterComponent]="dateFilter"
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-engagement-highlights>
-  </div>
-
-  <div [class.kHidden]="!_engagementViewConfig.topVideos"
-       id="top-videos" class="kReportContainer">
-    <app-engagement-top-videos #topVideos
-                               [dateFilter]="_dateFilter"
-                               [refineFilter]="_refineFilter"></app-engagement-top-videos>
-  </div>
-
-  <!--div class="kReportContainer">
-    <app-engagement-duration [dateFilter]="_dateFilter"
-                             [refineFilter]="_refineFilter"></app-engagement-duration>
-  </div-->
-
-  <div *ngIf="_engagementViewConfig.impressions"
-       class="kReportContainer">
-    <!--div class="kSmallReportContainer"-->
-      <app-impressions [dateFilter]="_dateFilter"
-                       [refineFilter]="_refineFilter"></app-impressions>
-    <!--/div-->
-    <!--div class="kSmallReportContainer">
-      <app-engagement-users [dateFilter]="_dateFilter"
-                            [refineFilter]="_refineFilter"></app-engagement-users>
-    </div-->
-  </div>
-
-  <div *ngIf="_engagementViewConfig.syndication"
-       class="kReportContainer">
-    <app-syndication [dateFilterComponent]="dateFilter"
-                     [dateFilter]="_dateFilter"
-                     (onDrillDown)="_onDrillDown($event)"
-                     [refineFilter]="_refineFilter"></app-syndication>
-  </div>
 </div>
-
-

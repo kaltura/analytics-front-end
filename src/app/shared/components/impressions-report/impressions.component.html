@@ -34,7 +34,8 @@
 
       <div class="kPlaythrough" [class.compare]="isCompareMode" *ngIf="_chartLoaded">
         <span class="kLabel">{{'app.engagement.playthrough1' | translate}}</span>
-        <p-dropdown aria-label="Playthrough Selector" [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough" (onChange)="onPlaythroughChange()"></p-dropdown>
+        <p-dropdown *ngIf="!exporting" aria-label="Playthrough Selector" [options]="_playthroughs" [(ngModel)]="_selectedPlaythrough" (onChange)="onPlaythroughChange()"></p-dropdown>
+        <span *ngIf="exporting" class="kLabel kExporting">{{_selectedPlaythrough + '%'}}</span>
         <span class="kLabel" [class.block]="isCompareMode">{{'app.engagement.playthrough2' | translate}}</span>
       </div>
 

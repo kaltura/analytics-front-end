@@ -71,6 +71,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
   @Input() entryId: string;
   @Input() userId: string;
   @Input() title: string = null;
+  @Input() exporting = false;
 
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];

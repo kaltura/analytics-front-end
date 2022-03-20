@@ -8,7 +8,7 @@
     <span>{{_dateRangeLabel}}</span>
     <i *ngIf="!exporting" class="kIcondropdown_arrow_bottom"></i>
   </div>
-  <a tabindex="0" role="button" *ngIf="comparing" class="kExitCompare"
+  <a tabindex="0" role="button" *ngIf="comparing && !exporting" class="kExitCompare"
      (click)="exitCompare()"
      (keydown.enter)="exitCompare()">
     {{'app.dateFilter.exit' | translate}}
