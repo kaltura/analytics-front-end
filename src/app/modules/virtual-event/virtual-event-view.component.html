@@ -9,7 +9,7 @@
           <h1 *ngIf="_viewConfig.title && !_exporting" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
           <h1 *ngIf="_exporting" class="kTitle kTruncateTitle">{{'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
-            <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport" [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+            <app-pdf-export *ngIf="_viewConfig.download"  [disabled]="_refineFilterOpened" [elementToExport]="reportToExport" [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
             <!--app-export-csv aria-label="Export" #export
                             role="button"
                             [class.kHidden]="!_viewConfig.export" name="Category"
@@ -51,8 +51,9 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <app-ve-filter class="kRefineFiltersHost" [class.kHidden]="_exporting"
+        <app-ve-filter class="kRefineFiltersHost"
                         name="virtualEvent" #virtualEvent
+                        [exporting]="_exporting"
                         [virtualEvent]="_virtualEvent"
                         [viewConfig]="_viewConfig.refineFilter"
                         [opened]="_refineFilterOpened"

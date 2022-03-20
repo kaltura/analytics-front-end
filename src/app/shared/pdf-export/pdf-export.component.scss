@@ -7,6 +7,9 @@
     white-space: nowrap;
   }
 }
+button.kButtonDefault:disabled {
+  opacity: 1;
+}
 .exportMessage {
   position: fixed;
   z-index: 100000;

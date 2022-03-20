@@ -4,7 +4,7 @@
       <div class="kReportHeader" [class.exporting]="_exporting">
         <span *ngIf="_engagementViewConfig.title" class="kTitle">{{ (_exporting ? 'app.engagement.exportTitle' : 'app.engagement.title') | translate}}</span>
         <app-pdf-export *ngIf="_engagementViewConfig.download" [elementToExport]="reportToExport" class="pdfExport"
-                        [filename]="'Summary_engagement_report.pdf'" (preExport)="preExportHandler()"
+                        [filename]="'Summary_engagement_report.pdf'" (preExport)="preExportHandler()" [disabled]="_refineFilterOpened"
                         (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
         <app-export-csv *ngIf="_engagementViewConfig.export"
                         name="Engagement"
@@ -29,6 +29,7 @@
       <div class="kReportContainer kNoPadding">
         <app-refine-filter name="engagement"
                            [viewConfig]="_engagementViewConfig.refineFilter"
+                           [exporting]="_exporting"
                            [opened]="_refineFilterOpened"
                            [dateFilter]="_dateFilter"
                            [selectedFilters]="_selectedRefineFilters"

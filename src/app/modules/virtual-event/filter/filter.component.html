@@ -7,6 +7,7 @@
     <kTags title=""
            labelField="label"
            tooltipField="tooltip"
+           [class.exporting]="exporting"
            [data]="_tags"
            [clearAllLabel]="'app.common.clearAll' | translate"
            (onTagRemove)="_removeFilter($event)"

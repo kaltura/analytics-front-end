@@ -12,6 +12,9 @@ export class PdfExportComponent {
   elementToExport: HTMLElement;
 
 	@Input()
+  disabled = false;
+
+	@Input()
   filename: string;
 
 	@Output()
@@ -30,6 +33,9 @@ export class PdfExportComponent {
 	constructor() {}
 
   public downloadReport(el: any): void {
+    if (this.disabled) {
+      return;
+    }
     this._showExportingLoader = true;
     this._fadeAnimation = true;
     setTimeout(() => {

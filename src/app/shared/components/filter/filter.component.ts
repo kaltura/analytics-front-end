@@ -72,6 +72,8 @@ export class FilterComponent {
 
   @Input() showAutocompleteGroup = true;
 
+  @Input() exporting = false;
+
   @Input() filterConfig: FilterConfig = {};
 
   @Input() set viewConfig(value: ViewConfig) {

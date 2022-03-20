@@ -153,3 +153,6 @@ app-checkboxes-list-filter {
     width: 30% !important;
   }
 }
+ktags.exporting ::ng-deep .kTagsClear {
+  display: none;
+}
