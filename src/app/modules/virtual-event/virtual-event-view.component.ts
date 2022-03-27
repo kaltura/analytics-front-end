@@ -79,7 +79,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     }
   };
 
-  public exportFilename = `Summary_registration_report_${this._virtualEventId}.pdf`;
+  public exportFilename = 'Summary_registration_report.pdf';
   private updateTitle = this._viewConfig.title === null; // need to temporarily display the title for the export
   private updateDetails = this._viewConfig.details === null; // need to temporarily display the details for the export
 
@@ -102,6 +102,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         this._virtualEventId = params['id'];
         if (this._virtualEventId) {
+          this.exportFilename = `Summary_registration_report_${this._virtualEventId}.pdf`;
           this._loadVirtualEventDetails();
         }
       });

@@ -248,12 +248,9 @@ app-pdf-export {
     height: 86px;
   }
 
-  .kReport .kReportHeader.noTitle{
-    height: 32px;
-  }
-
   .kHeaderRight.noTitle{
-    top: 64px;
+    top: 0px;
+    position: relative;
   }
 
   .kReport .kFloatingDetails{
