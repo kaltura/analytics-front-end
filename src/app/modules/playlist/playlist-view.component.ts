@@ -95,8 +95,8 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
         map((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
             const err: KalturaAPIException = responses.getFirstError();
-            // do not block view for invalid users. could be a deleted user but we still have the entry Analytics data.
-            if (err.code !== "INVALID_USER_ID") {
+            // do not block view for invalid users or user permissions issue. could be a deleted user but we still have the entry Analytics data.
+            if (err.code !== "INVALID_USER_ID" && err.code !== "CANNOT_RETRIEVE_ANOTHER_USER_USING_NON_ADMIN_SESSION") {
               throw err;
             }
           }
@@ -111,7 +111,7 @@ export class PlaylistViewComponent implements OnInit, OnDestroy {
         ([playlist, user]) => {
           this._playlist = playlist;
           this._interactiveVideo = (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') > -1) || playlist.playlistType === KalturaPlaylistType.path ? true : false;
-          this._owner = user && user.fullName ? user.fullName : playlist.userId; // fallback for deleted users
+          this._owner = user && user.fullName ? user.fullName : playlist.userId; // fallback for deleted users or no sufficient permissions
           this._isManualPlaylist = playlist.playlistType === KalturaPlaylistType.staticList;
           this._isRuleBasedPlaylist = playlist.playlistType === KalturaPlaylistType.dynamic;
           this._loadingPlaylist = false;
