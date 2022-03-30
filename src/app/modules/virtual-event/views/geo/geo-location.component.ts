@@ -43,7 +43,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   @Input() exporting = false;
   protected _componentId = 've-geo';
   private _dataConfig: ReportDataConfig;
-  private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _echartsIntance: any; // echart instance
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredCountries);
@@ -106,12 +106,10 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     this._filter.toDate = this._dateFilter.endDate;
     this._filter.interval = this._dateFilter.timeUnits;
     this._reportInterval = this._dateFilter.timeUnits;
-    this._pager.pageIndex = 1;
+    this._table.first = 0;
   }
 
   protected _updateRefineFilter(): void {
-    this._pager.pageIndex = 1;
-
     refineFilterToServerValue(this._refineFilter, this._filter);
   }
 
@@ -174,6 +172,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
             this._handleWorldRegionsTable(worldRegionsReport.table); // handle table
           }
           this._updateMap();
+          this._table.first = 0;
           this._isBusy = false;
         },
         error => {
