@@ -96,7 +96,7 @@ export function buildCDNUrl(suffix: string): string {
 }
 
 export const analyticsConfig: AnalyticsConfig = {
-  appVersion: '2.9.1',
+  appVersion: '2.9.2',
   valueSeparator: '|',
   skipEmptyBuckets: false,
   defaultPageSize: 25,
