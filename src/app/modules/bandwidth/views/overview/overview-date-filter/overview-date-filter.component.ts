@@ -79,11 +79,12 @@ export class OverviewDateFilterComponent implements OnInit {
       }
     }
     let currentMonth = today.getMonth() + 1;
+    const currentMonthStr = currentMonth.toString().length === 1 ? '0' + currentMonth : currentMonth.toString();
     const monthsDiff = today.getMonth() - partnerCreationDate.getMonth() + (12 * (today.getFullYear() - partnerCreationDate.getFullYear()));
     this.monthlyDateRangeItems = [{
       key: 'month-0',
       label: this._translate.instant('app.dateFilter.currentMonth'),
-      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonth}-01`), true),
+      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonthStr}-01`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
       interval: KalturaReportInterval.months,
       isSpecific: false
@@ -97,11 +98,12 @@ export class OverviewDateFilterComponent implements OnInit {
           month = month + 12;
           year = currentYear - 1;
         }
-        const monthName = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
+        const monthStr = month.toString().length === 1 ? '0' + month : month.toString();
+        const monthName = new Date(`${year}-${monthStr}-01`).toLocaleString('default', { month: 'long' });
         this.monthlyDateRangeItems.push({
           key: `month-${i}`,
           label: `${monthName} ${year}`,
-          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${month}-01`), true),
+          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${monthStr}-01`), true),
           endDate: DateFilterUtils.toServerDate(new Date(year,month,0), false),
           interval: KalturaReportInterval.months,
           isSpecific: false
