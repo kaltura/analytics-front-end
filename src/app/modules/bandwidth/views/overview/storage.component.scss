@@ -92,6 +92,7 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
       font-weight: 700;
       color: $kGrayscale3;
       margin-left: 2px;
+      padding-top: 1px;
     }
   }
 }
@@ -103,6 +104,9 @@ p-sorticon ::ng-deep .ui-sortable-column-icon.pi.pi-fw.pi-sort-up:before {
   &:hover {
     text-decoration: underline;
   }
+}
+.kMarginLeft {
+  margin-left: 8px;
 }
 .kNoResults {
   display: flex;

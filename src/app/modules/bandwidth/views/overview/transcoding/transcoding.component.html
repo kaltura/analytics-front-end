@@ -1,0 +1,16 @@
+<div class="kHeader">
+  <span class="kTitle">{{'app.bandwidth.overview.transcoding_duration' | translate}}</span>
+</div>
+<div class="kReport">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+      <span class="kTimePeriod">{{currentTimeFrame}}</span>
+      <div class="tableContainer">
+        <div class="profile" *ngFor="let profile of _tableData">
+          <span class="label" [kTooltip]="profile.name" [showOnEllipsis]="true">{{profile.name}}</span>
+          <app-horizontal-bar-row [label]="profile.transcoding_duration" [value]="profile.percent" [colorScheme]="'time'"></app-horizontal-bar-row>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
