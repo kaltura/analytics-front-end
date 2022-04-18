@@ -11,9 +11,12 @@ import {
   KalturaPermissionFilter,
   KalturaPermissionStatus,
   KalturaRequestOptions,
-  KalturaResponseProfileType, PartnerGetAction,
+  KalturaResponseProfileType, KalturaUiConf,
+  KalturaUiConfFilter,
+  PartnerGetAction,
   PermissionGetCurrentPermissionsAction,
   PermissionListAction,
+  UiConfListTemplatesAction,
   UserGetAction,
   UserRoleGetAction
 } from 'kaltura-ngx-client';
@@ -228,9 +231,34 @@ export class AppService implements OnDestroy {
       })
     );
 
-    return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions, getPartnerAction))
+    // load players from partner 0 if not provided in config
+    let mr: KalturaMultiRequest;
+    if (!analyticsConfig.kalturaServer.previewUIConf || !analyticsConfig.kalturaServer.previewUIConfV7) {
+      let tags = '';
+      const v2Tag = 'AnalyticsV2_v' + analyticsConfig.appVersion;
+      const v7Tag = 'AnalyticsV7_v' + analyticsConfig.appVersion;
+      if (!analyticsConfig.kalturaServer.previewUIConf && !analyticsConfig.kalturaServer.previewUIConfV7) {
+        tags = v2Tag + ',' + v7Tag;
+      } else if (!analyticsConfig.kalturaServer.previewUIConf) {
+        tags = v2Tag;
+      } else {
+        tags = v7Tag;
+      }
+      const listUIConfAction = new UiConfListTemplatesAction({
+        filter: new KalturaUiConfFilter({
+          partnerIdEqual: 0,
+          tagsMultiLikeAnd: 'autodeploy',
+          tagsMultiLikeOr: tags
+        })
+      });
+      mr = new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions, getPartnerAction, listUIConfAction);
+    } else {
+      mr = new KalturaMultiRequest(getUserAction, getRoleAction, getPermissionsAction, getCurrentPermissions, getPartnerAction);
+    }
+
+    return this._kalturaServerClient.multiRequest(mr)
       .pipe(map(responses => {
-        const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse, partnerResponse] = responses;
+        const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse, partnerResponse, playersListResponse] = responses;
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
           if (err.code === "SERVICE_FORBIDDEN") {
@@ -251,6 +279,17 @@ export class AppService implements OnDestroy {
           this._permissionsService.load(userRolePermissionList, partnerPermissionList);
           this._permissionsLoaded.next(true);
           this._authService.partnerCreatedAt = partnerResponse.result.createdAt;
+          if (playersListResponse) {
+            const players: KalturaUiConf[] = playersListResponse.result.objects || [];
+            const v2UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV2_v' + analyticsConfig.appVersion) > -1);
+            const v7UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV7_v' + analyticsConfig.appVersion) > -1);
+            if (!analyticsConfig.kalturaServer.previewUIConf) {
+              analyticsConfig.kalturaServer.previewUIConf = v2UIConf ? v2UIConf.id : null;
+            }
+            if (!analyticsConfig.kalturaServer.previewUIConfV7) {
+              analyticsConfig.kalturaServer.previewUIConfV7 = v7UIConf ? v7UIConf.id : null;
+            }
+          }
         }
       }));
   }
