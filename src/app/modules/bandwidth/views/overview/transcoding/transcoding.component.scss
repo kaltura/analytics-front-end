@@ -1,0 +1,78 @@
+@import '../../../../../../styles/variables';
+.kHeader {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid $kGrayscale4;
+  height: 77px;
+  padding-top: 24px;
+  box-sizing: border-box;
+  .kTitle {
+    color: $kGrayscale1;
+    font-size: 24px;
+    font-weight: 700;
+  }
+}
+
+.kReport {
+  width: 100%;
+  height: 598px;
+  .kReportContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .kTimePeriod {
+      color: $kGrayscale1;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 40px 40px 0px 40px;
+    }
+    .tableContainer {
+      margin: 40px 10px 0px 40px;
+      box-sizing: border-box;
+      height: 496px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      .profile {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        &:last-child {
+          margin-bottom: 40px;
+        }
+        .label {
+          width: 178px;
+          font-size: 15px;
+          font-weight: 700;
+          color: $kGrayscale1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        app-horizontal-bar-row ::ng-deep {
+          .kBarContainer .kLabel {
+            width: 92px;
+            text-align: right;
+          }
+          .kBarContainer .kValue {
+            display: none;
+          }
+          .kBarContainer .kBarWrapper {
+            width: 460px;
+          }
+          .kBarContainer .kBarWrapper {
+            width: 460px;
+          }
+          .kBarContainer .kBullet {
+            height: 24px;
+          }
+          .kBarContainer {
+            margin-right: 30px;
+          }
+        }
+      }
+    }
+  }
+}

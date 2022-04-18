@@ -92,43 +92,49 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             units: value => fileSize(value).units,
             sortOrder: 2
           },
+          'transcoding_duration': {
+            format: value => ReportHelper.numberOrZero(ReportHelper.hours(value), false, 2),
+            title: this._translate.instant(`app.bandwidth.overview.transcoding_duration`),
+            units: value => 'Hours',
+            sortOrder: 3
+          },
           'transcoding_consumption': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.overview.transcoding_consumption`),
             units: value => fileSize(value).units,
-            sortOrder: 3
+            sortOrder: 4
           },
           'total_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_entries`),
-            sortOrder: 4
+            sortOrder: 5
           },
           'total_interactive_video_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_interactive_video_entries`),
-            sortOrder: 5
+            sortOrder: 6
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.unique_known_users`),
-            sortOrder: 6
+            sortOrder: 7
           },
           'live_view_time': {
             format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.hours(value))),
             title: this._translate.instant(`app.bandwidth.overview.live_view_time`),
             tooltip: this._translate.instant(`app.bandwidth.live_view_tt`),
             units: value => 'Hours',
-            sortOrder: 7
+            sortOrder: 8
           },
           'video_streams': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.video_streams`),
-            sortOrder: 8
+            sortOrder: 9
           },
           'total_credits': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_credits`),
-            sortOrder: 9
+            sortOrder: 10
           },
         }
       }

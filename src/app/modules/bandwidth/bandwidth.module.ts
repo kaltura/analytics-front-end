@@ -25,6 +25,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { OverviewMetricsSelectorDropdownComponent } from "./views/overview/overview-metrics-selector-dropdown/overview-metrics-selector-dropdown.component";
 import { OverviewCanActivate } from "./gaurds/overview-can-activate";
+import {TranscodingComponent} from "./views/overview/transcoding/transcoding.component";
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { OverviewCanActivate } from "./gaurds/overview-can-activate";
     StorageComponent,
     StorageFilterComponent,
     OverviewDateFilterComponent,
+    TranscodingComponent,
     OverviewMetricsSelectorDropdownComponent
   ],
   exports: [],

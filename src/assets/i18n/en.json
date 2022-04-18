@@ -259,12 +259,14 @@
         "average_storage": "Stored Media",
         "bandwidth_consumption": "Outbound Bandwidth",
         "transcoding_consumption": "Transcoded Media",
+        "transcoding_duration": "Transcoded hours",
         "total_entries": "Managed Entries",
         "total_interactive_video_entries": "Interactive Videos",
         "unique_known_users": "Active Unique Users",
         "live_view_time": "Live Viewing Hours",
         "video_streams": "Delivered Video Streams",
-        "total_credits": "Enrichment Credits Spent"
+        "total_credits": "Enrichment Credits Spent",
+        "seeData": "See data"
       },
       "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
