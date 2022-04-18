@@ -11,7 +11,7 @@ import {
   KalturaPermissionFilter,
   KalturaPermissionStatus,
   KalturaRequestOptions,
-  KalturaResponseProfileType,
+  KalturaResponseProfileType, KalturaUiConf,
   KalturaUiConfFilter,
   PartnerGetAction,
   PermissionGetCurrentPermissionsAction,
@@ -280,7 +280,15 @@ export class AppService implements OnDestroy {
           this._permissionsLoaded.next(true);
           this._authService.partnerCreatedAt = partnerResponse.result.createdAt;
           if (playersListResponse) {
-            console.log("---> got players list response: " + playersListResponse);
+            const players: KalturaUiConf[] = playersListResponse.result.objects || [];
+            const v2UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV2_v' + analyticsConfig.appVersion) > -1);
+            const v7UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV7_v' + analyticsConfig.appVersion) > -1);
+            if (!analyticsConfig.kalturaServer.previewUIConf) {
+              analyticsConfig.kalturaServer.previewUIConf = v2UIConf ? v2UIConf.id : null;
+            }
+            if (!analyticsConfig.kalturaServer.previewUIConfV7) {
+              analyticsConfig.kalturaServer.previewUIConfV7 = v7UIConf ? v7UIConf.id : null;
+            }
           }
         }
       }));
