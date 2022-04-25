@@ -36,7 +36,8 @@ The structure of the config required by analytics app:
 appId: string, // the host application ID, for example 'kmc', 'kms' etc.
 kalturaServer: {
   uri: string, // link to the kaltura server, www.kaltura.com is the default one
-  previewUIConf: string, // UIConf of the player
+  previewUIConf?: string, // UIConf of the v2 player. Optional, if not provided the default v2 player will be used
+  previewUIConfV7?: string, // UIConf of the v7 player. Optional, if not provided the default v7 player will be used
 },
 cdnServers: string, // link to the cdn server
 liveAnalytics?: { // configuration of the legacy live analytics app, is displayed in case "permissions.enableLiveViews" is false
