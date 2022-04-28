@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
-import { BrowserService, ReportService } from 'shared/services';
+import { AppAnalytics, BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
@@ -64,6 +64,7 @@ export class ExportCsvComponent implements OnDestroy {
   constructor(private _reportService: ReportService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _logger: KalturaLogger,
               private _kalturaClient: KalturaClient) {
   }
@@ -226,6 +227,7 @@ export class ExportCsvComponent implements OnDestroy {
 
     const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
 
+    this._analytics.trackClickEvent('Export');
     this._exportingCsv = true;
 
     this._kalturaClient.request(exportAction)

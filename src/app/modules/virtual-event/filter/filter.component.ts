@@ -4,14 +4,14 @@ import { DomainsFilterService } from 'shared/components/filter/domains-filter/do
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { FilterComponent, OptionItem } from 'shared/components/filter/filter.component';
-import { ReportService } from 'shared/services';
+import { AppAnalytics, ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
-import {KalturaReportType, KalturaVirtualEvent} from "kaltura-ngx-client";
+import { KalturaReportType, KalturaVirtualEvent } from "kaltura-ngx-client";
 import { TranslateService } from "@ngx-translate/core";
 import { FrameEventManagerService } from "shared/modules/frame-event-manager/frame-event-manager.service";
 import { FilterConfig } from "shared/components/filter/filter-base.service";
-import {reportTypeMap} from "shared/utils/report-type-map";
+import { reportTypeMap } from "shared/utils/report-type-map";
 
 @Component({
   selector: 'app-ve-filter',
@@ -59,8 +59,9 @@ export class VirtualEventFilterComponent extends FilterComponent {
 
   constructor(_translate: TranslateService,
               _frameEventManager: FrameEventManagerService,
+              _analytics: AppAnalytics,
               _logger: KalturaLogger) {
-    super(_translate, _frameEventManager, _logger);
+    super(_translate, _frameEventManager, _analytics, _logger);
   }
 
   public _apply(forceApply = false): void {

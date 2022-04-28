@@ -3,7 +3,7 @@ import {OverviewDateRange} from "./overview-date-range.type";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {TranslateService} from "@ngx-translate/core";
 import {KalturaReportInterval} from "kaltura-ngx-client";
-import {AuthService} from "shared/services";
+import {AppAnalytics, AuthService} from "shared/services";
 import {SelectItem} from "primeng/api";
 import {analyticsConfig} from "configuration/analytics-config";
 
@@ -35,6 +35,7 @@ export class OverviewDateFilterComponent implements OnInit {
   public specificDateRange: Date[] = [this.specificStart, this.specificEnd];
 
   constructor(private _translate: TranslateService,
+              private _analytics: AppAnalytics,
               private _authService: AuthService) {
     this.localeData = DateFilterUtils.getLocalData(analyticsConfig.locale);
   }
@@ -110,6 +111,11 @@ export class OverviewDateFilterComponent implements OnInit {
         });
       }
     }
+  }
+
+  public apply(): void {
+    this._analytics.trackClickEvent('Calendar');
+    this.updateDataRanges();
   }
 
   updateDataRanges() {

@@ -8,9 +8,9 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import {KalturaClientModule, KalturaClientOptions, KalturaRequestOptionsArgs} from 'kaltura-ngx-client';
-import {analyticsConfig, getKalturaServerUri} from '../configuration/analytics-config';
-import { BrowserService, ErrorsManagerService, AuthService } from './shared/services';
+import { KalturaClientModule, KalturaClientOptions, KalturaRequestOptionsArgs } from 'kaltura-ngx-client';
+import { analyticsConfig, getKalturaServerUri } from '../configuration/analytics-config';
+import { BrowserService, ErrorsManagerService, AuthService, AppAnalytics } from './shared/services';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMenuComponent } from './app-menu/app-menu.component';
 import { SharedModule } from './shared/shared.module';
@@ -71,6 +71,7 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
   ],
   providers: [
     BrowserService,
+    AppAnalytics,
     ErrorsManagerService,
     ConfirmationService,
     AuthService,

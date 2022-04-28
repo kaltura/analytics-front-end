@@ -102,7 +102,7 @@
                 [disabled]="_applyDisabled"
                 [label]="'app.common.apply' | translate"
                 (keydown.tab)="$event.preventDefault();setFocus();datesPopup.close()"
-                (click)="updateDataRanges();datesPopup.close()"></button>
+                (click)="apply();datesPopup.close()"></button>
       </div>
 
     </div>
