@@ -166,25 +166,37 @@ export class AppAnalytics {
         // check for entry ID in URL
         const urlParts = this.router.url.split('/');
         const entryIndex = urlParts.indexOf('entry') + 1;
-        const entryId =  entryIndex > 0 && urlParts.length >= entryIndex ? urlParts[entryIndex] : null;
-        // build track event url
-        let url = this._analyticsBaseUrl;
+        const entryId =  entryIndex > 0 && urlParts.length >= entryIndex ? urlParts[entryIndex].split('?')[0] : null;
+        // build track event url and payload
+        let url = `${this._analyticsBaseUrl}/api_v3/index.php?service=analytics&action=trackEvent`;
+        let payload = {};
         if (eventType === EventType.PageLoad) {
-            url = `${url}/api_v3/index.php?service=analytics&action=trackEvent&eventType=${eventType}&pageType=${eventVar1}&pageName=${eventVar2}`;
+          payload = {
+            eventType,
+            pageType: eventVar1,
+            pageName: eventVar2
+          };
         } else {
-            url = `${url}/api_v3/index.php?service=analytics&action=trackEvent&eventType=${eventType}&buttonType=${eventVar1}&buttonName=${eventVar2}`;
+          payload = {
+            eventType,
+            buttonType: eventVar1,
+            buttonName: eventVar2
+          };
         }
-        url = `${url}&kalturaApplication=${ApplicationType.Analytics}&kalturaApplicationVer=${analyticsConfig.appVersion}`;
+        Object.assign(payload, {
+          kalturaApplication: ApplicationType.Analytics,
+          kalturaApplicationVer: analyticsConfig.appVersion
+        });
         if (pid) {
-            url = `${url}&partnerId=${pid}`;
+          Object.assign(payload, { partnerId: pid });
         }
         if (entryId) {
-            url = `${url}&entryId=${entryId}`;
+          Object.assign(payload, { entryId });
         }
         if (ks) {
-            url = `${url}&ks=${ks}`;
+          Object.assign(payload, { ks });
         }
         // send tracking event
-        this._http.get(url).subscribe(); // no need to handle response
+        this._http.post(url, payload).subscribe(); // no need to handle response
     }
 }
