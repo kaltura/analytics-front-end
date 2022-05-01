@@ -101,7 +101,7 @@ export class TranscodingComponent extends TranscodingBaseReportComponent impleme
       return profile;
     };
     this._columns = columns;
-    this._tableData = tableData.map(extendTableRow);
+    this._tableData = tableData.map(extendTableRow).filter(profile => profile.name && profile.name.length > 0);
   }
 
   public close(): void {
