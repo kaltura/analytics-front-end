@@ -7,7 +7,7 @@
       <span class="kTimePeriod">{{currentTimeFrame}}</span>
       <div class="tableContainer">
         <div class="profile" *ngFor="let profile of _tableData">
-          <span class="label" [kTooltip]="profile.name" [showOnEllipsis]="true">{{profile.name}}</span>
+          <span class="label" [kTooltip]="profile.name.length ? profile.name : null" [showOnEllipsis]="true">{{profile.name.length ? profile.name : 'app.common.unknown' | translate}}</span>
           <app-horizontal-bar-row [label]="profile.transcoding_duration" [value]="profile.percent" [colorScheme]="'time'"></app-horizontal-bar-row>
         </div>
       </div>
