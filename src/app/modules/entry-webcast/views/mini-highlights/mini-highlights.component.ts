@@ -47,6 +47,7 @@ export class WebcastMiniHighlightsComponent extends WebcastBaseReportComponent i
     }
   }
   @Input() entryIdIn = '';
+  @Input() exporting = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

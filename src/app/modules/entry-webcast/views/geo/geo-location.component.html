@@ -24,7 +24,7 @@
              [options]="_mapChartData[_selectedMetrics]"
              (chartClick)="_onChartClick($event)"
              (chartInit)="_onChartInit($event)"></div>
-        <div class="kZoomWidget">
+        <div class="kZoomWidget" *ngIf="!exporting">
           <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
           <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
         </div>
@@ -48,11 +48,11 @@
                 </div>
               </ng-template>
             </p-dropdown>
-            <span *ngIf="_totalCount" class="kEntitiesCount">
+            <span *ngIf="_totalCount && !exporting" class="kEntitiesCount">
               {{('app.audience.geo.' + _currentTableLevel) | translate: { '0': _totalCount } }}
             </span>
           </div>
-          <p-table #table
+          <p-table #table [class.hidePaginator]="exporting"
                    appScrollTopOnPaging
                    sortField="count_plays"
                    [value]="_tableData"
@@ -60,7 +60,7 @@
                    [defaultSortOrder]="-1"
                    [sortOrder]="-1"
                    [paginator]="true"
-                   [rows]="10"
+                   [rows]="exporting ? 5 : 10"
                    (sortFunction)="_onSortChanged($event)">
             <ng-template pTemplate="header">
               <tr>
@@ -126,7 +126,7 @@
                 </th>
               </tr>
 
-              <tr *ngIf="_tableData?.length" class="kSummaryRow">
+              <tr *ngIf="_tableData?.length && !exporting" class="kSummaryRow">
                 <th [ngStyle]="{'width': '50px'}"></th>
                 <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
                 <th [ngStyle]="{'width': '20%'}">

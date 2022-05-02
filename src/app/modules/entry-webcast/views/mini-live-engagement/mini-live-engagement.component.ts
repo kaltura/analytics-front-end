@@ -32,6 +32,7 @@ export class WebcastMiniLiveEngagementComponent extends WebcastBaseReportCompone
   protected _componentId = 'webcast-mini-live-engagement';
 
   @Input() entryIdIn = '';
+  @Input() exporting = false;
   @Output() viewKnownUsers = new EventEmitter();
 
   public _isBusy: boolean;

@@ -62,6 +62,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   @Input() entryId = '';
   @Input() showDownload = false;
   @Input() engagementViewConfig: ViewConfig;
+  @Input() exporting = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

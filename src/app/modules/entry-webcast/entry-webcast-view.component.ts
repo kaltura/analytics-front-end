@@ -60,6 +60,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
   public _isChildAccount = false;
   public _showViewDetails = false;
   public _exportConfig: ExportItem[] = [];
+  public _exporting = false;
 
   public _dateFilter: DateChangeEvent = null;
   public _dateRange = DateRanges.Last30D;
@@ -224,5 +225,36 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
 
   public _navigateToLive(): void {
     this._navigationDrillDownService.drilldown('entry-live', this._entryId, false, this._authService.pid);
+  }
+
+  // PDF export methods
+  public preExportHandler(): void {
+    this._viewConfig.entryPreview = null;
+    this._viewConfig.userEngagement = null;
+    this._viewConfig.devices = null;
+    this._viewConfig.export = null;
+    this._viewConfig.refineFilter = null;
+  }
+
+  public postExportHandler(): void {
+    this._viewConfig.entryPreview = {};
+    this._viewConfig.userEngagement = {
+      userFilter: {}
+    };
+    this._viewConfig.devices = {};
+    this._viewConfig.export = {};
+    this._viewConfig.refineFilter = {
+      playbackType: {},
+      owners: {},
+      devices: {},
+      browsers: {},
+      domains: {},
+      os: {},
+      geo: {}
+    };
+  }
+
+  public onExporting(exporting: boolean): void {
+    this._exporting = exporting;
   }
 }

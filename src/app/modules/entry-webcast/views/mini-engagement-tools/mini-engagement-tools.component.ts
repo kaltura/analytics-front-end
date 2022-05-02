@@ -61,6 +61,7 @@ export class WebcastMiniEngagementToolsComponent extends WebcastBaseReportCompon
 
   @Input() entryIdIn = '';
   @Input() toolsViewConfig: ViewConfig;
+  @Input() exporting = false;
   @ViewChild('overlay') _overlay: OverlayComponent;
 
   public _isBusy: boolean;

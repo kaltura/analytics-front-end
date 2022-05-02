@@ -47,7 +47,7 @@
         <div class="kLabels">
           <span class="value">{{_tabsData[0]?.value || 0}}</span>
           <span class="title">{{_tabsData[0]?.title}}</span>
-          <a class="link" [class.disabled]="!_tabsData.length || _tabsData[0].value === '0'" (mouseenter)="_showReactionsBreakdown($event)" (mouseleave)="_hideReactionsBreakdown()">{{'app.entryWebcast.tools.breakdown' | translate}}</a>
+          <a *ngIf="!exporting" class="link" [class.disabled]="!_tabsData.length || _tabsData[0].value === '0'" (mouseenter)="_showReactionsBreakdown($event)" (mouseleave)="_hideReactionsBreakdown()">{{'app.entryWebcast.tools.breakdown' | translate}}</a>
         </div>
       </div>
 
