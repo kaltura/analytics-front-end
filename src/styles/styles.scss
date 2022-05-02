@@ -10,7 +10,7 @@ $appBkgColor: #f2f2f2;
 body {
   background-color: $appBkgColor;
   overflow-y: hidden;
-  kpopupwidget[data-aid="webcast-questions"] {
+  kpopupwidget[data-aid="webcast-questions"], kpopupwidget[data-aid="transcoding-breakdown"] {
     margin-top: 100px !important;
   }
 }

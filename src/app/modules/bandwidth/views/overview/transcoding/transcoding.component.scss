@@ -12,10 +12,17 @@
     font-weight: 700;
   }
 }
-
+.kFooter {
+  height: 66px;
+  width: 100%;
+  border-top: 1px solid $kGrayscale4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .kReport {
   width: 100%;
-  height: 598px;
+  height: 432px;
   .kReportContent {
     width: 100%;
     height: 100%;
@@ -25,12 +32,12 @@
       color: $kGrayscale1;
       font-size: 20px;
       font-weight: 700;
-      margin: 40px 40px 0px 40px;
+      margin: 32px 40px 0px 40px;
     }
     .tableContainer {
-      margin: 40px 10px 0px 40px;
+      margin: 32px 10px 0px 40px;
       box-sizing: border-box;
-      height: 496px;
+      height: 346px;
       overflow-x: hidden;
       overflow-y: auto;
       display: flex;
@@ -39,9 +46,6 @@
         display: flex;
         align-items: center;
         height: 40px;
-        &:last-child {
-          margin-bottom: 40px;
-        }
         .label {
           width: 178px;
           font-size: 15px;
@@ -60,10 +64,10 @@
             display: none;
           }
           .kBarContainer .kBarWrapper {
-            width: 460px;
+            width: 350px;
           }
           .kBarContainer .kBarWrapper {
-            width: 460px;
+            width: 350px;
           }
           .kBarContainer .kBullet {
             height: 24px;

@@ -1,30 +1,16 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaAPIException,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval,
-  KalturaReportTable,
-  KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, of as ObservableOf } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
+import { switchMap } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { TranscodingConfig } from './transcoding.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { reportTypeMap } from "shared/utils/report-type-map";
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
-import {analyticsConfig} from "configuration/analytics-config";
-import * as moment from "moment";
-import {TranscodingBaseReportComponent} from "./transcoding-base-report.component";
-import {TableRow} from "shared/utils/table-local-sort-handler";
+import { TranscodingBaseReportComponent } from "./transcoding-base-report.component";
+import { TableRow } from "shared/utils/table-local-sort-handler";
 
 @Component({
   selector: 'app-transcoding',
@@ -42,6 +28,8 @@ export class TranscodingComponent extends TranscodingBaseReportComponent impleme
   @Input() set totalTranscodingDuration(value: string) {
     this._totalTranscodingDuration = parseFloat(value);
   }
+
+  @Output() onClose = new EventEmitter();
 
   private _dataConfig: ReportDataConfig;
   protected _componentId = 'transcoding';
@@ -114,6 +102,10 @@ export class TranscodingComponent extends TranscodingBaseReportComponent impleme
     };
     this._columns = columns;
     this._tableData = tableData.map(extendTableRow);
+  }
+
+  public close(): void {
+    this.onClose.emit();
   }
 
   protected _updateRefineFilter(): void {

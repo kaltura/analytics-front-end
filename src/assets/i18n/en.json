@@ -135,7 +135,8 @@
       "none": "None",
       "all": "All",
       "today": "Today",
-      "clear": "Clear"
+      "clear": "Clear",
+      "unknown": "Unknown"
     },
     "errors": {
       "errorHeader": "Error",
