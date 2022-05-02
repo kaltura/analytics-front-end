@@ -39,6 +39,9 @@ kalturaServer: {
   previewUIConf?: string, // UIConf of the v2 player used for entry, path and live Analytics. Optional, if not provided the default v2 player will be used
   previewUIConfV7?: string, // UIConf of the v7 player used for realtime dashboard. Optional, if not provided the default v7 player will be used
 },
+analyticsServer?: {
+  uri: string // link to kaltura analytics server, analytics.kaltura.com is the default one
+},
 cdnServers: string, // link to the cdn server
 liveAnalytics?: { // configuration of the legacy live analytics app, is displayed in case "permissions.enableLiveViews" is false
   uri: string,

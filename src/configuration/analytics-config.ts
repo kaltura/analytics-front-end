@@ -29,6 +29,9 @@ export interface AnalyticsConfig {
     previewUIConfV7?: number,
     exportRoute?: string
   };
+  analyticsServer?: {
+    uri?: string
+  };
   cdnServers?: {
     serverUri?: string,
     securedServerUri?: string
@@ -113,6 +116,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.pid = config.pid;
   analyticsConfig.locale = config.locale;
   analyticsConfig.kalturaServer = config.kalturaServer;
+  analyticsConfig.analyticsServer = config.analyticsServer;
   analyticsConfig.cdnServers = config.cdnServers;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;
   analyticsConfig.isHosted = hosted;

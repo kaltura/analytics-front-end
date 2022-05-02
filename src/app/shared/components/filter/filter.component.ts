@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import {KalturaMediaEntry, KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
+import { KalturaMediaEntry, KalturaPartner, KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -16,6 +16,7 @@ import { ViewConfig } from 'configuration/view-config';
 import { DomainsFilterService } from "shared/components/filter/domains-filter/domains-filter.service";
 import { DomainsFilterValue } from "shared/components/filter/domains-filter/domains-filter.component";
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import { AppAnalytics } from "shared/services";
 
 export interface OptionItem {
   value: any;
@@ -171,6 +172,7 @@ export class FilterComponent {
 
   constructor(public _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
+              private _analytics: AppAnalytics,
               private _logger: KalturaLogger) {
     this._clearAll();
   }
@@ -412,7 +414,7 @@ export class FilterComponent {
   public _apply(forceApply = false): void {
     if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
       this._logger.trace('User applied filters, emit update event and close filters');
-
+      this._analytics.trackClickEvent('Filter');
       // using spread to prevent passing by reference to avoid unwanted mutations
       this._appliedFilters = [...this._currentFilters];
       this._updateSelectedValues(this._currentFilters);

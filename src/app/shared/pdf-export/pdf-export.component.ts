@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import * as html2pdf from "html2pdf.js";
+import {AppAnalytics} from "shared/services";
 
 @Component({
     selector: 'app-pdf-export',
@@ -30,12 +31,13 @@ export class PdfExportComponent {
   public _exporting = false;
   public _fadeAnimation = false;
 
-	constructor() {}
+	constructor(private _analytics: AppAnalytics) {}
 
   public downloadReport(el: any): void {
     if (this.disabled) {
       return;
     }
+    this._analytics.trackClickEvent('Download_PDF_report');
     this._showExportingLoader = true;
     this._fadeAnimation = true;
     setTimeout(() => {

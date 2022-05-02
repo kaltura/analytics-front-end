@@ -31,6 +31,7 @@ import { AnalyticsPermissionsService } from 'shared/analytics-permissions/analyt
 import { AuthService } from 'shared/services/auth.service';
 import { AnalyticsPermissions } from 'shared/analytics-permissions/analytics-permissions';
 import { Location } from '@angular/common';
+import { AppAnalytics } from "./app-analytics.service";
 
 @Injectable()
 export class AppService implements OnDestroy {
@@ -50,6 +51,7 @@ export class AppService implements OnDestroy {
               private _kalturaServerClient: KalturaClient,
               private _translate: TranslateService,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _confirmationService: ConfirmationService,
               private _router: Router,
               private _location: Location,
@@ -79,6 +81,9 @@ export class AppService implements OnDestroy {
     this._kalturaServerClient.setDefaultRequestOptions({
       ks: this._authService.ks
     });
+
+    // init Analytics
+    this._analytics.init();
 
     this._browserService.registerOnShowConfirmation((confirmationMessage) => {
       const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');

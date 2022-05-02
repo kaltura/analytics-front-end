@@ -11,7 +11,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { filter } from 'rxjs/operators';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { BrowserService } from 'shared/services';
+import { AppAnalytics, BrowserService } from 'shared/services';
 
 @Component({
   selector: 'app-date-filter',
@@ -128,6 +128,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _translate: TranslateService,
+              private _analytics: AppAnalytics,
               private _frameEventManager: FrameEventManagerService,
               private _route: ActivatedRoute,
               private _router: Router,
@@ -263,6 +264,11 @@ export class DateFilterComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['.'], { relativeTo: this._route, queryParams });
     }
+  }
+
+  public apply(): void {
+    this._analytics.trackClickEvent('Calendar');
+    this.updateDataRanges();
   }
 
   public updateDataRanges(isUserAction = true): void {
