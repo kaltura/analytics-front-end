@@ -169,9 +169,9 @@
                   <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
                 </td>
                 <td class="kHighlight">
-                  <a *ngIf="_currentTableLevel === _tableModes.countries"
+                  <a *ngIf="_currentTableLevel === _tableModes.countries" [class.exporting]="exporting"
                      (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
-                  <a *ngIf="_currentTableLevel === _tableModes.regions"
+                  <a *ngIf="_currentTableLevel === _tableModes.regions" [class.exporting]="exporting"
                      (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
                   <span *ngIf="_currentTableLevel === _tableModes.cities">{{data['city']}}</span>
                 </td>

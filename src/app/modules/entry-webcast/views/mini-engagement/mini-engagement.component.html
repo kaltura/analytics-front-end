@@ -46,7 +46,7 @@
         <div class="kLabels">
           <span class="value">{{_tabsData[2]?.value}}</span>
           <span class="title">{{_tabsData[2]?.title}}</span>
-          <a class="link" *ngIf="showDownload" [class.disabled]="_isBusy" (click)="download()">{{'app.entryWebcast.engagement.download' | translate}}</a>
+          <a class="link" *ngIf="showDownload && !exporting" [class.disabled]="_isBusy" (click)="download()">{{'app.entryWebcast.engagement.download' | translate}}</a>
         </div>
       </div>
 

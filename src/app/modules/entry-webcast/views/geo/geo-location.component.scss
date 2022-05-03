@@ -83,7 +83,9 @@
     font-weight: normal;
   }
 }
-
+a.exporting {
+  color: $kGrayscale1;
+}
 :host ::ng-deep .kTableModeSelector {
   .ui-dropdown {
     width: 164px !important;
