@@ -41,7 +41,7 @@
       align-items: flex-end;
     }
     .kCountriesLables{
-      margin-left: 12px;
+      margin-left: 40px;
     }
     .kMiniIcon{
       flex: 0 0 auto;
@@ -91,10 +91,9 @@
       height: 30px;
     }
     .flag1 {
-      z-index: 1;
+      position: absolute;
     }
     .flag2 {
-      z-index: 0;
       position: absolute;
       top: 9px;
       left: 12px;

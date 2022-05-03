@@ -33,6 +33,7 @@ export class WebcastMiniQualityComponent extends WebcastBaseReportComponent impl
   @Input() entryIdIn = '';
   @Input() lastBroadcastDuration = '';
   @Input() isLive = false;
+  @Input() exporting = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

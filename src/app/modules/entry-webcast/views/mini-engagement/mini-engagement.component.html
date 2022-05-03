@@ -13,7 +13,7 @@
           <div class="kLabels">
             <span class="value">{{_tabsData[0]?.value}}</span>
             <span class="title">{{_tabsData[0]?.title}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{_tabsData[0]?.tooltip}}</span>
             </kInputHelper>
           </div>
@@ -25,7 +25,7 @@
         <div class="kLabels">
           <span class="value">{{_tabsData[1]?.value}}</span>
           <span class="title">{{_tabsData[1]?.title}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{_tabsData[1]?.tooltip}}</span>
           </kInputHelper>
         </div>
@@ -36,7 +36,7 @@
         <div class="kLabels">
           <span class="value">{{_usersCount}}</span>
           <span class="title">{{'app.entryWebcast.engagement.questions' | translate: { '1': _questions.length} }}</span>
-          <a class="link" [class.disabled]="!_questions.length" (click)="questionsPopup.open()">{{'app.entryWebcast.engagement.view' | translate}}</a>
+          <a *ngIf="!exporting" class="link" [class.disabled]="!_questions.length" (click)="questionsPopup.open()">{{'app.entryWebcast.engagement.view' | translate}}</a>
         </div>
 
       </div>

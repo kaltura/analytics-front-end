@@ -538,6 +538,7 @@
       "vodViews": "VOD views",
       "livaDashboard": "Real Time Dashboard",
       "noRecording": "No Recording Found",
+      "exportTitle": "Summary webcast report",
       "noRecordingText": "This webcast doesn’t have a recording associated with it.\nEither the recording was archived or the entry was never broadcasted.",
       "webcastLive": "The webcast is currently live",
       "webcastLiveText": "Once the webcast ends, refresh the page\nand the webcast recording will be available.",

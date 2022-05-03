@@ -47,6 +47,7 @@ export enum GeoTableModes {
 export class WebcastGeoComponent extends WebcastBaseReportComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: Table;
   @Input() entryIdIn = '';
+  @Input() exporting = false;
   protected _componentId = 'webcast-geo';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });

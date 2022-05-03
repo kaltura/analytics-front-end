@@ -29,6 +29,9 @@
     font-weight: bold;
   }
 }
+.hidePaginator ::ng-deep .ui-paginator {
+  display: none;
+}
 .kMap {
   position: relative;
 
