@@ -72,6 +72,7 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
   @Input() userId: string;
   @Input() title: string = null;
   @Input() exporting = false;
+  @Input() virtualEventId: string;
 
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -207,7 +208,9 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
       this.filter.userIds = this.userId;
     }
     const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-
+    if (this.virtualEventId) {
+      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    }
     if (this.entryId) {
       reportConfig.filter.entryIdIn = this.entryId;
     }
@@ -221,6 +224,9 @@ export class ImpressionsComponent implements OnInit, OnDestroy {
           this.compareFilter.userIds = this.userId;
         }
         const compareReportConfig: ReportConfig = { reportType: this.reportType, filter: this.compareFilter, pager: this.pager, order: this.order };
+        if (this.virtualEventId) {
+          compareReportConfig.filter.virtualEventIdIn = this.virtualEventId;
+        }
         if (this.entryId) {
           compareReportConfig.filter.entryIdIn = this.entryId;
         }

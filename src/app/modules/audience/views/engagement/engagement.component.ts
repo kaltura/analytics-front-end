@@ -31,6 +31,7 @@ export class EngagementComponent {
   public _exportConfig: ExportItem[] = [];
   public _engagementViewConfig = analyticsConfig.viewsConfig.audience.engagement;
   public _exporting = false;
+  public _virtualEventId = '';
   public _miniViewsCount = [
     this._engagementViewConfig.miniHighlights,
     this._engagementViewConfig.miniTopVideos,
@@ -45,6 +46,7 @@ export class EngagementComponent {
 
   constructor(private _exportConfigService: EngagementExportConfig) {
     this._exportConfig = _exportConfigService.getConfig(this._engagementViewConfig);
+    this._virtualEventId = analyticsConfig.customData && analyticsConfig.customData.eventId ? analyticsConfig.customData.eventId : '';
   }
 
 
