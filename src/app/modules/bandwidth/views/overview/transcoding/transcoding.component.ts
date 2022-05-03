@@ -26,7 +26,7 @@ export class TranscodingComponent extends TranscodingBaseReportComponent impleme
 
   @Input() currentTimeFrame: string;
   @Input() set totalTranscodingDuration(value: string) {
-    this._totalTranscodingDuration = parseFloat(value);
+    this._totalTranscodingDuration = parseFloat(value) / 60;
   }
 
   @Output() onClose = new EventEmitter();
@@ -97,7 +97,7 @@ export class TranscodingComponent extends TranscodingBaseReportComponent impleme
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const {columns, tableData} = this._reportService.parseTableData(table, this._dataConfig.table);
     const extendTableRow = (profile, index) => {
-      (<any>profile)['percent'] = parseFloat(profile.transcoding_duration) / this._totalTranscodingDuration * 100;
+      (<any>profile)['percent'] = parseFloat(profile.transcoding_duration.split(',').join('')) / this._totalTranscodingDuration * 100;
       return profile;
     };
     this._columns = columns;
