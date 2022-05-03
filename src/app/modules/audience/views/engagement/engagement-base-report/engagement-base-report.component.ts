@@ -27,6 +27,7 @@ export abstract class EngagementBaseReportComponent {
   }
 
   @Input() exporting = false;
+  @Input() virtualEventId: string;
 
   protected _dateFilter: DateChangeEvent;
   protected _refineFilter: RefineFilter = [];

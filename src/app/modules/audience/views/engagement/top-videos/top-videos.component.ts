@@ -83,6 +83,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
     this._isBusy = true;
     this._blockerMessage = null;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    if (this.virtualEventId) {
+      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    }
     this._reportService.getReport(reportConfig, this._dataConfig)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -90,6 +93,9 @@ export class EngagementTopVideosComponent extends EngagementBaseReportComponent 
         }
 
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+        if (this.virtualEventId) {
+          compareReportConfig.filter.virtualEventIdIn = this.virtualEventId;
+        }
         return this._reportService.getReport(compareReportConfig, this._dataConfig)
           .pipe(map(compare => ({ report, compare })));
       }))

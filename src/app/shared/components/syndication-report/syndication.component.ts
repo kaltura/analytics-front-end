@@ -74,7 +74,7 @@ export class SyndicationComponent implements OnDestroy {
     this._selectedMetrics = this._dataConfig.totals.preSelected;
   };
   @Input() exporting = false;
-
+  @Input() virtualEventId: string;
   @Output() onDrillDown = new EventEmitter<string>();
 
   private _dateFilter: DateChangeEvent;
@@ -161,6 +161,9 @@ export class SyndicationComponent implements OnDestroy {
     if (this.playlistId && !reportConfig.filter.playlistIdIn) {
       reportConfig.filter.playlistIdIn = this.playlistId;
     }
+    if (this.virtualEventId) {
+      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    }
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -186,6 +189,10 @@ export class SyndicationComponent implements OnDestroy {
 
         if (this.playlistId && !compareReportConfig.filter.playlistIdIn) {
           compareReportConfig.filter.playlistIdIn = this.playlistId;
+        }
+
+        if (this.virtualEventId) {
+          compareReportConfig.filter.virtualEventIdIn = this.virtualEventId;
         }
 
         return this._reportService.getReport(compareReportConfig, sections)
