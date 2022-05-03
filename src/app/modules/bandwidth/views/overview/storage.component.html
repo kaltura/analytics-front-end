@@ -161,7 +161,7 @@
   </k-area-blocker>
   <kPopupWidget #transcodingDetails data-aid="transcoding-breakdown" [popupWidth]="680" [popupHeight]="575" [modal]="true" class="kPopupWidgetWrap" [closeBtn]="false">
     <ng-template>
-      <app-transcoding (onClose)="transcodingDetails.close()" [dateFilter]="_dateFilter" [currentTimeFrame]="dataFilter.selectedDateRange?.label" [totalTranscodingDuration]="_tabsData[2].value"></app-transcoding>
+      <app-transcoding (onClose)="transcodingDetails.close()" [dateFilter]="_dateFilter" [currentTimeFrame]="dataFilter.selectedDateRange?.label" [totalTranscodingDuration]="_tabsData[2].rawValue.toString()"></app-transcoding>
     </ng-template>
   </kPopupWidget>
 </div>
