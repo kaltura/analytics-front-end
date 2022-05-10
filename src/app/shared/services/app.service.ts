@@ -264,6 +264,19 @@ export class AppService implements OnDestroy {
     return this._kalturaServerClient.multiRequest(mr)
       .pipe(map(responses => {
         const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse, partnerResponse, playersListResponse] = responses;
+        const initPlayers = () => {
+          if (playersListResponse) {
+            const players: KalturaUiConf[] = playersListResponse.result.objects || [];
+            const v2UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV2_v' + analyticsConfig.appVersion) > -1);
+            const v7UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV7_v' + analyticsConfig.appVersion) > -1);
+            if (!analyticsConfig.kalturaServer.previewUIConf) {
+              analyticsConfig.kalturaServer.previewUIConf = v2UIConf ? v2UIConf.id : null;
+            }
+            if (!analyticsConfig.kalturaServer.previewUIConfV7) {
+              analyticsConfig.kalturaServer.previewUIConfV7 = v7UIConf ? v7UIConf.id : null;
+            }
+          }
+        }
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
           if (err.code === "SERVICE_FORBIDDEN") {
@@ -272,6 +285,7 @@ export class AppService implements OnDestroy {
             const currentPermissions = currentPermissionsResponse && currentPermissionsResponse.result ? currentPermissionsResponse.result.split(',') : [];
             this._permissionsService.load(currentPermissions, currentPermissions);
             this._permissionsLoaded.next(true);
+            initPlayers();
           } else {
             // all other errors should stop the permissions loading process
             throw err;
@@ -284,17 +298,7 @@ export class AppService implements OnDestroy {
           this._permissionsService.load(userRolePermissionList, partnerPermissionList);
           this._permissionsLoaded.next(true);
           this._authService.partnerCreatedAt = partnerResponse.result.createdAt;
-          if (playersListResponse) {
-            const players: KalturaUiConf[] = playersListResponse.result.objects || [];
-            const v2UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV2_v' + analyticsConfig.appVersion) > -1);
-            const v7UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV7_v' + analyticsConfig.appVersion) > -1);
-            if (!analyticsConfig.kalturaServer.previewUIConf) {
-              analyticsConfig.kalturaServer.previewUIConf = v2UIConf ? v2UIConf.id : null;
-            }
-            if (!analyticsConfig.kalturaServer.previewUIConfV7) {
-              analyticsConfig.kalturaServer.previewUIConfV7 = v7UIConf ? v7UIConf.id : null;
-            }
-          }
+          initPlayers();
         }
       }));
   }
