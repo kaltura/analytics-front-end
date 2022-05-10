@@ -10,13 +10,13 @@
 
       <div class="kRow" *ngFor="let tab of _tabsData; let i = index">
         <span>{{tab.title}}</span>
-        <kInputHelper>
+        <kInputHelper *ngIf="!exporting">
           <span>{{tab.tooltip}}</span>
         </kInputHelper>
         <app-horizontal-bar-row class="kBar" [color]="_colors[i]" [value]="tab.rawValue * 100"></app-horizontal-bar-row>
       </div>
 
-      <div class="kFooter">
+      <div class="kFooter" *ngIf="!exporting">
         <i class="kIcondropdown_arrow_bottom"></i>
         <a class="kLink" (click)="viewUsers()">{{'app.entryWebcast.liveEngagement.view' | translate}}</a>
       </div>

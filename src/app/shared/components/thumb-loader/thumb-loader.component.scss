@@ -24,4 +24,9 @@
     height: auto;
     border-radius: 3px;
   }
+  canvas {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+  }
 }

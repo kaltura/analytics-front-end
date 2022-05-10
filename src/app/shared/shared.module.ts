@@ -84,6 +84,7 @@ import { DeviceFilterComponent } from "shared/components/filter/device-filter/de
 import { OsFilterComponent } from "shared/components/filter/os-filter/os-filter.component";
 import { BrowserFilterComponent } from "shared/components/filter/browser-filter/browser-filter.component";
 import { AccountFilterComponent } from "shared/components/filter/account-filter/account-filter.component";
+import {PdfExportComponent} from "shared/pdf-export";
 
 @NgModule({
   imports: [
@@ -142,6 +143,7 @@ import { AccountFilterComponent } from "shared/components/filter/account-filter/
     DropdownFilterComponent,
     KalturaPlayerComponent,
     KalturaPlayerV7Component,
+    PdfExportComponent,
     ImpressionsComponent,
     SyndicationComponent,
     CompareMetricComponent,
@@ -197,6 +199,7 @@ import { AccountFilterComponent } from "shared/components/filter/account-filter/
     TrendValueComponent,
     KalturaPlayerComponent,
     KalturaPlayerV7Component,
+    PdfExportComponent,
     MiddleEllipsisDirective,
     CategoriesTreePropagationDirective,
     CategoriesTreeComponent,

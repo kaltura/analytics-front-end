@@ -30,9 +30,11 @@ import { WebcastBaseReportComponent } from "../webcast-base-report/webcast-base-
 export class WebcastDomainsComponent extends WebcastBaseReportComponent implements OnInit, OnDestroy {
 
   @Input() entryIdIn = '';
+  @Input() exporting = false;
+
   protected _componentId = 'webcast-domains';
   private _dataConfig: ReportDataConfig;
-  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
+  public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 5, pageIndex: 1 });
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.topDomainsWebcast);
   private order = '-count_plays';

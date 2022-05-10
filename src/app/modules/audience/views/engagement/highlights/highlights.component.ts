@@ -33,6 +33,7 @@ import { ViewConfig } from "configuration/view-config";
 })
 export class EngagementHighlightsComponent extends EngagementBaseReportComponent implements OnDestroy {
   @Input() dateFilterComponent: DateFilterComponent;
+  @Input() virtualEventId: string;
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;
@@ -119,6 +120,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
     delete sections[ReportDataSection.table]; // remove table config to prevent table request
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
+    if (this.virtualEventId) {
+      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    }
     this._reportService.getReport(reportConfig, sections, false)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
@@ -126,7 +130,9 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
         }
 
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
-
+        if (this.virtualEventId) {
+          compareReportConfig.filter.virtualEventIdIn = this.virtualEventId;
+        }
         return this._reportService.getReport(compareReportConfig, sections, false)
           .pipe(map(compare => ({ report, compare })));
       }))

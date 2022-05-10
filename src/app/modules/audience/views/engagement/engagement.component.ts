@@ -30,6 +30,8 @@ export class EngagementComponent {
   public _refineFilterOpened = false;
   public _exportConfig: ExportItem[] = [];
   public _engagementViewConfig = analyticsConfig.viewsConfig.audience.engagement;
+  public _exporting = false;
+  public _virtualEventId = '';
   public _miniViewsCount = [
     this._engagementViewConfig.miniHighlights,
     this._engagementViewConfig.miniTopVideos,
@@ -44,6 +46,7 @@ export class EngagementComponent {
 
   constructor(private _exportConfigService: EngagementExportConfig) {
     this._exportConfig = _exportConfigService.getConfig(this._engagementViewConfig);
+    this._virtualEventId = analyticsConfig.customData && analyticsConfig.customData.eventId ? analyticsConfig.customData.eventId : '';
   }
 
 
@@ -62,5 +65,32 @@ export class EngagementComponent {
     }
 
     this._exportConfig = EngagementExportConfig.updateConfig(this._exportConfigService.getConfig(this._engagementViewConfig), 'syndication', update);
+  }
+
+  public preExportHandler(): void {
+    this._engagementViewConfig.highlights = null; // hide highlights
+    this._engagementViewConfig.miniTopVideos = null; // hide miniTopVideos
+    this._engagementViewConfig.export = null; // hide csv export
+    this._engagementViewConfig.refineFilter = null; // hide refine filter
+  }
+
+  public postExportHandler(): void {
+    this._engagementViewConfig.highlights = {}; // show highlights
+    this._engagementViewConfig.miniTopVideos = {}; // show miniTopVideos
+    this._engagementViewConfig.export = {}; // sow csv export
+    this._engagementViewConfig.refineFilter = {
+      mediaType: {},
+      playbackType: {},
+      entrySource: {},
+      tags: {},
+      owners: {},
+      categories: {},
+      domains: {},
+      geo: {}
+    }; // show refine filter
+  }
+
+  public onExporting(exporting: boolean): void {
+    this._exporting = exporting;
   }
 }

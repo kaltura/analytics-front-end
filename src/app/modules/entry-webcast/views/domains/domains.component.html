@@ -2,7 +2,7 @@
 
   <div class="kFilters">
     <span class="kTitle">{{'app.entryWebcast.domains.title' | translate}}</span>
-    <kInputHelper>
+    <kInputHelper *ngIf="!exporting">
       <span>{{'app.entryWebcast.domains.title_tt' | translate}}</span>
     </kInputHelper>
   </div>
@@ -24,7 +24,7 @@
               <th [ngStyle]="{'width': '60px'}">
                 <span *ngIf="_tableData?.length">{{'app.entryWebcast.domains.index' | translate}}</span>
               </th>
-              <th [ngStyle]="{'width': '30px'}"></th>
+              <th *ngIf="!exporting" [ngStyle]="{'width': '30px'}"></th>
               <th *ngFor="let col of _columns"
                   [pSortableColumn]="col === 'plays_distribution'  || col === 'domain_name' ? null : col"
                   [class.nonSortable]="col === 'plays_distribution'  || col === 'domain_name'"
@@ -41,9 +41,9 @@
                 </div>
               </th>
             </tr>
-            <tr *ngIf="_tableData?.length" class="kSummaryRow">
+            <tr *ngIf="_tableData?.length && !exporting" class="kSummaryRow">
               <th [ngStyle]="{'width': '60px'}"></th>
-              <th [ngStyle]="{'width': '30px'}"></th>
+              <th *ngIf="!exporting" [ngStyle]="{'width': '30px'}"></th>
               <th [ngStyle]="{'width': '20%'}">
                 <span>{{'app.entryWebcast.domains.all' | translate}}</span>
               </th>
@@ -75,7 +75,7 @@
           <ng-template pTemplate="body" let-data>
             <tr>
               <td><span>{{data['index']}}</span></td>
-              <td [ngStyle]="{'padding': '0'}">
+              <td *ngIf="!exporting" [ngStyle]="{'padding': '0', 'width': exporting ? '0px' : '30px'}">
                 <div class="kDomainIcon" #holder>
                   <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
                        onError="this.onerror=null;this.style.display='none'"
@@ -113,7 +113,7 @@
             </div>
           </ng-template>
         </p-table>
-        <p-paginator aria-label="Pagination"
+        <p-paginator aria-label="Pagination" [class.hidePaginator]="exporting"
                      [rows]="_pager.pageSize"
                      [first]="(_pager.pageIndex -1) * _pager.pageSize"
                      [totalRecords]="_totalCount"

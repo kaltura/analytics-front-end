@@ -27,13 +27,14 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   @Input() dateFilterComponent: DateFilterComponent;
+  @Input() virtualEventId: string;
 
   private _order = '-count_plays';
   private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _dataConfig: ReportDataConfig;
-  
+
   protected _componentId = 'mini-peak-day';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _reportInterval = KalturaReportInterval.days;
@@ -49,7 +50,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
   }
 
   public _peakDayData: any = null;
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -58,23 +59,29 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
               private _authService: AuthService,
               private _dataConfigService: MiniPeakDayConfig) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
+    if (this.virtualEventId) {
+      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    }
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         const pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: pager, order: this._order };
+        if (this.virtualEventId) {
+          compareReportConfig.filter.virtualEventIdIn = this.virtualEventId;
+        }
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -99,7 +106,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -116,7 +123,7 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
     this._refineFilterToServerValue(this._filter);
@@ -124,12 +131,12 @@ export class MiniPeakDayComponent extends EngagementBaseReportComponent {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _handleTable(table: KalturaReportTable, compare?: Report): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     if (tableData.length) {
       this._peakDayData = tableData[0];
     }
   }
-  
+
 }

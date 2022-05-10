@@ -1,0 +1,19 @@
+@import '../../../../../styles/variables';
+
+:host {
+  width: 100%;
+}
+.kReport.kRoles {
+  .kReportContainer {
+    padding-bottom: 24px;
+    background-color: $appBkgColor;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .kReportContent {
+    padding-right: 12px;
+  }
+  ::ng-deep .p-table .p-table-tbody > tr > td, ::ng-deep  .p-table .p-table-thead {
+    border: none !important;
+  }
+}

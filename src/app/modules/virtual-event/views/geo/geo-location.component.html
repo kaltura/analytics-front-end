@@ -1,0 +1,161 @@
+<div data-aid="report-geo" class="kReport kGeo kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.ve.geo' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kMap">
+        <div *ngIf="_mapDataReady" echarts class="kChart"
+             [options]="_mapChartData[_selectedMetrics]"
+             (chartInit)="_onChartInit($event)"></div>
+        <div class="kZoomWidget" *ngIf="!exporting">
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+        </div>
+      </div>
+      <div class="kTable">
+        <div class="kTableContainer">
+
+          <p-table #table *ngIf="_worldRegionsTableData.length"
+                   appScrollTopOnPaging
+                   sortField="registered"
+                   [value]="_worldRegionsTableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortOrder]="-1"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th [ngStyle]="{'width': '50px'}">
+                  <span *ngIf="_tableData?.length"></span>
+                </th>
+                <th [ngStyle]="{'width': '42px'}"></th>
+                <th [ngStyle]="{'width': '30%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th [ngStyle]="{'width': '30%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.ve.registered' | translate" [showOnEllipsis]="true">
+                      {{'app.ve.registered' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th [ngStyle]="{'width': '40%'}">
+                  <div class="kColumnHeader">
+                    <span></span>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td>
+                  <span>{{rowIndex + 1}}</span>
+                </td>
+                <td class="kFlagColumn">
+                  <i class="kFlag icon-globe"></i>
+                </td>
+                <td class="kHighlight">
+                  <span>{{data['world_region'] !== '0' ? data['world_region'] : ('app.entry.entryType.unknown' | translate)}}</span>
+                </td>
+                <td>
+                  <span>{{data['registered']}}</span>
+                </td>
+                <td>
+                  <div>
+                    <app-bullet [value]="data['distribution']"></app-bullet>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+
+          <div class="divider"></div>
+
+          <p-table #table [class.hidePaginator]="exporting"
+                   appScrollTopOnPaging
+                   sortField="registered"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortOrder]="-1"
+                   [paginator]="true"
+                   [rows]="5"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr class="hiddenHeader">
+                <th [ngStyle]="{'width': '50px'}">
+                  <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+                </th>
+                <th [ngStyle]="{'width': '42px'}"></th>
+                <th [ngStyle]="{'width': '30%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th [ngStyle]="{'width': '30%'}">
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.ve.registered' | translate" [showOnEllipsis]="true">
+                      {{'app.ve.registered' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th [ngStyle]="{'width': '40%'}">
+                  <div class="kColumnHeader">
+                    <span></span>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td [ngStyle]="{'width': '50px'}">
+                  <span>{{rowIndex + 1}}</span>
+                </td>
+                <td class="kFlagColumn" [ngStyle]="{'width': '42px'}">
+                  <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
+                </td>
+                <td class="kHighlight" [ngStyle]="{'width': '30%'}">
+                  <span>{{data['country']}}</span>
+                </td>
+                <td [ngStyle]="{'width': '30%'}">
+                  <span>{{data['registered']}}</span>
+                </td>
+                <td [ngStyle]="{'width': '40%'}">
+                  <div>
+                    <app-bullet [value]="data['distribution']"></app-bullet>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+
+</div>
+

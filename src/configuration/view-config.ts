@@ -6,6 +6,7 @@ export const viewsConfig = {
   audience: {
     engagement: {
       title: {},
+      download: {},
       export: {},
       refineFilter: {
         mediaType: {},
@@ -177,6 +178,7 @@ export const viewsConfig = {
   },
   entryLive: {
     title: {},
+    owner: {},
     export: {},
     toggleLive: {},
     details: {},
@@ -191,9 +193,27 @@ export const viewsConfig = {
       userFilter: {}
     },
   },
+  virtualEvent: {
+    title: {},
+    download: {},
+    details: {},
+    refineFilter: {
+      origin: {},
+      geo: {}
+    },
+    miniFunnel: {},
+    miniInsights: {},
+    miniDevices: {},
+    status : {},
+    highlights: {},
+    geo: {},
+    roles: {},
+    industries: {}
+  },
   entryWebcast: {
     export: {},
     title: {},
+    download: {},
     linkToLive: {},
     details: {},
     miniHighlights: {},

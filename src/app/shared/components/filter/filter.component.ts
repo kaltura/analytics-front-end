@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import {KalturaMediaEntry, KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
+import { KalturaMediaEntry, KalturaPartner, KalturaUser } from 'kaltura-ngx-client';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { LocationsFilterService } from './location-filter/locations-filter.service';
 import { LocationsFilterValue } from './location-filter/location-filter.component';
@@ -16,6 +16,7 @@ import { ViewConfig } from 'configuration/view-config';
 import { DomainsFilterService } from "shared/components/filter/domains-filter/domains-filter.service";
 import { DomainsFilterValue } from "shared/components/filter/domains-filter/domains-filter.component";
 import { FilterConfig } from "shared/components/filter/filter-base.service";
+import { AppAnalytics } from "shared/services";
 
 export interface OptionItem {
   value: any;
@@ -71,6 +72,8 @@ export class FilterComponent {
   @Input() locationFiltersWarning: string;
 
   @Input() showAutocompleteGroup = true;
+
+  @Input() exporting = false;
 
   @Input() filterConfig: FilterConfig = {};
 
@@ -169,6 +172,7 @@ export class FilterComponent {
 
   constructor(public _translate: TranslateService,
               private _frameEventManager: FrameEventManagerService,
+              private _analytics: AppAnalytics,
               private _logger: KalturaLogger) {
     this._clearAll();
   }
@@ -179,6 +183,13 @@ export class FilterComponent {
     { value: 'Audio', label: 'app.filters.mediaType.Audio' },
     // { value: 'interactiveVideo', label: 'app.filters.interactiveVideo' }, // TODO what is interactive video?
     { value: 'Image', label: 'app.filters.mediaType.Image' },
+  ];
+
+  public _origins: OptionItem[] = [
+    { value: 'Registration', label: 'app.filters.origin.Registration' },
+    { value: 'Invitation', label: 'app.filters.origin.Invitation' },
+    { value: 'SSO', label: 'app.filters.origin.SSO' },
+    { value: 'Webhook', label: 'app.filters.origin.Webhook' }
   ];
 
   public _playbackTypes: OptionItem[] = [
@@ -206,6 +217,7 @@ export class FilterComponent {
       'playbackType': [],
       'entrySources': [],
       'categories': [],
+      'origin': [],
       'tags': [],
       'devices': [],
       'browser': [],
@@ -226,6 +238,7 @@ export class FilterComponent {
     return this._appliedFilters.map(({ value, type }) => {
       switch (type) {
         case 'mediaType':
+        case 'origin':
         case 'playbackType':
         case 'entrySources':
           label = this._translate.instant(`app.filters.${type}.${value}`);
@@ -401,7 +414,7 @@ export class FilterComponent {
   public _apply(forceApply = false): void {
     if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
       this._logger.trace('User applied filters, emit update event and close filters');
-
+      this._analytics.trackClickEvent('Filter');
       // using spread to prevent passing by reference to avoid unwanted mutations
       this._appliedFilters = [...this._currentFilters];
       this._updateSelectedValues(this._currentFilters);

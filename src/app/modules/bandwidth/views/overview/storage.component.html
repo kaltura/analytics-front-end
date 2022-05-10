@@ -13,7 +13,7 @@
         <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
       </div>
     </div>
-    <app-overview-date-filter name="overview" (filterChange)="_onDateFilterChange($event)"></app-overview-date-filter>
+    <app-overview-date-filter #dataFilter name="overview" (filterChange)="_onDateFilterChange($event)"></app-overview-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
@@ -37,6 +37,9 @@
             <span class="kTotalValue">{{_tabsData[0].value}}</span>
             <span class="kTotalUnits">{{_tabsData[0].units}}</span>
             <span class="kTotalLabel">{{_tabsData[0].title}}</span>
+            <kInputHelper>
+              <span>{{_tabsData[0].tooltip}}</span>
+            </kInputHelper>
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[1].value}}</span>
@@ -45,38 +48,46 @@
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[2].value}}</span>
-            <span class="kTotalUnits">{{_tabsData[2].units}}</span>
             <span class="kTotalLabel">{{_tabsData[2].title}}</span>
+            <span *ngIf="_tabsData[2].value !== '0'" class="kMarginLeft kLink" (click)="transcodingDetails.open()">{{'app.bandwidth.overview.seeData' | translate}}</span>
           </div>
         </div>
         <div class="kCol">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[3].value}}</span>
+            <span class="kTotalUnits">{{_tabsData[3].units}}</span>
             <span class="kTotalLabel">{{_tabsData[3].title}}</span>
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[4].value}}</span>
             <span class="kTotalLabel">{{_tabsData[4].title}}</span>
           </div>
-        </div>
-        <div class="kCol">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[5].value}}</span>
             <span class="kTotalLabel">{{_tabsData[5].title}}</span>
           </div>
+        </div>
+        <div class="kCol">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[6].value}}</span>
             <span class="kTotalLabel">{{_tabsData[6].title}}</span>
+            <kInputHelper>
+              <span>{{_tabsData[6].tooltip}}</span>
+            </kInputHelper>
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[7].value}}</span>
             <span class="kTotalLabel">{{_tabsData[7].title}}</span>
           </div>
-        </div>
-        <div class="kCol" *ngIf="_reach">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[8].value}}</span>
             <span class="kTotalLabel">{{_tabsData[8].title}}</span>
+          </div>
+        </div>
+        <div class="kCol" *ngIf="_reach">
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[9].value}}</span>
+            <span class="kTotalLabel">{{_tabsData[9].title}}</span>
           </div>
           <span class="kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.enrichment_data' | translate}}</span>
         </div>
@@ -148,6 +159,10 @@
     </div>
 
   </k-area-blocker>
-
+  <kPopupWidget #transcodingDetails data-aid="transcoding-breakdown" [popupWidth]="680" [popupHeight]="575" [modal]="true" class="kPopupWidgetWrap" [closeBtn]="false">
+    <ng-template>
+      <app-transcoding (onClose)="transcodingDetails.close()" [dateFilter]="_dateFilter" [currentTimeFrame]="dataFilter.selectedDateRange?.label" [totalTranscodingDuration]="_tabsData[2].rawValue.toString()"></app-transcoding>
+    </ng-template>
+  </kPopupWidget>
 </div>
 

@@ -89,6 +89,7 @@ app-users-filter{
       font-weight: 700;
       color: $kGrayscale3;
       margin-left: 2px;
+      padding-top: 1px;
     }
   }
 }
@@ -100,6 +101,9 @@ app-users-filter{
   &:hover {
     text-decoration: underline;
   }
+}
+.kMarginLeft {
+  margin-left: 8px;
 }
 .kNoResults {
   display: flex;

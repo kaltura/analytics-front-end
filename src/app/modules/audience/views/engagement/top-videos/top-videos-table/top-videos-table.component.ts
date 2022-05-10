@@ -25,6 +25,7 @@ export class TopVideosTableComponent implements OnDestroy {
 
   @Input() entryDetails: EntryDetailsOverlayData[] = [];
   @Input() showDivider = false;
+  @Input() exporting = false;
   @Input() dates: string;
   @Input() isCompareMode: boolean;
   @Input() columns: string[] = [];

@@ -10,7 +10,7 @@ $appBkgColor: #f2f2f2;
 body {
   background-color: $appBkgColor;
   overflow-y: hidden;
-  kpopupwidget[data-aid="webcast-questions"] {
+  kpopupwidget[data-aid="webcast-questions"], kpopupwidget[data-aid="transcoding-breakdown"] {
     margin-top: 100px !important;
   }
 }
@@ -39,7 +39,6 @@ body {
   .kReportView {
     width: 100%;
     min-height: 680px;
-
     .kReport {
       width: 100%;
       margin-bottom: 24px;
@@ -735,4 +734,15 @@ ui-carousel {
   width: 10px;
   height: 10px;
   border-radius: 5px;
+}
+#reportToExport {
+  background-color: $kGrayscale7;
+  .kContent {
+    width: 100% !important;
+  }
+  .kReportView .kContent:first-child {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box;
+  }
 }

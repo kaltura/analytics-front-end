@@ -12,6 +12,13 @@
       "basicFilters": "Basic Filters",
       "advancedFilters": "Advanced Filters",
       "categories": "Categories",
+      "origin": {
+        "title": " Registration Origin",
+        "Registration": "Registration",
+        "Invitation": "Invitation",
+        "Webhook": "Webhook",
+        "SSO": "SSO"
+      },
       "mediaType": {
         "title": "Media Type",
         "Video": "Video",
@@ -128,7 +135,8 @@
       "none": "None",
       "all": "All",
       "today": "Today",
-      "clear": "Clear"
+      "clear": "Clear",
+      "unknown": "Unknown"
     },
     "errors": {
       "errorHeader": "Error",
@@ -184,6 +192,8 @@
       },
       "daily": "Daily",
       "sinceCreation": "Creation",
+      "publish": "Publish",
+      "sincePublish": "Since Publish",
       "lastBroadcast": "Last Broadcast",
       "firstBroadcast": "First Broadcast",
       "error": "'From' date must be before 'To' date",
@@ -247,15 +257,17 @@
         "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
         "year_id": "Year",
         "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
-        "peak_storage": "Stored Media",
+        "average_storage": "Stored Media",
         "bandwidth_consumption": "Outbound Bandwidth",
         "transcoding_consumption": "Transcoded Media",
+        "transcoding_duration": "Transcoded hours",
         "total_entries": "Managed Entries",
         "total_interactive_video_entries": "Interactive Videos",
         "unique_known_users": "Active Unique Users",
         "live_view_time": "Live Viewing Hours",
         "video_streams": "Delivered Video Streams",
-        "total_credits": "Enrichment Credits Spent"
+        "total_credits": "Enrichment Credits Spent",
+        "seeData": "See data"
       },
       "locationFiltersWarning": "Location filter applies to BW consumption only",
       "highlights": "Highlights",
@@ -334,7 +346,9 @@
       "exportLabels": {
         "endUser": "End user",
         "publisher": "Publisher Bandwidth"
-      }
+      },
+      "storedMedia_tt": "The average storage in the selected time frame",
+      "live_view_tt": "Webcast and Live"
     },
     "audience": {
       "menu": {
@@ -423,7 +437,9 @@
         "entries": "Entries",
         "context": "Playback Context"
       },
+      "footer": "insightful data",
       "title": "Engagement",
+      "exportTitle": "Summary Engagement Report",
       "playedEntries": "Out of {{0}} Played Entries",
       "highlights_tt": "Snapshot of important metrics for the selected timeframe",
       "highlights": "Highlights",
@@ -522,6 +538,7 @@
       "vodViews": "VOD views",
       "livaDashboard": "Real Time Dashboard",
       "noRecording": "No Recording Found",
+      "exportTitle": "Summary webcast report",
       "noRecordingText": "This webcast doesn’t have a recording associated with it.\nEither the recording was archived or the entry was never broadcasted.",
       "webcastLive": "The webcast is currently live",
       "webcastLiveText": "Once the webcast ends, refresh the page\nand the webcast recording will be available.",
@@ -1004,6 +1021,7 @@
       "videoPerformance": "Video performance over time",
       "month_id": "Month",
       "date_id": "Date",
+      "registered": "Registered",
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
@@ -1063,6 +1081,37 @@
         "syndication": "Top Domains"
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
+    },
+    "ve": {
+      "all": "All attendees",
+      "registration": "Registration",
+      "registered": "Registered",
+      "invited": "Invited",
+      "registered_tt": "Registered and invited attendees",
+      "confirmed": "Confirmed",
+      "confirmed_tt": "Confirmed the registration email",
+      "participated": "Participated",
+      "participated_tt": "Attendees who showed up for the event",
+      "turnout": "Overall Turnout",
+      "turnout_tt": "Participation rate",
+      "unregistered": "Unregistered",
+      "turnout2": "Turnout",
+      "dropoff": "Drop-off",
+      "attendees": "Attendees",
+      "status": "Attendees status",
+      "evolution": "Evolution of cumulated attendee’s statuses over time",
+      "peak": "Peak Day",
+      "date_id": "Days",
+      "geo": "Top Geographic Areas",
+      "roles": "Roles",
+      "industries": "Industries",
+      "details": "Registration details",
+      "people": "It’s all about the people",
+      "reportTitle": "Summary Registration Report: {{0}}",
+      "exporting": "Generating your report...",
+      "footer": "Remarkable events, insightful data",
+      "disclaimer": "* Please note that the data above is filtered based on the filter applied in the report",
+      "summary": "line1\nlin2"
     },
     "playlist": {
       "count_loads": "Player Impressions",

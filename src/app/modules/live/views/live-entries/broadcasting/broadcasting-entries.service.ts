@@ -42,6 +42,7 @@ export interface BroadcastingEntries {
   redundancy?: boolean;
   conversionProfileId?: number;
   partnerId?: string;
+  thumbnailUrl?: string;
 }
 
 @Injectable()
@@ -207,6 +208,7 @@ export class BroadcastingEntriesService implements OnDestroy {
               if (broadcastingEntry.id === entry.id) {
                 broadcastingEntry.name = entry.name;
                 broadcastingEntry.dvr = entry.dvrStatus;
+                broadcastingEntry.thumbnailUrl = entry.thumbnailUrl;
                 broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
                 broadcastingEntry.recording = entry.recordingStatus === KalturaRecordingStatus.active && entry.recordStatus !== KalturaRecordStatus.disabled;
                 broadcastingEntry.conversionProfileId = entry.conversionProfileId;

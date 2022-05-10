@@ -13,7 +13,7 @@
           <div class="kLabels">
             <span class="value">{{_tabsData[0]?.value}}</span>
             <span class="title">{{_tabsData[0]?.title}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{_tabsData[0]?.tooltip}}</span>
             </kInputHelper>
           </div>
@@ -35,7 +35,7 @@
           <span *ngIf="lastBroadcastDuration.length && !isLive" class="title">{{'app.entryWebcast.quality.minutes' | translate}}</span>
           <span *ngIf="!lastBroadcastDuration.length && isLive" class="title">{{'app.entryWebcast.quality.live' | translate}}</span>
         </div>
-        <kInputHelper *ngIf="lastBroadcastDuration.length && !isLive">
+        <kInputHelper *ngIf="lastBroadcastDuration.length && !isLive && !exporting">
           <span>{{'app.entryWebcast.quality.minutes_tt' | translate}}</span>
         </kInputHelper>
       </div>

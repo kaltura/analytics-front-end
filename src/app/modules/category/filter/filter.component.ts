@@ -3,8 +3,8 @@ import { LocationsFilterService } from 'shared/components/filter/location-filter
 import { DomainsFilterService } from 'shared/components/filter/domains-filter/domains-filter.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
-import {FilterComponent, OptionItem} from 'shared/components/filter/filter.component';
-import { ReportService } from 'shared/services';
+import { FilterComponent, OptionItem } from 'shared/components/filter/filter.component';
+import { AppAnalytics, ReportService } from 'shared/services';
 import { isEmptyObject } from 'shared/utils/is-empty-object';
 import { ViewConfig } from 'configuration/view-config';
 import { KalturaCategory } from "kaltura-ngx-client";
@@ -77,8 +77,9 @@ export class CatFilterComponent extends FilterComponent {
 
   constructor(_translate: TranslateService,
               _frameEventManager: FrameEventManagerService,
+              _analytics: AppAnalytics,
               _logger: KalturaLogger) {
-    super(_translate, _frameEventManager, _logger);
+    super(_translate, _frameEventManager, _analytics, _logger);
   }
 
   public openFilter(filter: string): void {

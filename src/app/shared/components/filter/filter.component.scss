@@ -101,3 +101,6 @@ app-location-filters ::ng-deep app-dropdown-filter{
     min-width: 118px !important;
   }
 }
+ktags.exporting ::ng-deep .kTagsClear {
+  display: none;
+}

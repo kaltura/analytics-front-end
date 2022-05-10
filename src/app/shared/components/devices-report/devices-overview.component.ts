@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
@@ -47,18 +47,21 @@ export interface Summary {
     ReportService,
   ]
 })
-export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
+export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDestroy {
   @Input() categoryId: string = null;
   @Input() playlistId: string = null;
   @Input() entryId: string = null;
+  @Input() virtualEventId: string = null;
+  @Input() reportType: KalturaReportType = null;
   @Input() colorScheme = 'default';
+  @Input() reportConfig: ReportDataConfig = null;
 
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'devices-overview';
 
   private readonly _allowedDevices = ['Computer', 'Mobile', 'Tablet', 'Game console', 'Digital media receiver'];
   private _fractions = 1;
-  private _reportType = reportTypeMap(KalturaReportType.platforms);
+  private _reportType: KalturaReportType = null;
   private _tabsData: Tab[] = [];
   private _compareTabsData: Tab[] = [];
 
@@ -93,9 +96,15 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
               private _dataConfigService: DevicesOverviewConfig,
               private _trendService: TrendService) {
     super();
-
     this._dataConfig = _dataConfigService.getConfig();
     this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
+  }
+
+  ngOnInit(): void {
+      if (this.reportConfig) {
+        this._dataConfig = this.reportConfig;
+        this._selectedMetric = this._dataConfig[ReportDataSection.totals].preSelected;
+      }
   }
 
   ngOnDestroy() {
@@ -130,10 +139,14 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
     this._blockerMessage = null;
     this._currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     this._currentPeriodLabel = this._getPeriodLabel(this._currentPeriod);
-
+    this._reportType = this.reportType ? reportTypeMap(this.reportType) : reportTypeMap(KalturaReportType.platforms);
 
     if (this.entryId) {
       this._filter.entryIdIn = this.entryId;
+    }
+
+    if (this.virtualEventId) {
+      this._filter.virtualEventIdIn = this.virtualEventId;
     }
 
     if (this.categoryId && !this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
@@ -161,6 +174,10 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
 
           if (this.entryId) {
             this._compareFilter.entryIdIn = this.entryId;
+          }
+
+          if (this.virtualEventId) {
+            this._compareFilter.virtualEventIdIn = this.virtualEventId;
           }
 
           if (this.categoryId && !this._compareFilter.categoriesIdsIn && !this._compareFilter.playbackContextIdsIn) {
@@ -283,8 +300,8 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
           return {
             trend,
             tooltip: [
-              { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
-              { value: ReportHelper.numberOrZero(compareRawValue), label: this._translate.instant(`app.entry.count_plays`) },
+              { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.${key}`) },
+              { value: ReportHelper.numberOrZero(compareRawValue), label: this._translate.instant(`app.entry.${key}`) },
             ],
             value: [currentValue, compareValue],
             label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
@@ -294,7 +311,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnDestroy {
 
         return {
           value: currentValue,
-          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.count_plays`) },
+          tooltip: { value: ReportHelper.numberOrZero(rawValue), label: this._translate.instant(`app.entry.${key}`) },
           label: this._translate.instant(`app.audience.technology.devices.${item.device}`),
           icon: this._deviceIconPipe.transform(item.device),
         };

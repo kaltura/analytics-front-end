@@ -17,7 +17,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'peak_storage': {
+          'average_storage': {
             format: value => value,
             graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
             colors: [getPrimaryColor('default'), getColorPercent(100,'default')],
@@ -28,15 +28,18 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
           },
           'total_entries': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('entries'), getColorPercent(100,'entries')],
           },
          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('viewers'), getColorPercent(100,'viewers')],
           },
          'live_view_time': {
-            format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.hours(value))),
+            format: value => Math.round(ReportHelper.hours(value)),
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
           },
         }
@@ -51,7 +54,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             format: value => DateFilterUtils.formatMonthString(value, analyticsConfig.locale),
             nonComparable: true,
           },
-          'peak_storage': {
+          'average_storage': {
             format: value => ReportHelper.numberOrZero(value, true),
             sortOrder: 1
           },
@@ -74,11 +77,12 @@ export class StorageDataConfig extends ReportDataBaseConfig {
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'peak_storage',
+        preSelected: 'average_storage',
         fields: {
-          'peak_storage': {
+          'average_storage': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
-            title: this._translate.instant(`app.bandwidth.overview.peak_storage`),
+            title: this._translate.instant(`app.bandwidth.overview.average_storage`),
+            tooltip: this._translate.instant(`app.bandwidth.storedMedia_tt`),
             units: value => fileSize(value).units,
             sortOrder: 1
           },
@@ -88,42 +92,49 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             units: value => fileSize(value).units,
             sortOrder: 2
           },
+          'transcoding_duration': {
+            format: value => ReportHelper.numberOrZero(ReportHelper.hours(value), false, 2),
+            title: this._translate.instant(`app.bandwidth.overview.transcoding_duration`),
+            units: value => 'Hours',
+            sortOrder: 3
+          },
           'transcoding_consumption': {
             format: value => ReportHelper.numberOrZero(fileSize(value).value, false),
             title: this._translate.instant(`app.bandwidth.overview.transcoding_consumption`),
             units: value => fileSize(value).units,
-            sortOrder: 3
+            sortOrder: 4
           },
           'total_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_entries`),
-            sortOrder: 4
+            sortOrder: 5
           },
           'total_interactive_video_entries': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_interactive_video_entries`),
-            sortOrder: 5
+            sortOrder: 6
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.unique_known_users`),
-            sortOrder: 6
+            sortOrder: 7
           },
           'live_view_time': {
             format: value => ReportHelper.numberOrZero(Math.round(ReportHelper.hours(value))),
             title: this._translate.instant(`app.bandwidth.overview.live_view_time`),
+            tooltip: this._translate.instant(`app.bandwidth.live_view_tt`),
             units: value => 'Hours',
-            sortOrder: 7
+            sortOrder: 8
           },
           'video_streams': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.video_streams`),
-            sortOrder: 8
+            sortOrder: 9
           },
           'total_credits': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_credits`),
-            sortOrder: 9
+            sortOrder: 10
           },
         }
       }
