@@ -265,7 +265,7 @@ export class AppService implements OnDestroy {
       .pipe(map(responses => {
         const [userResponse, roleResponse, permissionsResponse, currentPermissionsResponse, partnerResponse, playersListResponse] = responses;
         const initPlayers = () => {
-          if (playersListResponse) {
+          if (playersListResponse && playersListResponse.result) {
             const players: KalturaUiConf[] = playersListResponse.result.objects || [];
             const v2UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV2_v' + analyticsConfig.appVersion) > -1);
             const v7UIConf: KalturaUiConf = players.find(player => player.tags.indexOf('AnalyticsV7_v' + analyticsConfig.appVersion) > -1);
