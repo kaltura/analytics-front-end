@@ -65,4 +65,10 @@ export class ThumbLoaderComponent {
       this.base64Data = this._canvas.nativeElement.toDataURL();
     }
   }
+
+  public hideElement(event): void {
+    if (event && event.currentTarget) {
+      event.currentTarget.style.display = 'none';
+    }
+  }
 }
