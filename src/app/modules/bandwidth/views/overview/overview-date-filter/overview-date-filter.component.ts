@@ -57,10 +57,11 @@ export class OverviewDateFilterComponent implements OnInit {
     const partnerCreationDate = new Date(this._authService.partnerCreatedAt);
     const partnerCreationYear = partnerCreationDate.getFullYear();
     const currentYear = today.getFullYear();
+    const dayStr = DateFilterUtils.getTimeZoneOffset() > 0 ? '02' : '01';
     this.yearlyDateRangeItems = [{
       key: 'year-0',
       label: this._translate.instant('app.dateFilter.currentYear'),
-      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-01-01`), true),
+      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-01-${dayStr}`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
       interval: KalturaReportInterval.years,
       isSpecific: false
@@ -72,7 +73,7 @@ export class OverviewDateFilterComponent implements OnInit {
         this.yearlyDateRangeItems.push({
           key: `year-${i}`,
           label: year.toString(),
-          startDate: DateFilterUtils.toServerDate(new Date(`${year}-01-01`), true),
+          startDate: DateFilterUtils.toServerDate(new Date(`${year}-01-${dayStr}`), true),
           endDate: DateFilterUtils.toServerDate(new Date(`${year}-12-31`), false),
           interval: KalturaReportInterval.years,
           isSpecific: false
@@ -85,7 +86,7 @@ export class OverviewDateFilterComponent implements OnInit {
     this.monthlyDateRangeItems = [{
       key: 'month-0',
       label: this._translate.instant('app.dateFilter.currentMonth'),
-      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonthStr}-01`), true),
+      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonthStr}-${dayStr}`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
       interval: KalturaReportInterval.months,
       isSpecific: false
@@ -100,11 +101,11 @@ export class OverviewDateFilterComponent implements OnInit {
           year = currentYear - 1;
         }
         const monthStr = month.toString().length === 1 ? '0' + month : month.toString();
-        const monthName = new Date(`${year}-${monthStr}-01`).toLocaleString('default', { month: 'long' });
+        const monthName = new Date(`${year}-${monthStr}-10`).toLocaleString('default', { month: 'long' });
         this.monthlyDateRangeItems.push({
           key: `month-${i}`,
           label: `${monthName} ${year}`,
-          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${monthStr}-01`), true),
+          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${monthStr}-${dayStr}`), true),
           endDate: DateFilterUtils.toServerDate(new Date(year,month,0), false),
           interval: KalturaReportInterval.months,
           isSpecific: false
