@@ -1,6 +1,6 @@
 <div class="kThumbnailHolder" #holder [class.kDisabled]="disabled" [style.width.px]="width" [style.height.px]="height" (click)="_onClick()" (mouseenter)="_onMouseEnter($event)" (mouseleave)="_onMouseLeave($event)">
-  <img *ngIf="!_loadThumbnailWithKs && thumbnailUrl" [style.width.px]="width" [src]="thumbnailUrl"  (load)="onLoad($event)" alt="Image entry" crossorigin="anonymous">
+  <img *ngIf="!_loadThumbnailWithKs && thumbnailUrl" [style.width.px]="width" [src]="thumbnailUrl" (load)="onLoad($event)" alt="Image entry" crossorigin="anonymous">
   <img *ngIf="_loadThumbnailWithKs && thumbnailUrl && _ks" [style.width.px]="width" #thumbks [src]="thumbnailUrl+'/ks/'+ _ks" (error)="holder.classList.add('error');_onError()" (load)="onLoad($event)" alt="Image entry" crossorigin="anonymous">
-  <img *ngIf="useBase64" [style.width.px]="width" [style.height.px]="height" [src]="base64Data" alt="Image entry">
+  <img *ngIf="useBase64 && base64Data" [style.width.px]="width" [style.height.px]="height" [src]="base64Data" alt="Image entry" (error)="hideElement($event)">
   <canvas #canvas></canvas>
 </div>
