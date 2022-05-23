@@ -2,7 +2,7 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div style="display: flex; flex-direction: column; width: 100%">
       <div class="kPlayer" aria-label="Player">
-        <app-k-player-v7 #player [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
+        <app-k-player-v7 [id]="'analytics'" [cdnUrl]="serverUri" [pid]="_playerConfig.pid"
                          [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [ks]="_playerConfig.ks" [poster]="thumbnailUrl"
                          [loadThumbnailWithKs]="_loadThumbnailWithKs" (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player-v7>
       </div>

@@ -24,7 +24,7 @@
   </div>
 
   <div class="kReportContent" *ngIf="drillDown">
-    <app-node-preview [entryId]="drillDown.entryId" [nodeId]="drillDown.id" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter" (updateDuration)="onUpdateDuration($event)"></app-node-preview>
+    <app-node-preview [entryId]="drillDown.entryId" [thumbnailUrl]="drillDown.thumbnailUrl" [nodeId]="drillDown.id" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter" (updateDuration)="onUpdateDuration($event)"></app-node-preview>
     <app-node-hotspots [nodeId]="drillDown.id" [nodes]="_tableData" [hotspots]="drillDown.hotspots" [dateFilter]="_dateFilter" [refineFilter]="_refineFilter" [duration]="_duration"></app-node-hotspots>
   </div>
 </div>
