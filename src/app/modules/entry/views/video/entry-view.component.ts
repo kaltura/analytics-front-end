@@ -36,6 +36,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
       this._duration = value.msDuration || 0;
       this._creationDate = DateFilterUtils.getMomentDate(value.createdAt);
       this._showViewDetails = value.displayInSearch !== KalturaEntryDisplayInSearchType.system;
+      this._entryThumbnail = value.thumbnailUrl;
     }
   }
   @Input() owner: string;
@@ -67,6 +68,7 @@ export class VideoEntryViewComponent implements OnInit, OnDestroy {
   public _duration = 0;
   public _showViewDetails = false;
   public _entryName = '';
+  public _entryThumbnail = '';
   public _entryType: KalturaMediaType = null;
   public _viewConfig: ViewConfig = { ...viewsConfig.entry };
 
