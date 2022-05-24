@@ -119,7 +119,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,mediaType,createdAt,duration,userId,displayInSearch,lastBroadcastEndTime,firstBroadcast,lastBroadcast,recordedEntryId,liveStatus,'
+            fields: 'id,name,mediaType,createdAt,duration,userId,displayInSearch,lastBroadcastEndTime,firstBroadcast,lastBroadcast,recordedEntryId,liveStatus,thumbnailUrl'
           })
         }),
       new UserGetAction({ userId: null })
