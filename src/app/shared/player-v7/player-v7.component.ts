@@ -13,7 +13,13 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	@Input()
 	height = 360;
 
-	@Input()
+  @Input()
+  fillWidth = false;
+
+  @Input()
+  fillHeight = false;
+
+  @Input()
 	pid: string;
 
 	@Input()
@@ -99,7 +105,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
         },
         playback: {
           autoplay: this.autoPlay,
-          muted: this.muted
+          muted: this.muted,
         }
       };
       if (this.loadThumbnailWithKs && this.poster.length) {

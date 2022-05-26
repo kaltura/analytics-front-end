@@ -1,6 +1,5 @@
 <div class="kPlayer" aria-label="Live-Player">
-  <app-k-player #player [id]="'analytics-live-player'" [cdnUrl]="serverUri" [pid]="partnerID" *ngIf="entryId.length"
-              [uiconfid]="UIConfID" [entryid]="entryId" [loadThumbnailWithKs]="_loadThumbnailWithKs"
-              [flashvars]="flashvars" [fillWidth]="true" [fillHeight]="true"
-              (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player>
+  <app-k-player-v7 [id]="'analytics-live-player'" [cdnUrl]="serverUri" [pid]="partnerID" *ngIf="entryId.length"
+                   [uiconfid]="UIConfID" [entryid]="entryId" [ks]="ks" [poster]="thumbnailUrl"
+                   [fillWidth]="true" [fillHeight]="true" [loadThumbnailWithKs]="_loadThumbnailWithKs"></app-k-player-v7>
 </div>
