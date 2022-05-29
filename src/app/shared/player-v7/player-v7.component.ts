@@ -96,7 +96,9 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
         plugins: {
           kava: {
             disable: true
-          }
+          },
+          ivq: {},
+          kalturaCuepoints: {}
         },
         provider: {
           ks: this.ks,
