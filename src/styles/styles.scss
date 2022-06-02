@@ -665,10 +665,6 @@ k-area-blocker {
   }
 }
 
-ui-carousel {
-  z-index: 1;
-}
-
 .kDisclaimer {
   margin: 16px 0 0 16px;
   display: inline-block;
@@ -734,6 +730,38 @@ ui-carousel {
   width: 10px;
   height: 10px;
   border-radius: 5px;
+}
+p-carousel {
+  height: 100%;
+  .p-carousel {
+    height: 100%;
+    background-color: white;
+  }
+  .p-carousel-content, .p-carousel-container {
+    height: 100%;
+    overflow: hidden;
+  }
+  .p-carousel-indicators{
+    margin-bottom: 12px;
+  }
+  .p-carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: $kGrayscale3;
+    opacity: .6;
+    margin: 0 4px;
+    &.p-highlight {
+      background-color: $kTertiary;
+      opacity: 1;
+    }
+    .p-link {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      outline: none !important;
+    }
+  }
 }
 #reportToExport {
   background-color: $kGrayscale7;

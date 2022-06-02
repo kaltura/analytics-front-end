@@ -98,35 +98,20 @@
 
       <div class="separator" *ngIf="_viewConfig.miniInsights && (_viewConfig.miniTopVideos || _viewConfig.miniTopViewers)"></div>
       <div class="kMiniReportContainer kMiniTopReportSmall" *ngIf="_viewConfig.miniInsights">
-        <ui-carousel height="100%"
-                     [infinite]="true"
-                     [autoPlay]="true"
-                     [autoPlaySpeed]="5000"
-                     [arrows]="false"
-                     [fade]="false"
-                     [speed]="200">
-          <ui-carousel-item *ngIf="_viewConfig.miniInsights.peakDay">
-            <app-manual-playlist-insight-peak-day [dateFilter]="_dateFilter" [playlistId]="_playlistId"
-                                          [refineFilter]="_refineFilter"></app-manual-playlist-insight-peak-day>
-          </ui-carousel-item>
+        <p-carousel [autoplayInterval]="5000" [circular]="true" [value]="carouselItems">
+          <ng-template pTemplate="item" let-item>
+            <app-manual-playlist-insight-peak-day *ngIf="item === 'peakDay'" [dateFilter]="_dateFilter" [playlistId]="_playlistId"
+                                                  [refineFilter]="_refineFilter"></app-manual-playlist-insight-peak-day>
+            <app-manual-playlist-insight-geo *ngIf="item === 'geo'" [topCountries]="_topCountriesComponent?.topCountries$"
+                                             [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-manual-playlist-insight-geo>
+            <app-manual-playlist-devices-domains *ngIf="item === 'devices'" [playlistId]="_playlistId"
+                                                 [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-manual-playlist-devices-domains>
+            <app-manual-playlist-insight-domains *ngIf="item === 'domains'" [dateFilter]="_dateFilter" [playlistId]="_playlistId"
+                                                 [refineFilter]="_refineFilter"></app-manual-playlist-insight-domains>
 
-          <ui-carousel-item *ngIf="_viewConfig.miniInsights.geo">
-            <app-manual-playlist-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"
-                                      [dateFilter]="_dateFilter"
-                                      [refineFilter]="_refineFilter"></app-manual-playlist-insight-geo>
-          </ui-carousel-item>
+          </ng-template>
+        </p-carousel>
 
-          <ui-carousel-item *ngIf="_viewConfig.miniInsights.devices">
-            <app-manual-playlist-devices-domains [playlistId]="_playlistId"
-                                          [dateFilter]="_dateFilter"
-                                          [refineFilter]="_refineFilter"></app-manual-playlist-devices-domains>
-          </ui-carousel-item>
-
-          <ui-carousel-item *ngIf="_viewConfig.miniInsights.domains">
-            <app-manual-playlist-insight-domains [dateFilter]="_dateFilter" [playlistId]="_playlistId"
-                                          [refineFilter]="_refineFilter"></app-manual-playlist-insight-domains>
-          </ui-carousel-item>
-        </ui-carousel>
       </div>
 
       <div class="divider"></div>

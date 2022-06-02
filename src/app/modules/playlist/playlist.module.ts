@@ -5,10 +5,10 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
 import { PaginatorModule } from 'primeng/paginator';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 import { routing } from './playlist.routes';
-import { UICarouselModule } from 'ng-carousel-iuno';
 import { SharedModule } from 'shared/shared.module';
 import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TableModule } from 'primeng/table';
@@ -41,12 +41,12 @@ import { ManualPlaylistPerformanceComponent, ManualPlylistDatesTableComponent, M
   imports: [
     AreaBlockerModule,
     TagsModule,
-    UICarouselModule,
     CommonModule,
     FormsModule,
     TranslateModule,
     DropdownModule,
     ButtonModule,
+    CarouselModule,
     OverlayPanelModule,
     PaginatorModule,
     SharedModule,

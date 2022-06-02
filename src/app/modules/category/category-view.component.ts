@@ -72,6 +72,7 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
   public _parentCategoryName = '';
   public _categoryTopContentComponent: CategoryTopContentComponent;
   public _topCountriesComponent: TopCountriesComponent;
+  public carouselItems = [];
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -81,6 +82,15 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
               private _exportConfigService: CategoryExportConfig,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService) {
+    if (this._viewConfig.insights?.domains) {
+      this.carouselItems.push('domains');
+    }
+    if (this._viewConfig.insights?.geo) {
+      this.carouselItems.push('geo');
+    }
+    if (this._viewConfig.insights?.devices) {
+      this.carouselItems.push('devices');
+    }
   }
 
   ngOnInit() {
