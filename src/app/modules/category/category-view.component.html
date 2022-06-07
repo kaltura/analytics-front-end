@@ -102,30 +102,16 @@
 
           <div class="separator" *ngIf="_viewConfig.insights && (_viewConfig.miniTopVideos || _viewConfig.miniTopViewers)"></div>
           <div class="kMiniReportContainer kMiniTopReportSmall" *ngIf="_viewConfig.insights && _categoryLoaded">
-            <ui-carousel height="100%"
-                         [infinite]="true"
-                         [autoPlay]="true"
-                         [autoPlaySpeed]="5000"
-                         [arrows]="false"
-                         [fade]="false"
-                         [speed]="200">
-              <ui-carousel-item *ngIf="_viewConfig.insights.domains">
-                <app-category-insight-domains [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"
+            <p-carousel [autoplayInterval]="5000" [circular]="true" [value]="carouselItems">
+              <ng-template pTemplate="item" let-item>
+                <app-category-insight-domains *ngIf="item === 'domains'" [dateFilter]="_dateFilter" [categoryId]="_category?.id.toString()"
                                               [refineFilter]="_refineFilter"></app-category-insight-domains>
-              </ui-carousel-item>
-              <ui-carousel-item *ngIf="_viewConfig.insights.geo">
-                <app-category-insight-geo [topCountries]="_topCountriesComponent?.topCountries$"
-                                          [dateFilter]="_dateFilter"
-                                          [refineFilter]="_refineFilter"></app-category-insight-geo>
-              </ui-carousel-item>
-
-              <ui-carousel-item *ngIf="_viewConfig.insights.devices">
-                <app-category-devices-domains [categoryId]="_category?.id.toString()"
-                                         [dateFilter]="_dateFilter"
-                                         [refineFilter]="_refineFilter"></app-category-devices-domains>
-              </ui-carousel-item>
-
-            </ui-carousel>
+                <app-category-insight-geo *ngIf="item === 'geo'" [topCountries]="_topCountriesComponent?.topCountries$"
+                                          [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-category-insight-geo>
+                <app-category-devices-domains *ngIf="item === 'devices'" [categoryId]="_category?.id.toString()"
+                                              [dateFilter]="_dateFilter" [refineFilter]="_refineFilter"></app-category-devices-domains>
+              </ng-template>
+            </p-carousel>
           </div>
 
         </div>

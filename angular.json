@@ -22,7 +22,6 @@
             "allowedCommonJsDependencies": [
               "seamless-immutable",
               "jquery",
-              "ng-carousel-iuno.js",
               "html2pdf.js"
             ],
             "tsConfig": "src/tsconfig.app.json",

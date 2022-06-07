@@ -89,10 +89,23 @@ export class ManualPlaylistComponent implements OnInit {
     this._viewConfig.miniTopViewers,
     this._viewConfig.miniInsights
   ].filter(Boolean).length;
+  public carouselItems = [];
 
   constructor(private _exportConfigService: ManualExportConfig,
               private _customSyndicationConfig: CustomSyndicationConfig) {
     this._syndicationConfig = this._customSyndicationConfig.getConfig();
+    if (this._viewConfig.miniInsights?.peakDay) {
+      this.carouselItems.push('peakDay');
+    }
+    if (this._viewConfig.miniInsights?.geo) {
+      this.carouselItems.push('geo');
+    }
+    if (this._viewConfig.miniInsights.devices) {
+      this.carouselItems.push('devices');
+    }
+    if (this._viewConfig.miniInsights.domains) {
+      this.carouselItems.push('domains');
+    }
   }
 
   ngOnInit() {

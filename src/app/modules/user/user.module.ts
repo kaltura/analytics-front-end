@@ -14,12 +14,12 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { SharedModule } from 'shared/shared.module';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { CarouselModule } from 'primeng/carousel';
 import { UserFilterComponent } from './filter/filter.component';
 import { UserTotalsComponent } from './views/user-totals/user-totals.component';
 import { UserHighlightsTableComponent } from './views/user-highlights/table/table.component';
 import { UserHighlightsComponent } from './views/user-highlights/highlights.component';
 import { UserSourcesComponent } from './views/sources/sources.component';
-import { UICarouselModule } from 'ng-carousel-iuno';
 import { UserMiniTopContentComponent } from './views/user-mini-top-content/user-mini-top-content.component';
 import { TopContentTableComponent } from './views/user-top-content/top-content-table/top-content-table.component';
 import { TopContentComponent } from './views/user-top-content/top-content.component';
@@ -47,14 +47,14 @@ import { UserEntryDetailsOverlayComponent } from './components/entry-details-ove
     ButtonModule,
     OverlayPanelModule,
     PaginatorModule,
+    CarouselModule,
     SharedModule,
     TableModule,
     TooltipModule,
     InputHelperModule,
     NgxEchartsModule,
     RouterModule.forChild(routing),
-    AutoCompleteModule,
-    UICarouselModule,
+    AutoCompleteModule
   ],
   declarations: [
     UserViewComponent,

@@ -36,19 +36,22 @@ export class ContentInteractionsComponent {
     this._contentInteractionsViewConfig.topPlaybackSpeed,
     this._contentInteractionsViewConfig.topStats,
   ].filter(Boolean).length;
-  public _carouselItemsCount = [
-    this._contentInteractionsViewConfig.topPlaybackSpeed,
-    this._contentInteractionsViewConfig.topStats,
-  ].filter(Boolean).length;
   public _filter: KalturaEndUserReportInputFilter = new KalturaEndUserReportInputFilter(
     {
       searchInTags: true,
       searchInAdminTags: false
     }
   );
+  public carouselItems = [];
 
   constructor(private _exportConfigService: ContentInteractionsExportConfig) {
     this._exportConfig = _exportConfigService.getConfig();
+    if (this._contentInteractionsViewConfig.topPlaybackSpeed) {
+      this.carouselItems.push('topPlaybackSpeed');
+    }
+    if (this._contentInteractionsViewConfig.topStats) {
+      this.carouselItems.push('topStats');
+    }
   }
 
   public _onDateFilterChange(event: DateChangeEvent): void {
