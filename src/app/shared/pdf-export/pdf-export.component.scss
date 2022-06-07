@@ -1,10 +1,12 @@
 @import '../../../styles/variables';
-
 .kDownloadReport{
   font-weight: normal;
-  ::ng-deep  .ui-button-text {
+  ::ng-deep  .p-button-text {
     padding-left: 3.1em;
     white-space: nowrap;
+  }
+  ::ng-deep .p-button-icon-left {
+    font-size: 24px;
   }
 }
 button.kButtonDefault:disabled {

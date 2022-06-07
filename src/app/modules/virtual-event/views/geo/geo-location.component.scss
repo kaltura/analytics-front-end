@@ -13,10 +13,10 @@
   .hiddenHeader {
     display: none;
   }
-  ::ng-deep .ui-table .ui-table-tbody > tr > td, ::ng-deep  .ui-table .ui-table-thead {
+  ::ng-deep .p-table .p-table-tbody > tr > td, ::ng-deep  .p-table .p-table-thead {
     border: none !important;
   }
-  .hidePaginator ::ng-deep .ui-paginator {
+  .hidePaginator ::ng-deep .p-paginator {
     display: none;
   }
   .divider {
@@ -77,6 +77,6 @@
     padding-right: 12px;
   }
 }
-p-table ::ng-deep .ui-paginator .ui-paginator-page.ui-state-active {
+p-table ::ng-deep .p-paginator .p-paginator-page.p-state-active {
   z-index: 1;
 }

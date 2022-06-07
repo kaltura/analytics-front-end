@@ -17,13 +17,13 @@
 }
 .hideLabels{
   kautocomplete ::ng-deep {
-    .ui-autocomplete-multiple-container {
+    .p-autocomplete-multiple-container {
       padding: 4px;
       padding-left: 8px;
       display: flex;
       align-items: center;
       width: 200px;
-      &.ui-state-focus{
+      &.p-state-focus{
         border: 1px solid $kGrayscale3;
       }
       input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -37,17 +37,17 @@
       }
     }
     /*
-    .ui-autocomplete-multiple-container:before {
+    .p-autocomplete-multiple-container:before {
       font-family: 'kmcng-icon-pack' !important;
       content: "\e90f";
       margin-right: 6px;
       margin-left: 3px;
       font-size: 18px;
     }*/
-    .ui-autocomplete-token {
+    .p-autocomplete-token {
       display: none;
     }
-    .ui-autocomplete-panel .ui-autocomplete-list-item span{
+    .p-autocomplete-panel .p-autocomplete-list-item span{
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;

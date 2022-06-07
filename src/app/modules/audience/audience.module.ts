@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { CarouselModule } from 'primeng/carousel';
 import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
 
 import { routing } from './audience.routes';
@@ -30,7 +31,6 @@ import { TopBrowsersComponent } from './views/technology/top-browsers/top-browse
 import { TopOsComponent } from './views/technology/top-os/top-os.component';
 import { TopVideosTableComponent } from './views/engagement/top-videos/top-videos-table/top-videos-table.component';
 
-import { UICarouselModule } from 'ng-carousel-iuno';
 import { MiniTopVideosComponent } from './views/engagement/mini-top-videos/mini-top-videos.component';
 import { GeoFilterComponent } from './views/geo-location/filter/filter.component';
 import { ContentInteractionsComponent } from './views/content-interactions/content-interactions.component';
@@ -55,6 +55,7 @@ import { ContextTableComponent } from './views/engagement/highlights/context-tab
     TooltipModule,
     PopupWidgetModule,
     AutoCompleteModule,
+    CarouselModule,
     CommonModule,
     FormsModule,
     TranslateModule,
@@ -68,8 +69,7 @@ import { ContextTableComponent } from './views/engagement/highlights/context-tab
     NgxEchartsModule,
     CheckboxModule,
     RouterModule.forChild(routing),
-    OverlayPanelModule,
-    UICarouselModule,
+    OverlayPanelModule
   ],
   declarations: [
     AudienceComponent,

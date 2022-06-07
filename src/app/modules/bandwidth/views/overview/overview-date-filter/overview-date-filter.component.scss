@@ -61,6 +61,7 @@
           margin-bottom: 8px;
         }
         p-radiobutton{
+          position: relative;
           width: 100%;
           height: 32px;
           box-sizing: border-box;
@@ -69,18 +70,19 @@
           &:hover{
             background-color: $kGrayscale6;
           }
-          ::ng-deep .ui-radiobutton{
-            float: right;
-            margin-right: 16px;
-
-            .ui-radiobutton-box{
+          ::ng-deep .p-radiobutton{
+            position: absolute;
+            right: 16px;
+            top: 0px;
+            .p-radiobutton-box{
               display: none;
-              &.ui-state-active{
+              &.p-highlight{
                 display: block;
                 border: none;
                 margin-top: 7px;
                 background: transparent;
-                .pi-circle-on:before {
+                .p-radiobutton-icon:before {
+                  font-family: "kmcng-icon-pack";
                   content: "\e91c";
                   color: $kGrayscale1;
                   font-size: 14px;
@@ -88,16 +90,15 @@
               }
             }
           }
-          ::ng-deep .ui-radiobutton-label{
-            font-weight: 700;
-            font-size: 14px;
+          ::ng-deep .p-radiobutton-label{
+            font-weight: normal;
             margin-left: 24px;
             display: block;
             width: 100%;
-            height: 36px;
+            height: 24px;
             padding-top: 7px;
             cursor: pointer;
-            &.ui-label-active{
+            &.p-radiobutton-label-active{
               font-weight: 700;
             }
           }
@@ -126,14 +127,14 @@
 }
 
 :host ::ng-deep {
-  .ui-state-focus {
+  .p-state-focus {
     outline: 5px auto rgba(0, 150, 255, 1) !important;
   }
 }
-.kDateFilterPopup ::ng-deep .ui-button{
+.kDateFilterPopup ::ng-deep .p-button{
   height: auto;
   min-height: 34px;
-  .ui-button-text {
+  .p-button-text {
     line-height: 16px;
   }
 }
@@ -142,7 +143,7 @@
   display: flex;
   padding-top: 20px;
   justify-content: center;
-  ::ng-deep p-selectbutton .ui-button{
+  ::ng-deep p-selectbutton .p-button{
     width: 210px;
   }
 }
@@ -172,13 +173,13 @@
     }
   }
   p-calendar{
-    ::ng-deep .ui-calendar .ui-datepicker{
+    ::ng-deep .p-calendar .p-datepicker{
       width: 454px;
-      .ui-datepicker-calendar td:not(.ui-state-disabled) a:hover{
+      .p-datepicker-calendar td:not(.p-state-disabled) a:hover{
         background-color: $kPrimary;
       }
     }
-    ::ng-deep .ui-inputtext {
+    ::ng-deep .p-inputtext {
       margin-left: 40px;
     }
   }

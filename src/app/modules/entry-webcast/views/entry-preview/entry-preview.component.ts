@@ -14,7 +14,7 @@ import { KalturaPlayerComponent } from 'shared/player';
 import { WebcastBaseReportComponent } from '../webcast-base-report/webcast-base-report.component';
 import {getPrimaryColor, getSecondaryColor} from 'shared/utils/colors';
 import {switchMap} from "rxjs/operators";
-import {Observable, of as ObservableOf} from "rxjs";
+import {forkJoin, of as ObservableOf} from "rxjs";
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
@@ -264,7 +264,7 @@ export class WebcastEntryPreviewComponent extends WebcastBaseReportComponent imp
       }));
 
     // once both reports return, we need to merge the results and then generate the table and compare data
-    Observable.forkJoin(viewers, engagement)
+    forkJoin(viewers, engagement)
       .subscribe(([viewers, engagement]) => {
           this._chartOptions = {};
           let yAxisData1 = Array.from({ length: 100 }, () => 0); // assume no VOD data (no recorded entry)

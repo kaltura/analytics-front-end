@@ -3,7 +3,7 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseF
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable, of as ObservableOf } from 'rxjs';
+import { forkJoin, of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -121,7 +121,7 @@ export class NodeHotspotsComponent extends QueryBase {
       }));
 
     // once both reports return, we need to merge the results and then generate the table and compare data
-    Observable.forkJoin(topHotSpots, topSwitchHotSpots)
+    forkJoin(topHotSpots, topSwitchHotSpots)
       .subscribe(([topHotSpots, switchTopHotSpots]) => {
         this._tableData = [];
         this._totalCount = 0;

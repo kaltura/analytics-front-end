@@ -29,7 +29,7 @@
     font-weight: bold;
   }
 }
-.hidePaginator ::ng-deep .ui-paginator {
+.hidePaginator ::ng-deep .p-paginator {
   display: none;
 }
 .kMap {
@@ -87,16 +87,16 @@ a.exporting {
   color: $kGrayscale1;
 }
 :host ::ng-deep .kTableModeSelector {
-  .ui-dropdown {
+  .p-dropdown {
     width: 164px !important;
   }
 
-  .ui-dropdown-item {
+  .p-dropdown-item {
     position: relative;
 
     &:after {
       position: absolute;
-      right: 3px;
+      right: 8px;
       top: 9px;
     }
   }

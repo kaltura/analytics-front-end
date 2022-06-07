@@ -3,9 +3,9 @@
 @media screen and (min-width: 992px) {
   :host {
     ::ng-deep {
-      .ui-table tr td,
-      .ui-table tr th,
-      .ui-table thead {
+      .p-datatable tr td,
+      .p-datatable tr th,
+      .p-datatable thead {
         border: none !important;
       }
     }
@@ -17,7 +17,7 @@
   height: auto;
 
   ::ng-deep {
-    .ui-table-wrapper {
+    .p-datatable-wrapper {
       min-height: 260px;
     }
   }
@@ -71,10 +71,10 @@
   ::ng-deep k-area-blocker {
     flex-direction: column;
   }
-  ::ng-deep .ui-table thead {
+  ::ng-deep .p-datatable thead {
     border-top: 1px solid #d9d9d9 !important;
   }
-  ::ng-deep .ui-table-wrapper {
+  ::ng-deep .p-datatable-wrapper {
     min-height: 0px !important;
   }
   ::ng-deep .kTable {

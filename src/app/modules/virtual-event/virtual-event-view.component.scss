@@ -18,6 +18,7 @@
 }
 app-pdf-export {
   margin-right: 16px;
+  margin-left: auto;
 }
 .disclaimer{
   color: $kGrayscale3;
@@ -225,6 +226,7 @@ app-pdf-export {
 .kHeaderRight{
   display: flex;
   margin-left: auto;
+  width: 100%;
   &.noTitle {
     justify-content: flex-end;
   }

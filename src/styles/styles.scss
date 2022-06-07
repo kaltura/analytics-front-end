@@ -245,7 +245,7 @@ body {
   }
 
   .icon-progress, .icon-progress + span, .icon-progress + span + span {
-    color: $kPrimary !important;
+    color: $kUpTrend !important;
   }
 
   .icon-regression, .icon-regression + span, .icon-regression + span + span {
@@ -371,7 +371,7 @@ kpopupwidget {
 }
 
 p-multiselect ::ng-deep {
-  .ui-multiselect-label {
+  .p-multiselect-label {
     overflow: hidden;
     display: inline-block;
     text-overflow: ellipsis;
@@ -379,7 +379,7 @@ p-multiselect ::ng-deep {
     padding: .5em calc(2em + 12px) .25em 12px !important;
   }
 
-  .ui-multiselect-item {
+  .p-multiselect-item {
     padding: .125em 13px !important;
   }
 }
@@ -405,12 +405,13 @@ p-multiselect ::ng-deep {
   white-space: nowrap;
 }
 
-.ui-overlaypanel-content {
-  padding: 0;
+.p-overlaypanel-content {
+  padding: 0px !important;
 }
 
-.ui-carousel-item {
+.p-carousel-item {
   background-color: #FFFFFF !important;
+  overflow: hidden;
 }
 
 .dot {
@@ -421,16 +422,12 @@ p-multiselect ::ng-deep {
   }
 }
 
-.ui-paginator {
+.p-paginator {
   margin-top: 4px;
-  margin-bottom: 2px;
+  margin-bottom: 8px;
 }
 
-.ui-paginator .ui-paginator-pages {
-  margin-top: 1px;
-}
-
-.ui-paginator .ui-paginator-page {
+.p-paginator .p-paginator-page {
   width: 32px;
 }
 
@@ -440,12 +437,16 @@ p-multiselect ::ng-deep {
   height: 24px;
 }
 
-.ui-multiselect-item {
+.p-multiselect-item {
   display: flex;
   align-items: center;
   height: 40px;
+  .p-checkbox {
+    vertical-align: top;
+    margin-top: 2px;
+  }
 }
-.ui-widget-header {
+.p-widget-header {
   border: 0;
 }
 
@@ -514,14 +515,14 @@ button, a, tr, td, th, li, [role=button], [role=link], [role=tab], div, p-radiob
   }
 }
 
-.ui-datepicker-trigger {
+.p-datepicker-trigger {
   position: absolute;
 }
 
-.ui-table p-sorticon {
+.p-datatable p-sorticon {
   vertical-align: unset;
 }
-.ui-table th.nonSortable {
+.p-datatable th.nonSortable {
   cursor: default;
   &:hover {
     color: $kGrayscale3 !important;
@@ -633,15 +634,15 @@ k-area-blocker {
   border-top: none !important;
 }
 
-.ui-autocomplete-panel {
+.p-autocomplete-panel {
   max-height: 284px !important;
   max-width: 250px;
 
-  .ui-autocomplete-list {
+  .p-autocomplete-list {
     padding: 0;
 
-    .ui-autocomplete-list-item,
-    .ui-autocomplete-notification-item {
+    .p-autocomplete-list-item,
+    .p-autocomplete-notification-item {
       border: 0 !important;
       border-radius: 0 !important;
       min-height: 32px !important;
@@ -665,10 +666,6 @@ k-area-blocker {
   }
 }
 
-ui-carousel {
-  z-index: 1;
-}
-
 .kDisclaimer {
   margin: 16px 0 0 16px;
   display: inline-block;
@@ -678,8 +675,7 @@ ui-carousel {
     margin-right: 6px;
   }
 }
-
-.ui-dialog.ui-confirmdialog {
+.p-dialog.p-confirm-dialog {
   top: 180px !important;
 }
 
@@ -735,6 +731,38 @@ ui-carousel {
   width: 10px;
   height: 10px;
   border-radius: 5px;
+}
+p-carousel {
+  height: 100%;
+  .p-carousel {
+    height: 100%;
+    background-color: white;
+  }
+  .p-carousel-content, .p-carousel-container {
+    height: 100%;
+    overflow: hidden;
+  }
+  .p-carousel-indicators{
+    margin-bottom: 12px;
+  }
+  .p-carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: $kGrayscale3;
+    opacity: .6;
+    margin: 0 4px;
+    &.p-highlight {
+      background-color: $kTertiary;
+      opacity: 1;
+    }
+    .p-link {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      outline: none !important;
+    }
+  }
 }
 #reportToExport {
   background-color: $kGrayscale7;

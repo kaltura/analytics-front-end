@@ -102,7 +102,7 @@ export const pathLocationStrategyFactory = (_platformLocation: PlatformLocation)
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })
   ],
   providers: [{ provide: LocationStrategy, useFactory: pathLocationStrategyFactory, deps: [PlatformLocation] }],
   exports: [

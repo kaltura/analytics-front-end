@@ -16,19 +16,24 @@
     margin-bottom: 12px;
   }
 
-  ::ng-deep .ui-autocomplete {
+  ::ng-deep .p-autocomplete {
     width: 100%;
   }
 }
 
 :host ::ng-deep kautocomplete {
-  .ui-autocomplete-multiple-container {
+  .p-autocomplete-multiple-container {
     height: auto !important;
+    width: 100%;
   }
 
-  .ui-autocomplete-list-item span {
+  .p-autocomplete-list-item span {
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .p-autocomplete-input-token input {
+    width: auto;
   }
 }
 

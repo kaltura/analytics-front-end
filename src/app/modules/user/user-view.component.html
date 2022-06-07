@@ -76,36 +76,22 @@
                                        [refineFilter]="_refineFilter"></app-user-mini-top-content>
           </div>
           <div class="kRightCol" *ngIf="_userViewConfig.insights" [class.kCompare]="_isCompare">
-            <ui-carousel height="100%"
-                         [class.kCompare]="_isCompare"
-                         [infinite]="true"
-                         [autoPlay]="true"
-                         [autoPlaySpeed]="5000"
-                         [arrows]="false"
-                         [fade]="false"
-                         [speed]="200">
-              <ui-carousel-item *ngIf="_userViewConfig.insights.minutesViewed">
-                <app-user-insight-minutes-viewed [userId]="_userId"
+            <p-carousel [autoplayInterval]="5000" [circular]="true" [value]="carouselItems">
+              <ng-template pTemplate="item" let-item>
+                <app-user-insight-minutes-viewed [userId]="_userId" *ngIf="item==='minutesViewed'"
                                                  [dateFilter]="_dateFilter"
                                                  [refineFilter]="_refineFilter"></app-user-insight-minutes-viewed>
-              </ui-carousel-item>
-              <ui-carousel-item *ngIf="_userViewConfig.insights.plays">
-                <app-user-insight-plays [userId]="_userId"
+                <app-user-insight-plays [userId]="_userId" *ngIf="item==='plays'"
                                         [dateFilter]="_dateFilter"
                                         [refineFilter]="_refineFilter"></app-user-insight-plays>
-              </ui-carousel-item>
-
-              <ui-carousel-item *ngIf="_userViewConfig.insights.domains">
-                <app-user-insight-domain [userId]="_userId"
+                <app-user-insight-domain [userId]="_userId" *ngIf="item==='domains'"
                                          [dateFilter]="_dateFilter"
                                          [refineFilter]="_refineFilter"></app-user-insight-domain>
-              </ui-carousel-item>
-              <ui-carousel-item *ngIf="_userViewConfig.insights.sources">
-                <app-user-insight-source [userId]="_userId"
+                <app-user-insight-source [userId]="_userId" *ngIf="item==='sources'"
                                          [dateFilter]="_dateFilter"
                                          [refineFilter]="_refineFilter"></app-user-insight-source>
-              </ui-carousel-item>
-            </ui-carousel>
+              </ng-template>
+            </p-carousel>
           </div>
         </div>
 

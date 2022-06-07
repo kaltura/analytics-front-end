@@ -1,34 +1,35 @@
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
-import { Injectable, OnDestroy } from '@angular/core';
+import {Directive, Injectable, OnDestroy} from '@angular/core';
 import { Observable, throwError as ObservableThrowError } from 'rxjs';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export interface OnPollTickSuccess {
   onPollTickSuccess(): void;
 }
 
+@Directive()
 export class AnalyticsServerPollsBase extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestroy = new Subject<void>();
   private _isKSValid = true;
-  
+
   protected _getOnDestroy$(): Observable<void> {
     return this._onDestroy.asObservable();
   }
-  
+
   constructor(protected _kalturaClient: KalturaClient) {
     super(null);
   }
-  
+
   protected _createGlobalError(error?: Error): KalturaAPIException {
     return new KalturaAPIException(error ? error.message : '', 'kmc-server_polls_global_error', null);
   }
-  
+
   protected _canExecute(): boolean {
     return this._isKSValid;
   }
-  
+
   /*
    *   Before execution of the request function will flatten request array
    *   to perform correct multi-request and aggregate responses to according requests
@@ -58,7 +59,7 @@ export class AnalyticsServerPollsBase extends ServerPolls<KalturaRequestBase, Ka
           if (responses.hasErrors()) {
             throw responses.getFirstError();
           }
-          
+
           return requestsMapping.reduce((aggregatedResponses, requestSize) => {
             const response = responses.splice(0, requestSize);
             const unwrappedResponse = response.length === 1 ? response[0] : response;
@@ -73,7 +74,7 @@ export class AnalyticsServerPollsBase extends ServerPolls<KalturaRequestBase, Ka
         }),
       );
   }
-  
+
   ngOnDestroy(): void {
     this._onDestroy.next();
     this._onDestroy.complete();

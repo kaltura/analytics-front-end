@@ -53,6 +53,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   public _reportTabs = UserReportTabs;
   public _userViewConfig = analyticsConfig.viewsConfig.user;
   public _currentTab = !this._userViewConfig.viewer && this._userViewConfig.contributor ? UserReportTabs.contributor : UserReportTabs.viewer;
+  public carouselItems = [];
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -63,6 +64,18 @@ export class UserViewComponent implements OnInit, OnDestroy {
               private _frameEventManager: FrameEventManagerService,
               private _exportConfigService: UserExportConfig) {
       this.eventId = analyticsConfig.customData && analyticsConfig.customData.eventId ? analyticsConfig.customData.eventId : '';
+      if (this._userViewConfig.insights?.minutesViewed) {
+        this.carouselItems.push('minutesViewed');
+      }
+      if (this._userViewConfig.insights?.plays) {
+        this.carouselItems.push('plays');
+      }
+      if (this._userViewConfig.insights?.domains) {
+        this.carouselItems.push('domains');
+      }
+      if (this._userViewConfig.insights?.sources) {
+        this.carouselItems.push('sources');
+      }
       if (this.eventId.length) {
         this._refineFilter = [{type: 'categories', value: {id: this.eventId}}];
       }

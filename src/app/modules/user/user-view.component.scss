@@ -149,9 +149,6 @@
   .kRightCol {
     width: 391px;
 
-    ui-carousel {
-      border-radius: 3px;
-    }
   }
 }
 
@@ -183,10 +180,6 @@
     flex: 1;
     width: auto;
     height: 543px;
-
-    ui-carousel {
-      height: 543px !important;
-    }
   }
 
 
@@ -199,20 +192,6 @@
 
   .kRightCol.kCompare {
     height: 622px;
-
-    ui-carousel {
-      height: 622px !important;
-    }
-  }
-}
-
-@media screen and (min-width: 1280px) {
-  ui-carousel:not(.kCompare) {
-    min-height: 391px !important;
-  }
-
-  ui-carousel.kCompare {
-    min-height: 495px !important;
   }
 }
 
@@ -271,6 +250,4 @@
     }
   }
 }
-ui-carousel ::ng-deep dots.middle {
-  bottom: 12px;
-}
+

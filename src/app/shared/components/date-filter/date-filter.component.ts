@@ -421,7 +421,7 @@ export class DateFilterComponent implements OnInit, OnDestroy {
       this.disableHiddenElementTabs();
       // focus on the selected tab header
       try {
-        const elm = document.getElementsByClassName('kDateFilterPopup')[0].getElementsByClassName('ui-selectbutton')[0].getElementsByClassName('ui-state-active')[0] as HTMLDivElement;
+        const elm = document.getElementsByClassName('kDateFilterPopup')[0].getElementsByClassName('p-selectbutton')[0].getElementsByClassName('p-highlight')[0] as HTMLDivElement;
         if (elm) {
           elm.focus();
         }

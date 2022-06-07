@@ -4,7 +4,7 @@ import { UsersFilterService } from './users-filter.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { ISubscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-users-filter',
@@ -17,7 +17,7 @@ export class UsersFilterComponent implements OnInit {
   @Input() disabled = false;
 
   @Output() filterChange: EventEmitter<KalturaUser[]> = new EventEmitter();
-  
+
   @ViewChild('autocomplete') _autoComplete: AutoComplete;
 
   private _selectedUsers: KalturaUser[] = [];
@@ -76,7 +76,7 @@ export class UsersFilterComponent implements OnInit {
   public _updateUsers(event): void {
     this._selectedUsers.push(event);
     this.filterChange.emit(this._selectedUsers);
-    
+
     // clear user text from component
     this._autoComplete.clearValue();
   }

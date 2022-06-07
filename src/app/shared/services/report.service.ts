@@ -20,7 +20,7 @@ import {
   ReportGetUrlForReportAsCsvActionArgs
 } from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
