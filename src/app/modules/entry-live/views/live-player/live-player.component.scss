@@ -3,11 +3,29 @@
 .kPlayer {
   position: relative;
   width: 100%;
+  app-k-player-v7 ::ng-deep .playkit-overlay-contents {
+    overflow: hidden;
+  }
+  app-k-player-v7 ::ng-deep .playkit-error-overlay .playkit-headline {
+    margin: 0px;
+  }
+  app-k-player-v7 ::ng-deep .playkit-svg-container {
+    transform: scale(0.75);
+  }
 }
 /* player height according to screen resolution */
 @media (max-width: 991px) {
   .kPlayer {
     height: 160px;
+    app-k-player-v7 ::ng-deep .playkit-svg-container {
+      display: none;
+    }
+    app-k-player-v7 ::ng-deep .playkit-overlay .playkit-overlay-contents {
+      padding: 10px 20px 30px 20px;
+    }
+    app-k-player-v7 ::ng-deep .playkit-player.playkit-size-ty .playkit-control-button-container {
+      display: block;
+    }
   }
 }
 @media screen and (min-width: 992px) {

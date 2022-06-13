@@ -1,4 +1,4 @@
-import {Component, Input, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, Input, AfterViewInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 
 @Component({
     selector: 'app-k-player-v7',
@@ -13,7 +13,13 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	@Input()
 	height = 360;
 
-	@Input()
+  @Input()
+  fillWidth = false;
+
+  @Input()
+  fillHeight = false;
+
+  @Input()
 	pid: string;
 
 	@Input()
@@ -42,6 +48,9 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 
   @Input()
   loadThumbnailWithKs = false;
+
+  @Output()
+  kalturaPlayerReady = new EventEmitter<any>();
 
 	constructor() {
 	  if (!this.id.length) {
@@ -87,7 +96,10 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
         plugins: {
           kava: {
             disable: true
-          }
+          },
+          ivq: {},
+          kalturaCuepoints: {},
+          "kaltura-live": {}
         },
         provider: {
           ks: this.ks,
@@ -96,13 +108,14 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
         },
         playback: {
           autoplay: this.autoPlay,
-          muted: this.muted
+          muted: this.muted,
         }
       };
       if (this.loadThumbnailWithKs && this.poster.length) {
         playerConfig = Object.assign(playerConfig, {sources: {poster: `${this.poster}/ks/${this.ks}`}});
       }
       const kalturaPlayer = window["KalturaPlayer"].setup(playerConfig);
+      this.kalturaPlayerReady.emit(kalturaPlayer);
       kalturaPlayer.loadMedia({entryId: this.entryid});
     } catch (e) {
       console.error(e.message);

@@ -11,9 +11,11 @@
   </div>
 </div>
 
-<div class="kLiveStatus" *ngIf="_isManual" [ngClass]="{'kOffline': !_isLive}">
-  <div class="kStatus">
-    <i class="kStatusIcon" [ngClass]="(_isLive ? 'Live' : 'Offline') | appStreamState:true"></i>
-    <span class="kStreamStatus">{{(_isLive ? 'Live' : 'Offline') | appStreamState}}</span>
-  </div>
-</div>
+<!-- temp remove status bar for manual live as v7 player and BE can't report live status for manual live. To be added once v7 can report live change event for manual live -->
+
+<!--<div class="kLiveStatus" *ngIf="_isManual" [ngClass]="{'kOffline': !_isLive}">-->
+<!--  <div class="kStatus">-->
+<!--    <i class="kStatusIcon" [ngClass]="(_isLive ? 'Live' : 'Offline') | appStreamState:true"></i>-->
+<!--    <span class="kStreamStatus">{{(_isLive ? 'Live' : 'Offline') | appStreamState}}</span>-->
+<!--  </div>-->
+<!--</div>-->

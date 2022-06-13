@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -10,7 +10,6 @@ import { NodePreviewConfig } from './node-preview.config';
 import { FrameEventManagerService } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaPlayerComponent } from 'shared/player';
 import { QueryBase } from "shared/components/query-base/query-base";
 import { getPrimaryColor, getSecondaryColor } from 'shared/utils/colors';
 import { map, switchMap } from "rxjs/operators";
@@ -18,8 +17,8 @@ import { of as ObservableOf } from "rxjs";
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import {AnalyticsPermissionsService} from "shared/analytics-permissions/analytics-permissions.service";
-import {AnalyticsPermissions} from "shared/analytics-permissions/analytics-permissions";
+import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
+import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
 
 @Component({
   selector: 'app-node-preview',
@@ -31,6 +30,7 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   @Input() entryId = '';
   @Input() nodeId = '';
   @Output() updateDuration = new EventEmitter<number>();
+  @Input() thumbnailUrl = '';
 
   private _dataConfig: ReportDataConfig;
   private _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
@@ -61,8 +61,6 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
   public _currentTime = 0;
   public _loadThumbnailWithKs = false;
   public _chartOptions = {};
-
-  @ViewChild('player') player: KalturaPlayerComponent;
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
@@ -369,140 +367,39 @@ export class NodePreviewComponent extends QueryBase implements OnInit {
     if (!this._playerInitialized) {
       this._playerInitialized = true;
       this._playerConfig = {
-        uiconfid: analyticsConfig.kalturaServer.previewUIConf,  // serverConfig.kalturaServer.previewUIConf,
+        uiconfid: analyticsConfig.kalturaServer.previewUIConfV7,
         pid: this._authService.pid,
         entryid: this.entryId,
-        flashvars: {
-          'ks': this._authService.ks,
-          "EmbedPlayer.LiveCuepoints": true,
-          // "IframeCustomPluginCss1" : environment.production ? "assets/player.css" : "../assets/player.css",
-          "controlBarContainer": {
-            "plugin": true,
-            "hover": false
-          },
-          "durationLabel": {
-            "plugin": false
-          },
-          "currentTimeLabel": {
-            "plugin": false
-          },
-          "fullScreenBtn": {
-            "plugin": false
-          },
-          "theme": {
-            "applyToLargePlayButton": true,
-            "buttonsSize": 12,
-            "buttonsColor": "rgb(51, 51, 51)",
-            "buttonsIconColor": "rgb(204, 204, 204)",
-            "sliderColor": "rgb(91, 91, 91)",
-            "scrubberColor": "rgb(1, 172, 205)",
-            "controlsBkgColor": "rgb(51, 51, 51)",
-            "watchedSliderColor": "rgb(1, 172, 205)",
-            "bufferedSliderColor": "#AFAFAF",
-            "timeLabelColor": "rgb(204, 204, 204)",
-            "buttonsIconColorDropShadow": true,
-            "plugin": true
-          },
-          "scrubber": {
-            "plugin": true,
-            'insertMode': 'lastChild',
-            'sliderPreview': false
-          },
-          "dualScreen": {
-            "plugin": true,
-            "defaultDualScreenViewId": "pip-parent-in-small",
-            "showFirstSlideOnLoad": true
-          },
-          "chapters": {
-            "plugin": true
-          },
-          "sideBarContainer": {
-            "plugin": true
-          },
-          "quiz": {
-            "plugin": true
-          }
-        }
+        ks: this._authService.ks,
+        thumbnailUrl: this.thumbnailUrl
       };
-      setTimeout(() => {
-        this.player.Embed();
-      }, 0);
     }
   }
 
   private _seekTo(percent: number, forcePlay = false): void {
-    this._playerInstance.sendNotification("doSeek", this._duration / 1000 * percent);
+    this._playerInstance.currentTime = this._duration / 1000 * percent;
     if (forcePlay) {
-      this._playerInstance.sendNotification("doPlay");
+      this._playerInstance.play();
     }
   }
 
   public _onPlayerReady(player): void {
     this._playerInstance = player;
-    setTimeout(() => {
-      this._duration = parseFloat(this._playerInstance.evaluate('{duration}')) * 1000;
-      this.updateDuration.emit(this._duration);
-    }, 0);
 
-    // register to playhead update event to update our scrubber
-    this._playerInstance.kBind('playerUpdatePlayhead', (event) => {
-      this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this._playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
-        this._currentTime = parseFloat(event) * 1000;
-      });
+    // event registration
+    this._playerInstance.addEventListener(this._playerInstance.Event.CHANGE_SOURCE_STARTED, event => {
+      this._duration = this._playerInstance.sources.duration * 1000;
     });
-    this._playerInstance.kBind('playerPlayEnd', (event) => {
-      this.zone.run(() => {
-        this._playProgress = 100;
-      });
+    this._playerInstance.addEventListener(this._playerInstance.Event.MEDIA_LOADED, event => {
+      this._playerPlayed = true;
     });
-    this._playerInstance.kBind('firstPlay', (event) => {
-      this.zone.run(() => {
-        this._playerPlayed = true;
-      });
+    this._playerInstance.addEventListener(this._playerInstance.Event.TIME_UPDATE, event => {
+      this._playProgress = this._playerInstance.currentTime / this._duration * 1000 *100;
+      this._currentTime = this._playerInstance.currentTime * 1000;
     });
-    this._playerInstance.kBind('seeked', (event) => {
-      this.zone.run(() => {
-        this._playProgress =  parseFloat((event / this._playerInstance.evaluate('{duration}')).toFixed(10)) * 100;
-        this._currentTime = parseFloat(event) * 1000;
-      });
+    this._playerInstance.addEventListener(this._playerInstance.Event.ENDED, event => {
+      this._playProgress = 100;
     });
-
-    // inject CSS instead of using IframeCustomPluginCss1 to solve IE11 broken relative path issue
-    try {
-      let head = player.getElementsByTagName('iframe')[0].contentWindow.document.getElementsByTagName("head")[0];
-      if (head) {
-        let css = document.createElement('style');
-        css['type'] = 'text/css';
-
-        let styles = `
-        .scrubber .playHead {
-          border-bottom-left-radius: 0 !important;
-          border-bottom-right-radius: 0 !important;
-          border-top-left-radius: 5px !important;
-          border-top-right-radius: 5px !important;
-          width: 10px !important;
-          height: 14px !important;
-        }
-        .scrubber .handle-wrapper{
-          bottom: 3px !important;
-          margin: 0px !important;
-        }
-        .controlsContainer{
-          border-top: none !important;
-        }`;
-
-        if (css['styleSheet']) {
-          css['styleSheet'].cssText = styles;
-        } else {
-          css.appendChild(document.createTextNode(styles));
-        }
-        head.appendChild(css);
-      }
-    } catch (e) {
-      console.log("Failed to inject custom CSS to player");
-    }
-
   }
 
   /* -------------------------- end of player logic --------------------------*/
