@@ -10,7 +10,9 @@ export const viewsConfig = {
       export: {},
       refineFilter: {
         mediaType: {},
-        playbackType: {},
+        playbackType: {
+          filterLiveOnStart: null
+        },
         entrySource: {},
         tags: {},
         owners: {},

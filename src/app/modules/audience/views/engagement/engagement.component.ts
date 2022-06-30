@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { RefineFilter } from 'shared/components/filter/filter.component';
+import { FilterComponent, RefineFilter } from 'shared/components/filter/filter.component';
 import { EngagementExportConfig } from './engagement-export.config';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
@@ -18,8 +18,8 @@ import { DateRanges } from "shared/components/date-filter/date-filter-utils";
     KalturaLogger.createLogger('EngagementComponent')
   ]
 })
-export class EngagementComponent {
-  public _selectedRefineFilters: RefineFilter = null;
+export class EngagementComponent implements AfterViewInit{
+  public _selectedRefineFilters: RefineFilter = [{type: "playbackType", value: 'vod'}];
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
   public _totalCount: number;
@@ -43,6 +43,8 @@ export class EngagementComponent {
       searchInAdminTags: false
     }
   );
+
+  @ViewChild('refineFilter') refineFilterComponent: FilterComponent;
 
   constructor(private _exportConfigService: EngagementExportConfig) {
     this._exportConfig = _exportConfigService.getConfig(this._engagementViewConfig);
@@ -92,5 +94,16 @@ export class EngagementComponent {
 
   public onExporting(exporting: boolean): void {
     this._exporting = exporting;
+  }
+
+  ngAfterViewInit(): void {
+    if (this._engagementViewConfig.refineFilter.playbackType && this._engagementViewConfig.refineFilter.playbackType.filterLiveOnStart) {
+      setTimeout(() => {
+        this.refineFilterComponent._onItemSelected('vod', 'playbackType');
+        this.refineFilterComponent._onItemSelected('live', 'playbackType');
+        this.refineFilterComponent._apply();
+      }, 0);
+    }
+
   }
 }
