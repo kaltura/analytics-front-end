@@ -15,6 +15,7 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule, PopupW
 import { TableModule } from 'primeng/table';
 import { EntryWebcastFilterComponent } from './filter/filter.component';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { WebcastMiniHighlightsComponent } from "./views/mini-highlights/mini-highlights.component";
 import { WebcastGeoComponent } from "./views/geo/geo-location.component";
 import { WebcastMiniQualityComponent } from "./views/mini-quality/mini-quality.component";
@@ -45,6 +46,7 @@ import { ReactionsBreakdownOverlayComponent } from "./views/mini-engagement-tool
     NgxEchartsModule,
     RouterModule.forChild(routing),
     AutoCompleteModule,
+    OverlayPanelModule,
     InputHelperModule,
   ],
   declarations: [
