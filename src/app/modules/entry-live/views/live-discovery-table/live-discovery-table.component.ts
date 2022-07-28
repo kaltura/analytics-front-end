@@ -81,6 +81,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
         this._totalCount = data.table.totalCount;
         this._summaryData = data.summary;
         this._firstTimeLoading = false;
+        this._widget.updateLayout();
       });
 
     this._toggleTable();
