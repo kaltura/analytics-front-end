@@ -608,7 +608,7 @@
           "message-text-box": "エンコーダーの再接続が発生しました。エンコーダーのログを確認してください。"
         },
         "101": {
-          "message-log": "検出された実際の着信ビットレート（{{incomingBitrate}} Mbit/s）は、宣言されたビットレート（{{configuredBitrate}} Mbit/s）と異なります。エンコーダーがCBR（固定ビットレート）を使用するように構成されていることを確認してください",
+          "message-log": "検出された実際の着信ビットレート（{{incomingBitrate}} Kbps）は、宣言されたビットレート（{{configuredBitrate}} Kbps）と異なります。エンコーダーがCBR（固定ビットレート）を使用するように構成されていることを確認してください",
           "message-text-box": "検出された実際の着信ビットレート（{{incomingBitrate}}）は、宣言されたビットレート（{{configuredBitrate}}）と異なります。エンコーダーがCBR（固定ビットレート）を使用するように構成されていることを確認してください"
         },
         "102": {

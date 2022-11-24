@@ -608,7 +608,7 @@
           "message-text-box": "Opnieuw verbinding gemaakt met encoder. Controleer uw encoder-logboeken"
         },
         "101": {
-          "message-log": "Gedetecteerde binnenkomende bitrate ({{incomingBitrate}} Mbit/s) verschilt van vermelde bitrate ({{configuredBitrate}} Mbit/s). Zorg dat uw encoder is geconfigureerd voor gebruik van CBR (constante bitrate)",
+          "message-log": "Gedetecteerde binnenkomende bitrate ({{incomingBitrate}} Kbps) verschilt van vermelde bitrate ({{configuredBitrate}} Kbps). Zorg dat uw encoder is geconfigureerd voor gebruik van CBR (constante bitrate)",
           "message-text-box": "Gedetecteerde binnenkomende bitrate ({{incomingBitrate}}) verschilt van vermelde bitrate ({{configuredBitrate}}). Zorg dat uw encoder is geconfigureerd voor gebruik van CBR (constante bitrate)"
         },
         "102": {
