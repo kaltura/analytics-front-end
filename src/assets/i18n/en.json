@@ -837,7 +837,7 @@
           "message-text-box": "Encoder re-connection occurred. Please check your encoder logs"
         },
         "101": {
-          "message-log": "Detected incoming actual bitrate ({{incomingBitrate}} Mbit/s) is different from declared one ({{configuredBitrate}} Mbit/s). Make sure your encoder is configured to use CBR (constant bitrate)",
+          "message-log": "Detected incoming actual bitrate ({{incomingBitrate}} Kbps) is different from declared one ({{configuredBitrate}} Kbps). Make sure your encoder is configured to use CBR (constant bitrate)",
           "message-text-box": "Detected incoming actual bitrate ({{incomingBitrate}}) is different from declared one ({{configuredBitrate}}). Make sure your encoder is configured to use CBR (constant bitrate)"
         },
         "102": {

@@ -608,7 +608,7 @@
           "message-text-box": "Une reconnexion de l'encodeur s'est produite. Veuillez vérifier les journaux de votre encodeur."
         },
         "101": {
-          "message-log": "Le débit entrant actuellement détecté ({{incomingBitrate}} Mbit/s) est différent de celui indiqué ({{configuredBitrate}} Mbit/s). Assurez-vous que votre encodeur est configuré pour utiliser CBR (débit binaire constant).",
+          "message-log": "Le débit entrant actuellement détecté ({{incomingBitrate}} Kbps) est différent de celui indiqué ({{configuredBitrate}} Kbps). Assurez-vous que votre encodeur est configuré pour utiliser CBR (débit binaire constant).",
           "message-text-box": "Le débit entrant actuellement détecté ({{incomingBitrate}}) est différent de celui indiqué ({{configuredBitrate}}). Assurez-vous que votre encodeur est configuré pour utiliser CBR (débit binaire constant)."
         },
         "102": {
