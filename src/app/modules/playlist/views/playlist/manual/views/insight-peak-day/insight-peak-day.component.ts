@@ -175,7 +175,7 @@ export class ManualPlaylistInsightPeakDayComponent extends ManualPlaylistBase {
             const { columns, tableData } = this._reportService.parseTableData(report.table, this._dataConfig.entryDetails);
             if (tableData.length) {
               const topEntry = tableData[0];
-              this._peakDayData['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${topEntry['object_id']}/width/256/height/144?rnd=${Math.random()}` || '';
+              this._peakDayData['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${topEntry['object_id']}/width/256/height/144` || '';
               this._peakDayData['entry_name'] = topEntry['entry_name'] || '';
             }
           }

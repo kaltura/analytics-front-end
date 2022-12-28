@@ -304,7 +304,7 @@ export class UserHighlightsComponent extends UserBase implements OnDestroy {
   
   private _extendTableRow(item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
     item['index'] = String(pager.pageSize * (pager.pageIndex - 1) + (index + 1));
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     return item;
   }
   

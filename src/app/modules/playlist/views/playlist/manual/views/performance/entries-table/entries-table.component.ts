@@ -159,7 +159,7 @@ export class ManualPlaylistEntriesTableComponent implements OnInit, OnDestroy {
 
   private addThumbnailData(): void {
     this._tableData.forEach(entryData => {
-      const thumbnailUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${entryData.object_id}/width/256/height/144?rnd=${Math.random()}`;
+      const thumbnailUrl = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${entryData.object_id}/width/256/height/144`;
       entryData['thumbnailUrl'] = thumbnailUrl;
     });
   }

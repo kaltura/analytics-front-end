@@ -180,7 +180,7 @@ export class PathContentComponent extends PlaylistBase implements OnInit, OnDest
   }
 
   private getThumbnailUrl(node: Node): string {
-    return `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${node.entryId}/width/256/height/144?rnd=${Math.random()}`;
+    return `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${node.entryId}/width/256/height/144`;
   }
 
   private appendMissingNodes(table: any[], nodes: Node[]) {

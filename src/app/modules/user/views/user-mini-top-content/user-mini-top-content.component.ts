@@ -141,7 +141,7 @@ export class UserMiniTopContentComponent extends UserBase implements OnDestroy {
   }
 
   private _extendTableRow(item: TableRow<string>): TableRow<string> {
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144?rnd=${Math.random()}`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     return item;
   }
 
