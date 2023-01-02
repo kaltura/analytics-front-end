@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { AuthService } from "shared/services";
 import { AnalyticsPermissionsService } from "shared/analytics-permissions/analytics-permissions.service";
 import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-permissions";
@@ -8,7 +8,7 @@ import { AnalyticsPermissions } from "shared/analytics-permissions/analytics-per
   templateUrl: './thumb-loader.component.html',
   styleUrls: ['./thumb-loader.component.scss']
 })
-export class ThumbLoaderComponent {
+export class ThumbLoaderComponent implements OnInit {
   @ViewChild('canvas') _canvas: any;
   @Input() thumbnailUrl: string = null;
   @Input() width = 86;
@@ -28,6 +28,12 @@ export class ThumbLoaderComponent {
               private _permissionsService: AnalyticsPermissionsService) {
     this._ks = _authService.ks;
     this._loadThumbnailWithKs = this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS);
+  }
+
+  ngOnInit(): void {
+    if (this._loadThumbnailWithKs && this.thumbnailUrl !== null) {
+      this.thumbnailUrl = this.thumbnailUrl.split('?')[0];
+    }
   }
 
   public _onError(): void {
