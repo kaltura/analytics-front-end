@@ -35,10 +35,10 @@ export const defaultDateRange = DateRange.Last5M;
 export class FiltersService {
   constructor(private _translate: TranslateService) {
   }
-  
+
   public static getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
     let from;
-    
+
     switch (dateRange) {
       case DateRange.LastMin:
         from = moment().subtract(1, 'minute');
@@ -62,10 +62,10 @@ export class FiltersService {
         from = moment().subtract(24, 'hours');
         break;
       case DateRange.Last3D:
-        from = moment().subtract(2, 'days');
+        from = moment().subtract(3, 'days');
         break;
       case DateRange.Last7D:
-        from = moment().subtract(6, 'days');
+        from = moment().subtract(7, 'days');
         break;
       default:
         from = moment().subtract(1, 'minute');
@@ -76,11 +76,11 @@ export class FiltersService {
       fromDate: from.unix(),
     };
   }
-  
+
   public getDateRangeServerValue(dateRange: DateRange): DateRangeServerValue {
     return FiltersService.getDateRangeServerValue(dateRange);
   }
-  
+
   public getDateRangeList(): SelectItem[] {
     return [
       {
@@ -121,7 +121,7 @@ export class FiltersService {
       },
     ];
   }
-  
+
   public getTimeIntervalList(dateRange: DateRange, daysCount = null): SelectItem[] {
     return [
       {
@@ -154,7 +154,7 @@ export class FiltersService {
       },
     ];
   }
-  
+
   public getTimeIntervalServerValue(interval: TimeInterval): KalturaReportInterval {
     switch (interval) {
       case TimeInterval.TenSeconds:
