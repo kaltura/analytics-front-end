@@ -39,6 +39,7 @@ export interface AnalyticsConfig {
   ks?: string;
   pid?: string;
   locale?: string;
+  loadThumbnailWithKs?: boolean;
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;

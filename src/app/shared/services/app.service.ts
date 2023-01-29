@@ -283,6 +283,10 @@ export class AppService implements OnDestroy {
             // weak ks such as KMS user cannot load user roles. In that case we will use the getCurrentPermissions API to load current permissions disregarding user roles
             // if getCurrentPermissions didn't return a valid result (for example an exception) - we will init the permissions manager with no permissions as all
             const currentPermissions = currentPermissionsResponse && currentPermissionsResponse.result ? currentPermissionsResponse.result.split(',') : [];
+            // since FEATURE_LOAD_THUMBNAIL_WITH_KS is a partner feature it is not returned by the getCurrentPermissions API so it is send from KMS using configuration
+            if (analyticsConfig.loadThumbnailWithKs) {
+              currentPermissions.push('FEATURE_LOAD_THUMBNAIL_WITH_KS');
+            }
             this._permissionsService.load(currentPermissions, currentPermissions);
             this._permissionsLoaded.next(true);
             initPlayers();
