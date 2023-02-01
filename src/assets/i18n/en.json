@@ -203,7 +203,9 @@
       "exit": "Exit Compare Mode",
       "byMonth": "By Month",
       "byYear": "By Year",
+      "byQuarter": "By Quarter",
       "currentYear": "Current Year",
+      "currentQuarter": "Current Quarter",
       "currentMonth": "Current Month",
       "past_period": "Past Period"
     },

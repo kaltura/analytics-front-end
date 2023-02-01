@@ -20,6 +20,7 @@ export class OverviewDateFilterComponent implements OnInit {
   public selectedDateRange: OverviewDateRange = null;
   public labelPostfix = '';
   public monthlyDateRangeItems: OverviewDateRange[] = [];
+  public quarterlyDateRangeItems: OverviewDateRange[] = [];
   public yearlyDateRangeItems: OverviewDateRange[] = [];
 
   public viewItems: SelectItem[] = [
@@ -54,8 +55,14 @@ export class OverviewDateFilterComponent implements OnInit {
       return; // no need to set time ranges for specific periods
     }
     const today = new Date();
+    let currentMonth = today.getMonth() + 1;
+    const getMonthString = (month) => {
+      return month.toString().length === 1 ? '0' + month : month.toString();
+    }
     const partnerCreationDate = new Date(this._authService.partnerCreatedAt);
     const partnerCreationYear = partnerCreationDate.getFullYear();
+
+    // yearly date range logic
     const currentYear = today.getFullYear();
     const dayStr = DateFilterUtils.getTimeZoneOffset() > 0 ? '02' : '01';
     this.yearlyDateRangeItems = [{
@@ -80,13 +87,47 @@ export class OverviewDateFilterComponent implements OnInit {
         });
       }
     }
-    let currentMonth = today.getMonth() + 1;
-    const currentMonthStr = currentMonth.toString().length === 1 ? '0' + currentMonth : currentMonth.toString();
+
+    // quarterly date range logic
+    const quarterMonths = [1,4,7,10];
+    let quarterMonth = quarterMonths.find(month => month <= currentMonth && (currentMonth - month) < 3);
+    const quarterIndex = Math.floor((quarterMonth -1) / 3) + 1;
+    this.quarterlyDateRangeItems = [{
+      key: 'quarter-0',
+      label: this._translate.instant('app.dateFilter.currentQuarter'),
+      postfix: `Q${quarterIndex} ${currentYear}`,
+      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${getMonthString(quarterMonth)}-${dayStr}`), true),
+      endDate: DateFilterUtils.toServerDate(today, false),
+      interval: KalturaReportInterval.months,
+      isSpecific: false
+    }];
+
+    // add 3 previous quarters
+    let quarterYear = currentYear;
+    for (let i = 1; i < 4; i++) {
+      quarterMonth -= 3;
+      if (quarterMonth < 0) {
+        quarterMonth = 10;
+        quarterYear--;
+      }
+      const quarterIndex = Math.floor((quarterMonth -1) / 3) + 1;
+      const endDay = quarterMonth === 1 || quarterMonth === 10 ? 31 : 30;
+      this.quarterlyDateRangeItems.push({
+        key: `quarter-${i}`,
+        label: `Q${quarterIndex} ${quarterYear}`,
+        startDate: DateFilterUtils.toServerDate(new Date(`${quarterYear}-${getMonthString(quarterMonth)}-${dayStr}`), true),
+        endDate: DateFilterUtils.toServerDate(new Date(`${quarterYear}-${getMonthString(quarterMonth + 2)}-${endDay}`), false),
+        interval: KalturaReportInterval.months,
+        isSpecific: false
+      });
+    }
+
+    // monthly date range logic
     const monthsDiff = today.getMonth() - partnerCreationDate.getMonth() + (12 * (today.getFullYear() - partnerCreationDate.getFullYear()));
     this.monthlyDateRangeItems = [{
       key: 'month-0',
       label: this._translate.instant('app.dateFilter.currentMonth'),
-      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${currentMonthStr}-${dayStr}`), true),
+      startDate: DateFilterUtils.toServerDate(new Date(`${currentYear}-${getMonthString(currentMonth)}-${dayStr}`), true),
       endDate: DateFilterUtils.toServerDate(today, false),
       interval: KalturaReportInterval.months,
       isSpecific: false
@@ -100,12 +141,11 @@ export class OverviewDateFilterComponent implements OnInit {
           month = month + 12;
           year = currentYear - 1;
         }
-        const monthStr = month.toString().length === 1 ? '0' + month : month.toString();
-        const monthName = new Date(`${year}-${monthStr}-10`).toLocaleString('default', { month: 'long' });
+        const monthName = new Date(`${year}-${getMonthString(month)}-10`).toLocaleString('default', { month: 'long' });
         this.monthlyDateRangeItems.push({
           key: `month-${i}`,
           label: `${monthName} ${year}`,
-          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${monthStr}-${dayStr}`), true),
+          startDate: DateFilterUtils.toServerDate(new Date(`${year}-${getMonthString(month)}-${dayStr}`), true),
           endDate: DateFilterUtils.toServerDate(new Date(year,month,0), false),
           interval: KalturaReportInterval.months,
           isSpecific: false
@@ -124,12 +164,19 @@ export class OverviewDateFilterComponent implements OnInit {
       const keys = this.selectedDateRangeKey.split('-');
       if (keys && keys.length === 2) {
         const index = parseInt(keys[1]);
-        if (keys[0] === "year") {
-          this.selectedDateRange = this.yearlyDateRangeItems[index];
-          this.labelPostfix = index === 0 ? new Date().getFullYear().toString() : '';
-        } else {
-          this.selectedDateRange = this.monthlyDateRangeItems[index];
-          this.labelPostfix = index === 0 ? new Date().toLocaleString('default', {month: 'long'}) + ' ' + new Date().getFullYear().toString() : '';
+        switch (keys[0]) {
+          case "year":
+            this.selectedDateRange = this.yearlyDateRangeItems[index];
+            this.labelPostfix = index === 0 ? new Date().getFullYear().toString() : '';
+            break;
+          case "quarter":
+            this.selectedDateRange = this.quarterlyDateRangeItems[index];
+            this.labelPostfix = index === 0 ? this.selectedDateRange.postfix : '';
+            break;
+          case "month":
+            this.selectedDateRange = this.monthlyDateRangeItems[index];
+            this.labelPostfix = index === 0 ? new Date().toLocaleString('default', {month: 'long'}) + ' ' + new Date().getFullYear().toString() : '';
+            break;
         }
       }
     } else {
