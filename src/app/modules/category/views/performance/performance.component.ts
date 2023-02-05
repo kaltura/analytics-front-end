@@ -69,11 +69,6 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
     searchInTags: true,
     searchInAdminTags: false
   });
-  public _tableModesOptions = [
-    { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users },
-    { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries },
-    { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates }
-  ];
   public _currentPeriod: { from: number, to: number };
   public _comparePeriod: { from: number, to: number };
   public _filterChange$ = this._filterChange.asObservable();
@@ -82,6 +77,12 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.category.performance;
   public _showExternalLink = true;
   public _showCustomLegend = false;
+
+  public _tableModesOptions = [
+    ...(this._viewConfig.userFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users } : []),
+    ...(this._viewConfig.entryFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries } : []),
+    { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates }
+  ];
 
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
