@@ -257,6 +257,7 @@
         "title": "Overview",
         "month_id": "Month",
         "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
+        "lastQuarters": "{{quarters}} Quarters usage up to {{selectedPeriod}}",
         "year_id": "Year",
         "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
         "average_storage": "Stored Media",
