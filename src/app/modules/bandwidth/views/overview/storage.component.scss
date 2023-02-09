@@ -82,13 +82,15 @@ app-users-filter{
     .kTotalLabel {
       font-size: 15px;
       font-weight: 400;
+      margin-left: 4px;
+    }
+    .kTotalLabelNoUnits {
       margin-left: 8px;
     }
     .kTotalUnits {
-      font-size: 13px;
-      font-weight: 700;
-      color: $kGrayscale3;
-      margin-left: 2px;
+      font-size: 15px;
+      color: $kGrayscale1;
+      margin-left: 8px;
       padding-top: 1px;
     }
   }

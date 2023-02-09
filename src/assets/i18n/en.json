@@ -268,6 +268,7 @@
         "total_interactive_video_entries": "Interactive Videos",
         "unique_known_users": "Active Unique Users",
         "live_view_time": "Live Viewing Hours",
+        "added_meeting_recording_hours": "Recording Hours",
         "video_streams": "Delivered Video Streams",
         "total_credits": "Enrichment Credits Spent",
         "seeData": "See data"

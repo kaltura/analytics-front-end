@@ -42,6 +42,11 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
           },
+         'added_meeting_recording_hours': {
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
+            colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
+          },
         }
       },
       [ReportDataSection.table]: {
@@ -135,6 +140,11 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_credits`),
             sortOrder: 10
+          },
+          'added_meeting_recording_hours': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.bandwidth.overview.added_meeting_recording_hours`),
+            sortOrder: 11
           },
         }
       }
