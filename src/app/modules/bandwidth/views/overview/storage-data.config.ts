@@ -25,7 +25,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
           'bandwidth_consumption': {
             format: value => value,
             graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
-            colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
+            colors: [getPrimaryColor('impressions'), getColorPercent(100, 'impressions')],
           },
           'total_entries': {
             format: value => value,
@@ -45,7 +45,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
          'added_meeting_recording_hours': {
             format: value => value,
             graphTooltip: (value) => ReportHelper.numberOrZero(value),
-            colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
+            colors: [getPrimaryColor('moderation'), getColorPercent(100,'moderation')],
           },
         }
       },
