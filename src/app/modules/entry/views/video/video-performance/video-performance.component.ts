@@ -78,8 +78,8 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
 
   public _tableModes = [
     { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
-    ...(this._entryPerformanceViewConfig.userFilter    !== null ? { label: this._translate.instant('app.entry.users'), value: TableModes.users } : []),
-    ...(this._entryPerformanceViewConfig.contextFilter !== null ? { label: this._translate.instant('app.entry.context'), value: TableModes.context } : []),
+    ...this._entryPerformanceViewConfig.userFilter !== null ? { label: this._translate.instant('app.entry.users'), value: TableModes.users } : [],
+    ...this._entryPerformanceViewConfig.contextFilter !== null ? { label: this._translate.instant('app.entry.context'), value: TableModes.context } : [],
   ];
 
   public _currentDatePeriod = '';

@@ -79,8 +79,8 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
   public _showCustomLegend = false;
 
   public _tableModesOptions = [
-    ...(this._viewConfig.userFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users } : []),
-    ...(this._viewConfig.entryFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries } : []),
+    ...this._viewConfig.userFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.users'), value: TableModes.users } : [],
+    ...this._viewConfig.entryFilter !== null ? { label: this._translate.instant('app.engagement.dimensions.entries'), value: TableModes.entries } : [],
     { label: this._translate.instant('app.engagement.dimensions.dates'), value: TableModes.dates }
   ];
 
@@ -152,7 +152,7 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
       .subscribe(({ report, compare }) => {
           this._tableData = [];
           if (this._tableMode === '') {
-            this._tableMode = TableModes.users;
+            this._tableMode = this._tableModesOptions[0].value;
           }
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
 
