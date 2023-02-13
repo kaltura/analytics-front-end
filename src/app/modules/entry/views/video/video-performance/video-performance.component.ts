@@ -73,10 +73,13 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
     searchInTags: true,
     searchInAdminTags: false
   });
+
+  public _entryPerformanceViewConfig = analyticsConfig.viewsConfig.entry.performance;
+
   public _tableModes = [
     { label: this._translate.instant('app.entry.dates'), value: TableModes.dates },
-    { label: this._translate.instant('app.entry.users'), value: TableModes.users },
-    { label: this._translate.instant('app.entry.context'), value: TableModes.context },
+    ...this._entryPerformanceViewConfig.userFilter !== null ? { label: this._translate.instant('app.entry.users'), value: TableModes.users } : [],
+    ...this._entryPerformanceViewConfig.contextFilter !== null ? { label: this._translate.instant('app.entry.context'), value: TableModes.context } : [],
   ];
 
   public _currentDatePeriod = '';

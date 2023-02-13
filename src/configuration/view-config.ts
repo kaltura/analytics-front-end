@@ -134,7 +134,10 @@ export const viewsConfig = {
     userEngagement: {
       userFilter: {}
     },
-    performance: {},
+    performance: {
+      userFilter: {},
+      contextFilter: {}
+    },
     impressions: {},
     geo: {},
     devices: {},

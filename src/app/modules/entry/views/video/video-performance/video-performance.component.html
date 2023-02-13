@@ -52,7 +52,8 @@
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
           <div class="kTableModeSelector">
-            <p-dropdown [style]="{'width': '172px'}"
+            <p-dropdown *ngIf="_tableModes.length > 1"
+                        [style]="{'width': '172px'}"
                         [options]="_tableModes"
                         (onChange)="_onTableModeChange($event.value)"
                         [(ngModel)]="_tableMode">
