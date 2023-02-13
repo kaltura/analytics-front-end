@@ -71,6 +71,7 @@ export class StorageComponent implements OnInit {
   public _isSpecificTimeRange = false;
 
   private order = '-month_id';
+  private isQuarters = false;
   private _dataConfig: ReportDataConfig = null;
 
   constructor(private _frameEventManager: FrameEventManagerService,
@@ -134,16 +135,22 @@ export class StorageComponent implements OnInit {
         this.graphFilter.fromDate = DateFilterUtils.toServerDate(new Date(`${startYear}-01-01`), true);
       }
     } else {
-      // get up to last 12 months
+      let loadedMonths = 12;
+      if (range.key.indexOf('quarter') === 0) {
+        loadedMonths = 9;
+        this.isQuarters = true;
+      }
+      // get up to last 9 or 12 months
       const selectedDate = new Date(range.startDate * 1000);
-      const monthsDiff = selectedDate.getMonth() - partnerCreationDate.getMonth() + (12 * (selectedDate.getFullYear() - partnerCreationDate.getFullYear()));
-      if (monthsDiff < 12) {
-        // partner created less than 12 months since selected month - show data since partner creation till selected month
+      const monthsDiff = selectedDate.getMonth() - partnerCreationDate.getMonth() + (loadedMonths * (selectedDate.getFullYear() - partnerCreationDate.getFullYear()));
+      if (monthsDiff < loadedMonths) {
+        // partner created less than 9 or 12 months since selected month - show data since partner creation till selected month
         this.graphFilter.fromDate = DateFilterUtils.toServerDate(partnerCreationDate, true);
       } else {
-        // partner created over 12 months since selected month - show data from 12 months before selected month till selected month
+        // partner created over 9 or 12 months since selected month - show data from 12 months before selected month till selected month
         const selectedDate = new Date(range.startDate * 1000);
-        selectedDate.setMonth((selectedDate.getMonth() - 11));
+        const substractMonths = this.isQuarters ? 9 : 11;
+        selectedDate.setMonth((selectedDate.getMonth() - substractMonths));
         this.graphFilter.fromDate = DateFilterUtils.toServerDate(selectedDate, true);
       }
     }
@@ -237,7 +244,8 @@ export class StorageComponent implements OnInit {
     this._tableData = tableData;
     if (this._tableData.length > 1) {
       this._graphTitle = this._sortField === 'month_id'
-        ? this._translate.instant('app.bandwidth.overview.lastMonths', {months: this._tableData.length, selectedPeriod: this._selectedPeriod})
+        ? this.isQuarters ? this._translate.instant('app.bandwidth.overview.lastQuarters', {quarters: Math.ceil(this._tableData.length / 3), selectedPeriod: this._selectedPeriod})
+          : this._translate.instant('app.bandwidth.overview.lastMonths', {months: this._tableData.length, selectedPeriod: this._selectedPeriod})
         : this._translate.instant('app.bandwidth.overview.lastYears', {years: this._tableData.length, selectedPeriod: this._selectedPeriod});
     } else if (this._tableData.length === 1) {
       this._graphTitle = this._selectedPeriod;

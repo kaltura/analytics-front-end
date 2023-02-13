@@ -11,7 +11,7 @@
 </div>
 
 <kPopupWidget #datesPopup [attr.data-aid]="'date-filter-overview'"
-              [popupWidth]="560" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
+              [popupWidth]="750" [closeBtn]="false" [targetRef]="datesBtn" [targetOffset]="{'x':0, 'y': 42}"
 >
   <ng-template>
     <div class="kDateFilterPopup kOverrideFAIcons">
@@ -22,6 +22,13 @@
         <div class="col">
           <span class="kTitle">{{'app.dateFilter.byMonth' | translate | uppercase}}</span>
           <p-radioButton *ngFor="let dateRange of monthlyDateRangeItems" name="dates"
+                         [label]="dateRange.label"
+                         [value]="dateRange.key"
+                         [(ngModel)]="selectedDateRangeKey"></p-radioButton>
+        </div>
+        <div class="col">
+          <span class="kTitle">{{'app.dateFilter.byQuarter' | translate | uppercase}}</span>
+          <p-radioButton *ngFor="let dateRange of quarterlyDateRangeItems" name="dates"
                          [label]="dateRange.label"
                          [value]="dateRange.key"
                          [(ngModel)]="selectedDateRangeKey"></p-radioButton>

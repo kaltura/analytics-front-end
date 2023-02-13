@@ -48,11 +48,9 @@
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[2].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[2].title}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[2].title}}</span>
             <span *ngIf="_tabsData[2].value !== '0'" class="kMarginLeft kLink" (click)="transcodingDetails.open()">{{'app.bandwidth.overview.seeData' | translate}}</span>
           </div>
-        </div>
-        <div class="kCol">
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[3].value}}</span>
             <span class="kTotalUnits">{{_tabsData[3].units}}</span>
@@ -60,36 +58,40 @@
           </div>
           <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[4].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[4].title}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[4].title}}</span>
           </div>
           <div class="kTotal">
-            <span class="kTotalValue">{{_tabsData[5].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[5].title}}</span>
+            <span class="kTotalValue">{{_tabsData[6].value}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[6].title}}</span>
           </div>
         </div>
         <div class="kCol">
           <div class="kTotal">
-            <span class="kTotalValue">{{_tabsData[6].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[6].title}}</span>
-          </div>
-          <div class="kTotal">
             <span class="kTotalValue">{{_tabsData[7].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[7].title}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[7].title}}</span>
             <kInputHelper>
               <span>{{_tabsData[7].tooltip}}</span>
             </kInputHelper>
           </div>
           <div class="kTotal">
-            <span class="kTotalValue">{{_tabsData[8].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[8].title}}</span>
+            <span class="kTotalValue">{{_tabsData[10].value}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[10].title}}</span>
           </div>
         </div>
-        <div class="kCol" *ngIf="_reach">
+        <div class="kCol">
           <div class="kTotal">
-            <span class="kTotalValue">{{_tabsData[9].value}}</span>
-            <span class="kTotalLabel">{{_tabsData[9].title}}</span>
+            <span class="kTotalValue">{{_tabsData[5].value}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[5].title}}</span>
           </div>
-          <span class="kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.enrichment_data' | translate}}</span>
+          <div class="kTotal">
+            <span class="kTotalValue">{{_tabsData[8].value}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[8].title}}</span>
+          </div>
+          <div class="kTotal" *ngIf="_reach">
+            <span class="kTotalValue">{{_tabsData[9].value}}</span>
+            <span class="kTotalLabel kTotalLabelNoUnits">{{_tabsData[9].title}}</span>
+            <span class="kMarginLeft kLink" (click)="_navigateToEnrichment()">{{'app.bandwidth.overview.seeData' | translate}}</span>
+          </div>
         </div>
       </div>
 

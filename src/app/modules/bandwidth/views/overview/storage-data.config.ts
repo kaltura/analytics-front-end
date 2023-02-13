@@ -25,7 +25,7 @@ export class StorageDataConfig extends ReportDataBaseConfig {
           'bandwidth_consumption': {
             format: value => value,
             graphTooltip: (value) => `<span class="kValue">${fileSize(value, 1).value} ${fileSize(value).units}</span>`,
-            colors: [getPrimaryColor('moderation'), getColorPercent(100, 'moderation')],
+            colors: [getPrimaryColor('impressions'), getColorPercent(100, 'impressions')],
           },
           'total_entries': {
             format: value => value,
@@ -41,6 +41,11 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             format: value => Math.round(ReportHelper.hours(value)),
             graphTooltip: (value) => ReportHelper.numberOrZero(value),
             colors: [getPrimaryColor('time'), getColorPercent(100,'time')],
+          },
+         'added_meeting_recording_hours': {
+            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value),
+            colors: [getPrimaryColor('moderation'), getColorPercent(100,'moderation')],
           },
         }
       },
@@ -135,6 +140,11 @@ export class StorageDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.bandwidth.overview.total_credits`),
             sortOrder: 10
+          },
+          'added_meeting_recording_hours': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.bandwidth.overview.added_meeting_recording_hours`),
+            sortOrder: 11
           },
         }
       }

@@ -203,7 +203,9 @@
       "exit": "Exit Compare Mode",
       "byMonth": "By Month",
       "byYear": "By Year",
+      "byQuarter": "By Quarter",
       "currentYear": "Current Year",
+      "currentQuarter": "Current Quarter",
       "currentMonth": "Current Month",
       "past_period": "Past Period"
     },
@@ -255,6 +257,7 @@
         "title": "Overview",
         "month_id": "Month",
         "lastMonths": "{{months}} Months usage up to {{selectedPeriod}}",
+        "lastQuarters": "{{quarters}} Quarters usage up to {{selectedPeriod}}",
         "year_id": "Year",
         "lastYears": "{{years}} Years usage up to {{selectedPeriod}}",
         "average_storage": "Stored Media",
@@ -265,6 +268,7 @@
         "total_interactive_video_entries": "Interactive Videos",
         "unique_known_users": "Active Unique Users",
         "live_view_time": "Live Viewing Hours",
+        "added_meeting_recording_hours": "Recording Hours",
         "video_streams": "Delivered Video Streams",
         "total_credits": "Enrichment Credits Spent",
         "seeData": "See data"
