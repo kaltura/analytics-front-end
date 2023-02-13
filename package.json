@@ -40,7 +40,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "core-js": "^3.2.1",
     "echarts": "^4.2.1",
-    "html2pdf.js": "^0.9.3",
+    "html2pdf.js": "^0.10.1",
     "jquery": "^3.5.1",
     "jsnlog": "^2.29.0",
     "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20220413-113715.tgz",
