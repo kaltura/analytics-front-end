@@ -128,6 +128,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.customData = config.customData || { };
   analyticsConfig.multiAccount = config.multiAccount || false;
   analyticsConfig.previewPlayer = config.previewPlayer || { loadJquery: true };
+  analyticsConfig.loadThumbnailWithKs = config.loadThumbnailWithKs || false;
   setLiveEntryUsersReports(config.liveEntryUsersReports);
   if (config.customStyle) {
     setCustomStyle(config.customStyle);
