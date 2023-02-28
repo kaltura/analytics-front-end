@@ -102,7 +102,7 @@ export class OverviewDateFilterComponent implements OnInit {
       isSpecific: false
     }];
 
-    // add 3 previous quarters
+    // add up to 3 previous quarters
     let quarterYear = currentYear;
     for (let i = 1; i < 4; i++) {
       quarterMonth -= 3;
@@ -112,14 +112,17 @@ export class OverviewDateFilterComponent implements OnInit {
       }
       const quarterIndex = Math.floor((quarterMonth -1) / 3) + 1;
       const endDay = quarterMonth === 1 || quarterMonth === 10 ? 31 : 30;
-      this.quarterlyDateRangeItems.push({
-        key: `quarter-${i}`,
-        label: `Q${quarterIndex} ${quarterYear}`,
-        startDate: DateFilterUtils.toServerDate(new Date(`${quarterYear}-${getMonthString(quarterMonth)}-${dayStr}`), true),
-        endDate: DateFilterUtils.toServerDate(new Date(`${quarterYear}-${getMonthString(quarterMonth + 2)}-${endDay}`), false),
-        interval: KalturaReportInterval.months,
-        isSpecific: false
-      });
+      const quarterEndDate = new Date(`${quarterYear}-${getMonthString(quarterMonth + 2)}-${endDay}`);
+      if (quarterEndDate.getTime() > partnerCreationDate.getTime()) {
+        this.quarterlyDateRangeItems.push({
+          key: `quarter-${i}`,
+          label: `Q${quarterIndex} ${quarterYear}`,
+          startDate: DateFilterUtils.toServerDate(new Date(`${quarterYear}-${getMonthString(quarterMonth)}-${dayStr}`), true),
+          endDate: DateFilterUtils.toServerDate(quarterEndDate, false),
+          interval: KalturaReportInterval.months,
+          isSpecific: false
+        });
+      }
     }
 
     // monthly date range logic
