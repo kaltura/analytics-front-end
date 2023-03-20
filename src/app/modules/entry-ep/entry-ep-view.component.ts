@@ -1,37 +1,31 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BaseEntryGetAction,
   KalturaAPIException,
   KalturaClient,
-  KalturaDetachedResponseProfile,
-  KalturaEntryDisplayInSearchType, KalturaEntryScheduleEventFilter,
+  KalturaEntryScheduleEventFilter,
   KalturaLiveEntry,
-  KalturaLiveStreamBroadcastStatus,
-  KalturaLiveStreamDetails, KalturaMediaEntry, KalturaMeetingScheduleEvent,
+  KalturaMediaEntry,
+  KalturaMeetingScheduleEvent,
   KalturaMultiRequest,
   KalturaMultiResponse,
-  KalturaReportInterval, KalturaRequest,
-  KalturaRequestOptions,
-  KalturaResponseProfileType, KalturaScheduleEventFilter, KalturaScheduleEventListResponse,
-  KalturaUser,
-  LiveStreamGetDetailsAction, ScheduleEventListAction,
-  UserGetAction
-} from 'kaltura-ngx-client';
+  KalturaReportInterval,
+  KalturaScheduleEventListResponse,
+  ScheduleEventListAction } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
-import { map } from 'rxjs/operators';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, NavigationDrillDownService, ReportHelper} from 'shared/services';
-import { TranslateService } from '@ngx-translate/core';
-import {EntryEPExportConfig} from "./entry-ep-export.config";
-import {ExportItem} from "shared/components/export-csv/export-config-base.service";
-import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
+import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import { EntryEPExportConfig } from "./entry-ep-export.config";
+import { ExportItem } from "shared/components/export-csv/export-config-base.service";
+import { DateChangeEvent } from "shared/components/date-filter/date-filter.service";
+import { DateFilterUtils, DateRanges } from "shared/components/date-filter/date-filter-utils";
+import { PageScrollConfig, PageScrollInstance, PageScrollService } from "ngx-page-scroll";
+import { KalturaLogger } from "@kaltura-ng/kaltura-logger";
+import { map } from 'rxjs/operators';
 import * as moment from "moment";
-import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
-import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
-import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 
 @Component({
   selector: 'app-ep-webcast',
@@ -143,7 +137,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 (referenceEntry: KalturaMediaEntry) => {
                   if (referenceEntry.redirectEntryId) {
-                    this._vodEntryIds += `,${referenceEntry.redirectEntryId}`;
+                    this._vodEntryIds = this._vodEntryIds.length ? `${this._vodEntryIds},${referenceEntry.redirectEntryId}` : referenceEntry.redirectEntryId;
                   }
                   this._loadingEntry = false;
                 },
