@@ -17,7 +17,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
 import { EntryEPExportConfig } from "./entry-ep-export.config";
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 import { DateChangeEvent } from "shared/components/date-filter/date-filter.service";
@@ -40,9 +40,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _entry: KalturaLiveEntry | KalturaMediaEntry;
   public _entryId = '';
-  public _entryIdIn = '';
   public _exportConfig: ExportItem[] = [];
-  public _exporting = false;
 
   public _dateFilter: DateChangeEvent = null;
   public _dateRange = DateRanges.Last30D;
@@ -52,8 +50,9 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _eventStartDate: moment.Moment = null;
   public _eventEndDate: moment.Moment = null;
 
-  private _liveEntryIds = '';
-  private _vodEntryIds = '';
+  public _liveEntryIds = '';
+  public _vodEntryIds = '';
+  public _allEntryIds = '';
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -63,8 +62,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private pageScrollService: PageScrollService,
               private _frameEventManager: FrameEventManagerService,
-              private _navigationDrillDownService: NavigationDrillDownService,
-              private _authService: AuthService) {
+              private _navigationDrillDownService: NavigationDrillDownService) {
     this._logger = _logger.subLogger('EntryEpViewComponent');
   }
 
@@ -79,6 +77,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             console.log("---> live entry IDS: " + this._liveEntryIds);
             console.log("---> vod entry IDS: " + this._vodEntryIds);
+            console.log("---> all entry IDS: " + this._allEntryIds);
             console.log("---> start date: " + this._eventStartDate);
             console.log("---> end date: " + this._eventEndDate);
           }, 5000);
@@ -129,8 +128,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           if (entry.redirectEntryId) {
             this._vodEntryIds = entry.redirectEntryId;
           }
+          this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds},${this._vodEntryIds}` : this._liveEntryIds;
           if (entry.referenceId) { // DIY Live Broadcast
             this._liveEntryIds += `,${entry.referenceId}`;
+            this._allEntryIds += `,${entry.referenceId}`;
             this._kalturaClient
               .request(new BaseEntryGetAction({ entryId: entry.referenceId }))
               .pipe(cancelOnDestroy(this))
@@ -138,6 +139,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
                 (referenceEntry: KalturaMediaEntry) => {
                   if (referenceEntry.redirectEntryId) {
                     this._vodEntryIds = this._vodEntryIds.length ? `${this._vodEntryIds},${referenceEntry.redirectEntryId}` : referenceEntry.redirectEntryId;
+                    this._allEntryIds += `,${referenceEntry.redirectEntryId}`;
                   }
                   this._loadingEntry = false;
                 },
@@ -180,35 +182,4 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     this._navigationDrillDownService.navigateBack('audience/engagement', true);
   }
 
-
-  // PDF export methods
-  public preExportHandler(): void {
-    this._viewConfig.entryPreview = null;
-    this._viewConfig.userEngagement = null;
-    this._viewConfig.devices = null;
-    this._viewConfig.export = null;
-    this._viewConfig.refineFilter = null;
-  }
-
-  public postExportHandler(): void {
-    this._viewConfig.entryPreview = {};
-    this._viewConfig.userEngagement = {
-      userFilter: {}
-    };
-    this._viewConfig.devices = {};
-    this._viewConfig.export = {};
-    this._viewConfig.refineFilter = {
-      playbackType: {},
-      owners: {},
-      devices: {},
-      browsers: {},
-      domains: {},
-      os: {},
-      geo: {}
-    };
-  }
-
-  public onExporting(exporting: boolean): void {
-    this._exporting = exporting;
-  }
 }
