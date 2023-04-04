@@ -15,6 +15,7 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule, PopupW
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import {EpMiniViewersComponent} from "./views/mini-viewers/mini-viewers.component";
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     InputHelperModule,
   ],
   declarations: [
-    EntryEpViewComponent
+    EntryEpViewComponent,
+    EpMiniViewersComponent
   ],
   exports: [],
   providers: []

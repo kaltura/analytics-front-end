@@ -1,0 +1,79 @@
+@import '../../../../../styles/variables';
+
+.reportContent {
+  height: 204px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  .kMiniIcon {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 12px;
+    &.blue{
+      background-color: rgba(72,122,223,0.2);
+      color: #487ADF;
+    }
+    &.green{
+      background-color: rgba(49,190,166,0.2);
+      color: #31BEA6;
+
+    }
+    &.aqua {
+      background-color: rgba(22, 168, 215, 0.2);
+      color: #16a8d7;
+    }
+    &.orange{
+      background-color: rgba(225,150,46,0.2);
+      color: #E1962E;
+    }
+  }
+  .dataContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .title {
+      font-size: 16px;
+      color: $kGrayscale1;
+    }
+    .value {
+      font-weight: 700;
+      font-size: 24px;
+      margin-top: 4px;
+      color: $kGrayscale1;
+      margin-bottom: 8px;
+    }
+    .label {
+      font-size: 15px;
+      line-height: 18px;
+      color: black;
+      margin-top: 12px;
+    }
+    .kBulletContainer {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      .kBullet {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #31BEA6;
+        width: 0%;
+        transition: width 250ms ease-in;
+      }
+      .graphValue {
+        margin-left: auto;
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 18px;
+        color: black;
+        padding-left: 16px;
+      }
+    }
+  }
+}

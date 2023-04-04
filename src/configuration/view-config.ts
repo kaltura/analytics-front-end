@@ -260,7 +260,7 @@ export const viewsConfig = {
     download: {},
     linkToLive: {},
     details: {},
-    miniHighlights: {},
+    miniViewers: {},
     miniEngagement: {
       questions: {},
       viewers: {},

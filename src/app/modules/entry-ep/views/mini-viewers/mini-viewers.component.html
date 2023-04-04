@@ -1,0 +1,46 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <div class="icons">
+        <div class="kMiniIcon green"><i class="icon-small-viewer-contributor"></i></div>
+      </div>
+
+      <div class="dataContainer">
+        <span class="title">{{_tabsData[0]?.title}}</span>
+        <span class="value">{{_tabsData[0]?.value}}</span>
+        <span class="label">{{_tabsData[1]?.title}}</span>
+        <div class="kBulletContainer">
+          <div class="kBullet" [style.width]="_livePercent + '%'"></div>
+          <span class="graphValue">{{_tabsData[1]?.value}}</span>
+        </div>
+        <span class="label">{{_tabsData[2]?.title}}</span>
+        <div class="kBulletContainer">
+          <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
+          <span class="graphValue">{{_tabsData[2]?.value}}</span>
+        </div>
+      </div>
+
+
+
+<!--      <div class="kVal">-->
+<!--        <div class="kLabels">-->
+<!--          <span class="value">{{_tabsData[1]?.value}}</span>-->
+<!--          <span class="title">{{_tabsData[1]?.title}}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="kVal">-->
+<!--        <div class="kLabels">-->
+<!--          <span class="value">{{_tabsData[2]?.value}}</span>-->
+<!--          <span class="title">{{_tabsData[2]?.title}}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

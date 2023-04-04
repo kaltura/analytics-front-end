@@ -536,6 +536,13 @@
         "openLink": "Open page URL in a new browser tab"
       }
     },
+    "entryEp": {
+      "highlights": {
+        "viewers": "Unique viewers",
+        "live": "Live",
+        "recordings": "Recordings"
+      }
+    },
     "entryWebcast": {
       "live": "Live",
       "vod": "VOD",

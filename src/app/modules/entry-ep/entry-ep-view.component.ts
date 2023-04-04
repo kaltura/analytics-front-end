@@ -41,14 +41,16 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _entry: KalturaLiveEntry | KalturaMediaEntry;
   public _entryId = '';
   public _exportConfig: ExportItem[] = [];
+  public _exporting = false;
 
   public _dateFilter: DateChangeEvent = null;
   public _dateRange = DateRanges.Last30D;
   public _timeUnit = KalturaReportInterval.days;
 
-  public _creationDate: moment.Moment = null;
-  public _eventStartDate: moment.Moment = null;
-  public _eventEndDate: moment.Moment = null;
+  public _creationDate: Date = null;
+  public _eventStartDate: Date = null;
+  public _eventEndDate: Date = null;
+  public _now: Date = new Date();
 
   public _liveEntryIds = '';
   public _vodEntryIds = '';
@@ -74,13 +76,6 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
         this._entryId = params['id'];
         if (this._entryId) {
           this._loadEventDetails();
-          setTimeout(() => {
-            console.log("---> live entry IDS: " + this._liveEntryIds);
-            console.log("---> vod entry IDS: " + this._vodEntryIds);
-            console.log("---> all entry IDS: " + this._allEntryIds);
-            console.log("---> start date: " + this._eventStartDate);
-            console.log("---> end date: " + this._eventEndDate);
-          }, 5000);
         }
       });
   }
@@ -119,8 +114,8 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           // set start and edit date
           if (eventList?.objects?.length > 0) {
             const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
-            this._eventStartDate = DateFilterUtils.getMomentDate(event.startDate);
-            this._eventEndDate = DateFilterUtils.getMomentDate(event.endDate);
+            this._eventStartDate = event.startDate;
+            this._eventEndDate = event.endDate;
           }
           // set live and vod entry IDs string
           this._entry = entry;
@@ -128,18 +123,18 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           if (entry.redirectEntryId) {
             this._vodEntryIds = entry.redirectEntryId;
           }
-          this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds},${this._vodEntryIds}` : this._liveEntryIds;
+          this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds}${analyticsConfig.valueSeparator}${this._vodEntryIds}` : this._liveEntryIds;
           if (entry.referenceId) { // DIY Live Broadcast
-            this._liveEntryIds += `,${entry.referenceId}`;
-            this._allEntryIds += `,${entry.referenceId}`;
+            this._liveEntryIds += `${analyticsConfig.valueSeparator}${entry.referenceId}`;
+            this._allEntryIds += `${analyticsConfig.valueSeparator}${entry.referenceId}`;
             this._kalturaClient
               .request(new BaseEntryGetAction({ entryId: entry.referenceId }))
               .pipe(cancelOnDestroy(this))
               .subscribe(
                 (referenceEntry: KalturaMediaEntry) => {
                   if (referenceEntry.redirectEntryId) {
-                    this._vodEntryIds = this._vodEntryIds.length ? `${this._vodEntryIds},${referenceEntry.redirectEntryId}` : referenceEntry.redirectEntryId;
-                    this._allEntryIds += `,${referenceEntry.redirectEntryId}`;
+                    this._vodEntryIds = this._vodEntryIds.length ? `${this._vodEntryIds}${analyticsConfig.valueSeparator}${referenceEntry.redirectEntryId}` : referenceEntry.redirectEntryId;
+                    this._allEntryIds += `${analyticsConfig.valueSeparator}${referenceEntry.redirectEntryId}`;
                   }
                   this._loadingEntry = false;
                 },
@@ -176,6 +171,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
       const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
       this.pageScrollService.start(pageScrollInstance);
     }
+  }
+
+  public onExporting(exporting: boolean): void {
+    this._exporting = exporting;
   }
 
   public _back(): void {
