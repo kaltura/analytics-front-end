@@ -38,7 +38,7 @@ export class EpMiniViewersComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = "60002";
+  private _reportType = KalturaReportType.epWebcastUniqueUsers;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
@@ -101,6 +101,10 @@ export class EpMiniViewersComponent implements OnInit {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
     this._livePercent = this._tabsData.length > 1 ? parseInt(this._tabsData[1].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
     this._recordingPercent = this._tabsData.length > 2 ? parseInt(this._tabsData[2].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
+  }
+
+  public exportLinks(): void {
+    console.log("export links");
   }
 
   public export(): void {

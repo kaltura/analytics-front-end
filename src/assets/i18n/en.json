@@ -540,7 +540,8 @@
       "highlights": {
         "viewers": "Unique viewers",
         "live": "Live",
-        "recordings": "Recordings"
+        "recordings": "Recordings",
+        "export": "Export list"
       }
     },
     "entryWebcast": {

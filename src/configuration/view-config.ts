@@ -257,41 +257,7 @@ export const viewsConfig = {
   entryEP: {
     export: {},
     title: {},
-    download: {},
-    linkToLive: {},
-    details: {},
-    miniViewers: {},
-    miniEngagement: {
-      questions: {},
-      viewers: {},
-      // download: {} // used by KMS only
-    },
-    miniQuality: {},
-    highlights: {},
-    liveEngagement: {},
-    tools: {
-      slides: {},
-      polls: {},
-      announcements: {},
-      answers: {}
-    },
-    insights: {},
-    entryPreview: {},
-    userEngagement: {
-      userFilter: {},
-    },
-    geo: {},
-    devices: {},
-    domains: {},
-    refineFilter: {
-      playbackType: {},
-      owners: {},
-      devices: {},
-      browsers: {},
-      domains: {},
-      os: {},
-      geo: {}
-    }
+    miniViewers: {}
   },
   playlist: {
     title: {},
