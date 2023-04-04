@@ -7,26 +7,26 @@ import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
-import { MiniViewersConfig } from './mini-viewers.config';
+import { MiniMinutesViewedConfig } from './mini-minutes-viewed.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {analyticsConfig} from "configuration/analytics-config";
 import * as moment from "moment";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
-  selector: 'app-ep-mini-viewers',
-  templateUrl: './mini-viewers.component.html',
-  styleUrls: ['./mini-viewers.component.scss'],
+  selector: 'app-ep-mini-minutes-viewed',
+  templateUrl: './mini-minutes-viewed.component.html',
+  styleUrls: ['./mini-minutes-viewed.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EpMiniViewersComponent'),
-    MiniViewersConfig,
+    KalturaLogger.createLogger('EpMiniMinutesViewedComponent'),
+    MiniMinutesViewedConfig,
     ReportService,
   ]
 })
-export class EpMiniViewersComponent implements OnInit {
+export class EpMiniMinutesViewedComponent implements OnInit {
 
   private _dataConfig: ReportDataConfig;
-  protected _componentId = 'ep-mini-viewers';
+  protected _componentId = 'ep-mini-minutes-viewed';
 
   @Input() entryIdIn = '';
   @Input() startDate: Date;
@@ -37,7 +37,7 @@ export class EpMiniViewersComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = KalturaReportType.epWebcastUniqueUsers;
+  private _reportType = KalturaReportType.epWebcastHighlights;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
@@ -53,7 +53,7 @@ export class EpMiniViewersComponent implements OnInit {
               private _browserService: BrowserService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
-              private _dataConfigService: MiniViewersConfig,
+              private _dataConfigService: MiniMinutesViewedConfig,
               private _logger: KalturaLogger) {
 
     this._dataConfig = _dataConfigService.getConfig();

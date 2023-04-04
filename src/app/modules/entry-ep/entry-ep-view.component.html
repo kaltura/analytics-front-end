@@ -16,10 +16,7 @@
             <app-ep-mini-viewers [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
           </div>
           <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer">
-            <app-ep-mini-viewers [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
-          </div>
-          <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer">
-            <app-ep-mini-viewers [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
+            <app-ep-mini-minutes-viewed [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
           </div>
         </div>
 

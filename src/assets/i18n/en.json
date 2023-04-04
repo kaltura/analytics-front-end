@@ -541,7 +541,8 @@
         "viewers": "Unique viewers",
         "live": "Live",
         "recordings": "Recordings",
-        "export": "Export list"
+        "export": "Export list",
+        "avgMinutes": "Minutes viewed"
       }
     },
     "entryWebcast": {

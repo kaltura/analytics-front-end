@@ -114,8 +114,8 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           // set start and edit date
           if (eventList?.objects?.length > 0) {
             const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
-            this._eventStartDate = event.startDate;
-            this._eventEndDate = event.endDate;
+            this._eventStartDate = new Date(event.startDate * 1000);
+            this._eventEndDate = new Date(event.endDate * 1000);
           }
           // set live and vod entry IDs string
           this._entry = entry;
