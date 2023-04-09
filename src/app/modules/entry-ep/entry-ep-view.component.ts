@@ -173,6 +173,14 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  public preExportHandler(): void {
+
+  }
+
+  public postExportHandler(): void {
+
+  }
+
   public onExporting(exporting: boolean): void {
     this._exporting = exporting;
   }

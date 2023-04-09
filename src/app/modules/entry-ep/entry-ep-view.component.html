@@ -5,9 +5,11 @@
         <div class="kReportHeader" [ngClass]="{exporting: _exporting, noTitle: !_viewConfig.title}">
           <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
-          <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryWebcast.exportTitle' | translate) : _entry?.name}}</h1>
+          <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryEp.exportTitle' | translate) : _entry?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-            <app-export-csv aria-label="Export" role="button" *ngIf="_viewConfig.export" name="entry" [reports]="_exportConfig" [dateFilter]="_dateFilter" [entryId]="_allEntryIds"></app-export-csv>
+            <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport"
+                            [filename]="_entry.name + '_summary_report.pdf'" (preExport)="preExportHandler()"
+                            (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
           </div>
         </div>
 

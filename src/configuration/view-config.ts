@@ -255,7 +255,7 @@ export const viewsConfig = {
     }
   },
   entryEP: {
-    export: {},
+    download: {},
     title: {},
     miniViewers: {},
     miniMinutesViewed: {},
