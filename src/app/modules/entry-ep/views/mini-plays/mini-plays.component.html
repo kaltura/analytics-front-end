@@ -1,0 +1,31 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <div class="icons">
+        <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+      </div>
+
+      <div class="dataContainer">
+        <div class="header">
+          <span class="title">{{_tabsData[0]?.title}}</span>
+          <a class="kLink" (click)="scrollTo('#recordings')">{{'app.entryEp.highlights.seeMore' | translate}}</a>
+        </div>
+        <span class="value">{{_tabsData[0]?.value}}</span>
+
+        <div class="chart">
+          <div aria-label="Recordings plays chart" class="chart" echarts [options]="_lineChartData"></div>
+        </div>
+
+        <div class="dates">
+          <span class="date">{{startDate | date}}</span>
+          <span class="date">{{'app.common.today' | translate}}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

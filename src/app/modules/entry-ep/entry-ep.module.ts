@@ -17,6 +17,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { EpMiniViewersComponent } from "./views/mini-viewers/mini-viewers.component";
 import { EpMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
+import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { EpMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-m
   declarations: [
     EntryEpViewComponent,
     EpMiniViewersComponent,
-    EpMiniMinutesViewedComponent
+    EpMiniMinutesViewedComponent,
+    EpMiniPlaysComponent
   ],
   exports: [],
   providers: []

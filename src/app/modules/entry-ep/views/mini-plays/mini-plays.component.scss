@@ -1,0 +1,92 @@
+@import '../../../../../styles/variables';
+
+.reportContent {
+  position: relative;
+  overflow: hidden;
+  height: 204px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  .kMiniIcon {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 12px;
+    &.blue{
+      background-color: rgba(72,122,223,0.2);
+      color: #487ADF;
+    }
+    &.green{
+      background-color: rgba(49,190,166,0.2);
+      color: #31BEA6;
+
+    }
+    &.aqua {
+      background-color: rgba(22, 168, 215, 0.2);
+      color: #16a8d7;
+    }
+    &.orange{
+      background-color: rgba(225,150,46,0.2);
+      color: #E1962E;
+    }
+  }
+  .dataContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .header {
+      display: flex;
+      align-items: center;
+      .title {
+        font-size: 16px;
+        color: $kGrayscale1;
+      }
+      .kLink {
+        margin-left: auto;
+        font-weight: 700;
+        font-size: 15px;
+        color: $kPrimary;
+        cursor: pointer;
+      }
+    }
+    .value {
+      font-weight: 700;
+      font-size: 24px;
+      margin-top: 4px;
+      color: $kGrayscale1;
+      margin-bottom: 8px;
+    }
+    .chart {
+      height: 80px;
+      position: absolute;
+      width: 100%;
+      left: -6px;
+      top: 50px;
+    }
+    .dates {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: absolute;
+      bottom: 24px;
+      left: 0px;
+      padding-left: 24px;
+      box-sizing: border-box;
+      padding-right: 24px;
+      .date {
+        font-weight: 700;
+        font-size: 12px;
+        color: $kGrayscale3;
+        &:nth-of-type(even) {
+        margin-left: auto;
+      }
+      }
+    }
+  }
+}

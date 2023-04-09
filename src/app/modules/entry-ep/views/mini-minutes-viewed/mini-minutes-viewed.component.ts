@@ -31,7 +31,6 @@ export class EpMiniMinutesViewedComponent implements OnInit {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
-  @Input() exporting = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -100,22 +99,6 @@ export class EpMiniMinutesViewedComponent implements OnInit {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
     this._livePercent = this._tabsData.length > 1 ? parseInt(this._tabsData[1].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
     this._recordingPercent = this._tabsData.length > 2 ? parseInt(this._tabsData[2].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
-  }
-
-  public exportLinks(): void {
-    console.log("export links");
-  }
-
-  public export(): void {
-    this._browserService.exportToCsv(`${this._authService.pid}-Report_export-${this.entryIdIn.split(analyticsConfig.valueSeparator)[0]}.csv`,[
-      ["# ------------------------------------"],
-      ["Report: Highlights"],
-      ["Please note that the data below is filtered based on the filter applied in the report"],
-      ["Filtered dates: " + moment.unix(this._filter.fromDate).toDate() + " - " + moment.unix(this._filter.toDate).toDate()],
-      ["Plays", "Known Users", "Total minutes viewed", "Live minutes viewed (percentage)", "Countries"],
-      [this._tabsData[0].rawValue, this._tabsData[1].rawValue, this._tabsData[2].rawValue ],
-      ["# ------------------------------------"],
-    ]);
   }
 
 }

@@ -542,7 +542,9 @@
         "live": "Live",
         "recordings": "Recordings",
         "export": "Export list",
-        "avgMinutes": "Minutes viewed"
+        "avgMinutes": "Minutes viewed",
+        "seeMore": "See more",
+        "plays": "Recordings plays"
       }
     },
     "entryWebcast": {
