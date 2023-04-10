@@ -18,6 +18,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { EpMiniViewersComponent } from "./views/mini-viewers/mini-viewers.component";
 import { EpMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
 import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
+import { EpRecordingsComponent } from "./views/recordings/recordings.component";
+import { SelectButtonModule } from "primeng/selectbutton";
+import { UsersTableComponent } from "./views/recordings/users-table/users-table.component";
 
 @NgModule({
   imports: [
@@ -29,6 +32,7 @@ import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
     DropdownModule,
     ButtonModule,
     PaginatorModule,
+    SelectButtonModule,
     SharedModule,
     TableModule,
     TooltipModule,
@@ -43,7 +47,9 @@ import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
     EntryEpViewComponent,
     EpMiniViewersComponent,
     EpMiniMinutesViewedComponent,
-    EpMiniPlaysComponent
+    EpMiniPlaysComponent,
+    EpRecordingsComponent,
+    UsersTableComponent
   ],
   exports: [],
   providers: []

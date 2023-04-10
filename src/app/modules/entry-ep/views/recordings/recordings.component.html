@@ -1,0 +1,113 @@
+<div data-aid="report-engagement-highlights" class="kReport kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReport kContent kOverrideFAIcons">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.entryEp.highlights.recordings' | translate}}</span>
+      </div>
+      <div class="timeUnits">
+        <p-selectButton [options]="_timeUnitsItems" (onChange)="onTimeUnitsChange()" [(ngModel)]="_reportInterval"></p-selectButton>
+      </div>
+
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div></div>
+        <span>{{'app.engagement.highlightsReport.count_plays' | translate}}</span>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <div class="kTableModeSelector">
+            <p-dropdown [style]="{'width': '200px'}"
+                        [options]="_tableModesOptions"
+                        [(ngModel)]="_tableMode">
+            </p-dropdown>
+            <span *ngIf="_tableMode === _tableModes.users" class="label">{{'app.entryEp.recordings.numViewers' | translate: { '0': _totalViewers} }}</span>
+            <span *ngIf="_tableMode === _tableModes.entries" class="label">{{'app.entryEp.recordings.numEntries' | translate: { '0': _totalEntries} }}</span>
+          </div>
+
+          <ng-container [ngSwitch]="_tableMode">
+              <ng-container *ngSwitchCase="_tableModes.users">
+                <app-users-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalViewersChange($event)"></app-users-table>
+              </ng-container>
+          </ng-container>>
+
+<!--          <ng-container [ngSwitch]="_tableMode">-->
+<!--            <app-dates-table *ngSwitchCase="_tableModes.dates"-->
+<!--                             [data]="_datesTableData"-->
+<!--                             [sortField]="_sortField"-->
+<!--                             [currentPeriod]="_currentPeriod"-->
+<!--                             [comparePeriod]="_comparePeriod"-->
+<!--                             [isCompareMode]="_isCompareMode"-->
+<!--                             [reportInterval]="_reportInterval"-->
+<!--                             [firstTimeLoading]="_firstTimeLoading"></app-dates-table>-->
+
+<!--            <ng-container *ngSwitchCase="_tableModes.users">-->
+<!--              <app-user-engagement-filter *ngIf="!_isMultiAccount"-->
+<!--                                          [totalCount]="usersTableComponent.totalCount"-->
+<!--                                          [dateFilter]="_dateFilter"-->
+<!--                                          [showUserFilter]="_viewConfig.userFilter"-->
+<!--                                          (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>-->
+
+<!--              <app-users-table #usersTableComponent-->
+<!--                               [filterChange]="_filterChange$"-->
+<!--                               [filter]="_filter"-->
+<!--                               [compareFilter]="_compareFilter"-->
+<!--                               [isCompareMode]="_isCompareMode"-->
+<!--                               [reportInterval]="_reportInterval"-->
+<!--                               [firstTimeLoading]="_firstTimeLoading"></app-users-table>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container *ngSwitchCase="_tableModes.entries">-->
+<!--              <app-entry-engagement-filter *ngIf="!_isMultiAccount"-->
+<!--                                          [totalCount]="entriesTableComponent.totalCount"-->
+<!--                                          [dateFilter]="_dateFilter"-->
+<!--                                          (filterChange)="_onRefineFilterChange($event)"></app-entry-engagement-filter>-->
+
+<!--              <app-entries-table #entriesTableComponent-->
+<!--                                 [filterChange]="_filterChange$"-->
+<!--                                 [filter]="_filter"-->
+<!--                                 [compareFilter]="_compareFilter"-->
+<!--                                 [isCompareMode]="_isCompareMode"-->
+<!--                                 [reportInterval]="_reportInterval"-->
+<!--                                 [firstTimeLoading]="_firstTimeLoading"></app-entries-table>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container *ngSwitchCase="_tableModes.context">-->
+<!--              <app-context-table-filter *ngIf="!_isMultiAccount"-->
+<!--                                          [totalCount]="contextTableComponent.totalCount"-->
+<!--                                          [dateFilter]="_dateFilter"-->
+<!--                                          (filterChange)="_onRefineFilterChange($event)"></app-context-table-filter>-->
+
+<!--              <app-context-table #contextTableComponent-->
+<!--                                 [filterChange]="_filterChange$"-->
+<!--                                 [filter]="_filter"-->
+<!--                                 [compareFilter]="_compareFilter"-->
+<!--                                 [isCompareMode]="_isCompareMode"-->
+<!--                                 [reportInterval]="_reportInterval"-->
+<!--                                 [firstTimeLoading]="_firstTimeLoading"></app-context-table>-->
+<!--            </ng-container>-->
+<!--          </ng-container>-->
+        </div>
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>
+

@@ -546,6 +546,12 @@
         "avgMinutes": "Minutes viewed",
         "seeMore": "See more",
         "plays": "Recordings plays"
+      },
+      "recordings": {
+        "viewers": "Unique viewers",
+        "entries": "Associated Recordings",
+        "numViewers": "{{0}} Unique viewers",
+        "numEntries": "{{0}} Associated recordings"
       }
     },
     "entryWebcast": {
