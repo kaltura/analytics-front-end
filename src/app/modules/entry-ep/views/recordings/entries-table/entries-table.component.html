@@ -8,12 +8,13 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr [ngStyle]="{'borderBottom': '1px solid #cccccc'}">
-        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' ? null : col" [class.nonSortable]="col === 'full_name'">
-          {{'app.entry.' + col | translate}}
-          <p-sortIcon [field]="col" *ngIf="col !== 'full_name'"></p-sortIcon>
+        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' ? null : col" [class.nonSortable]="col === 'full_name'" [ngStyle]="{'width': col === 'object_id' ? '100px': 'auto'}">
+          {{col !== 'object_id' ? ('app.entry.' + col | translate) : ''}}
+          <p-sortIcon [field]="col" *ngIf="col !== 'full_name' && col !== 'object_id'"></p-sortIcon>
         </th>
       </tr>
       <tr *ngIf="_tableData?.length" class="kSummaryRow" [ngStyle]="{'height': '48px'}">
+        <th></th>
         <th>
           <span class="summaryLabel">{{'app.playlist.summary' | translate}}</span>
         </th>
@@ -33,12 +34,23 @@
     </ng-template>
     <ng-template pTemplate="body" let-data>
       <tr>
-        <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
-          <ng-container>
-            <span *ngIf="col === 'full_name'">{{data[col].length ? data[col] : data['name']}}</span>
-            <span *ngIf="col !== 'full_name' && col !== 'avg_completion_rate'">{{data[col]}}</span>
-            <app-bullet [hideBulletOnTablet]="true" *ngIf="(col === 'avg_completion_rate') || col === 'total_completion_rate'" [ngStyle]="{'padding-right': '24px'}" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
-          </ng-container>
+        <td [ngStyle]="{'padding': '16px', 'paddingLeft': '24px'}">
+          <thumb-loader [thumbnailUrl]="data.thumbnailUrl"></thumb-loader>
+        </td>
+        <td class="kHighlight">
+          <span >{{data['entry_name']}}</span>
+        </td>
+        <td>
+          <span >{{data['count_loads']}}</span>
+        </td>
+        <td>
+          <span >{{data['count_plays']}}</span>
+        </td>
+        <td>
+          <span >{{data['sum_time_viewed']}}</span>
+        </td>
+        <td>
+          <app-bullet [hideBulletOnTablet]="true" [ngStyle]="{'padding-right': '24px'}" [value]="data['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
         </td>
       </tr>
     </ng-template>

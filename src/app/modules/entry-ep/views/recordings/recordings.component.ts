@@ -143,6 +143,10 @@ export class EpRecordingsComponent implements OnInit {
     this._totalViewers = value;
   }
 
+  public onTotalEntriesChange(value: number): void {
+    this._totalEntries = value;
+  }
+
   public onTimeUnitsChange(): void {
     this._loadReport();
   }
