@@ -545,7 +545,10 @@
         "export": "Export list",
         "avgMinutes": "Minutes viewed",
         "seeMore": "See more",
-        "plays": "Recordings plays"
+        "plays": "Recordings plays",
+        "engagement": "Live engagement",
+        "engagementRate": "{{0}}% Live avg. engagement rate",
+        "reactions": "{{0}}% Sent live reactions"
       },
       "recordings": {
         "viewers": "Unique viewers",

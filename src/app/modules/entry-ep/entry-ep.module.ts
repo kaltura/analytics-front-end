@@ -21,7 +21,8 @@ import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
 import { EpRecordingsComponent } from "./views/recordings/recordings.component";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { UsersTableComponent } from "./views/recordings/users-table/users-table.component";
-import {EntriesTableComponent} from "./views/recordings/entries-table/entries-table.component";
+import { EntriesTableComponent } from "./views/recordings/entries-table/entries-table.component";
+import { EpMiniEngagementComponent } from "./views/mini-engagement/mini-engagement.component";
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import {EntriesTableComponent} from "./views/recordings/entries-table/entries-ta
     EpMiniPlaysComponent,
     EpRecordingsComponent,
     UsersTableComponent,
-    EntriesTableComponent
+    EntriesTableComponent,
+    EpMiniEngagementComponent
   ],
   exports: [],
   providers: []

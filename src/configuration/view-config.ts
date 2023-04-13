@@ -259,6 +259,7 @@ export const viewsConfig = {
     title: {},
     miniViewers: {},
     miniMinutesViewed: {},
+    miniEngagement: {},
     miniPlays: {},
     recordings: {}
   },

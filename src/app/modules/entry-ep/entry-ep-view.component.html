@@ -25,7 +25,13 @@
           </div>
         </div>
 
-        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting">
+        <div class="kReportContainer" *ngIf="!_loadingEntry">
+          <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer">
+            <app-ep-mini-engagement [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
+          </div>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings">
           <app-ep-recordings [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-recordings>
         </div>
 

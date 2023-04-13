@@ -7,6 +7,12 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString('en-US', { maximumSignificantDigits: 20 });
   }
 
+  static precisionRound(number, precision) {
+    const factor = Math.pow(10, precision);
+    const n = precision < 0 ? number : 0.01 / factor + number;
+    return Math.round( n * factor) / factor;
+  }
+
   static percents(x: any, round = true, maxHundred = false, addUnits = true, precision = 1): string {
     x = parseFloat(x) * 100;
     x = maxHundred && x > 100 ? 100 : x;
