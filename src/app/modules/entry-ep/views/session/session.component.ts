@@ -1,20 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import { ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { switchMap } from 'rxjs/operators';
-import { of as ObservableOf, Subject } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
-import {ReportDataConfig, ReportDataSection} from 'shared/services/storage-data-base.config';
+import { of as ObservableOf } from 'rxjs';
+import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionConfig } from './session.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
 
 @Component({
   selector: 'app-ep-session',
@@ -26,7 +23,7 @@ import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
     ReportService
   ],
 })
-export class EpSessionComponent implements OnInit {
+export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
@@ -34,12 +31,19 @@ export class EpSessionComponent implements OnInit {
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+
   private _duration = 0;
+  private _timerIntervalId = null;
+  private _tickPercentIncrease = 0;
+  public _currentPositionPercent = 0;
+  public _currentPosition = '';
+  public _playing = false;
 
   public _chartOptions = {};
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _durationLabel = '';
+  public _recordingAvailable = false;
   public _pager = new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
@@ -57,6 +61,7 @@ export class EpSessionComponent implements OnInit {
   ngOnInit(): void {
     this._duration = this.endDate.getTime() - this.startDate.getTime();
     this._durationLabel = ReportHelper.time(this._duration.toString());
+    this._tickPercentIncrease = 100000 / this._duration;
     this._loadReport();
   }
 
@@ -236,8 +241,31 @@ export class EpSessionComponent implements OnInit {
   }
 
   public _onChartClick(event): void {
-    const percent = event.offsetX / event.currentTarget.clientWidth;
+    this._currentPositionPercent = event.offsetX / event.currentTarget.clientWidth * 100;
+    this._currentPosition = ReportHelper.time((this._duration * event.offsetX / event.currentTarget.clientWidth).toString(), true);
     // this._seekTo(percent, true);
+  }
+
+  private tick(): void {
+    this._currentPositionPercent += this._tickPercentIncrease;
+    this._currentPosition = ReportHelper.time((this._duration * this._currentPositionPercent / 100).toString(), true);
+  }
+
+  public togglePlay(): void {
+    this._playing = !this._playing;
+    if (this._playing && this._timerIntervalId === null) {
+      this._timerIntervalId = setInterval(this.tick.bind(this) , 1000);
+    } else {
+      clearInterval(this._timerIntervalId);
+      this._timerIntervalId = null;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this._timerIntervalId) {
+      clearInterval(this._timerIntervalId);
+      this._timerIntervalId = null;
+    }
   }
 
 }

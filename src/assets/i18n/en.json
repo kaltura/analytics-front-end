@@ -553,7 +553,8 @@
       "session": {
         "title": "Scheduled session",
         "viewers": "Live unique viewers",
-        "engagement": "Live engagement rate"
+        "engagement": "Live engagement rate",
+        "noRecording": "No recording"
       },
       "recordings": {
         "viewers": "Unique viewers",

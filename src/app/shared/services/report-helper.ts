@@ -56,7 +56,7 @@ export class ReportHelper {
     return this.numberOrZero(x, round);
   }
 
-  static time(x: any): string {
+  static time(x: any, showEmptyHours = false): string {
     if (!x.length) {
       return '00:00';
     }
@@ -65,7 +65,7 @@ export class ReportHelper {
     let minutesText = wholeMinutes < 10 ? '0' + wholeMinutes.toString() : wholeMinutes.toString();
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
-    let formattedTime = minutesText + ':' + secondsText;
+    let formattedTime = showEmptyHours ? '00:' + minutesText + ':' + secondsText : minutesText + ':' + secondsText;
     if (wholeMinutes > 60) {
       const wholeHours = Math.floor(wholeMinutes / 60);
       wholeMinutes = wholeMinutes % 60;

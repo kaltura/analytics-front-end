@@ -5,16 +5,28 @@
         <span class="kTitle">{{'app.entryEp.session.title' | translate}}</span>
       </div>
 
-      <div class="kChart">
-        <div aria-label="Timeline Chart" echarts class="kChart"
-             [options]="_chartOptions"
-             (click)="_onChartClick($event)"></div>
+      <div class="noRecording">
+        <span *ngIf="!_recordingAvailable">{{'app.entryEp.session.noRecording' | translate}}</span>
+        <div class="controlbar">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="togglePlay()">
+            <g opacity="0.8">
+              <path *ngIf="!_playing" fill-rule="evenodd" clip-rule="evenodd" d="M24.9056 14.7197C25.8627 15.3046 25.8627 16.6947 24.9056 17.2796L11.2822 25.605C10.2826 26.2158 9 25.4965 9 24.3251V7.67423C9 6.50283 10.2826 5.78348 11.2822 6.39431L24.9056 14.7197Z" fill="white"/>
+              <path *ngIf="_playing" fill-rule="evenodd" clip-rule="evenodd" d="M10 7C8.89543 7 8 7.89543 8 9V23C8 24.1046 8.89543 25 10 25C11.1046 25 12 24.1046 12 23V9C12 7.89543 11.1046 7 10 7ZM22 7C20.8954 7 20 7.89543 20 9V23C20 24.1046 20.8954 25 22 25C23.1046 25 24 24.1046 24 23V9C24 7.89543 23.1046 7 22 7Z" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="scrubber"></div>
+        <div class="fill" [ngStyle]="{'width': _currentPositionPercent + '%'}"></div>
+      </div>
 
-        <div
-          *ngIf="!_isBusy && !_chartOptions"
-          class="kNoResults">
+      <div class="kChart">
+        <div aria-label="Timeline Chart" echarts class="kChart" [options]="_chartOptions" (click)="_onChartClick($event)"></div>
+        <div *ngIf="!_isBusy && !_chartOptions" class="kNoResults">
           <span>{{'app.common.noResults' | translate}}</span>
         </div>
+        <div class="progressLine" *ngIf="_currentPositionPercent > 0" [ngStyle]="{'left': 'calc(' + _currentPositionPercent + '% - 2px)'}"></div>
+        <span class="currentPosition" *ngIf="_currentPositionPercent > 0"
+              [ngStyle]="_currentPositionPercent < 50 ? {'left': 'calc(' + _currentPositionPercent + '% + 8px)'} : {'left': 'calc(' + _currentPositionPercent + '% - 60px)'}">{{_currentPosition}}</span>
       </div>
 
       <div class="time">
