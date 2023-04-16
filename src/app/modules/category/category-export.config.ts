@@ -56,13 +56,13 @@ export class CategoryExportConfig extends ExportConfigService {
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
       },
-      {
+      ...viewConfig && viewConfig.performance.userFilter !== null ? [{
         id: 'performance',
         label: this._translate.instant('app.category.exportLabels.user'),
         reportType: reportTypeMap(KalturaReportType.userTopContent),
         sections: [KalturaReportExportItemType.table],
         order: '-count_loads',
-      },
+      }] : [],
       {
         id: 'performance',
         label: this._translate.instant('app.category.exportLabels.media'),
