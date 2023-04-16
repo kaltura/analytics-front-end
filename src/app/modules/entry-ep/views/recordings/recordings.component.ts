@@ -36,8 +36,6 @@ export class EpRecordingsComponent implements OnInit {
   private _reportType = KalturaReportType.userTopContent;
   private _dataConfig: ReportDataConfig;
 
-  protected _componentId = 'ep-recordings';
-
   public _tableModes = TableModes;
   public _tableMode = TableModes.users;
   public _columns: string[] = [];

@@ -550,6 +550,11 @@
         "engagementRate": "{{0}}% Live avg. engagement rate",
         "reactions": "{{0}}% Sent live reactions"
       },
+      "session": {
+        "title": "Scheduled session",
+        "viewers": "Live unique viewers",
+        "engagement": "Live engagement rate"
+      },
       "recordings": {
         "viewers": "Unique viewers",
         "entries": "Associated Recordings",

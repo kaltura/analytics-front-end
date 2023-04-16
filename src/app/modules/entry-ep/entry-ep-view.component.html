@@ -31,8 +31,12 @@
           </div>
         </div>
 
-        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings">
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">
           <app-ep-recordings [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-recordings>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.session" [class.exporting]="_exporting" class="kReportContainer">
+          <app-ep-session [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-session>
         </div>
 
       </div>

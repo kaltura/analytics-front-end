@@ -61,10 +61,18 @@ export class ReportHelper {
       return '00:00';
     }
     const numValue = Math.abs(parseFloat(x));
-    const wholeMinutes = Math.floor(numValue / 60000);
+    let wholeMinutes = Math.floor(numValue / 60000);
+    let minutesText = wholeMinutes < 10 ? '0' + wholeMinutes.toString() : wholeMinutes.toString();
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
-    let formattedTime = wholeMinutes.toString() + ':' + secondsText;
+    let formattedTime = minutesText + ':' + secondsText;
+    if (wholeMinutes > 60) {
+      const wholeHours = Math.floor(wholeMinutes / 60);
+      wholeMinutes = wholeMinutes % 60;
+      minutesText = wholeMinutes < 10 ? '0' + wholeMinutes.toString() : wholeMinutes.toString();
+      const hoursText = wholeHours < 10 ? '0' + wholeHours.toString() : wholeHours.toString();
+      formattedTime = hoursText + ':' + minutesText + ':' + secondsText;
+    }
 
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;

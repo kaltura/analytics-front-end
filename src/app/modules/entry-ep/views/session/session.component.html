@@ -1,0 +1,38 @@
+<div data-aid="report-engagement-highlights" class="kReport kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReport kContent kOverrideFAIcons">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.entryEp.session.title' | translate}}</span>
+      </div>
+
+      <div class="kChart">
+        <div aria-label="Timeline Chart" echarts class="kChart"
+             [options]="_chartOptions"
+             (click)="_onChartClick($event)"></div>
+
+        <div
+          *ngIf="!_isBusy && !_chartOptions"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="time">
+        <span>00:00:00</span>
+        <span class="duration">{{_durationLabel}}</span>
+      </div>
+
+      <div class="legend">
+        <div class="mark viewers"></div>
+        <span>{{'app.entryEp.session.viewers' | translate}}</span>
+        <div class="mark engagement"></div>
+        <span>{{'app.entryEp.session.engagement' | translate}}</span>
+      </div>
+
+      <div class="kTable">
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>
+

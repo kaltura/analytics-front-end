@@ -23,6 +23,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 import { UsersTableComponent } from "./views/recordings/users-table/users-table.component";
 import { EntriesTableComponent } from "./views/recordings/entries-table/entries-table.component";
 import { EpMiniEngagementComponent } from "./views/mini-engagement/mini-engagement.component";
+import { EpSessionComponent } from "./views/session/session.component";
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { EpMiniEngagementComponent } from "./views/mini-engagement/mini-engageme
     EpRecordingsComponent,
     UsersTableComponent,
     EntriesTableComponent,
-    EpMiniEngagementComponent
+    EpMiniEngagementComponent,
+    EpSessionComponent
   ],
   exports: [],
   providers: []
