@@ -54,6 +54,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public _liveEntryIds = '';
   public _vodEntryIds = '';
+  public _recordingEntryId = '';
   public _allEntryIds = '';
 
   constructor(private _router: Router,
@@ -145,6 +146,8 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           } else {
             this._loadingEntry = false;
           }
+          // we will use the webcast recording if available for the recording preview. If not available - use the room recording instead;
+          this._recordingEntryId = this._vodEntryIds.split(analyticsConfig.valueSeparator)[0];
         },
         error => {
           this._loadingEntry = false;

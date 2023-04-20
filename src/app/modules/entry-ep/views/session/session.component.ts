@@ -1,9 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
+import {
+  BaseEntryGetAction, KalturaClient,
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager, KalturaMediaEntry,
+  KalturaReportInterval,
+  KalturaReportType
+} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionConfig } from './session.config';
@@ -12,6 +17,7 @@ import { analyticsConfig } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
+import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'app-ep-session',
@@ -24,6 +30,7 @@ import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
   ],
 })
 export class EpSessionComponent implements OnInit, OnDestroy {
+  @Input() recordingEntryId = '';
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
@@ -43,7 +50,12 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _durationLabel = '';
+
   public _recordingAvailable = false;
+  public _recordingPlaying = false;
+  public _recordingStartPercent = 0;
+  public _recordingEndPercent = 0;
+
   public _pager = new KalturaFilterPager({ pageSize: analyticsConfig.defaultPageSize, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
@@ -54,6 +66,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: SessionConfig,
+              private _kalturaClient: KalturaClient,
               private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -73,12 +86,13 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._filter.fromDate = DateFilterUtils.toServerDate(this.startDate, true);
     this._filter.toDate = DateFilterUtils.toServerDate(this.endDate, false);
     this._filter.interval = KalturaReportInterval.days;
+
+
+    const recording = this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId })).pipe(cancelOnDestroy(this));
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
-    this._reportService.getReport(reportConfig, sections, false)
-      .pipe(switchMap(report => {
-        return ObservableOf({ report, compare: null });
-      }))
-      .subscribe(({ report, compare }) => {
+    const report = this._reportService.getReport(reportConfig, sections, false);
+    forkJoin({recording, report})
+      .subscribe(({ recording, report }) => {
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
             const yAxisData1 = this._getAxisData(tableData, 'combined_live_view_period_count');
@@ -87,6 +101,14 @@ export class EpSessionComponent implements OnInit, OnDestroy {
           } else {
             const emptyLine = Array.from({ length: 100 }, () => 0);
             this._chartOptions = this._getGraphData(emptyLine, emptyLine);
+          }
+          if (recording) {
+            const recordingStart = recording.createdAt;
+            const recordingEnd = recordingStart + (recording as KalturaMediaEntry).duration;
+            const sessionStart = this.startDate.getTime() / 1000;
+            const sessionEnd = this.endDate.getTime() / 1000;
+            this._recordingStartPercent = (recordingStart - sessionStart) / (sessionEnd - sessionStart) * 100;
+            this._recordingEndPercent = (recordingEnd - sessionStart) / (sessionEnd - sessionStart) * 100;
           }
           this._isBusy = false;
         },
@@ -249,6 +271,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   private tick(): void {
     this._currentPositionPercent += this._tickPercentIncrease;
     this._currentPosition = ReportHelper.time((this._duration * this._currentPositionPercent / 100).toString(), true);
+    this._recordingAvailable = this._currentPositionPercent >= this._recordingStartPercent && this._currentPositionPercent <= this._recordingEndPercent;
   }
 
   public togglePlay(): void {
