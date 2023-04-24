@@ -7,13 +7,13 @@ import {
   KalturaReportType
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService} from 'shared/services';
 import { forkJoin } from 'rxjs';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionConfig } from './session.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { analyticsConfig } from 'configuration/analytics-config';
+import {analyticsConfig, getKalturaServerUri} from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
@@ -51,6 +51,11 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _durationLabel = '';
 
+  // player and recording
+  private _playerInstance: any = null;
+  public serverUri = getKalturaServerUri();
+  public _playerConfig: any = {};
+  private _recordingDuration = 0;
   public _recordingAvailable = false;
   public _recordingPlaying = false;
   public _recordingStartPercent = 0;
@@ -67,6 +72,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: SessionConfig,
               private _kalturaClient: KalturaClient,
+              private _authService: AuthService,
               private _logger: KalturaLogger) {
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -75,6 +81,14 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._duration = this.endDate.getTime() - this.startDate.getTime();
     this._durationLabel = ReportHelper.time(this._duration.toString());
     this._tickPercentIncrease = 100000 / this._duration;
+
+    // init player
+    this._playerConfig = {
+      uiconfid: analyticsConfig.kalturaServer.previewUIConfV7,
+      pid: this._authService.pid,
+      ks: this._authService.ks
+    };
+
     this._loadReport();
   }
 
@@ -103,8 +117,9 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             this._chartOptions = this._getGraphData(emptyLine, emptyLine);
           }
           if (recording) {
+            this._recordingDuration = (recording as KalturaMediaEntry).duration;
             const recordingStart = recording.createdAt;
-            const recordingEnd = recordingStart + (recording as KalturaMediaEntry).duration;
+            const recordingEnd = recordingStart + this._recordingDuration;
             const sessionStart = this.startDate.getTime() / 1000;
             const sessionEnd = this.endDate.getTime() / 1000;
             this._recordingStartPercent = (recordingStart - sessionStart) / (sessionEnd - sessionStart) * 100;
@@ -265,13 +280,33 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   public _onChartClick(event): void {
     this._currentPositionPercent = event.offsetX / event.currentTarget.clientWidth * 100;
     this._currentPosition = ReportHelper.time((this._duration * event.offsetX / event.currentTarget.clientWidth).toString(), true);
-    // this._seekTo(percent, true);
+    this.updateRecording();
+    // calculate the recording position and seek to it
+    if (this._recordingAvailable) {
+      const recordingPositionPercent = (this._currentPositionPercent - this._recordingStartPercent) / (this._recordingEndPercent - this._recordingStartPercent) * 100;
+      if (recordingPositionPercent >= 0 && recordingPositionPercent <= 100) {
+        this._seekTo(recordingPositionPercent);
+      }
+    }
+  }
+
+  private updateRecording(): void {
+    this._currentPosition = ReportHelper.time((this._duration * this._currentPositionPercent / 100).toString(), true);
+    this._recordingAvailable = this._currentPositionPercent >= this._recordingStartPercent && this._currentPositionPercent <= this._recordingEndPercent;
+    if (this._recordingAvailable && !this._recordingPlaying && this._playerInstance && this._playing) {
+      this._playerInstance.play();
+      this._recordingPlaying = true;
+    }
+    if (!this._recordingAvailable && this._playerInstance) {
+      this._playerInstance.pause();
+      this._seekTo(0);
+      this._recordingPlaying = false;
+    }
   }
 
   private tick(): void {
     this._currentPositionPercent += this._tickPercentIncrease;
-    this._currentPosition = ReportHelper.time((this._duration * this._currentPositionPercent / 100).toString(), true);
-    this._recordingAvailable = this._currentPositionPercent >= this._recordingStartPercent && this._currentPositionPercent <= this._recordingEndPercent;
+    this.updateRecording();
   }
 
   public togglePlay(): void {
@@ -282,6 +317,24 @@ export class EpSessionComponent implements OnInit, OnDestroy {
       clearInterval(this._timerIntervalId);
       this._timerIntervalId = null;
     }
+    if (this._recordingAvailable) {
+      if (this._playing) {
+        this._playerInstance.play();
+        this._recordingPlaying = true;
+      } else {
+        this._playerInstance.pause();
+        this._recordingPlaying = false;
+      }
+    }
+  }
+
+  public _onPlayerReady(player): void {
+    this._playerInstance = player;
+  }
+
+  private _seekTo(percent: number): void {
+    this._playerInstance.currentTime = this._recordingDuration * percent / 100;
+    this._playerInstance.play();
   }
 
   ngOnDestroy(): void {

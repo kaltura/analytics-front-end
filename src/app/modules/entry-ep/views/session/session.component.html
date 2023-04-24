@@ -6,7 +6,11 @@
       </div>
 
       <div class="noRecording">
-        <span *ngIf="!_recordingAvailable">{{'app.entryEp.session.noRecording' | translate}}</span>
+
+        <app-k-player-v7 [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [preload]="true" [fillWidth]="true" [fillHeight]="true"
+                         [uiconfid]="_playerConfig.uiconfid" [entryid]="recordingEntryId" [ks]="_playerConfig.ks"
+                         (kalturaPlayerReady)="_onPlayerReady($event)" [ngStyle]="{'opacity': _recordingAvailable ? 1 : 0}"></app-k-player-v7>
+        <span class="noRecordingLabel" *ngIf="!_recordingAvailable">{{'app.entryEp.session.noRecording' | translate}}</span>
         <div class="controlbar">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="togglePlay()">
             <g opacity="0.8">
@@ -15,7 +19,7 @@
             </g>
           </svg>
         </div>
-        <div class="scrubber"></div>
+        <div class="scrubber" (click)="_onChartClick($event)"></div>
         <div class="fill" [ngStyle]="{'width': _currentPositionPercent + '%'}"></div>
       </div>
 

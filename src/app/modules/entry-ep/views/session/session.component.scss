@@ -1,4 +1,25 @@
 @import '../../../../../styles/variables';
+:host ::ng-deep .kPlayer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  .playkit-control-play-pause, .playkit-pre-playback-play-overlay, .playkit-poster, .playkit-overlay-action  {
+    display: none !important;
+  }
+  .playkit-bottom-bar {
+    .playkit-bottom-bar-area, .playkit-left-controls {
+      display: none !important;
+    }
+    .playkit-right-controls {
+      .playkit-control-settings, .playkit-control-picture-in-picture, .playkit-control-fullscreen {
+        display: none !important;
+      }
+      .playkit-volume-control {
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
 :host .kReport {
   margin-bottom: 0px;
   .kChart {
@@ -84,11 +105,15 @@
   color: white;
   font-weight: 700;
   font-size: 16px;
+  .noRecordingLabel {
+    position: absolute;
+  }
   svg {
     cursor: pointer;
     left: 16px;
     bottom: 4px;
     position: absolute;
+    z-index: 1;
   }
   .controlbar {
     box-sizing: border-box;
@@ -100,6 +125,8 @@
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
   }
   .scrubber {
+    z-index: 1;
+    cursor: pointer;
     position: absolute;
     bottom: 0px;
     width: 100%;

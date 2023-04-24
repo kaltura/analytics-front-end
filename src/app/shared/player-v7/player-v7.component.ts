@@ -41,6 +41,9 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	muted = false;
 
 	@Input()
+	preload = false;
+
+	@Input()
 	id = "";
 
   @Input()
@@ -109,6 +112,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
         playback: {
           autoplay: this.autoPlay,
           muted: this.muted,
+          preload: this.preload
         }
       };
       if (this.loadThumbnailWithKs && this.poster.length) {
