@@ -356,7 +356,6 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
   }
 
   public _onSortChanged(event: SortEvent): void {
-    this._pager.pageIndex = 1;
 
     if (this._tableMode === TableModes.dates) {
       this._order = tableLocalSortHandler(event, this._order, this._isCompareMode);
@@ -372,6 +371,7 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
         const order = event.order === 1 ? '+' + event.field : '-' + event.field;
         if (order !== this._order) {
           this._order = order;
+          this._pager.pageIndex = 1;
           this._loadReport({ table: this._dataConfig.table });
         }
       });
@@ -439,7 +439,7 @@ export class PathPerformanceComponent extends PlaylistBase implements OnDestroy 
   public _onTableModeChange(mode: TableModes): void {
     this._tableMode = mode;
     this._customPaginator = this._ignoreFirstSortEvent = this._tableMode === TableModes.users;
-    this._order = this._tableMode === TableModes.users ? '-name' : '-date_id';
+    this._order = this._tableMode === TableModes.users ? '-count_loads' : '-date_id';
     this._updateTableData();
     this.updateLayout();
   }
