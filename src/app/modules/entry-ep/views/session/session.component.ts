@@ -1,19 +1,13 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {
-  BaseEntryGetAction, KalturaClient,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager, KalturaMediaEntry,
-  KalturaReportInterval,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { BaseEntryGetAction, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMediaEntry, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { forkJoin } from 'rxjs';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionConfig } from './session.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import {analyticsConfig, getKalturaServerUri} from 'configuration/analytics-config';
+import { analyticsConfig, getKalturaServerUri } from 'configuration/analytics-config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
@@ -334,7 +328,6 @@ export class EpSessionComponent implements OnInit, OnDestroy {
 
   private _seekTo(percent: number): void {
     this._playerInstance.currentTime = this._recordingDuration * percent / 100;
-    this._playerInstance.play();
   }
 
   ngOnDestroy(): void {
