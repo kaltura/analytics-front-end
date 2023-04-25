@@ -24,7 +24,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'sum_vod_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             units: value => 'min',
@@ -40,7 +40,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.table]: {
         fields: {
-          'object_id': {
+          'entry_id': {
             format: value => value,
             nonComparable: true,
             sortOrder: 0,
@@ -58,7 +58,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'sum_vod_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },

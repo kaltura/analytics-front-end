@@ -20,14 +20,14 @@
           <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer">
             <app-ep-mini-minutes-viewed [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
           </div>
-          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer">
-            <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
-          </div>
         </div>
 
         <div class="kReportContainer" *ngIf="!_loadingEntry">
           <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer">
             <app-ep-mini-engagement [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
+          </div>
+          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer">
+            <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
           </div>
         </div>
 

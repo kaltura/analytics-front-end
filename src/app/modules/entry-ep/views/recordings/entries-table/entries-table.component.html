@@ -8,9 +8,9 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr [ngStyle]="{'borderBottom': '1px solid #cccccc'}">
-        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' ? null : col" [class.nonSortable]="col === 'full_name'" [ngStyle]="{'width': col === 'object_id' ? '100px': 'auto'}">
-          {{col !== 'object_id' ? ('app.entry.' + col | translate) : ''}}
-          <p-sortIcon [field]="col" *ngIf="col !== 'full_name' && col !== 'object_id'"></p-sortIcon>
+        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' || col === 'entry_id' ? null : col" [class.nonSortable]="col === 'full_name'" [ngStyle]="{'width': col === 'entry_id' ? '100px': 'auto'}">
+          {{col !== 'entry_id' ? ('app.entry.' + col | translate) : ''}}
+          <p-sortIcon [field]="col" *ngIf="col !== 'full_name' && col !== 'entry_id'"></p-sortIcon>
         </th>
       </tr>
       <tr *ngIf="_tableData?.length" class="kSummaryRow" [ngStyle]="{'height': '48px'}">
@@ -25,7 +25,7 @@
           <span>{{_summaryData['count_plays']}}</span>
         </th>
         <th>
-          <span>{{_summaryData['sum_time_viewed']}}</span>
+          <span>{{_summaryData['sum_vod_view_period']}}</span>
         </th>
         <th [ngStyle]="{'paddingRight':'28px', 'fontWeight': 'normal'}">
           <app-bullet [hideBulletOnTablet]="true" [value]="_summaryData['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
@@ -47,7 +47,7 @@
           <span >{{data['count_plays']}}</span>
         </td>
         <td>
-          <span >{{data['sum_time_viewed']}}</span>
+          <span >{{data['sum_vod_view_period']}}</span>
         </td>
         <td>
           <app-bullet [hideBulletOnTablet]="true" [ngStyle]="{'padding-right': '24px'}" [value]="data['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>

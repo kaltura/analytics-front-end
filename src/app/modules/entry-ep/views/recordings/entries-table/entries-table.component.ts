@@ -43,7 +43,7 @@ export class EntriesTableComponent implements OnInit {
 
   @Output() totalChanged = new EventEmitter<number>();
 
-  private _reportType = reportTypeMap(KalturaReportType.topContent);
+  private _reportType = reportTypeMap(KalturaReportType.epWebcastTopRecording);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   private _filter = new KalturaEndUserReportInputFilter({
@@ -119,7 +119,7 @@ export class EntriesTableComponent implements OnInit {
   }
 
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['entry_id']}/width/256/height/144`;
     return item;
   }
 
