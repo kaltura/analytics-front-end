@@ -187,8 +187,8 @@ export class UserTotalsComponent extends UserBase {
     const getAction = filter => new LikeListAction({
       filter: new KalturaLikeFilter({
         userIdEqual: this.userId,
-        createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
-        createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
+        createdAtGreaterThanOrEqual: filter.fromDate,
+        createdAtLessThanOrEqual: filter.toDate,
       }),
       pager: new KalturaFilterPager({ pageSize: 1 }),
     });

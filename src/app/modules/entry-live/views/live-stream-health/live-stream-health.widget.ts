@@ -16,14 +16,14 @@ import { FrameEventManagerService } from 'shared/modules/frame-event-manager/fra
 export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo> {
   protected _widgetId = 'stream-health';
   protected _pollsFactory = null;
-  
+
   constructor(protected _serverPolls: EntryLiveGeneralPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _logger: KalturaLogger,
               private _codeToSeverityPipe: CodeToSeverityPipe) {
     super(_serverPolls, _frameEventManager);
     this._logger = _logger.subLogger('LiveStreamHealthWidget');
-    
+
     this._data.next({
       staticInfoPrimary: { updatedTime: 0 },
       staticInfoSecondary: { updatedTime: 0 },
@@ -33,23 +33,23 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
       selfServe: { updatedTime: 0, data: false }
     });
   }
-  
+
   protected _onRestart(): void {
     this._pollsFactory = new LiveStreamHealthRequestFactory(this._activationArgs.entryId);
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs): Observable<void> {
     this._pollsFactory = new LiveStreamHealthRequestFactory(widgetsArgs.entryId);
-    
+
     return ObservableOf(null);
   }
-  
+
   protected _responseMapping(responses: KalturaBeaconListResponse): LiveEntryDiagnosticsInfo {
     this._pollsFactory.removePager();
 
     const beaconsArray: KalturaBeacon[] = responses.objects;
     let entryDiagnosticsObject = this._currentData;
-  
+
     this._pollsFactory.lastUpdateTime = entryDiagnosticsObject.streamHealth.updatedTime;
 
     if (beaconsArray.length) {
@@ -65,7 +65,7 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
         let eventType = b.eventType;
         let isPrimary = (b.eventType[0] === '0');
         let beaconUpdateTime = b.updatedAt.valueOf();
-        
+
         let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
         if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
           if (eventType.indexOf('healthData') > -1) {
@@ -84,10 +84,10 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
         this._logger.error('Error parsing beacon', error);
       }
     });
-    
+
     return entryDiagnosticsObject;
   }
-  
+
   private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, eventType: string, isPrimary: boolean): { updatedFormattedTime?: string, updatedTime?: number, data?: any } {
 
     if (eventType.indexOf('staticData') > -1) {
@@ -103,11 +103,11 @@ export class LiveStreamHealthWidget extends WidgetBase<LiveEntryDiagnosticsInfo>
       return null;
     }
   }
-  
+
   private _handleHealthBeacon(beaconTime: number, isPrimary: boolean, metaData: any, diagnosticsObject: { updatedTime?: number, data?: DiagnosticsHealthInfo }): void {
     let report = {
       updatedTime: beaconTime,
-      updatedFormattedTime: moment(beaconTime).format(analyticsConfig.dateFormat === 'month-day-year' ? 'HH:mm MM/DD/YYYY' : 'HH:mm DD/MM/YYYY'),
+      updatedFormattedTime: moment(beaconTime * 1000).format(analyticsConfig.dateFormat === 'month-day-year' ? 'HH:mm MM/DD/YYYY' : 'HH:mm DD/MM/YYYY'),
       severity: metaData.maxSeverity,
       isPrimary: isPrimary,
       alerts: Array.isArray(metaData.alerts)

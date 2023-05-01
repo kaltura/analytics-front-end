@@ -111,8 +111,8 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       tagsLike: 'qna',
       entryIdEqual: this.entryId,
       orderBy: '+createdAt',
-      createdAtGreaterThanOrEqual: new Date(this._dateFilter.startDate * 1000),
-      createdAtLessThanOrEqual: new Date(this._dateFilter.endDate * 1000),
+      createdAtGreaterThanOrEqual: this._dateFilter.startDate,
+      createdAtLessThanOrEqual: this._dateFilter.endDate,
       isPublicEqual: KalturaNullableBoolean.trueValue
     });
 
@@ -165,7 +165,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
             const xmlDoc = parser.parseFromString(xml,"text/xml");
             const type = xmlDoc.getElementsByTagName("Type")[0].childNodes[0].nodeValue;
             if (type === "Question") {
-              this._questions.push({ text: cuePoint.text, userId: cuePoint.userId, updated: cuePoint.createdAt });
+              this._questions.push({ text: cuePoint.text, userId: cuePoint.userId, updated: new Date(cuePoint.createdAt * 1000) });
             }
           }
         }
