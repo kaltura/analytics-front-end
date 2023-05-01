@@ -32,6 +32,7 @@ import { getPrimaryColor } from 'shared/utils/colors';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { BrowserService } from 'shared/services/browser.service';
+import { isEmptyObject } from "shared/utils/is-empty-object";
 
 export type ReportConfig = {
   reportType: KalturaReportType,
@@ -90,6 +91,13 @@ export class ReportService implements OnDestroy {
     sections = sections === null ? { table: { fields: {}} } : sections; // table is default section
     const logger = this._logger.subLogger(`Report #${config.reportType}`);
     logger.info('Request report from the server', { reportType: config.reportType, sections: Object.keys(sections) });
+
+    // check for predefined filters passed in application config and apply if exists
+    if (analyticsConfig.predefinedFilter !== null && !isEmptyObject(analyticsConfig.predefinedFilter)) {
+      Object.keys(analyticsConfig.predefinedFilter).forEach(key => {
+        config.filter[key] = analyticsConfig.predefinedFilter[key]; // override filter value
+      })
+    }
 
     const responseOptions: KalturaReportResponseOptions = new KalturaReportResponseOptions({
       delimiter: analyticsConfig.valueSeparator,

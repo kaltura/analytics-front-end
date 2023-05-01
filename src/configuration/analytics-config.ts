@@ -61,6 +61,9 @@ export interface AnalyticsConfig {
   customData?: {
     [key: string]: any;
   };
+  predefinedFilter?: {
+    [key: string]: any;
+  };
   customStyle?: {
     baseClassName: string,
     css: any
@@ -126,6 +129,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.menuConfig = config.menuConfig;
   analyticsConfig.viewsConfig = config.viewsConfig || { ...viewsConfig };
   analyticsConfig.customData = config.customData || { };
+  analyticsConfig.predefinedFilter = config.predefinedFilter || { };
   analyticsConfig.multiAccount = config.multiAccount || false;
   analyticsConfig.previewPlayer = config.previewPlayer || { loadJquery: true };
   analyticsConfig.loadThumbnailWithKs = config.loadThumbnailWithKs || false;

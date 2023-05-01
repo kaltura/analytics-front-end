@@ -25,7 +25,8 @@ export const viewsConfig = {
       miniPeakDay: {},
       topVideos: {},
       highlights: {
-        userFilter: {}
+        userFilter: {},
+        userDrilldown: {},
       },
       impressions: {},
       syndication: {},

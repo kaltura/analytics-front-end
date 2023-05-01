@@ -62,12 +62,13 @@
               <app-user-engagement-filter *ngIf="!_isMultiAccount"
                                           [totalCount]="usersTableComponent.totalCount"
                                           [dateFilter]="_dateFilter"
-                                          [showUserFilter]="_viewConfig.userFilter"
+                                          [showUserFilter]="_viewConfig.userFilter !== null"
                                           (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
               <app-users-table #usersTableComponent
                                [filterChange]="_filterChange$"
                                [filter]="_filter"
+                               [allowUserDrilldown]="_viewConfig.userDrilldown !== null"
                                [compareFilter]="_compareFilter"
                                [isCompareMode]="_isCompareMode"
                                [reportInterval]="_reportInterval"
