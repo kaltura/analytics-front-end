@@ -2,15 +2,20 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {
+  AuthService,
+  BrowserService,
+  ErrorsManagerService,
+  ReportConfig,
+  ReportHelper,
+  ReportService
+} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { MiniMinutesViewedConfig } from './mini-minutes-viewed.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import {analyticsConfig} from "configuration/analytics-config";
-import * as moment from "moment";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
@@ -46,6 +51,7 @@ export class EpMiniMinutesViewedComponent implements OnInit {
 
   public _livePercent = 0;
   public _recordingPercent = 0;
+  public _avgMinutesViewed = '';
 
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
@@ -97,8 +103,17 @@ export class EpMiniMinutesViewedComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._livePercent = this._tabsData.length > 1 ? parseInt(this._tabsData[1].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
-    this._recordingPercent = this._tabsData.length > 2 ? parseInt(this._tabsData[2].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
+    if (this._tabsData.length > 1) {
+      this._avgMinutesViewed = ReportHelper.numberOrZero((parseFloat(this._tabsData[0].value) + parseFloat(this._tabsData[1].value)) / 2, false);
+    } else {
+      this._avgMinutesViewed = this._translate.instant('app.common.na');
+    }
+    if (this._tabsData.length > 1) {
+      this._livePercent = parseFloat(this._tabsData[0].value) > parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[0].value) / parseFloat(this._tabsData[1].value) * 100;
+      this._recordingPercent = parseFloat(this._tabsData[0].value) < parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[1].value) / parseFloat(this._tabsData[0].value) * 100;
+    }
+    console.log(this._livePercent);
+    console.log(this._recordingPercent);
   }
 
 }

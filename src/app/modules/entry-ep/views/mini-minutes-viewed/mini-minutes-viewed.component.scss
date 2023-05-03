@@ -59,6 +59,10 @@
       display: flex;
       align-items: center;
       width: 100%;
+      .bulletContainer {
+        width: calc(100% - 70px);
+        flex: 0 0 auto;
+      }
       .kBullet {
         height: 8px;
         border-radius: 4px;

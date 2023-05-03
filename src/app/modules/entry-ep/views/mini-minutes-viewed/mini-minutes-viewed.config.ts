@@ -13,20 +13,15 @@ export class MiniMinutesViewedConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'vod_live_view_time': {
-            format: value => ReportHelper.numberOrZero(value, false),
-            title: this._translate.instant(`app.entryEp.highlights.avgMinutes`),
-            sortOrder: 1,
-          },
-          'live_view_time': {
+          'combined_live_avg_play_time': {
             format: value => ReportHelper.numberOrZero(value, false),
             title: this._translate.instant(`app.entryEp.highlights.live`),
-            sortOrder: 2,
+            sortOrder: 1,
           },
-          'vod_view_time': {
+          'vod_avg_play_time': {
             format: value => ReportHelper.numberOrZero(value, false),
             title: this._translate.instant(`app.entryEp.highlights.recordings`),
-            sortOrder: 3,
+            sortOrder: 2,
           }
         }
       }
