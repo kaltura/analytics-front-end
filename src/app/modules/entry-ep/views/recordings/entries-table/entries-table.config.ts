@@ -24,17 +24,16 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
             sortOrder: 1,
           },
-          'sum_vod_view_period': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            units: value => 'min',
+            title: this._translate.instant(`app.engagement.highlightsReport.unique_known_users`),
             sortOrder: 2,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false),
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate_tt`),
-            sortOrder: 4,
+            sortOrder: 3,
           },
         }
       },
@@ -58,7 +57,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'sum_vod_view_period': {
+          'unique_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },

@@ -25,7 +25,7 @@
           <span>{{_summaryData['count_plays']}}</span>
         </th>
         <th>
-          <span>{{_summaryData['sum_vod_view_period']}}</span>
+          <span>{{_summaryData['unique_viewers']}}</span>
         </th>
         <th [ngStyle]="{'paddingRight':'28px', 'fontWeight': 'normal'}">
           <app-bullet [hideBulletOnTablet]="true" [value]="_summaryData['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
@@ -47,7 +47,7 @@
           <span >{{data['count_plays']}}</span>
         </td>
         <td>
-          <span >{{data['sum_vod_view_period']}}</span>
+          <span >{{data['unique_viewers']}}</span>
         </td>
         <td>
           <app-bullet [hideBulletOnTablet]="true" [ngStyle]="{'padding-right': '24px'}" [value]="data['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
