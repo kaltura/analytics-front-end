@@ -31,6 +31,7 @@
         <div class="progressLine" *ngIf="_currentPositionPercent > 0" [ngStyle]="{'left': 'calc(' + _currentPositionPercent + '% - 2px)'}"></div>
         <span class="currentPosition" *ngIf="_currentPositionPercent > 0"
               [ngStyle]="_currentPositionPercent < 50 ? {'left': 'calc(' + _currentPositionPercent + '% + 8px)'} : {'left': 'calc(' + _currentPositionPercent + '% - 60px)'}">{{_currentPosition}}</span>
+        <app-ep-reactions *ngIf="_reportData.length > 0" [reportData]="_reportData"></app-ep-reactions>
       </div>
 
       <div class="time">

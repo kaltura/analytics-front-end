@@ -44,6 +44,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   public _isBusy = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _durationLabel = '';
+  public _reportData: any[] = [];
 
   // player and recording
   private _playerInstance: any = null;
@@ -103,6 +104,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
       .subscribe(({ recording, report }) => {
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
+            this._reportData = tableData;
             const yAxisData1 = this._getAxisData(tableData, 'combined_live_view_period_count');
             const yAxisData2 = this._getAxisData(tableData, 'combined_live_engaged_users_ratio');
             this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);

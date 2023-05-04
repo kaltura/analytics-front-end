@@ -25,6 +25,26 @@ export class SessionConfig extends ReportDataBaseConfig {
           'combined_live_engaged_users_ratio': {
             format: value => value,
             sortOrder: 0,
+          },
+          'reaction_clap_clicked': {
+            format: value => value,
+            sortOrder: 0,
+          },
+          'reaction_heart_clicked': {
+            format: value => value,
+            sortOrder: 0,
+          },
+          'reaction_think_clicked': {
+            format: value => value,
+            sortOrder: 0,
+          },
+          'reaction_wow_clicked': {
+            format: value => value,
+            sortOrder: 0,
+          },
+          'reaction_smile_clicked': {
+            format: value => value,
+            sortOrder: 0,
           }
         }
       }

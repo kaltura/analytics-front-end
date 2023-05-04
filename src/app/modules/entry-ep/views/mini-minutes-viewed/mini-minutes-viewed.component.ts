@@ -112,8 +112,6 @@ export class EpMiniMinutesViewedComponent implements OnInit {
       this._livePercent = parseFloat(this._tabsData[0].value) > parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[0].value) / parseFloat(this._tabsData[1].value) * 100;
       this._recordingPercent = parseFloat(this._tabsData[0].value) < parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[1].value) / parseFloat(this._tabsData[0].value) * 100;
     }
-    console.log(this._livePercent);
-    console.log(this._recordingPercent);
   }
 
 }
