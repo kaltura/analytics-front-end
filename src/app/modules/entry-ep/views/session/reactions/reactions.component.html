@@ -1,5 +1,5 @@
 <div class="reactions">
   <div class="reaction" *ngFor="let reaction of _topReactions" [ngStyle]="{left: reaction.positionPercent}">
-    <span>{{reaction.totalClicks}}</span>
+    <app-ep-reaction-icon [reaction]="reaction"></app-ep-reaction-icon>
   </div>
 </div>

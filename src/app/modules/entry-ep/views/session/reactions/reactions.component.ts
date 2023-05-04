@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-ep-reactions',
@@ -14,13 +14,13 @@ export class ReactionsComponent implements OnInit{
   constructor() {}
 
   ngOnInit(): void {
-    this.reportData[2]['reaction_wow_clicked'] = '23';
-    this.reportData[0]['reaction_wow_clicked'] = '23';
+    this.reportData[2]['reaction_think_clicked'] = '23';
+    this.reportData[0]['reaction_smile_clicked'] = '23';
     this.reportData[11]['reaction_wow_clicked'] = '3';
     this.reportData[13]['reaction_think_clicked'] = '5';
     this.reportData[16]['reaction_clap_clicked'] = '13';
     this.reportData[19]['reaction_wow_clicked'] = '7';
-    this.reportData[22]['reaction_clap_clicked'] = '11';
+    this.reportData[22]['reaction_heart_clicked'] = '11';
     this.reportData[24]['reaction_smile_clicked'] = '7';
     this.createReactionsData();
     this.setTopReactions();
@@ -74,10 +74,12 @@ export class ReactionsComponent implements OnInit{
           topReaction = reaction;
         }
       })
+      // to define the absolute position we calculate the left positioning in percentage and reduce 20px which is half the reaction icon size in order to center it
+      const position = index * interval + interval / 2;
       this._reactions.push({
         totalClicks,
         topReaction,
-        positionPercent: (index * interval + interval / 2) + '%'
+        positionPercent: `calc(${position}% - 20px`
       });
     });
   }

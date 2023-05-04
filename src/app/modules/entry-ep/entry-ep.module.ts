@@ -25,6 +25,7 @@ import { EntriesTableComponent } from "./views/recordings/entries-table/entries-
 import { EpMiniEngagementComponent } from "./views/mini-engagement/mini-engagement.component";
 import { EpSessionComponent } from "./views/session/session.component";
 import { ReactionsComponent } from "./views/session/reactions/reactions.component";
+import { ReactionIconComponent } from "./views/session/reactions/reaction-icon.component";
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { ReactionsComponent } from "./views/session/reactions/reactions.componen
     EntriesTableComponent,
     EpMiniEngagementComponent,
     EpSessionComponent,
-    ReactionsComponent
+    ReactionsComponent,
+    ReactionIconComponent
   ],
   exports: [],
   providers: []
