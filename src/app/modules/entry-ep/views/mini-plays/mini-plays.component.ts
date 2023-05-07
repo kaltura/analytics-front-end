@@ -68,8 +68,8 @@ export class EpMiniPlaysComponent implements OnInit {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = DateFilterUtils.toServerDate(this.startDate, true);
-    this._filter.toDate = DateFilterUtils.toServerDate(this.endDate, false);
+    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     this._reportService.getReport(reportConfig, sections, false)

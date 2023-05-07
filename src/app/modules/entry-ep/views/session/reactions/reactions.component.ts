@@ -14,14 +14,6 @@ export class ReactionsComponent implements OnInit{
   constructor() {}
 
   ngOnInit(): void {
-    this.reportData[2]['reaction_think_clicked'] = '23';
-    this.reportData[0]['reaction_smile_clicked'] = '23';
-    this.reportData[11]['reaction_wow_clicked'] = '3';
-    this.reportData[13]['reaction_think_clicked'] = '5';
-    this.reportData[16]['reaction_clap_clicked'] = '13';
-    this.reportData[19]['reaction_wow_clicked'] = '7';
-    this.reportData[22]['reaction_heart_clicked'] = '11';
-    this.reportData[24]['reaction_smile_clicked'] = '7';
     this.createReactionsData();
     this.setTopReactions();
   }
