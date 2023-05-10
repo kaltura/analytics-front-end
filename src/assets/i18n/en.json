@@ -561,6 +561,12 @@
         "entries": "Associated Recordings",
         "numViewers": "{{0}} Unique viewers",
         "numEntries": "{{0}} Associated recordings"
+      },
+      "devices": {
+        "device": "Name",
+        "unique_combined_live_viewers": "Live unique viewers",
+        "unique_vod_viewers": "Recording unique viewers",
+        "all": "All devices"
       }
     },
     "entryWebcast": {

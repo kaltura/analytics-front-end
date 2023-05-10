@@ -26,6 +26,7 @@ import { EpMiniEngagementComponent } from "./views/mini-engagement/mini-engageme
 import { EpSessionComponent } from "./views/session/session.component";
 import { ReactionsComponent } from "./views/session/reactions/reactions.component";
 import { ReactionIconComponent } from "./views/session/reactions/reaction-icon.component";
+import { EpDevicesComponent } from "./views/devices/devices.component";
 
 @NgModule({
   imports: [
@@ -59,7 +60,8 @@ import { ReactionIconComponent } from "./views/session/reactions/reaction-icon.c
     EpMiniEngagementComponent,
     EpSessionComponent,
     ReactionsComponent,
-    ReactionIconComponent
+    ReactionIconComponent,
+    EpDevicesComponent
   ],
   exports: [],
   providers: []

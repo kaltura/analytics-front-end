@@ -15,6 +15,7 @@ export class BulletComponent {
   @Input() animate = true;
   @Input() colorPercent = 65;
   @Input() hideBulletOnTablet = false;
+  @Input() showValue = true;
 
   @Input() set value(value: any) {
     if (this.animate) {

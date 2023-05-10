@@ -262,7 +262,8 @@ export const viewsConfig = {
     miniEngagement: {},
     miniPlays: {},
     recordings: {},
-    session: {}
+    session: {},
+    devices: {}
   },
   playlist: {
     title: {},
