@@ -263,6 +263,7 @@ export const viewsConfig = {
     miniPlays: {},
     recordings: {},
     session: {},
+    geo: {},
     devices: {}
   },
   playlist: {

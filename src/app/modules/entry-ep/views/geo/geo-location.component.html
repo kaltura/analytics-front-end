@@ -1,0 +1,159 @@
+<div data-aid="report-geo" class="kReport kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span *ngIf="!_drillDown.length" class="kTitle">
+      {{('app.audience.geo.tableMode.' + _currentTableLevel) | translate}}
+    </span>
+    <div class="kBreadcrumbs" *ngIf="_drillDown.length">
+      <a (click)="_onDrillDown('')">
+        {{('app.audience.geo.tableMode.' + _tableMode) | translate}}
+      </a>
+      <span class="separator">/</span>
+      <span *ngIf="_drillDown.length === 1">{{_drillDown[0]}}</span>
+      <a *ngIf="_drillDown.length === 2" (click)="_onDrillDown(_drillDown[0], true)">{{_drillDown[0]}}</a>
+      <span *ngIf="_drillDown.length === 2" class="separator">/</span>
+      <span *ngIf="_drillDown.length === 2">{{_drillDown[1]}}</span>
+    </div>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kMap">
+        <div *ngIf="_mapDataReady" echarts class="kChart"
+             [options]="_mapChartData[_selectedMetrics]"
+             (chartClick)="_onChartClick($event)"
+             (chartInit)="_onChartInit($event)"></div>
+        <div class="kZoomWidget" *ngIf="!exporting">
+          <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
+          <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
+        </div>
+      </div>
+      <div class="kTable">
+        <div class="kTableContainer">
+          <div class="kTableModeSelector">
+            <p-dropdown [style]="{'width': '172px'}"
+                        [options]="_tableModeOptions"
+                        (onChange)="_onTableModeChange($event.value)"
+                        [(ngModel)]="_tableMode">
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="kOptionsLabelWrapper">
+                  <i class="kIcon" [ngClass]="option.value | tableModeIcon"></i>
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                <div class="kOptionsLabelWrapper">
+                  <span>{{option.label}}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <span *ngIf="_totalCount && !exporting" class="kEntitiesCount">
+              {{('app.audience.geo.' + _currentTableLevel) | translate: { '0': _totalCount } }}
+            </span>
+          </div>
+          <p-table #table [class.hidePaginator]="exporting"
+                   appScrollTopOnPaging
+                   sortField="count_plays"
+                   [value]="_tableData"
+                   [customSort]="true"
+                   [defaultSortOrder]="-1"
+                   [sortOrder]="-1"
+                   [paginator]="true"
+                   [rows]="exporting ? 5 : 10"
+                   (sortFunction)="_onSortChanged($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th [ngStyle]="{'width': '50px'}">
+                  <span *ngIf="_tableData?.length">{{'app.audience.geo.index' | translate}}</span>
+                </th>
+                <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
+                <th>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
+                      {{'app.audience.geo.object_id' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.entryEp.devices.unique_combined_live_viewers' | translate" [showOnEllipsis]="true">
+                      {{'app.entryEp.devices.unique_combined_live_viewers' | translate}}
+                    </span>
+                  </div>
+                </th>
+                <th>
+                  <div class="kColumnHeader">
+                    <span [kTooltip]="'app.entryEp.devices.unique_vod_viewers' | translate" [showOnEllipsis]="true">
+                      {{'app.entryEp.devices.unique_vod_viewers' | translate}}
+                    </span>
+                  </div>
+                </th>
+              </tr>
+
+              <tr *ngIf="_tableData?.length && !exporting" class="kSummaryRow">
+                <th [ngStyle]="{'width': '50px'}"></th>
+                <th *ngIf="_currentTableLevel === _tableModes.countries" [ngStyle]="{'width': '42px'}"></th>
+                <th>
+                  <span *ngIf="_currentTableLevel === _tableModes.countries">{{'app.entryWebcast.geo.worldwide' | translate}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.regions">{{'app.entryWebcast.geo.regions' | translate}}</span>
+                  <span *ngIf="_currentTableLevel === _tableModes.cities">{{'app.entryWebcast.geo.cities' | translate}}</span>
+                </th>
+                <th>
+                  <div class="tableCell">
+                    <span>{{_tabsData[0].value}}</span>
+                    <div class="bulletContainer">
+                      <app-bullet [value]="100" [showValue]="false"></app-bullet>
+                    </div>
+                  </div>
+                </th>
+                <th>
+                  <span>{{_tabsData[1].value}}</span>
+                </th>
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+              <tr>
+                <td>
+                  <span>{{rowIndex + 1}}</span>
+                </td>
+                <td class="kFlagColumn" *ngIf="_currentTableLevel === _tableModes.countries">
+                  <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
+                </td>
+                <td class="kHighlight">
+                  <a *ngIf="_currentTableLevel === _tableModes.countries" [class.exporting]="exporting"
+                     (click)="_onDrillDown(data['country'])">{{data['country']}}</a>
+                  <a *ngIf="_currentTableLevel === _tableModes.regions" [class.exporting]="exporting"
+                     (click)="_onDrillDown(data['region'])">{{data['region']}}</a>
+                  <span *ngIf="_currentTableLevel === _tableModes.cities">{{data['city']}}</span>
+                </td>
+                <td>
+                  <div class="tableCell">
+                    <span>{{data['unique_combined_live_viewers']}}</span>
+                    <div class="bulletContainer">
+                      <app-bullet [value]="data['live_viewer_distribution']" [showValue]="false"></app-bullet>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span>{{data['unique_vod_viewers']}}</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <div class="emptymessage">
+                <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+                <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+
+</div>
+
