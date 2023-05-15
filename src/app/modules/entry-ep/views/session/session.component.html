@@ -64,7 +64,7 @@
 
       <ng-container *ngIf="_currentTab === _reportTabs.viewer">
         <div class="kReportContainer">
-          Viewer
+          <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn"></app-ep-viewer-engagement>
         </div>
       </ng-container>
 

@@ -556,7 +556,12 @@
         "engagement": "Live engagement rate",
         "noRecording": "No recording",
         "viewer": "Viewer engagement",
-        "stage": "Stage participation"
+        "stage": "Stage participation",
+        "user_name": "Name",
+        "live_view_time": "Minutes viewed",
+        "count_reaction_clicked": "Reactions",
+        "count_raise_hand_clicked": "Raised hands",
+        "combined_live_engaged_users_play_time_ratio": "Live engagement rate"
       },
       "recordings": {
         "viewers": "Unique viewers",
