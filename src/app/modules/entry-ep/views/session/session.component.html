@@ -49,6 +49,31 @@
       <div class="kTable">
       </div>
 
+      <div class="kReportTabs">
+        <a class="kReportTabsItem"
+           [class.kTabActive]="_currentTab === _reportTabs.viewer"
+           (click)="_selectTab(_reportTabs.viewer)">
+          <span>{{'app.entryEp.session.viewer' | translate}}</span>
+        </a>
+        <a class="kReportTabsItem"
+           [class.kTabActive]="_currentTab === _reportTabs.stage"
+           (click)="_selectTab(_reportTabs.stage)">
+          <span>{{'app.entryEp.session.stage' | translate}}</span>
+        </a>
+      </div>
+
+      <ng-container *ngIf="_currentTab === _reportTabs.viewer">
+        <div class="kReportContainer">
+          Viewer
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="_currentTab === _reportTabs.stage">
+        <div class="kReportContainer">
+          Stage
+        </div>
+      </ng-container>
+
     </div>
   </k-area-blocker>
 </div>

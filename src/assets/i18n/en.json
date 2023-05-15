@@ -554,7 +554,9 @@
         "title": "Scheduled session",
         "viewers": "Live unique viewers",
         "engagement": "Live engagement rate",
-        "noRecording": "No recording"
+        "noRecording": "No recording",
+        "viewer": "Viewer engagement",
+        "stage": "Stage participation"
       },
       "recordings": {
         "viewers": "Unique viewers",

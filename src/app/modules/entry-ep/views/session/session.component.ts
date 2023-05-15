@@ -13,6 +13,11 @@ import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 
+export enum ViewerTabs {
+  viewer = 'viewer',
+  stage = 'stage',
+}
+
 @Component({
   selector: 'app-ep-session',
   templateUrl: './session.component.html',
@@ -32,6 +37,9 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+
+  public _reportTabs = ViewerTabs;
+  public _currentTab = ViewerTabs.viewer;
 
   private _duration = 0;
   private _timerIntervalId = null;
@@ -95,7 +103,6 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
-
 
     const recording = this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId })).pipe(cancelOnDestroy(this));
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
@@ -330,6 +337,10 @@ export class EpSessionComponent implements OnInit, OnDestroy {
 
   private _seekTo(percent: number): void {
     this._playerInstance.currentTime = this._recordingDuration * percent / 100;
+  }
+
+  public _selectTab(tab: ViewerTabs): void {
+    this._currentTab = tab;
   }
 
   ngOnDestroy(): void {
