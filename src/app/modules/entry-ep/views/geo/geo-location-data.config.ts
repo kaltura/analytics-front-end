@@ -80,9 +80,6 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         formatter: (params) => {
           if (params.name && params.data && params.data.value && params.data.value.length === 3) {
             let tooltip = '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2];
-            if (params.seriesName === 'Avg. Drop Off') {
-              tooltip = tooltip + '%';
-            }
             return tooltip;
           } else {
             return this._translate.instant('app.common.na');

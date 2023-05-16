@@ -309,7 +309,7 @@ export class EpGeoComponent implements OnInit, OnDestroy {
   private _updateMap(): void {
     const isScatter = this._canMapDrillDown && this._isScatter;
     let mapConfig: EChartOption = this._dataConfigService.getMapConfig(isScatter);
-    mapConfig.series[0].name = this._translate.instant('app.audience.geo.' + this._selectedMetrics);
+    mapConfig.series[0].name = this._translate.instant('app.entryEp.session.viewers');
     mapConfig.series[0].data = [];
     let maxValue = 0;
 

@@ -548,7 +548,8 @@
         "plays": "Recordings plays",
         "engagement": "Live engagement",
         "engagementRate": "{{0}}% Live avg. engagement rate",
-        "reactions": "{{0}}% Sent live reactions"
+        "reactions": "{{0}}% Sent live reactions",
+        "noReactions": "It appears that no live reactions were sent during the session. Please ensure live reactions are enabled."
       },
       "session": {
         "title": "Scheduled session",

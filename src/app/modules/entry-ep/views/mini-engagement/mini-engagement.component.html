@@ -39,7 +39,12 @@
           </svg>
         </div>
         <div class="dataContainer">
-          <span class="label">{{'app.entryEp.highlights.reactions' | translate: {'0': _reactionsRate} }}</span>
+          <div class="kBulletContainer">
+            <span class="label">{{'app.entryEp.highlights.reactions' | translate: {'0': _reactionsRate} }}</span>
+            <kInputHelper *ngIf="_reactionsRate === 0">
+              <span>{{'app.entryEp.highlights.noReactions' | translate}}</span>
+            </kInputHelper>
+          </div>
           <div class="kBulletContainer">
             <div class="bulletBkg">
               <div class="kBullet"[style.width]="_reactionsRate + '%'"></div>
