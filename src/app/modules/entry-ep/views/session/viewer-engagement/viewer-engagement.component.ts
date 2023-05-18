@@ -18,7 +18,7 @@ import {
   ReportConfig,
   ReportService
 } from 'shared/services';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -26,13 +26,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { ViewerEngagementConfig } from './viewer-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { RefineFilter } from 'shared/components/filter/filter.component';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import { ExportItem } from "shared/components/export-csv/export-config-base.service";
+import { ExportConfig } from "./export.config";
 
 @Component({
   selector: 'app-ep-viewer-engagement',
@@ -41,7 +41,8 @@ import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
   providers: [
     HeatMapStoreService,
     ViewerEngagementConfig,
-    ReportService
+    ReportService,
+    ExportConfig
   ]
 })
 export class EpViewerEngagementComponent implements OnInit {
@@ -53,8 +54,9 @@ export class EpViewerEngagementComponent implements OnInit {
   public _sortField = 'live_view_time';
   private _reportType = reportTypeMap(KalturaReportType.epWebcastLiveUserEngagement);
   private _dataConfig: ReportDataConfig;
+  public _exportConfig: ExportItem[] = [];
+  public _exportDateFilter: DateChangeEvent = null;
   private _ignoreFirstSortEvent = true;
-  public _exporting = false;
 
   public _columns: string[] = [];
   public _totalCount = 0;
@@ -78,12 +80,23 @@ export class EpViewerEngagementComponent implements OnInit {
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: ViewerEngagementConfig,
               private _authService: AuthService,
+              private _exportConfigService: ExportConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
 
     this._dataConfig = _dataConfigService.getConfig();
+    this._exportConfig = _exportConfigService.getConfig();
   }
 
   ngOnInit(): void {
+    this._exportDateFilter = {
+      startDate: Math.floor(this.startDate.getTime() / 1000),
+      endDate: Math.floor(this.endDate.getTime() / 1000),
+      timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
+      timeUnits: KalturaReportInterval.days,
+      endDay: null,
+      startDay: null,
+      compare: null
+    }
     this._loadReport();
   }
 
@@ -169,7 +182,4 @@ export class EpViewerEngagementComponent implements OnInit {
     this._navigationDrillDownService.drilldown('user', row['user_id'], true, this._authService.pid);
   }
 
-  public _export(): void {
-    // Export report
-  }
 }

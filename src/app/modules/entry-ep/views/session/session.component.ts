@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseEntryGetAction, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMediaEntry, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionConfig } from './session.config';
@@ -12,6 +12,7 @@ import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
+import { of } from 'rxjs';
 
 export enum ViewerTabs {
   viewer = 'viewer',
@@ -104,7 +105,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
 
-    const recording = this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId })).pipe(cancelOnDestroy(this));
+    const recording = this.recordingEntryId.length ? this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId })).pipe(cancelOnDestroy(this)) : of(false);
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     const report = this._reportService.getReport(reportConfig, sections, false);
     forkJoin({recording, report})
@@ -121,7 +122,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
           }
           if (recording) {
             this._recordingDuration = (recording as KalturaMediaEntry).duration;
-            const recordingStart = recording.createdAt;
+            const recordingStart = (recording as KalturaMediaEntry).createdAt;
             const recordingEnd = recordingStart + this._recordingDuration;
             const sessionStart = this.startDate.getTime() / 1000;
             const sessionEnd = this.endDate.getTime() / 1000;

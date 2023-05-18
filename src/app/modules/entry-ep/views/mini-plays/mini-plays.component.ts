@@ -60,6 +60,9 @@ export class EpMiniPlaysComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.entryIdIn.length === 0) {
+      this.entryIdIn="noRecording";
+    }
     this._loadReport();
   }
 

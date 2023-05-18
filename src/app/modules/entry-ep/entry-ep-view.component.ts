@@ -103,7 +103,17 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
       map((responses: KalturaMultiResponse) => {
         if (responses.hasErrors()) {
           const err: KalturaAPIException = responses.getFirstError();
-          this._logger.error('Error retrieving entry by referenceId', err);
+          this._loadingEntry = false;
+          const actions = {
+            'close': () => {
+              this._blockerMessage = null;
+            },
+            'retry': () => {
+              this._loadEventDetails();
+            },
+          };
+          this._blockerMessage = this._errorsManager.getErrorMessage(err, actions);
+          return [];
         }
         return [
           responses[0].result,
@@ -112,6 +122,9 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
       }))
       .subscribe(
         ([entry, eventList]) => {
+          if (!entry) {
+            return;
+          }
           // set start and edit date
           if (eventList?.objects?.length > 0) {
             const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
@@ -141,7 +154,15 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
                 },
                 error => {
                   this._loadingEntry = false;
-                  this._logger.error('Error retrieving entry by referenceId', error);
+                  const actions = {
+                    'close': () => {
+                      this._blockerMessage = null;
+                    },
+                    'retry': () => {
+                      this._loadEventDetails();
+                    },
+                  };
+                  this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
                 });
           } else {
             this._loadingEntry = false;

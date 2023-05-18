@@ -5,7 +5,10 @@
       <div class="kTableContainer kReportContent kNoTitle">
         <div class="kHeader">
           <span class="label">{{'app.entryEp.recordings.numViewers' | translate: { '0': _totalCount} }}</span>
-          <button *ngIf="!_exporting" tabindex="0" aria-label="Export Report" role="button" pButton class="kButtonDefault kExportReport" (click)="_export()" [label]="'app.common.exportCsv' | translate"></button>
+          <app-export-csv name="Viewers Engagement"
+                          [entryId]="entryIdIn"
+                          [reports]="_exportConfig"
+                          [dateFilter]="_exportDateFilter"></app-export-csv>
         </div>
 
         <p-table dataKey="name"

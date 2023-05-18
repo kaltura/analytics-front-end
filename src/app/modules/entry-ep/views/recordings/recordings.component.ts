@@ -39,7 +39,7 @@ export class EpRecordingsComponent implements OnInit {
   public _tableModes = TableModes;
   public _tableMode = TableModes.users;
   public _columns: string[] = [];
-  public _isBusy = true;
+  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableData: TableRow[] = [];
   public _selectedMetrics = 'count_plays';
@@ -77,7 +77,9 @@ export class EpRecordingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._loadReport();
+    if (this.entryIdIn.length) {
+      this._loadReport();
+    }
   }
 
   private _loadReport(sections = this._dataConfig): void {

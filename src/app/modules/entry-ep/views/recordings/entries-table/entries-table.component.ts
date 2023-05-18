@@ -77,7 +77,9 @@ export class EntriesTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._loadReport();
+    if (this.entryIdIn.length) {
+      this._loadReport();
+    }
   }
 
   private _loadReport(): void {

@@ -35,10 +35,12 @@ export class DevicesDataConfig extends ReportDataBaseConfig {
           'unique_combined_live_viewers': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.entryWebcast.geo.count_plays`),
+            sortOrder: 0
           },
           'unique_vod_viewers': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.entryWebcast.geo.unique_viewers`)
+            title: this._translate.instant(`app.entryWebcast.geo.unique_viewers`),
+            sortOrder: 1
           }
         }
       }

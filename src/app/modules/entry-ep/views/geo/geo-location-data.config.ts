@@ -47,11 +47,13 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         fields: {
           'unique_combined_live_viewers': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.entryWebcast.geo.count_plays`),
+            title: this._translate.instant(`app.entryEp.devices.unique_combined_live_viewers`),
+            sortOrder: 0
           },
           'unique_vod_viewers': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.entryWebcast.geo.unique_viewers`)
+            title: this._translate.instant(`app.entryEp.devices.unique_vod_viewers`),
+            sortOrder: 1
           }
         }
       }
