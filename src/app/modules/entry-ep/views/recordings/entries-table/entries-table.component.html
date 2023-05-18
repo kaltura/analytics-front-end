@@ -8,10 +8,11 @@
            (sortFunction)="_onSortChanged($event)">
     <ng-template pTemplate="header">
       <tr [ngStyle]="{'borderBottom': '1px solid #cccccc'}">
-        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' || col === 'entry_id' ? null : col" [class.nonSortable]="col === 'full_name'" [ngStyle]="{'width': col === 'entry_id' ? '100px': 'auto'}">
+        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' || col === 'entry_id' ? null : col" [class.nonSortable]="col === 'full_name'" [ngStyle]="{'width': col === 'entry_id' ? '100px': col === 'avg_completion_rate' ? '25%' : 'auto'}">
           {{col !== 'entry_id' ? ('app.entry.' + col | translate) : ''}}
           <p-sortIcon [field]="col" *ngIf="col !== 'full_name' && col !== 'entry_id'"></p-sortIcon>
         </th>
+        <th [ngStyle]="{'width': '150px'}"></th>
       </tr>
       <tr *ngIf="_tableData?.length" class="kSummaryRow" [ngStyle]="{'height': '48px'}">
         <th></th>
@@ -30,6 +31,7 @@
         <th [ngStyle]="{'paddingRight':'28px', 'fontWeight': 'normal'}">
           <app-bullet [hideBulletOnTablet]="true" [value]="_summaryData['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
         </th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-data>
@@ -51,6 +53,9 @@
         </td>
         <td>
           <app-bullet [hideBulletOnTablet]="true" [ngStyle]="{'padding-right': '24px'}" [value]="data['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+        </td>
+        <td [ngStyle]="{'paddingRight':'24px', 'paddingLeft': '0px'}">
+          <button tabindex="0" aria-label="View Analytics" role="button" pButton class="kButtonDefault kViewAnalytics" (click)="_drillDown(data)" [label]="'app.entryEp.recordings.view' | translate"></button>
         </td>
       </tr>
     </ng-template>

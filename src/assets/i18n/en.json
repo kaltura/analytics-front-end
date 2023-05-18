@@ -568,7 +568,8 @@
         "viewers": "Unique viewers",
         "entries": "Associated Recordings",
         "numViewers": "{{0}} Unique viewers",
-        "numEntries": "{{0}} Associated recordings"
+        "numEntries": "{{0}} Associated recordings",
+        "view": "View analytics"
       },
       "devices": {
         "device": "Name",

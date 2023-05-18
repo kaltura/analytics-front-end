@@ -161,10 +161,6 @@ export class EntriesTableComponent implements OnInit {
   }
 
   public _drillDown(row: TableRow): void {
-    if (row['name'] === 'Unknown') {
-      return; // ignore unknown user drill-down
-    }
-
-    this._navigationDrillDownService.drilldown('user', row['name'], true, row['partner_id']);
+    this._navigationDrillDownService.drilldown('entry', row['entry_id'], false);
   }
 }
