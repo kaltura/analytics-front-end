@@ -3,36 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="/">
-
+  <!--#if expr="$base_url" -->
+  <!--# echo var="base_url" encoding="none"-->
+  <!--#else -->
+  <base href="./">
+  <!--#endif -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
-
-  <script type="text/javascript">
-    var analyticsConfig = {
-      kalturaServer: {
-        uri : "ny-front-stg.kaltura.com",
-        "previewUIConf": 12345678,
-        "previewUIConfV7":52312812
-      },
-      cdnServers: {
-        serverUri: "http://cdnapi.kaltura.com",
-        securedServerUri: "https://cdnapisec.kaltura.com"
-      },
-      ks: "djJ8NTIzNzkyMnxw-Qgg7HtfHxfugOBBblCcT8FYXfaLB87n-fZ47RPZsPf1Sauo0wBXsL2rF-x7t1s4GduQducs6ylEyrYs5IpqE8N3H8UZoKHW8HXqRubz1BhjrpBmooV6CJcK1-AQDqTDjOlhRd3hFXfXKzCCAjEy7I5hlMJWRiW-d8QtnIoUgg",
-      pid: "5237922",
-      locale: "en",
-      multiAccount: false,
-      live: {
-        "pollInterval": 30,
-        "healthNotificationsCount": 50,
-      },
-    }
-  </script>
-
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: auto">
+<body class="kOverrideFAIcons" style="overflow-y: hidden">
 <app-root></app-root>
 </body>
 </html>
