@@ -128,6 +128,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             const sessionEnd = this.endDate.getTime() / 1000;
             this._recordingStartPercent = (recordingStart - sessionStart) / (sessionEnd - sessionStart) * 100;
             this._recordingEndPercent = (recordingEnd - sessionStart) / (sessionEnd - sessionStart) * 100;
+            this.updateRecording();
           }
           this._isBusy = false;
         },
