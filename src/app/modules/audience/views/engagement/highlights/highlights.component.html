@@ -9,7 +9,7 @@
                         [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
-        <div echarts class="kChart"
+        <div echarts class="kChart" id="engagement-heighlights-graph"
              *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
              [options]="_lineChartData[_selectedMetrics]"></div>
 
