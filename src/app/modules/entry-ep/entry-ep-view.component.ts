@@ -49,6 +49,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public _creationDate: Date = null;
   public _eventStartDate: Date = null;
+  public _actualEventStartDate: Date = null;
   public _eventEndDate: Date = null;
   public _now: Date = new Date();
 
@@ -128,7 +129,16 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           // set start and edit date
           if (eventList?.objects?.length > 0) {
             const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
-            this._eventStartDate = new Date(event.startDate * 1000);
+
+            this._actualEventStartDate = new Date(event.startDate * 1000); // save actual start date before calculating round down start date
+            this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start dat object
+            // need to round down to the last half hour because this is our data aggregation interval
+            const minutes = this._actualEventStartDate.getMinutes();
+            if (minutes !== 0 && minutes !== 30) {
+              const roundDownMinutes = minutes > 30 ? 30 : 0;
+              this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
+              this._eventStartDate.setSeconds(0); // round down seconds
+            }
             this._eventEndDate = new Date(event.endDate * 1000);
           }
           // set live and vod entry IDs string

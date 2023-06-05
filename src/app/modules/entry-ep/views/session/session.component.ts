@@ -32,7 +32,8 @@ export enum ViewerTabs {
 export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() recordingEntryId = '';
   @Input() entryIdIn = '';
-  @Input() startDate: Date;
+  @Input() actualStartDate: Date; // session actual start date
+  @Input() startDate: Date; // session start date rounded down the the last half hour
   @Input() endDate: Date;
 
   private _order = '-date_id';
@@ -82,7 +83,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._duration = this.endDate.getTime() - this.startDate.getTime();
+    this._duration = this.endDate.getTime() - this.actualStartDate.getTime(); // use actual session start date for duration calculation
     this._durationLabel = ReportHelper.time(this._duration.toString());
     this._tickPercentIncrease = 100000 / this._duration;
 
@@ -112,9 +113,10 @@ export class EpSessionComponent implements OnInit, OnDestroy {
       .subscribe(({ recording, report }) => {
           if (report.table && report.table.header && report.table.data) {
             const { tableData } = this._reportService.parseTableData(report.table, this._dataConfig[ReportDataSection.table]);
-            this._reportData = tableData;
-            const yAxisData1 = this._getAxisData(tableData, 'combined_live_view_period_count');
-            const yAxisData2 = this._getAxisData(tableData, 'combined_live_engaged_users_ratio');
+            const startTime = this.actualStartDate.getTime() / 1000;
+            this._reportData = tableData.filter(dataPoint => parseInt(dataPoint.position) >= startTime); // filter out points earlier than the actual session start date
+            const yAxisData1 = this._getAxisData(this._reportData, 'combined_live_view_period_count');
+            const yAxisData2 = this._getAxisData(this._reportData, 'combined_live_engaged_users_ratio');
             this._chartOptions = this._getGraphData(yAxisData1, yAxisData2);
           } else {
             const emptyLine = Array.from({ length: 100 }, () => 0);
@@ -124,7 +126,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             this._recordingDuration = (recording as KalturaMediaEntry).duration;
             const recordingStart = (recording as KalturaMediaEntry).createdAt;
             const recordingEnd = recordingStart + this._recordingDuration;
-            const sessionStart = this.startDate.getTime() / 1000;
+            const sessionStart = this.actualStartDate.getTime() / 1000;
             const sessionEnd = this.endDate.getTime() / 1000;
             this._recordingStartPercent = (recordingStart - sessionStart) / (sessionEnd - sessionStart) * 100;
             this._recordingEndPercent = (recordingEnd - sessionStart) / (sessionEnd - sessionStart) * 100;
