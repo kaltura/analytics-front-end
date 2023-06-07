@@ -43,7 +43,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   public _reportTabs = ViewerTabs;
   public _currentTab = ViewerTabs.viewer;
 
-  private _duration = 0;
+  public _duration = 0;
   private _timerIntervalId = null;
   private _tickPercentIncrease = 0;
   public _currentPositionPercent = 0;

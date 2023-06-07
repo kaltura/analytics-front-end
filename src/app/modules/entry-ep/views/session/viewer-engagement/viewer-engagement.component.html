@@ -67,12 +67,11 @@
           <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
             <tr>
               <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-                <span>Heat map</span>
-<!--                <app-heat-map [attr.data-aid]="'heat-map-' + index"-->
-<!--                              [userId]="data['name']"-->
-<!--                              [entryId]="entryId"-->
-<!--                              [duration]="duration"-->
-<!--                              [filter]="_filter"></app-heat-map>-->
+                <ep-heat-map [attr.data-aid]="'heat-map-' + index"
+                              [userId]="data['user_id']"
+                              [entryId]="entryIdIn"
+                              [duration]="duration"
+                              [filter]="_filter"></ep-heat-map>
               </td>
             </tr>
           </ng-template>

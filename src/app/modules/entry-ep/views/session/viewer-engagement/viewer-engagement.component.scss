@@ -16,7 +16,10 @@
   .kHeader {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    /* margin-bottom: 24px; TODO: use this instead of the next 2 lines when tabs are back */
+    margin-bottom: 18px;
+    margin-top: 12px;
+
     .label {
       font-size: 14px;
       color: $kGrayscale1;

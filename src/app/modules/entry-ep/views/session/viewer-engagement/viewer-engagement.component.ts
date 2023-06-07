@@ -1,23 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import {
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaObjectBaseFactory,
-  KalturaReportInterval,
-  KalturaReportTable,
-  KalturaReportTotal,
-  KalturaReportType
-} from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {
-  AuthService,
-  ErrorsManagerService,
-  NavigationDrillDownService,
-  Report,
-  ReportConfig,
-  ReportService
-} from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -49,6 +34,7 @@ export class EpViewerEngagementComponent implements OnInit {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() duration = 0;
 
   private _order = '-live_view_time';
   public _sortField = 'live_view_time';

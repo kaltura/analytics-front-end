@@ -29,6 +29,7 @@ import { ReactionIconComponent } from "./views/session/reactions/reaction-icon.c
 import { EpDevicesComponent } from "./views/devices/devices.component";
 import { EpGeoComponent } from "./views/geo/geo-location.component";
 import { EpViewerEngagementComponent } from "./views/session/viewer-engagement/viewer-engagement.component";
+import { EpHeatMapComponent } from "./views/session/viewer-engagement/heat-map/heat-map.component";
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import { EpViewerEngagementComponent } from "./views/session/viewer-engagement/v
     EpMiniEngagementComponent,
     EpSessionComponent,
     EpViewerEngagementComponent,
+    EpHeatMapComponent,
     ReactionsComponent,
     ReactionIconComponent,
     EpDevicesComponent,

@@ -46,25 +46,22 @@
         <span>{{'app.entryEp.session.engagement' | translate}}</span>
       </div>
 
-      <div class="kTable">
-      </div>
-
-      <div class="kReportTabs">
-        <a class="kReportTabsItem"
-           [class.kTabActive]="_currentTab === _reportTabs.viewer"
-           (click)="_selectTab(_reportTabs.viewer)">
-          <span>{{'app.entryEp.session.viewer' | translate}}</span>
-        </a>
-        <a class="kReportTabsItem"
-           [class.kTabActive]="_currentTab === _reportTabs.stage"
-           (click)="_selectTab(_reportTabs.stage)">
-          <span>{{'app.entryEp.session.stage' | translate}}</span>
-        </a>
-      </div>
+<!--      <div class="kReportTabs">-->
+<!--        <a class="kReportTabsItem"-->
+<!--           [class.kTabActive]="_currentTab === _reportTabs.viewer"-->
+<!--           (click)="_selectTab(_reportTabs.viewer)">-->
+<!--          <span>{{'app.entryEp.session.viewer' | translate}}</span>-->
+<!--        </a>-->
+<!--        <a class="kReportTabsItem"-->
+<!--           [class.kTabActive]="_currentTab === _reportTabs.stage"-->
+<!--           (click)="_selectTab(_reportTabs.stage)">-->
+<!--          <span>{{'app.entryEp.session.stage' | translate}}</span>-->
+<!--        </a>-->
+<!--      </div>-->
 
       <ng-container *ngIf="_currentTab === _reportTabs.viewer">
         <div class="kReportContainer">
-          <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn"></app-ep-viewer-engagement>
+          <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
         </div>
       </ng-container>
 
