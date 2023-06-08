@@ -27,14 +27,14 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
     delimiter: analyticsConfig.valueSeparator,
     skipEmptyDates: analyticsConfig.skipEmptyBuckets
   });
-  
+
   private _dateRange: DateRangeServerValue = {
     toDate: getFixedEpoch(moment()),
     fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
-  
+
   private _interval = KalturaReportInterval.tenSeconds;
-  
+
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
@@ -45,7 +45,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
     }),
     responseOptions: this._responseOptions
   };
-  
+
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
     reportInputFilter: new KalturaEndUserReportInputFilter({
@@ -57,19 +57,19 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
     pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1}),
     responseOptions: this._responseOptions
   };
-  
+
   public set dateRange(range: DateRangeServerValue) {
     if (range.hasOwnProperty('toDate') && range.hasOwnProperty('fromDate')) {
       this._dateRange = range;
       this.onPollTickSuccess();
     }
   }
-  
+
   constructor(private _entryId: string) {
     this._getTableActionArgs.reportInputFilter.entryIdIn = this._entryId;
     this._getTotalActionArgs.reportInputFilter.entryIdIn = this._entryId;
   }
-  
+
   public set interval(interval: KalturaReportInterval) {
     if (KalturaReportInterval[interval] !== null) {
       this._interval = interval;
@@ -77,35 +77,34 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
       this._getTotalActionArgs.reportInputFilter.interval = interval;
     }
   }
-  
-  public set userIds(userIds: string) {
-    if (userIds) {
-      (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds = userIds;
-      (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds = userIds;
+
+  public set pollFilter(filter: {key: string, value: string | undefined}) {
+    if (filter.value) {
+      this._getTableActionArgs.reportInputFilter[filter.key] = filter.value;
+      this._getTotalActionArgs.reportInputFilter[filter.key] = filter.value;
     } else {
-      delete (<KalturaEndUserReportInputFilter>this._getTableActionArgs.reportInputFilter).userIds;
-      delete (<KalturaEndUserReportInputFilter>this._getTotalActionArgs.reportInputFilter).userIds;
+      delete this._getTableActionArgs.reportInputFilter[filter.key];
+      delete this._getTotalActionArgs.reportInputFilter[filter.key];
     }
-    
   }
-  
+
   public set pager(pager: KalturaFilterPager) {
     this._getTableActionArgs.pager = pager;
   }
-  
+
   public set order(order: string) {
     this._getTableActionArgs.order = order;
   }
-  
-  
+
+
   public onPollTickSuccess(): void {
     this._getTableActionArgs.reportInputFilter.toDate = this._dateRange.toDate;
     this._getTableActionArgs.reportInputFilter.fromDate = this._dateRange.fromDate;
-    
+
     this._getTotalActionArgs.reportInputFilter.toDate = this._dateRange.toDate;
     this._getTotalActionArgs.reportInputFilter.fromDate = this._dateRange.fromDate;
   }
-  
+
   public create(): KalturaMultiRequest {
     return new KalturaMultiRequest(
       new ReportGetTableAction(this._getTableActionArgs),

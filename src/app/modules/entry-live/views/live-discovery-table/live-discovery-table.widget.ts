@@ -47,9 +47,9 @@ export interface LiveDiscoveryTableWidgetProvider {
   dateRange: DateRangeServerValue;
 
   getPollFactory(args: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory;
-  
+
   responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData;
-  
+
   hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>,
               usersTableFilter?: UsersTableFilter): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }>;
 }
@@ -60,25 +60,24 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _widgetArgs: WidgetsActivationArgs;
   private _tableMode = this._usersModeService.usersMode === EntryLiveUsersMode.Authenticated ? TableModes.users : TableModes.devices;
   private _dateFilter: DateFiltersChangedEvent;
-  private _usersFilter: UsersTableFilter;
   private _filtersChange = new Subject<void>();
-  
+
   protected _widgetId = 'discovery-devices-table';
   protected _pollsFactory: LiveDiscoveryTableWidgetPollFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _showTable = false;
-  
+
   public isBusy = false;
   public filtersChange$ = this._filtersChange.asObservable();
-  
+
   private get _dateRange(): DateRange {
     return this._dateFilter ? this._dateFilter.dateRange : null;
   }
-  
+
   private get _isPresetMode(): boolean {
     return this._dateFilter ? this._dateFilter.isPresetMode : true;
   }
-  
+
   constructor(protected _serverPolls: EntryLiveDiscoveryPollsService,
               protected _frameEventManager: FrameEventManagerService,
               protected _filterService: FiltersService,
@@ -89,29 +88,19 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     super(_serverPolls, _frameEventManager);
 
     this._setProvider(this._tableMode);
-    this._resetUsersFilter();
 
     _usersModeService.usersMode$
       .pipe(cancelOnDestroy(this), filter(mode => mode === EntryLiveUsersMode.All))
       .subscribe(() => {
         this._tableMode = TableModes.devices;
         this._setProvider(this._tableMode);
-        this._resetUsersFilter();
       });
   }
-  
+
   ngOnDestroy(): void {
     this._filtersChange.complete();
   }
-  
-  private _resetUsersFilter(): void {
-    this._usersFilter = {
-      userIds: '',
-      pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1 }),
-      order: '-view_buffer_time_ratio',
-    };
-  }
-  
+
   private _setProvider(tableMode: TableModes): void {
     switch (tableMode) {
       case TableModes.devices:
@@ -124,7 +113,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
         throw Error('Unsupported table mode: ' + tableMode);
     }
   }
-  
+
   private _updateProviderDateRange(): void {
     if (this._isPresetMode) {
       this._provider.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
@@ -135,17 +124,11 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
       };
     }
   }
-  
-  private _applyFilters(): void {
-    if (this._tableMode === TableModes.users) {
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
-    }
-    
+
+  private _applyFilters(widgetsArgs: WidgetsActivationArgs = null): void {
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-      
+
       if (this._isPresetMode) {
         this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
       } else {
@@ -154,67 +137,73 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
           toDate: this._dateFilter.endDate,
         };
       }
-  
       this._updateProviderDateRange();
     }
+
+    if (widgetsArgs) {
+      this.stopPolling();
+      ['deviceIn', 'browserFamilyIn', 'operatingSystemFamilyIn', 'countryIn', 'regionIn', 'citiesIn', 'userIds'].forEach(key => {
+        this._pollsFactory.pollFilter = {key, value: widgetsArgs[key] || ''};
+      });
+      this.isBusy = true;
+      this.startPolling();
+    }
   }
-  
+
   protected _canStartPolling(): boolean {
     return this._showTable;
   }
-  
+
   protected _onRestart(): void {
     this._pollsFactory = this._provider.getPollFactory(this._widgetArgs);
     this._applyFilters();
   }
-  
+
   protected _onActivate(widgetsArgs: WidgetsActivationArgs, silent = false): Observable<void> {
     if (!silent) {
       this.isBusy = true;
     }
-    
+
     this._widgetArgs = widgetsArgs;
-    
+
     this._pollsFactory = this._provider.getPollFactory(widgetsArgs);
-    
-    this._applyFilters();
-    
+
+    this._applyFilters(widgetsArgs);
+
     return ObservableOf(null);
   }
-  
+
   // actual response mapping is already done in _hooksToPoll function
   protected _responseMapping(data: LiveDiscoveryTableData): LiveDiscoveryTableData {
     this.isBusy = false;
-    
+
     this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
-  
+
     this._updateProviderDateRange();
-    
+
     return { tableMode: this._tableMode, ...data };
   }
-  
+
   protected _hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
-    return this._provider.hookToPolls(poll$, this._usersFilter);
+    return this._provider.hookToPolls(poll$);
   }
-  
+
   public setTableMode(tableMode: TableModes): void {
     this._tableMode = tableMode;
-    
-    this._resetUsersFilter();
-    
+
     this.deactivate();
-    
+
     this._setProvider(tableMode);
-    
+
     this.activate(this._widgetArgs, false, !this._dateFilter.isPresetMode);
   }
-  
+
   public updateFilters(event: DateFiltersChangedEvent): void {
     this._filtersChange.next();
     this._dateFilter = event;
-    
+
     this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
-    
+
     if (this._isPresetMode) {
       this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
     } else {
@@ -223,23 +212,25 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
         toDate: this._dateFilter.endDate,
       };
     }
-  
+
     // reset page
-    this._usersFilter.pager.pageIndex = 1;
-    (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
-  
+    (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = new KalturaFilterPager({
+      pageIndex: 1,
+      pageSize: 30
+    });
+
     this._updateProviderDateRange();
-    
+
     if (this._showTable) {
       this.restartPolling(!this._isPresetMode);
     }
   }
-  
+
   public toggleTable(showTable: boolean, isPolling: boolean): void {
     this._showTable = showTable;
-    
+
     this.updateLayout();
-    
+
     if (!this._showTable) {
       this.stopPolling();
     } else {
@@ -247,36 +238,18 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
       this.startPolling(!isPolling);
     }
   }
-  
-  public usersFilterChange(refineFilter: RefineFilter): void {
-    if (this._tableMode === TableModes.users) {
-      this._usersFilter.userIds = refineFilter
-        .map(filter => filter.value.id === '0' ? 'Unknown' : filter.value.id) // replace id=0 with Unknown due to the server limitation
-        .join(analyticsConfig.valueSeparator);
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).userIds = this._usersFilter.userIds;
-      
-      // reset page
-      this._usersFilter.pager.pageIndex = 1;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
 
-      this.isBusy = true;
-      this.restartPolling();
-    }
-  }
-  
   public sortChange(order: string): void {
     if (this._tableMode === TableModes.users) {
-      this._usersFilter.order = order;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = this._usersFilter.order;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = order;
       this.isBusy = true;
       this.restartPolling();
     }
   }
-  
+
   public paginationChange(pager: KalturaFilterPager): void {
     if (this._tableMode === TableModes.users) {
-      this._usersFilter.pager.pageIndex = pager.pageIndex;
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = this._usersFilter.pager;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager.pageIndex = pager.pageIndex;
       this.isBusy = true;
       this.restartPolling();
     }
