@@ -1,5 +1,17 @@
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaReportInputFilter, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportType, ReportGetTableAction, ReportGetTableActionArgs, ReportGetTotalAction, ReportGetTotalActionArgs } from 'kaltura-ngx-client';
+import {
+  KalturaEndUserReportInputFilter,
+  KalturaFilterPager,
+  KalturaMultiRequest,
+  KalturaMultiResponse,
+  KalturaReportInterval,
+  KalturaReportResponseOptions,
+  KalturaReportType,
+  ReportGetTableAction,
+  ReportGetTableActionArgs,
+  ReportGetTotalAction,
+  ReportGetTotalActionArgs
+} from 'kaltura-ngx-client';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
 import * as moment from 'moment';
@@ -23,7 +35,7 @@ export class LiveDiscoveryDevicesTableRequestFactory implements RequestFactory<K
 
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.platformsDiscoveryRealtime),
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
@@ -34,7 +46,7 @@ export class LiveDiscoveryDevicesTableRequestFactory implements RequestFactory<K
 
   private _getTableActionArgs: ReportGetTableActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.platformsDiscoveryRealtime),
-    reportInputFilter: new KalturaReportInputFilter({
+    reportInputFilter: new KalturaEndUserReportInputFilter({
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
