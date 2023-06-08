@@ -242,16 +242,19 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   public sortChange(order: string): void {
     if (this._tableMode === TableModes.users) {
       (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).order = order;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = new KalturaFilterPager({pageIndex: 1, pageSize: liveDiscoveryTablePageSize})
       this.isBusy = true;
-      this.restartPolling();
+      this.stopPolling();
+      this.startPolling();
     }
   }
 
   public paginationChange(pager: KalturaFilterPager): void {
     if (this._tableMode === TableModes.users) {
-      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager.pageIndex = pager.pageIndex;
+      (<LiveDiscoveryUsersTableRequestFactory>this._pollsFactory).pager = pager;
       this.isBusy = true;
-      this.restartPolling();
+      this.stopPolling();
+      this.startPolling();
     }
   }
 }

@@ -55,6 +55,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
       interval: this._interval,
     }),
     pager: new KalturaFilterPager({ pageSize: liveDiscoveryTablePageSize, pageIndex: 1}),
+    order: '-view_buffer_time_ratio',
     responseOptions: this._responseOptions
   };
 
