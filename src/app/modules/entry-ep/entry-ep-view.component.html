@@ -47,6 +47,10 @@
           <app-ep-devices [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-devices>
         </div>
 
+        <div *ngIf="_exporting" class="footer">
+          <i></i>
+          <span>{{'app.engagement.footer' | translate}}</span>
+        </div>
 
       </div>
     </div>
