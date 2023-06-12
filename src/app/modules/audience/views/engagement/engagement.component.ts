@@ -90,6 +90,14 @@ export class EngagementComponent implements AfterViewInit{
       domains: {},
       geo: {}
     }; // show refine filter
+
+    // force refresh of graph elements width
+    document.getElementById('engagement-heighlights-graph').style.width = '1000px';
+    document.getElementById('engagement-impressions').style.width = '1000px';
+    setTimeout(() => {
+      document.getElementById('engagement-heighlights-graph').style.width = '100%';
+      document.getElementById('engagement-impressions').style.width = '100%';
+    }, 0);
   }
 
   public onExporting(exporting: boolean): void {
