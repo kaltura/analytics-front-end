@@ -19,19 +19,19 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="kReportContent">
-      <div class="kMap">
+      <div class="kMap" *ngIf="!exporting">
         <div *ngIf="_mapDataReady" echarts class="kChart"
              [options]="_mapChartData[_selectedMetrics]"
              (chartClick)="_onChartClick($event)"
              (chartInit)="_onChartInit($event)"></div>
-        <div class="kZoomWidget" *ngIf="!exporting">
+        <div class="kZoomWidget">
           <button pButton class="kButtonDefault kZoomOutBtn" icon="icon-minus" (click)="_zoom('out')"></button>
           <button pButton class="kButtonDefault kZoomInBtn" icon="kIconplus" (click)="_zoom('in')"></button>
         </div>
       </div>
       <div class="kTable">
         <div class="kTableContainer">
-          <div class="kTableModeSelector">
+          <div class="kTableModeSelector" *ngIf="!exporting">
             <p-dropdown [style]="{'width': '172px'}"
                         [options]="_tableModeOptions"
                         (onChange)="_onTableModeChange($event.value)"

@@ -31,6 +31,7 @@ export class EpRecordingsComponent implements OnInit {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() exporting = false;
 
   private _order = '-date_id';
   private _reportType = KalturaReportType.userTopContent;

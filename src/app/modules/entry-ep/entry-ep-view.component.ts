@@ -208,13 +208,11 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   }
 
   public preExportHandler(): void {
-    this._viewConfig.session = null;
-    this._viewConfig.recordings = null;
+    this._viewConfig.devices = null;
   }
 
   public postExportHandler(): void {
-    this._viewConfig.session = {};
-    this._viewConfig.recordings = {};
+    this._viewConfig.devices = {};
   }
 
   public onExporting(exporting: boolean): void {

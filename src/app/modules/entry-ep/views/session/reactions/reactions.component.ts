@@ -7,6 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ReactionsComponent implements OnInit{
   @Input() reportData: any[] = [];
+  @Input() exporting = false;
 
   private _reactions: { totalClicks: number, topReaction: string, positionPercent: string }[] = [];
   public _topReactions: { totalClicks: number, topReaction: string, positionPercent: string }[] = [];

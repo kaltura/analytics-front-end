@@ -7,6 +7,7 @@ import {Component, Input} from '@angular/core';
 })
 export class ReactionIconComponent {
   @Input() reaction: { totalClicks: number, topReaction: string, positionPercent: string };
+  @Input() exporting = false;
 
   public isHover = false;
 

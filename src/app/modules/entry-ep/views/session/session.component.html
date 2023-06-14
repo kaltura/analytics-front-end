@@ -5,7 +5,7 @@
         <span class="kTitle">{{'app.entryEp.session.title' | translate}}</span>
       </div>
 
-      <div class="noRecording">
+      <div class="noRecording" *ngIf="!exporting">
 
         <app-k-player-v7 [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [preload]="true" [fillWidth]="true" [fillHeight]="true"
                          [uiconfid]="_playerConfig.uiconfid" [entryid]="recordingEntryId" [ks]="_playerConfig.ks"
@@ -31,7 +31,7 @@
         <div class="progressLine" *ngIf="_currentPositionPercent > 0" [ngStyle]="{'left': 'calc(' + _currentPositionPercent + '% - 2px)'}"></div>
         <span class="currentPosition" *ngIf="_currentPositionPercent > 0"
               [ngStyle]="_currentPositionPercent < 50 ? {'left': 'calc(' + _currentPositionPercent + '% + 8px)'} : {'left': 'calc(' + _currentPositionPercent + '% - 60px)'}">{{_currentPosition}}</span>
-        <app-ep-reactions *ngIf="_reportData.length > 0" [reportData]="_reportData"></app-ep-reactions>
+        <app-ep-reactions [exporting]="exporting" *ngIf="_reportData.length > 0" [reportData]="_reportData"></app-ep-reactions>
       </div>
 
       <div class="time">
@@ -58,18 +58,19 @@
 <!--          <span>{{'app.entryEp.session.stage' | translate}}</span>-->
 <!--        </a>-->
 <!--      </div>-->
+      <div [class.kHidden]="exporting" class="kTableContainer">
+        <ng-container *ngIf="_currentTab === _reportTabs.viewer">
+          <div class="kReportContainer">
+            <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
+          </div>
+        </ng-container>
 
-      <ng-container *ngIf="_currentTab === _reportTabs.viewer">
-        <div class="kReportContainer">
-          <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="_currentTab === _reportTabs.stage">
-        <div class="kReportContainer">
-          Stage
-        </div>
-      </ng-container>
+        <ng-container *ngIf="_currentTab === _reportTabs.stage">
+          <div class="kReportContainer">
+            Stage
+          </div>
+        </ng-container>
+      </div>
 
     </div>
   </k-area-blocker>

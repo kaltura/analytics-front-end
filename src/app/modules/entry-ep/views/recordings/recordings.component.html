@@ -26,14 +26,14 @@
       </div>
 
       <div class="kTable">
-        <div class="kToggle">
+        <div class="kToggle" [class.kHidden]="exporting">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="_toggleTable()">
             {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
           </a>
         </div>
         <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-          <div class="kTableModeSelector">
+          <div class="kTableModeSelector" [class.kHidden]="exporting">
             <p-dropdown [style]="{'width': '200px'}"
                         [options]="_tableModesOptions"
                         [(ngModel)]="_tableMode">
@@ -42,14 +42,16 @@
             <span *ngIf="_tableMode === _tableModes.entries" class="label">{{'app.entryEp.recordings.numEntries' | translate: { '0': _totalEntries} }}</span>
           </div>
 
-          <ng-container [ngSwitch]="_tableMode">
-              <ng-container *ngSwitchCase="_tableModes.users">
-                <app-users-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalViewersChange($event)"></app-users-table>
-              </ng-container>
-              <ng-container *ngSwitchCase="_tableModes.entries">
-                <app-entries-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalEntriesChange($event)"></app-entries-table>
-              </ng-container>
-          </ng-container>
+          <div [class.kHidden]="exporting" class="kTableContainer">
+            <ng-container [ngSwitch]="_tableMode">
+                <ng-container *ngSwitchCase="_tableModes.users">
+                  <app-users-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalViewersChange($event)"></app-users-table>
+                </ng-container>
+                <ng-container *ngSwitchCase="_tableModes.entries">
+                  <app-entries-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalEntriesChange($event)"></app-entries-table>
+                </ng-container>
+            </ng-container>
+          </div>
 
         </div>
 
