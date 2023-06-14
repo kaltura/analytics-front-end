@@ -1,6 +1,6 @@
 <div #reportToExport data-aid="report-group-engagement" class="kMain" [class.exporting]="_exporting">
   <div class="kReportView">
-    <div class="kReport kContent kOverrideFAIcons" [ngStyle]="{backgroundColor: '#f2f2f2'}" [class.exporting]="_exporting">
+    <div class="kReport kContent kOverrideFAIcons" [class.exporting]="_exporting">
       <div class="kReportHeader" [class.exporting]="_exporting">
         <span *ngIf="_engagementViewConfig.title" class="kTitle">{{ (_exporting ? 'app.engagement.exportTitle' : 'app.engagement.title') | translate}}</span>
         <app-pdf-export *ngIf="_engagementViewConfig.download" [elementToExport]="reportToExport" class="pdfExport"

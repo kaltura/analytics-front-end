@@ -562,7 +562,15 @@
         "live_view_time": "Minutes viewed",
         "count_reaction_clicked": "Reactions",
         "count_raise_hand_clicked": "Raised hands",
-        "combined_live_engaged_users_play_time_ratio": "Live engagement rate"
+        "combined_live_engaged_users_play_time_ratio": "Live engagement rate",
+        "heatMap": {
+          "high": "High",
+          "good": "Good",
+          "fair": "Fair",
+          "low": "Low",
+          "non": "Not Engaged",
+          "offline": "Offline"
+        }
       },
       "recordings": {
         "viewers": "Unique viewers",

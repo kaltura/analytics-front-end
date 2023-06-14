@@ -7,8 +7,6 @@ import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
 
 export interface HeatMapItem {
   color: string;
-  plays: number;
-  count: number;
   width: string;
   tooltip: string;
 }
@@ -25,7 +23,14 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
 
-  private _heatMapColorScheme = ['#dfe9ff', '#487adf', '#2655b0', '#1d4694'];
+  private _heatMapColors = {
+    'high': '#1d4694',
+    'good': '#3567CA',
+    'fair': '#6391ED',
+    'low': '#B5CDFC',
+    'non': '#DFE9FF',
+    'offline': '#EBEBEB'
+  }
 
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
@@ -102,35 +107,17 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
         });
   }
 
-  private _createHeatMap(points: HeatMapPoints): HeatMapItem[] {debugger;
-    return points
-      .reduce((acc, value) => {
-        if (acc.length === 0 || acc[acc.length - 1].plays !== value) {
-          acc.push({
-            color: this._getColor(value),
-            plays: value,
-            count: 1,
-          });
-        } else {
-          acc[acc.length - 1].count += 1;
-        }
-
-        return acc;
-      }, [])
-      .map((item, index, array) => {
-        item.width = `${item.count / array.length * 100}%`;
-
-        const message = this._translate.instant(`app.entry.heatMap.tooltip.${item.plays > 2 ? 'n' : item.plays}`);
-        item.tooltip = `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${item.color}"></i><span class="kMessage">${message}</span></div></div>`;
-        return item;
-      });
+  private _createHeatMap(points: HeatMapPoints): HeatMapItem[] {
+    const items = [];
+    points.forEach((point, index) => {
+      const message = this._translate.instant(`app.entryEp.session.heatMap.${point}`);
+      items.push({
+        width: `${(index + 1) / points.length * 100}%`,
+        color: this._heatMapColors[point],
+        tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${this._heatMapColors[point]}"></i><span class="kMessage">${message}</span></div></div>`
+      })
+    })
+    return items;
   }
 
-  private _getColor(countPlays: number): string {
-    if (countPlays > 2) {
-      return this._heatMapColorScheme[3];
-    }
-
-    return this._heatMapColorScheme[countPlays];
-  }
 }

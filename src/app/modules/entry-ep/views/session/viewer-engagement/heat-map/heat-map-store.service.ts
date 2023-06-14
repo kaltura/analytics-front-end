@@ -5,7 +5,7 @@ import { ReportConfig, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportType } from 'kaltura-ngx-client';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 
-export type HeatMapPoints = number[];
+export type HeatMapPoints = string[];
 
 export interface HeatMapCache {
   [key: string]: Observable<HeatMapPoints>;
@@ -30,6 +30,15 @@ export class HeatMapStoreService {
       }
     }
   };
+
+  private user_engagement_values = {
+    'high': 6,
+    'good': 5,
+    'fair': 4,
+    'low': 3,
+    'non': 2,
+    'offline': 1
+  }
 
   constructor(private _reportService: ReportService) {
 
@@ -57,12 +66,24 @@ export class HeatMapStoreService {
             if (!report.table || !report.table.data || !report.table.header) {
               return Array.from({ length: 1 }, () => 0);
             }
-
+            const dataPoints = [];
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
-debugger;
-            return tableData
-              .sort((a, b) => Number(a['percentile']) - Number(b['percentile']))
-              .map(item => Number(item['count_viewers']));
+            if (tableData.length) {
+              const getMaxValue = (val1: string, val2: string) => {
+                return this.user_engagement_values[val1] > this.user_engagement_values[val2] ? val1 : val2;
+              }
+              // merge duplicated position and set their user_engagement to the highest value
+              const positions = {}; // /create hash map
+              tableData.forEach(dataPoint => {
+                if (positions[dataPoint.position]) {
+                  positions[dataPoint.position] = getMaxValue(positions[dataPoint.position], dataPoint.user_engagement)
+                } else {
+                  positions[dataPoint.position] = dataPoint.user_engagement;
+                }
+              })
+              Object.keys(positions).forEach(key => dataPoints.push(positions[key]));
+            }
+            return dataPoints;
           }),
           publishReplay(1),
           refCount()
