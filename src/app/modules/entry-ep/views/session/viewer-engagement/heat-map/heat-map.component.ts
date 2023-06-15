@@ -23,15 +23,6 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
 
-  private _heatMapColors = {
-    'high': '#1d4694',
-    'good': '#3567CA',
-    'fair': '#6391ED',
-    'low': '#B5CDFC',
-    'non': '#DFE9FF',
-    'offline': '#EBEBEB'
-  }
-
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
 
@@ -110,11 +101,13 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   private _createHeatMap(points: HeatMapPoints): HeatMapItem[] {
     const items = [];
     points.forEach((point, index) => {
-      const message = this._translate.instant(`app.entryEp.session.heatMap.${point}`);
+      const key = point === 'Offline' ? 'offline' : point.indexOf('TabFocused') > -1 ? 'TabFocused' : 'TabNotFocused';
+      const color = point === 'Offline' ? '#EBEBEB' : point.indexOf('TabFocused') > -1 ? '#6391ED' : '#B5CDFC';
+      const message = this._translate.instant(`app.entryEp.session.heatMap.${key}`);
       items.push({
         width: `${(index + 1) / points.length * 100}%`,
-        color: this._heatMapColors[point],
-        tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${this._heatMapColors[point]}"></i><span class="kMessage">${message}</span></div></div>`
+        color,
+        tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${color}"></i><span class="kMessage">${message}</span></div></div>`
       })
     })
     return items;
