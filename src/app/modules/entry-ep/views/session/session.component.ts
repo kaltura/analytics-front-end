@@ -179,7 +179,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
               </div>
               <div class="kValue">
                 <span class="kBullet" style="color: ${getPrimaryColor('viewers')}">&bull;</span>
-                ${this._translate.instant('app.entryEp.session.engagement')}:&nbsp;${value2}
+                ${this._translate.instant('app.entryEp.session.engagement')}:&nbsp;${parseFloat(value2).toFixed(2)}
               </div>
             </div>
           `;

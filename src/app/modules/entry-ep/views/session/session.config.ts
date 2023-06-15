@@ -23,7 +23,7 @@ export class SessionConfig extends ReportDataBaseConfig {
             sortOrder: 0,
           },
           'combined_live_engaged_users_ratio': {
-            format: value => value,
+            format: value => value * 100,
             sortOrder: 0,
           },
           'reaction_clap_clicked': {
