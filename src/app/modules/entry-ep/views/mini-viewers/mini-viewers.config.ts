@@ -13,12 +13,12 @@ export class MiniViewersConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'unique_combined_live_viewers': {
+          'unique_vod_live_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entryEp.highlights.viewers`),
             sortOrder: 1,
           },
-          'unique_vod_live_viewers': {
+          'unique_combined_live_viewers': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.entryEp.highlights.live`),
             sortOrder: 2,
