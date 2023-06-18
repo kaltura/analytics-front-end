@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="kCharts" [class.compare]="isCompareMode" [style.opacity]="_chartLoaded ? 1 : 0">
+      <div class="kCharts" [class.compare]="isCompareMode" [style.opacity]="_chartLoaded ? 1 : 0" id="engagement-impressions">
         <div class="kChart" [class.kHidden]="!isCompareMode">
           <div aria-label="Impressions Funnel" echarts class="kChart" [class.compare]="isCompareMode" [options]="_compareChartData" (chartInit)="onCompareChartInit($event)"></div>
         </div>

@@ -9,7 +9,7 @@
                         [selectedTimeUnit]="_reportInterval"></app-time-units>
       </div>
       <div class="kChart">
-        <div echarts class="kChart"
+        <div echarts class="kChart" id="engagement-heighlights-graph"
              *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
              [options]="_lineChartData[_selectedMetrics]"></div>
 
@@ -62,12 +62,13 @@
               <app-user-engagement-filter *ngIf="!_isMultiAccount"
                                           [totalCount]="usersTableComponent.totalCount"
                                           [dateFilter]="_dateFilter"
-                                          [showUserFilter]="_viewConfig.userFilter"
+                                          [showUserFilter]="_viewConfig.userFilter !== null"
                                           (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
 
               <app-users-table #usersTableComponent
                                [filterChange]="_filterChange$"
                                [filter]="_filter"
+                               [allowUserDrilldown]="_viewConfig.userDrilldown !== null"
                                [compareFilter]="_compareFilter"
                                [isCompareMode]="_isCompareMode"
                                [reportInterval]="_reportInterval"

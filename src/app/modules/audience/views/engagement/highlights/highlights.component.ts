@@ -86,6 +86,7 @@ export class EngagementHighlightsComponent extends EngagementBaseReportComponent
   public _filterChange$ = this._filterChange.asObservable();
   public _viewConfig: ViewConfig = {
     userFilter: {},
+    userDrilldown: {}
   };
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
