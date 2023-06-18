@@ -124,11 +124,14 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             this._chartOptions = this._getGraphData(emptyLine, emptyLine);
           }
           if (recording) {
-            this._recordingDuration = (recording as KalturaMediaEntry).duration;
-            const recordingStart = (recording as KalturaMediaEntry).createdAt;
-            const recordingEnd = recordingStart + this._recordingDuration;
             const sessionStart = this.actualStartDate.getTime() / 1000;
             const sessionEnd = this.endDate.getTime() / 1000;
+            this._recordingDuration = (recording as KalturaMediaEntry).duration;
+            let recordingStart = (recording as KalturaMediaEntry).createdAt;
+            if (recordingStart < sessionStart) {
+              recordingStart = sessionStart;
+            }
+            const recordingEnd = recordingStart + this._recordingDuration;
             this._recordingStartPercent = (recordingStart - sessionStart) / (sessionEnd - sessionStart) * 100;
             this._recordingEndPercent = (recordingEnd - sessionStart) / (sessionEnd - sessionStart) * 100;
             this.updateRecording();
