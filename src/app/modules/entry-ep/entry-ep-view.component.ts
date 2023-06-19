@@ -213,6 +213,11 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public postExportHandler(): void {
     this._viewConfig.devices = {};
+    // force refresh of graph elements width
+    document.getElementById('ep-session-graph').style.width = '1000px';
+    setTimeout(() => {
+      document.getElementById('ep-session-graph').style.width = '100%';
+    }, 0);
   }
 
   public onExporting(exporting: boolean): void {
