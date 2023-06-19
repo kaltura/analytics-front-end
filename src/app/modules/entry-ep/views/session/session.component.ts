@@ -128,6 +128,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             const sessionEnd = this.endDate.getTime() / 1000;
             this._recordingDuration = (recording as KalturaMediaEntry).duration;
             let recordingStart = (recording as KalturaMediaEntry).createdAt;
+            // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time
             if (recordingStart < sessionStart) {
               recordingStart = sessionStart;
             }
