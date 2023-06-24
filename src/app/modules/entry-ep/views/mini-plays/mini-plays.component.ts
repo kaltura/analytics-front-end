@@ -118,7 +118,7 @@ export class EpMiniPlaysComponent implements OnInit {
     this._lineChartData.xAxis.boundaryGap = true;
     this._lineChartData.yAxis.show = false;
     this._lineChartData.grid = {
-      top: 0, left: 0, bottom: 0, right: 0, containLabel: true
+      top: 10, left: 0, bottom: 0, right: 0, containLabel: true
     };
     this._lineChartData.series[0].areaStyle = {
       color: "#E6ECF9"
