@@ -50,19 +50,21 @@ console.log('analytics-config.ts has been updated!');
 const packageJsonPath = path.resolve(packageRoot, 'package.json');
 const packageData = fs.readFileSync(packageJsonPath);
 let packageJsonObj = JSON.parse(packageData);
+const commitRequired = packageJsonObj.version !== versionNumber;
 packageJsonObj.version = versionNumber;
 packageJsonObj = JSON.stringify(packageJsonObj, null, 2);
 
 fs.writeFileSync(packageJsonPath, packageJsonObj);
 console.log('Package.json has been updated!');
 
-// STEP: commit changed files to git
-try {
-  execSync(`git commit -am "bump analytics version to v${versionNumber}"`);
-}
-catch (error) {
-  console.error('Git commit operation failed. Verify you are logged into Github and have permissions to commit to this repository');
-  // process.exit(1);
+// STEP: commit changed files to git if needed
+if (commitRequired) {
+  try {
+    execSync(`git commit -am "bump analytics version to v${versionNumber}"`);
+  } catch (error) {
+    console.error('Git commit operation failed. Verify you are logged into Github and have permissions to commit to this repository');
+    process.exit(1);
+  }
 }
 
 // STEP: push commit to origin
