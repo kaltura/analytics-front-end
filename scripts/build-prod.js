@@ -21,6 +21,7 @@ catch (error) {
 }
 
 // STEP: check existence of tag with the version
+/*
 try {
   const tagExistence = execSync(`git tag -l "v${versionNumber}"`).toString();
   if (tagExistence) {
@@ -31,7 +32,7 @@ try {
   console.error(error);
   process.exit(1);
 }
-
+*/
 const packageRoot = findRoot(process.cwd());
 if (!packageRoot) throw new Error("couldn't find package root");
 
@@ -115,6 +116,7 @@ catch (error) {
 
 
 // STEP: create tag with new version
+/*
 try {
   execSync(`git tag v${versionNumber}`);
 }
@@ -142,5 +144,7 @@ catch (error) {
   console.error('cannot upload release: ', error);
   process.exit(1);
 }
-
 console.log('\x1b[32m%s\x1b[0m', `Version created successfully! You can find the new release here: https://github.com/kaltura/analytics-front-end/releases/tag/v${versionNumber}`);
+*/
+console.log('\x1b[32m%s\x1b[0m', `Version created successfully! You can find the zipped version here: dist/${zipName}v${versionNumber}`);
+
