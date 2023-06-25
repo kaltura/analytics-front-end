@@ -61,9 +61,8 @@ try {
   execSync(`git commit -am "bump analytics version to v${versionNumber}"`);
 }
 catch (error) {
-  console.error({error});
   console.error('Git commit operation failed. Verify you are logged into Github and have permissions to commit to this repository');
-  process.exit(1);
+  // process.exit(1);
 }
 
 // STEP: push commit to origin
