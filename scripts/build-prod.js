@@ -12,7 +12,6 @@ const versionNumber = paramsVersion.substring(1);
 const zipName = `kmcAnalytics_v${versionNumber}.zip`;
 
 // STEP: check uncommitted changes
-/*
 try {
   execSync('git diff --exit-code');
 }
@@ -20,7 +19,6 @@ catch (error) {
   console.error('it seems that you have un-commited changes. to perform this action you should either commit your changes or reset them. aborting action');
   process.exit(1);
 }
-*/
 
 // STEP: check existence of tag with the version
 /*
