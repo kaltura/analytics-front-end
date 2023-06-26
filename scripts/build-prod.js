@@ -125,10 +125,8 @@ try {
   process.exit(1);
 }
 
+// STEP: copy player deployment folders
 console.log('---copy player deployment folders---');
-console.log(path.resolve(packageRoot, 'deploy'));
-console.log(dir);
-
 try {
   fse.copySync(path.resolve(packageRoot, 'deploy'), dir + '/deploy');
   fse.copySync(path.resolve(packageRoot, 'deploy_v7'), dir + '/deploy_v7');
