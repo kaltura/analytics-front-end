@@ -106,8 +106,8 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
       const color = key === 'offline' ? '#EBEBEB' : key === 'engaged' ? '#6391ED' : '#B5CDFC';
       const message = this._translate.instant(`app.entryEp.session.heatMap.${key}`);
       items.push({
-        left: `${(index + 1) / points.length * 100}%`,
-        width: `${points.length / 100}%`,
+        left: `${ index / points.length * 100}%`,
+        width: `${100 / points.length}%`,
         color,
         tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${color}"></i><span class="kMessage">${message}</span></div></div>`
       })
