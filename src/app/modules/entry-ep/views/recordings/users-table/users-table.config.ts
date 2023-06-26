@@ -24,7 +24,7 @@ export class UsersTableConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.highlightsReport.count_loads`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'sum_vod_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
             units: value => 'min',
@@ -63,7 +63,7 @@ export class UsersTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'sum_vod_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },

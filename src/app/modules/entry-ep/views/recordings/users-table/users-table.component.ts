@@ -35,7 +35,7 @@ export class UsersTableComponent implements OnInit {
 
   @Output() totalChanged = new EventEmitter<number>();
 
-  private _reportType = reportTypeMap(KalturaReportType.userTopContent);
+  private _reportType = reportTypeMap(KalturaReportType.epWebcastVodUserTopContent);
   private _dataConfig: ReportDataConfig;
   private _order = '-count_plays';
   private _filter = new KalturaEndUserReportInputFilter({

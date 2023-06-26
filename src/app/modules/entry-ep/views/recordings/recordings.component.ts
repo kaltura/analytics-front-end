@@ -34,7 +34,7 @@ export class EpRecordingsComponent implements OnInit {
   @Input() exporting = false;
 
   private _order = '-date_id';
-  private _reportType = KalturaReportType.userTopContent;
+  private _reportType = KalturaReportType.epWebcastVodUserTopContent;
   private _dataConfig: ReportDataConfig;
 
   public _tableModes = TableModes;
