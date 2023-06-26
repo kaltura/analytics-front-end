@@ -8,6 +8,7 @@ import { KalturaEndUserReportInputFilter } from 'kaltura-ngx-client';
 export interface HeatMapItem {
   color: string;
   width: string;
+  left: string;
   tooltip: string;
 }
 
@@ -101,11 +102,12 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   private _createHeatMap(points: HeatMapPoints): HeatMapItem[] {
     const items = [];
     points.forEach((point, index) => {
-      const key = point === 'Offline' ? 'offline' : point.indexOf('TabFocused') > -1 ? 'TabFocused' : 'TabNotFocused';
-      const color = point === 'Offline' ? '#EBEBEB' : point.indexOf('TabFocused') > -1 ? '#6391ED' : '#B5CDFC';
+      const key = point === 'Offline' ? 'offline' : point.indexOf('TabFocused') > -1 && point.indexOf('SoundOn') > -1 ? 'engaged' : 'notEngaged';
+      const color = key === 'offline' ? '#EBEBEB' : key === 'engaged' ? '#6391ED' : '#B5CDFC';
       const message = this._translate.instant(`app.entryEp.session.heatMap.${key}`);
       items.push({
-        width: `${(index + 1) / points.length * 100}%`,
+        left: `${(index + 1) / points.length * 100}%`,
+        width: `${points.length / 100}%`,
         color,
         tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${color}"></i><span class="kMessage">${message}</span></div></div>`
       })
