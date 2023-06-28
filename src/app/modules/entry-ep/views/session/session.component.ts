@@ -317,19 +317,30 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   }
 
   private tick(): void {
-    this._currentPositionPercent += this._tickPercentIncrease;
-    this.updateRecording();
+    if (this._currentPositionPercent > 100) {
+      this._currentPositionPercent = 100;
+      this.togglePlay();
+    } else {
+      this._currentPositionPercent += this._tickPercentIncrease;
+      this.updateRecording();
+    }
   }
 
   public togglePlay(): void {
     this._playing = !this._playing;
-    if (this._playing && this._timerIntervalId === null) {
+    if (this._playing && this._timerIntervalId === null && this._currentPositionPercent < 100) {
       this._timerIntervalId = setInterval(this.tick.bind(this) , 1000);
     } else {
       clearInterval(this._timerIntervalId);
       this._timerIntervalId = null;
     }
     if (this._recordingAvailable) {
+      if (this._currentPositionPercent === 100) {
+        this._playing = false;
+        this._playerInstance.pause();
+        this._recordingPlaying = false;
+        return;
+      }
       if (this._playing) {
         this._playerInstance.play();
         this._recordingPlaying = true;
