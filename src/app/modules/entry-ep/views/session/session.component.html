@@ -1,0 +1,78 @@
+<div data-aid="report-engagement-highlights" class="kReport kOverrideFAIcons">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReport kOverrideFAIcons">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.entryEp.session.title' | translate}}</span>
+      </div>
+
+      <div class="noRecording" *ngIf="!exporting">
+
+        <app-k-player-v7 [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [preload]="true" [fillWidth]="true" [fillHeight]="true"
+                         [uiconfid]="_playerConfig.uiconfid" [entryid]="recordingEntryId" [ks]="_playerConfig.ks"
+                         (kalturaPlayerReady)="_onPlayerReady($event)" [ngStyle]="{'opacity': _recordingAvailable ? 1 : 0}"></app-k-player-v7>
+        <span class="noRecordingLabel" *ngIf="!_recordingAvailable">{{'app.entryEp.session.noRecording' | translate}}</span>
+        <div class="controlbar">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="togglePlay()">
+            <g opacity="0.8">
+              <path *ngIf="!_playing" fill-rule="evenodd" clip-rule="evenodd" d="M24.9056 14.7197C25.8627 15.3046 25.8627 16.6947 24.9056 17.2796L11.2822 25.605C10.2826 26.2158 9 25.4965 9 24.3251V7.67423C9 6.50283 10.2826 5.78348 11.2822 6.39431L24.9056 14.7197Z" fill="white"/>
+              <path *ngIf="_playing" fill-rule="evenodd" clip-rule="evenodd" d="M10 7C8.89543 7 8 7.89543 8 9V23C8 24.1046 8.89543 25 10 25C11.1046 25 12 24.1046 12 23V9C12 7.89543 11.1046 7 10 7ZM22 7C20.8954 7 20 7.89543 20 9V23C20 24.1046 20.8954 25 22 25C23.1046 25 24 24.1046 24 23V9C24 7.89543 23.1046 7 22 7Z" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="scrubber" (click)="_onChartClick($event)"></div>
+        <div class="fill" [ngStyle]="{'width': _currentPositionPercent + '%'}"></div>
+      </div>
+
+      <div class="kChart">
+        <div aria-label="Timeline Chart" echarts class="kChart" id="ep-session-graph" [options]="_chartOptions" (click)="_onChartClick($event)"></div>
+        <div *ngIf="!_isBusy && !_chartOptions" class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+        <div class="progressLine" *ngIf="_currentPositionPercent > 0" [ngStyle]="{'left': 'calc(' + _currentPositionPercent + '% - 2px)'}"></div>
+        <span class="currentPosition" *ngIf="_currentPositionPercent > 0"
+              [ngStyle]="_currentPositionPercent < 50 ? {'left': 'calc(' + _currentPositionPercent + '% + 8px)'} : {'left': 'calc(' + _currentPositionPercent + '% - 60px)'}">{{_currentPosition}}</span>
+        <app-ep-reactions [exporting]="exporting" *ngIf="_reportData.length > 0" [reportData]="_reportData"></app-ep-reactions>
+      </div>
+
+      <div class="time">
+        <span>00:00:00</span>
+        <span class="duration">{{_durationLabel}}</span>
+      </div>
+
+      <div class="legend">
+        <div class="mark viewers"></div>
+        <span>{{'app.entryEp.session.viewers' | translate}}</span>
+        <div class="mark engagement"></div>
+        <span>{{'app.entryEp.session.engagement' | translate}}</span>
+      </div>
+
+<!--      <div class="kReportTabs">-->
+<!--        <a class="kReportTabsItem"-->
+<!--           [class.kTabActive]="_currentTab === _reportTabs.viewer"-->
+<!--           (click)="_selectTab(_reportTabs.viewer)">-->
+<!--          <span>{{'app.entryEp.session.viewer' | translate}}</span>-->
+<!--        </a>-->
+<!--        <a class="kReportTabsItem"-->
+<!--           [class.kTabActive]="_currentTab === _reportTabs.stage"-->
+<!--           (click)="_selectTab(_reportTabs.stage)">-->
+<!--          <span>{{'app.entryEp.session.stage' | translate}}</span>-->
+<!--        </a>-->
+<!--      </div>-->
+      <div [class.kHidden]="exporting" class="kTableContainer">
+        <ng-container *ngIf="_currentTab === _reportTabs.viewer">
+          <div class="kReportContainer">
+            <app-ep-viewer-engagement [startDate]="startDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="_currentTab === _reportTabs.stage">
+          <div class="kReportContainer">
+            Stage
+          </div>
+        </ng-container>
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>
+

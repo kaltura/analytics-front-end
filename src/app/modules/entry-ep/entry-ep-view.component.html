@@ -1,0 +1,59 @@
+<div #reportToExport data-aid="report-group-entry-webcast" class="kMain" [class.exporting]="_exporting">
+  <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
+    <div class="kReportView kVideoMedia">
+      <div class="kReport kContent kOverrideFAIcons" *ngIf="_entry?.id" [class.exporting]="_exporting">
+        <div class="kReportHeader" [ngClass]="{exporting: _exporting, noTitle: !_viewConfig.title}">
+          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
+          <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryEp.exportTitle' | translate: {'0': _entry?.name}) : _entry?.name}}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+            <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport"
+                            [filename]="_entry.name + '_summary_report.pdf'" (preExport)="preExportHandler()"
+                            (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+          </div>
+        </div>
+
+        <div class="kReportContainer" *ngIf="!_loadingEntry">
+          <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights">
+            <app-ep-mini-viewers [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
+          </div>
+          <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer kSocialHighlights">
+            <app-ep-mini-minutes-viewed [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
+          </div>
+        </div>
+
+        <div class="kReportContainer" *ngIf="!_loadingEntry">
+          <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer kSocialHighlights">
+            <app-ep-mini-engagement [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
+          </div>
+          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer kSocialHighlights">
+            <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
+          </div>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.session" [class.exporting]="_exporting" class="kReportContainer">
+          <app-ep-session [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId"></app-ep-session>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">
+          <app-ep-recordings [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-recordings>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.geo" [class.exporting]="_exporting" class="kReportContainer">
+          <app-ep-geo [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-geo>
+        </div>
+
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.devices" [class.exporting]="_exporting" class="kReportContainer">
+          <app-ep-devices [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-devices>
+        </div>
+
+        <div *ngIf="_exporting" class="footer">
+          <i></i>
+          <span>{{'app.engagement.footer' | translate}}</span>
+        </div>
+
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

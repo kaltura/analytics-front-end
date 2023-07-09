@@ -1,0 +1,5 @@
+<div class="reactions">
+  <div class="reaction" *ngFor="let reaction of _topReactions" [ngStyle]="{left: reaction.positionPercent}">
+    <app-ep-reaction-icon [reaction]="reaction" [exporting]="exporting"></app-ep-reaction-icon>
+  </div>
+</div>

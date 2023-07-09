@@ -1,0 +1,84 @@
+<div data-aid="report-devices" class="kReport kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryWebcast.devices.title' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" aria-labelledby="kWebcastDomains">
+
+      <span *ngIf="_totalCount !== undefined" class="kTotalCount">
+          {{'app.entryLive.discovery.totalDevices' | translate: { '0': _totalCount } }}
+      </span>
+
+    <div class="kTable">
+      <div class="kTableContainer">
+        <p-table aria-label="Devices Table"
+                 [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"
+                 sortField="unique_combined_live_viewers" [sortOrder]="-1" [defaultSortOrder]="-1">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _columns"
+                  [pSortableColumn]="col === 'unique_combined_live_viewers'  || col === 'unique_vod_viewers' ? col : null"
+                  [class.nonSortable]="col === 'device'"
+                 >
+                <div class="kColumnHeader" [ngStyle]="{'paddingLeft': col === 'device' ? '39px' : '0px'}">
+                    <span [kTooltip]="'app.entryEp.devices.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.entryEp.devices.' + col | translate}}
+                    </span>
+                  <p-sortIcon [field]="col" *ngIf="col !== 'device'"></p-sortIcon>
+                </div>
+              </th>
+            </tr>
+            <tr *ngIf="_tableData?.length && !exporting" class="kSummaryRow">
+              <th [ngStyle]="{'width': 'auto', 'paddingLeft': '63px'}">
+                <span>{{'app.entryEp.devices.all' | translate}}</span>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <div class="tableCell">
+                  <span>{{_tabsData[0].value}}</span>
+                  <div class="bulletContainer">
+                    <app-bullet [value]="100" [formatter]="null" [showValue]="false"></app-bullet>
+                  </div>
+                </div>
+              </th>
+              <th [ngStyle]="{'width': 'auto'}">
+                <span>{{_tabsData[1].value}}</span>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td *ngFor="let col of _columns; let i = index"
+                  [class.kHighlight]="i===0">
+                <ng-container>
+                  <div class="tableCell">
+                    <i *ngIf="col === 'device'" class="kIcon" [ngClass]="data[col] | appDeviceIcon"></i>
+                    <span>{{data[col]}}</span>
+                    <div class="bulletContainer" *ngIf="col === 'unique_combined_live_viewers'">
+                      <app-bullet [value]="data['live_viewer_distribution']" [formatter]="null" [showValue]="false"></app-bullet>
+                    </div>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+        <p-paginator aria-label="Pagination" [class.hidePaginator]="exporting"
+                     [rows]="_pager.pageSize"
+                     [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                     [totalRecords]="_totalCount"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

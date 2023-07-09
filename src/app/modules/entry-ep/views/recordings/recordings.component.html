@@ -1,0 +1,64 @@
+<div data-aid="report-engagement-highlights" class="kReport kOverrideFAIcons">
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryEp.highlights.recordings' | translate}}</span>
+  </div>
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent">
+
+      <div class="timeUnits">
+        <p-selectButton [options]="_timeUnitsItems" (onChange)="onTimeUnitsChange()" [(ngModel)]="_reportInterval"></p-selectButton>
+      </div>
+
+      <div class="kChart">
+        <div echarts class="kChart"
+             *ngIf="_lineChartData && _lineChartData[_selectedMetrics] && _lineChartData[_selectedMetrics]?.series[0]?.data?.length"
+             [options]="_lineChartData[_selectedMetrics]"></div>
+
+        <div
+          *ngIf="!_isBusy && (!_lineChartData || !_lineChartData[_selectedMetrics] || !_lineChartData[_selectedMetrics]?.series[0]?.data?.length)"
+          class="kNoResults">
+          <span>{{'app.common.noResults' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div></div>
+        <span>{{'app.engagement.highlightsReport.count_plays' | translate}}</span>
+      </div>
+
+      <div class="kTable">
+        <div class="kToggle" [class.kHidden]="exporting">
+          <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
+          <a (click)="_toggleTable()">
+            {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
+          </a>
+        </div>
+        <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
+          <div class="kTableModeSelector" [class.kHidden]="exporting">
+            <p-dropdown [style]="{'width': '200px'}"
+                        [options]="_tableModesOptions"
+                        [(ngModel)]="_tableMode">
+            </p-dropdown>
+            <span *ngIf="_tableMode === _tableModes.users" class="label">{{'app.entryEp.recordings.numViewers' | translate: { '0': _totalViewers} }}</span>
+            <span *ngIf="_tableMode === _tableModes.entries" class="label">{{'app.entryEp.recordings.numEntries' | translate: { '0': _totalEntries} }}</span>
+          </div>
+
+          <div [class.kHidden]="exporting" class="kTableContainer">
+            <ng-container [ngSwitch]="_tableMode">
+                <ng-container *ngSwitchCase="_tableModes.users">
+                  <app-users-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalViewersChange($event)"></app-users-table>
+                </ng-container>
+                <ng-container *ngSwitchCase="_tableModes.entries">
+                  <app-entries-table [entryIdIn]="entryIdIn" [startDate]="startDate" [endDate]="endDate" (totalChanged)="onTotalEntriesChange($event)"></app-entries-table>
+                </ng-container>
+            </ng-container>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>
+

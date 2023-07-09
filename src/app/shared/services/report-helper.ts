@@ -7,6 +7,12 @@ export class ReportHelper {
     return parseFloat(x).toLocaleString('en-US', { maximumSignificantDigits: 20 });
   }
 
+  static precisionRound(number, precision) {
+    const factor = Math.pow(10, precision);
+    const n = precision < 0 ? number : 0.01 / factor + number;
+    return Math.round( n * factor) / factor;
+  }
+
   static percents(x: any, round = true, maxHundred = false, addUnits = true, precision = 1): string {
     x = parseFloat(x) * 100;
     x = maxHundred && x > 100 ? 100 : x;
@@ -50,15 +56,23 @@ export class ReportHelper {
     return this.numberOrZero(x, round);
   }
 
-  static time(x: any): string {
+  static time(x: any, showEmptyHours = false): string {
     if (!x.length) {
       return '00:00';
     }
     const numValue = Math.abs(parseFloat(x));
-    const wholeMinutes = Math.floor(numValue / 60000);
+    let wholeMinutes = Math.floor(numValue / 60000);
+    let minutesText = wholeMinutes < 10 ? '0' + wholeMinutes.toString() : wholeMinutes.toString();
     const wholeSeconds = Math.floor((numValue - (wholeMinutes * 60000)) / 1000);
     const secondsText = wholeSeconds < 10 ? '0' + wholeSeconds.toString() : wholeSeconds.toString();
-    let formattedTime = wholeMinutes.toString() + ':' + secondsText;
+    let formattedTime = showEmptyHours ? '00:' + minutesText + ':' + secondsText : minutesText + ':' + secondsText;
+    if (wholeMinutes > 60) {
+      const wholeHours = Math.floor(wholeMinutes / 60);
+      wholeMinutes = wholeMinutes % 60;
+      minutesText = wholeMinutes < 10 ? '0' + wholeMinutes.toString() : wholeMinutes.toString();
+      const hoursText = wholeHours < 10 ? '0' + wholeHours.toString() : wholeHours.toString();
+      formattedTime = hoursText + ':' + minutesText + ':' + secondsText;
+    }
 
     if (parseFloat(x) < 0) {
       formattedTime = '-' + formattedTime;

@@ -1,0 +1,184 @@
+@import '../../../../../styles/variables';
+:host ::ng-deep .kPlayer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  .playkit-control-play-pause, .playkit-pre-playback-play-overlay, .playkit-overlay-action  {
+    display: none !important;
+  }
+  .playkit-bottom-bar {
+    .playkit-bottom-bar-area, .playkit-left-controls {
+      display: none !important;
+    }
+    .playkit-right-controls {
+      .playkit-control-settings, .playkit-control-picture-in-picture, .playkit-control-fullscreen {
+        display: none !important;
+      }
+      .playkit-volume-control {
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
+:host .kReport {
+  margin-bottom: 0px;
+  .kChart {
+    margin-bottom: 0px;
+    height: 224px;
+    position: relative;
+    .progressLine {
+      position: absolute;
+      top: 0px;
+      height: 253px;
+      width: 2px;
+      background-color: #006EFA;
+    }
+    .currentPosition {
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      position: absolute;
+      bottom: -23px;
+    }
+  }
+}
+.kNoResults {
+  display: flex;
+  width: 100%;
+  height: 280px;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 28px;
+    color: $kGrayscale3;
+  }
+}
+.time {
+  height: 32px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  .duration {
+    margin-left: auto;
+  }
+}
+.legend {
+  height: 48px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  padding-left: 16px;
+  .mark {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    &.viewers {
+      background-color: #487ADF;
+    }
+    &.engagement {
+      background-color: #81CC6F;
+    }
+  }
+  span {
+    margin-right: 16px;
+  }
+}
+.noRecording {
+  width: 100%;
+  height: 550px;
+  background-color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  .noRecordingLabel {
+    position: absolute;
+  }
+  svg {
+    cursor: pointer;
+    left: 16px;
+    bottom: 4px;
+    position: absolute;
+    z-index: 1;
+  }
+  .controlbar {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    left: 0px;
+    height: 52px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+  }
+  .scrubber {
+    z-index: 1;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    left: 0px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  .fill {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 8px;
+    background-color: #006EFA;
+  }
+}
+.kReportTabs {
+  width: 100%;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid $kGrayscale5;
+
+  a.kReportTabsItem {
+    width: 160px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $kGrayscale3;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18px;
+
+    &:last-child {
+      margin-left: 40px;
+    }
+
+    &:hover {
+      color: #000000;
+    }
+
+    &.kTabActive {
+      color: #000000;
+      border-bottom: 3px solid #006EFA;
+      span {
+        margin-top: 3px;
+      }
+    }
+  }
+}
+.kTableContainer {
+  width: 100% !important;
+}

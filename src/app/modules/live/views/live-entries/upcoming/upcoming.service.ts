@@ -39,7 +39,7 @@ export class UpcomingService implements OnDestroy {
     this._kalturaClient
       .request(
         new ScheduleEventListAction({
-          filter: new KalturaLiveStreamScheduleEventFilter({ startDateGreaterThanOrEqual: new Date(), orderBy: this._orderBy}),
+          filter: new KalturaLiveStreamScheduleEventFilter({ startDateGreaterThanOrEqual: Math.floor(new Date().getTime() / 1000), orderBy: this._orderBy}),
           pager: this._pager
         }).setRequestOptions(
           new KalturaRequestOptions({

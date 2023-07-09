@@ -255,6 +255,18 @@ export const viewsConfig = {
       geo: {}
     }
   },
+  entryEP: {
+    download: {},
+    title: {},
+    miniViewers: {},
+    miniMinutesViewed: {},
+    miniEngagement: {},
+    miniPlays: {},
+    recordings: {},
+    session: {},
+    geo: {},
+    devices: {}
+  },
   playlist: {
     title: {},
     export: {},

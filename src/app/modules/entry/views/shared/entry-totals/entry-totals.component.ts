@@ -28,14 +28,14 @@ export class BaseEntryTotalsComponent extends EntryBase {
   @Input() entryId = '';
   @Input() comments: number = null;
   @Input() likes: number = null;
-  
+
   private _order = '-month_id';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
   private _dataConfig: ReportDataConfig;
-  
+
   public _dateFilter: DateChangeEvent;
   protected _componentId = 'totals';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
@@ -47,11 +47,11 @@ export class BaseEntryTotalsComponent extends EntryBase {
     likes: null,
     shares: null,
   };
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -61,27 +61,27 @@ export class BaseEntryTotalsComponent extends EntryBase {
               private _kalturaClient: KalturaClient,
               @Inject(TotalsConfig) private _dataConfigService: ReportDataBaseConfig) {
     super();
-    
+
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
     reportConfig.objectIds = this.entryId;
-    
+
     this._reportService.getReport(reportConfig, sections)
       .pipe(
         switchMap(report => {
           if (!this._isCompareMode) {
             return ObservableOf({ report, compare: null });
           }
-          
+
           const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
           if (compareReportConfig['objectIds__null']) {
             delete compareReportConfig['objectIds__null'];
@@ -115,14 +115,14 @@ export class BaseEntryTotalsComponent extends EntryBase {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateRefineFilter(): void {
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -139,19 +139,19 @@ export class BaseEntryTotalsComponent extends EntryBase {
       this._compareFilter = null;
     }
   }
-  
+
   private _handleCompare(current: Report, compare: Report, likes: number[]): void {
     const currentPeriod = { from: this._filter.fromDate, to: this._filter.toDate };
     const comparePeriod = { from: this._compareFilter.fromDate, to: this._compareFilter.toDate };
-  
+
     if (likes !== null) {
       current.totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
       current.totals.header += `${analyticsConfig.valueSeparator}votes`;
-    
+
       compare.totals.data += `${analyticsConfig.valueSeparator}${likes[1]}`;
       compare.totals.header += `${analyticsConfig.valueSeparator}votes`;
     }
-  
+
     if (current.totals && compare.totals && current.totals.data && compare.totals.data) {
       const tabsData = this._compareService.compareTotalsData(
         currentPeriod,
@@ -160,19 +160,19 @@ export class BaseEntryTotalsComponent extends EntryBase {
         compare.totals,
         this._dataConfig.totals
       );
-    
+
       const shares = tabsData.find(({ key }) => key === 'count_viral');
       const like = tabsData.find(({ key }) => key === 'votes');
-    
+
       this._socialHighlights = {
         likes: like,
         shares: shares,
       };
-    
+
       this._tabsData = tabsData.filter(({ hidden }) => !hidden);
     }
   }
-  
+
   private _handleTotals(totals: KalturaReportTotal, likes: number[]): void {
     if (likes !== null) {
       totals.data += `${analyticsConfig.valueSeparator}${likes[0]}`;
@@ -180,7 +180,7 @@ export class BaseEntryTotalsComponent extends EntryBase {
     }
 
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-  
+
     const shares = tabsData.find(({ key }) => key === 'count_viral');
     const like = tabsData.find(({ key }) => key === 'votes');
     this._socialHighlights = {
@@ -189,23 +189,23 @@ export class BaseEntryTotalsComponent extends EntryBase {
     };
     this._tabsData = tabsData.filter(({ hidden }) => !hidden);
   }
-  
+
   private _getLikes(): Observable<number[]> {
     const getAction = filter => new LikeListAction({
       filter: new KalturaLikeFilter({
         entryIdEqual: this.entryId,
-        createdAtGreaterThanOrEqual: DateFilterUtils.getMomentDate(filter.fromDate).toDate(),
-        createdAtLessThanOrEqual: DateFilterUtils.getMomentDate(filter.toDate).toDate(),
+        createdAtGreaterThanOrEqual: filter.fromDate,
+        createdAtLessThanOrEqual: filter.toDate,
       }),
       pager: new KalturaFilterPager({ pageSize: 1 }),
     });
-    
+
     const actions = [getAction(this._filter)];
-    
+
     if (this._isCompareMode) {
       actions.push(getAction(this._compareFilter));
     }
-    
+
     return this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
       .pipe(map(responses => {
         if (responses.hasErrors()) {

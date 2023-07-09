@@ -1,0 +1,56 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <p-table dataKey="name"
+           [sortField]="'count_plays'"
+           [value]="_tableData"
+           [customSort]="true"
+           [defaultSortOrder]="-1"
+           [sortOrder]="-1"
+           (sortFunction)="_onSortChanged($event)">
+    <ng-template pTemplate="header">
+      <tr [ngStyle]="{'borderBottom': '1px solid #cccccc'}">
+        <th *ngFor="let col of _columns" [pSortableColumn]="col === 'full_name' ? null : col" [class.nonSortable]="col === 'full_name'">
+          {{'app.entry.' + col | translate}}
+          <p-sortIcon [field]="col" *ngIf="col !== 'full_name'"></p-sortIcon>
+        </th>
+      </tr>
+      <tr *ngIf="_tableData?.length" class="kSummaryRow" [ngStyle]="{'height': '48px'}">
+        <th>
+          <span class="summaryLabel">{{'app.playlist.summary' | translate}}</span>
+        </th>
+        <th>
+          <span>{{_summaryData['count_loads']}}</span>
+        </th>
+        <th>
+          <span>{{_summaryData['count_plays']}}</span>
+        </th>
+        <th>
+          <span>{{_summaryData['sum_vod_view_period']}}</span>
+        </th>
+        <th [ngStyle]="{'paddingRight':'28px', 'fontWeight': 'normal'}">
+          <app-bullet [hideBulletOnTablet]="true" [value]="_summaryData['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+      <tr>
+        <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+          <ng-container>
+            <span *ngIf="col === 'full_name'">{{data[col].length ? data[col] : data['name']}}</span>
+            <span *ngIf="col !== 'full_name' && col !== 'avg_completion_rate'">{{data[col]}}</span>
+            <app-bullet [hideBulletOnTablet]="true" *ngIf="(col === 'avg_completion_rate') || col === 'total_completion_rate'" [ngStyle]="{'padding-right': '24px'}" [value]="data[col]" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <div class="emptymessage">
+        <div class="kEmptyMessage">{{'app.common.noResults' | translate}}</div>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-paginator [rows]="_pager.pageSize"
+               [first]="(_pager.pageIndex -1) * _pager.pageSize"
+               [totalRecords]="totalCount"
+               (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+</k-area-blocker>
