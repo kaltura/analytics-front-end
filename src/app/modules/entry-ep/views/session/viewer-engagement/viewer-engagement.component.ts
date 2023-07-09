@@ -33,6 +33,7 @@ import { ExportConfig } from "./export.config";
 export class EpViewerEngagementComponent implements OnInit {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
+  @Input() actualStartDate: Date; // session actual start date
   @Input() endDate: Date;
   @Input() duration = 0;
 

@@ -23,6 +23,7 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   @Input() entryId: string;
   @Input() duration: number;
   @Input() filter: KalturaEndUserReportInputFilter;
+  @Input() actualStartDate: Date; // session actual start date
 
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
@@ -87,7 +88,7 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   private _prepare(): void {
     this._isBusy = true;
 
-    this._heatMapStore.getHeatMap(this.userId, this.entryId, this.filter)
+    this._heatMapStore.getHeatMap(this.userId, this.entryId, this.filter, this.actualStartDate)
       .pipe(cancelOnDestroy(this))
       .subscribe(
         points => {

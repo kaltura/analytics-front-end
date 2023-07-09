@@ -40,7 +40,7 @@ export class HeatMapStoreService {
     this._cache = {};
   }
 
-  public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
+  public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter, actualStartDate: Date): Observable<HeatMapPoints> {
     if (!this._cache[`${userId}_${entryId}`]) {
       const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
       userFilter.userIds = userId;
@@ -69,11 +69,15 @@ export class HeatMapStoreService {
               }
               // merge duplicated position and set their user_engagement to the highest value
               const positions = {}; // /create hash map
+              const startTime = actualStartDate.getTime() / 1000;
               tableData.forEach(dataPoint => {
-                if (positions[dataPoint.position]) {
-                  positions[dataPoint.position] = getMaxValue(positions[dataPoint.position], dataPoint.user_engagement)
-                } else {
-                  positions[dataPoint.position] = dataPoint.user_engagement;
+                // filter out points earlier than the actual session start date
+                if (parseInt(dataPoint.position) >= startTime) {
+                  if (positions[dataPoint.position]) {
+                    positions[dataPoint.position] = getMaxValue(positions[dataPoint.position], dataPoint.user_engagement)
+                  } else {
+                    positions[dataPoint.position] = dataPoint.user_engagement;
+                  }
                 }
               })
               Object.keys(positions).forEach(key => dataPoints.push(positions[key]));
