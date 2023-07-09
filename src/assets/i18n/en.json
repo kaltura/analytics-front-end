@@ -537,7 +537,7 @@
       }
     },
     "entryEp": {
-      "exportTitle": "Event summary report",
+      "exportTitle": "Event summary report: {{0}}",
       "highlights": {
         "viewers": "Unique viewers",
         "live": "Live",
