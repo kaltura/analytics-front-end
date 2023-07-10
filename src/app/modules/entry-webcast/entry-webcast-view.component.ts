@@ -74,6 +74,8 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
   public _refineFilterOpened = false;
   public _selectedRefineFilters: RefineFilter = null;
 
+  private _saveTitleConfig = this._viewConfig.title;
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _exportConfigService: EntryWebcastExportConfig,
@@ -234,6 +236,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
     this._viewConfig.devices = null;
     this._viewConfig.export = null;
     this._viewConfig.refineFilter = null;
+    this._viewConfig.title = {}; // force show title for export
   }
 
   public postExportHandler(): void {
@@ -252,6 +255,7 @@ export class EntryWebcastViewComponent implements OnInit, OnDestroy {
       os: {},
       geo: {}
     };
+    this._viewConfig.title = this._saveTitleConfig; // restore title settings
   }
 
   public onExporting(exporting: boolean): void {

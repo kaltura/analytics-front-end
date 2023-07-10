@@ -58,6 +58,8 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _recordingEntryId = '';
   public _allEntryIds = '';
 
+  private _saveTitleConfig = this._viewConfig.title;
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _exportConfigService: EntryEPExportConfig,
@@ -209,12 +211,12 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public preExportHandler(): void {
     this._viewConfig.devices = null;
-    this._viewConfig.title = {};
+    this._viewConfig.title = {}; // force show title for export
   }
 
   public postExportHandler(): void {
     this._viewConfig.devices = {};
-    this._viewConfig.title = null;
+    this._viewConfig.title = this._saveTitleConfig; // restore title settings
     // force refresh of graph elements width
     document.getElementById('ep-session-graph').style.width = '1000px';
     setTimeout(() => {
