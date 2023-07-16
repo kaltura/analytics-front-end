@@ -30,7 +30,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   public _aiLoading = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public searchTerms: Term[] = [];
-  public AIResponse = 'Loading...';
+  public AIResponse = 'Analyzing...';
 
   constructor(private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService) {

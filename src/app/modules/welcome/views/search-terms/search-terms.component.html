@@ -8,7 +8,7 @@
         <div id="wordsCloud"[class.shown]="_searchTermsLoaded">
           <div class="cover"></div>
         </div>
-        <div class="insights">
+        <div class="insights" *ngIf="!_loading">
           <div class="row">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19.4552 10.9986C19.2775 11.3894 18.7225 11.3894 18.5448 10.9986L17.4375 8.5625L15.0014 7.45518C14.6106 7.27755 14.6106 6.72245 15.0014 6.54482L17.4375 5.4375L18.5448 3.0014C18.7225 2.61061 19.2775 2.6106 19.4552 3.0014L20.5625 5.4375L22.9986 6.54482C23.3894 6.72245 23.3894 7.27755 22.9986 7.45518L20.5625 8.5625L19.4552 10.9986Z" fill="black"/>
