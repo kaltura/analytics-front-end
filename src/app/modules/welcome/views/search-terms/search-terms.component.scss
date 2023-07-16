@@ -14,6 +14,13 @@
   height: 500px;
   align-self: center;
   position: relative;
+  transform: scale(0.1,0.1);
+  transition: all 350ms ease-in;
+  opacity: 0;
+  &.shown {
+    transform: scale(1,1);
+    opacity: 1;
+  }
   .cover {
     position: absolute;
     width: 135px;
@@ -44,10 +51,19 @@
     }
   }
   .aiResponse {
-    margin-top: 24px;
+    margin-top: 12px;
     width: 100%;
     font-size: 15px;
     font-weight: 700;
     color: $kGrayscale3;
+    opacity: 1;
+    &.blink {
+      animation: blinker 350ms linear infinite;
+    }
+  }
+}
+@keyframes blinker {
+  50% {
+    opacity: 0.2;
   }
 }

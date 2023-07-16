@@ -5,7 +5,7 @@
   <div class="kReportContent">
     <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
       <div class="divider">
-        <div id="wordsCloud"[class.shown]="!_loading">
+        <div id="wordsCloud"[class.shown]="_searchTermsLoaded">
           <div class="cover"></div>
         </div>
         <div class="insights">
@@ -17,7 +17,7 @@
             </svg>
             <span class="aiTitle">AI Analysis</span>
           </div>
-          <div class="aiResponse">{{AIResponse}}</div>
+          <div class="aiResponse" [class.blink]="_aiLoading">{{AIResponse}}</div>
         </div>
       </div>
     </k-area-blocker>
