@@ -11,6 +11,11 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
+        path: 'insights',
+        loadChildren: () => import('../modules/welcome/welcome.module').then(m => m.WelcomeModule)
+      },
+
+      {
         path: 'entry/:id',
         loadChildren: () => import('../modules/entry/entry.module').then(m => m.EntryModule)
       },

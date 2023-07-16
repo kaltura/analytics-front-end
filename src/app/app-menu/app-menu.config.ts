@@ -58,4 +58,9 @@ export const menu = [
     link: 'live',
     label: 'app.modules.live',
   },
+  {
+    id: 'insights',
+    link: 'insights',
+    label: 'app.modules.insights',
+  },
 ];
