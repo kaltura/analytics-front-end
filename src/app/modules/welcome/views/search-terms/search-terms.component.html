@@ -5,7 +5,7 @@
   <div class="kReportContent">
     <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
       <div class="divider">
-        <div id="wordsCloud">
+        <div id="wordsCloud"[class.shown]="!_loading">
           <div class="cover"></div>
         </div>
         <div class="insights">

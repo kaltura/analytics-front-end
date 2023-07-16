@@ -7,9 +7,10 @@ import {
   KalturaESearchRange,
   SearchHistoryListAction
 } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
+import { Configuration, OpenAIApi } from 'openai';
 
 export type Term = {
   x: string;
@@ -26,7 +27,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public searchTerms: Term[] = [];
-  public AIResponse = 'hello';
+  public AIResponse = 'Loading...';
 
   constructor(private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService) {
@@ -104,6 +105,20 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   }
 
   private loadAiAnalysis(): void {
+    const configuration = new Configuration({
+        apiKey: analyticsConfig.customData.openAiKey,
+      });
+    const openai: OpenAIApi = new OpenAIApi(configuration);
+
+    openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: "how to make pizza",
+      max_tokens: 256
+    }).then(response => {
+      this.AIResponse = response?.data?.choices[0]?.text || '';
+    }).catch(error => {
+      console.error(error?.response?.data?.error?.message || error);
+    });
 
   }
 }
