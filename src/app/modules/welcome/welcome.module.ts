@@ -11,14 +11,17 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import {WelcomeComponent} from "./welcome.component";
 import {SearchTermsComponent} from "./views/search-terms/search-terms.component";
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   imports: [
     CommonModule,
     ButtonModule,
     RouterModule.forChild(routing),
+    SelectButtonModule,
     KalturaUIModule,
     SharedModule,
+
     TableModule,
     OverlayPanelModule,
     PaginatorModule,

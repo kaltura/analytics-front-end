@@ -7,9 +7,39 @@
 .divider {
   display: flex;
   width: 100%;
+  .chart {
+    .banner {
+      display: flex;
+    }
+    .header {
+      width: 60%;
+      position: absolute;
+      top: 0px;
+      left: 24px;
+      display: flex;
+      z-index: 1;
+      ::ng-deep .p-selectbutton {
+        transform: scale(0.7);
+      }
+      button {
+        margin-left: auto;
+        margin-right: 32px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+    width: 60%;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    a {
+      font-size: 13px;
+      z-index: 2;
+    }
+  }
 }
 #wordsCloud {
-  width: 60%;
+  width: 100%;
   flex: 0 0 auto;
   height: 500px;
   align-self: center;
@@ -29,6 +59,25 @@
     background-color: white;
     bottom: 0px;
     right: 0px;
+    text-align: right;
+    padding-bottom: 12px;
+    padding-right: 8px;
+  }
+}
+.table {
+  position: absolute;
+  top: 48px;
+  left: 40px;
+  width: 55%;
+  height: 416px;
+  overflow-y: scroll;
+  transform: scale(0.1,0.1);
+  transition: all 350ms ease-in;
+  opacity: 0;
+  border-left: 1px solid #d9d9d9;
+  &.shown {
+    transform: scale(1,1);
+    opacity: 1;
   }
 }
 .insights {

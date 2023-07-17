@@ -22,8 +22,8 @@ export class WelcomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._kalturaServerClient.request(new PartnerGetInfoAction()).subscribe(
-      partner => this.partnerName = partner.name
-    )
+    // this._kalturaServerClient.request(new PartnerGetInfoAction()).subscribe(
+    //   partner => this.partnerName = partner.name
+    // )
   }
 }

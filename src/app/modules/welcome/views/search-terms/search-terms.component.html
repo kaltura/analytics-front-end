@@ -5,9 +5,32 @@
   <div class="kReportContent">
     <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
       <div class="divider">
-        <div id="wordsCloud"[class.shown]="_searchTermsLoaded">
-          <div class="cover"></div>
+        <div class="chart">
+          <div class="header">
+            <p-selectButton [options]="_viewOptions" [(ngModel)]="_selectedView"></p-selectButton>
+            <button type="button" class="kButtonDefault" pButton (click)="exportChart()" icon="icon-pdf" [kTooltip]="'Export PDF'"></button>
+          </div>
+          <div id="wordsCloud" [class.shown]="_searchTermsLoaded && _selectedView==='cloud'">
+            <div class="cover"></div>
+          </div>
+          <div class="table" [class.shown]="_selectedView!=='cloud'">
+            <p-table [value]="searchTerms">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Search Term</th>
+                  <th  pSortableColumn="value">Count<p-sortIcon field="value"></p-sortIcon></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-term>
+                <tr>
+                  <td>{{term.x}}</td>
+                  <td>{{term.value}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
         </div>
+
         <div class="insights" *ngIf="!_loading">
           <div class="row">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
