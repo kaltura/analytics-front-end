@@ -39,8 +39,29 @@
               <path d="M16.9942 19.9065C17.0382 19.9265 17.0735 19.9618 17.0935 20.0058L17.8179 21.5994C17.889 21.7558 18.111 21.7558 18.1821 21.5994L18.9065 20.0058C18.9265 19.9618 18.9618 19.9265 19.0058 19.9065L20.5994 19.1821C20.7558 19.111 20.7558 18.889 20.5994 18.8179L19.0058 18.0935C18.9618 18.0735 18.9265 18.0382 18.9065 17.9942L18.1821 16.4006C18.111 16.2442 17.889 16.2442 17.8179 16.4006L17.0935 17.9942C17.0735 18.0382 17.0382 18.0735 16.9942 18.0935L15.4006 18.8179C15.2442 18.889 15.2442 19.111 15.4006 19.1821L16.9942 19.9065Z" fill="black"/>
             </svg>
             <span class="aiTitle">AI Analysis</span>
+            <button *ngIf="!_showTrends" [disabled]="_aiLoading" type="button" class="kButtonDefault" pButton (click)="showTrends(true)" label="Calculate Trends" style="margin-left: 'auto'"></button>
+            <button *ngIf="_showTrends" [disabled]="_aiLoading" type="button" class="kButtonDefault" pButton (click)="showTrends(false)" label="Hide Trends" style="margin-left: 'auto'"></button>
           </div>
-          <div class="aiResponse" [class.blink]="_aiLoading">{{AIResponse}}</div>
+          <div class="aiResponse">
+            <span *ngIf="_aiLoading" class="blink">Loading...</span>
+            <ul *ngIf="!_showTrends">
+              <li *ngFor="let category of _categories">
+                <span>{{category.category}}</span>
+                <span style="margin-left: 12px">{{category.percent}}%</span>
+              </li>
+            </ul>
+            <ul *ngIf="_showTrends">
+              <span *ngIf="!_aiLoading" class="trendTitle">Monthly trends</span>
+              <li *ngFor="let trend of _trends">
+                <span>{{trend.categoryName}}</span>
+                <span style="margin-left: 12px" [ngStyle]="{'color': trend.negative ? '#db1f26' : '#00a784'}">{{trend.changePercent}}%</span>
+              </li>
+            </ul>
+            <div class="error" *ngIf="showError">
+              <span>Error analyzing data...</span>
+              <button class="kButtonDefault" pButton (click)="handleError()" label="Try Again"></button>
+            </div>
+          </div>
         </div>
       </div>
     </k-area-blocker>

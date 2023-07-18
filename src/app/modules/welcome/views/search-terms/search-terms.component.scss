@@ -41,7 +41,7 @@
 #wordsCloud {
   width: 100%;
   flex: 0 0 auto;
-  height: 500px;
+  height: 600px;
   align-self: center;
   position: relative;
   transform: scale(0.1,0.1);
@@ -94,6 +94,7 @@
   }
   .row {
     display: flex;
+    width: 100%;
     align-items: center;
     svg {
       margin-right: 12px;
@@ -106,10 +107,26 @@
     font-weight: 700;
     color: $kGrayscale3;
     opacity: 1;
-    &.blink {
-      animation: blinker 350ms linear infinite;
+  }
+  .trendTitle {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 24px;
+    display: block;
+    color: $kGrayscale1;
+  }
+  .error {
+    display: flex;
+    flex-direction: column;
+    span {
+      color: #db1f26;
+      margin-bottom: 12px;
+      margin-top: 12px;
     }
   }
+}
+.blink {
+  animation: blinker 350ms linear infinite;
 }
 @keyframes blinker {
   50% {
