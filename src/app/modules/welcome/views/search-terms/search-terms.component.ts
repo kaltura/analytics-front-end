@@ -57,7 +57,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   }
 
   private loadSearchTerms(): void {
-   // this._loading = true;
+    this._loading = true;
     this._blockerMessage = null;
 
     const today = new Date().getTime();
@@ -89,8 +89,8 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
     // this.chart.draw();
     // this._searchTermsLoaded = true;
     //
-     this.loadAiAnalysis();
-return;
+     // this.loadAiAnalysis();
+
     this._kalturaClient
       .request(request)
       .pipe(
@@ -113,7 +113,7 @@ return;
             this.chart.palette(palette);
             this.chart.textSpacing(7);
             this.chart.angles([0]);
-            this.chart.data(this.searchTerms, {mode: "rect"});
+            this.chart.data(this.searchTerms, {mode: "spiral"});
             this.chart.container("wordsCloud");
             this.chart.draw();
             this._searchTermsLoaded = true;

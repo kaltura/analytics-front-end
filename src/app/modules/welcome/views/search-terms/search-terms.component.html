@@ -45,6 +45,7 @@
           <div class="aiResponse">
             <span *ngIf="_aiLoading" class="blink">Loading...</span>
             <ul *ngIf="!_showTrends">
+              <span *ngIf="!_aiLoading" class="trendTitle">Categories</span>
               <li *ngFor="let category of _categories">
                 <span>{{category.category}}</span>
                 <span style="margin-left: 12px">{{category.percent}}%</span>
@@ -54,7 +55,9 @@
               <span *ngIf="!_aiLoading" class="trendTitle">Monthly trends</span>
               <li *ngFor="let trend of _trends">
                 <span>{{trend.categoryName}}</span>
-                <span style="margin-left: 12px" [ngStyle]="{'color': trend.negative ? '#db1f26' : '#00a784'}">{{trend.changePercent}}%</span>
+                <i *ngIf="!trend.negative" class="trend icon-progress" style="color: '#00a784'"></i>
+                <i *ngIf="trend.negative" class="trend icon-regression" style="color: '#db1f26'"></i>
+                <span [ngStyle]="{'color': trend.negative ? '#db1f26' : '#00a784'}">{{trend.changePercent}}%</span>
               </li>
             </ul>
             <div class="error" *ngIf="showError">
