@@ -33,6 +33,7 @@
   }
 }
 #wordsCloud {
+  padding-top: 24px;
   width: 100%;
   flex: 0 0 auto;
   height: 600px;
@@ -90,7 +91,7 @@
     img, lottie-player {
       width: 140px;
       height: 140px;
-      margin-top: 56px;
+      margin-top: 48px;
     }
     .aiTitle {
       color: var(--primary, #006EFA);
@@ -108,7 +109,7 @@
         color: var(--tone-1, #333);
         text-align: center;
         font-family: Lato;
-        font-size: 14px;
+        font-size: 16px;
         font-style: normal;
         font-weight: 400;
         line-height: 21px; /* 150% */
@@ -117,7 +118,7 @@
       }
       .tag {
         box-sizing: border-box;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         border-radius: 8px;
         background: rgba(0, 110, 250, 0.10);
         display: flex;
