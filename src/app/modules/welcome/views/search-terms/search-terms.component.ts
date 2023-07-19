@@ -12,7 +12,6 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Configuration, OpenAIApi } from 'openai';
-import {SelectItem} from "primeng/api";
 
 export type Term = {
   x: string;
@@ -32,11 +31,6 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public searchTerms: Term[] = [];
   public AIResponse = 'Analyzing...';
-  public _viewOptions: SelectItem[] = [
-    {label: '', value: 'cloud', icon: 'icon-ic_nodes'},
-    {label: '', value: 'table', icon: 'kIconList'}
-  ];
-  public _selectedView = 'table';
   public _showTrends = false;
   public _showTable = false;
   public _categories: {category: string, percent: number}[] = [];
@@ -58,7 +52,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
   }
 
   private loadSearchTerms(): void {
-    // this._loading = true;
+    this._loading = true;
     this._blockerMessage = null;
 
     const today = new Date().getTime();
@@ -76,21 +70,21 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
       })
     });
 
-    this.searchTerms = JSON.parse(`[{"x":"workday","value":362},{"x":"generative ai","value":225},{"x":"powtoon","value":171},{"x":"japan tech lunch session","value":144},{"x":"gen ai","value":137},{"x":"sesion tq:","value":123},{"x":"song","value":121},{"x":"self reflection","value":120},{"x":"tq","value":117},{"x":"synops","value":114},{"x":"one accenture","value":112},{"x":"salesforce accenture","value":111},{"x":"pride","value":109},{"x":"sap","value":108},{"x":"talent discussion","value":89},{"x":"cdms","value":82},{"x":"rodolfo eschenbach","value":78},{"x":"julie sweet","value":77},{"x":"power bi","value":77},{"x":"rpa","value":74},{"x":"self-reflection","value":73},{"x":"abcd","value":66},{"x":"hacker land","value":66},{"x":"summer event","value":64},{"x":"roro","value":60},{"x":"ai","value":58},{"x":"hackerland","value":56},{"x":"priorities","value":56},{"x":"mms","value":55},{"x":"ace","value":54},{"x":"rosetta stone","value":54},{"x":"security","value":54},{"x":"sustainability","value":54},{"x":"total enterprise reinvention","value":54},{"x":"flavia picolo","value":53},{"x":"salesforce","value":53},{"x":"disability","value":51},{"x":"excel","value":49},{"x":"kaltura capture","value":49},{"x":"finance in five","value":48},{"x":"servicenow","value":48},{"x":"abcd reflection","value":44},{"x":"art retention","value":44},{"x":"audm","value":44},{"x":"performance achievement","value":44},{"x":"sap btp","value":44},{"x":"h&m","value":43},{"x":"sap mdg","value":43},{"x":"cybersecurity","value":42},{"x":"myconcerto","value":42},{"x":"controllership","value":40},{"x":"townhall","value":40},{"x":"music","value":39}]`);
-    this.chart = window['anychart'].tagCloud();
-    this.chart.angles([0]);
-    this.chart.data(this.searchTerms, {mode: "spiral"});
-    this.chart.normal().fontFamily('Lato');
-    let palette = window['anychart'].palettes.distinctColors();
-    palette.items(
-      ['#006EFA', '#41BEFF', '#FFCD00', '#FFAA00','#FA374B', '#3CD2AF', '#00A078']
-    );
-    this.chart.palette(palette);
-    this.chart.container("wordsCloud");
-    this.chart.draw();
-    this._searchTermsLoaded = true;
-return;
-     this.loadAiAnalysis();
+    // this.searchTerms = JSON.parse(`[{"x":"workday","value":362},{"x":"generative ai","value":225},{"x":"powtoon","value":171},{"x":"japan tech lunch session","value":144},{"x":"gen ai","value":137},{"x":"sesion tq:","value":123},{"x":"song","value":121},{"x":"self reflection","value":120},{"x":"tq","value":117},{"x":"synops","value":114},{"x":"one accenture","value":112},{"x":"salesforce accenture","value":111},{"x":"pride","value":109},{"x":"sap","value":108},{"x":"talent discussion","value":89},{"x":"cdms","value":82},{"x":"rodolfo eschenbach","value":78},{"x":"julie sweet","value":77},{"x":"power bi","value":77},{"x":"rpa","value":74},{"x":"self-reflection","value":73},{"x":"abcd","value":66},{"x":"hacker land","value":66},{"x":"summer event","value":64},{"x":"roro","value":60},{"x":"ai","value":58},{"x":"hackerland","value":56},{"x":"priorities","value":56},{"x":"mms","value":55},{"x":"ace","value":54},{"x":"rosetta stone","value":54},{"x":"security","value":54},{"x":"sustainability","value":54},{"x":"total enterprise reinvention","value":54},{"x":"flavia picolo","value":53},{"x":"salesforce","value":53},{"x":"disability","value":51},{"x":"excel","value":49},{"x":"kaltura capture","value":49},{"x":"finance in five","value":48},{"x":"servicenow","value":48},{"x":"abcd reflection","value":44},{"x":"art retention","value":44},{"x":"audm","value":44},{"x":"performance achievement","value":44},{"x":"sap btp","value":44},{"x":"h&m","value":43},{"x":"sap mdg","value":43},{"x":"cybersecurity","value":42},{"x":"myconcerto","value":42},{"x":"controllership","value":40},{"x":"townhall","value":40},{"x":"music","value":39}]`);
+    // this.chart = window['anychart'].tagCloud();
+    // this.chart.angles([0]);
+    // this.chart.data(this.searchTerms, {mode: "spiral"});
+    // this.chart.normal().fontFamily('Lato');
+    // let palette = window['anychart'].palettes.distinctColors();
+    // palette.items(
+    //   ['#006EFA', '#41BEFF', '#FFCD00', '#FFAA00','#FA374B', '#3CD2AF', '#00A078']
+    // );
+    // this.chart.palette(palette);
+    // this.chart.container("wordsCloud");
+    // this.chart.draw();
+    // this._searchTermsLoaded = true;
+
+     // this.loadAiAnalysis();
 
     this._kalturaClient
       .request(request)
@@ -148,7 +142,7 @@ return;
       });
     const openai: OpenAIApi = new OpenAIApi(configuration);
 
-    let prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into up to 5 categories and return a JSON array of category items. For each category set the field 'category' with the category name and the field 'count' with the total number of searches preformed on all the word items in this category.
+    let prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into up to 5 categories and return a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches preformed on all the word items in this category.
 
 [
   {"word": "workday", "count": 402},
@@ -197,7 +191,7 @@ return;
     if (this._showTrends && !this._trendsLoaded) {
       const categories = [];
       this._categories.forEach(category => categories.push(category.category));
-      prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into these categories: ${categories.toString()} .return a JSON array of category items. For each category set the field 'category' with the category name and the field 'count' with the total number of searches performed on all the word items in this category.
+      prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into these categories: ${categories.toString()} .return a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches performed on all the word items in this category.
 
 [
   {"word": "recognition", "count": 679},
