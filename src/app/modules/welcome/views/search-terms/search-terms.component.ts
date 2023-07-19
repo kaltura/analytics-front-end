@@ -142,7 +142,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
       });
     const openai: OpenAIApi = new OpenAIApi(configuration);
 
-    let prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into up to 5 categories and return a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches preformed on all the word items in this category.
+    let prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into up to 5 categories and return only a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches preformed on all the word items in this category.
 
 [
   {"word": "workday", "count": 402},
@@ -191,7 +191,7 @@ export class SearchTermsComponent implements OnInit, OnDestroy {
     if (this._showTrends && !this._trendsLoaded) {
       const categories = [];
       this._categories.forEach(category => categories.push(category.category));
-      prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into these categories: ${categories.toString()} .return a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches performed on all the word items in this category.
+      prompt = `below is a JSON array of search terms represented by the 'word' field and the number of times people searched for them represented by the 'count' field. Categorize the search terms into these categories: ${categories.toString()} .return only a JSON array of category items without line breaks. For each category set the field 'category' with the category name and the field 'count' with the total number of searches performed on all the word items in this category.
 
 [
   {"word": "recognition", "count": 679},

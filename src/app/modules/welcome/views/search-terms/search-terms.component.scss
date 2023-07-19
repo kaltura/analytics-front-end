@@ -17,6 +17,7 @@
       left: 24px;
       display: flex;
       z-index: 1;
+      width: 45%;
       svg {
         cursor: pointer;
       }
@@ -86,7 +87,7 @@
     flex-direction: column;
     flex: 0 0 auto;
     align-items: center;
-    img {
+    img, lottie-player {
       width: 140px;
       height: 140px;
       margin-top: 56px;
