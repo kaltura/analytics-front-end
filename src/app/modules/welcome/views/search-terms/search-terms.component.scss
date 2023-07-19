@@ -12,23 +12,16 @@
       display: flex;
     }
     .header {
-      width: 60%;
       position: absolute;
       top: 0px;
       left: 24px;
       display: flex;
       z-index: 1;
-      ::ng-deep .p-selectbutton {
-        transform: scale(0.7);
-      }
-      button {
-        margin-left: auto;
-        margin-right: 32px;
-        width: 24px;
-        height: 24px;
+      svg {
+        cursor: pointer;
       }
     }
-    width: 60%;
+    width: 55%;
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
@@ -67,9 +60,9 @@
 .table {
   position: absolute;
   top: 48px;
-  left: 40px;
-  width: 55%;
-  height: 416px;
+  left: 24px;
+  width: 50%;
+  height: 528px;
   overflow-y: scroll;
   transform: scale(0.1,0.1);
   transition: all 350ms ease-in;
@@ -81,33 +74,105 @@
   }
 }
 .insights {
-  width: 35%;
-  flex: 0 0 auto;
-  padding-left: 24px;
-  padding-top: 24px;
-  display: flex;
-  flex-direction: column;
-  .aiTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: $kGrayscale1;
-  }
-  .row {
-    display: flex;
+  width: 45%;
+  padding-right: 24px;
+  padding-bottom: 24px;
+  .blueBkg {
+    border-radius: 4px;
+    background: rgba(0, 110, 250, 0.05);
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
     align-items: center;
-    svg {
-      margin-right: 12px;
+    img {
+      width: 140px;
+      height: 140px;
+      margin-top: 64px;
+    }
+    .aiTitle {
+      color: var(--primary, #006EFA);
+      font-family: Lato;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 26px;
+    }
+    .aiResponse {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .title {
+        color: var(--tone-1, #333);
+        text-align: center;
+        font-family: Lato;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 21px; /* 150% */
+        margin-top: 16px;
+      }
+      .row {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+        .tag {
+          box-sizing: border-box;
+          margin-left: 8px;
+          margin-right: 8px;
+          border-radius: 8px;
+          background: rgba(0, 110, 250, 0.10);
+          display: flex;
+          align-items: center;
+          height: 32px;
+          padding: 8px;
+          gap: 8px;
+          .label {
+            color: var(--tone-light-theme-tone-1, #333);
+            font-family: Lato;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+          .percent {
+            margin-left: 8px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    .genAiBtn {
+      display: inline-flex;
+      height: 32px;
+      padding: 8px 12px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      border-radius: var(--roundness-1, 4px);
+      background: var(--primary, #006EFA);
+      cursor: pointer;
+      margin-top: 60px;
+      box-sizing: border-box;
+      .label {
+        color: var(--primary-text-contrast, #FFF);
+        leading-trim: both;
+        text-edge: cap;
+        /* Button Label 1 */
+        font-family: Lato;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
     }
   }
-  .aiResponse {
-    margin-top: 12px;
-    width: 100%;
-    font-size: 15px;
-    font-weight: 700;
-    color: $kGrayscale3;
-    opacity: 1;
-  }
+
+
+
   .trendTitle {
     font-weight: 700;
     font-size: 16px;
