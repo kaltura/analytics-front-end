@@ -3,16 +3,45 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <!--#if expr="$base_url" -->
-  <!--# echo var="base_url" encoding="none"-->
-  <!--#else -->
-  <base href="./">
-  <!--#endif -->
+  <base href="/">
+
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-exports.min.js"></script>
+
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+
+  <script type="text/javascript">
+    var analyticsConfig = {
+      kalturaServer: {
+        uri : "www.kaltura.com",
+        "previewUIConf": 12345678,
+        "previewUIConfV7":12345678
+      },
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      ks: "",
+      pid: "",
+      locale: "en",
+      multiAccount: false,
+      live: {
+        "pollInterval": 30,
+        "healthNotificationsCount": 50,
+      },
+      customData: {
+        openAiKey: ""
+      }
+    }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>
