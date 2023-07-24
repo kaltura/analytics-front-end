@@ -104,7 +104,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
     this._recordingPercent = this._tabsData.length > 2 ? parseInt(this._tabsData[2].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
   }
 
-  public exportLinks(): void {
+  public exportUsers(): void {
     this._isBusy = true;
     this._blockerMessage = null;
 
