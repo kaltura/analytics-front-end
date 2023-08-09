@@ -13,6 +13,7 @@ import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils
 import { getPrimaryColor, getSecondaryColor } from "shared/utils/colors";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import { of } from 'rxjs';
+import { catchError } from "rxjs/operators";
 
 export enum ViewerTabs {
   viewer = 'viewer',
@@ -107,7 +108,22 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
 
-    const recording = this.recordingEntryId.length ? this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId })).pipe(cancelOnDestroy(this)) : of(false);
+    const recording = this.recordingEntryId.length ?
+      this._kalturaClient.request(new BaseEntryGetAction({ entryId: this.recordingEntryId }))
+      .pipe(catchError(error => {
+        this._isBusy = false;
+        const actions = {
+          'close': () => {
+            this._blockerMessage = null;
+          },
+          'retry': () => {
+            this._loadReport();
+          },
+        };
+        this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+        return of(false);
+      }))
+      .pipe(cancelOnDestroy(this)) : of(false);
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     const report = this._reportService.getReport(reportConfig, sections, false);
     forkJoin({recording, report})
