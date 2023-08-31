@@ -977,6 +977,15 @@
           "message-log": "Abnormal M3U8 segment size",
           "self-serve-message-log": "Abnormal M3U8 segment size",
           "message-text-box": "Segment reported in m3u8 is with irregular duration"
+        },
+        "124": {
+          "message-log": "AStream framerate seem to fluctuate. Check source stream and encoder framerate stability"
+        },
+        "125": {
+          "message-log": "Number of connection requests exceeded permitted limit for entry id / IP {{param}}. Check your encoder and wait for a couple of minutes before trying to restore the stream."
+        },
+        "126": {
+          "message-log": "New broadcast request received while the entry is already broadcasting"
         }
       },
       "exportLabels": {

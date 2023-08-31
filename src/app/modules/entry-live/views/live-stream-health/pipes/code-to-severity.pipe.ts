@@ -15,6 +15,7 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.HighFpsRate:
       case DiagnosticsErrorCodes.BackupOnlyStreamNoRecording:
       case DiagnosticsErrorCodes.BandwidthBackToNormal:
+      case DiagnosticsErrorCodes.InconsistentFrameRateAlert:
       case DiagnosticsErrorCodes.CPUBackToNormal:
         return AlertSeverity.info;
 
@@ -34,6 +35,8 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.AuthenticationNoLivePermission:
       case DiagnosticsErrorCodes.AuthenticationTooManyStreams:
       case DiagnosticsErrorCodes.AuthenticationTooManyTranscodedStreams:
+      case DiagnosticsErrorCodes.LimitRate:
+      case DiagnosticsErrorCodes.LiveStreamAlreadyBroadcasting:
       case DiagnosticsErrorCodes.M3U8ChunkWithInvalidDurationAlert:
         return AlertSeverity.critical;
 

@@ -29,6 +29,9 @@ export enum DiagnosticsErrorCodes {
   BandwidthBackToNormal = 121,
   CPUBackToNormal = 122,
   M3U8ChunkWithInvalidDurationAlert = 123,
+  InconsistentFrameRateAlert = 124,
+  LimitRate = 125,
+  LiveStreamAlreadyBroadcasting = 126
 }
 
 export enum AlertSeverity {
