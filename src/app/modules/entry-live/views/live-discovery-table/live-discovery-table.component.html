@@ -12,15 +12,18 @@
 
         <!-- USERS TABLE-->
         <ng-container *ngSwitchCase="_tableModes.users">
-          <app-discovery-filter [totalCount]="_totalCount"
-                                [rangeLabel]="rangeLabel"
-                                [showUserFilter]="discoveryViewConfig.userFilter"
-                                (openTimeSelector)="_openTimeSelector()"
-                                (filterChange)="_widget.usersFilterChange($event)">
+          <div class="kTableContent">
             <app-table-selector *ngIf="(_usersModeService.usersMode$ | async) === _entryLiveUsersMode.Authenticated"
                                 [tableMode]="_tableMode"
                                 (tableModeChange)="_onTableModeChange($event)"></app-table-selector>
-          </app-discovery-filter>
+            <span class="kTotalCount">
+              {{'app.entryLive.discovery.totalActiveUsers' | translate: { '0': _totalCount } }}
+            </span>
+            <div class="kTimePeriodLabel">
+              <span [innerHTML]="rangeLabel"></span>
+              <a (click)="_openTimeSelector()">{{'app.entryLive.changeDate' | translate}}</a>
+            </div>
+          </div>
           <app-users-table [tableData]="_tableData"
                            [summary]="_summaryData"
                            [columns]="_columns"

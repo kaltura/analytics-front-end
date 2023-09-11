@@ -18,9 +18,9 @@ import { EntryLiveUsersMode } from 'configuration/analytics-config';
 @Injectable()
 export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidgetProvider, OnDestroy {
   private _dataConfig: ReportDataConfig;
-  
+
   public dateRange: DateRangeServerValue;
-  
+
   constructor(private _reportService: ReportService,
               private _dataConfigService: LiveDiscoveryDevicesTableConfig,
               private _usersModeService: ToggleUsersModeService) {
@@ -30,15 +30,15 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
         this._dataConfig = _dataConfigService.getConfig(mode === EntryLiveUsersMode.Authenticated);
       });
   }
-  
+
   public ngOnDestroy(): void {
-  
+
   }
 
   public getPollFactory(widgetsArgs: WidgetsActivationArgs): LiveDiscoveryTableWidgetPollFactory {
     return new LiveDiscoveryDevicesTableRequestFactory(widgetsArgs.entryId);
   }
-  
+
   public responseMapping(responses: KalturaResponse<KalturaReportTable | KalturaReportTotal>[]): LiveDiscoveryTableData {
     let tableResult = {
       data: [],
@@ -46,43 +46,43 @@ export class LiveDiscoveryDevicesTableProvider implements LiveDiscoveryTableWidg
       totalCount: 0,
     };
     let summary = {};
-    
+
     const mapData = row => {
       const activeUsers = parseFormattedValue(row['view_unique_audience']);
       const engagedUsers = parseFormattedValue(row['view_unique_engaged_users']);
       row['view_unique_engaged_users'] = activeUsers ? ReportHelper.percents(engagedUsers / activeUsers, false) : '0%';
       return row;
     };
-    
+
     const table = getResponseByType<KalturaReportTable>(responses, KalturaReportTable);
     if (table && table.data && table.header) {
       const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-      
+
       tableResult.totalCount = table.totalCount;
       tableResult.columns = columns;
       tableResult.data = tableData.map(mapData);
     }
-    
+
     const totals = getResponseByType<KalturaReportTotal>(responses, KalturaReportTotal);
     if (totals && totals.data && totals.header) {
       const { columns, tableData: totalsData } = this._reportService.parseTableData(totals, this._dataConfig[ReportDataSection.totals]);
       const summaryValues = totalsData.map(mapData)[0];
       summary = columns.reduce((acc, val) => (acc[val] = summaryValues[val], acc), {});
     }
-    
+
     return {
       summary,
       table: tableResult,
     };
   }
-  
+
   public hookToPolls(poll$: Observable<{ error: KalturaAPIException; result: KalturaResponse<any>[] }>): Observable<{ error: KalturaAPIException; result: LiveDiscoveryTableData }> {
     return poll$
       .pipe(map(response => {
         if (response.error) { // pass thru an error
           return { ...response, result: null };
         }
-        
+
         return { ...response, result: this.responseMapping(response.result) };
       }));
   }
