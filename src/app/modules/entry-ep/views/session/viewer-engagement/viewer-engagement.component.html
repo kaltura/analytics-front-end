@@ -37,7 +37,7 @@
               </th>
               <th *ngFor="let tab of _tabsData; let i = index" [ngStyle]="{'width': tab === 'combined_live_engaged_users_play_time_ratio' ? '30%' : '20%'}">
                 <span *ngIf="tab.key !== 'combined_live_engaged_users_play_time_ratio'">{{_tabsData[i].value}}</span>
-                <app-bullet *ngIf="tab.key === 'combined_live_engaged_users_play_time_ratio'" colorScheme="time" [value]="_tabsData[i].value"></app-bullet>
+                <app-bullet *ngIf="tab.key === 'combined_live_engaged_users_play_time_ratio'" colorScheme="dropoff" [value]="_tabsData[i].value"></app-bullet>
               </th>
             </tr>
 
@@ -53,7 +53,7 @@
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'paddingRight': col === 'combined_live_engaged_users_play_time_ratio' ? '24px' : '0px'}">
                 <ng-container>
                   <span *ngIf="col !== 'combined_live_engaged_users_play_time_ratio'">{{data[col]}}</span>
-                  <app-bullet *ngIf="col === 'combined_live_engaged_users_play_time_ratio'" colorScheme="time" [value]="data[col]"></app-bullet>
+                  <app-bullet *ngIf="col === 'combined_live_engaged_users_play_time_ratio'" colorScheme="dropoff" [value]="data[col]"></app-bullet>
                 </ng-container>
               </td>
             </tr>
