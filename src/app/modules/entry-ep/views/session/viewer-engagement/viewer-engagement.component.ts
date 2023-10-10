@@ -18,6 +18,7 @@ import { SortEvent } from 'primeng/api';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 import { ExportConfig } from "./export.config";
+import { analyticsConfig } from "configuration/analytics-config";
 
 @Component({
   selector: 'app-ep-viewer-engagement',
@@ -169,4 +170,12 @@ export class EpViewerEngagementComponent implements OnInit {
     this._navigationDrillDownService.drilldown('user', row['user_id'], true, this._authService.pid);
   }
 
+  public updateLayout(): void {
+    if (analyticsConfig.isHosted) {
+      setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+        this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
+      }, 0);
+    }
+  }
 }
