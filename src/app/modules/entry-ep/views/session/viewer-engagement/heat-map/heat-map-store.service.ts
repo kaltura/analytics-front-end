@@ -60,11 +60,16 @@ export class HeatMapStoreService {
             const dataPoints = [];
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
             if (tableData.length) {
+              const hasEngagedValue = str => str.indexOf('SoundOn') > -1 &&
+                (str.indexOf('TabFocused') > -1 ||
+                str.indexOf('CameraOn') > -1 ||
+                str.indexOf('OnStage') > -1 ||
+                (str.indexOf('FullScreen') > -1 && str.indexOf('FullScreenOff') === -1));
               const getMaxValue = (val1: string, val2: string) => {
                 if (val1 === 'Offline' || val2 === 'Offline') {
                   return val1 === 'Offline' ? val2 : val1;
                 } else {
-                  return val1.indexOf('TabFocused') > -1 ? val1 : val2.indexOf('TabFocused') > -1 ? val2 : val1;
+                  return hasEngagedValue(val1) ? val1 : hasEngagedValue(val2) ? val2 : val1;
                 }
               }
               // merge duplicated position and set their user_engagement to the highest value
