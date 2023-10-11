@@ -103,13 +103,7 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   private _createHeatMap(points: HeatMapPoints): HeatMapItem[] {
     const items = [];
     points.forEach((point, index) => {
-      const isEngaged = str =>
-          (str.indexOf('TabFocused') > -1 && str.indexOf('SoundOn') > -1) ||
-          (str.indexOf('FullScreen') > -1 && str.indexOf('SoundOn') > -1 && str.indexOf('FullScreenOff') === -1) ||
-          str.indexOf('CameraOn') > -1 ||
-          str.indexOf('OnStage') > -1;
-
-      const key = point === 'Offline' ? 'offline' : isEngaged(point) ? 'engaged' : 'notEngaged';
+      const key = point === 'Offline' ? 'offline' : this._heatMapStore.isEngaged(point) ? 'engaged' : 'notEngaged';
       const color = key === 'offline' ? '#EBEBEB' : key === 'engaged' ? '#6391ED' : '#B5CDFC';
       const message = this._translate.instant(`app.entryEp.session.heatMap.${key}`);
       items.push({

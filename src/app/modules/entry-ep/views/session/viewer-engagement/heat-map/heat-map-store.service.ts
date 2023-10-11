@@ -40,6 +40,12 @@ export class HeatMapStoreService {
     this._cache = {};
   }
 
+  public isEngaged = str =>
+    (str.indexOf('TabFocused') > -1 && str.indexOf('SoundOn') > -1) || // player or room with sound and tab focused
+    (str.indexOf('FullScreen') > -1 && str.indexOf('Camera') > -1 && str.indexOf('FullScreenOff') === -1) || // room in full screen
+    str.indexOf('CameraOn') > -1 || // room with camera on
+    str.indexOf('OnStage') > -1; // room on stage
+
   public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter, actualStartDate: Date): Observable<HeatMapPoints> {
     if (!this._cache[`${userId}_${entryId}`]) {
       const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
@@ -60,16 +66,11 @@ export class HeatMapStoreService {
             const dataPoints = [];
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
             if (tableData.length) {
-              const hasEngagedValue = str => str.indexOf('SoundOn') > -1 &&
-                (str.indexOf('TabFocused') > -1 ||
-                str.indexOf('CameraOn') > -1 ||
-                str.indexOf('OnStage') > -1 ||
-                (str.indexOf('FullScreen') > -1 && str.indexOf('FullScreenOff') === -1));
               const getMaxValue = (val1: string, val2: string) => {
                 if (val1 === 'Offline' || val2 === 'Offline') {
                   return val1 === 'Offline' ? val2 : val1;
                 } else {
-                  return hasEngagedValue(val1) ? val1 : hasEngagedValue(val2) ? val2 : val1;
+                  return this.isEngaged(val1) ? val1 : this.isEngaged(val2) ? val2 : val1;
                 }
               }
               // merge duplicated position and set their user_engagement to the highest value
