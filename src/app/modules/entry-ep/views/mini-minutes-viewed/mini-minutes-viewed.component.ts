@@ -51,7 +51,6 @@ export class EpMiniMinutesViewedComponent implements OnInit {
 
   public _livePercent = 0;
   public _recordingPercent = 0;
-  public _avgMinutesViewed = '';
 
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
@@ -103,11 +102,6 @@ export class EpMiniMinutesViewedComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    if (this._tabsData.length > 1) {
-      this._avgMinutesViewed = ReportHelper.numberOrZero((parseFloat(this._tabsData[0].value) + parseFloat(this._tabsData[1].value)) / 2, false);
-    } else {
-      this._avgMinutesViewed = this._translate.instant('app.common.na');
-    }
     if (this._tabsData.length > 1) {
       this._livePercent = parseFloat(this._tabsData[0].value) > parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[0].value) / parseFloat(this._tabsData[1].value) * 100;
       this._recordingPercent = parseFloat(this._tabsData[0].value) < parseFloat(this._tabsData[1].value) ? 100 : parseFloat(this._tabsData[1].value) / parseFloat(this._tabsData[0].value) * 100;

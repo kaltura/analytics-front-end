@@ -13,7 +13,7 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'combined_live_engaged_users_ratio': {
+          'combined_live_engaged_users_play_time_ratio': {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 1,
           },
