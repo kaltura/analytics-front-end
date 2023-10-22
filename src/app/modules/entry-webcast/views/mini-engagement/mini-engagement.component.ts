@@ -19,7 +19,7 @@ import {
   KalturaResponseProfileType,
   KalturaMetadataFilter,
   KalturaMetadataObjectType,
-  KalturaResponseProfileMapping,
+  KalturaResponseProfileMapping
 } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
@@ -35,6 +35,7 @@ import { analyticsConfig } from "configuration/analytics-config";
 import * as moment from "moment";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import { ViewConfig } from "configuration/view-config";
+import {KalturaCuePoint} from "kaltura-ngx-client/lib/api/types/KalturaCuePoint";
 
 export interface Question {
   text: string;
@@ -65,6 +66,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   @Input() exporting = false;
 
   public _isBusy: boolean;
+  public _loadingCuepoints = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
@@ -104,7 +106,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
   ngOnDestroy(): void {
   }
 
-  private getEntryCuePoints(): CuePointListAction {
+  private getEntryCuePoints(pageIndex: number): CuePointListAction {
 
     const filter: KalturaAnnotationFilter = new KalturaAnnotationFilter({
       cuePointTypeEqual: KalturaCuePointType.annotation,
@@ -116,7 +118,7 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       isPublicEqual: KalturaNullableBoolean.trueValue
     });
 
-    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
+    const pager: KalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex});
 
     return new CuePointListAction({ filter, pager })
       .setRequestOptions(
@@ -154,11 +156,11 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
     return cuepointResponseProfile;
   }
 
-  private _parseCuePointsResponse(data: KalturaCuePointListResponse): void {
-    if (data.objects) {
+  private _parseCuePointsResponse(cuePoints: KalturaCuePoint[]): void {
+    if (cuePoints.length) {
       this._questions = [];
       const parser = new DOMParser();
-      data.objects.forEach((cuePoint: KalturaAnnotation) => {
+      cuePoints.forEach((cuePoint: KalturaAnnotation) => {
         if (cuePoint.relatedObjects && cuePoint.relatedObjects.analytics_qna_drp) {
           if (cuePoint.relatedObjects.analytics_qna_drp['objects'] && cuePoint.relatedObjects.analytics_qna_drp['objects'][0] && cuePoint.relatedObjects.analytics_qna_drp['objects'][0]['xml'] ){
             const xml = cuePoint.relatedObjects.analytics_qna_drp['objects'][0]['xml'];
@@ -178,25 +180,61 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
         }
       });
       this._usersCount = uniqueUsers.length;
+      this._loadingCuepoints = false;
     }
   }
 
   private loadCuePoints(): void {
+    this._loadingCuepoints = true;
+    const displayError = error => {
+      const actions = {
+        'close': () => {
+          this._blockerMessage = null;
+        }
+      };
+      this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+    }
     this._kalturaClient
-      .request(this.getEntryCuePoints())
+      .request(this.getEntryCuePoints(1))
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (data: KalturaCuePointListResponse) => {
-          this._parseCuePointsResponse(data);
+          if (data.totalCount > 500) {
+            let cuePoints = data.objects;
+            let requests = [];
+            let additionalRequests = Math.ceil((data.totalCount - 500) / 500);
+            additionalRequests = additionalRequests > 4 ? 4 : additionalRequests; // capping
+            let responses = 0; // to track requests that returned
+            for (let i=1; i <= additionalRequests; i++) {
+              this._kalturaClient.request(this.getEntryCuePoints(i+1))
+                .pipe(cancelOnDestroy(this))
+                .subscribe(
+                  (data: KalturaCuePointListResponse) => {
+                    if (data.objects) {
+                      cuePoints = [...cuePoints, ...data.objects];
+                    }
+                    responses++;
+                    if (responses === additionalRequests) {
+                      this._parseCuePointsResponse(cuePoints);
+                    }
+                  },
+                  error => {
+                    displayError(error);
+                    this._parseCuePointsResponse(cuePoints);
+                  }
+                )
+            }
+          } else {
+            if (data.objects) {
+              this._parseCuePointsResponse(data.objects);
+            }
+          }
         },
         error => {
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            }
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
+          displayError(error);
+          this._loadingCuepoints = false;
+        }
+      );
   }
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
