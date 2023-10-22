@@ -32,13 +32,16 @@
       </div>
 
       <div class="kVal" *ngIf="engagementViewConfig.questions">
-        <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
-        <div class="kLabels">
+        <div *ngIf="!_loadingCuepoints" class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
+        <div class="k-spinner-animation kSpinnerAnim" *ngIf="_loadingCuepoints"></div>
+        <div class="kLabels" *ngIf="!_loadingCuepoints">
           <span class="value">{{_usersCount}}</span>
           <span class="title">{{'app.entryWebcast.engagement.questions' | translate: { '1': _questions.length} }}</span>
           <a *ngIf="!exporting" class="link" [class.disabled]="!_questions.length" (click)="questionsPopup.open()">{{'app.entryWebcast.engagement.view' | translate}}</a>
         </div>
-
+        <div class="kLabels" *ngIf="_loadingCuepoints">
+          <span class="title">{{'app.entryWebcast.engagement.loading' | translate}}</span>
+        </div>
       </div>
 
       <div class="kVal" *ngIf="engagementViewConfig.viewers">

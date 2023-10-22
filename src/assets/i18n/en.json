@@ -621,6 +621,7 @@
         "vod": "VOD Avg. Completion Rate",
         "vod_tt": "The Avg. completion rate of all the viewers that watched the associated VOD of the webcast entry",
         "questions": "Users asked {{1}} questions",
+        "loading": "Loading questions....",
         "view": "View",
         "registered": "Registered Viewers",
         "download": "Download",
