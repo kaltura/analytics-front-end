@@ -37,4 +37,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 * Install [gh](https://github.com/cli/cli#installation).
 * Login to GitHub `gh auth login`.
-* Run `ng run build:prod -- v*.*.*` where *.*.* is version number.
+* Run `ng run build:prod v*.*.*` where *.*.* is version number. The zipped version will be generated in the `dist` folder
+* Tag a new version on Github and attach the generated zip file to the version
