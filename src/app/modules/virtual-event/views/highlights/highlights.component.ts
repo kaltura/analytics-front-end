@@ -42,6 +42,7 @@ export class HighlightsComponent implements OnInit, OnDestroy {
   public _columns: string[] = [];
 
   @Input() exporting = false;
+  @Input() hideDetails = false;
 
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
@@ -114,6 +115,9 @@ export class HighlightsComponent implements OnInit, OnDestroy {
 
     // mark peak days
     Object.keys(lineChartData).forEach(key => {
+      if (this.hideDetails) {
+        (lineChartData[key] as any).tooltip = null; // hide tooltip
+      }
       // display peak day label only if we have at least one value larger than 0
       if (Math.max(...(lineChartData[key] as any).series[0].data) > 0) {
         (lineChartData[key] as any).series[0].markPoint = {

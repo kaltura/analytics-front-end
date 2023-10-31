@@ -204,14 +204,13 @@ export const viewsConfig = {
     download: {},
     details: {},
     refineFilter: {
-      origin: {},
-      geo: {}
+      origin: {}
     },
     miniFunnel: {},
-    miniInsights: {},
-    miniDevices: {},
+    miniOrigin: {},
     status : {},
     highlights: {},
+    topDevices: {},
     geo: {},
     roles: {},
     industries: {}
