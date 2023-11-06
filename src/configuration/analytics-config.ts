@@ -29,6 +29,14 @@ export interface AnalyticsConfig {
     previewUIConfV7?: number,
     exportRoute?: string
   };
+  externalServices?: {
+    appRegistryServer?: {
+      uri: string
+    },
+    userProfileServer?: {
+      uri: string;
+    }
+  },
   analyticsServer?: {
     uri?: string
   };
@@ -120,6 +128,7 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.pid = config.pid;
   analyticsConfig.locale = config.locale;
   analyticsConfig.kalturaServer = config.kalturaServer;
+  analyticsConfig.externalServices = config.externalServices;
   analyticsConfig.analyticsServer = config.analyticsServer;
   analyticsConfig.cdnServers = config.cdnServers;
   analyticsConfig.showNavBar = config.menuConfig && config.menuConfig.showMenu || !hosted;

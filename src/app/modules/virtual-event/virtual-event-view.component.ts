@@ -9,7 +9,7 @@ import {
 } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
+import {AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import { ViewConfig } from "configuration/view-config";
 import { DateChangeEvent } from "shared/components/date-filter/date-filter.service";
 import { analyticsConfig } from "configuration/analytics-config";
@@ -24,6 +24,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {reportTypeMap} from "shared/utils/report-type-map";
 import {ReportDataSection} from "shared/services/storage-data-base.config";
 import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-virtual-event',
@@ -47,13 +48,13 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _loadingVirtualEvent = false;
+  public _loadingAppGuid = false;
   public _virtualEventLoaded = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _virtualEvent: KalturaVirtualEvent;
   public _virtualEventId = null;
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
-  public _unregistered = 0;
   public _exporting = false;
   public _devicesReportConfig = {
     [ReportDataSection.table]: {
@@ -79,6 +80,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     }
   };
 
+  public _appGuid = '';
   public exportFilename = 'Summary_registration_report.pdf';
   private updateTitle = this._viewConfig.title === null; // need to temporarily display the title for the export
   private updateDetails = this._viewConfig.details === null; // need to temporarily display the details for the export
@@ -86,6 +88,8 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   constructor(private _router: Router,
               private _translate: TranslateService,
               private _route: ActivatedRoute,
+              private _http: HttpClient,
+              private _authService: AuthService,
               private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _errorsManager: ErrorsManagerService,
@@ -104,6 +108,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         if (this._virtualEventId) {
           this.exportFilename = `Summary_registration_report_${this._virtualEventId}.pdf`;
           this._loadVirtualEventDetails();
+          this._loadAppGuid();
         }
       });
   }
@@ -118,6 +123,38 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _onRefineFilterChange(event: RefineFilter): void {
     this._refineFilter = event;
   }
+
+  private _loadAppGuid(): void {
+    this._loadingAppGuid = true;
+    const filter = {
+      "appCustomIdIn": [this._virtualEventId]
+    }
+    const headers = new HttpHeaders({
+      'authorization': `KS ${this._authService.ks}`,
+      'Content-Type': 'application/json',
+    });
+    this._http.post(`${analyticsConfig.externalServices.appRegistryServer.uri}/api/v1/app-registry/list`, {filter}, {headers}).pipe(cancelOnDestroy(this)).subscribe(
+      (result: any) => {
+        this._loadingAppGuid = false;
+        if (result && result.objects && result.objects.length) {
+          this._appGuid = result.objects[0].id;
+        }
+      },
+      error => {
+        this._loadingAppGuid = false;
+        const actions = {
+          'close': () => {
+            this._blockerMessage = null;
+          },
+          'retry': () => {
+            this._loadAppGuid();
+          }
+        };
+        this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+      }
+    )
+  }
+
 
   private _loadVirtualEventDetails(parentCategory = false): void {
     this._loadingVirtualEvent = true;
@@ -158,10 +195,6 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-  }
-
-  public onRegistrationDataLoaded(event: { unregistered: number }): void {
-    this._unregistered = event.unregistered;
   }
 
   public exportReport(event: { type: string, id: string }): void {

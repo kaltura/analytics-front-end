@@ -1,5 +1,5 @@
 <div #reportToExport data-aid="report-group-category" class="kMain">
-  <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_loadingVirtualEvent || _loadingAppGuid" [message]="_blockerMessage">
     <div class="kReportView">
       <div class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
@@ -57,18 +57,17 @@
         <!--span class="kTitle" *ngIf="_exporting">{{'app.ve.registration' | translate}}</span>
         <div class="kSummary" *ngIf="_exporting">{{'app.ve.summary' | translate}}</div-->
 
-        <div *ngIf="_virtualEventLoaded" class="kReportContainer stickToBottom">
-          <div *ngIf="_viewConfig.miniFunnel" class="kMiniReportContainer">
-            <app-registration-funnel [dateFilter]="_dateFilter"
+        <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer stickToBottom">
+          <div [class.kHidden]="!_viewConfig.miniFunnel" class="kMiniReportContainer">
+            <app-registration-funnel [appGuid]="_appGuid" #funnel
                                      [refineFilter]="_refineFilter"
                                      [virtualEventId]="_virtualEventId"
-                                     [exporting]="_exporting"
-                                     (registrationDataLoaded)="onRegistrationDataLoaded($event)">
+                                     [exporting]="_exporting">
             </app-registration-funnel>
           </div>
           <div *ngIf="_viewConfig.miniOrigin" class="kMiniReportContainer">
             <div class="col">
-              <app-ve-mini-origin [unregistered]="_unregistered" [topCountries$]="geo.topCountries$">
+              <app-ve-mini-origin [attendees$]="funnel.attendees$">
               </app-ve-mini-origin>
             </div>
           </div>
@@ -105,6 +104,7 @@
 
         <div *ngIf="_viewConfig.topDevices" class="kReportContainer">
           <app-devices-overview [dateFilter]="_dateFilter"
+                                [title]="'app.category.topDevices' | translate"
                                 [refineFilter]="_refineFilter"
                                 [reportConfig]="_devicesReportConfig"
                                 [virtualEventId]="_virtualEventId"

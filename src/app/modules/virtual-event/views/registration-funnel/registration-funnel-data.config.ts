@@ -81,10 +81,10 @@ export class RegistrationFunnelDataConfig extends ReportDataBaseConfig implement
         {
           name: 'Registration',
           type: 'funnel',
-          left: '65%',
+          left: '45%',
           top: 0,
           bottom: 0,
-          width: '30%',
+          width: '50%',
           height: 314,
           min: 0,
           max: 100,

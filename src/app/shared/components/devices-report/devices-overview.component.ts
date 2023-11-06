@@ -51,6 +51,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDes
   @Input() categoryId: string = null;
   @Input() playlistId: string = null;
   @Input() entryId: string = null;
+  @Input() title: string = '';
   @Input() virtualEventId: string = null;
   @Input() reportType: KalturaReportType = null;
   @Input() colorScheme = 'default';

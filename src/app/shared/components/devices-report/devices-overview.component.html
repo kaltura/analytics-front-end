@@ -1,6 +1,6 @@
 <div data-aid="report-entry-details-overview" class="kReport kOverrideFAIcons kNoMargin">
   <div class="kFilters">
-    <h2 class="kTitle" id="kDevicesOverview">{{'app.audience.technology.devicesOverview' | translate}}</h2>
+    <h2 class="kTitle" id="kDevicesOverview">{{title.length ? title : 'app.audience.technology.devicesOverview' | translate}}</h2>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

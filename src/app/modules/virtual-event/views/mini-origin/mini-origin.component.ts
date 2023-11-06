@@ -16,7 +16,7 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
   protected _componentId = 've-mini-insights';
 
   @Input() unregistered = 0;
-  @Input() topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }> = new BehaviorSubject({ topCountries: [], totalCount: 0 });
+  @Input() attendees$: BehaviorSubject<{ results: any[], sum: number }> = new BehaviorSubject({ results: [], sum: 0 });
 
   public countries = [];
   public countriesCount = 0;
@@ -25,18 +25,11 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    if (this.topCountries$) {
-      this.topCountries$
+    if (this.attendees$) {
+      this.attendees$
         .pipe(cancelOnDestroy(this))
-        .subscribe(({ topCountries, totalCount }) => {
-          this.countriesCount = totalCount;
-          this.countries = [];
-          if (topCountries.length > 0) {
-            this.countries.push(topCountries[0].object_id);
-          }
-          if (topCountries.length > 1) {
-            this.countries.push(topCountries[1].object_id);
-          }
+        .subscribe(({ results, sum }) => {
+
         });
     }
   }
