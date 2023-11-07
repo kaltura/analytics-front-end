@@ -123,9 +123,12 @@
   .kReportHeader {
     height: 80px;
     position: relative;
-    &.kRight {
-      justify-content: flex-end;
-    }
+  }
+  .kDateSelector {
+    height: 32px;
+    margin-bottom: 24px;
+    justify-content: flex-end;
+    display: flex;
   }
   .kTitle {
     color: $kGrayscale1;

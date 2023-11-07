@@ -1,85 +1,70 @@
 @import '../../../../../styles/variables';
-:host ::ng-deep .kValue{
-  font-size: 24px;
-  font-weight: 700;
-}
-:host ::ng-deep .kUnits{
-  font-size: 13px;
-  font-weight: 700;
-}
-.kMini{
-  height: 100%;
-  .kReportContent {
-    padding-bottom: 8px;
+
+.kReport {
+  .kFilters {
+    height: auto;
+    margin-bottom: 28px;
+    .kTitle {
+      padding: 0px;
+    }
   }
-  .kVal{
-    display: flex;
-    align-items: center;
-    margin-left: 24px;
-    margin-top: 12px;
-    position: relative;
-    height: 48px;
-    .kLabels {
-      display: flex;
-      align-items: flex-end;
-      margin-left: 12px;
-    }
-    .kCountriesLables{
-      margin-left: 24px;
-    }
-    .icon-globe {
-      font-size: 30px;
-      color: #888888;
-    }
-    .kMiniIcon{
-      flex: 0 0 auto;
-      width: 30px;
-      height: 30px;
-      border-radius: 15px;
+  .kReportContent {
+    padding: 24px;
+    height: 400px;
+    .kRow {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      margin-right: 12px;
-      &.blue{
-        background-color: rgba(72,122,223,0.2);
-        color: #487ADF;
+      margin-bottom: 32px;
+      .kLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+        width: 150px;
       }
-      &.grey{
-        background-color: rgba(136,136,136,0.2);
-        color: #888888;
-
+      .kVal {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+        text-align: right;
+        margin-right: 8px;
+        width: 120px;
+      }
+      .notParticipated {
+        background-color: #88ACF6;
+      }
+      .participated {
+        background-color: #487ADF;
       }
     }
-    .value{
-      font-size: 24px;
-      line-height: 24px;
-      font-weight: 700;
-      color: $kGrayscale1;
+    .kBar {
+      width: 100%;
+      height: 24px;
+      background-color: $kGrayscale6;
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
     }
-    .percentLive{
-      font-weight: 700;
-      margin-left: 8px;
-    }
-    .title{
-      font-size: 15px;
-      color: $kGrayscale1;
-      margin-left: 8px;
-    }
-    .kFlag {
-      width: 30px;
-      height: 30px;
-    }
-    .flag1 {
-      z-index: 1;
-    }
-    .flag2 {
-      z-index: 0;
-      position: absolute;
-      top: 9px;
-      left: 12px;
+    .kFooter {
+      display: flex;
+      align-items: center;
+      .kLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .bullet {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        margin-right: 8px;
+        &.notAttended {
+          background-color: #88ACF6;
+        }
+        &.attended {
+          background-color: #487ADF;
+          margin-left: 16px;
+        }
+      }
     }
   }
-
 }
-

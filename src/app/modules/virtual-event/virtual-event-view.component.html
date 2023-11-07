@@ -66,14 +66,11 @@
             </app-registration-funnel>
           </div>
           <div *ngIf="_viewConfig.miniOrigin" class="kMiniReportContainer">
-            <div class="col">
-              <app-ve-mini-origin [attendees$]="funnel.attendees$">
-              </app-ve-mini-origin>
-            </div>
+            <app-ve-mini-origin [attendees$]="funnel.attendees$"></app-ve-mini-origin>
           </div>
         </div>
 
-        <div class="kReportHeader kRight">
+        <div class="kDateSelector">
           <app-date-filter #dateFilter *ngIf="_creationDate" [class.noTitle]="!_viewConfig.title"
                            name="virtual-event"
                            [appendTo]="reportToExport"
@@ -97,7 +94,7 @@
         <div *ngIf="_viewConfig.highlights && !_exporting" class="kReportContainer">
           <app-ve-highlights [dateFilter]="_dateFilter"
                              [exporting]="_exporting"
-                             [hideDetails]="false"
+                             [hideDetails]="true"
                              [highlights$]="status.status$">
           </app-ve-highlights>
         </div>

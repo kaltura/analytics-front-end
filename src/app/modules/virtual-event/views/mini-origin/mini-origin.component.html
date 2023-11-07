@@ -1,27 +1,28 @@
 <div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
-
+  <k-area-blocker [showLoader]="_isBusy">
     <div class="kReportContent">
 
-      <div class="kVal">
-        <i *ngIf="countries.length === 0" class="icon-globe"></i>
-        <i *ngIf="countries.length" class="kFlag flag1" [ngClass]="'kFlag-' + countries[0]"></i>
-        <i *ngIf="countries.length > 1" class="kFlag flag2" [ngClass]="'kFlag-' + countries[1]"></i>
-        <div class="kLabels kCountriesLables">
-          <span class="value">{{countriesCount | numberFormat}}</span>
-          <span class="title">{{'app.entryWebcast.highlights.countries' | translate }}</span>
+      <div class="kFilters">
+        <span class="kTitle">{{'app.ve.origin' | translate}}</span>
+      </div>
+
+      <div class="kRow" *ngFor="let origin of _origins" [class.kHidden]="origin.total === 0">
+        <span class="kLabel">{{'app.ve.' + origin.key | translate}}</span>
+        <span class="kVal">{{origin.total}}</span>
+        <div class="kBar">
+          <div [ngStyle]="{width: (origin.notAttended / _allAttendees) * 100 + '%'}" [kTooltip]="origin.notAttended" class="notParticipated"></div>
+          <div [ngStyle]="{width: (origin.attended / _allAttendees) * 100 + '%'}" [kTooltip]="origin.attended" class="participated"></div>
         </div>
       </div>
 
-
-      <div class="kVal">
-        <div class="kMiniIcon grey"><i class="icon-small-viewer-contributor"></i></div>
-        <div class="kLabels">
-          <span class="value">{{unregistered | numberFormat}}</span>
-          <span class="title">{{'app.ve.unregistered' | translate}}</span>
-        </div>
+      <div class="kFooter">
+        <div class="bullet notAttended"></div>
+        <span class="kLabel">{{'app.ve.notAttended' | translate}}</span>
+        <div class="bullet attended"></div>
+        <span class="kLabel">{{'app.ve.attended' | translate}}</span>
       </div>
 
     </div>
-
+  </k-area-blocker>
 </div>
 

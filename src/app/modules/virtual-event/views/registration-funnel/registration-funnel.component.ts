@@ -1,25 +1,31 @@
-import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angular/core';
+import { Component, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService} from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { RegistrationFunnelDataConfig } from './registration-funnel-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import { getColorPalette } from 'shared/utils/colors';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { reportTypeMap } from 'shared/utils/report-type-map';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from "rxjs";
+import { BehaviorSubject } from "rxjs";
+import {analyticsConfig} from "configuration/analytics-config";
 
 export type funnelData = {
   registered: number;
   participated: number;
 };
+
+export type attendeesData = {
+  count: number;
+  dimensions: {
+    eventData: {
+      attendanceStatus: string;
+      regOrigin: string;
+    }
+  }
+}
 
 @Component({
   selector: 'app-registration-funnel',
@@ -65,7 +71,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
   private echartsIntance: any;
 
-  public attendees$: BehaviorSubject<{ results: any[], sum: number }> = new BehaviorSubject({ results: [], sum: 0 });
+  public attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: false, results: [], sum: 0 });
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
@@ -136,10 +142,10 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     this._chartLoaded = false;
     this._blockerMessage = null;
     this._participated = 0;
-    this.attendees$.next({results: [], sum: 0});
+    this.attendees$.next({loading: true, results: [], sum: 0});
 
     const filter = {
-      "appGuidIn": [this._appGuid]
+      "appGuid": this._appGuid
     }
 
     // add origin filter
@@ -158,37 +164,38 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     }
 
     // set minimal pager
-    const dimensions = ["eventData.regOrigin","eventData.attendanceStatus"];
+    const dimensions = ["regOrigin","attendanceStatus"];
+
 
     const headers = new HttpHeaders({
       'authorization': `KS ${this._authService.ks}`,
       'Content-Type': 'application/json',
     });
 
-    this._http.get('assets/data.json')
+    this._http.post(`${analyticsConfig.externalServices.userProfileServer.uri}/api/v1/reports/eventDataStats`, {filter, dimensions}, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
-        this.attendees$.next({results: data.results ? data.results : [], sum: data.sum ? data.sum : 0});
-        this._registered = data.sum;
-        if (data?.results && data.results.length) {
-          data.results.forEach((users: any) => {
-            if (users.dimensions?.eventData?.attendanceStatus === "participated") {
-              this._participated += users.count;
-            }
-          });
-          this._funnelData = {
-            registered: this._registered,
-            participated: this._participated
-          };
-          this.updateFunnel();
-          const participated = this._registered === 0 ? 0 : Math.round(this._participated / this._registered * 100);
-          this.turnout = participated.toFixed(0);
-          this._chartLoaded = true;
-        }
+          this.attendees$.next({loading: false, results: data.results ? data.results : [], sum: data.sum ? data.sum : 0});
+          this._registered = data.sum;
+          if (data?.results && data.results.length) {
+            data.results.forEach((users: any) => {
+              if (users.dimensions?.eventData?.attendanceStatus === "participated") {
+                this._participated += users.count;
+              }
+            });
+            this._funnelData = {
+              registered: this._registered,
+              participated: this._participated
+            };
+            this.updateFunnel();
+            const participated = this._registered === 0 ? 0 : Math.round(this._participated / this._registered * 100);
+            this.turnout = participated.toFixed(0);
+            this._chartLoaded = true;
+          }
           this._isBusy = false;
-      },
+        },
         error => {
           this._isBusy = false;
-          this.attendees$.next({results: [], sum: 0});
+          this.attendees$.next({loading: false, results: [], sum: 0});
           const actions = {
             'close': () => {
               this._blockerMessage = null;
@@ -199,21 +206,6 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-
-    /*
-    this._http.post(`${analyticsConfig.externalServices.userProfileServer.uri}/api/v1/user-profile/list`, {filter, pager}, {headers}).pipe(cancelOnDestroy(this)).subscribe(
-      (result: any) => {
-        if (result && result.totalCount) {
-          this._registered = result.totalCount;
-        }
-        this._registeredLoaded = true;
-        handleResults();
-      },
-      error => {
-        showError(error);
-      }
-    ); */
-
   }
 
   private _setEchartsOption(option: EChartOption, opts?: any): void {
