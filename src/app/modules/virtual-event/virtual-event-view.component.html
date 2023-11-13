@@ -65,6 +65,9 @@
                                      [exporting]="_exporting">
             </app-registration-funnel>
           </div>
+          <div *ngIf="_viewConfig.miniAttendance" class="kMiniReportContainer">
+            <app-ve-mini-attendance [attendees$]="funnel.attendees$"></app-ve-mini-attendance>
+          </div>
           <div *ngIf="_viewConfig.miniOrigin" class="kMiniReportContainer">
             <app-ve-mini-origin [attendees$]="funnel.attendees$"></app-ve-mini-origin>
           </div>

@@ -1,3 +1,5 @@
+import {VEMiniAttendanceComponent} from "../app/modules/virtual-event/views/mini-attendance/mini-attendance.component";
+
 export interface ViewConfig {
   [key: string]: ViewConfig;
 }
@@ -207,6 +209,7 @@ export const viewsConfig = {
       origin: {}
     },
     miniFunnel: {},
+    miniAttendance: {},
     miniOrigin: {},
     status : {},
     highlights: {},

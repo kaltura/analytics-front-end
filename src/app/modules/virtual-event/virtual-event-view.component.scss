@@ -60,9 +60,9 @@
     }
   }
   .kMiniReportContainer{
-    width: calc(50% - 12px);
+    width: 30%;
     flex: 1 1 auto;
-    &:first-child {
+    &:not(:last-child)  {
       margin-right: 24px;
       height: 400px;
     }

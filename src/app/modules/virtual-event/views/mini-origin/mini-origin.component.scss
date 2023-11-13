@@ -31,9 +31,11 @@
       }
       .notParticipated {
         background-color: #88ACF6;
+        transition: width 0.35s ease-in-out;
       }
       .participated {
         background-color: #487ADF;
+        transition: width 0.35s ease-in-out;
       }
     }
     .kBar {

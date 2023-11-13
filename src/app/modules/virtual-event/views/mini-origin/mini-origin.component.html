@@ -10,8 +10,8 @@
         <span class="kLabel">{{'app.ve.' + origin.key | translate}}</span>
         <span class="kVal">{{origin.total}}</span>
         <div class="kBar">
-          <div [ngStyle]="{width: (origin.notAttended / _allAttendees) * 100 + '%'}" [kTooltip]="origin.notAttended" class="notParticipated"></div>
-          <div [ngStyle]="{width: (origin.attended / _allAttendees) * 100 + '%'}" [kTooltip]="origin.attended" class="participated"></div>
+          <div [ngStyle]="{width: _allAttendees > 0 ? (origin.notAttended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.notAttended" class="notParticipated"></div>
+          <div [ngStyle]="{width: _allAttendees > 0 ? (origin.attended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.attended" class="participated"></div>
         </div>
       </div>
 

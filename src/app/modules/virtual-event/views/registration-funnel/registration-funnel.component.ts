@@ -71,7 +71,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
   private echartsIntance: any;
 
-  public attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: false, results: [], sum: 0 });
+  public attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: true, results: [], sum: 0 });
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,

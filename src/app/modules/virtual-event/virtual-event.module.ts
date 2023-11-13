@@ -21,6 +21,7 @@ import { VEGeoComponent } from "./views/geo/geo-location.component";
 import { VERolesComponent } from "./views/roles/roles.component";
 import { VEIndustriesComponent } from "./views/industries/industries.component";
 import { VEMiniOriginComponent } from "./views/mini-origin/mini-origin.component";
+import { VEMiniAttendanceComponent } from "./views/mini-attendance/mini-attendance.component";
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { VEMiniOriginComponent } from "./views/mini-origin/mini-origin.component
     VirtualEventFilterComponent,
     RegistrationFunnelComponent,
     VEMiniOriginComponent,
+    VEMiniAttendanceComponent,
     StatusComponent,
     HighlightsComponent,
     VEGeoComponent,
