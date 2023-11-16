@@ -145,7 +145,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     this.attendees$.next({loading: true, results: [], sum: 0});
 
     const filter = {
-      "appGuid": this._appGuid
+      "appGuidIn": [this._appGuid]
     }
 
     // add origin filter

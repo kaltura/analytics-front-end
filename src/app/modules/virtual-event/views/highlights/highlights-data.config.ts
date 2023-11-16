@@ -19,18 +19,12 @@ export class HighlightsDataConfig extends ReportDataBaseConfig {
         fields: {
           'registered': {
             format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value) + '%',
             colors: [getPrimaryColor(), getSecondaryColor()],
           },
-          'confirmed': {
+          'attended': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'participated': {
-            format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'unregistered': {
-            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value) + '%',
             colors: [getPrimaryColor(), getSecondaryColor()],
           }
         }
@@ -42,17 +36,9 @@ export class HighlightsDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
           },
-          'confirmed': {
+          'attended': {
             format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.confirmed`),
-          },
-          'participated': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.participated`),
-          },
-          'unregistered': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.unregistered`),
+            title: this._translate.instant(`app.ve.attended`),
           }
         }
       },

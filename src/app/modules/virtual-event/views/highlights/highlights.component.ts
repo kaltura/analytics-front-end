@@ -64,6 +64,9 @@ export class HighlightsComponent implements OnInit, OnDestroy {
   private _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   private _dataConfig: ReportDataConfig;
 
+  private totalRegistered = 0;
+  private totalAttended = 0;
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _reportService: ReportService,
@@ -97,6 +100,10 @@ export class HighlightsComponent implements OnInit, OnDestroy {
 
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    if (this._tabsData.length === 2) {
+      this.totalRegistered = parseInt(this._tabsData[0].rawValue as string);
+      this.totalAttended = parseInt(this._tabsData[1].rawValue as string);
+    }
   }
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
@@ -113,11 +120,26 @@ export class HighlightsComponent implements OnInit, OnDestroy {
     // });
     // ------- Mock data end ----  //
 
+    // convert data to percentage
+    Object.keys(lineChartData).forEach(key => {
+      (lineChartData[key] as any).yAxis.axisLabel.formatter = param => param + '%';
+      const data = (lineChartData[key] as any).series[0].data;
+      if (key === 'registered' && Math.max(...data) > 0) {
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.round(data[i] / this.totalRegistered * 100);
+        }
+      }
+      if (key === 'attended' && Math.max(...data) > 0) {
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.round(data[i] / this.totalAttended * 100);
+        }
+      }
+    });
     // mark peak days
     Object.keys(lineChartData).forEach(key => {
-      if (this.hideDetails) {
-        (lineChartData[key] as any).tooltip = null; // hide tooltip
-      }
+      // if (this.hideDetails) {
+      //   (lineChartData[key] as any).tooltip = null; // hide tooltip
+      // }
       // display peak day label only if we have at least one value larger than 0
       if (Math.max(...(lineChartData[key] as any).series[0].data) > 0) {
         (lineChartData[key] as any).series[0].markPoint = {
