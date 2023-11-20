@@ -73,7 +73,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   private _componentId = 'status';
   private echartsIntance: any;
 
-  private reportType: KalturaReportType = reportTypeMap(KalturaReportType.veHighlights);
+  private reportType: KalturaReportType = reportTypeMap(KalturaReportType.veUserHighlights);
   private pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private order = 'registered';
   private filter = new KalturaEndUserReportInputFilter(
@@ -118,9 +118,9 @@ export class StatusComponent implements OnInit, OnDestroy {
       }))
       .subscribe(({ report, compare }) => {
           this.status$.next({ current: report, busy: false, error: null });
-          if (report.graphs) {
-            this.handleGraphs(report.graphs); // handle graphs
-          }
+          // if (report.graphs) {
+          //   this.handleGraphs(report.graphs); // handle graphs
+          // }
           this._isBusy = false;
         },
         error => {

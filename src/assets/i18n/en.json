@@ -1083,6 +1083,7 @@
       "month_id": "Month",
       "date_id": "Date",
       "registered": "Registered",
+      "registered_unique_users": "Registered",
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",

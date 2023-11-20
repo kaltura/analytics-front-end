@@ -49,7 +49,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredCountries);
   private _reportTypeWorldRegions: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredWorldRegions);
   private _mapCenter = [0, 10];
-  private order = '-registered';
+  private order = '-registered_unique_users';
   private _mapZoom = 1.2;
 
   public topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }> = new BehaviorSubject({ topCountries: [], totalCount: 0 });
@@ -205,7 +205,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const registrationDistribution = calculateDistribution('registered');
+      const registrationDistribution = calculateDistribution('registered_unique_users');
 
       row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
 
@@ -233,7 +233,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const registrationDistribution = calculateDistribution('registered');
+      const registrationDistribution = calculateDistribution('registered_unique_users');
 
       row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
 

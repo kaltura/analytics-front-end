@@ -15,16 +15,10 @@ export class StatusDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'invited': {
+          'registered_unique_users': {
             format: value => value,
           },
-          'registered': {
-            format: value => value,
-          },
-          'confirmed': {
-            format: value => value,
-          },
-          'participated': {
+          'attendance_unique_users': {
             format: value => value,
           }
         }
@@ -32,21 +26,13 @@ export class StatusDataConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         preSelected: 'registered',
         fields: {
-          'registered': {
+          'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
           },
-          'confirmed': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.confirmed`),
-          },
-          'participated': {
+          'attendance_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.participated`),
-          },
-          'unregistered': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.unregistered`),
           }
         }
       }

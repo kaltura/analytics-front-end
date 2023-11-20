@@ -21,7 +21,7 @@
 
           <p-table #table *ngIf="_worldRegionsTableData.length"
                    appScrollTopOnPaging
-                   sortField="registered"
+                   sortField="registered_unique_users"
                    [value]="_worldRegionsTableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
@@ -89,7 +89,7 @@
 
           <p-table #table [class.hidePaginator]="exporting"
                    appScrollTopOnPaging
-                   sortField="registered"
+                   sortField="registered_unique_users"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"

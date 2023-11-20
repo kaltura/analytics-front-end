@@ -63,15 +63,15 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         'device': {
           format: value => value,
         },
-        'registered': {
+        'registered_unique_users': {
           format: value => value,
         }
       }
     },
     [ReportDataSection.totals]: {
-      preSelected: 'registered',
+      preSelected: 'registered_unique_users',
       fields: {
-        'registered': {
+        'registered_unique_users': {
           format: value => value,
           title: this._translate.instant(`app.ve.registered`),
           sortOrder: 1,

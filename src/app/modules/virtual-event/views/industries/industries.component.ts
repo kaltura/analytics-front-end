@@ -39,7 +39,7 @@ export class VEIndustriesComponent extends VEBaseReportComponent implements OnIn
 
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredIndustry);
-  private order = '-registered';
+  private order = '-registered_unique_users';
 
   public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
@@ -149,7 +149,7 @@ export class VEIndustriesComponent extends VEBaseReportComponent implements OnIn
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const registrationDistribution = calculateDistribution('registered');
+      const registrationDistribution = calculateDistribution('registered_unique_users');
 
       row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
 

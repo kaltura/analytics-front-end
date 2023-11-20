@@ -89,7 +89,7 @@ export class HighlightsComponent implements OnInit, OnDestroy {
           }
           if (current && current.graphs) {
             this.handleGraphs(current.graphs);
-            this.handleTable(current);  // table from graph
+            // this.handleTable(current);  // table from graph
           }
         });
     }
