@@ -3,11 +3,17 @@
     <div class="kReportContent" aria-labelledby="kImpressions">
 
       <div class="kTurnout">
-        <span class="kValue">{{turnout}}%</span>
+        <span *ngIf="!disabled" class="kValue">{{turnout}}%</span>
+        <span *ngIf="disabled" class="kValue">{{'app.common.na' | translate}}</span>
         <span class="kLabel">{{'app.ve.turnout' | translate}}</span>
         <kInputHelper *ngIf="!exporting">
           <span>{{'app.ve.turnout_tt' | translate}}</span>
         </kInputHelper>
+      </div>
+
+      <div *ngIf="!disabled" class="kTurnout unregistered">
+        <span class="kValue">{{_unregistered}}</span>
+        <span class="kLabel">{{'app.ve.unregistered' | translate}}</span>
       </div>
 
       <div class="kData" *ngIf="_chartLoaded">
@@ -17,6 +23,16 @@
             <span class="kLabel">{{'app.ve.all' | translate}}</span>
             <kInputHelper *ngIf="!exporting">
               <span>{{'app.ve.registered_tt' | translate}}</span>
+            </kInputHelper>
+          </div>
+        </div>
+
+        <div class="kDataContainer" aria-label="Participated">
+          <span class="kValue">{{_funnelData.confirmed | numberFormat}}</span>
+          <div>
+            <span class="kLabel">{{'app.ve.confirmed' | translate}}</span>
+            <kInputHelper *ngIf="!exporting">
+              <span>{{'app.ve.confirmed_tt' | translate}}</span>
             </kInputHelper>
           </div>
         </div>
@@ -32,12 +48,12 @@
         </div>
       </div>
 
-      <div class="kCharts"  [style.opacity]="_chartLoaded ? 1 : 0">
+      <div class="kCharts" *ngIf="!disabled" [style.opacity]="_chartLoaded ? 1 : 0">
         <div class="kChart">
           <div aria-label="Impressions Funnel" echarts class="kChart"  [options]="_chartData" (chartInit)="onChartInit($event)"></div>
         </div>
       </div>
-
+      <span *ngIf="disabled" class="old">{{'app.ve.old' | translate}}</span>
     </div>
 
   </k-area-blocker>

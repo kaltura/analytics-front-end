@@ -20,6 +20,7 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
   protected _componentId = 've-mini-origin';
 
   @Input() attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: false, results: [], sum: 0 });
+  @Input() disabled = false;
 
   private registration: origin = {key: 'registration', total:0, attended: 0, notAttended: 0};
   private webhook: origin = {key: 'webhook', total:0, attended: 0, notAttended: 0};
@@ -35,7 +36,7 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    if (this.attendees$) {
+    if (this.attendees$ && !this.disabled) {
       this.attendees$
         .pipe(cancelOnDestroy(this))
         .subscribe(({ loading, results, sum }) => {

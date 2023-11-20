@@ -306,3 +306,7 @@
   max-height: 272px;
   overflow: hidden;
 }
+.offscreen {
+  position: absolute;
+  top: -3000px;
+}

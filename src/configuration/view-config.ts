@@ -209,7 +209,6 @@ export const viewsConfig = {
       origin: {}
     },
     miniFunnel: {},
-    miniAttendance: {},
     miniOrigin: {},
     status : {},
     highlights: {},

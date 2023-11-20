@@ -14,6 +14,7 @@ import {analyticsConfig} from "configuration/analytics-config";
 
 export type funnelData = {
   registered: number;
+  confirmed: number;
   participated: number;
 };
 
@@ -55,6 +56,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
   @Input() virtualEventId: string;
   @Input() exporting = false;
+  @Input() disabled = false;
 
   private _refineFilter: RefineFilter = [];
   private _appGuid = '';
@@ -65,8 +67,11 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   public _chartLoaded = false;
   public _funnelData: funnelData;
   public turnout = '0';
+  public confirmation = '0';
 
   private _registered = 0;
+  private _unregistered = 0;
+  private _confirmed = 0;
   private _participated = 0;
 
   private echartsIntance: any;
@@ -118,6 +123,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   public updateFunnel(): void {
+    const confirmed = this._funnelData.confirmed === 0 ? '0' : Math.round(this._funnelData.confirmed / this._funnelData.registered * 100).toFixed(0);
     const participated = this._funnelData.registered === 0 ? '0' : Math.round(this._funnelData.participated / this._funnelData.registered * 100).toFixed(0);
 
     this._setEchartsOption({
@@ -128,16 +134,23 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
             name: this._translate.instant('app.ve.all')
           },
           {
+            value: Math.round(parseFloat(confirmed)),
+            name: this._translate.instant('app.ve.confirmed')
+          },
+          {
             value: Math.round(parseFloat(participated)),
             name: this._translate.instant('app.ve.participated')
           }
         ]
       }]
     }, false);
-    this._setEchartsOption({ color: [getColorPalette()[2], getColorPalette()[4]] });
+    this._setEchartsOption({ color: [getColorPalette()[7], getColorPalette()[4], getColorPalette()[2]] });
   }
 
   private _loadReport(): void {
+    if (this.disabled) {
+      return;
+    }
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
@@ -172,7 +185,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json',
     });
 
-    this._http.post(`${analyticsConfig.externalServices.userProfileServer.uri}/api/v1/reports/eventDataStats`, {filter, dimensions}, {headers}).pipe(cancelOnDestroy(this))
+    this._http.post(`${analyticsConfig.externalServices.userReportsEndpoint.uri}/eventDataStats`, {filter, dimensions}, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
           this.attendees$.next({loading: false, results: data.results ? data.results : [], sum: data.sum ? data.sum : 0});
           this._registered = data.sum;
@@ -181,14 +194,23 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
               if (users.dimensions?.eventData?.attendanceStatus === "participated") {
                 this._participated += users.count;
               }
+              if (users.dimensions?.eventData?.attendanceStatus === "confirmed") {
+                this._confirmed += users.count;
+              }
+              if (users.dimensions?.eventData?.attendanceStatus === "unregistered") {
+                this._unregistered += users.count;
+              }
             });
             this._funnelData = {
               registered: this._registered,
+              confirmed: this._confirmed,
               participated: this._participated
             };
             this.updateFunnel();
             const participated = this._registered === 0 ? 0 : Math.round(this._participated / this._registered * 100);
             this.turnout = participated.toFixed(0);
+            const confirmation = this._confirmed === 0 ? 0 : Math.round(this._participated / this._registered * 100);
+            this.confirmation = confirmation.toFixed(0);
             this._chartLoaded = true;
           }
           this._isBusy = false;
@@ -221,7 +243,11 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
       const dropoff = this.turnout.includes('.') ? (100 - parseFloat(this.turnout)).toFixed(2) + "%" : 100 - parseInt(this.turnout) + "%";
       return `<span style="color: #333333"><b>${dropoff} ${this._translate.instant('app.ve.dropoff')}</b><br/><b>${this._funnelData.registered.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
     } else {
-      return `<span style="color: #333333"><b>${this.turnout}% ${this._translate.instant('app.ve.turnout2')}</b><br/><b>${this._funnelData.participated.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+      if (params.data.name === this._translate.instant('app.ve.confirmed')) {
+        return `<span style="color: #333333"><b>${this.confirmation}% ${this._translate.instant('app.ve.confirmation')}</b><br/><b>${this._funnelData.confirmed.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.confirmed')}</b></span>`;
+      } else {
+        return `<span style="color: #333333"><b>${this.turnout}% ${this._translate.instant('app.ve.turnout2')}</b><br/><b>${this._funnelData.participated.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+      }
     }
   }
 }

@@ -22,7 +22,7 @@
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <!--span *ngIf="exporting" class="kDetails">{{'app.ve.details' | translate}}</span-->
-        <div class="kTableContainer" [class.kOpen]="_showTable || exporting" [class.kClose]="!_showTable && !exporting">
+        <!--div class="kTableContainer" [class.kOpen]="_showTable || exporting" [class.kClose]="!_showTable && !exporting">
           <p-table appScrollTopOnPaging
                    [value]="_tableData"
                    [paginator]="true"
@@ -61,7 +61,7 @@
               </div>
             </ng-template>
           </p-table>
-        </div>
+        </div-->
       </div>
 
     </div>

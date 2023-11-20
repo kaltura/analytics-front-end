@@ -30,10 +30,10 @@ export interface AnalyticsConfig {
     exportRoute?: string
   };
   externalServices?: {
-    appRegistryServer?: {
+    appRegistryEndpoint?: {
       uri: string
     },
-    userProfileServer?: {
+    userReportsEndpoint?: {
       uri: string;
     }
   },

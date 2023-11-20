@@ -56,6 +56,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
   public _exporting = false;
+  public _disableMiniViews = false;
   public _devicesReportConfig = {
     [ReportDataSection.table]: {
       fields: {
@@ -133,7 +134,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
       'authorization': `KS ${this._authService.ks}`,
       'Content-Type': 'application/json',
     });
-    this._http.post(`${analyticsConfig.externalServices.appRegistryServer.uri}/api/v1/app-registry/list`, {filter}, {headers}).pipe(cancelOnDestroy(this)).subscribe(
+    this._http.post(`${analyticsConfig.externalServices.appRegistryEndpoint.uri}/list`, {filter}, {headers}).pipe(cancelOnDestroy(this)).subscribe(
       (result: any) => {
         this._loadingAppGuid = false;
         if (result && result.objects && result.objects.length) {
@@ -221,7 +222,6 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     if (this.updateDetails) {
       this._viewConfig.details = {};
     }
-    this._viewConfig.refineFilter = null; // hide refine filter
   }
 
   public postExportHandler(): void {
@@ -231,10 +231,6 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     if (this.updateDetails) {
       this._viewConfig.details = null;
     }
-    this._viewConfig.refineFilter = {
-      origin: {},
-      geo: {}
-    };
   }
 
   public onExporting(exporting: boolean): void {

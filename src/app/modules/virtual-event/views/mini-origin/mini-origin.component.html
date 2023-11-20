@@ -15,12 +15,14 @@
         </div>
       </div>
 
-      <div class="kFooter">
+      <div *ngIf="!disabled" class="kFooter">
         <div class="bullet notAttended"></div>
         <span class="kLabel">{{'app.ve.notAttended' | translate}}</span>
         <div class="bullet attended"></div>
         <span class="kLabel">{{'app.ve.attended' | translate}}</span>
       </div>
+
+      <span *ngIf="disabled" class="old">{{'app.ve.old' | translate}}</span>
 
     </div>
   </k-area-blocker>

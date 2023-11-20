@@ -18,6 +18,7 @@ export class VEMiniAttendanceComponent implements OnInit, OnDestroy{
   protected _componentId = 've-mini-attendance';
 
   @Input() attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: false, results: [], sum: 0 });
+  @Input() disabled = false;
 
   public pre = 0;
   public during = 0;
