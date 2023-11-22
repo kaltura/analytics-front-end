@@ -129,11 +129,6 @@ export class HighlightsComponent implements OnInit, OnDestroy {
           data[i] = Math.round(data[i] / this.totalRegistered * 100);
         }
       }
-      if (key === 'attended' && Math.max(...data) > 0) {
-        for (let i = 0; i < data.length; i++) {
-          data[i] = Math.round(data[i] / this.totalAttended * 100);
-        }
-      }
     });
     // mark peak days
     Object.keys(lineChartData).forEach(key => {

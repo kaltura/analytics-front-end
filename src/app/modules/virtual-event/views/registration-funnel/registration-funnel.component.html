@@ -14,6 +14,9 @@
       <div *ngIf="!disabled" class="kTurnout unregistered">
         <span class="kValue">{{_unregistered}}</span>
         <span class="kLabel">{{'app.ve.unregistered' | translate}}</span>
+        <kInputHelper *ngIf="!exporting">
+          <span>{{'app.ve.unregistered_tt' | translate}}</span>
+        </kInputHelper>
       </div>
 
       <div class="kData" *ngIf="_chartLoaded">
@@ -27,7 +30,7 @@
           </div>
         </div>
 
-        <div class="kDataContainer" aria-label="Participated">
+        <div class="kDataContainer" aria-label="Participated" *ngIf="_showConfirmed">
           <span class="kValue">{{_funnelData.confirmed | numberFormat}}</span>
           <div>
             <span class="kLabel">{{'app.ve.confirmed' | translate}}</span>

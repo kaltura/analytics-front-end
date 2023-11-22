@@ -21,11 +21,6 @@ export class HighlightsDataConfig extends ReportDataBaseConfig {
             format: value => value,
             graphTooltip: (value) => ReportHelper.numberOrZero(value) + '%',
             colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'attendance_unique_users': {
-            format: value => value,
-            graphTooltip: (value) => ReportHelper.numberOrZero(value) + '%',
-            colors: [getPrimaryColor(), getSecondaryColor()],
           }
         }
       },
@@ -35,10 +30,6 @@ export class HighlightsDataConfig extends ReportDataBaseConfig {
           'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
-          },
-          'attendance_unique_users': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.attended`),
           }
         }
       }

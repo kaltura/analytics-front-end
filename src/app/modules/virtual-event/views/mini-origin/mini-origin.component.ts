@@ -46,7 +46,8 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
             if (attendees.dimensions?.eventData?.regOrigin) {
               const origin = this[attendees.dimensions.eventData.regOrigin];
               origin.total += attendees.count;
-              if (attendees.dimensions.eventData.attendanceStatus === "participated") {
+              const status = attendees.dimensions.eventData.attendanceStatus;
+              if (status === "attended" || status === "participated" || status === "participatedPostEvent") {
                 origin.attended += attendees.count;
               } else {
                 origin.notAttended += attendees.count;

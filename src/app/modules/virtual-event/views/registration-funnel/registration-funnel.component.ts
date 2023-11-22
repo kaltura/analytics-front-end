@@ -14,7 +14,7 @@ import {analyticsConfig} from "configuration/analytics-config";
 
 export type funnelData = {
   registered: number;
-  confirmed: number;
+  confirmed?: number;
   participated: number;
 };
 
@@ -68,6 +68,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   public _funnelData: funnelData;
   public turnout = '0';
   public confirmation = '0';
+  public _showConfirmed = false;
 
   private _registered = 0;
   private _unregistered = 0;
@@ -126,23 +127,24 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     const confirmed = this._funnelData.confirmed === 0 ? '0' : Math.round(this._funnelData.confirmed / this._funnelData.registered * 100).toFixed(0);
     const participated = this._funnelData.registered === 0 ? '0' : Math.round(this._funnelData.participated / this._funnelData.registered * 100).toFixed(0);
 
+    const data = [
+      {
+        value: this._funnelData.registered === 0 ? 0 : 100,
+        name: this._translate.instant('app.ve.all')
+      },
+      {
+        value: Math.round(parseFloat(participated)),
+        name: this._translate.instant('app.ve.participated')
+      }
+    ];
+    if (this._showConfirmed) {
+      data.splice(1, 0,{
+        value: Math.round(parseFloat(confirmed)),
+        name: this._translate.instant('app.ve.confirmed')
+      })
+    }
     this._setEchartsOption({
-      series: [{
-        data: [
-          {
-            value: this._funnelData.registered === 0 ? 0 : 100,
-            name: this._translate.instant('app.ve.all')
-          },
-          {
-            value: Math.round(parseFloat(confirmed)),
-            name: this._translate.instant('app.ve.confirmed')
-          },
-          {
-            value: Math.round(parseFloat(participated)),
-            name: this._translate.instant('app.ve.participated')
-          }
-        ]
-      }]
+      series: [{ data }]
     }, false);
     this._setEchartsOption({ color: [getColorPalette()[7], getColorPalette()[4], getColorPalette()[2]] });
   }
@@ -188,28 +190,34 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     this._http.post(`${analyticsConfig.externalServices.userReportsEndpoint.uri}/eventDataStats`, {filter, dimensions}, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
           this.attendees$.next({loading: false, results: data.results ? data.results : [], sum: data.sum ? data.sum : 0});
+          this._showConfirmed = false;
           this._registered = data.sum;
           if (data?.results && data.results.length) {
             data.results.forEach((users: any) => {
-              if (users.dimensions?.eventData?.attendanceStatus === "participated") {
+              const status = users.dimensions?.eventData?.attendanceStatus || '';
+              if (status === "attended" || status === "participated" || status === "participatedPostEvent") {
                 this._participated += users.count;
-              }
-              if (users.dimensions?.eventData?.attendanceStatus === "confirmed") {
                 this._confirmed += users.count;
               }
-              if (users.dimensions?.eventData?.attendanceStatus === "unregistered") {
+              if (status === "confirmed" && users.count > 0) {
+                this._confirmed += users.count;
+                this._showConfirmed = true;
+              }
+              if (status === "unregistered") {
                 this._unregistered += users.count;
               }
             });
             this._funnelData = {
               registered: this._registered,
-              confirmed: this._confirmed,
               participated: this._participated
             };
+            if (this._showConfirmed) {
+              this._funnelData.confirmed = this._confirmed;
+            }
             this.updateFunnel();
             const participated = this._registered === 0 ? 0 : Math.round(this._participated / this._registered * 100);
             this.turnout = participated.toFixed(0);
-            const confirmation = this._confirmed === 0 ? 0 : Math.round(this._participated / this._registered * 100);
+            const confirmation = this._registered === 0 ? 0 : Math.round(this._confirmed / this._registered * 100);
             this.confirmation = confirmation.toFixed(0);
             this._chartLoaded = true;
           }

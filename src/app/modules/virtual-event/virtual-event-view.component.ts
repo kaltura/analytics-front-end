@@ -181,6 +181,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
           this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
           this._creationDate = DateFilterUtils.getMomentDate(virtualEvent.createdAt);
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
+          this._disableMiniViews = virtualEvent.createdAt < 1680307200; // before April 2023
           this._loadingVirtualEvent = false;
         },
         error => {
