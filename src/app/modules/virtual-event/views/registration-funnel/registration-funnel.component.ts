@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
 import { RegistrationFunnelDataConfig } from './registration-funnel-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';

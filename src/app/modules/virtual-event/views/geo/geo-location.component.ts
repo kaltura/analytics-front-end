@@ -2,13 +2,12 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TrendService } from 'shared/services/trend.service';
 import { SortEvent } from 'primeng/api';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
@@ -25,8 +24,8 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.component";
-import {BehaviorSubject, forkJoin, Observable, of as ObservableOf} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import { BehaviorSubject, forkJoin, of as ObservableOf } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 @Component({
   selector: 'app-ve-geo',

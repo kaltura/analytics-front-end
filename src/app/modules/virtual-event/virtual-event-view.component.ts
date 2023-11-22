@@ -21,9 +21,6 @@ import { FrameEventManagerService } from "shared/modules/frame-event-manager/fra
 import { ExportCsvComponent } from "shared/components/export-csv/export-csv.component";
 import * as moment from "moment";
 import {TranslateService} from "@ngx-translate/core";
-import {reportTypeMap} from "shared/utils/report-type-map";
-import {ReportDataSection} from "shared/services/storage-data-base.config";
-import {getPrimaryColor, getSecondaryColor} from "shared/utils/colors";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({

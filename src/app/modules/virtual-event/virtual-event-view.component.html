@@ -1,5 +1,5 @@
 <div #reportToExport data-aid="report-group-category" class="kMain">
-  <k-area-blocker [showLoader]="_loadingVirtualEvent || _loadingAppGuid" [message]="_blockerMessage">
+  <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
     <div class="kReportView">
       <div class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
@@ -137,7 +137,6 @@
 
       </div>
 
-      <span *ngIf="_exporting" class="disclaimer">{{'app.ve.disclaimer' | translate}}</span>
       <div *ngIf="_exporting" class="footer">
         <i></i>
         <span>{{'app.ve.footer' | translate}}</span>

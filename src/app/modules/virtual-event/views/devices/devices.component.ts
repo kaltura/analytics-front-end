@@ -1,13 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { DevicesDataConfig } from './devices-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { SortEvent } from 'primeng/api';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateRanges } from 'shared/components/date-filter/date-filter-utils';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -15,7 +13,6 @@ import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { significantDigits } from 'shared/utils/significant-digits';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.component";
@@ -34,7 +31,7 @@ export class VEDevicesComponent extends VEBaseReportComponent implements OnInit,
   @Input() virtualEventId = '';
   @Input() exporting = false;
 
-  protected _componentId = 've-roles';
+  protected _componentId = 've-devices';
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
 
@@ -42,18 +39,14 @@ export class VEDevicesComponent extends VEBaseReportComponent implements OnInit,
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms);
   private order = '-registered_unique_users';
 
-  public _selectedMetrics: string;
   public _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   public _dateRange = DateRanges.Last30D;
   public _tableData: TableRow<any>[] = [];
-  public _tabsData: Tab[] = [];
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _columns: string[] = [];
   public _dateFilter: DateChangeEvent = null;
   public _refineFilter: RefineFilter = [];
-  public _exportConfig: ExportItem[] = [];
-  public _mapDataReady = false;
+
   private _deviceIconPipe = new DeviceIconPipe();
 
   constructor(private _translate: TranslateService,

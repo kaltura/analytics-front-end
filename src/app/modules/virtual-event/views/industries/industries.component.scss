@@ -17,3 +17,16 @@
     border: none !important;
   }
 }
+.kIndustries ::ng-deep p-table .p-datatable .p-datatable-thead {
+  border-top: none;
+}
+
+.kIndustries ::ng-deep p-table .p-datatable-tbody > tr > td {
+  border: none;
+  height: 40px;
+}
+
+.kIndustries ::ng-deep p-table .p-datatable .p-datatable-tbody > tr > td:first-child {
+  border: none;
+  height: 40px;
+}
