@@ -17,9 +17,6 @@ export class StatusDataConfig extends ReportDataBaseConfig {
         fields: {
           'registered_unique_users': {
             format: value => value,
-          },
-          'attendance_unique_users': {
-            format: value => value,
           }
         }
       },
@@ -29,10 +26,6 @@ export class StatusDataConfig extends ReportDataBaseConfig {
           'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
-          },
-          'attendance_unique_users': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.participated`),
           }
         }
       }
