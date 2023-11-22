@@ -85,7 +85,7 @@ export class HighlightsComponent implements OnInit, OnDestroy {
           this._isBusy = busy;
           this._blockerMessage = this._errorsManager.getErrorMessage(error, { 'close': () => { this._blockerMessage = null; } });
           if (current && current.totals) {
-            this.handleTotals(current.totals);
+            // this.handleTotals(current.totals);
           }
           if (current && current.graphs) {
             this.handleGraphs(current.graphs);
@@ -100,9 +100,9 @@ export class HighlightsComponent implements OnInit, OnDestroy {
 
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
-    if (this._tabsData.length === 2) {
+    if (this._tabsData.length > 0) {
       this.totalRegistered = parseInt(this._tabsData[0].rawValue as string);
-      this.totalAttended = parseInt(this._tabsData[1].rawValue as string);
+      // this.totalAttended = parseInt(this._tabsData[1].rawValue as string);
     }
   }
 
@@ -124,9 +124,14 @@ export class HighlightsComponent implements OnInit, OnDestroy {
     Object.keys(lineChartData).forEach(key => {
       (lineChartData[key] as any).yAxis.axisLabel.formatter = param => param + '%';
       const data = (lineChartData[key] as any).series[0].data;
-      if (key === 'registered' && Math.max(...data) > 0) {
+      if (key === 'registered_unique_users' && Math.max(...data) > 0) {
+        // creating local total as the unique users total is not accurate
+        let total = 0;
         for (let i = 0; i < data.length; i++) {
-          data[i] = Math.round(data[i] / this.totalRegistered * 100);
+          total += data[i];
+        }
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Math.round(data[i] / total * 100);
         }
       }
     });

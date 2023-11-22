@@ -142,10 +142,15 @@ export class VEIndustriesComponent extends VEBaseReportComponent implements OnIn
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
 
+    // use local total as the unique viewers total is not accurate
+    let total = 0;
+    for (let i = 0; i < tableData.length; i++) {
+      total += parseInt(tableData[i]['registered_unique_users']);
+    }
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
-        const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFormattedValue(tab.value) : 0;
+        // const tab = this._tabsData.find(item => item.key === key);
+        // const total = tab ? parseFormattedValue(tab.value) : 0;
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
