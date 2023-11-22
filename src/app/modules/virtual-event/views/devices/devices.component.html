@@ -1,0 +1,23 @@
+<div data-aid="report-roles" class="kReport kOverrideFAIcons kDevices">
+
+  <div class="kFilters">
+    <span class="kTitle">{{'app.entryLive.discovery.devices' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="kReportContent">
+      <div class="kRow" *ngFor="let device of _tableData">
+        <i class="kIcon" [ngClass]="device.icon"></i>
+        <span class="kLabel">{{'app.user.devices.' + device.device | translate}}</span>
+        <span class="kVal">{{device.distribution}}%</span>
+        <div class="kBar">
+          <div [ngStyle]="{width: device.distribution+'%'}" class="device"></div>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+
+</div>
+

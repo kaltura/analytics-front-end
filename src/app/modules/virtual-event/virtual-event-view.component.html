@@ -104,13 +104,7 @@
         </div>
 
         <div *ngIf="_viewConfig.topDevices" class="kReportContainer">
-          <app-devices-overview [dateFilter]="_dateFilter"
-                                [title]="'app.category.topDevices' | translate"
-                                [refineFilter]="_refineFilter"
-                                [reportConfig]="_devicesReportConfig"
-                                [virtualEventId]="_virtualEventId"
-                                [reportType]="_devicesReportType">
-          </app-devices-overview>
+          <app-ve-devices [refineFilter]="_refineFilter" [dateFilter]="_dateFilter" [virtualEventId]="_virtualEventId"></app-ve-devices>
         </div>
 
         <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">

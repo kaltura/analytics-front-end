@@ -131,7 +131,7 @@ export class HighlightsComponent implements OnInit, OnDestroy {
           total += data[i];
         }
         for (let i = 0; i < data.length; i++) {
-          data[i] = Math.round(data[i] / total * 100);
+          data[i] = Number((data[i] / total * 100).toFixed(1));
         }
       }
     });

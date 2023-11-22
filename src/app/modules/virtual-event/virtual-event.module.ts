@@ -22,6 +22,7 @@ import { VERolesComponent } from "./views/roles/roles.component";
 import { VEIndustriesComponent } from "./views/industries/industries.component";
 import { VEMiniOriginComponent } from "./views/mini-origin/mini-origin.component";
 import { VEMiniAttendanceComponent } from "./views/mini-attendance/mini-attendance.component";
+import { VEDevicesComponent } from "./views/devices/devices.component";
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { VEMiniAttendanceComponent } from "./views/mini-attendance/mini-attendan
     VEMiniAttendanceComponent,
     StatusComponent,
     HighlightsComponent,
+    VEDevicesComponent,
     VEGeoComponent,
     VERolesComponent,
     VEIndustriesComponent

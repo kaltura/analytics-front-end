@@ -53,33 +53,9 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _virtualEvent: KalturaVirtualEvent;
   public _virtualEventId = null;
-  public _devicesReportType = reportTypeMap(KalturaReportType.veRegisteredPlatforms)
   public _creationDateLabels = {label: null, prefix: null};
   public _exporting = false;
   public _disableMiniViews = false;
-  public _devicesReportConfig = {
-    [ReportDataSection.table]: {
-      fields: {
-        'device': {
-          format: value => value,
-        },
-        'registered_unique_users': {
-          format: value => value,
-        }
-      }
-    },
-    [ReportDataSection.totals]: {
-      preSelected: 'registered_unique_users',
-      fields: {
-        'registered_unique_users': {
-          format: value => value,
-          title: this._translate.instant(`app.ve.registered`),
-          sortOrder: 1,
-          colors: [getPrimaryColor(), getSecondaryColor()],
-        }
-      }
-    }
-  };
 
   public _appGuid = '';
   public exportFilename = 'Summary_registration_report.pdf';
