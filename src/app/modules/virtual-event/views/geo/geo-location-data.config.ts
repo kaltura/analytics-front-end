@@ -37,7 +37,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             nonComparable: true,
           },
-          'registered': {
+          'registered_unique_users': {
             format: value => value
           },
 
@@ -45,9 +45,9 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'registered',
+        preSelected: 'registered_unique_users',
         fields: {
-          'registered': {
+          'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
           }

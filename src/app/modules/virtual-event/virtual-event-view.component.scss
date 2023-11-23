@@ -16,10 +16,6 @@
 .kMain {
   position: relative;
 }
-app-pdf-export {
-  margin-right: 16px;
-  margin-left: auto;
-}
 .disclaimer{
   color: $kGrayscale3;
   font-size: 16px;
@@ -54,6 +50,9 @@ app-pdf-export {
   background-color: $appBkgColor;
   display: flex;
   flex-wrap: wrap;
+  &.stickToBottom {
+    padding-bottom: 0px;
+  }
   .kSmallReportContainer {
     width: calc(50% - 12px);
     &:first-child {
@@ -61,9 +60,9 @@ app-pdf-export {
     }
   }
   .kMiniReportContainer{
-    width: calc(50% - 12px);
+    width: 30%;
     flex: 1 1 auto;
-    &:first-child {
+    &:not(:last-child)  {
       margin-right: 24px;
       height: 400px;
     }
@@ -124,6 +123,12 @@ app-pdf-export {
   .kReportHeader {
     height: 80px;
     position: relative;
+  }
+  .kDateSelector {
+    height: 32px;
+    margin-bottom: 24px;
+    justify-content: flex-end;
+    display: flex;
   }
   .kTitle {
     color: $kGrayscale1;
@@ -188,6 +193,7 @@ app-pdf-export {
   display: flex;
   align-items: center;
   flex: 0 0 auto;
+  margin-left: auto;
   .kDropDown {
     background-color: white;
     height: 34px;
@@ -299,4 +305,8 @@ app-pdf-export {
 .fixHeight {
   max-height: 272px;
   overflow: hidden;
+}
+.offscreen {
+  position: absolute;
+  top: -3000px;
 }

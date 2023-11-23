@@ -15,12 +15,14 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { VirtualEventViewComponent } from "./virtual-event-view.component";
 import { VirtualEventFilterComponent } from "./filter/filter.component";
 import { RegistrationFunnelComponent } from "./views/registration-funnel/registration-funnel.component";
-import { VEMiniInsightsComponent } from "./views/mini-insights/mini-insights.component";
 import { StatusComponent } from "./views/status/status.component";
 import { HighlightsComponent } from "./views/highlights/highlights.component";
 import { VEGeoComponent } from "./views/geo/geo-location.component";
 import { VERolesComponent } from "./views/roles/roles.component";
 import { VEIndustriesComponent } from "./views/industries/industries.component";
+import { VEMiniOriginComponent } from "./views/mini-origin/mini-origin.component";
+import { VEMiniAttendanceComponent } from "./views/mini-attendance/mini-attendance.component";
+import { VEDevicesComponent } from "./views/devices/devices.component";
 
 
 @NgModule({
@@ -45,9 +47,11 @@ import { VEIndustriesComponent } from "./views/industries/industries.component";
     VirtualEventViewComponent,
     VirtualEventFilterComponent,
     RegistrationFunnelComponent,
-    VEMiniInsightsComponent,
+    VEMiniOriginComponent,
+    VEMiniAttendanceComponent,
     StatusComponent,
     HighlightsComponent,
+    VEDevicesComponent,
     VEGeoComponent,
     VERolesComponent,
     VEIndustriesComponent

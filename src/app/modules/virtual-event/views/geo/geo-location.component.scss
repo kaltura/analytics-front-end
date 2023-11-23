@@ -80,3 +80,16 @@
 p-table ::ng-deep .p-paginator .p-paginator-page.p-state-active {
   z-index: 1;
 }
+.kGeo ::ng-deep p-table .p-datatable .p-datatable-thead {
+  border-top: none;
+}
+
+.kGeo ::ng-deep p-table .p-datatable-tbody > tr > td {
+  border: none;
+  height: 40px;
+}
+
+.kGeo ::ng-deep p-table .p-datatable .p-datatable-tbody > tr > td:first-child {
+  border: none;
+  height: 40px;
+}

@@ -99,6 +99,12 @@ app-checkboxes-list-filter {
 }
 app-checkboxes-list-filter {
   min-width: 206px;
+  ::ng-deep .kColumnContent {
+    display: flex;
+    .kCheckboxGroup {
+      margin-right: 24px;
+    }
+  }
 }
 
 :host ::ng-deep .p-autocomplete-multiple-container {

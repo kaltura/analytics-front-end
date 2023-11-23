@@ -1,27 +1,32 @@
-import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angular/core';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
+import { Component, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
-import { switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
+import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
 import { RegistrationFunnelDataConfig } from './registration-funnel-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
 import { getColorPalette } from 'shared/utils/colors';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { RefineFilter } from 'shared/components/filter/filter.component';
-import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
-import { reportTypeMap } from 'shared/utils/report-type-map';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { BehaviorSubject } from "rxjs";
+import {analyticsConfig} from "configuration/analytics-config";
 
 export type funnelData = {
   registered: number;
+  confirmed?: number;
   participated: number;
 };
+
+export type attendeesData = {
+  count: number;
+  dimensions: {
+    eventData: {
+      attendanceStatus: string;
+      regOrigin: string;
+    }
+  }
+}
 
 @Component({
   selector: 'app-registration-funnel',
@@ -34,38 +39,27 @@ export type funnelData = {
   ],
 })
 export class RegistrationFunnelComponent implements OnInit, OnDestroy {
-  @Input() set dateFilter(value: DateChangeEvent) {
-    if (value) {
-      this._dateFilter = value;
 
-      if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
-        this._updateFilter();
-        // load report in the next run cycle to be sure all properties are updated
-        setTimeout(() => {
-          this._loadReport();
-        });
-      }
+  @Input() set appGuid(value: string) {
+    if (value.length) {
+      this._appGuid = value;
+      this._loadReport();
     }
   }
 
   @Input() set refineFilter(value: RefineFilter) {
     if (value) {
       this._refineFilter = value;
-      this._updateRefineFilter();
-      // load report in the next run cycle to be sure all properties are updated
-      setTimeout(() => {
-        this._loadReport();
-      });
+      this._loadReport();
     }
   }
 
   @Input() virtualEventId: string;
   @Input() exporting = false;
+  @Input() disabled = false;
 
-  @Output() registrationDataLoaded = new EventEmitter<{ unregistered: number }>();
-
-  private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
+  private _appGuid = '';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -73,28 +67,25 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   public _chartLoaded = false;
   public _funnelData: funnelData;
   public turnout = '0';
+  public confirmation = '0';
+  public _showConfirmed = false;
 
-  private _componentId = 'registration-funnel';
+  private _registered = 0;
+  private _unregistered = 0;
+  private _confirmed = 0;
+  private _participated = 0;
 
   private echartsIntance: any;
-  private reportType: KalturaReportType = reportTypeMap(KalturaReportType.veHighlights);
-  private pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
-  private order = 'registered';
-  private filter = new KalturaEndUserReportInputFilter(
-    {
-      searchInTags: true,
-      searchInAdminTags: false
-    }
-  );
-  private _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
-  private _dataConfig: ReportDataConfig;
+
+  public attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: true, results: [], sum: 0 });
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
+              private _http: HttpClient,
+              private _authService: AuthService,
               private _translate: TranslateService,
               private _dataConfigService: RegistrationFunnelDataConfig,
               private _browserService: BrowserService) {
-    this._dataConfig = _dataConfigService.getConfig();
 
     this._chartData = _dataConfigService.getChartConfig((params) => {
       return this.getChartTooltip(params);
@@ -110,7 +101,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.attendees$.complete();
   }
 
   private _toggleChartTheme(isContrast: boolean): void {
@@ -133,76 +124,118 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   public updateFunnel(): void {
+    const confirmed = this._funnelData.confirmed === 0 ? '0' : Math.round(this._funnelData.confirmed / this._funnelData.registered * 100).toFixed(0);
     const participated = this._funnelData.registered === 0 ? '0' : Math.round(this._funnelData.participated / this._funnelData.registered * 100).toFixed(0);
 
+    const data = [
+      {
+        value: this._funnelData.registered === 0 ? 0 : 100,
+        name: this._translate.instant('app.ve.all')
+      },
+      {
+        value: Math.round(parseFloat(participated)),
+        name: this._translate.instant('app.ve.participated')
+      }
+    ];
+    if (this._showConfirmed) {
+      data.splice(1, 0,{
+        value: Math.round(parseFloat(confirmed)),
+        name: this._translate.instant('app.ve.confirmed')
+      })
+    }
     this._setEchartsOption({
-      series: [{
-        data: [
-          {
-            value: this._funnelData.registered === 0 ? 0 : 100,
-            name: this._translate.instant('app.ve.all')
-          },
-          {
-            value: Math.round(parseFloat(participated)),
-            name: this._translate.instant('app.ve.participated')
-          }
-        ]
-      }]
+      series: [{ data }]
     }, false);
-    this._setEchartsOption({ color: [getColorPalette()[2], getColorPalette()[4]] });
+    this._setEchartsOption({ color: [getColorPalette()[7], getColorPalette()[4], getColorPalette()[2]] });
   }
 
   private _loadReport(): void {
+    if (this.disabled) {
+      return;
+    }
     this._isBusy = true;
     this._chartLoaded = false;
     this._blockerMessage = null;
+    this._participated = 0;
+    this.attendees$.next({loading: true, results: [], sum: 0});
 
-    const reportConfig: ReportConfig = { reportType: this.reportType, filter: this.filter, pager: this.pager, order: this.order };
-
-    if (this.virtualEventId) {
-      reportConfig.filter.virtualEventIdIn = this.virtualEventId;
+    const filter = {
+      "appGuidIn": [this._appGuid]
     }
-    this._reportService.getReport(reportConfig, this._dataConfig)
-      .pipe(switchMap(report => {
-          return ObservableOf({ report, compare: null });
-      }))
-      .subscribe(({ report, compare }) => {
-          if (report.totals) {
-            this.handleTotals(report.totals); // handle totals
+
+    // add origin filter
+    const regOrigin = [];
+    if (this._refineFilter.length) {
+      this._refineFilter.forEach(refineFilter => {
+        if (refineFilter.type === 'origin') {
+          regOrigin.push(refineFilter.value.toLowerCase());
+        }
+      })
+    }
+    if (regOrigin.length) {
+      filter["regOriginIn"] = regOrigin;
+    } else {
+      delete filter["regOriginIn"];
+    }
+
+    // set minimal pager
+    const dimensions = ["regOrigin","attendanceStatus"];
+
+
+    const headers = new HttpHeaders({
+      'authorization': `KS ${this._authService.ks}`,
+      'Content-Type': 'application/json',
+    });
+
+    this._http.post(`${analyticsConfig.externalServices.userReportsEndpoint.uri}/eventDataStats`, {filter, dimensions}, {headers}).pipe(cancelOnDestroy(this))
+      .subscribe((data: any) => {
+          this.attendees$.next({loading: false, results: data.results ? data.results : [], sum: data.sum ? data.sum : 0});
+          this._showConfirmed = false;
+          this._registered = data.sum;
+          if (data?.results && data.results.length) {
+            data.results.forEach((users: any) => {
+              const status = users.dimensions?.eventData?.attendanceStatus || '';
+              if (status === "attended" || status === "participated" || status === "participatedPostEvent") {
+                this._participated += users.count;
+                this._confirmed += users.count;
+              }
+              if (status === "confirmed" && users.count > 0) {
+                this._confirmed += users.count;
+                this._showConfirmed = true;
+              }
+              if (status === "unregistered") {
+                this._unregistered += users.count;
+              }
+            });
+            this._funnelData = {
+              registered: this._registered,
+              participated: this._participated
+            };
+            if (this._showConfirmed) {
+              this._funnelData.confirmed = this._confirmed;
+            }
+            this.updateFunnel();
+            const participated = this._registered === 0 ? 0 : Math.round(this._participated / this._registered * 100);
+            this.turnout = participated.toFixed(0);
+            const confirmation = this._registered === 0 ? 0 : Math.round(this._confirmed / this._registered * 100);
+            this.confirmation = confirmation.toFixed(0);
             this._chartLoaded = true;
           }
           this._isBusy = false;
         },
         error => {
           this._isBusy = false;
+          this.attendees$.next({loading: false, results: [], sum: 0});
           const actions = {
             'close': () => {
               this._blockerMessage = null;
             },
             'retry': () => {
               this._loadReport();
-            },
+            }
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-  }
-
-  private handleTotals(totals: KalturaReportTotal): void {
-    this._setEchartsOption({ series: [{ width: '50%' }] }, false);
-    this._setEchartsOption({ series: [{ left: '50%' }] }, false);
-    const data = totals.data.split(analyticsConfig.valueSeparator);
-    const all = parseInt(data[0]) + parseInt(data[6]) + parseInt(data[7]); // registered + invited + created
-    this._funnelData = {
-      registered: all,
-      participated: parseInt(data[3])
-    };
-    // dispatch event for other widgets
-    const unregistered = data[5].length ? parseInt(data[5]) : 0;
-    const participated = all === 0 ? 0 : Math.round(this._funnelData.participated / all * 100);
-    this.turnout = participated.toFixed(0);
-    this.registrationDataLoaded.emit({unregistered});
-    // update funnel graph
-    this.updateFunnel();
   }
 
   private _setEchartsOption(option: EChartOption, opts?: any): void {
@@ -218,21 +251,11 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
       const dropoff = this.turnout.includes('.') ? (100 - parseFloat(this.turnout)).toFixed(2) + "%" : 100 - parseInt(this.turnout) + "%";
       return `<span style="color: #333333"><b>${dropoff} ${this._translate.instant('app.ve.dropoff')}</b><br/><b>${this._funnelData.registered.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
     } else {
-      return `<span style="color: #333333"><b>${this.turnout}% ${this._translate.instant('app.ve.turnout2')}</b><br/><b>${this._funnelData.participated.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+      if (params.data.name === this._translate.instant('app.ve.confirmed')) {
+        return `<span style="color: #333333"><b>${this.confirmation}% ${this._translate.instant('app.ve.confirmation')}</b><br/><b>${this._funnelData.confirmed.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.confirmed')}</b></span>`;
+      } else {
+        return `<span style="color: #333333"><b>${this.turnout}% ${this._translate.instant('app.ve.turnout2')}</b><br/><b>${this._funnelData.participated.toLocaleString(navigator.language)} ${this._translate.instant('app.ve.attendees')}</b></span>`;
+      }
     }
-  }
-
-  private _updateFilter(): void {
-    this.filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
-    this.filter.fromDate = this._dateFilter.startDate;
-    this.filter.toDate = this._dateFilter.endDate;
-    this.filter.interval = this._dateFilter.timeUnits;
-    this._reportInterval = this._dateFilter.timeUnits;
-    this.pager.pageIndex = 1;
-  }
-
-  private _updateRefineFilter(): void {
-    this.pager.pageIndex = 1;
-    refineFilterToServerValue(this._refineFilter, this.filter);
   }
 }

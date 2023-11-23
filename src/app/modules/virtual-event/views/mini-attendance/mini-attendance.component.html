@@ -1,0 +1,32 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+  <k-area-blocker [showLoader]="_isBusy">
+    <div class="kReportContent">
+
+      <div class="kFilters">
+        <span class="kTitle">{{'app.ve.attendance' | translate}}</span>
+      </div>
+
+      <div class="kAttendance">
+        <div class="attendance">
+          <span class="kLabel">{{pre}}</span>
+          <div class="bar" [ngStyle]="{'height':  max > 0 ? pre / max * 80 + '%' : '0px'}"></div>
+          <span class="kLabel">{{'app.ve.pre' | translate}}</span>
+        </div>
+
+        <div class="attendance">
+          <span class="kLabel">{{during}}</span>
+          <div class="bar" [ngStyle]="{'height': max > 0 ? during / max * 80 + '%' : '0px'}"></div>
+          <span class="kLabel">{{'app.ve.during' | translate}}</span>
+        </div>
+
+        <div class="attendance">
+          <span class="kLabel">{{post}}</span>
+          <div class="bar" [ngStyle]="{'height': max > 0 ? post / max * 80 + '%' : '0px'}"></div>
+          <span class="kLabel">{{'app.ve.post' | translate}}</span>
+        </div>
+
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+

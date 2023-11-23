@@ -10,7 +10,7 @@
       <div class="kTable">
         <div class="kTableContainer">
           <p-table appScrollTopOnPaging
-                   sortField="registered"
+                   sortField="registered_unique_users"
                    [value]="_tableData"
                    [customSort]="true"
                    [defaultSortOrder]="-1"
@@ -23,23 +23,25 @@
                 <th [ngStyle]="{'width': '50px'}">
                   <span *ngIf="_tableData?.length"></span>
                 </th>
-                <th [ngStyle]="{'width': '30%'}">
+                <th [ngStyle]="{'width': '50%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.audience.geo.object_id' | translate" [showOnEllipsis]="true">
                       {{'app.audience.geo.object_id' | translate}}
                     </span>
                   </div>
                 </th>
-                <th [ngStyle]="{'width': '30%'}">
+<!--                <th [ngStyle]="{'width': '30%'}">-->
+<!--                  <div class="kColumnHeader">-->
+<!--                    <span [kTooltip]="'app.ve.registered' | translate" [showOnEllipsis]="true">-->
+<!--                      {{'app.ve.registered' | translate}}-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                </th>-->
+                <th [ngStyle]="{'width': '50%'}">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.ve.registered' | translate" [showOnEllipsis]="true">
                       {{'app.ve.registered' | translate}}
                     </span>
-                  </div>
-                </th>
-                <th [ngStyle]="{'width': '40%'}">
-                  <div class="kColumnHeader">
-                    <span></span>
                   </div>
                 </th>
               </tr>
@@ -52,9 +54,9 @@
                 <td class="kHighlight">
                   <span>{{data['industry']}}</span>
                 </td>
-                <td>
-                  <span>{{data['registered']}}</span>
-                </td>
+<!--                <td>-->
+<!--                  <span>{{data['registered']}}</span>-->
+<!--                </td>-->
                 <td>
                   <div>
                     <app-bullet [value]="data['distribution']"></app-bullet>

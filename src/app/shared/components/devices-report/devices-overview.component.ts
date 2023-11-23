@@ -51,6 +51,7 @@ export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDes
   @Input() categoryId: string = null;
   @Input() playlistId: string = null;
   @Input() entryId: string = null;
+  @Input() title: string = '';
   @Input() virtualEventId: string = null;
   @Input() reportType: KalturaReportType = null;
   @Input() colorScheme = 'default';
@@ -331,7 +332,6 @@ export class DevicesOverviewComponent extends QueryBase implements OnInit, OnDes
 
   private _handleTotals(totals: KalturaReportTotal, compare?: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetric);
-
     if (compare) {
       this._compareTabsData = this._reportService.parseTotals(compare, this._dataConfig.totals, this._selectedMetric);
     }

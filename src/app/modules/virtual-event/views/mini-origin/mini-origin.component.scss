@@ -1,0 +1,80 @@
+@import '../../../../../styles/variables';
+
+.kReport {
+  .kFilters {
+    height: auto;
+    margin-bottom: 28px;
+    .kTitle {
+      padding: 0px;
+    }
+  }
+  .kReportContent {
+    padding: 24px;
+    height: 400px;
+    .kRow {
+      display: flex;
+      align-items: center;
+      margin-bottom: 32px;
+      .kLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+        width: 150px;
+      }
+      .kVal {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+        text-align: right;
+        margin-right: 8px;
+        width: 120px;
+      }
+      .notParticipated {
+        background-color: #88ACF6;
+        transition: width 0.35s ease-in-out;
+      }
+      .participated {
+        background-color: #487ADF;
+        transition: width 0.35s ease-in-out;
+      }
+    }
+    .kBar {
+      width: 100%;
+      height: 24px;
+      background-color: $kGrayscale6;
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
+    }
+    .kFooter {
+      display: flex;
+      align-items: center;
+      .kLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .bullet {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        margin-right: 8px;
+        &.notAttended {
+          background-color: #88ACF6;
+          margin-left: 16px;
+        }
+        &.attended {
+          background-color: #487ADF;
+        }
+      }
+    }
+  }
+  .old {
+    font-size: 20px;
+    font-weight: 700;
+    color: #888888;
+    width: 100%;
+    text-align: center;
+    margin-top: 126px;
+  }
+}

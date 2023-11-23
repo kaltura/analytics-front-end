@@ -2,7 +2,10 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
     <div class="kReportContent">
 
-      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+<!--      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>-->
+      <div class="kFilters">
+        <span class="kTitle">{{'app.ve.registrants' | translate}}</span>
+      </div>
 
       <div class="kChart">
         <div echarts class="kChart"
@@ -17,12 +20,12 @@
       </div>
 
       <div class="kTable" *ngIf="_tableData.length">
-        <div class="kToggle" *ngIf="!exporting">
+        <div class="kToggle" *ngIf="!exporting && !hideDetails">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
           <a (click)="toggleTable()">{{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}</a>
         </div>
         <!--span *ngIf="exporting" class="kDetails">{{'app.ve.details' | translate}}</span-->
-        <div class="kTableContainer" [class.kOpen]="_showTable || exporting" [class.kClose]="!_showTable && !exporting">
+        <!--div class="kTableContainer" [class.kOpen]="_showTable || exporting" [class.kClose]="!_showTable && !exporting">
           <p-table appScrollTopOnPaging
                    [value]="_tableData"
                    [paginator]="true"
@@ -61,7 +64,7 @@
               </div>
             </ng-template>
           </p-table>
-        </div>
+        </div-->
       </div>
 
     </div>

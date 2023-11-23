@@ -42,6 +42,7 @@ export class HighlightsComponent implements OnInit, OnDestroy {
   public _columns: string[] = [];
 
   @Input() exporting = false;
+  @Input() hideDetails = false;
 
   @Input() set dateFilter(value: DateChangeEvent) {
     if (value) {
@@ -63,6 +64,9 @@ export class HighlightsComponent implements OnInit, OnDestroy {
   private _reportInterval: KalturaReportInterval = KalturaReportInterval.days;
   private _dataConfig: ReportDataConfig;
 
+  private totalRegistered = 0;
+  private totalAttended = 0;
+
   constructor(private _errorsManager: ErrorsManagerService,
               private _frameEventManager: FrameEventManagerService,
               private _reportService: ReportService,
@@ -81,11 +85,11 @@ export class HighlightsComponent implements OnInit, OnDestroy {
           this._isBusy = busy;
           this._blockerMessage = this._errorsManager.getErrorMessage(error, { 'close': () => { this._blockerMessage = null; } });
           if (current && current.totals) {
-            this.handleTotals(current.totals);
+            // this.handleTotals(current.totals);
           }
           if (current && current.graphs) {
             this.handleGraphs(current.graphs);
-            this.handleTable(current);  // table from graph
+            // this.handleTable(current);  // table from graph
           }
         });
     }
@@ -96,6 +100,10 @@ export class HighlightsComponent implements OnInit, OnDestroy {
 
   private handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
+    if (this._tabsData.length > 0) {
+      this.totalRegistered = parseInt(this._tabsData[0].rawValue as string);
+      // this.totalAttended = parseInt(this._tabsData[1].rawValue as string);
+    }
   }
 
   private handleGraphs(graphs: KalturaReportGraph[]): void {
@@ -112,8 +120,26 @@ export class HighlightsComponent implements OnInit, OnDestroy {
     // });
     // ------- Mock data end ----  //
 
+    // convert data to percentage
+    Object.keys(lineChartData).forEach(key => {
+      (lineChartData[key] as any).yAxis.axisLabel.formatter = param => param + '%';
+      const data = (lineChartData[key] as any).series[0].data;
+      if (key === 'registered_unique_users' && Math.max(...data) > 0) {
+        // creating local total as the unique users total is not accurate
+        let total = 0;
+        for (let i = 0; i < data.length; i++) {
+          total += data[i];
+        }
+        for (let i = 0; i < data.length; i++) {
+          data[i] = Number((data[i] / total * 100).toFixed(1));
+        }
+      }
+    });
     // mark peak days
     Object.keys(lineChartData).forEach(key => {
+      // if (this.hideDetails) {
+      //   (lineChartData[key] as any).tooltip = null; // hide tooltip
+      // }
       // display peak day label only if we have at least one value larger than 0
       if (Math.max(...(lineChartData[key] as any).series[0].data) > 0) {
         (lineChartData[key] as any).series[0].markPoint = {

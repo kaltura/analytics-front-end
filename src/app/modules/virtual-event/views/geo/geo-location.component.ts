@@ -2,13 +2,12 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { GeoLocationDataConfig } from './geo-location-data.config';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TrendService } from 'shared/services/trend.service';
 import { SortEvent } from 'primeng/api';
 import * as echarts from 'echarts';
 import { EChartOption } from 'echarts';
@@ -25,8 +24,8 @@ import { ExportItem } from 'shared/components/export-csv/export-config-base.serv
 import { parseFormattedValue } from 'shared/utils/parse-fomated-value';
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { VEBaseReportComponent } from "../ve-base-report/ve-base-report.component";
-import {BehaviorSubject, forkJoin, Observable, of as ObservableOf} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import { BehaviorSubject, forkJoin, of as ObservableOf } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 @Component({
   selector: 'app-ve-geo',
@@ -49,7 +48,7 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredCountries);
   private _reportTypeWorldRegions: KalturaReportType = reportTypeMap(KalturaReportType.veRegisteredWorldRegions);
   private _mapCenter = [0, 10];
-  private order = '-registered';
+  private order = '-registered_unique_users';
   private _mapZoom = 1.2;
 
   public topCountries$: BehaviorSubject<{ topCountries: any[], totalCount: number }> = new BehaviorSubject({ topCountries: [], totalCount: 0 });
@@ -198,14 +197,19 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
 
+    // use local total as the unique viewers total is not accurate
+    let total = 0;
+    for (let i = 0; i < tableData.length; i++) {
+      total += parseInt(tableData[i]['registered_unique_users']);
+    }
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
-        const tab = this._tabsData.find(item => item.key === key);
-        const total = tab ? parseFormattedValue(tab.value) : 0;
+        // const tab = this._tabsData.find(item => item.key === key);
+        // const total = tab ? parseFormattedValue(tab.value) : 0;
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const registrationDistribution = calculateDistribution('registered');
+      const registrationDistribution = calculateDistribution('registered_unique_users');
 
       row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
 
@@ -226,14 +230,19 @@ export class VEGeoComponent extends VEBaseReportComponent implements OnInit, OnD
     this._worldRegionsColumns.push('distribution'); // add distribution column at the end
     this._worldRegionsColumns.push(tmp);
 
+    // use local total as the unique viewers total is not accurate
+    let total = 0;
+    for (let i = 0; i < tableData.length; i++) {
+      total += parseInt(tableData[i]['registered_unique_users']);
+    }
     this._worldRegionsTableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
-        const tab = this._worldRegionsTabsData.find(item => item.key === key);
-        const total = tab ? parseFormattedValue(tab.value) : 0;
+        // const tab = this._worldRegionsTabsData.find(item => item.key === key);
+        // const total = tab ? parseFormattedValue(tab.value) : 0;
         const rowValue = parseFormattedValue(row[key]);
         return significantDigits((rowValue / total) * 100);
       };
-      const registrationDistribution = calculateDistribution('registered');
+      const registrationDistribution = calculateDistribution('registered_unique_users');
 
       row['distribution'] = ReportHelper.numberWithCommas(registrationDistribution);
 

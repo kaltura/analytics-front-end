@@ -1,0 +1,30 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+  <k-area-blocker [showLoader]="_isBusy && !disabled">
+    <div class="kReportContent">
+
+      <div class="kFilters">
+        <span class="kTitle">{{'app.ve.origin' | translate}}</span>
+      </div>
+
+      <div class="kRow" *ngFor="let origin of _origins" [class.kHidden]="origin.total === 0">
+        <span class="kLabel">{{'app.ve.' + origin.key | translate}}</span>
+        <span class="kVal">{{origin.total}}</span>
+        <div class="kBar">
+          <div [ngStyle]="{width: _allAttendees > 0 ? (origin.attended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.attended" class="participated"></div>
+          <div [ngStyle]="{width: _allAttendees > 0 ? (origin.notAttended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.notAttended" class="notParticipated"></div>
+        </div>
+      </div>
+
+      <div *ngIf="!disabled" class="kFooter">
+        <div class="bullet attended"></div>
+        <span class="kLabel">{{'app.ve.attended' | translate}}</span>
+        <div class="bullet notAttended"></div>
+        <span class="kLabel">{{'app.ve.notAttended' | translate}}</span>
+      </div>
+
+      <span *ngIf="disabled" class="old">{{'app.ve.old' | translate}}</span>
+
+    </div>
+  </k-area-blocker>
+</div>
+

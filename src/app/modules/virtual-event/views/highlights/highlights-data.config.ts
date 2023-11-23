@@ -17,66 +17,19 @@ export class HighlightsDataConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'registered': {
+          'registered_unique_users': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'confirmed': {
-            format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'participated': {
-            format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
-          },
-          'unregistered': {
-            format: value => value,
+            graphTooltip: (value) => ReportHelper.numberOrZero(value) + '%',
             colors: [getPrimaryColor(), getSecondaryColor()],
           }
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'registered',
+        preSelected: 'registered_unique_users',
         fields: {
-          'registered': {
+          'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
             title: this._translate.instant(`app.ve.registered`),
-          },
-          'confirmed': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.confirmed`),
-          },
-          'participated': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.participated`),
-          },
-          'unregistered': {
-            format: value => ReportHelper.numberOrNA(value),
-            title: this._translate.instant(`app.ve.unregistered`),
-          }
-        }
-      },
-      [ReportDataSection.table]: {
-        fields: {
-          'date_id': {
-            format: value => DateFilterUtils.formatFullDateString(value),
-            nonComparable: true,
-          },
-          'registered': {
-            format: value => ReportHelper.numberOrZero(value, true),
-            sortOrder: 1
-          },
-          'confirmed': {
-            format: value => ReportHelper.numberOrZero(value, true),
-            sortOrder: 2
-          },
-          'participated': {
-            format: value => ReportHelper.numberOrZero(value, true),
-            sortOrder: 3
-          },
-          'unregistered': {
-            format: value => ReportHelper.numberOrZero(value, true),
-            sortOrder: 4
           }
         }
       }

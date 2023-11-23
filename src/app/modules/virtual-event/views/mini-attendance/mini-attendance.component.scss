@@ -1,0 +1,42 @@
+@import '../../../../../styles/variables';
+
+.kReport {
+  .kFilters {
+    height: auto;
+    margin-bottom: 28px;
+    .kTitle {
+      padding: 0px;
+    }
+  }
+  .kReportContent {
+    padding: 24px;
+    height: 400px;
+    .kAttendance {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      height: 100%;
+      .attendance {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        width: 22%;
+        .kLabel {
+          color: $kGrayscale1;
+          font-size: 15px;
+          font-weight: 700;
+        }
+        .bar {
+          width: 100%;
+          background-color: #487ADF;
+          border-radius: 4px;
+          margin-bottom: 4px;
+          margin-top: 4px;
+          flex: 0 0 auto;
+          transition: height 0.35s ease-in-out;
+        }
+      }
+    }
+  }
+}
