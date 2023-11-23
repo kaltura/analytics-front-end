@@ -9,7 +9,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 * Run ng serve for a dev server.
 * Navigate to http://localhost:4200
 
-## Example
+## Documentation
 
 Follow this [link](https://github.com/kaltura/analytics-front-end/tree/master/docs/loadingAnalytics.md) to see the docs
 

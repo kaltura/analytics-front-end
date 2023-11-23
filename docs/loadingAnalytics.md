@@ -120,11 +120,11 @@ To see analytics in action follow the steps:
 
 #### Additional demos
 
-* [Setting custom style](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderCustomStyle.html) (to run example: `npm run example:style`)
-* [Force friendly iframe loading](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderFriendly.html) (to run example: `npm run example:friendly`)
-* [Changing locale at runtime](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderLocale.html) (to run example: `npm run example:locale`)
-* [Setting custom menu](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderMenu.html) (to run example: `npm run example:menu`)
-* [Hiding analytics sections](https://github.com/kaltura/analytics-front-end/blob/localization/src/dev/analyticsLoaderView.html) (to run example: `npm run example:view`)
+* [Setting custom style](https://github.com/kaltura/analytics-front-end/blob/master/src/dev/analyticsLoaderCustomStyle.html) (to run example: `npm run example:style`)
+* [Force friendly iframe loading](https://github.com/kaltura/analytics-front-end/blob/master/src/dev/analyticsLoaderFriendly.html) (to run example: `npm run example:friendly`)
+* [Changing locale at runtime](https://github.com/kaltura/analytics-front-end/blob/master/src/dev/analyticsLoaderLocale.html) (to run example: `npm run example:locale`)
+* [Setting custom menu](https://github.com/kaltura/analytics-front-end/blob/master/src/dev/analyticsLoaderMenu.html) (to run example: `npm run example:menu`)
+* [Hiding analytics sections](https://github.com/kaltura/analytics-front-end/blob/master/src/dev/analyticsLoaderView.html) (to run example: `npm run example:view`)
 
 **DO NOT COMMIT ANYTHING WHILE THE EXAMPLE SCRIPT IS RUNNING**
 
